@@ -13,7 +13,14 @@ export default defineConfig({
         enabled: true,
         suppressWarnings: true,
       },
-      includeAssets: ['favicon.svg'],
+      includeAssets: [
+        'favicon.svg',
+        'robots.txt',
+        'apple-touch-icon.png',
+        'pwa-192x192.png',
+        'pwa-512x512.png',
+        'pwa-512x512-maskable.png',
+      ],
       manifest: {
         name: 'CodeQuest',
         short_name: 'CodeQuest',
@@ -26,10 +33,20 @@ export default defineConfig({
         scope: '/codeQuest/',
         icons: [
           {
-            src: 'favicon.svg',
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/svg+xml',
-            purpose: 'any',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512-maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
           },
         ],
       },
