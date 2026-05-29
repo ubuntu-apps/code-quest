@@ -1,0 +1,5 @@
+export { CodeTextareaWithErrorLine, type CodeTextareaWithErrorLineProps } from './CodeTextareaWithErrorLine'
+export { DraggableErrorPopover, type DraggableErrorPopoverProps } from './DraggableErrorPopover'
+export { CodeEditorLineGutter } from './CodeEditorLineGutter'
+export { CODE_EDITOR_LAYOUT, codeEditorPopoverTop } from './codeEditorLayout'
+export { useCodeEditorScrollSync } from './useCodeEditorScrollSync'

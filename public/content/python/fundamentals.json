@@ -1,0 +1,229 @@
+{
+  "sectionId": "fundamentals",
+  "title": "Fundamentals",
+  "levels": [
+    {
+      "id": "print_command",
+      "title": "Print command",
+      "intro": {
+        "title": "Show output with print()",
+        "bodyMarkdown": "Use `print()` to display text and values in Python.\n\n```python\nprint(\"Hello, world!\")\nname = \"Asha\"\nprint(name)\n```\n\n`print()` is one of the first tools you use to debug and verify your code.",
+        "readMore": {
+          "label": "Read more (Python docs)",
+          "url": "https://docs.python.org/3/tutorial/introduction.html#using-python-as-a-calculator",
+          "source": "Python Software Foundation — Python 3 Tutorial"
+        }
+      },
+      "challenges": [
+        {
+          "id": "py_print_hello",
+          "title": "Print plain text",
+          "promptMarkdown": "Write one line that prints `Hello, CodeQuest!` exactly (including punctuation).",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "print_exact",
+                "label": "Prints exact message",
+                "assertion": "_cq_stdout.strip() == 'Hello, CodeQuest!'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "py_print_variable",
+          "title": "Print a variable",
+          "promptMarkdown": "Assume `name = \"Sam\"` already exists. Write one line that prints `name`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "name = \"Sam\"",
+            "tests": [
+              {
+                "id": "prints_variable",
+                "label": "Runs with provided variable",
+                "assertion": "_cq_stdout.strip() == 'Sam'"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "py_print_mcq_1",
+            "type": "mcq",
+            "prompt": "Which statement correctly prints text in Python?",
+            "choices": [
+              { "id": "a", "label": "echo(\"hi\")" },
+              { "id": "b", "label": "print(\"hi\")" },
+              { "id": "c", "label": "System.out.println(\"hi\")" }
+            ],
+            "correctChoiceId": "b"
+          },
+          {
+            "id": "py_print_short_1",
+            "type": "shortText",
+            "prompt": "Type only the Python function name used for console output.",
+            "validation": { "mode": "equalsNormalized", "expected": "print" }
+          }
+        ]
+      }
+    },
+    {
+      "id": "variables",
+      "title": "Variables",
+      "intro": {
+        "title": "Storing values",
+        "bodyMarkdown": "In Python you assign a name to a value with `=`. Names are often called **variables**.\n\n```python\nscore = 10\nname = \"Asha\"\nis_active = True\n```\n\nVariables can hold numbers, text, booleans, and more. You can reassign them as your program runs.\n\n```python\nscore = score + 5\nname = \"Asha K\"\n```\n\nUse descriptive snake_case names like `user_age` and `total_price`.",
+        "readMore": {
+          "label": "Read more (Python docs)",
+          "url": "https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming",
+          "source": "Python Software Foundation — Python 3 Tutorial"
+        }
+      },
+      "challenges": [
+        {
+          "id": "py_var_assign",
+          "title": "Create an integer",
+          "promptMarkdown": "Write **one line** that assigns the integer `42` to a variable named `answer`.",
+          "starterCode": "answer = ",
+          "hints": ["Use `answer = 42` with no spaces around `=` required, but PEP 8 likes spaces."],
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "answer_is_42",
+                "label": "`answer` equals 42",
+                "assertion": "answer == 42"
+              }
+            ]
+          }
+        },
+        {
+          "id": "py_var_string",
+          "title": "String variable",
+          "promptMarkdown": "Assign the string `hello` to a variable named `greeting` using double quotes.",
+          "starterCode": "greeting = ",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "greeting_value",
+                "label": "`greeting` equals \"hello\"",
+                "assertion": "greeting == 'hello'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "py_var_bool",
+          "title": "Boolean variable",
+          "promptMarkdown": "Create a boolean variable named `is_ready` set to `True`.",
+          "starterCode": "is_ready = ",
+          "validation": {
+            "mode": "regex",
+            "pattern": "^\\s*is_ready\\s*=\\s*True\\s*$"
+          }
+        },
+        {
+          "id": "py_var_reassign",
+          "title": "Reassign a variable",
+          "promptMarkdown": "Assume `count = 1` exists. Write one line that reassigns `count` to `count + 1`.",
+          "starterCode": "count = ",
+          "validation": {
+            "mode": "regex",
+            "pattern": "^\\s*count\\s*=\\s*count\\s*\\+\\s*1\\s*$"
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "py_var_mcq_1",
+            "type": "mcq",
+            "prompt": "Which assignment stores text?",
+            "choices": [
+              { "id": "a", "label": "count = 3" },
+              { "id": "b", "label": "label = \"ok\"" },
+              { "id": "c", "label": "both can; quotes mean str" }
+            ],
+            "correctChoiceId": "b"
+          },
+          {
+            "id": "py_var_short",
+            "type": "shortText",
+            "prompt": "What symbol assigns a value in Python? Type **only** that symbol.",
+            "validation": { "mode": "equalsNormalized", "expected": "=" }
+          },
+          {
+            "id": "py_var_mcq_2",
+            "type": "mcq",
+            "prompt": "Which variable name follows common Python style?",
+            "choices": [
+              { "id": "a", "label": "UserAge" },
+              { "id": "b", "label": "user-age" },
+              { "id": "c", "label": "user_age" }
+            ],
+            "correctChoiceId": "c"
+          },
+          {
+            "id": "py_var_short_2",
+            "type": "shortText",
+            "prompt": "Type the boolean literal used for true in Python.",
+            "validation": { "mode": "equalsNormalized", "expected": "True" }
+          }
+        ]
+      }
+    },
+    {
+      "id": "operators",
+      "title": "Operators",
+      "intro": {
+        "title": "Math and comparisons",
+        "bodyMarkdown": "Python supports arithmetic (`+`, `-`, `*`, `/`, `//`, `%`, `**`) and comparisons (`==`, `!=`, `<`, `>`).\n\n```python\ntotal = 3 + 4 * 2   # multiplication first\nok = total > 10\n```"
+      },
+      "challenges": [
+        {
+          "id": "py_op_add",
+          "title": "Addition expression",
+          "promptMarkdown": "Write an expression (not a full statement) that adds `10` and `5`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": ["10", "5", "+"]
+          }
+        },
+        {
+          "id": "py_op_compare",
+          "title": "Comparison",
+          "promptMarkdown": "Write an expression that tests whether `7` is less than `3` (should be false).",
+          "validation": {
+            "mode": "regex",
+            "pattern": "7\\s*<\\s*3"
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "py_op_mcq",
+            "type": "mcq",
+            "prompt": "What does `**` mean in Python?",
+            "choices": [
+              { "id": "a", "label": "Comment" },
+              { "id": "b", "label": "Exponentiation" },
+              { "id": "c", "label": "Integer division" }
+            ],
+            "correctChoiceId": "b"
+          }
+        ]
+      }
+    }
+  ]
+}
