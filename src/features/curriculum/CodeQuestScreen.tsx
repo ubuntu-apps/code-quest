@@ -28,6 +28,7 @@ import {
 } from './pythonSandbox'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { APP_VERSION } from '../../version'
+import { detectPlatform, installInstructions } from '../../platform'
 import { CodeTextareaWithErrorLine } from './codeEditor'
 import { pythonErrorSummaryLine } from './pythonErrorHelper'
 
@@ -116,6 +117,7 @@ function pythonErrorLinePointer(
 
 export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
+  const [platform] = useState(() => detectPlatform())
 
   const [tab, setTab] = useState<TabId>('learn')
   const [, bump] = useReducer((n: number) => n + 1, 0)
@@ -1221,8 +1223,17 @@ ${pyErrPointer.caret}`}
 
   const showBack = tab === 'learn' && learnView !== 'languages'
 
+  const shellClassName =
+    platform === 'android'
+      ? 'cq-shell cq-shell--android'
+      : platform === 'ios'
+        ? 'cq-shell cq-shell--ios'
+        : 'cq-shell'
+
+  const installSteps = installInstructions(platform).split('\n').slice(1)
+
   return (
-    <div className="cq-shell">
+    <div className={shellClassName}>
       <header className="cq-header">
         {showBack ? (
           <button type="button" className="cq-back" onClick={back} aria-label="Back">
@@ -1241,6 +1252,15 @@ ${pyErrPointer.caret}`}
           <p className="cq-lead">
             CodeQuest is a configurable PWA for learning syntax and concepts. Challenges check your answers with patterns you define in JSON — no cloud compiler.
           </p>
+          <section>
+            <h2 className="cq-subtitle">Install on your phone</h2>
+            <p className="cq-muted cq-install-intro">{installInstructions(platform).split('\n')[0]}</p>
+            <ol className="cq-install-steps">
+              {installSteps.map((step) => (
+                <li key={step}>{step.replace(/^\d+\.\s*/, '')}</li>
+              ))}
+            </ol>
+          </section>
           <p className="cq-muted">Version {APP_VERSION}</p>
         </div>
       )}</main>
