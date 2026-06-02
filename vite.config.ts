@@ -22,6 +22,7 @@ export default defineConfig({
         'pwa-512x512-maskable.png',
       ],
       manifest: {
+        id: '/codeQuest/',
         name: 'CodeQuest',
         short_name: 'CodeQuest',
         description: 'Learn to code — fundamentals, challenges, and quizzes.',
@@ -29,6 +30,7 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         display_override: ['standalone', 'fullscreen'],
+        orientation: 'portrait',
         start_url: '/codeQuest/',
         scope: '/codeQuest/',
         icons: [

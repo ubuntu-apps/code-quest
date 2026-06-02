@@ -31,6 +31,7 @@ import { APP_VERSION } from '../../version'
 import { detectPlatform, installInstructions } from '../../platform'
 import { CodeTextareaWithErrorLine } from './codeEditor'
 import { pythonErrorSummaryLine } from './pythonErrorHelper'
+import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 
 type TabId = 'learn' | 'progress' | 'about'
 type LearnView = 'languages' | 'sections' | 'levels' | 'level'
@@ -168,6 +169,7 @@ export function CodeQuestScreen() {
   const [progressBundles, setProgressBundles] = useState<Record<string, LanguageBundle>>({})
   const [progressLoading, setProgressLoading] = useState(false)
   const [progressError, setProgressError] = useState<string | null>(null)
+  const [installResetNotice, setInstallResetNotice] = useState<string | null>(null)
 
   useEffect(() => {
     loadRootIndex(baseUrl)
@@ -1231,6 +1233,10 @@ ${pyErrPointer.caret}`}
         : 'cq-shell'
 
   const installSteps = installInstructions(platform).split('\n').slice(1)
+  const resetInstallPrompt = () => {
+    resetInstallBannerPreference()
+    setInstallResetNotice('Install prompt banner reset for this device.')
+  }
 
   return (
     <div className={shellClassName}>
@@ -1260,6 +1266,12 @@ ${pyErrPointer.caret}`}
                 <li key={step}>{step.replace(/^\d+\.\s*/, '')}</li>
               ))}
             </ol>
+            <div className="cq-row cq-about-actions">
+              <button type="button" className="cq-btn" onClick={resetInstallPrompt}>
+                Reset install prompt
+              </button>
+              {installResetNotice ? <span className="cq-muted">{installResetNotice}</span> : null}
+            </div>
           </section>
           <p className="cq-muted">Version {APP_VERSION}</p>
         </div>
