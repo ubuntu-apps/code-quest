@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/codeQuest/',
+  base: '/code-quest/',
   plugins: [
     react(),
     VitePWA({
@@ -22,7 +22,7 @@ export default defineConfig({
         'pwa-512x512-maskable.png',
       ],
       manifest: {
-        id: '/codeQuest/',
+        id: '/code-quest/',
         name: 'CodeQuest',
         short_name: 'CodeQuest',
         description: 'Learn to code — fundamentals, challenges, and quizzes.',
@@ -31,8 +31,8 @@ export default defineConfig({
         display: 'standalone',
         display_override: ['standalone', 'fullscreen'],
         orientation: 'portrait',
-        start_url: '/codeQuest/',
-        scope: '/codeQuest/',
+        start_url: '/code-quest/',
+        scope: '/code-quest/',
         icons: [
           {
             src: 'pwa-192x192.png',
