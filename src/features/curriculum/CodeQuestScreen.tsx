@@ -32,6 +32,16 @@ import { detectPlatform, installInstructions } from '../../platform'
 import { CodeTextareaWithErrorLine } from './codeEditor'
 import { pythonErrorSummaryLine } from './pythonErrorHelper'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
+import {
+  EditableMarkdown,
+  EditableText,
+  EditableTextarea,
+  EditableTestQuestionEditor,
+  EditableValidationEditor,
+  EditorHeaderButton,
+  EditorToolbar,
+  useEditor,
+} from '../editor'
 
 type TabId = 'learn' | 'progress' | 'about'
 type LearnView = 'languages' | 'sections' | 'levels' | 'level'
@@ -119,6 +129,30 @@ function pythonErrorLinePointer(
 export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
   const [platform] = useState(() => detectPlatform())
+  const editor = useEditor()
+  const {
+    isEditMode,
+    rootIndex: editableRootIndex,
+    syncRootIndex,
+    syncBundle,
+    getBundle,
+    homeLead,
+    updateHomeLead,
+    updateLanguage,
+    updateLanguageTitle,
+    updateSectionTitle,
+    updateLevelTitle,
+    updateLevelIntro,
+    updateChallenge,
+    updateChallengeValidation,
+    updateTestPassingScore,
+    updateTestQuestion,
+    aboutContent,
+    initAboutContent,
+    updateAboutLead,
+    updateAboutInstallIntro,
+    updateAboutInstallStep,
+  } = editor
 
   const [tab, setTab] = useState<TabId>('learn')
   const [, bump] = useReducer((n: number) => n + 1, 0)
@@ -173,9 +207,12 @@ export function CodeQuestScreen() {
 
   useEffect(() => {
     loadRootIndex(baseUrl)
-      .then(setRootIndex)
+      .then((data) => {
+        setRootIndex(data)
+        syncRootIndex(data)
+      })
       .catch((e: unknown) => setRootError(e instanceof Error ? e.message : 'Failed to load catalog'))
-  }, [baseUrl])
+  }, [baseUrl, syncRootIndex])
 
   useEffect(() => {
     if (!rootIndex) return
@@ -188,7 +225,11 @@ export function CodeQuestScreen() {
             return [lang.id, b] as const
           }),
         )
-        if (!cancelled) setHomeBundles(Object.fromEntries(entries))
+        if (!cancelled) {
+          const map = Object.fromEntries(entries)
+          setHomeBundles(map)
+          for (const [langId, b] of entries) syncBundle(langId, b)
+        }
       } catch {
         if (!cancelled) setHomeBundles({})
       }
@@ -196,7 +237,7 @@ export function CodeQuestScreen() {
     return () => {
       cancelled = true
     }
-  }, [rootIndex, baseUrl])
+  }, [rootIndex, baseUrl, syncBundle])
 
   useEffect(() => {
     if (tab !== 'progress' || !rootIndex) return
@@ -213,6 +254,7 @@ export function CodeQuestScreen() {
         )
         if (!cancelled) {
           setProgressBundles(Object.fromEntries(entries))
+          for (const [langId, b] of entries) syncBundle(langId, b)
         }
       } catch (e: unknown) {
         if (!cancelled) {
@@ -225,7 +267,7 @@ export function CodeQuestScreen() {
     return () => {
       cancelled = true
     }
-  }, [tab, rootIndex, baseUrl])
+  }, [tab, rootIndex, baseUrl, syncBundle])
 
   useEffect(() => {
     if (!readMoreOpen) return
@@ -238,21 +280,36 @@ export function CodeQuestScreen() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [readMoreOpen])
 
+  const displayRootIndex = editableRootIndex ?? rootIndex
+
+  const displayBundle = useMemo(() => {
+    if (!languageId) return bundle
+    return getBundle(languageId) ?? bundle
+  }, [languageId, getBundle, bundle])
+
+  const bundleForView = displayBundle ?? bundle
+
   const selectedSection = useMemo(() => {
-    if (!bundle || !sectionId) return null
-    return bundle.sections.find((s) => s.sectionRef.id === sectionId) ?? null
-  }, [bundle, sectionId])
+    if (!bundleForView || !sectionId) return null
+    return bundleForView.sections.find((s) => s.sectionRef.id === sectionId) ?? null
+  }, [bundleForView, sectionId])
 
   const selectedLevel = useMemo(() => {
     if (!selectedSection || !levelId) return null
     return selectedSection.file.levels.find((l) => l.id === levelId) ?? null
   }, [selectedSection, levelId])
 
+  const resolveBundle = useCallback(
+    (langId: string, fallback: LanguageBundle | undefined) => getBundle(langId) ?? fallback ?? null,
+    [getBundle],
+  )
+
   const isLevelUnlocked = useCallback((langId: string, levels: Level[], index: number): boolean => {
+    if (isEditMode) return true
     if (index === 0) return true
     const prev = levels[index - 1]
     return loadProgress(langId, prev.id).testPassed
-  }, [])
+  }, [isEditMode])
 
   const resetLevelWorkState = useCallback((level: Level, langId: string | null) => {
     const drafts: Record<string, string> = {}
@@ -291,12 +348,13 @@ export function CodeQuestScreen() {
       try {
         const b = await loadLanguageBundle(baseUrl, path)
         setBundle(b)
+        syncBundle(id, b)
       } catch (e: unknown) {
         setBundle(null)
         setBundleError(e instanceof Error ? e.message : 'Failed to load language')
       }
     },
-    [baseUrl],
+    [baseUrl, syncBundle],
   )
 
   const openLevelByPath = useCallback(
@@ -348,10 +406,10 @@ export function CodeQuestScreen() {
   )
 
   const totalXp = useMemo(() => {
-    if (!rootIndex) return 0
+    if (!displayRootIndex) return 0
     let xp = 0
-    for (const lang of rootIndex.languages) {
-      const b = homeBundles[lang.id]
+    for (const lang of displayRootIndex.languages) {
+      const b = resolveBundle(lang.id, homeBundles[lang.id]) ?? homeBundles[lang.id]
       if (!b) continue
       for (const { file } of b.sections) {
         for (const lvl of file.levels) {
@@ -360,13 +418,13 @@ export function CodeQuestScreen() {
       }
     }
     return xp
-  }, [homeBundles, rootIndex])
+  }, [homeBundles, displayRootIndex, resolveBundle])
 
   const xpCurrentLevel = totalXp % 100
   const xpLevel = Math.floor(totalXp / 100)
 
   const continueTarget = (() => {
-    if (!rootIndex) return null
+    if (!displayRootIndex) return null
     try {
       const raw = localStorage.getItem(LAST_LEVEL_STORAGE_KEY)
       if (raw) {
@@ -389,8 +447,8 @@ export function CodeQuestScreen() {
       // ignore malformed local storage
     }
 
-    for (const lang of rootIndex.languages) {
-      const b = homeBundles[lang.id]
+    for (const lang of displayRootIndex.languages) {
+      const b = resolveBundle(lang.id, homeBundles[lang.id]) ?? homeBundles[lang.id]
       if (!b) continue
       for (const section of b.sections) {
         for (let i = 0; i < section.file.levels.length; i += 1) {
@@ -596,7 +654,7 @@ export function CodeQuestScreen() {
     if (rootError) {
       return <div className="cq-panel cq-error">{rootError}</div>
     }
-    if (!rootIndex) {
+    if (!displayRootIndex) {
       return <div className="cq-panel cq-muted">Loading catalog…</div>
     }
 
@@ -642,13 +700,26 @@ export function CodeQuestScreen() {
               </div>
             </div>
           </div>
-          <p className="cq-lead">Pick a language. Lessons and quizzes load from JSON — edit files under `public/content/`.</p>
+          <EditableText
+            as="p"
+            className="cq-lead"
+            value={homeLead}
+            onChange={updateHomeLead}
+          />
           <ul className="cq-card-list">
-            {rootIndex.languages.map((lang) => (
+            {displayRootIndex.languages.map((lang) => (
               <li key={lang.id}>
                 <button type="button" className="cq-card-btn" onClick={() => void openLanguage(lang.path, lang.id)}>
-                  <span className="cq-card-title">{lang.title}</span>
-                  <span className="cq-card-meta">{lang.id}</span>
+                  <EditableText
+                    className="cq-card-title"
+                    value={lang.title}
+                    onChange={(title) => updateLanguage(lang.id, { title })}
+                  />
+                  <EditableText
+                    className="cq-card-meta"
+                    value={lang.id}
+                    onChange={(id) => updateLanguage(lang.id, { id })}
+                  />
                 </button>
               </li>
             ))}
@@ -657,18 +728,23 @@ export function CodeQuestScreen() {
       )
     }
 
-    if (bundleError || !bundle) {
+    if (bundleError || !bundleForView) {
       return <div className="cq-panel cq-error">{bundleError ?? 'Loading…'}</div>
     }
 
     if (learnView === 'sections') {
       return (
         <div className="cq-stack">
-          <h1 className="cq-title">{bundle.index.title}</h1>
+          <EditableText
+            as="h1"
+            className="cq-title"
+            value={bundleForView.index.title}
+            onChange={(title) => languageId && updateLanguageTitle(languageId, title)}
+          />
           <p className="cq-lead">Sections</p>
           <ul className="cq-card-list">
-            {bundle.index.sections.map((sec) => {
-              const loaded = bundle.sections.find((s) => s.sectionRef.id === sec.id)
+            {bundleForView.index.sections.map((sec) => {
+              const loaded = bundleForView.sections.find((s) => s.sectionRef.id === sec.id)
               const levels = loaded?.file.levels ?? []
               const completedCount =
                 languageId && levels.length > 0
@@ -690,7 +766,13 @@ export function CodeQuestScreen() {
                       setLearnView('levels')
                     }}
                   >
-                    <span className="cq-card-title">{sec.title}</span>
+                    <EditableText
+                      className="cq-card-title"
+                      value={sec.title}
+                      onChange={(title) =>
+                        languageId && updateSectionTitle(languageId, sec.id, title)
+                      }
+                    />
                     <span className="cq-card-meta">
                       {completedCount}/{levels.length} levels complete · {sectionXp} XP
                     </span>
@@ -709,13 +791,22 @@ export function CodeQuestScreen() {
     if (learnView === 'levels' && selectedSection) {
       return (
         <div className="cq-stack">
-          <h1 className="cq-title">{selectedSection.sectionRef.title}</h1>
+          <EditableText
+            as="h1"
+            className="cq-title"
+            value={selectedSection.sectionRef.title}
+            onChange={(title) =>
+              languageId && updateSectionTitle(languageId, selectedSection.sectionRef.id, title)
+            }
+          />
           <ul className="cq-card-list">
             {selectedSection.file.levels.map((lvl) => {
               const levelIndex = selectedSection.file.levels.findIndex((v) => v.id === lvl.id)
-              const locked = !languageId
-                ? false
-                : !isLevelUnlocked(languageId, selectedSection.file.levels, levelIndex)
+              const locked =
+                !isEditMode &&
+                (!languageId
+                  ? false
+                  : !isLevelUnlocked(languageId, selectedSection.file.levels, levelIndex))
               const p = languageId ? loadProgress(languageId, lvl.id) : null
               const challengesDone =
                 lvl.challenges.length === 0 ||
@@ -729,7 +820,7 @@ export function CodeQuestScreen() {
                     className={`cq-card-btn${locked ? ' cq-card-btn--locked' : ''}`}
                     disabled={locked}
                     onClick={() => {
-                      if (locked || !languageId) return
+                      if ((locked && !isEditMode) || !languageId) return
                       setLevelId(lvl.id)
                       setLevelStep('intro')
                       setLearnView('level')
@@ -739,14 +830,21 @@ export function CodeQuestScreen() {
                         JSON.stringify({
                           languageId,
                           languagePath:
-                            rootIndex?.languages.find((lang) => lang.id === languageId)?.path ?? '',
+                            displayRootIndex?.languages.find((lang) => lang.id === languageId)?.path ?? '',
                           sectionId: selectedSection.sectionRef.id,
                           levelId: lvl.id,
                         }),
                       )
                     }}
                   >
-                    <span className="cq-card-title">{lvl.title}</span>
+                    <EditableText
+                      className="cq-card-title"
+                      value={lvl.title}
+                      onChange={(title) =>
+                        languageId &&
+                        updateLevelTitle(languageId, selectedSection.sectionRef.id, lvl.id, title)
+                      }
+                    />
                     <span className="cq-card-meta">
                       {locked
                         ? 'Locked · pass previous test to unlock'
@@ -775,7 +873,14 @@ export function CodeQuestScreen() {
 
       return (
         <div className="cq-stack cq-level">
-          <h1 className="cq-title">{selectedLevel.title}</h1>
+          <EditableText
+            as="h1"
+            className="cq-title"
+            value={selectedLevel.title}
+            onChange={(title) =>
+              updateLevelTitle(languageId, selectedSection!.sectionRef.id, selectedLevel.id, title)
+            }
+          />
           <div className="cq-step-tabs" role="tablist">
             {stepTabs.map((t) => (
               <button
@@ -793,17 +898,95 @@ export function CodeQuestScreen() {
 
           {levelStep === 'intro' && (
             <section className="cq-panel">
-              {selectedLevel.intro.title && <h2 className="cq-subtitle">{selectedLevel.intro.title}</h2>}
-              <SimpleMarkdown text={selectedLevel.intro.bodyMarkdown} />
-              {selectedLevel.intro.readMore && (
+              {(selectedLevel.intro.title || isEditMode) && (
+                <EditableText
+                  as="h2"
+                  className="cq-subtitle"
+                  value={selectedLevel.intro.title ?? ''}
+                  placeholder="Intro title"
+                  onChange={(title) =>
+                    updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                      title,
+                    })
+                  }
+                />
+              )}
+              <EditableMarkdown
+                value={selectedLevel.intro.bodyMarkdown}
+                onChange={(bodyMarkdown) =>
+                  updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                    bodyMarkdown,
+                  })
+                }
+              />
+              {(selectedLevel.intro.readMore || isEditMode) && (
                 <div className="cq-row">
-                  <button
-                    type="button"
-                    className="cq-btn cq-btn--primary"
-                    onClick={() => setReadMoreOpen(true)}
-                  >
-                    {selectedLevel.intro.readMore.label ?? 'Read more'}
-                  </button>
+                  {selectedLevel.intro.readMore && !isEditMode ? (
+                    <button
+                      type="button"
+                      className="cq-btn cq-btn--primary"
+                      onClick={() => setReadMoreOpen(true)}
+                    >
+                      {selectedLevel.intro.readMore.label ?? 'Read more'}
+                    </button>
+                  ) : (
+                    isEditMode && (
+                      <button
+                        type="button"
+                        className="cq-btn cq-btn--primary"
+                        onClick={() => setReadMoreOpen(true)}
+                        disabled={!selectedLevel.intro.readMore}
+                      >
+                        Preview read more
+                      </button>
+                    )
+                  )}
+                </div>
+              )}
+              {isEditMode && (
+                <div className="cq-editable-block">
+                  <div className="cq-editable-block-label">Read more link</div>
+                  <EditableText
+                    value={selectedLevel.intro.readMore?.label ?? ''}
+                    placeholder="Button label"
+                    onChange={(label) =>
+                      updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                        readMore: {
+                          label,
+                          url: selectedLevel.intro.readMore?.url ?? '',
+                          source: selectedLevel.intro.readMore?.source ?? '',
+                        },
+                      })
+                    }
+                  />
+                  <EditableTextarea
+                    label="URL"
+                    rows={1}
+                    value={selectedLevel.intro.readMore?.url ?? ''}
+                    onChange={(url) =>
+                      updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                        readMore: {
+                          label: selectedLevel.intro.readMore?.label,
+                          url,
+                          source: selectedLevel.intro.readMore?.source ?? '',
+                        },
+                      })
+                    }
+                  />
+                  <EditableTextarea
+                    label="Source credit"
+                    rows={1}
+                    value={selectedLevel.intro.readMore?.source ?? ''}
+                    onChange={(source) =>
+                      updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                        readMore: {
+                          label: selectedLevel.intro.readMore?.label,
+                          url: selectedLevel.intro.readMore?.url ?? '',
+                          source,
+                        },
+                      })
+                    }
+                  />
                 </div>
               )}
 
@@ -942,8 +1125,72 @@ ${sandboxErrorPointer.caret}`}
                     : null
                 return (
                   <div key={ch.id} className="cq-panel cq-challenge-card">
-                    <h2 className="cq-subtitle">{ch.title}</h2>
-                    <SimpleMarkdown text={ch.promptMarkdown} />
+                    <EditableText
+                      as="h2"
+                      className="cq-subtitle"
+                      value={ch.title}
+                      onChange={(title) =>
+                        updateChallenge(languageId, selectedSection!.sectionRef.id, selectedLevel.id, ch.id, {
+                          title,
+                        })
+                      }
+                    />
+                    <EditableMarkdown
+                      value={ch.promptMarkdown}
+                      onChange={(promptMarkdown) =>
+                        updateChallenge(
+                          languageId,
+                          selectedSection!.sectionRef.id,
+                          selectedLevel.id,
+                          ch.id,
+                          { promptMarkdown },
+                        )
+                      }
+                    />
+                    {isEditMode && (
+                      <>
+                        <EditableTextarea
+                          label="Starter code"
+                          rows={2}
+                          value={ch.starterCode ?? ''}
+                          onChange={(starterCode) =>
+                            updateChallenge(
+                              languageId,
+                              selectedSection!.sectionRef.id,
+                              selectedLevel.id,
+                              ch.id,
+                              { starterCode },
+                            )
+                          }
+                        />
+                        <EditableTextarea
+                          label="Hints (one per line)"
+                          rows={2}
+                          value={(ch.hints ?? []).join('\n')}
+                          onChange={(raw) =>
+                            updateChallenge(
+                              languageId,
+                              selectedSection!.sectionRef.id,
+                              selectedLevel.id,
+                              ch.id,
+                              { hints: raw.split('\n').filter((h) => h.length > 0) },
+                            )
+                          }
+                        />
+                        <EditableValidationEditor
+                          validation={ch.validation}
+                          onChange={(validation) =>
+                            updateChallengeValidation(
+                              languageId,
+                              selectedSection!.sectionRef.id,
+                              selectedLevel.id,
+                              ch.id,
+                              validation,
+                            )
+                          }
+                        />
+                      </>
+                    )}
                     <label className="cq-label" htmlFor={`code-${ch.id}`}>
                       Your answer
                     </label>
@@ -1102,7 +1349,28 @@ ${pyErrPointer.caret}`}
           {levelStep === 'test' && (
             <section className="cq-panel cq-test">
               <p className="cq-muted">
-                Passing score: {selectedLevel.test.passingScorePercent ?? PASS_DEFAULT}% ·{' '}
+                Passing score:{' '}
+                {isEditMode ? (
+                  <input
+                    type="number"
+                    className="cq-editable-input"
+                    style={{ width: '4rem', display: 'inline' }}
+                    min={0}
+                    max={100}
+                    value={selectedLevel.test.passingScorePercent ?? PASS_DEFAULT}
+                    onChange={(e) =>
+                      updateTestPassingScore(
+                        languageId,
+                        selectedSection!.sectionRef.id,
+                        selectedLevel.id,
+                        Number(e.target.value),
+                      )
+                    }
+                  />
+                ) : (
+                  selectedLevel.test.passingScorePercent ?? PASS_DEFAULT
+                )}
+                % ·{' '}
                 {prog.testPassed ? 'You already passed at least once.' : 'Answer all questions, then Submit.'}
               </p>
               <ol className="cq-test-list">
@@ -1145,6 +1413,18 @@ ${pyErrPointer.caret}`}
                             />
                           </>
                         )}
+                        <EditableTestQuestionEditor
+                          question={q}
+                          onChange={(question) =>
+                            updateTestQuestion(
+                              languageId,
+                              selectedSection!.sectionRef.id,
+                              selectedLevel.id,
+                              q.id,
+                              question,
+                            )
+                          }
+                        />
                       </div>
                     </div>
                   </li>
@@ -1172,16 +1452,25 @@ ${pyErrPointer.caret}`}
   const renderProgress = () => {
     if (progressLoading) return <div className="cq-panel cq-muted">Loading progress…</div>
     if (progressError) return <div className="cq-panel cq-error">{progressError}</div>
-    if (!rootIndex) return <div className="cq-panel cq-muted">Open the Learn tab once to load catalog.</div>
+    if (!displayRootIndex) return <div className="cq-panel cq-muted">Open the Learn tab once to load catalog.</div>
 
-    const rows: { lang: string; section: string; level: Level; prog: ReturnType<typeof loadProgress> }[] = []
-    for (const lang of rootIndex.languages) {
-      const b = progressBundles[lang.id]
+    const rows: {
+      langId: string
+      lang: string
+      sectionId: string
+      section: string
+      level: Level
+      prog: ReturnType<typeof loadProgress>
+    }[] = []
+    for (const lang of displayRootIndex.languages) {
+      const b = resolveBundle(lang.id, progressBundles[lang.id]) ?? progressBundles[lang.id]
       if (!b) continue
       for (const { sectionRef, file } of b.sections) {
         for (const lvl of file.levels) {
           rows.push({
+            langId: lang.id,
             lang: lang.title,
+            sectionId: sectionRef.id,
             section: sectionRef.title,
             level: lvl,
             prog: loadProgress(lang.id, lvl.id),
@@ -1202,7 +1491,13 @@ ${pyErrPointer.caret}`}
             return (
               <li key={`${r.level.id}-${r.section}`} className="cq-progress-row">
                 <div>
-                  <div className="cq-progress-title">{r.level.title}</div>
+                  <EditableText
+                    className="cq-progress-title"
+                    value={r.level.title}
+                    onChange={(title) =>
+                      updateLevelTitle(r.langId, r.sectionId, r.level.id, title)
+                    }
+                  />
                   <div className="cq-progress-meta">
                     {r.lang} · {r.section}
                   </div>
@@ -1225,18 +1520,27 @@ ${pyErrPointer.caret}`}
 
   const showBack = tab === 'learn' && learnView !== 'languages'
 
-  const shellClassName =
-    platform === 'android'
-      ? 'cq-shell cq-shell--android'
-      : platform === 'ios'
-        ? 'cq-shell cq-shell--ios'
-        : 'cq-shell'
+  const installSteps = aboutContent.installSteps.length
+    ? aboutContent.installSteps
+    : installInstructions(platform).split('\n').slice(1)
+  const installIntro =
+    aboutContent.installIntro || installInstructions(platform).split('\n')[0]
 
-  const installSteps = installInstructions(platform).split('\n').slice(1)
+  useEffect(() => {
+    initAboutContent(installInstructions(platform).split('\n').slice(1))
+  }, [platform, initAboutContent])
+
   const resetInstallPrompt = () => {
     resetInstallBannerPreference()
     setInstallResetNotice('Install prompt banner reset for this device.')
   }
+
+  const shellClassName =
+    (platform === 'android'
+      ? 'cq-shell cq-shell--android'
+      : platform === 'ios'
+        ? 'cq-shell cq-shell--ios'
+        : 'cq-shell') + (isEditMode ? ' cq-shell--edit-mode' : '')
 
   return (
     <div className={shellClassName}>
@@ -1249,21 +1553,40 @@ ${pyErrPointer.caret}`}
           <span className="cq-header-spacer" aria-hidden />
         )}
         <div className="cq-brand">CodeQuest</div>
-        <span className="cq-header-spacer" aria-hidden />
+        <EditorHeaderButton />
       </header>
+
+      <EditorToolbar languageId={languageId} sectionId={sectionId} />
 
       <main className="cq-main">{tab === 'learn' ? renderLearn() : tab === 'progress' ? renderProgress() : (
         <div className="cq-stack cq-about">
           <h1 className="cq-title">About</h1>
-          <p className="cq-lead">
-            CodeQuest is a configurable PWA for learning syntax and concepts. Challenges check your answers with patterns you define in JSON — no cloud compiler.
-          </p>
+          <EditableText
+            as="p"
+            className="cq-lead"
+            value={aboutContent.lead}
+            onChange={updateAboutLead}
+          />
           <section>
             <h2 className="cq-subtitle">Install on your phone</h2>
-            <p className="cq-muted cq-install-intro">{installInstructions(platform).split('\n')[0]}</p>
+            <EditableText
+              as="p"
+              className="cq-muted cq-install-intro"
+              value={installIntro}
+              onChange={updateAboutInstallIntro}
+            />
             <ol className="cq-install-steps">
-              {installSteps.map((step) => (
-                <li key={step}>{step.replace(/^\d+\.\s*/, '')}</li>
+              {installSteps.map((step, i) => (
+                <li key={`${i}-${step.slice(0, 20)}`}>
+                  {isEditMode ? (
+                    <EditableText
+                      value={step.replace(/^\d+\.\s*/, '')}
+                      onChange={(text) => updateAboutInstallStep(i, text)}
+                    />
+                  ) : (
+                    step.replace(/^\d+\.\s*/, '')
+                  )}
+                </li>
               ))}
             </ol>
             <div className="cq-row cq-about-actions">
