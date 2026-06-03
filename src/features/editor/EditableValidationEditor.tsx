@@ -1,6 +1,6 @@
 import type { Validation, ValidationMode } from '../curriculum/types'
 import { EditableBlock, EditableTextarea } from './EditableField'
-import { useEditor } from './EditorContext'
+import { useEditorMode } from './editorHooks'
 
 const MODES: ValidationMode[] = ['equalsNormalized', 'includesAll', 'regex', 'python_tests']
 
@@ -10,7 +10,7 @@ interface EditableValidationEditorProps {
 }
 
 export function EditableValidationEditor({ validation, onChange }: EditableValidationEditorProps) {
-  const { canEdit, isEditMode } = useEditor()
+  const { canEdit, isEditMode } = useEditorMode()
   if (!canEdit || !isEditMode) return null
 
   const setMode = (mode: ValidationMode) => {

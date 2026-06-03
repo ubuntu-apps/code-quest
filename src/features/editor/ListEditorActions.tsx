@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
-import { useEditor } from './EditorContext'
+import { useEditorConfirm, useEditorMode } from './editorHooks'
 
 interface ListEditorActionsProps {
   canMoveUp?: boolean
@@ -18,7 +18,8 @@ export function ListEditorActions({
   confirmMessage = 'Delete this item?',
   onDelete,
 }: ListEditorActionsProps) {
-  const { isEditMode, requestConfirm } = useEditor()
+  const { isEditMode } = useEditorMode()
+  const { requestConfirm } = useEditorConfirm()
   if (!isEditMode) return null
 
   const stop = (e: React.MouseEvent) => e.stopPropagation()
@@ -80,7 +81,7 @@ interface AddItemButtonProps {
 }
 
 export function AddItemButton({ label, onClick }: AddItemButtonProps) {
-  const { isEditMode } = useEditor()
+  const { isEditMode } = useEditorMode()
   if (!isEditMode) return null
 
   return (

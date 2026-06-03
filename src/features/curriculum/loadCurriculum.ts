@@ -5,6 +5,11 @@ import type {
   RootIndex,
   SectionFile,
 } from './types'
+import {
+  parseLanguageIndex,
+  parseRootIndex,
+  parseSectionFile,
+} from './curriculumSchemas'
 
 function languageDirFromPath(languagePath: string): string {
   const idx = languagePath.lastIndexOf('/')
@@ -12,15 +17,19 @@ function languageDirFromPath(languagePath: string): string {
 }
 
 export async function loadRootIndex(baseUrl: string): Promise<RootIndex> {
-  const res = await fetch(`${baseUrl}content/index.json`)
+  const source = 'content/index.json'
+  const res = await fetch(`${baseUrl}${source}`)
   if (!res.ok) throw new Error(`Failed to load curriculum index (${res.status})`)
-  return res.json() as Promise<RootIndex>
+  const data: unknown = await res.json()
+  return parseRootIndex(data, source)
 }
 
 async function loadLanguageIndex(baseUrl: string, languagePath: string): Promise<LanguageIndex> {
-  const res = await fetch(`${baseUrl}content/${languagePath}`)
+  const source = `content/${languagePath}`
+  const res = await fetch(`${baseUrl}${source}`)
   if (!res.ok) throw new Error(`Failed to load language (${res.status})`)
-  return res.json() as Promise<LanguageIndex>
+  const data: unknown = await res.json()
+  return parseLanguageIndex(data, source)
 }
 
 async function loadSectionFile(
@@ -28,9 +37,11 @@ async function loadSectionFile(
   languageDir: string,
   sectionPath: string,
 ): Promise<SectionFile> {
-  const res = await fetch(`${baseUrl}content/${languageDir}${sectionPath}`)
+  const source = `content/${languageDir}${sectionPath}`
+  const res = await fetch(`${baseUrl}${source}`)
   if (!res.ok) throw new Error(`Failed to load section (${res.status})`)
-  return res.json() as Promise<SectionFile>
+  const data: unknown = await res.json()
+  return parseSectionFile(data, source)
 }
 
 export async function loadLanguageBundle(baseUrl: string, languagePath: string): Promise<LanguageBundle> {

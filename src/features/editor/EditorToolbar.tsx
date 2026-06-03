@@ -1,5 +1,5 @@
 import { Download, Pencil, X } from 'lucide-react'
-import { useEditor } from './EditorContext'
+import { useEditorExport, useEditorMode } from './editorHooks'
 
 interface EditorToolbarProps {
   languageId?: string | null
@@ -7,7 +7,7 @@ interface EditorToolbarProps {
 }
 
 export function EditorHeaderButton() {
-  const { canEdit, isEditMode, toggleEditMode } = useEditor()
+  const { canEdit, isEditMode, toggleEditMode } = useEditorMode()
   if (!canEdit) return <span className="cq-header-spacer" aria-hidden />
 
   return (
@@ -24,7 +24,8 @@ export function EditorHeaderButton() {
 }
 
 export function EditorToolbar({ languageId, sectionId }: EditorToolbarProps) {
-  const { isEditMode, exportRootIndex, exportLanguageIndex, exportSection } = useEditor()
+  const { isEditMode } = useEditorMode()
+  const { exportRootIndex, exportLanguageIndex, exportSection } = useEditorExport()
   if (!isEditMode) return null
 
   return (

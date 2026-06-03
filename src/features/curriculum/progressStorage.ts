@@ -32,4 +32,22 @@ export function loadProgress(languageId: string, levelId: string): LevelProgress
 
 export function saveProgress(languageId: string, levelId: string, p: LevelProgress): void {
   localStorage.setItem(progressKey(languageId, levelId), JSON.stringify(p))
+  notifyProgressChanged()
+}
+
+let progressVersion = 0
+const progressListeners = new Set<() => void>()
+
+export function subscribeProgress(listener: () => void): () => void {
+  progressListeners.add(listener)
+  return () => progressListeners.delete(listener)
+}
+
+export function getProgressSnapshot(): number {
+  return progressVersion
+}
+
+function notifyProgressChanged(): void {
+  progressVersion += 1
+  for (const listener of progressListeners) listener()
 }
