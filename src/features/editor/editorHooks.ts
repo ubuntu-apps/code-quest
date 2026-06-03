@@ -3,8 +3,10 @@ import { useEditor } from './EditorContext'
 
 export type EditorModeValue = Pick<
   EditorContextValue,
-  'canEdit' | 'isEditMode' | 'setEditMode' | 'toggleEditMode'
->
+  'canEdit' | 'isEditMode' | 'setEditMode' | 'toggleEditMode' | 'contentSource' | 'setContentSource' | 'githubHomeLead'
+> & {
+  isEditingLocal: boolean
+}
 
 export type EditorConfirmValue = Pick<EditorContextValue, 'requestConfirm'>
 
@@ -62,9 +64,22 @@ export type EditorAboutValue = Pick<
   | 'moveAboutInstallStep'
 >
 
+export type EditorGitHubValue = Pick<EditorContextValue, 'importFromGitHub' | 'saveToGitHub'>
+
 export function useEditorMode(): EditorModeValue {
-  const { canEdit, isEditMode, setEditMode, toggleEditMode } = useEditor()
-  return { canEdit, isEditMode, setEditMode, toggleEditMode }
+  const { canEdit, isEditMode, setEditMode, toggleEditMode, contentSource, setContentSource, githubHomeLead } =
+    useEditor()
+  const isEditingLocal = isEditMode && contentSource === 'local'
+  return {
+    canEdit,
+    isEditMode,
+    setEditMode,
+    toggleEditMode,
+    contentSource,
+    setContentSource,
+    githubHomeLead,
+    isEditingLocal,
+  }
 }
 
 export function useEditorConfirm(): EditorConfirmValue {
@@ -129,5 +144,13 @@ export function useEditorAbout(): EditorAboutValue {
     addAboutInstallStep: ctx.addAboutInstallStep,
     removeAboutInstallStep: ctx.removeAboutInstallStep,
     moveAboutInstallStep: ctx.moveAboutInstallStep,
+  }
+}
+
+export function useEditorGitHub(): EditorGitHubValue {
+  const ctx = useEditor()
+  return {
+    importFromGitHub: ctx.importFromGitHub,
+    saveToGitHub: ctx.saveToGitHub,
   }
 }

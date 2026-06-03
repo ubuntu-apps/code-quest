@@ -2,12 +2,11 @@ import type { Level, TestQuestion } from '../types'
 import type { LevelProgress } from '../progressStorage'
 import { PASS_DEFAULT } from '../constants'
 import { SimpleMarkdown } from '../SimpleMarkdown'
-import { AddItemButton, EditableTestQuestionEditor, ListEditorActions } from '../../editor'
+import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditorMode } from '../../editor'
 
 interface TestStepProps {
   level: Level
   prog: LevelProgress
-  isEditMode: boolean
   testShort: Record<string, string>
   testMcq: Record<string, string>
   testResult: { correct: number; total: number; passed: boolean } | null
@@ -24,7 +23,6 @@ interface TestStepProps {
 export function TestStep({
   level,
   prog,
-  isEditMode,
   testShort,
   testMcq,
   testResult,
@@ -37,11 +35,13 @@ export function TestStep({
   onAddQuestion,
   onSubmit,
 }: TestStepProps) {
+  const { isEditingLocal } = useEditorMode()
+
   return (
     <section className="cq-panel cq-test">
       <p className="cq-muted">
         Passing score:{' '}
-        {isEditMode ? (
+        {isEditingLocal ? (
           <input
             type="number"
             className="cq-editable-input"

@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -16,6 +17,8 @@ import type {
 import { moveItem, removeAt } from './arrayHelpers'
 import { mergeAboutContent, type AboutContent } from './aboutContent'
 import { ConfirmDialog } from './ConfirmDialog'
+import { cloneBundle, cloneRootIndex, patchBundle, patchSectionLevels as patchBundleSectionLevels } from './curriculumPatch'
+import { loadLanguageBundle, loadRootIndex } from '../curriculum/loadCurriculum'
 import {
   createDefaultChallenge,
   createDefaultLanguage,
@@ -30,19 +33,27 @@ import {
   loadDraftBundle,
   loadDraftHomeLead,
   loadDraftRootIndex,
+  loadContentSource,
+  saveContentSource,
   saveDraftAbout,
   saveDraftBundle,
   saveDraftHomeLead,
   saveDraftRootIndex,
+  type ContentSource,
 } from './curriculumDraftStorage'
-import { canEditContent } from './editorAuth'
+import { canEditContent, subscribeGitHubAuth } from './editorAuth'
 import { downloadJson } from './exportCurriculum'
+import { saveCurriculumToGitHub } from './githubCurriculumApi'
 
 export interface EditorContextValue {
   canEdit: boolean
   isEditMode: boolean
   setEditMode: (value: boolean) => void
   toggleEditMode: () => void
+
+  contentSource: ContentSource
+  setContentSource: (source: ContentSource) => void
+  githubHomeLead: string
 
   rootIndex: RootIndex | null
   syncRootIndex: (fetched: RootIndex) => void
@@ -139,6 +150,9 @@ export interface EditorContextValue {
   exportRootIndex: () => void
   exportLanguageIndex: (langId: string) => void
   exportSection: (langId: string, sectionId: string) => void
+
+  importFromGitHub: (baseUrl: string) => Promise<void>
+  saveToGitHub: (onProgress?: (label: string, index: number, total: number) => void) => Promise<void>
 }
 
 const EditorContext = createContext<EditorContextValue | null>(null)
@@ -146,37 +160,21 @@ const EditorContext = createContext<EditorContextValue | null>(null)
 const DEFAULT_HOME_LEAD =
   'Pick a language. Lessons and quizzes load from JSON — edit files under `public/content/` or use Edit mode.'
 
-function cloneBundle(bundle: LanguageBundle): LanguageBundle {
-  return structuredClone(bundle)
-}
+export { DEFAULT_HOME_LEAD }
 
-function cloneRootIndex(root: RootIndex): RootIndex {
-  return structuredClone(root)
-}
-
-function patchBundle(
-  bundle: LanguageBundle,
-  sectionId: string,
-  levelId: string,
-  patchLevel: (level: Level) => Level,
-): LanguageBundle {
-  const next = cloneBundle(bundle)
-  for (const section of next.sections) {
-    if (section.sectionRef.id !== sectionId) continue
-    section.file.levels = section.file.levels.map((lvl) =>
-      lvl.id === levelId ? patchLevel(lvl) : lvl,
-    )
-    const secRef = next.index.sections.find((s) => s.id === sectionId)
-    if (secRef && section.file.title) {
-      secRef.title = section.file.title
-    }
-  }
-  return next
+function useCanEdit(): boolean {
+  const [canEdit, setCanEdit] = useState(() => canEditContent())
+  useEffect(() => {
+    setCanEdit(canEditContent())
+    return subscribeGitHubAuth(() => setCanEdit(canEditContent()))
+  }, [])
+  return canEdit
 }
 
 export function EditorProvider({ children }: { children: ReactNode }) {
-  const canEdit = canEditContent()
+  const canEdit = useCanEdit()
   const [isEditMode, setEditMode] = useState(false)
+  const [contentSource, setContentSourceState] = useState<ContentSource>(() => loadContentSource())
   const [rootIndex, setRootIndex] = useState<RootIndex | null>(() => loadDraftRootIndex())
   const [bundles, setBundles] = useState<Record<string, LanguageBundle>>({})
   const [homeLead, setHomeLead] = useState(
@@ -364,7 +362,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     [bundles, persistBundle],
   )
 
-  const patchSectionLevels = useCallback(
+  const applySectionLevelsPatch = useCallback(
     (
       langId: string,
       sectionId: string,
@@ -372,12 +370,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     ): LanguageBundle | null => {
       const bundle = bundles[langId]
       if (!bundle) return null
-      const next = cloneBundle(bundle)
-      for (const section of next.sections) {
-        if (section.sectionRef.id !== sectionId) continue
-        section.file.levels = patchLevels(section.file.levels)
-      }
-      return next
+      return patchBundleSectionLevels(bundle, sectionId, patchLevels)
     },
     [bundles],
   )
@@ -466,23 +459,23 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const addLevel = useCallback(
     (langId: string, sectionId: string): string | null => {
       const level = createDefaultLevel()
-      const next = patchSectionLevels(langId, sectionId, (levels) => [...levels, level])
+      const next = applySectionLevelsPatch(langId, sectionId, (levels) => [...levels, level])
       if (!next) return null
       persistBundle(langId, next)
       return level.id
     },
-    [patchSectionLevels, persistBundle],
+    [applySectionLevelsPatch, persistBundle],
   )
 
   const removeLevel = useCallback(
     (langId: string, sectionId: string, levelId: string) => {
-      const next = patchSectionLevels(langId, sectionId, (levels) =>
+      const next = applySectionLevelsPatch(langId, sectionId, (levels) =>
         levels.filter((l) => l.id !== levelId),
       )
       if (!next) return
       persistBundle(langId, next)
     },
-    [patchSectionLevels, persistBundle],
+    [applySectionLevelsPatch, persistBundle],
   )
 
   const moveLevel = useCallback(
@@ -493,11 +486,11 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       if (!section) return
       const index = section.file.levels.findIndex((l) => l.id === levelId)
       if (index < 0) return
-      const next = patchSectionLevels(langId, sectionId, (levels) => moveItem(levels, index, direction))
+      const next = applySectionLevelsPatch(langId, sectionId, (levels) => moveItem(levels, index, direction))
       if (!next) return
       persistBundle(langId, next)
     },
-    [bundles, patchSectionLevels, persistBundle],
+    [bundles, applySectionLevelsPatch, persistBundle],
   )
 
   const addChallenge = useCallback(
@@ -702,8 +695,35 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     [bundles],
   )
 
+  const importFromGitHub = useCallback(
+    async (baseUrl: string) => {
+      const fetchedRoot = await loadRootIndex(baseUrl)
+      persistRoot(cloneRootIndex(fetchedRoot))
+      for (const lang of fetchedRoot.languages) {
+        const bundle = await loadLanguageBundle(baseUrl, lang.path)
+        persistBundle(lang.id, cloneBundle(bundle))
+      }
+      setContentSourceState('local')
+      saveContentSource('local')
+    },
+    [persistRoot, persistBundle],
+  )
+
+  const saveToGitHub = useCallback(
+    async (onProgress?: (label: string, index: number, total: number) => void) => {
+      if (!rootIndex) throw new Error('No local curriculum to save.')
+      await saveCurriculumToGitHub(rootIndex, bundles, onProgress)
+    },
+    [rootIndex, bundles],
+  )
+
   const toggleEditMode = useCallback(() => {
     setEditMode((v) => !v)
+  }, [])
+
+  const setContentSource = useCallback((source: ContentSource) => {
+    setContentSourceState(source)
+    saveContentSource(source)
   }, [])
 
   const value = useMemo<EditorContextValue>(
@@ -712,6 +732,9 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       isEditMode,
       setEditMode,
       toggleEditMode,
+      contentSource,
+      setContentSource,
+      githubHomeLead: DEFAULT_HOME_LEAD,
       rootIndex,
       syncRootIndex,
       updateLanguage,
@@ -753,11 +776,15 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       exportRootIndex,
       exportLanguageIndex,
       exportSection,
+      importFromGitHub,
+      saveToGitHub,
     }),
     [
       canEdit,
       isEditMode,
       toggleEditMode,
+      contentSource,
+      setContentSource,
       rootIndex,
       syncRootIndex,
       updateLanguage,
@@ -799,6 +826,8 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       exportRootIndex,
       exportLanguageIndex,
       exportSection,
+      importFromGitHub,
+      saveToGitHub,
     ],
   )
 

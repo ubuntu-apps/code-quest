@@ -18,9 +18,9 @@ export function ListEditorActions({
   confirmMessage = 'Delete this item?',
   onDelete,
 }: ListEditorActionsProps) {
-  const { isEditMode } = useEditorMode()
+  const { isEditingLocal } = useEditorMode()
   const { requestConfirm } = useEditorConfirm()
-  if (!isEditMode) return null
+  if (!isEditingLocal) return null
 
   const stop = (e: React.MouseEvent) => e.stopPropagation()
 
@@ -81,8 +81,8 @@ interface AddItemButtonProps {
 }
 
 export function AddItemButton({ label, onClick }: AddItemButtonProps) {
-  const { isEditMode } = useEditorMode()
-  if (!isEditMode) return null
+  const { isEditingLocal } = useEditorMode()
+  if (!isEditingLocal) return null
 
   return (
     <button type="button" className="cq-btn cq-add-item-btn" onClick={onClick}>

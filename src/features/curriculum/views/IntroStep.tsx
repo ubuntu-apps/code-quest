@@ -4,6 +4,7 @@ import {
   EditableMarkdown,
   EditableText,
   EditableTextarea,
+  useEditorMode,
 } from '../../editor'
 import { PythonSandboxSection } from '../components/PythonSandboxSection'
 import type { FriendlyPythonError } from '../pythonSandbox'
@@ -11,7 +12,6 @@ import type { FriendlyPythonError } from '../pythonSandbox'
 interface IntroStepProps {
   level: Level
   languageId: string
-  isEditMode: boolean
   sandboxCode: string
   sandboxOutput: string
   sandboxRunning: boolean
@@ -28,7 +28,6 @@ interface IntroStepProps {
 export function IntroStep({
   level,
   languageId,
-  isEditMode,
   sandboxCode,
   sandboxOutput,
   sandboxRunning,
@@ -41,9 +40,11 @@ export function IntroStep({
   onSandboxReset,
   onSandboxErrorClear,
 }: IntroStepProps) {
+  const { isEditingLocal } = useEditorMode()
+
   return (
     <section className="cq-panel">
-      {(level.intro.title || isEditMode) && (
+      {(level.intro.title || isEditingLocal) && (
         <EditableText
           as="h2"
           className="cq-subtitle"
@@ -56,14 +57,14 @@ export function IntroStep({
         value={level.intro.bodyMarkdown}
         onChange={(bodyMarkdown) => onUpdateIntro({ bodyMarkdown })}
       />
-      {(level.intro.readMore || isEditMode) && (
+      {(level.intro.readMore || isEditingLocal) && (
         <div className="cq-row">
-          {level.intro.readMore && !isEditMode ? (
+          {level.intro.readMore && !isEditingLocal ? (
             <button type="button" className="cq-btn cq-btn--primary" onClick={onReadMoreOpen}>
               {level.intro.readMore.label ?? 'Read more'}
             </button>
           ) : (
-            isEditMode && (
+            isEditingLocal && (
               <button
                 type="button"
                 className="cq-btn cq-btn--primary"
@@ -76,7 +77,7 @@ export function IntroStep({
           )}
         </div>
       )}
-      {isEditMode && (
+      {isEditingLocal && (
         <EditableBlock label="Read more link">
           <EditableText
             value={level.intro.readMore?.label ?? ''}
