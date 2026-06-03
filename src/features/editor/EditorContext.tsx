@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -44,6 +42,8 @@ import {
 import { canEditContent, subscribeGitHubAuth } from './editorAuth'
 import { downloadJson } from './exportCurriculum'
 import { saveCurriculumToGitHub } from './githubCurriculumApi'
+import { DEFAULT_HOME_LEAD } from './editorConstants'
+import { EditorContext } from './editorReactContext'
 
 export interface EditorContextValue {
   canEdit: boolean
@@ -155,19 +155,9 @@ export interface EditorContextValue {
   saveToGitHub: (onProgress?: (label: string, index: number, total: number) => void) => Promise<void>
 }
 
-const EditorContext = createContext<EditorContextValue | null>(null)
-
-const DEFAULT_HOME_LEAD =
-  'Pick a language. Lessons and quizzes load from JSON — edit files under `public/content/` or use Edit mode.'
-
-export { DEFAULT_HOME_LEAD }
-
 function useCanEdit(): boolean {
   const [canEdit, setCanEdit] = useState(() => canEditContent())
-  useEffect(() => {
-    setCanEdit(canEditContent())
-    return subscribeGitHubAuth(() => setCanEdit(canEditContent()))
-  }, [])
+  useEffect(() => subscribeGitHubAuth(() => setCanEdit(canEditContent())), [])
   return canEdit
 }
 
@@ -842,10 +832,4 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       />
     </EditorContext.Provider>
   )
-}
-
-export function useEditor(): EditorContextValue {
-  const ctx = useContext(EditorContext)
-  if (!ctx) throw new Error('useEditor must be used within EditorProvider')
-  return ctx
 }

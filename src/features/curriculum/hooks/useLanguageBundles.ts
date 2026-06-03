@@ -12,12 +12,7 @@ export function useLanguageBundles(
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!rootIndex) {
-      setBundles({})
-      setLoading(false)
-      setError(null)
-      return
-    }
+    if (!rootIndex) return
 
     let cancelled = false
     void (async () => {
@@ -50,5 +45,9 @@ export function useLanguageBundles(
     }
   }, [rootIndex, baseUrl, syncBundle])
 
-  return { bundles, loading, error }
+  return {
+    bundles: rootIndex ? bundles : {},
+    loading: rootIndex ? loading : false,
+    error: rootIndex ? error : null,
+  }
 }
