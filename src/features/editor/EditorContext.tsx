@@ -14,7 +14,18 @@ import type {
   TestQuestion,
   Validation,
 } from '../curriculum/types'
+import { moveItem, removeAt } from './arrayHelpers'
 import { mergeAboutContent, type AboutContent } from './aboutContent'
+import { ConfirmDialog } from './ConfirmDialog'
+import {
+  createDefaultChallenge,
+  createDefaultLanguage,
+  createDefaultLevel,
+  createDefaultMcqQuestion,
+  createDefaultSection,
+  createDefaultShortTextQuestion,
+  newId,
+} from './curriculumDefaults'
 import {
   loadDraftAbout,
   loadDraftBundle,
@@ -77,6 +88,54 @@ interface EditorContextValue {
     question: TestQuestion,
   ) => void
 
+  requestConfirm: (message: string) => Promise<boolean>
+
+  addLanguage: () => string | null
+  removeLanguage: (langId: string) => void
+  moveLanguage: (langId: string, direction: -1 | 1) => void
+
+  addSection: (langId: string) => string | null
+  removeSection: (langId: string, sectionId: string) => void
+  moveSection: (langId: string, sectionId: string, direction: -1 | 1) => void
+
+  addLevel: (langId: string, sectionId: string) => string | null
+  removeLevel: (langId: string, sectionId: string, levelId: string) => void
+  moveLevel: (langId: string, sectionId: string, levelId: string, direction: -1 | 1) => void
+
+  addChallenge: (langId: string, sectionId: string, levelId: string) => string | null
+  removeChallenge: (langId: string, sectionId: string, levelId: string, challengeId: string) => void
+  moveChallenge: (
+    langId: string,
+    sectionId: string,
+    levelId: string,
+    challengeId: string,
+    direction: -1 | 1,
+  ) => void
+
+  addTestQuestion: (
+    langId: string,
+    sectionId: string,
+    levelId: string,
+    type: 'mcq' | 'shortText',
+  ) => string | null
+  removeTestQuestion: (
+    langId: string,
+    sectionId: string,
+    levelId: string,
+    questionId: string,
+  ) => void
+  moveTestQuestion: (
+    langId: string,
+    sectionId: string,
+    levelId: string,
+    questionId: string,
+    direction: -1 | 1,
+  ) => void
+
+  addAboutInstallStep: () => void
+  removeAboutInstallStep: (index: number) => void
+  moveAboutInstallStep: (index: number, direction: -1 | 1) => void
+
   aboutContent: AboutContent
   initAboutContent: (platformSteps: string[]) => void
   updateAboutLead: (text: string) => void
@@ -132,6 +191,23 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     return draft ?? mergeAboutContent([], null)
   })
   const [aboutInitialized, setAboutInitialized] = useState(false)
+  const [confirmState, setConfirmState] = useState<{
+    message: string
+    resolve: (value: boolean) => void
+  } | null>(null)
+
+  const requestConfirm = useCallback((message: string) => {
+    return new Promise<boolean>((resolve) => {
+      setConfirmState({ message, resolve })
+    })
+  }, [])
+
+  const closeConfirm = useCallback((result: boolean) => {
+    setConfirmState((prev) => {
+      prev?.resolve(result)
+      return null
+    })
+  }, [])
 
   const syncRootIndex = useCallback((fetched: RootIndex) => {
     setRootIndex((prev) => {
@@ -304,6 +380,282 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     [bundles, persistBundle],
   )
 
+  const patchSectionLevels = useCallback(
+    (
+      langId: string,
+      sectionId: string,
+      patchLevels: (levels: Level[]) => Level[],
+    ): LanguageBundle | null => {
+      const bundle = bundles[langId]
+      if (!bundle) return null
+      const next = cloneBundle(bundle)
+      for (const section of next.sections) {
+        if (section.sectionRef.id !== sectionId) continue
+        section.file.levels = patchLevels(section.file.levels)
+      }
+      return next
+    },
+    [bundles],
+  )
+
+  const addLanguage = useCallback((): string | null => {
+    if (!rootIndex) return null
+    const langId = newId('lang')
+    const { rootEntry, bundle } = createDefaultLanguage(langId)
+    const nextRoot = cloneRootIndex(rootIndex)
+    nextRoot.languages.push(rootEntry)
+    persistRoot(nextRoot)
+    persistBundle(langId, bundle)
+    return langId
+  }, [rootIndex, persistRoot, persistBundle])
+
+  const removeLanguage = useCallback(
+    (langId: string) => {
+      if (!rootIndex) return
+      const nextRoot = cloneRootIndex(rootIndex)
+      nextRoot.languages = nextRoot.languages.filter((l) => l.id !== langId)
+      persistRoot(nextRoot)
+      setBundles((prev) => {
+        const next = { ...prev }
+        delete next[langId]
+        return next
+      })
+    },
+    [rootIndex, persistRoot],
+  )
+
+  const moveLanguage = useCallback(
+    (langId: string, direction: -1 | 1) => {
+      if (!rootIndex) return
+      const index = rootIndex.languages.findIndex((l) => l.id === langId)
+      if (index < 0) return
+      const nextRoot = cloneRootIndex(rootIndex)
+      nextRoot.languages = moveItem(nextRoot.languages, index, direction)
+      persistRoot(nextRoot)
+    },
+    [rootIndex, persistRoot],
+  )
+
+  const addSection = useCallback(
+    (langId: string): string | null => {
+      const bundle = bundles[langId]
+      if (!bundle) return null
+      const { sectionId, path, sectionFile } = createDefaultSection()
+      const next = cloneBundle(bundle)
+      next.index.sections.push({ id: sectionId, title: sectionFile.title ?? 'New section', path })
+      next.sections.push({
+        sectionRef: { id: sectionId, title: sectionFile.title ?? 'New section', path },
+        file: sectionFile,
+      })
+      persistBundle(langId, next)
+      return sectionId
+    },
+    [bundles, persistBundle],
+  )
+
+  const removeSection = useCallback(
+    (langId: string, sectionId: string) => {
+      const bundle = bundles[langId]
+      if (!bundle) return
+      const next = cloneBundle(bundle)
+      next.index.sections = next.index.sections.filter((s) => s.id !== sectionId)
+      next.sections = next.sections.filter((s) => s.sectionRef.id !== sectionId)
+      persistBundle(langId, next)
+    },
+    [bundles, persistBundle],
+  )
+
+  const moveSection = useCallback(
+    (langId: string, sectionId: string, direction: -1 | 1) => {
+      const bundle = bundles[langId]
+      if (!bundle) return
+      const index = bundle.index.sections.findIndex((s) => s.id === sectionId)
+      if (index < 0) return
+      const next = cloneBundle(bundle)
+      next.index.sections = moveItem(next.index.sections, index, direction)
+      next.sections = moveItem(next.sections, index, direction)
+      persistBundle(langId, next)
+    },
+    [bundles, persistBundle],
+  )
+
+  const addLevel = useCallback(
+    (langId: string, sectionId: string): string | null => {
+      const level = createDefaultLevel()
+      const next = patchSectionLevels(langId, sectionId, (levels) => [...levels, level])
+      if (!next) return null
+      persistBundle(langId, next)
+      return level.id
+    },
+    [patchSectionLevels, persistBundle],
+  )
+
+  const removeLevel = useCallback(
+    (langId: string, sectionId: string, levelId: string) => {
+      const next = patchSectionLevels(langId, sectionId, (levels) =>
+        levels.filter((l) => l.id !== levelId),
+      )
+      if (!next) return
+      persistBundle(langId, next)
+    },
+    [patchSectionLevels, persistBundle],
+  )
+
+  const moveLevel = useCallback(
+    (langId: string, sectionId: string, levelId: string, direction: -1 | 1) => {
+      const bundle = bundles[langId]
+      if (!bundle) return
+      const section = bundle.sections.find((s) => s.sectionRef.id === sectionId)
+      if (!section) return
+      const index = section.file.levels.findIndex((l) => l.id === levelId)
+      if (index < 0) return
+      const next = patchSectionLevels(langId, sectionId, (levels) => moveItem(levels, index, direction))
+      if (!next) return
+      persistBundle(langId, next)
+    },
+    [bundles, patchSectionLevels, persistBundle],
+  )
+
+  const addChallenge = useCallback(
+    (langId: string, sectionId: string, levelId: string): string | null => {
+      const challenge = createDefaultChallenge()
+      const bundle = bundles[langId]
+      if (!bundle) return null
+      const next = patchBundle(bundle, sectionId, levelId, (lvl) => ({
+        ...lvl,
+        challenges: [...lvl.challenges, challenge],
+      }))
+      persistBundle(langId, next)
+      return challenge.id
+    },
+    [bundles, persistBundle],
+  )
+
+  const removeChallenge = useCallback(
+    (langId: string, sectionId: string, levelId: string, challengeId: string) => {
+      const bundle = bundles[langId]
+      if (!bundle) return
+      const next = patchBundle(bundle, sectionId, levelId, (lvl) => ({
+        ...lvl,
+        challenges: lvl.challenges.filter((ch) => ch.id !== challengeId),
+      }))
+      persistBundle(langId, next)
+    },
+    [bundles, persistBundle],
+  )
+
+  const moveChallenge = useCallback(
+    (
+      langId: string,
+      sectionId: string,
+      levelId: string,
+      challengeId: string,
+      direction: -1 | 1,
+    ) => {
+      const bundle = bundles[langId]
+      if (!bundle) return
+      const section = bundle.sections.find((s) => s.sectionRef.id === sectionId)
+      const level = section?.file.levels.find((l) => l.id === levelId)
+      if (!level) return
+      const index = level.challenges.findIndex((ch) => ch.id === challengeId)
+      if (index < 0) return
+      const next = patchBundle(bundle, sectionId, levelId, (lvl) => ({
+        ...lvl,
+        challenges: moveItem(lvl.challenges, index, direction),
+      }))
+      persistBundle(langId, next)
+    },
+    [bundles, persistBundle],
+  )
+
+  const addTestQuestion = useCallback(
+    (
+      langId: string,
+      sectionId: string,
+      levelId: string,
+      type: 'mcq' | 'shortText',
+    ): string | null => {
+      const question =
+        type === 'mcq' ? createDefaultMcqQuestion() : createDefaultShortTextQuestion()
+      const bundle = bundles[langId]
+      if (!bundle) return null
+      const next = patchBundle(bundle, sectionId, levelId, (lvl) => ({
+        ...lvl,
+        test: { ...lvl.test, questions: [...lvl.test.questions, question] },
+      }))
+      persistBundle(langId, next)
+      return question.id
+    },
+    [bundles, persistBundle],
+  )
+
+  const removeTestQuestion = useCallback(
+    (langId: string, sectionId: string, levelId: string, questionId: string) => {
+      const bundle = bundles[langId]
+      if (!bundle) return
+      const next = patchBundle(bundle, sectionId, levelId, (lvl) => ({
+        ...lvl,
+        test: {
+          ...lvl.test,
+          questions: lvl.test.questions.filter((q) => q.id !== questionId),
+        },
+      }))
+      persistBundle(langId, next)
+    },
+    [bundles, persistBundle],
+  )
+
+  const moveTestQuestion = useCallback(
+    (
+      langId: string,
+      sectionId: string,
+      levelId: string,
+      questionId: string,
+      direction: -1 | 1,
+    ) => {
+      const bundle = bundles[langId]
+      if (!bundle) return
+      const section = bundle.sections.find((s) => s.sectionRef.id === sectionId)
+      const level = section?.file.levels.find((l) => l.id === levelId)
+      if (!level) return
+      const index = level.test.questions.findIndex((q) => q.id === questionId)
+      if (index < 0) return
+      const next = patchBundle(bundle, sectionId, levelId, (lvl) => ({
+        ...lvl,
+        test: {
+          ...lvl.test,
+          questions: moveItem(lvl.test.questions, index, direction),
+        },
+      }))
+      persistBundle(langId, next)
+    },
+    [bundles, persistBundle],
+  )
+
+  const addAboutInstallStep = useCallback(() => {
+    setAboutContent((prev) => {
+      const next = { ...prev, installSteps: [...prev.installSteps, 'New step'] }
+      saveDraftAbout(next)
+      return next
+    })
+  }, [])
+
+  const removeAboutInstallStep = useCallback((index: number) => {
+    setAboutContent((prev) => {
+      const next = { ...prev, installSteps: removeAt(prev.installSteps, index) }
+      saveDraftAbout(next)
+      return next
+    })
+  }, [])
+
+  const moveAboutInstallStep = useCallback((index: number, direction: -1 | 1) => {
+    setAboutContent((prev) => {
+      const next = { ...prev, installSteps: moveItem(prev.installSteps, index, direction) }
+      saveDraftAbout(next)
+      return next
+    })
+  }, [])
+
   const initAboutContent = useCallback(
     (platformSteps: string[]) => {
       if (aboutInitialized) return
@@ -391,6 +743,25 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       updateChallengeValidation,
       updateTestPassingScore,
       updateTestQuestion,
+      requestConfirm,
+      addLanguage,
+      removeLanguage,
+      moveLanguage,
+      addSection,
+      removeSection,
+      moveSection,
+      addLevel,
+      removeLevel,
+      moveLevel,
+      addChallenge,
+      removeChallenge,
+      moveChallenge,
+      addTestQuestion,
+      removeTestQuestion,
+      moveTestQuestion,
+      addAboutInstallStep,
+      removeAboutInstallStep,
+      moveAboutInstallStep,
       aboutContent,
       initAboutContent,
       updateAboutLead,
@@ -419,6 +790,25 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       updateChallengeValidation,
       updateTestPassingScore,
       updateTestQuestion,
+      requestConfirm,
+      addLanguage,
+      removeLanguage,
+      moveLanguage,
+      addSection,
+      removeSection,
+      moveSection,
+      addLevel,
+      removeLevel,
+      moveLevel,
+      addChallenge,
+      removeChallenge,
+      moveChallenge,
+      addTestQuestion,
+      removeTestQuestion,
+      moveTestQuestion,
+      addAboutInstallStep,
+      removeAboutInstallStep,
+      moveAboutInstallStep,
       aboutContent,
       initAboutContent,
       updateAboutLead,
@@ -430,7 +820,17 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     ],
   )
 
-  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
+  return (
+    <EditorContext.Provider value={value}>
+      {children}
+      <ConfirmDialog
+        open={confirmState !== null}
+        message={confirmState?.message ?? ''}
+        onCancel={() => closeConfirm(false)}
+        onConfirm={() => closeConfirm(true)}
+      />
+    </EditorContext.Provider>
+  )
 }
 
 export function useEditor(): EditorContextValue {
