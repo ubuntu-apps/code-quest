@@ -1,5 +1,5 @@
 import type { Validation, ValidationMode } from '../curriculum/types'
-import { EditableTextarea } from './EditableField'
+import { EditableBlock, EditableTextarea } from './EditableField'
 import { useEditor } from './EditorContext'
 
 const MODES: ValidationMode[] = ['equalsNormalized', 'includesAll', 'regex', 'python_tests']
@@ -18,8 +18,7 @@ export function EditableValidationEditor({ validation, onChange }: EditableValid
   }
 
   return (
-    <div className="cq-editable-block">
-      <div className="cq-editable-block-label">Validation</div>
+    <EditableBlock label="Validation">
       <label className="cq-editable-field">
         <span className="cq-label">Mode</span>
         <select
@@ -101,6 +100,6 @@ export function EditableValidationEditor({ validation, onChange }: EditableValid
           ))}
         </>
       )}
-    </div>
+    </EditableBlock>
   )
 }

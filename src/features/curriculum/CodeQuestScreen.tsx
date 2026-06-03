@@ -34,6 +34,7 @@ import { pythonErrorSummaryLine } from './pythonErrorHelper'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
   AddItemButton,
+  EditableBlock,
   EditableMarkdown,
   EditableText,
   EditableTextarea,
@@ -146,7 +147,6 @@ export function CodeQuestScreen() {
     updateLevelTitle,
     updateLevelIntro,
     updateChallenge,
-    updateChallengeValidation,
     updateTestPassingScore,
     updateTestQuestion,
     aboutContent,
@@ -175,7 +175,7 @@ export function CodeQuestScreen() {
   } = editor
 
   const [tab, setTab] = useState<TabId>('learn')
-  const [, bump] = useReducer((n: number) => n + 1, 0)
+  const [progressTick, bump] = useReducer((n: number) => n + 1, 0)
 
   const [rootIndex, setRootIndex] = useState<RootIndex | null>(null)
   const [rootError, setRootError] = useState<string | null>(null)
@@ -361,7 +361,7 @@ export function CodeQuestScreen() {
   }, [])
 
   const openLanguage = useCallback(
-    async (path: string, id: string) => {
+    async (path: string, id: string): Promise<LanguageBundle | null> => {
       setLanguageId(id)
       setBundleError(null)
       setLearnView('sections')
@@ -369,9 +369,11 @@ export function CodeQuestScreen() {
         const b = await loadLanguageBundle(baseUrl, path)
         setBundle(b)
         syncBundle(id, b)
+        return b
       } catch (e: unknown) {
         setBundle(null)
         setBundleError(e instanceof Error ? e.message : 'Failed to load language')
+        return null
       }
     },
     [baseUrl, syncBundle],
@@ -379,8 +381,8 @@ export function CodeQuestScreen() {
 
   const openLevelByPath = useCallback(
     async (opts: { languageId: string; languagePath: string; sectionId: string; levelId: string }) => {
-      await openLanguage(opts.languagePath, opts.languageId)
-      const b = await loadLanguageBundle(baseUrl, opts.languagePath)
+      const b = await openLanguage(opts.languagePath, opts.languageId)
+      if (!b) return
       const section = b.sections.find((s) => s.sectionRef.id === opts.sectionId)
       if (!section) return
       const levelIndex = section.file.levels.findIndex((l) => l.id === opts.levelId)
@@ -394,7 +396,7 @@ export function CodeQuestScreen() {
       resetLevelWorkState(level, opts.languageId)
       localStorage.setItem(LAST_LEVEL_STORAGE_KEY, JSON.stringify(opts))
     },
-    [baseUrl, isLevelUnlocked, openLanguage, resetLevelWorkState],
+    [isLevelUnlocked, openLanguage, resetLevelWorkState],
   )
 
   const back = () => {
@@ -443,7 +445,7 @@ export function CodeQuestScreen() {
   const xpCurrentLevel = totalXp % 100
   const xpLevel = Math.floor(totalXp / 100)
 
-  const continueTarget = (() => {
+  const continueTarget = useMemo(() => {
     if (!displayRootIndex) return null
     try {
       const raw = localStorage.getItem(LAST_LEVEL_STORAGE_KEY)
@@ -487,7 +489,7 @@ export function CodeQuestScreen() {
       }
     }
     return null
-  })()
+  }, [displayRootIndex, homeBundles, resolveBundle, isLevelUnlocked, progressTick])
 
   const checkChallenge = async (ch: Challenge) => {
     if (!languageId || !selectedLevel) return
@@ -654,21 +656,10 @@ export function CodeQuestScreen() {
     }
   }
 
-  const sandboxErrorPointer = useMemo(() => {
-    if (!sandboxError?.line) return null
-    const lines = sandboxCode.split('\n')
-    const lineIndex = sandboxError.line - 1
-    if (lineIndex < 0 || lineIndex >= lines.length) return null
-    const text = lines[lineIndex] ?? ''
-    const col = Math.max(1, sandboxError.column ?? 1)
-    const caretPad = ' '.repeat(Math.max(0, col - 1))
-    return {
-      line: sandboxError.line,
-      text,
-      caret: `${caretPad}^`,
-      column: sandboxError.column,
-    }
-  }, [sandboxCode, sandboxError])
+  const sandboxErrorPointer = useMemo(
+    () => pythonErrorLinePointer(sandboxCode, sandboxError),
+    [sandboxCode, sandboxError],
+  )
 
   const handleRemoveLanguage = (langId: string) => {
     removeLanguage(langId)
@@ -961,7 +952,8 @@ export function CodeQuestScreen() {
       )
     }
 
-    if (learnView === 'level' && selectedLevel && languageId) {
+    if (learnView === 'level' && selectedSection && selectedLevel && languageId) {
+      const secId = selectedSection.sectionRef.id
       const prog = loadProgress(languageId, selectedLevel.id)
       const stepTabs: { id: LevelStep; label: string }[] = [
         { id: 'intro', label: 'Intro' },
@@ -976,7 +968,7 @@ export function CodeQuestScreen() {
             className="cq-title"
             value={selectedLevel.title}
             onChange={(title) =>
-              updateLevelTitle(languageId, selectedSection!.sectionRef.id, selectedLevel.id, title)
+              updateLevelTitle(languageId, secId, selectedLevel.id, title)
             }
           />
           <div className="cq-step-tabs" role="tablist">
@@ -1003,7 +995,7 @@ export function CodeQuestScreen() {
                   value={selectedLevel.intro.title ?? ''}
                   placeholder="Intro title"
                   onChange={(title) =>
-                    updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                    updateLevelIntro(languageId, secId, selectedLevel.id, {
                       title,
                     })
                   }
@@ -1012,7 +1004,7 @@ export function CodeQuestScreen() {
               <EditableMarkdown
                 value={selectedLevel.intro.bodyMarkdown}
                 onChange={(bodyMarkdown) =>
-                  updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                  updateLevelIntro(languageId, secId, selectedLevel.id, {
                     bodyMarkdown,
                   })
                 }
@@ -1042,13 +1034,12 @@ export function CodeQuestScreen() {
                 </div>
               )}
               {isEditMode && (
-                <div className="cq-editable-block">
-                  <div className="cq-editable-block-label">Read more link</div>
+                <EditableBlock label="Read more link">
                   <EditableText
                     value={selectedLevel.intro.readMore?.label ?? ''}
                     placeholder="Button label"
                     onChange={(label) =>
-                      updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                      updateLevelIntro(languageId, secId, selectedLevel.id, {
                         readMore: {
                           label,
                           url: selectedLevel.intro.readMore?.url ?? '',
@@ -1062,7 +1053,7 @@ export function CodeQuestScreen() {
                     rows={1}
                     value={selectedLevel.intro.readMore?.url ?? ''}
                     onChange={(url) =>
-                      updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                      updateLevelIntro(languageId, secId, selectedLevel.id, {
                         readMore: {
                           label: selectedLevel.intro.readMore?.label,
                           url,
@@ -1076,7 +1067,7 @@ export function CodeQuestScreen() {
                     rows={1}
                     value={selectedLevel.intro.readMore?.source ?? ''}
                     onChange={(source) =>
-                      updateLevelIntro(languageId, selectedSection!.sectionRef.id, selectedLevel.id, {
+                      updateLevelIntro(languageId, secId, selectedLevel.id, {
                         readMore: {
                           label: selectedLevel.intro.readMore?.label,
                           url: selectedLevel.intro.readMore?.url ?? '',
@@ -1085,7 +1076,7 @@ export function CodeQuestScreen() {
                       })
                     }
                   />
-                </div>
+                </EditableBlock>
               )}
 
               {languageId === 'python' && (
@@ -1221,7 +1212,6 @@ ${sandboxErrorPointer.caret}`}
                   ch.validation.mode === 'python_tests' && pyRuntimeErr
                     ? pythonErrorLinePointer(challengeDrafts[ch.id] ?? '', pyRuntimeErr)
                     : null
-                const secId = selectedSection!.sectionRef.id
                 return (
                   <div key={ch.id} className="cq-panel cq-challenge-card">
                     <div className="cq-card-row cq-card-row--panel">
@@ -1247,7 +1237,7 @@ ${sandboxErrorPointer.caret}`}
                       onChange={(promptMarkdown) =>
                         updateChallenge(
                           languageId,
-                          selectedSection!.sectionRef.id,
+                          secId,
                           selectedLevel.id,
                           ch.id,
                           { promptMarkdown },
@@ -1263,7 +1253,7 @@ ${sandboxErrorPointer.caret}`}
                           onChange={(starterCode) =>
                             updateChallenge(
                               languageId,
-                              selectedSection!.sectionRef.id,
+                              secId,
                               selectedLevel.id,
                               ch.id,
                               { starterCode },
@@ -1277,7 +1267,7 @@ ${sandboxErrorPointer.caret}`}
                           onChange={(raw) =>
                             updateChallenge(
                               languageId,
-                              selectedSection!.sectionRef.id,
+                              secId,
                               selectedLevel.id,
                               ch.id,
                               { hints: raw.split('\n').filter((h) => h.length > 0) },
@@ -1287,13 +1277,9 @@ ${sandboxErrorPointer.caret}`}
                         <EditableValidationEditor
                           validation={ch.validation}
                           onChange={(validation) =>
-                            updateChallengeValidation(
-                              languageId,
-                              selectedSection!.sectionRef.id,
-                              selectedLevel.id,
-                              ch.id,
+                            updateChallenge(languageId, secId, selectedLevel.id, ch.id, {
                               validation,
-                            )
+                            })
                           }
                         />
                       </>
@@ -1453,7 +1439,7 @@ ${pyErrPointer.caret}`}
               <AddItemButton
                 label="Add challenge"
                 onClick={() =>
-                  addChallenge(languageId, selectedSection!.sectionRef.id, selectedLevel.id)
+                  addChallenge(languageId, secId, selectedLevel.id)
                 }
               />
             </section>
@@ -1474,7 +1460,7 @@ ${pyErrPointer.caret}`}
                     onChange={(e) =>
                       updateTestPassingScore(
                         languageId,
-                        selectedSection!.sectionRef.id,
+                        secId,
                         selectedLevel.id,
                         Number(e.target.value),
                       )
@@ -1535,7 +1521,7 @@ ${pyErrPointer.caret}`}
                             onMoveUp={() =>
                               moveTestQuestion(
                                 languageId,
-                                selectedSection!.sectionRef.id,
+                                secId,
                                 selectedLevel.id,
                                 q.id,
                                 -1,
@@ -1544,7 +1530,7 @@ ${pyErrPointer.caret}`}
                             onMoveDown={() =>
                               moveTestQuestion(
                                 languageId,
-                                selectedSection!.sectionRef.id,
+                                secId,
                                 selectedLevel.id,
                                 q.id,
                                 1,
@@ -1554,7 +1540,7 @@ ${pyErrPointer.caret}`}
                             onDelete={() =>
                               removeTestQuestion(
                                 languageId,
-                                selectedSection!.sectionRef.id,
+                                secId,
                                 selectedLevel.id,
                                 q.id,
                               )
@@ -1566,7 +1552,7 @@ ${pyErrPointer.caret}`}
                           onChange={(question) =>
                             updateTestQuestion(
                               languageId,
-                              selectedSection!.sectionRef.id,
+                              secId,
                               selectedLevel.id,
                               q.id,
                               question,
@@ -1584,7 +1570,7 @@ ${pyErrPointer.caret}`}
                   onClick={() =>
                     addTestQuestion(
                       languageId,
-                      selectedSection!.sectionRef.id,
+                      secId,
                       selectedLevel.id,
                       'mcq',
                     )
@@ -1595,7 +1581,7 @@ ${pyErrPointer.caret}`}
                   onClick={() =>
                     addTestQuestion(
                       languageId,
-                      selectedSection!.sectionRef.id,
+                      secId,
                       selectedLevel.id,
                       'shortText',
                     )
