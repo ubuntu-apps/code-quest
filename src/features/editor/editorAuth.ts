@@ -2,7 +2,3 @@
 export function canEditContent(): boolean {
   return true
 }
-
-export function authenticateEditor(_password?: string): boolean {
-  return true
-}

@@ -4,6 +4,7 @@ import type { AboutContent } from './aboutContent'
 const ROOT_KEY = 'codequest:editor:rootIndex'
 const BUNDLE_PREFIX = 'codequest:editor:bundle:'
 const ABOUT_KEY = 'codequest:editor:about'
+const HOME_LEAD_KEY = 'codequest:editor:homeLead'
 
 function readJson<T>(key: string): T | null {
   try {
@@ -43,9 +44,10 @@ export function saveDraftAbout(data: AboutContent): void {
   writeJson(ABOUT_KEY, data)
 }
 
-export function clearAllDrafts(): void {
-  const keys = Object.keys(localStorage).filter(
-    (k) => k.startsWith('codequest:editor:'),
-  )
-  for (const k of keys) localStorage.removeItem(k)
+export function loadDraftHomeLead(): string | null {
+  return readJson<string>(HOME_LEAD_KEY)
+}
+
+export function saveDraftHomeLead(text: string): void {
+  writeJson(HOME_LEAD_KEY, text)
 }

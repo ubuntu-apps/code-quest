@@ -4,4 +4,3 @@ export { EditableText, EditableTextarea, EditableMarkdown, EditableBlock } from 
 export { EditableValidationEditor } from './EditableValidationEditor'
 export { EditableTestQuestionEditor } from './EditableTestEditor'
 export { ListEditorActions, AddItemButton } from './ListEditorActions'
-export { canEditContent } from './editorAuth'

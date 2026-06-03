@@ -1,5 +1,5 @@
 import type { TestQuestion } from '../curriculum/types'
-import { EditableMarkdown, EditableText, EditableTextarea } from './EditableField'
+import { EditableBlock, EditableMarkdown, EditableText, EditableTextarea } from './EditableField'
 import { useEditor } from './EditorContext'
 import { EditableValidationEditor } from './EditableValidationEditor'
 
@@ -14,8 +14,7 @@ export function EditableTestQuestionEditor({ question, onChange }: EditableTestQ
 
   if (question.type === 'mcq') {
     return (
-      <div className="cq-editable-block">
-        <div className="cq-editable-block-label">Edit MCQ question</div>
+      <EditableBlock label="Edit MCQ question">
         <EditableTextarea
           label="Prompt"
           rows={2}
@@ -49,13 +48,12 @@ export function EditableTestQuestionEditor({ question, onChange }: EditableTestQ
             ))}
           </select>
         </label>
-      </div>
+      </EditableBlock>
     )
   }
 
   return (
-    <div className="cq-editable-block">
-      <div className="cq-editable-block-label">Edit short-text question</div>
+    <EditableBlock label="Edit short-text question">
       <EditableMarkdown
         label="Prompt"
         value={question.prompt}
@@ -65,6 +63,6 @@ export function EditableTestQuestionEditor({ question, onChange }: EditableTestQ
         validation={question.validation}
         onChange={(validation) => onChange({ ...question, validation })}
       />
-    </div>
+    </EditableBlock>
   )
 }

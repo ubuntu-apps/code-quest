@@ -12,7 +12,6 @@ import type {
   Level,
   RootIndex,
   TestQuestion,
-  Validation,
 } from '../curriculum/types'
 import { moveItem, removeAt } from './arrayHelpers'
 import { mergeAboutContent, type AboutContent } from './aboutContent'
@@ -29,9 +28,11 @@ import {
 import {
   loadDraftAbout,
   loadDraftBundle,
+  loadDraftHomeLead,
   loadDraftRootIndex,
   saveDraftAbout,
   saveDraftBundle,
+  saveDraftHomeLead,
   saveDraftRootIndex,
 } from './curriculumDraftStorage'
 import { canEditContent } from './editorAuth'
@@ -66,13 +67,6 @@ interface EditorContextValue {
     levelId: string,
     challengeId: string,
     patch: Partial<Challenge>,
-  ) => void
-  updateChallengeValidation: (
-    langId: string,
-    sectionId: string,
-    levelId: string,
-    challengeId: string,
-    validation: Validation,
   ) => void
   updateTestPassingScore: (
     langId: string,
@@ -185,7 +179,9 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const [isEditMode, setEditMode] = useState(false)
   const [rootIndex, setRootIndex] = useState<RootIndex | null>(() => loadDraftRootIndex())
   const [bundles, setBundles] = useState<Record<string, LanguageBundle>>({})
-  const [homeLead, setHomeLead] = useState(DEFAULT_HOME_LEAD)
+  const [homeLead, setHomeLead] = useState(
+    () => loadDraftHomeLead() ?? DEFAULT_HOME_LEAD,
+  )
   const [aboutContent, setAboutContent] = useState<AboutContent>(() => {
     const draft = loadDraftAbout()
     return draft ?? mergeAboutContent([], null)
@@ -252,6 +248,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
 
   const updateHomeLead = useCallback((text: string) => {
     setHomeLead(text)
+    saveDraftHomeLead(text)
   }, [])
 
   const updateLanguageTitle = useCallback(
@@ -330,19 +327,6 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       persistBundle(langId, next)
     },
     [bundles, persistBundle],
-  )
-
-  const updateChallengeValidation = useCallback(
-    (
-      langId: string,
-      sectionId: string,
-      levelId: string,
-      challengeId: string,
-      validation: Validation,
-    ) => {
-      updateChallenge(langId, sectionId, levelId, challengeId, { validation })
-    },
-    [updateChallenge],
   )
 
   const updateTestPassingScore = useCallback(
@@ -740,7 +724,6 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       updateLevelTitle,
       updateLevelIntro,
       updateChallenge,
-      updateChallengeValidation,
       updateTestPassingScore,
       updateTestQuestion,
       requestConfirm,
@@ -787,7 +770,6 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       updateLevelTitle,
       updateLevelIntro,
       updateChallenge,
-      updateChallengeValidation,
       updateTestPassingScore,
       updateTestQuestion,
       requestConfirm,

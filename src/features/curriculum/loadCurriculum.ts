@@ -6,7 +6,7 @@ import type {
   SectionFile,
 } from './types'
 
-export function languageDirFromPath(languagePath: string): string {
+function languageDirFromPath(languagePath: string): string {
   const idx = languagePath.lastIndexOf('/')
   return idx >= 0 ? languagePath.slice(0, idx + 1) : ''
 }
@@ -17,13 +17,13 @@ export async function loadRootIndex(baseUrl: string): Promise<RootIndex> {
   return res.json() as Promise<RootIndex>
 }
 
-export async function loadLanguageIndex(baseUrl: string, languagePath: string): Promise<LanguageIndex> {
+async function loadLanguageIndex(baseUrl: string, languagePath: string): Promise<LanguageIndex> {
   const res = await fetch(`${baseUrl}content/${languagePath}`)
   if (!res.ok) throw new Error(`Failed to load language (${res.status})`)
   return res.json() as Promise<LanguageIndex>
 }
 
-export async function loadSectionFile(
+async function loadSectionFile(
   baseUrl: string,
   languageDir: string,
   sectionPath: string,
