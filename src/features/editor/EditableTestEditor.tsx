@@ -1,0 +1,70 @@
+import type { TestQuestion } from '../curriculum/types'
+import { EditableMarkdown, EditableText, EditableTextarea } from './EditableField'
+import { useEditor } from './EditorContext'
+import { EditableValidationEditor } from './EditableValidationEditor'
+
+interface EditableTestQuestionProps {
+  question: TestQuestion
+  onChange: (question: TestQuestion) => void
+}
+
+export function EditableTestQuestionEditor({ question, onChange }: EditableTestQuestionProps) {
+  const { canEdit, isEditMode } = useEditor()
+  if (!canEdit || !isEditMode) return null
+
+  if (question.type === 'mcq') {
+    return (
+      <div className="cq-editable-block">
+        <div className="cq-editable-block-label">Edit MCQ question</div>
+        <EditableTextarea
+          label="Prompt"
+          rows={2}
+          value={question.prompt}
+          onChange={(prompt) => onChange({ ...question, prompt })}
+        />
+        {question.choices.map((choice, i) => (
+          <div key={choice.id} className="cq-editable-nested">
+            <EditableText
+              value={choice.label}
+              onChange={(label) => {
+                const choices = [...question.choices]
+                choices[i] = { ...choices[i], label }
+                onChange({ ...question, choices })
+              }}
+              placeholder={`Choice ${choice.id}`}
+            />
+          </div>
+        ))}
+        <label className="cq-editable-field">
+          <span className="cq-label">Correct choice</span>
+          <select
+            className="cq-editable-select"
+            value={question.correctChoiceId}
+            onChange={(e) => onChange({ ...question, correctChoiceId: e.target.value })}
+          >
+            {question.choices.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.id}: {c.label.slice(0, 40)}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    )
+  }
+
+  return (
+    <div className="cq-editable-block">
+      <div className="cq-editable-block-label">Edit short-text question</div>
+      <EditableMarkdown
+        label="Prompt"
+        value={question.prompt}
+        onChange={(prompt) => onChange({ ...question, prompt })}
+      />
+      <EditableValidationEditor
+        validation={question.validation}
+        onChange={(validation) => onChange({ ...question, validation })}
+      />
+    </div>
+  )
+}
