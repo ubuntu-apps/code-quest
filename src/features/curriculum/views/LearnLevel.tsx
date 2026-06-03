@@ -13,7 +13,6 @@ interface LearnLevelProps {
   level: Level
   languageId: string
   levelStep: LevelStep
-  isEditMode: boolean
   prog: LevelProgress
   onLevelStepChange: (step: LevelStep) => void
   onUpdateLevelTitle: (title: string) => void
@@ -63,7 +62,6 @@ export function LearnLevel({
   level,
   languageId,
   levelStep,
-  isEditMode,
   prog,
   onLevelStepChange,
   onUpdateLevelTitle,
@@ -141,7 +139,6 @@ export function LearnLevel({
         <IntroStep
           level={level}
           languageId={languageId}
-          isEditMode={isEditMode}
           sandboxCode={sandboxCode}
           sandboxOutput={sandboxOutput}
           sandboxRunning={sandboxRunning}
@@ -164,7 +161,6 @@ export function LearnLevel({
               challenge={ch}
               chIndex={chIndex}
               totalChallenges={level.challenges.length}
-              isEditMode={isEditMode}
               draft={challengeDrafts[ch.id] ?? ''}
               done={prog.challengesCompleted.includes(ch.id)}
               status={challengeStatus[ch.id]}
@@ -195,7 +191,6 @@ export function LearnLevel({
         <TestStep
           level={level}
           prog={prog}
-          isEditMode={isEditMode}
           testShort={testShort}
           testMcq={testMcq}
           testResult={testResult}

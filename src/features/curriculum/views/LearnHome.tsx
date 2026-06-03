@@ -1,8 +1,10 @@
 import { Flame, Play, Zap } from 'lucide-react'
 import type { RootIndex } from '../types'
+import type { ContentSource } from '../../editor/curriculumDraftStorage'
 import { AddItemButton } from '../../editor'
 import { EditableText } from '../../editor'
 import { CatalogListItem } from '../components/CatalogListItem'
+import { ContentSourceToggle } from '../components/ContentSourceToggle'
 
 export interface ContinueTarget {
   languageId: string
@@ -19,6 +21,10 @@ interface LearnHomeProps {
   totalXp: number
   streakCount: number
   homeLead: string
+  isEditMode: boolean
+  contentSource: ContentSource
+  onContentSourceChange: (source: ContentSource) => void
+  onImportFromGitHub?: () => void
   onContinue: () => void
   onOpenLanguage: (path: string, id: string) => void
   onUpdateHomeLead: (text: string) => void
@@ -36,6 +42,10 @@ export function LearnHome({
   totalXp,
   streakCount,
   homeLead,
+  isEditMode,
+  contentSource,
+  onContentSourceChange,
+  onImportFromGitHub,
   onContinue,
   onOpenLanguage,
   onUpdateHomeLead,
@@ -47,6 +57,13 @@ export function LearnHome({
   return (
     <div className="cq-stack">
       <h1 className="cq-title">Home</h1>
+      {isEditMode && (
+        <ContentSourceToggle
+          contentSource={contentSource}
+          onChange={onContentSourceChange}
+          onImportFromGitHub={onImportFromGitHub}
+        />
+      )}
       <div className="cq-panel cq-home-panel">
         <button
           type="button"

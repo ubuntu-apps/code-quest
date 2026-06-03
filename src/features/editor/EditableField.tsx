@@ -17,8 +17,8 @@ export function EditableText({
   as: Tag = 'span',
   placeholder,
 }: EditableTextProps) {
-  const { canEdit, isEditMode } = useEditorMode()
-  if (!canEdit || !isEditMode) {
+  const { canEdit, isEditingLocal } = useEditorMode()
+  if (!canEdit || !isEditingLocal) {
     return <Tag className={className}>{value}</Tag>
   }
   return (
@@ -50,8 +50,8 @@ export function EditableTextarea({
   label,
   placeholder,
 }: EditableTextareaProps) {
-  const { canEdit, isEditMode } = useEditorMode()
-  if (!canEdit || !isEditMode) {
+  const { canEdit, isEditingLocal } = useEditorMode()
+  if (!canEdit || !isEditingLocal) {
     return label ? (
       <div>
         {label && <div className="cq-label">{label}</div>}
@@ -83,8 +83,8 @@ interface EditableMarkdownProps {
 }
 
 export function EditableMarkdown({ value, onChange, label }: EditableMarkdownProps) {
-  const { canEdit, isEditMode } = useEditorMode()
-  if (!canEdit || !isEditMode) {
+  const { canEdit, isEditingLocal } = useEditorMode()
+  if (!canEdit || !isEditingLocal) {
     return <SimpleMarkdown text={value} />
   }
   return (
@@ -111,8 +111,8 @@ interface EditableBlockProps {
 }
 
 export function EditableBlock({ label, children }: EditableBlockProps) {
-  const { canEdit, isEditMode } = useEditorMode()
-  if (!canEdit || !isEditMode) return null
+  const { canEdit, isEditingLocal } = useEditorMode()
+  if (!canEdit || !isEditingLocal) return null
   return (
     <div className="cq-editable-block">
       <div className="cq-editable-block-label">{label}</div>

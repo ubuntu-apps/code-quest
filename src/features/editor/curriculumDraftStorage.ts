@@ -11,6 +11,9 @@ const ROOT_KEY = 'codequest:editor:rootIndex'
 const BUNDLE_PREFIX = 'codequest:editor:bundle:'
 const ABOUT_KEY = 'codequest:editor:about'
 const HOME_LEAD_KEY = 'codequest:editor:homeLead'
+const CONTENT_SOURCE_KEY = 'codequest:editor:contentSource'
+
+export type ContentSource = 'local' | 'github'
 
 const aboutContentSchema = z.object({
   lead: z.string(),
@@ -76,4 +79,14 @@ export function loadDraftHomeLead(): string | null {
 
 export function saveDraftHomeLead(text: string): void {
   writeJson(HOME_LEAD_KEY, text)
+}
+
+export function loadContentSource(): ContentSource {
+  const data = readJson(CONTENT_SOURCE_KEY)
+  if (data === 'local' || data === 'github') return data
+  return 'local'
+}
+
+export function saveContentSource(source: ContentSource): void {
+  writeJson(CONTENT_SOURCE_KEY, source)
 }

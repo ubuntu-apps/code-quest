@@ -10,13 +10,13 @@ import {
   EditableTextarea,
   EditableValidationEditor,
   ListEditorActions,
+  useEditorMode,
 } from '../../editor'
 
 interface ChallengeCardProps {
   challenge: Challenge
   chIndex: number
   totalChallenges: number
-  isEditMode: boolean
   draft: string
   done: boolean
   status: 'passed' | 'failed' | undefined
@@ -41,7 +41,6 @@ export function ChallengeCard({
   challenge: ch,
   chIndex,
   totalChallenges,
-  isEditMode,
   draft,
   done,
   status,
@@ -61,6 +60,8 @@ export function ChallengeCard({
   onRequestAiHelp,
   onFixCopied,
 }: ChallengeCardProps) {
+  const { isEditingLocal } = useEditorMode()
+
   return (
     <div className="cq-panel cq-challenge-card">
       <div className="cq-card-row cq-card-row--panel">
@@ -83,7 +84,7 @@ export function ChallengeCard({
         value={ch.promptMarkdown}
         onChange={(promptMarkdown) => onUpdateChallenge({ promptMarkdown })}
       />
-      {isEditMode && (
+      {isEditingLocal && (
         <>
           <EditableTextarea
             label="Starter code"

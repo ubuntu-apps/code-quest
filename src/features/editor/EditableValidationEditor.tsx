@@ -10,8 +10,8 @@ interface EditableValidationEditorProps {
 }
 
 export function EditableValidationEditor({ validation, onChange }: EditableValidationEditorProps) {
-  const { canEdit, isEditMode } = useEditorMode()
-  if (!canEdit || !isEditMode) return null
+  const { canEdit, isEditingLocal } = useEditorMode()
+  if (!canEdit || !isEditingLocal) return null
 
   const setMode = (mode: ValidationMode) => {
     onChange({ ...validation, mode })

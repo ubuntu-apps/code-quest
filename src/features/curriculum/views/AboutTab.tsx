@@ -1,11 +1,10 @@
 import { APP_VERSION } from '../../../version'
-import { AddItemButton, EditableText, ListEditorActions } from '../../editor'
+import { AddItemButton, EditableText, ListEditorActions, useEditorMode } from '../../editor'
 
 interface AboutTabProps {
   aboutLead: string
   installIntro: string
   installSteps: string[]
-  isEditMode: boolean
   installResetNotice: string | null
   onUpdateLead: (text: string) => void
   onUpdateInstallIntro: (text: string) => void
@@ -20,7 +19,6 @@ export function AboutTab({
   aboutLead,
   installIntro,
   installSteps,
-  isEditMode,
   installResetNotice,
   onUpdateLead,
   onUpdateInstallIntro,
@@ -30,6 +28,8 @@ export function AboutTab({
   onAddInstallStep,
   onResetInstallPrompt,
 }: AboutTabProps) {
+  const { isEditingLocal } = useEditorMode()
+
   return (
     <div className="cq-stack cq-about">
       <h1 className="cq-title">About</h1>
@@ -46,7 +46,7 @@ export function AboutTab({
           {installSteps.map((step, i) => (
             <li key={`${i}-${step.slice(0, 20)}`} className="cq-install-step-row">
               <div className="cq-card-row">
-                {isEditMode ? (
+                {isEditingLocal ? (
                   <EditableText
                     value={step.replace(/^\d+\.\s*/, '')}
                     onChange={(text) => onUpdateInstallStep(i, text)}

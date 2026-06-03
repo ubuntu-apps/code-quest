@@ -9,8 +9,8 @@ interface EditableTestQuestionProps {
 }
 
 export function EditableTestQuestionEditor({ question, onChange }: EditableTestQuestionProps) {
-  const { canEdit, isEditMode } = useEditorMode()
-  if (!canEdit || !isEditMode) return null
+  const { canEdit, isEditingLocal } = useEditorMode()
+  if (!canEdit || !isEditingLocal) return null
 
   if (question.type === 'mcq') {
     return (

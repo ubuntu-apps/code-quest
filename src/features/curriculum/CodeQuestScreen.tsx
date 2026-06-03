@@ -1,6 +1,6 @@
 import '../../App.css'
 
-import { useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { BookOpen, ChevronLeft, ExternalLink, Info, ListTodo, X } from 'lucide-react'
 import type { Challenge, LanguageBundle, Level, RootIndex } from './types'
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
@@ -22,16 +22,18 @@ import {
   useEditorAbout,
   useEditorCatalog,
   useEditorDraft,
+  useEditorGitHub,
   useEditorMode,
+  useEditorConfirm,
 } from '../editor'
+import { mergeAboutContent } from '../editor/aboutContent'
 import {
   DEFAULT_SANDBOX_CODE,
   LAST_LEVEL_STORAGE_KEY,
   PASS_DEFAULT,
-  type LearnView,
-  type LevelStep,
   type TabId,
 } from './constants'
+import { useLearnRoute } from './hooks/useLearnRoute'
 import {
   computeLevelXp,
   loadStreakState,
@@ -81,7 +83,7 @@ export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
   const [platform] = useState(() => detectPlatform())
   const progressVersion = useProgressVersion()
-  const { isEditMode } = useEditorMode()
+  const { isEditMode, contentSource, setContentSource, githubHomeLead } = useEditorMode()
   const {
     rootIndex: editableRootIndex,
     syncRootIndex,
@@ -125,20 +127,33 @@ export function CodeQuestScreen() {
     removeAboutInstallStep,
     moveAboutInstallStep,
   } = useEditorAbout()
+  const { importFromGitHub } = useEditorGitHub()
+  const { requestConfirm } = useEditorConfirm()
 
-  const [tab, setTab] = useState<TabId>('learn')
+  const {
+    tab,
+    learnView,
+    languageId,
+    sectionId,
+    levelId,
+    levelStep,
+    goToTab,
+    goToLanguage,
+    goToSection,
+    goToLevel,
+    goToLevelStep,
+    backFromLearn,
+  } = useLearnRoute()
+
   const [rootIndex, setRootIndex] = useState<RootIndex | null>(null)
   const [rootError, setRootError] = useState<string | null>(null)
   const [streakCount, setStreakCount] = useState(() => loadStreakState().count)
 
-  const [learnView, setLearnView] = useState<LearnView>('languages')
-  const [languageId, setLanguageId] = useState<string | null>(null)
   const [bundle, setBundle] = useState<LanguageBundle | null>(null)
   const [bundleError, setBundleError] = useState<string | null>(null)
+  const [loadedLanguageId, setLoadedLanguageId] = useState<string | null>(null)
 
-  const [sectionId, setSectionId] = useState<string | null>(null)
-  const [levelId, setLevelId] = useState<string | null>(null)
-  const [levelStep, setLevelStep] = useState<LevelStep>('intro')
+  const prevLevelIdRef = useRef<string | null>(null)
 
   const [challengeDrafts, setChallengeDrafts] = useState<Record<string, string>>({})
   const [challengeStatus, setChallengeStatus] = useState<Record<string, 'passed' | 'failed'>>({})
@@ -176,6 +191,40 @@ export function CodeQuestScreen() {
   }, [baseUrl, syncRootIndex])
 
   useEffect(() => {
+    if (!languageId || !rootIndex) {
+      if (!languageId) {
+        setBundle(null)
+        setLoadedLanguageId(null)
+      }
+      return
+    }
+
+    const lang = rootIndex.languages.find((l) => l.id === languageId)
+    if (!lang) return
+    if (loadedLanguageId === languageId && bundle) return
+
+    let cancelled = false
+    setBundleError(null)
+    void loadLanguageBundle(baseUrl, lang.path)
+      .then((b) => {
+        if (cancelled) return
+        setBundle(b)
+        setLoadedLanguageId(languageId)
+        syncBundle(languageId, b)
+      })
+      .catch((e: unknown) => {
+        if (cancelled) return
+        setBundle(null)
+        setLoadedLanguageId(null)
+        setBundleError(e instanceof Error ? e.message : 'Failed to load language')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [languageId, rootIndex, baseUrl, syncBundle, loadedLanguageId, bundle])
+
+  useEffect(() => {
     if (!readMoreOpen) return
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setReadMoreOpen(false)
@@ -184,14 +233,25 @@ export function CodeQuestScreen() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [readMoreOpen])
 
-  const displayRootIndex = editableRootIndex ?? rootIndex
+  const useLocalContent = isEditMode && contentSource === 'local'
+
+  const displayRootIndex = useLocalContent ? (editableRootIndex ?? rootIndex) : rootIndex
 
   const displayBundle = useMemo(() => {
     if (!languageId) return bundle
+    if (!useLocalContent) return languageBundles[languageId] ?? bundle
     return getBundle(languageId) ?? bundle
-  }, [languageId, getBundle, bundle])
+  }, [languageId, getBundle, bundle, useLocalContent, languageBundles])
 
   const bundleForView = displayBundle ?? bundle
+
+  const displayHomeLead = useLocalContent ? homeLead : githubHomeLead
+
+  const githubAboutContent = useMemo(
+    () => mergeAboutContent(installInstructions(platform).split('\n').slice(1), null),
+    [platform],
+  )
+  const displayAboutContent = useLocalContent ? aboutContent : githubAboutContent
 
   const selectedSection = useMemo(() => {
     if (!bundleForView || !sectionId) return null
@@ -204,8 +264,11 @@ export function CodeQuestScreen() {
   }, [selectedSection, levelId])
 
   const resolveBundle = useCallback(
-    (langId: string, fallback: LanguageBundle | undefined) => getBundle(langId) ?? fallback ?? null,
-    [getBundle],
+    (langId: string, fallback: LanguageBundle | undefined) => {
+      if (!useLocalContent) return fallback ?? null
+      return getBundle(langId) ?? fallback ?? null
+    },
+    [getBundle, useLocalContent],
   )
 
   const isLevelUnlocked = useCallback(
@@ -243,23 +306,32 @@ export function CodeQuestScreen() {
     setChallengeErrorUiEpoch({})
   }, [])
 
+  useEffect(() => {
+    if (levelId === prevLevelIdRef.current) return
+    prevLevelIdRef.current = levelId
+    if (!levelId || !selectedLevel) return
+    resetLevelWorkState(selectedLevel, languageId)
+  }, [levelId, selectedLevel, languageId, resetLevelWorkState])
+
   const openLanguage = useCallback(
     async (path: string, id: string): Promise<LanguageBundle | null> => {
-      setLanguageId(id)
+      goToLanguage(id)
+      if (loadedLanguageId === id && bundle) return bundle
       setBundleError(null)
-      setLearnView('sections')
       try {
         const b = await loadLanguageBundle(baseUrl, path)
         setBundle(b)
+        setLoadedLanguageId(id)
         syncBundle(id, b)
         return b
       } catch (e: unknown) {
         setBundle(null)
+        setLoadedLanguageId(null)
         setBundleError(e instanceof Error ? e.message : 'Failed to load language')
         return null
       }
     },
-    [baseUrl, syncBundle],
+    [baseUrl, syncBundle, goToLanguage, loadedLanguageId, bundle],
   )
 
   const openLevelByPath = useCallback(
@@ -272,33 +344,16 @@ export function CodeQuestScreen() {
       if (levelIndex < 0) return
       if (!isLevelUnlocked(opts.languageId, section.file.levels, levelIndex)) return
       const level = section.file.levels[levelIndex]
-      setSectionId(opts.sectionId)
-      setLevelId(level.id)
-      setLevelStep('intro')
-      setLearnView('level')
+      goToLevel(opts.languageId, opts.sectionId, level.id, 'intro')
       resetLevelWorkState(level, opts.languageId)
       localStorage.setItem(LAST_LEVEL_STORAGE_KEY, JSON.stringify(opts))
     },
-    [isLevelUnlocked, openLanguage, resetLevelWorkState],
+    [isLevelUnlocked, openLanguage, resetLevelWorkState, goToLevel],
   )
 
   const back = () => {
     setTestResult(null)
-    if (learnView === 'level') {
-      setLevelId(null)
-      setLearnView('levels')
-      return
-    }
-    if (learnView === 'levels') {
-      setSectionId(null)
-      setLearnView('sections')
-      return
-    }
-    if (learnView === 'sections') {
-      setBundle(null)
-      setLanguageId(null)
-      setLearnView('languages')
-    }
+    backFromLearn()
   }
 
   const challengeFeedbackSetters = useMemo(
@@ -411,10 +466,8 @@ export function CodeQuestScreen() {
     removeLanguage(langId)
     if (languageId === langId) {
       setBundle(null)
-      setLanguageId(null)
-      setSectionId(null)
-      setLevelId(null)
-      setLearnView('languages')
+      setLoadedLanguageId(null)
+      backFromLearn()
     }
   }
 
@@ -422,9 +475,7 @@ export function CodeQuestScreen() {
     if (!languageId) return
     removeSection(languageId, secId)
     if (sectionId === secId) {
-      setSectionId(null)
-      setLevelId(null)
-      setLearnView('sections')
+      goToLanguage(languageId)
     }
   }
 
@@ -432,8 +483,7 @@ export function CodeQuestScreen() {
     if (!languageId) return
     removeLevel(languageId, secId, lvlId)
     if (levelId === lvlId) {
-      setLevelId(null)
-      setLearnView('levels')
+      goToSection(languageId, secId)
     }
   }
 
@@ -484,11 +534,11 @@ export function CodeQuestScreen() {
     return null
   }, [displayRootIndex, languageBundles, resolveBundle, isLevelUnlocked, progressVersion])
 
-  const installSteps = aboutContent.installSteps.length
-    ? aboutContent.installSteps
+  const installSteps = displayAboutContent.installSteps.length
+    ? displayAboutContent.installSteps
     : installInstructions(platform).split('\n').slice(1)
   const installIntro =
-    aboutContent.installIntro || installInstructions(platform).split('\n')[0]
+    displayAboutContent.installIntro || installInstructions(platform).split('\n')[0]
 
   useEffect(() => {
     initAboutContent(installInstructions(platform).split('\n').slice(1))
@@ -507,7 +557,23 @@ export function CodeQuestScreen() {
           xpCurrentLevel={totalXp % 100}
           totalXp={totalXp}
           streakCount={streakCount}
-          homeLead={homeLead}
+          homeLead={displayHomeLead}
+          isEditMode={isEditMode}
+          contentSource={contentSource}
+          onContentSourceChange={setContentSource}
+          onImportFromGitHub={() => {
+            void (async () => {
+              const ok = await requestConfirm(
+                'Replace local drafts with content from public/content/? Unsaved local changes will be lost.',
+              )
+              if (!ok) return
+              await importFromGitHub(baseUrl)
+              const data = await loadRootIndex(baseUrl)
+              setRootIndex(data)
+              setBundle(null)
+              setLoadedLanguageId(null)
+            })()
+          }}
           onContinue={() => continueTarget && void openLevelByPath(continueTarget)}
           onOpenLanguage={(path, id) => void openLanguage(path, id)}
           onUpdateHomeLead={updateHomeLead}
@@ -528,10 +594,7 @@ export function CodeQuestScreen() {
         <LearnSections
           bundle={bundleForView}
           languageId={languageId}
-          onSelectSection={(id) => {
-            setSectionId(id)
-            setLearnView('levels')
-          }}
+          onSelectSection={(id) => languageId && goToSection(languageId, id)}
           onUpdateLanguageTitle={(title) => languageId && updateLanguageTitle(languageId, title)}
           onUpdateSectionTitle={(id, title) => languageId && updateSectionTitle(languageId, id, title)}
           onMoveSection={(id, dir) => languageId && moveSection(languageId, id, dir)}
@@ -550,10 +613,8 @@ export function CodeQuestScreen() {
           isEditMode={isEditMode}
           isLevelUnlocked={(levels, index) => isLevelUnlocked(languageId, levels, index)}
           onOpenLevel={(lvl) => {
-            setLevelId(lvl.id)
-            setLevelStep('intro')
-            setLearnView('level')
-            resetLevelWorkState(lvl, languageId)
+            if (!languageId || !secId) return
+            goToLevel(languageId, secId, lvl.id, 'intro')
             localStorage.setItem(
               LAST_LEVEL_STORAGE_KEY,
               JSON.stringify({
@@ -582,9 +643,8 @@ export function CodeQuestScreen() {
           level={selectedLevel}
           languageId={languageId}
           levelStep={levelStep}
-          isEditMode={isEditMode}
           prog={prog}
-          onLevelStepChange={setLevelStep}
+          onLevelStepChange={goToLevelStep}
           onUpdateLevelTitle={(title) => updateLevelTitle(languageId, secId, selectedLevel.id, title)}
           onUpdateIntro={(patch) => updateLevelIntro(languageId, secId, selectedLevel.id, patch)}
           onReadMoreOpen={() => setReadMoreOpen(true)}
@@ -703,10 +763,9 @@ export function CodeQuestScreen() {
           ))}
         {tab === 'about' && (
           <AboutTab
-            aboutLead={aboutContent.lead}
+            aboutLead={displayAboutContent.lead}
             installIntro={installIntro}
             installSteps={installSteps}
-            isEditMode={isEditMode}
             installResetNotice={installResetNotice}
             onUpdateLead={updateAboutLead}
             onUpdateInstallIntro={updateAboutInstallIntro}
@@ -722,7 +781,7 @@ export function CodeQuestScreen() {
         )}
       </main>
 
-      <BottomNav items={navItems} activeId={tab} onSelect={(id) => setTab(id as TabId)} />
+      <BottomNav items={navItems} activeId={tab} onSelect={(id) => goToTab(id as TabId)} />
 
       {readMoreOpen && selectedLevel?.intro.readMore && (
         <div
