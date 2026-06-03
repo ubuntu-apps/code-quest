@@ -1,5 +1,6 @@
-export { EditorProvider, useEditor, type EditorContextValue } from './EditorContext'
+export { EditorProvider, type EditorContextValue } from './EditorContext'
 export {
+  useEditor,
   useEditorAbout,
   useEditorCatalog,
   useEditorConfirm,

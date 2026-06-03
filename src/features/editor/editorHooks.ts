@@ -1,5 +1,12 @@
 import type { EditorContextValue } from './EditorContext'
-import { useEditor } from './EditorContext'
+import { useContext } from 'react'
+import { EditorContext } from './editorReactContext'
+
+export function useEditor(): EditorContextValue {
+  const ctx = useContext(EditorContext)
+  if (!ctx) throw new Error('useEditor must be used within EditorProvider')
+  return ctx
+}
 
 export type EditorModeValue = Pick<
   EditorContextValue,

@@ -191,38 +191,32 @@ export function CodeQuestScreen() {
   }, [baseUrl, syncRootIndex])
 
   useEffect(() => {
-    if (!languageId || !rootIndex) {
-      if (!languageId) {
-        setBundle(null)
-        setLoadedLanguageId(null)
-      }
-      return
-    }
+    if (!languageId || !rootIndex) return
 
     const lang = rootIndex.languages.find((l) => l.id === languageId)
     if (!lang) return
-    if (loadedLanguageId === languageId && bundle) return
+    if (loadedLanguageId === languageId) return
 
     let cancelled = false
-    setBundleError(null)
     void loadLanguageBundle(baseUrl, lang.path)
       .then((b) => {
         if (cancelled) return
-        setBundle(b)
         setLoadedLanguageId(languageId)
+        setBundle(b)
+        setBundleError(null)
         syncBundle(languageId, b)
       })
       .catch((e: unknown) => {
         if (cancelled) return
-        setBundle(null)
         setLoadedLanguageId(null)
+        setBundle(null)
         setBundleError(e instanceof Error ? e.message : 'Failed to load language')
       })
 
     return () => {
       cancelled = true
     }
-  }, [languageId, rootIndex, baseUrl, syncBundle, loadedLanguageId, bundle])
+  }, [languageId, rootIndex, baseUrl, syncBundle, loadedLanguageId])
 
   useEffect(() => {
     if (!readMoreOpen) return
@@ -273,6 +267,7 @@ export function CodeQuestScreen() {
 
   const isLevelUnlocked = useCallback(
     (langId: string, levels: Level[], index: number): boolean => {
+      void progressVersion
       if (isEditMode) return true
       if (index === 0) return true
       const prev = levels[index - 1]
@@ -310,23 +305,23 @@ export function CodeQuestScreen() {
     if (levelId === prevLevelIdRef.current) return
     prevLevelIdRef.current = levelId
     if (!levelId || !selectedLevel) return
-    resetLevelWorkState(selectedLevel, languageId)
+    void Promise.resolve().then(() => resetLevelWorkState(selectedLevel, languageId))
   }, [levelId, selectedLevel, languageId, resetLevelWorkState])
 
   const openLanguage = useCallback(
     async (path: string, id: string): Promise<LanguageBundle | null> => {
       goToLanguage(id)
       if (loadedLanguageId === id && bundle) return bundle
-      setBundleError(null)
       try {
         const b = await loadLanguageBundle(baseUrl, path)
-        setBundle(b)
         setLoadedLanguageId(id)
+        setBundle(b)
+        setBundleError(null)
         syncBundle(id, b)
         return b
       } catch (e: unknown) {
-        setBundle(null)
         setLoadedLanguageId(null)
+        setBundle(null)
         setBundleError(e instanceof Error ? e.message : 'Failed to load language')
         return null
       }
@@ -488,6 +483,7 @@ export function CodeQuestScreen() {
   }
 
   const totalXp = useMemo(() => {
+    void progressVersion
     if (!displayRootIndex) return 0
     let xp = 0
     for (const lang of displayRootIndex.languages) {
@@ -501,6 +497,7 @@ export function CodeQuestScreen() {
   }, [languageBundles, displayRootIndex, resolveBundle, progressVersion])
 
   const continueTarget = useMemo((): ContinueTarget | null => {
+    void progressVersion
     if (!displayRootIndex) return null
     try {
       const raw = localStorage.getItem(LAST_LEVEL_STORAGE_KEY)
