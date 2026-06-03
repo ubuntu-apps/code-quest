@@ -1,16 +1,28 @@
 import type { LanguageBundle, RootIndex } from '../curriculum/types'
+import {
+  safeParseHomeLead,
+  safeParseLanguageBundle,
+  safeParseRootIndex,
+} from '../curriculum/curriculumSchemas'
 import type { AboutContent } from './aboutContent'
+import { z } from 'zod'
 
 const ROOT_KEY = 'codequest:editor:rootIndex'
 const BUNDLE_PREFIX = 'codequest:editor:bundle:'
 const ABOUT_KEY = 'codequest:editor:about'
 const HOME_LEAD_KEY = 'codequest:editor:homeLead'
 
-function readJson<T>(key: string): T | null {
+const aboutContentSchema = z.object({
+  lead: z.string(),
+  installIntro: z.string(),
+  installSteps: z.array(z.string()),
+})
+
+function readJson(key: string): unknown | null {
   try {
     const raw = localStorage.getItem(key)
     if (!raw) return null
-    return JSON.parse(raw) as T
+    return JSON.parse(raw) as unknown
   } catch {
     return null
   }
@@ -21,7 +33,9 @@ function writeJson(key: string, data: unknown): void {
 }
 
 export function loadDraftRootIndex(): RootIndex | null {
-  return readJson<RootIndex>(ROOT_KEY)
+  const data = readJson(ROOT_KEY)
+  if (data === null) return null
+  return safeParseRootIndex(data, ROOT_KEY)
 }
 
 export function saveDraftRootIndex(data: RootIndex): void {
@@ -29,7 +43,10 @@ export function saveDraftRootIndex(data: RootIndex): void {
 }
 
 export function loadDraftBundle(langId: string): LanguageBundle | null {
-  return readJson<LanguageBundle>(`${BUNDLE_PREFIX}${langId}`)
+  const key = `${BUNDLE_PREFIX}${langId}`
+  const data = readJson(key)
+  if (data === null) return null
+  return safeParseLanguageBundle(data, key)
 }
 
 export function saveDraftBundle(langId: string, data: LanguageBundle): void {
@@ -37,7 +54,14 @@ export function saveDraftBundle(langId: string, data: LanguageBundle): void {
 }
 
 export function loadDraftAbout(): AboutContent | null {
-  return readJson<AboutContent>(ABOUT_KEY)
+  const data = readJson(ABOUT_KEY)
+  if (data === null) return null
+  const result = aboutContentSchema.safeParse(data)
+  if (!result.success) {
+    console.warn(`Invalid draft in ${ABOUT_KEY}`)
+    return null
+  }
+  return result.data
 }
 
 export function saveDraftAbout(data: AboutContent): void {
@@ -45,7 +69,9 @@ export function saveDraftAbout(data: AboutContent): void {
 }
 
 export function loadDraftHomeLead(): string | null {
-  return readJson<string>(HOME_LEAD_KEY)
+  const data = readJson(HOME_LEAD_KEY)
+  if (data === null) return null
+  return safeParseHomeLead(data, HOME_LEAD_KEY)
 }
 
 export function saveDraftHomeLead(text: string): void {

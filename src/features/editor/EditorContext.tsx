@@ -38,7 +38,7 @@ import {
 import { canEditContent } from './editorAuth'
 import { downloadJson } from './exportCurriculum'
 
-interface EditorContextValue {
+export interface EditorContextValue {
   canEdit: boolean
   isEditMode: boolean
   setEditMode: (value: boolean) => void

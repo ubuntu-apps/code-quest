@@ -1,6 +1,6 @@
 import type { TestQuestion } from '../curriculum/types'
 import { EditableBlock, EditableMarkdown, EditableText, EditableTextarea } from './EditableField'
-import { useEditor } from './EditorContext'
+import { useEditorMode } from './editorHooks'
 import { EditableValidationEditor } from './EditableValidationEditor'
 
 interface EditableTestQuestionProps {
@@ -9,7 +9,7 @@ interface EditableTestQuestionProps {
 }
 
 export function EditableTestQuestionEditor({ question, onChange }: EditableTestQuestionProps) {
-  const { canEdit, isEditMode } = useEditor()
+  const { canEdit, isEditMode } = useEditorMode()
   if (!canEdit || !isEditMode) return null
 
   if (question.type === 'mcq') {

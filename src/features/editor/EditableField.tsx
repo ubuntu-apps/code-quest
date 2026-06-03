@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { SimpleMarkdown } from '../curriculum/SimpleMarkdown'
-import { useEditor } from './EditorContext'
+import { useEditorMode } from './editorHooks'
 
 interface EditableTextProps {
   value: string
@@ -17,7 +17,7 @@ export function EditableText({
   as: Tag = 'span',
   placeholder,
 }: EditableTextProps) {
-  const { canEdit, isEditMode } = useEditor()
+  const { canEdit, isEditMode } = useEditorMode()
   if (!canEdit || !isEditMode) {
     return <Tag className={className}>{value}</Tag>
   }
@@ -50,7 +50,7 @@ export function EditableTextarea({
   label,
   placeholder,
 }: EditableTextareaProps) {
-  const { canEdit, isEditMode } = useEditor()
+  const { canEdit, isEditMode } = useEditorMode()
   if (!canEdit || !isEditMode) {
     return label ? (
       <div>
@@ -83,7 +83,7 @@ interface EditableMarkdownProps {
 }
 
 export function EditableMarkdown({ value, onChange, label }: EditableMarkdownProps) {
-  const { canEdit, isEditMode } = useEditor()
+  const { canEdit, isEditMode } = useEditorMode()
   if (!canEdit || !isEditMode) {
     return <SimpleMarkdown text={value} />
   }
@@ -111,7 +111,7 @@ interface EditableBlockProps {
 }
 
 export function EditableBlock({ label, children }: EditableBlockProps) {
-  const { canEdit, isEditMode } = useEditor()
+  const { canEdit, isEditMode } = useEditorMode()
   if (!canEdit || !isEditMode) return null
   return (
     <div className="cq-editable-block">
