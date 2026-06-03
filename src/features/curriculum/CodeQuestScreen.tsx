@@ -33,6 +33,7 @@ import { CodeTextareaWithErrorLine } from './codeEditor'
 import { pythonErrorSummaryLine } from './pythonErrorHelper'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
+  AddItemButton,
   EditableMarkdown,
   EditableText,
   EditableTextarea,
@@ -40,6 +41,7 @@ import {
   EditableValidationEditor,
   EditorHeaderButton,
   EditorToolbar,
+  ListEditorActions,
   useEditor,
 } from '../editor'
 
@@ -152,6 +154,24 @@ export function CodeQuestScreen() {
     updateAboutLead,
     updateAboutInstallIntro,
     updateAboutInstallStep,
+    addLanguage,
+    removeLanguage,
+    moveLanguage,
+    addSection,
+    removeSection,
+    moveSection,
+    addLevel,
+    removeLevel,
+    moveLevel,
+    addChallenge,
+    removeChallenge,
+    moveChallenge,
+    addTestQuestion,
+    removeTestQuestion,
+    moveTestQuestion,
+    addAboutInstallStep,
+    removeAboutInstallStep,
+    moveAboutInstallStep,
   } = editor
 
   const [tab, setTab] = useState<TabId>('learn')
@@ -650,6 +670,36 @@ export function CodeQuestScreen() {
     }
   }, [sandboxCode, sandboxError])
 
+  const handleRemoveLanguage = (langId: string) => {
+    removeLanguage(langId)
+    if (languageId === langId) {
+      setBundle(null)
+      setLanguageId(null)
+      setSectionId(null)
+      setLevelId(null)
+      setLearnView('languages')
+    }
+  }
+
+  const handleRemoveSection = (secId: string) => {
+    if (!languageId) return
+    removeSection(languageId, secId)
+    if (sectionId === secId) {
+      setSectionId(null)
+      setLevelId(null)
+      setLearnView('sections')
+    }
+  }
+
+  const handleRemoveLevel = (secId: string, lvlId: string) => {
+    if (!languageId) return
+    removeLevel(languageId, secId, lvlId)
+    if (levelId === lvlId) {
+      setLevelId(null)
+      setLearnView('levels')
+    }
+  }
+
   const renderLearn = () => {
     if (rootError) {
       return <div className="cq-panel cq-error">{rootError}</div>
@@ -707,23 +757,34 @@ export function CodeQuestScreen() {
             onChange={updateHomeLead}
           />
           <ul className="cq-card-list">
-            {displayRootIndex.languages.map((lang) => (
-              <li key={lang.id}>
-                <button type="button" className="cq-card-btn" onClick={() => void openLanguage(lang.path, lang.id)}>
-                  <EditableText
-                    className="cq-card-title"
-                    value={lang.title}
-                    onChange={(title) => updateLanguage(lang.id, { title })}
+            {displayRootIndex.languages.map((lang, langIndex) => (
+              <li key={lang.id} className="cq-card-list-item">
+                <div className="cq-card-row">
+                  <button type="button" className="cq-card-btn" onClick={() => void openLanguage(lang.path, lang.id)}>
+                    <EditableText
+                      className="cq-card-title"
+                      value={lang.title}
+                      onChange={(title) => updateLanguage(lang.id, { title })}
+                    />
+                    <EditableText
+                      className="cq-card-meta"
+                      value={lang.id}
+                      onChange={(id) => updateLanguage(lang.id, { id })}
+                    />
+                  </button>
+                  <ListEditorActions
+                    canMoveUp={langIndex > 0}
+                    canMoveDown={langIndex < displayRootIndex.languages.length - 1}
+                    onMoveUp={() => moveLanguage(lang.id, -1)}
+                    onMoveDown={() => moveLanguage(lang.id, 1)}
+                    confirmMessage={`Delete language "${lang.title}"?`}
+                    onDelete={() => handleRemoveLanguage(lang.id)}
                   />
-                  <EditableText
-                    className="cq-card-meta"
-                    value={lang.id}
-                    onChange={(id) => updateLanguage(lang.id, { id })}
-                  />
-                </button>
+                </div>
               </li>
             ))}
           </ul>
+          <AddItemButton label="Add language" onClick={() => addLanguage()} />
         </div>
       )
     }
@@ -743,7 +804,7 @@ export function CodeQuestScreen() {
           />
           <p className="cq-lead">Sections</p>
           <ul className="cq-card-list">
-            {bundleForView.index.sections.map((sec) => {
+            {bundleForView.index.sections.map((sec, secIndex) => {
               const loaded = bundleForView.sections.find((s) => s.sectionRef.id === sec.id)
               const levels = loaded?.file.levels ?? []
               const completedCount =
@@ -757,33 +818,46 @@ export function CodeQuestScreen() {
                   : 0
 
               return (
-                <li key={sec.id}>
-                  <button
-                    type="button"
-                    className="cq-card-btn"
-                    onClick={() => {
-                      setSectionId(sec.id)
-                      setLearnView('levels')
-                    }}
-                  >
-                    <EditableText
-                      className="cq-card-title"
-                      value={sec.title}
-                      onChange={(title) =>
-                        languageId && updateSectionTitle(languageId, sec.id, title)
-                      }
+                <li key={sec.id} className="cq-card-list-item">
+                  <div className="cq-card-row">
+                    <button
+                      type="button"
+                      className="cq-card-btn"
+                      onClick={() => {
+                        setSectionId(sec.id)
+                        setLearnView('levels')
+                      }}
+                    >
+                      <EditableText
+                        className="cq-card-title"
+                        value={sec.title}
+                        onChange={(title) =>
+                          languageId && updateSectionTitle(languageId, sec.id, title)
+                        }
+                      />
+                      <span className="cq-card-meta">
+                        {completedCount}/{levels.length} levels complete · {sectionXp} XP
+                      </span>
+                      <div className="cq-progress-bar" aria-label={`${sec.title} progress`}>
+                        <div className="cq-progress-bar-fill" style={{ width: `${pct}%` }} />
+                      </div>
+                    </button>
+                    <ListEditorActions
+                      canMoveUp={secIndex > 0}
+                      canMoveDown={secIndex < bundleForView.index.sections.length - 1}
+                      onMoveUp={() => languageId && moveSection(languageId, sec.id, -1)}
+                      onMoveDown={() => languageId && moveSection(languageId, sec.id, 1)}
+                      confirmMessage={`Delete section "${sec.title}"?`}
+                      onDelete={() => handleRemoveSection(sec.id)}
                     />
-                    <span className="cq-card-meta">
-                      {completedCount}/{levels.length} levels complete · {sectionXp} XP
-                    </span>
-                    <div className="cq-progress-bar" aria-label={`${sec.title} progress`}>
-                      <div className="cq-progress-bar-fill" style={{ width: `${pct}%` }} />
-                    </div>
-                  </button>
+                  </div>
                 </li>
               )
             })}
           </ul>
+          {languageId && (
+            <AddItemButton label="Add section" onClick={() => addSection(languageId)} />
+          )}
         </div>
       )
     }
@@ -800,7 +874,7 @@ export function CodeQuestScreen() {
             }
           />
           <ul className="cq-card-list">
-            {selectedSection.file.levels.map((lvl) => {
+            {selectedSection.file.levels.map((lvl, lvlIndex) => {
               const levelIndex = selectedSection.file.levels.findIndex((v) => v.id === lvl.id)
               const locked =
                 !isEditMode &&
@@ -814,51 +888,75 @@ export function CodeQuestScreen() {
               const done = Boolean(p && challengesDone && p.testPassed)
               const partial = Boolean(p && !done && (p.challengesCompleted.length > 0 || p.testPassed))
               return (
-                <li key={lvl.id}>
-                  <button
-                    type="button"
-                    className={`cq-card-btn${locked ? ' cq-card-btn--locked' : ''}`}
-                    disabled={locked}
-                    onClick={() => {
-                      if ((locked && !isEditMode) || !languageId) return
-                      setLevelId(lvl.id)
-                      setLevelStep('intro')
-                      setLearnView('level')
-                      resetLevelWorkState(lvl, languageId)
-                      localStorage.setItem(
-                        LAST_LEVEL_STORAGE_KEY,
-                        JSON.stringify({
-                          languageId,
-                          languagePath:
-                            displayRootIndex?.languages.find((lang) => lang.id === languageId)?.path ?? '',
-                          sectionId: selectedSection.sectionRef.id,
-                          levelId: lvl.id,
-                        }),
-                      )
-                    }}
-                  >
-                    <EditableText
-                      className="cq-card-title"
-                      value={lvl.title}
-                      onChange={(title) =>
+                <li key={lvl.id} className="cq-card-list-item">
+                  <div className="cq-card-row">
+                    <button
+                      type="button"
+                      className={`cq-card-btn${locked ? ' cq-card-btn--locked' : ''}`}
+                      disabled={locked}
+                      onClick={() => {
+                        if ((locked && !isEditMode) || !languageId) return
+                        setLevelId(lvl.id)
+                        setLevelStep('intro')
+                        setLearnView('level')
+                        resetLevelWorkState(lvl, languageId)
+                        localStorage.setItem(
+                          LAST_LEVEL_STORAGE_KEY,
+                          JSON.stringify({
+                            languageId,
+                            languagePath:
+                              displayRootIndex?.languages.find((lang) => lang.id === languageId)?.path ?? '',
+                            sectionId: selectedSection.sectionRef.id,
+                            levelId: lvl.id,
+                          }),
+                        )
+                      }}
+                    >
+                      <EditableText
+                        className="cq-card-title"
+                        value={lvl.title}
+                        onChange={(title) =>
+                          languageId &&
+                          updateLevelTitle(languageId, selectedSection.sectionRef.id, lvl.id, title)
+                        }
+                      />
+                      <span className="cq-card-meta">
+                        {locked
+                          ? 'Locked · pass previous test to unlock'
+                          : done
+                            ? 'Completed'
+                            : partial
+                              ? 'In progress'
+                              : 'Not started'}
+                      </span>
+                    </button>
+                    <ListEditorActions
+                      canMoveUp={lvlIndex > 0}
+                      canMoveDown={lvlIndex < selectedSection.file.levels.length - 1}
+                      onMoveUp={() =>
                         languageId &&
-                        updateLevelTitle(languageId, selectedSection.sectionRef.id, lvl.id, title)
+                        moveLevel(languageId, selectedSection.sectionRef.id, lvl.id, -1)
+                      }
+                      onMoveDown={() =>
+                        languageId &&
+                        moveLevel(languageId, selectedSection.sectionRef.id, lvl.id, 1)
+                      }
+                      confirmMessage={`Delete level "${lvl.title}"?`}
+                      onDelete={() =>
+                        handleRemoveLevel(selectedSection.sectionRef.id, lvl.id)
                       }
                     />
-                    <span className="cq-card-meta">
-                      {locked
-                        ? 'Locked · pass previous test to unlock'
-                        : done
-                          ? 'Completed'
-                          : partial
-                            ? 'In progress'
-                            : 'Not started'}
-                    </span>
-                  </button>
+                  </div>
                 </li>
               )
             })}
           </ul>
+          {languageId && (
+            <AddItemButton
+              label="Add level"
+              onClick={() => addLevel(languageId, selectedSection.sectionRef.id)}
+            />
+          )}
         </div>
       )
     }
@@ -1111,7 +1209,7 @@ ${sandboxErrorPointer.caret}`}
 
           {levelStep === 'challenges' && (
             <section className="cq-challenges">
-              {selectedLevel.challenges.map((ch) => {
+              {selectedLevel.challenges.map((ch, chIndex) => {
                 const done = prog.challengesCompleted.includes(ch.id)
                 const status = challengeStatus[ch.id]
                 const pyRuntimeErr = challengeRuntimeError[ch.id] ?? null
@@ -1123,18 +1221,27 @@ ${sandboxErrorPointer.caret}`}
                   ch.validation.mode === 'python_tests' && pyRuntimeErr
                     ? pythonErrorLinePointer(challengeDrafts[ch.id] ?? '', pyRuntimeErr)
                     : null
+                const secId = selectedSection!.sectionRef.id
                 return (
                   <div key={ch.id} className="cq-panel cq-challenge-card">
-                    <EditableText
-                      as="h2"
-                      className="cq-subtitle"
-                      value={ch.title}
-                      onChange={(title) =>
-                        updateChallenge(languageId, selectedSection!.sectionRef.id, selectedLevel.id, ch.id, {
-                          title,
-                        })
-                      }
-                    />
+                    <div className="cq-card-row cq-card-row--panel">
+                      <EditableText
+                        as="h2"
+                        className="cq-subtitle"
+                        value={ch.title}
+                        onChange={(title) =>
+                          updateChallenge(languageId, secId, selectedLevel.id, ch.id, { title })
+                        }
+                      />
+                      <ListEditorActions
+                        canMoveUp={chIndex > 0}
+                        canMoveDown={chIndex < selectedLevel.challenges.length - 1}
+                        onMoveUp={() => moveChallenge(languageId, secId, selectedLevel.id, ch.id, -1)}
+                        onMoveDown={() => moveChallenge(languageId, secId, selectedLevel.id, ch.id, 1)}
+                        confirmMessage={`Delete challenge "${ch.title}"?`}
+                        onDelete={() => removeChallenge(languageId, secId, selectedLevel.id, ch.id)}
+                      />
+                    </div>
                     <EditableMarkdown
                       value={ch.promptMarkdown}
                       onChange={(promptMarkdown) =>
@@ -1343,6 +1450,12 @@ ${pyErrPointer.caret}`}
                   </div>
                 )
               })}
+              <AddItemButton
+                label="Add challenge"
+                onClick={() =>
+                  addChallenge(languageId, selectedSection!.sectionRef.id, selectedLevel.id)
+                }
+              />
             </section>
           )}
 
@@ -1378,7 +1491,9 @@ ${pyErrPointer.caret}`}
                   <li key={q.id} className="cq-test-item">
                     <div className="cq-test-prompt">
                       <span className="cq-test-num">{qi + 1}.</span>
-                      <div>
+                      <div className="cq-test-content">
+                        <div className="cq-card-row cq-card-row--panel">
+                          <div className="cq-test-body">
                         {q.type === 'mcq' ? (
                           <>
                             <p>{q.prompt}</p>
@@ -1413,6 +1528,39 @@ ${pyErrPointer.caret}`}
                             />
                           </>
                         )}
+                          </div>
+                          <ListEditorActions
+                            canMoveUp={qi > 0}
+                            canMoveDown={qi < selectedLevel.test.questions.length - 1}
+                            onMoveUp={() =>
+                              moveTestQuestion(
+                                languageId,
+                                selectedSection!.sectionRef.id,
+                                selectedLevel.id,
+                                q.id,
+                                -1,
+                              )
+                            }
+                            onMoveDown={() =>
+                              moveTestQuestion(
+                                languageId,
+                                selectedSection!.sectionRef.id,
+                                selectedLevel.id,
+                                q.id,
+                                1,
+                              )
+                            }
+                            confirmMessage="Delete this test question?"
+                            onDelete={() =>
+                              removeTestQuestion(
+                                languageId,
+                                selectedSection!.sectionRef.id,
+                                selectedLevel.id,
+                                q.id,
+                              )
+                            }
+                          />
+                        </div>
                         <EditableTestQuestionEditor
                           question={q}
                           onChange={(question) =>
@@ -1430,6 +1578,30 @@ ${pyErrPointer.caret}`}
                   </li>
                 ))}
               </ol>
+              <div className="cq-row cq-test-add-buttons">
+                <AddItemButton
+                  label="Add MCQ"
+                  onClick={() =>
+                    addTestQuestion(
+                      languageId,
+                      selectedSection!.sectionRef.id,
+                      selectedLevel.id,
+                      'mcq',
+                    )
+                  }
+                />
+                <AddItemButton
+                  label="Add short-text"
+                  onClick={() =>
+                    addTestQuestion(
+                      languageId,
+                      selectedSection!.sectionRef.id,
+                      selectedLevel.id,
+                      'shortText',
+                    )
+                  }
+                />
+              </div>
               <button type="button" className="cq-btn cq-btn--primary" onClick={submitTest}>
                 Submit test
               </button>
@@ -1577,18 +1749,29 @@ ${pyErrPointer.caret}`}
             />
             <ol className="cq-install-steps">
               {installSteps.map((step, i) => (
-                <li key={`${i}-${step.slice(0, 20)}`}>
-                  {isEditMode ? (
-                    <EditableText
-                      value={step.replace(/^\d+\.\s*/, '')}
-                      onChange={(text) => updateAboutInstallStep(i, text)}
+                <li key={`${i}-${step.slice(0, 20)}`} className="cq-install-step-row">
+                  <div className="cq-card-row">
+                    {isEditMode ? (
+                      <EditableText
+                        value={step.replace(/^\d+\.\s*/, '')}
+                        onChange={(text) => updateAboutInstallStep(i, text)}
+                      />
+                    ) : (
+                      step.replace(/^\d+\.\s*/, '')
+                    )}
+                    <ListEditorActions
+                      canMoveUp={i > 0}
+                      canMoveDown={i < installSteps.length - 1}
+                      onMoveUp={() => moveAboutInstallStep(i, -1)}
+                      onMoveDown={() => moveAboutInstallStep(i, 1)}
+                      confirmMessage="Delete this install step?"
+                      onDelete={() => removeAboutInstallStep(i)}
                     />
-                  ) : (
-                    step.replace(/^\d+\.\s*/, '')
-                  )}
+                  </div>
                 </li>
               ))}
             </ol>
+            <AddItemButton label="Add install step" onClick={addAboutInstallStep} />
             <div className="cq-row cq-about-actions">
               <button type="button" className="cq-btn" onClick={resetInstallPrompt}>
                 Reset install prompt
