@@ -4,6 +4,8 @@ import { EditableText, ListEditorActions } from '../../editor'
 interface CatalogListItemProps {
   title: string
   onTitleChange: (title: string) => void
+  onTitleCommit?: (title: string) => void
+  titlePlaceholder?: string
   onClick: () => void
   meta?: ReactNode
   metaEditable?: {
@@ -25,6 +27,8 @@ interface CatalogListItemProps {
 export function CatalogListItem({
   title,
   onTitleChange,
+  onTitleCommit,
+  titlePlaceholder,
   onClick,
   meta,
   metaEditable,
@@ -51,7 +55,9 @@ export function CatalogListItem({
           <EditableText
             className="cq-card-title"
             value={title}
+            placeholder={titlePlaceholder}
             onChange={onTitleChange}
+            onCommit={onTitleCommit}
           />
           {metaEditable ? (
             <EditableText

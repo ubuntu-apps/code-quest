@@ -593,7 +593,9 @@ export function CodeQuestScreen() {
           languageId={languageId}
           onSelectSection={(id) => languageId && goToSection(languageId, id)}
           onUpdateLanguageTitle={(title) => languageId && updateLanguageTitle(languageId, title)}
-          onUpdateSectionTitle={(id, title) => languageId && updateSectionTitle(languageId, id, title)}
+          onUpdateSectionTitle={(id, title, options) =>
+            languageId && updateSectionTitle(languageId, id, title, options)
+          }
           onMoveSection={(id, dir) => languageId && moveSection(languageId, id, dir)}
           onRemoveSection={handleRemoveSection}
           onAddSection={() => languageId && addSection(languageId)}

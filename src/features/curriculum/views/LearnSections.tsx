@@ -9,7 +9,7 @@ interface LearnSectionsProps {
   languageId: string | null
   onSelectSection: (sectionId: string) => void
   onUpdateLanguageTitle: (title: string) => void
-  onUpdateSectionTitle: (sectionId: string, title: string) => void
+  onUpdateSectionTitle: (sectionId: string, title: string, options?: { commit?: boolean }) => void
   onMoveSection: (sectionId: string, direction: -1 | 1) => void
   onRemoveSection: (sectionId: string) => void
   onAddSection: () => void
@@ -52,7 +52,9 @@ export function LearnSections({
             <CatalogListItem
               key={sec.id}
               title={sec.title}
+              titlePlaceholder="Section title"
               onTitleChange={(title) => onUpdateSectionTitle(sec.id, title)}
+              onTitleCommit={(title) => onUpdateSectionTitle(sec.id, title, { commit: true })}
               onClick={() => onSelectSection(sec.id)}
               meta={
                 <span className="cq-card-meta">
