@@ -55,7 +55,7 @@ export function createDefaultSection(): { sectionId: string; sectionFile: Sectio
     path,
     sectionFile: {
       sectionId,
-      title: 'New section',
+      title: '',
       levels: [],
     },
   }

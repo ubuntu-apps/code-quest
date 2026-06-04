@@ -5,6 +5,7 @@ import { useEditorMode } from './editorHooks'
 interface EditableTextProps {
   value: string
   onChange: (value: string) => void
+  onCommit?: (value: string) => void
   className?: string
   as?: 'span' | 'h1' | 'h2' | 'h3' | 'p'
   placeholder?: string
@@ -13,6 +14,7 @@ interface EditableTextProps {
 export function EditableText({
   value,
   onChange,
+  onCommit,
   className,
   as: Tag = 'span',
   placeholder,
@@ -21,6 +23,11 @@ export function EditableText({
   if (!canEdit || !isEditingLocal) {
     return <Tag className={className}>{value}</Tag>
   }
+
+  const commit = (next: string) => {
+    onCommit?.(next)
+  }
+
   return (
     <input
       type="text"
@@ -29,6 +36,13 @@ export function EditableText({
       placeholder={placeholder}
       onClick={(e) => e.stopPropagation()}
       onChange={(e) => onChange(e.target.value)}
+      onBlur={(e) => commit(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key !== 'Enter') return
+        e.preventDefault()
+        e.stopPropagation()
+        e.currentTarget.blur()
+      }}
     />
   )
 }
