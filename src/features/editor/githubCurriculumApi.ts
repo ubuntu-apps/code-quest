@@ -1,4 +1,5 @@
 import type { LanguageBundle, RootIndex } from '../curriculum/types'
+import { buildCurriculumSavePlan } from './curriculumSavePlan'
 import {
   getGitHubAccessToken,
   getGitHubContentBranch,
@@ -65,39 +66,6 @@ export async function putGitHubJsonFile(
     const err = (await res.json().catch(() => null)) as { message?: string } | null
     throw new Error(err?.message ?? `Failed to save ${repoPath} (${res.status})`)
   }
-}
-
-export interface GitHubSavePlan {
-  repoPath: string
-  json: unknown
-  label: string
-}
-
-export function buildCurriculumSavePlan(
-  rootIndex: RootIndex,
-  bundles: Record<string, LanguageBundle>,
-): GitHubSavePlan[] {
-  const plan: GitHubSavePlan[] = [
-    { repoPath: 'index.json', json: rootIndex, label: 'index.json' },
-  ]
-
-  for (const [langId, bundle] of Object.entries(bundles)) {
-    plan.push({
-      repoPath: `${langId}/index.json`,
-      json: bundle.index,
-      label: `${langId}/index.json`,
-    })
-    for (const section of bundle.sections) {
-      const filename = section.sectionRef.path.split('/').pop() ?? `${section.sectionRef.id}.json`
-      plan.push({
-        repoPath: `${langId}/${filename}`,
-        json: section.file,
-        label: `${langId}/${filename}`,
-      })
-    }
-  }
-
-  return plan
 }
 
 export async function saveCurriculumToGitHub(

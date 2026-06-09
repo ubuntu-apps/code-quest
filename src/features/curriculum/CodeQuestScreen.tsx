@@ -83,7 +83,15 @@ export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
   const [platform] = useState(() => detectPlatform())
   const progressVersion = useProgressVersion()
-  const { isEditMode, contentSource, setContentSource, githubHomeLead } = useEditorMode()
+  const {
+    isEditMode,
+    contentSource,
+    setContentSource,
+    githubHomeLead,
+    editSessionEpoch,
+    registerCatalogReload,
+    applyCatalogFromDisk,
+  } = useEditorMode()
   const {
     rootIndex: editableRootIndex,
     syncRootIndex,
@@ -179,6 +187,7 @@ export function CodeQuestScreen() {
     rootIndex,
     baseUrl,
     syncBundle,
+    getBundle,
   )
 
   useEffect(() => {
@@ -198,7 +207,21 @@ export function CodeQuestScreen() {
     if (loadedLanguageId === languageId) return
 
     let cancelled = false
-    void loadLanguageBundle(baseUrl, lang.path)
+    const useLocalContent = isEditMode && contentSource === 'local'
+    const draftBundle = useLocalContent ? getBundle(languageId) : null
+    if (useLocalContent && draftBundle) {
+      void Promise.resolve().then(() => {
+        if (cancelled) return
+        setBundle(draftBundle)
+        setLoadedLanguageId(languageId)
+        setBundleError(null)
+      })
+      return () => {
+        cancelled = true
+      }
+    }
+
+    void loadLanguageBundle(baseUrl, lang.path, { fallbackBundle: draftBundle ?? getBundle(languageId) })
       .then((b) => {
         if (cancelled) return
         setLoadedLanguageId(languageId)
@@ -216,7 +239,60 @@ export function CodeQuestScreen() {
     return () => {
       cancelled = true
     }
-  }, [languageId, rootIndex, baseUrl, syncBundle, loadedLanguageId])
+  }, [
+    languageId,
+    rootIndex,
+    baseUrl,
+    syncBundle,
+    loadedLanguageId,
+    isEditMode,
+    contentSource,
+    getBundle,
+    editSessionEpoch,
+  ])
+
+  useEffect(() => {
+    return registerCatalogReload(async () => {
+      setLoadedLanguageId(null)
+      setBundleError(null)
+
+      if (import.meta.env.DEV) {
+        const root = await loadRootIndex(baseUrl, { cacheBust: true })
+        const loaded: Record<string, LanguageBundle> = {}
+        for (const lang of root.languages) {
+          loaded[lang.id] = await loadLanguageBundle(baseUrl, lang.path, {
+            cacheBust: true,
+            fallbackBundle: getBundle(lang.id),
+          })
+        }
+        applyCatalogFromDisk(root, loaded)
+        setRootIndex(root)
+        if (languageId && loaded[languageId]) {
+          setBundle(loaded[languageId])
+          setLoadedLanguageId(languageId)
+          syncBundle(languageId, loaded[languageId])
+        }
+        return
+      }
+
+      if (editableRootIndex) setRootIndex(editableRootIndex)
+      if (languageId) {
+        const draft = getBundle(languageId)
+        if (draft) {
+          setBundle(draft)
+          setLoadedLanguageId(languageId)
+        }
+      }
+    })
+  }, [
+    registerCatalogReload,
+    applyCatalogFromDisk,
+    baseUrl,
+    languageId,
+    getBundle,
+    syncBundle,
+    editableRootIndex,
+  ])
 
   useEffect(() => {
     if (!readMoreOpen) return
@@ -313,7 +389,9 @@ export function CodeQuestScreen() {
       goToLanguage(id)
       if (loadedLanguageId === id && bundle) return bundle
       try {
-        const b = await loadLanguageBundle(baseUrl, path)
+        const b = await loadLanguageBundle(baseUrl, path, {
+          fallbackBundle: getBundle(id),
+        })
         setLoadedLanguageId(id)
         setBundle(b)
         setBundleError(null)
@@ -326,7 +404,7 @@ export function CodeQuestScreen() {
         return null
       }
     },
-    [baseUrl, syncBundle, goToLanguage, loadedLanguageId, bundle],
+    [baseUrl, syncBundle, goToLanguage, loadedLanguageId, bundle, getBundle],
   )
 
   const openLevelByPath = useCallback(
