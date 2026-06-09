@@ -45,6 +45,10 @@ export function saveDraftRootIndex(data: RootIndex): void {
   writeJson(ROOT_KEY, data)
 }
 
+export function removeDraftRootIndex(): void {
+  localStorage.removeItem(ROOT_KEY)
+}
+
 export function loadDraftBundle(langId: string): LanguageBundle | null {
   const key = `${BUNDLE_PREFIX}${langId}`
   const data = readJson(key)
@@ -54,6 +58,21 @@ export function loadDraftBundle(langId: string): LanguageBundle | null {
 
 export function saveDraftBundle(langId: string, data: LanguageBundle): void {
   writeJson(`${BUNDLE_PREFIX}${langId}`, data)
+}
+
+export function removeDraftBundle(langId: string): void {
+  localStorage.removeItem(`${BUNDLE_PREFIX}${langId}`)
+}
+
+export function listDraftBundleIds(): string[] {
+  const ids: string[] = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    if (key?.startsWith(BUNDLE_PREFIX)) {
+      ids.push(key.slice(BUNDLE_PREFIX.length))
+    }
+  }
+  return ids
 }
 
 export function loadDraftAbout(): AboutContent | null {

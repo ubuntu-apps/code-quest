@@ -2,12 +2,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { curriculumSavePlugin } from './scripts/vite-curriculum-save-plugin'
 
 // https://vite.dev/config/
 export default defineConfig({
   base: '/code-quest/',
   plugins: [
     react(),
+    curriculumSavePlugin(),
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: {

@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react'
@@ -32,6 +33,9 @@ import {
   loadDraftHomeLead,
   loadDraftRootIndex,
   loadContentSource,
+  listDraftBundleIds,
+  removeDraftBundle,
+  removeDraftRootIndex,
   saveContentSource,
   saveDraftAbout,
   saveDraftBundle,
@@ -39,9 +43,11 @@ import {
   saveDraftRootIndex,
   type ContentSource,
 } from './curriculumDraftStorage'
+import { captureEditorSnapshot, type EditorDraftSnapshot } from './editorSnapshot'
 import { canEditContent, subscribeGitHubAuth } from './editorAuth'
 import { downloadJson } from './exportCurriculum'
 import { saveCurriculumToGitHub } from './githubCurriculumApi'
+import { canSaveCurriculumToDisk, saveCurriculumToDisk } from './localCurriculumApi'
 import { DEFAULT_HOME_LEAD } from './editorConstants'
 import { EditorContext } from './editorReactContext'
 import {
@@ -56,6 +62,12 @@ export interface EditorContextValue {
   isEditMode: boolean
   setEditMode: (value: boolean) => void
   toggleEditMode: () => void
+  beginEditSession: () => void
+  commitEditSession: () => Promise<void>
+  discardEditSession: () => Promise<void>
+  editSessionEpoch: number
+  registerCatalogReload: (handler: () => void | Promise<void>) => () => void
+  applyCatalogFromDisk: (root: RootIndex, loadedBundles: Record<string, LanguageBundle>) => void
 
   contentSource: ContentSource
   setContentSource: (source: ContentSource) => void
@@ -185,6 +197,9 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     message: string
     resolve: (value: boolean) => void
   } | null>(null)
+  const [editSessionEpoch, setEditSessionEpoch] = useState(0)
+  const editSnapshotRef = useRef<EditorDraftSnapshot | null>(null)
+  const catalogReloadRef = useRef<(() => void | Promise<void>) | null>(null)
 
   const requestConfirm = useCallback((message: string) => {
     return new Promise<boolean>((resolve) => {
@@ -725,9 +740,96 @@ export function EditorProvider({ children }: { children: ReactNode }) {
     [rootIndex, bundles],
   )
 
-  const toggleEditMode = useCallback(() => {
-    setEditMode((v) => !v)
+  const persistAllDrafts = useCallback(() => {
+    if (rootIndex) saveDraftRootIndex(rootIndex)
+    for (const [langId, bundle] of Object.entries(bundles)) {
+      saveDraftBundle(langId, bundle)
+    }
+    saveDraftHomeLead(homeLead)
+    saveDraftAbout(aboutContent)
+  }, [rootIndex, bundles, homeLead, aboutContent])
+
+  const restoreEditSnapshot = useCallback((snapshot: EditorDraftSnapshot) => {
+    setRootIndex(snapshot.rootIndex)
+    if (snapshot.rootIndex) saveDraftRootIndex(snapshot.rootIndex)
+    else removeDraftRootIndex()
+    setBundles(snapshot.bundles)
+    const snapshotLangIds = new Set(Object.keys(snapshot.bundles))
+    for (const [langId, bundle] of Object.entries(snapshot.bundles)) {
+      saveDraftBundle(langId, bundle)
+    }
+    for (const langId of listDraftBundleIds()) {
+      if (!snapshotLangIds.has(langId)) removeDraftBundle(langId)
+    }
+    setHomeLead(snapshot.homeLead)
+    saveDraftHomeLead(snapshot.homeLead)
+    setAboutContent(snapshot.aboutContent)
+    saveDraftAbout(snapshot.aboutContent)
+    setEditSessionEpoch((n) => n + 1)
   }, [])
+
+  const beginEditSession = useCallback(() => {
+    editSnapshotRef.current = captureEditorSnapshot(rootIndex, bundles, homeLead, aboutContent)
+    setContentSourceState('local')
+    saveContentSource('local')
+    setEditMode(true)
+  }, [rootIndex, bundles, homeLead, aboutContent])
+
+  const registerCatalogReload = useCallback((handler: () => void | Promise<void>) => {
+    catalogReloadRef.current = handler
+    return () => {
+      if (catalogReloadRef.current === handler) catalogReloadRef.current = null
+    }
+  }, [])
+
+  const applyCatalogFromDisk = useCallback(
+    (root: RootIndex, loadedBundles: Record<string, LanguageBundle>) => {
+      setRootIndex(root)
+      saveDraftRootIndex(root)
+      setBundles(loadedBundles)
+      for (const [langId, bundle] of Object.entries(loadedBundles)) {
+        saveDraftBundle(langId, bundle)
+      }
+      setEditSessionEpoch((n) => n + 1)
+    },
+    [],
+  )
+
+  const commitEditSession = useCallback(async () => {
+    if (!rootIndex) {
+      editSnapshotRef.current = null
+      setEditMode(false)
+      return
+    }
+    persistAllDrafts()
+    if (canSaveCurriculumToDisk()) {
+      await saveCurriculumToDisk(rootIndex, bundles)
+    }
+    editSnapshotRef.current = null
+    setEditMode(false)
+    await catalogReloadRef.current?.()
+  }, [persistAllDrafts, rootIndex, bundles])
+
+  const discardEditSession = useCallback(async () => {
+    const snapshot = editSnapshotRef.current
+    if (!snapshot) {
+      setEditMode(false)
+      return
+    }
+    const ok = await requestConfirm('Discard all edits made since you opened edit mode?')
+    if (!ok) return
+    restoreEditSnapshot(snapshot)
+    editSnapshotRef.current = null
+    setEditMode(false)
+  }, [requestConfirm, restoreEditSnapshot])
+
+  const toggleEditMode = useCallback(() => {
+    if (isEditMode) {
+      void discardEditSession()
+    } else {
+      beginEditSession()
+    }
+  }, [isEditMode, beginEditSession, discardEditSession])
 
   const setContentSource = useCallback((source: ContentSource) => {
     setContentSourceState(source)
@@ -740,6 +842,12 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       isEditMode,
       setEditMode,
       toggleEditMode,
+      beginEditSession,
+      commitEditSession,
+      discardEditSession,
+      editSessionEpoch,
+      registerCatalogReload,
+      applyCatalogFromDisk,
       contentSource,
       setContentSource,
       githubHomeLead: DEFAULT_HOME_LEAD,
@@ -791,6 +899,12 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       canEdit,
       isEditMode,
       toggleEditMode,
+      beginEditSession,
+      commitEditSession,
+      discardEditSession,
+      editSessionEpoch,
+      registerCatalogReload,
+      applyCatalogFromDisk,
       contentSource,
       setContentSource,
       rootIndex,

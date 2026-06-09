@@ -10,7 +10,19 @@ export function useEditor(): EditorContextValue {
 
 export type EditorModeValue = Pick<
   EditorContextValue,
-  'canEdit' | 'isEditMode' | 'setEditMode' | 'toggleEditMode' | 'contentSource' | 'setContentSource' | 'githubHomeLead'
+  | 'canEdit'
+  | 'isEditMode'
+  | 'setEditMode'
+  | 'toggleEditMode'
+  | 'beginEditSession'
+  | 'commitEditSession'
+  | 'discardEditSession'
+  | 'editSessionEpoch'
+  | 'registerCatalogReload'
+  | 'applyCatalogFromDisk'
+  | 'contentSource'
+  | 'setContentSource'
+  | 'githubHomeLead'
 > & {
   isEditingLocal: boolean
 }
@@ -74,14 +86,33 @@ export type EditorAboutValue = Pick<
 export type EditorGitHubValue = Pick<EditorContextValue, 'importFromGitHub' | 'saveToGitHub'>
 
 export function useEditorMode(): EditorModeValue {
-  const { canEdit, isEditMode, setEditMode, toggleEditMode, contentSource, setContentSource, githubHomeLead } =
-    useEditor()
+  const {
+    canEdit,
+    isEditMode,
+    setEditMode,
+    toggleEditMode,
+    beginEditSession,
+    commitEditSession,
+    discardEditSession,
+    editSessionEpoch,
+    registerCatalogReload,
+    applyCatalogFromDisk,
+    contentSource,
+    setContentSource,
+    githubHomeLead,
+  } = useEditor()
   const isEditingLocal = isEditMode && contentSource === 'local'
   return {
     canEdit,
     isEditMode,
     setEditMode,
     toggleEditMode,
+    beginEditSession,
+    commitEditSession,
+    discardEditSession,
+    editSessionEpoch,
+    registerCatalogReload,
+    applyCatalogFromDisk,
     contentSource,
     setContentSource,
     githubHomeLead,

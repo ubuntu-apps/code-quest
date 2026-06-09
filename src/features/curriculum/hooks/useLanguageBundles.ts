@@ -6,6 +6,7 @@ export function useLanguageBundles(
   rootIndex: RootIndex | null,
   baseUrl: string,
   syncBundle: (langId: string, bundle: LanguageBundle) => void,
+  getBundle?: (langId: string) => LanguageBundle | null,
 ) {
   const [bundles, setBundles] = useState<Record<string, LanguageBundle>>({})
   const [loading, setLoading] = useState(false)
@@ -21,7 +22,9 @@ export function useLanguageBundles(
       try {
         const entries = await Promise.all(
           rootIndex.languages.map(async (lang) => {
-            const b = await loadLanguageBundle(baseUrl, lang.path)
+            const b = await loadLanguageBundle(baseUrl, lang.path, {
+              fallbackBundle: getBundle?.(lang.id) ?? null,
+            })
             return [lang.id, b] as const
           }),
         )
@@ -43,7 +46,7 @@ export function useLanguageBundles(
     return () => {
       cancelled = true
     }
-  }, [rootIndex, baseUrl, syncBundle])
+  }, [rootIndex, baseUrl, syncBundle, getBundle])
 
   return {
     bundles: rootIndex ? bundles : {},
