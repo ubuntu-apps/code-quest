@@ -1,23 +1,184 @@
 {
   "sectionId": "data_structures",
-  "title": "Data structures",
+  "title": "Data Structures",
   "levels": [
     {
       "id": "lists",
       "title": "Lists",
       "intro": {
-        "title": "Ordered sequences",
-        "bodyMarkdown": "A **list** is an ordered collection in square brackets. Elements can be mixed types.\n\n```python\nnums = [1, 2, 3]\nnums.append(4)\n```"
+        "title": "Lists",
+        "bodyMarkdown": "Lists are ordered, mutable sequences: `nums = [1, 2, 3]`. Index from 0; negative indices from end.\n\nMethods: append, extend, insert, pop, remove, sort. Lists can hold mixed types.\n\nLists are workhorses for collections you change often.",
+        "sandboxCode": "nums = [10, 20, 30]\nnums.append(40)\nprint(nums[0], nums[-1], len(nums))"
       },
       "challenges": [
         {
-          "id": "py_list_literal",
-          "title": "List literal",
-          "promptMarkdown": "Create a list named `items` containing integers `1` and `2` in order.",
-          "starterCode": "items = ",
+          "id": "ch_t5urfz7",
+          "title": "Easy: Create list",
+          "promptMarkdown": "lst=[1,2,3]",
+          "starterCode": "",
           "validation": {
-            "mode": "regex",
-            "pattern": "items\\s*=\\s*\\[\\s*1\\s*,\\s*2\\s*\\]"
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lst",
+                "assertion": "lst==[1,2,3]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ose9cyi",
+          "title": "Easy: Index",
+          "promptMarkdown": "lst[0] from [5,6]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lst=[5,6]\nx=lst[0]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x==5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hd1h1kb",
+          "title": "Medium: append",
+          "promptMarkdown": "append 4",
+          "starterCode": "lst.append(4)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lst=[1,2,3]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lst",
+                "assertion": "lst==[1,2,3,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ou6qjzn",
+          "title": "Medium: slice",
+          "promptMarkdown": "[1:3] of [0,1,2,3]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==[1,2]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qbaxdzm",
+          "title": "Hard: pop",
+          "promptMarkdown": "pop last",
+          "starterCode": "lst.pop()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lst=[1,2]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lst",
+                "assertion": "lst==[1]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ov9psd1",
+          "title": "Hard: sort",
+          "promptMarkdown": "sort desc?",
+          "starterCode": "lst.sort()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lst=[3,1,2]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lst",
+                "assertion": "lst==[1,2,3]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_u0fjo6p",
+          "title": "Expert: list comp",
+          "promptMarkdown": "squares 0-3",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=[i*i for i in range(4)]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==[0,1,4,9]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_do1xga4",
+          "title": "Expert: extend",
+          "promptMarkdown": "extend [3]",
+          "starterCode": "lst.extend([3])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lst=[1,2]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lst",
+                "assertion": "lst==[1,2,3]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_e8uflqr",
+          "title": "Expert: insert",
+          "promptMarkdown": "insert 0 at 0",
+          "starterCode": "lst.insert(0,0)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lst=[1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lst",
+                "assertion": "lst==[0,1]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_a4r412h",
+          "title": "Expert: copy",
+          "promptMarkdown": "copy not alias",
+          "starterCode": "b.pop()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "a=[1,2]\nb=a.copy()",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks b",
+                "assertion": "b==[1] and a==[1,2]"
+              }
+            ]
           }
         }
       ],
@@ -25,24 +186,3249 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "py_list_mcq",
+            "id": "q_pqp33l4",
             "type": "mcq",
-            "prompt": "Which literal is a Python list?",
+            "prompt": "Lists are:",
             "choices": [
               {
                 "id": "a",
-                "label": "(1, 2)"
+                "label": "Mutable"
               },
               {
                 "id": "b",
-                "label": "{1, 2}"
+                "label": "Immutable"
               },
               {
                 "id": "c",
-                "label": "[1, 2]"
+                "label": "Unordered only"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_u0fhxg3",
+            "type": "shortText",
+            "prompt": "First index?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "0"
+            }
+          },
+          {
+            "id": "q_95b4zl6",
+            "type": "mcq",
+            "prompt": "append adds:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "End"
+              },
+              {
+                "id": "b",
+                "label": "Start only"
+              },
+              {
+                "id": "c",
+                "label": "Middle only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_a8jmvvw",
+            "type": "shortText",
+            "prompt": "Negative index -1 is?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "last"
+            }
+          },
+          {
+            "id": "q_yvvxcra",
+            "type": "mcq",
+            "prompt": "lst[1:3] is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Slice"
+              },
+              {
+                "id": "b",
+                "label": "Type error"
+              },
+              {
+                "id": "c",
+                "label": "Delete"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_knyowdr",
+            "type": "mcq",
+            "prompt": "sort() changes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "List in place"
+              },
+              {
+                "id": "b",
+                "label": "New tuple"
+              },
+              {
+                "id": "c",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qtjcip5",
+            "type": "shortText",
+            "prompt": "len counts:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "items"
+            }
+          },
+          {
+            "id": "q_vgq5q95",
+            "type": "mcq",
+            "prompt": "Expert: [1,2]+[3] is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "[1,2,3]"
+              },
+              {
+                "id": "b",
+                "label": "[3,1,2]"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fvu5ooc",
+            "type": "mcq",
+            "prompt": "Expert: pop() without arg removes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Last"
+              },
+              {
+                "id": "b",
+                "label": "First"
+              },
+              {
+                "id": "c",
+                "label": "All"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fpue9eh",
+            "type": "shortText",
+            "prompt": "Expert: shallow copy method?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "copy"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "tuples",
+      "title": "Tuples",
+      "intro": {
+        "title": "Tuples",
+        "bodyMarkdown": "Tuples are ordered, immutable sequences: `(1, 2)`. Use for fixed records and dict keys.\n\nPacking/unpacking: `a, b = 1, 2`. Parentheses optional for simple tuples.\n\nImmutability protects data you should not change accidentally.",
+        "sandboxCode": "point = (3, 4)\nx, y = point\nprint(x + y)"
+      },
+      "challenges": [
+        {
+          "id": "ch_c68dfn6",
+          "title": "Easy: Tuple literal",
+          "promptMarkdown": "t=(1,2)",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks t",
+                "assertion": "t==(1,2)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xosdxo1",
+          "title": "Easy: Index",
+          "promptMarkdown": "t[1]=2",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "t=(1,2)\nv=t[1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_74v96i7",
+          "title": "Medium: Unpack",
+          "promptMarkdown": "a,b=10,20",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks a",
+                "assertion": "a==10 and b==20"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_20k4ts0",
+          "title": "Medium: len",
+          "promptMarkdown": "len((1,2,3))",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_o4o7hc2",
+          "title": "Hard: single tuple",
+          "promptMarkdown": "(1,) comma",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "t=(1,)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks t",
+                "assertion": "t==(1,)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rm0u9nv",
+          "title": "Hard: count",
+          "promptMarkdown": "(1,1,2).count(1)",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ejn3tu8",
+          "title": "Expert: immutable",
+          "promptMarkdown": "cannot assign t[0]=0 — verify type tuple",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "t=(1,)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks t",
+                "assertion": "type(t)==tuple"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_retyk20",
+          "title": "Expert: nested",
+          "promptMarkdown": "((1,2),3)[0][1]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qvfvcu3",
+          "title": "Expert: swap",
+          "promptMarkdown": "a,b=1,2; a,b=b,a",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "a,b=1,2\na,b=b,a",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks a",
+                "assertion": "a==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_oxq1sd6",
+          "title": "Expert: as key",
+          "promptMarkdown": "{(1,2):3}[(1,2)]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==3"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_v8n1oiz",
+            "type": "mcq",
+            "prompt": "Tuples are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Immutable"
+              },
+              {
+                "id": "b",
+                "label": "Mutable"
+              },
+              {
+                "id": "c",
+                "label": "Sets"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_e5m7j3x",
+            "type": "shortText",
+            "prompt": "One-element tuple needs?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "comma"
+            }
+          },
+          {
+            "id": "q_qz41b11",
+            "type": "mcq",
+            "prompt": "Unpacking assigns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Multiple names"
+              },
+              {
+                "id": "b",
+                "label": "Only one"
+              },
+              {
+                "id": "c",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tidfibx",
+            "type": "shortText",
+            "prompt": "t[0] gets:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "first"
+            }
+          },
+          {
+            "id": "q_7y7yg0p",
+            "type": "mcq",
+            "prompt": "(1,2)==(1,2):",
+            "choices": [
+              {
+                "id": "a",
+                "label": "True"
+              },
+              {
+                "id": "b",
+                "label": "False"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ocfy6au",
+            "type": "mcq",
+            "prompt": "Tuple as dict key works because:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Hashable"
+              },
+              {
+                "id": "b",
+                "label": "Mutable"
+              },
+              {
+                "id": "c",
+                "label": "List rules"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xf708k1",
+            "type": "shortText",
+            "prompt": "Cannot modify tuple means:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "immutable"
+            }
+          },
+          {
+            "id": "q_b5ep5uh",
+            "type": "mcq",
+            "prompt": "Expert: (1) type:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "int not tuple"
+              },
+              {
+                "id": "b",
+                "label": "tuple"
+              },
+              {
+                "id": "c",
+                "label": "list"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_w985nj8",
+            "type": "mcq",
+            "prompt": "Expert: a,b=b,a swaps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Without temp"
+              },
+              {
+                "id": "b",
+                "label": "Illegal"
+              },
+              {
+                "id": "c",
+                "label": "Only strings"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_rrlcf4r",
+            "type": "shortText",
+            "prompt": "Expert: count method returns:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "occurrences"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dictionaries",
+      "title": "Dictionaries",
+      "intro": {
+        "title": "Dictionaries",
+        "bodyMarkdown": "Dicts map keys to values: `{\"name\": \"Ada\", \"age\": 36}`. Keys must be hashable; lookup is fast.\n\nMethods: keys, values, items, get, pop, update. Dicts preserve insertion order (3.7+).\n\nUse dicts for records, counts, caches, and JSON-like data.",
+        "sandboxCode": "user = {\"name\": \"Ada\", \"score\": 99}\nuser[\"score\"] = 100\nprint(user.get(\"role\", \"guest\"))"
+      },
+      "challenges": [
+        {
+          "id": "ch_1rqset6",
+          "title": "Easy: Dict literal",
+          "promptMarkdown": "d={\"a\":1}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={\"a\":1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_159bnsf",
+          "title": "Easy: Access",
+          "promptMarkdown": "d[\"x\"]=2",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={}\nd[\"x\"]=2",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d[\"x\"]==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8r4v35m",
+          "title": "Medium: get default",
+          "promptMarkdown": "get missing",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "v={}.get(\"z\",0)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_gi0hqm2",
+          "title": "Medium: keys",
+          "promptMarkdown": "list keys",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "k=list({\"a\":1}.keys())",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks k",
+                "assertion": "k==[\"a\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_212oo36",
+          "title": "Hard: update",
+          "promptMarkdown": "merge dicts",
+          "starterCode": "d.update({\"b\":2})",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={\"a\":1}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={\"a\":1,\"b\":2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_q9yp3dc",
+          "title": "Hard: pop",
+          "promptMarkdown": "pop key",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "v={\"a\":1}.pop(\"a\")",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8ngyski",
+          "title": "Expert: items",
+          "promptMarkdown": "dict items tuple",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=len({\"a\":1}.items())",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_40xa5u4",
+          "title": "Expert: count freq",
+          "promptMarkdown": "count a in \"aba\"",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "c={}\nfor ch in \"aba\": c[ch]=c.get(ch,0)+1",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c=={\"a\":2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_a94cbzp",
+          "title": "Expert: nested",
+          "promptMarkdown": "{\"u\":{\"n\":1}} access",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_uxt9pvd",
+          "title": "Expert: comp",
+          "promptMarkdown": "{x:x*x for x in range(3)}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={0:0,1:1,2:4}"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_t9kzi7r",
+            "type": "mcq",
+            "prompt": "Dict maps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Keys to values"
+              },
+              {
+                "id": "b",
+                "label": "Only indices"
+              },
+              {
+                "id": "c",
+                "label": "Bits only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_mhd9zqx",
+            "type": "shortText",
+            "prompt": "Safe access with default?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "get"
+            }
+          },
+          {
+            "id": "q_iscn773",
+            "type": "mcq",
+            "prompt": "Keys must be:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Hashable"
+              },
+              {
+                "id": "b",
+                "label": "Lists"
+              },
+              {
+                "id": "c",
+                "label": "Mutable always"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_mgkg7m0",
+            "type": "mcq",
+            "prompt": "d[\"k\"]=v adds or:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Updates"
+              },
+              {
+                "id": "b",
+                "label": "Deletes"
+              },
+              {
+                "id": "c",
+                "label": "Sorts"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_wxqo7vg",
+            "type": "shortText",
+            "prompt": "items() returns:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "pairs"
+            }
+          },
+          {
+            "id": "q_215i85o",
+            "type": "mcq",
+            "prompt": "JSON objects map to:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "dict"
+              },
+              {
+                "id": "b",
+                "label": "tuple only"
+              },
+              {
+                "id": "c",
+                "label": "set"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_4eigwd9",
+            "type": "shortText",
+            "prompt": "pop removes:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "key"
+            }
+          },
+          {
+            "id": "q_hh6rdxs",
+            "type": "mcq",
+            "prompt": "Expert: {} is empty:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "dict"
+              },
+              {
+                "id": "b",
+                "label": "set only"
+              },
+              {
+                "id": "c",
+                "label": "list"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pz4fo1f",
+            "type": "mcq",
+            "prompt": "Expert: KeyError means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Missing key"
+              },
+              {
+                "id": "b",
+                "label": "Syntax"
+              },
+              {
+                "id": "c",
+                "label": "Indent"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_jdh6kz6",
+            "type": "shortText",
+            "prompt": "Expert: update merges:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dicts"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "sets",
+      "title": "Sets",
+      "intro": {
+        "title": "Sets",
+        "bodyMarkdown": "Sets are unordered collections of unique hashable items: `{1, 2, 3}`.\n\nUse for membership tests, removing duplicates, and set math: union, intersection, difference.\n\nSets are mutable; frozenset is immutable.",
+        "sandboxCode": "a = {1, 2, 3}\nb = {3, 4, 5}\nprint(a | b, a & b, 2 in a)"
+      },
+      "challenges": [
+        {
+          "id": "ch_2lfg719",
+          "title": "Easy: Set literal",
+          "promptMarkdown": "s={1,2,2}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={1,2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hec0wl8",
+          "title": "Easy: add",
+          "promptMarkdown": "s.add(3)",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s={1}\ns.add(3)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={1,3}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_r9k1atf",
+          "title": "Medium: union",
+          "promptMarkdown": "{1,2}|{2,3}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks u",
+                "assertion": "u=={1,2,3}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_oqydy92",
+          "title": "Medium: intersection",
+          "promptMarkdown": "&",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks i",
+                "assertion": "i=={2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pnncw53",
+          "title": "Hard: difference",
+          "promptMarkdown": "{1,2,3}-{2}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={1,3}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1jr1wor",
+          "title": "Hard: discard",
+          "promptMarkdown": "discard missing ok",
+          "starterCode": "s.discard(9)\ns.discard(2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s={1,2}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_as7dfsw",
+          "title": "Expert: dedupe",
+          "promptMarkdown": "unique order? set([1,1,2])",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks u",
+                "assertion": "u=={1,2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ve3bt2f",
+          "title": "Expert: subset",
+          "promptMarkdown": "{1}.issubset({1,2})",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_exnopdk",
+          "title": "Expert: symmetric",
+          "promptMarkdown": "^",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "x={1,2}^{2,3}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x=={1,3}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6ktc2wm",
+          "title": "Expert: from list",
+          "promptMarkdown": "set(\"aab\")",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={\"a\",\"b\"}"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_nphac9u",
+            "type": "mcq",
+            "prompt": "Sets contain:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Unique items"
+              },
+              {
+                "id": "b",
+                "label": "Duplicates"
+              },
+              {
+                "id": "c",
+                "label": "Ordered pairs"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zl7vhn7",
+            "type": "shortText",
+            "prompt": "Union operator?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "|"
+            }
+          },
+          {
+            "id": "q_5vrtg8x",
+            "type": "mcq",
+            "prompt": "in tests:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Membership"
+              },
+              {
+                "id": "b",
+                "label": "Assignment"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_3qmichf",
+            "type": "shortText",
+            "prompt": "Intersection operator?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "&"
+            }
+          },
+          {
+            "id": "q_4yluvyf",
+            "type": "mcq",
+            "prompt": "& means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Intersection"
+              },
+              {
+                "id": "b",
+                "label": "Union"
+              },
+              {
+                "id": "c",
+                "label": "Power"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_6vploz0",
+            "type": "mcq",
+            "prompt": "Sets are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Unordered"
+              },
+              {
+                "id": "b",
+                "label": "Indexed"
+              },
+              {
+                "id": "c",
+                "label": "Immutable default"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_njs6yx5",
+            "type": "shortText",
+            "prompt": "remove dupes with:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "set"
+            }
+          },
+          {
+            "id": "q_5ccpb1v",
+            "type": "mcq",
+            "prompt": "Expert: frozenset is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Immutable"
+              },
+              {
+                "id": "b",
+                "label": "Mutable"
+              },
+              {
+                "id": "c",
+                "label": "Dict"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_jgj9lkh",
+            "type": "mcq",
+            "prompt": "Expert: {} creates:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "dict not set"
+              },
+              {
+                "id": "b",
+                "label": "set"
+              },
+              {
+                "id": "c",
+                "label": "list"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_58k2j0i",
+            "type": "shortText",
+            "prompt": "Expert: discard vs remove on missing:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "discard safe"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "list_comprehensions",
+      "title": "List Comprehensions",
+      "intro": {
+        "title": "List Comprehensions",
+        "bodyMarkdown": "`[expr for item in iterable if cond]` builds lists concisely.\n\nOften clearer and faster than manual append loops. Can nest for matrix patterns.\n\nReadable comprehensions beat clever one-liners that harm clarity.",
+        "sandboxCode": "squares = [n * n for n in range(6) if n % 2 == 0]\nprint(squares)"
+      },
+      "challenges": [
+        {
+          "id": "ch_lj88m75",
+          "title": "Easy: Basic",
+          "promptMarkdown": "[x for x in range(3)]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[0,1,2]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_lzgvc59",
+          "title": "Easy: Map",
+          "promptMarkdown": "[x*2 for x in [1,2]]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[2,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6b40t3g",
+          "title": "Medium: Filter",
+          "promptMarkdown": "evens",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=[x for x in range(5) if x%2==0]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[0,2,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vat4dhj",
+          "title": "Medium: if clause",
+          "promptMarkdown": ">2",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=[x for x in range(5) if x>2]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[3,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_blj4fxb",
+          "title": "Hard: nested",
+          "promptMarkdown": "pairs i,j",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=len([(i,j) for i in range(2) for j in range(2)])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==4"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_af4da45",
+          "title": "Hard: string comp",
+          "promptMarkdown": "upper chars",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=[c.upper() for c in \"ab\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[\"A\",\"B\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_aiepsn4",
+          "title": "Expert: flatten",
+          "promptMarkdown": "[[1],[2]]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "f=[x for row in [[1],[2]] for x in row]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks f",
+                "assertion": "f==[1,2]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_z1ucgt4",
+          "title": "Expert: conditional expr",
+          "promptMarkdown": "fizz",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=[\"Fizz\" if i%3==0 else i for i in [3]]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[\"Fizz\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_k989kak",
+          "title": "Expert: set comp",
+          "promptMarkdown": "{x%2 for x in range(4)}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={0,1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_njvzxzs",
+          "title": "Expert: dict comp",
+          "promptMarkdown": "{x:x for x in range(2)}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={0:0,1:1}"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_88wwf23",
+            "type": "mcq",
+            "prompt": "Comprehension builds:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "List"
+              },
+              {
+                "id": "b",
+                "label": "File"
+              },
+              {
+                "id": "c",
+                "label": "Socket"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_mq5tks5",
+            "type": "shortText",
+            "prompt": "Filter uses:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "if"
+            }
+          },
+          {
+            "id": "q_krqie6w",
+            "type": "mcq",
+            "prompt": "[x for x in L] is like:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Loop append"
+              },
+              {
+                "id": "b",
+                "label": "import"
+              },
+              {
+                "id": "c",
+                "label": "class"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_r3lp97m",
+            "type": "shortText",
+            "prompt": "Nested comps can use:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "multiple fors"
+            }
+          },
+          {
+            "id": "q_w6slsbg",
+            "type": "mcq",
+            "prompt": "Expert: ternary in comp:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "if else expr"
+              },
+              {
+                "id": "b",
+                "label": "only def"
+              },
+              {
+                "id": "c",
+                "label": "try"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2ltfs1g",
+            "type": "mcq",
+            "prompt": "Expert: {x for x in L} makes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "set comp"
+              },
+              {
+                "id": "b",
+                "label": "dict"
+              },
+              {
+                "id": "c",
+                "label": "tuple"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_n5wazv2",
+            "type": "shortText",
+            "prompt": "Expert: readability vs:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "complexity"
+            }
+          },
+          {
+            "id": "q_cc3aptv",
+            "type": "mcq",
+            "prompt": "Expert: comp often faster than:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "append loop"
+              },
+              {
+                "id": "b",
+                "label": "print"
+              },
+              {
+                "id": "c",
+                "label": "comments"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_rzhppxm",
+            "type": "mcq",
+            "prompt": "Expert: if at end filters:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Items"
+              },
+              {
+                "id": "b",
+                "label": "Types only"
+              },
+              {
+                "id": "c",
+                "label": "Files"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zbnri7e",
+            "type": "shortText",
+            "prompt": "Expert: matrix rows via:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "nested"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dict_set_comprehensions",
+      "title": "Dict and Set Comprehensions",
+      "intro": {
+        "title": "Dict and Set Comprehensions",
+        "bodyMarkdown": "`{k: v for ...}` builds dicts; `{expr for ...}` builds sets.\n\nSame syntax rules as list comprehensions with different braces.\n\nGreat for transforming data pipelines in one expression.",
+        "sandboxCode": "idx = {name: len(name) for name in [\"Ada\", \"Bob\"]}\nunique = {c.lower() for c in \"AaBb\"}"
+      },
+      "challenges": [
+        {
+          "id": "ch_cz2ymf3",
+          "title": "Easy: Set comp",
+          "promptMarkdown": "{x for x in \"aab\"}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={\"a\",\"b\"}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1v5rwim",
+          "title": "Easy: Dict comp",
+          "promptMarkdown": "{x:x for x in range(2)}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={0:0,1:1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_lr3s1ng",
+          "title": "Medium: Filter set",
+          "promptMarkdown": "{x for x in range(5) if x%2}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={1,3}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_q8db8wv",
+          "title": "Medium: Dict from pairs",
+          "promptMarkdown": "{k:v for k,v in [(1,2)]}",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={1:2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sykfc3o",
+          "title": "Hard: Invert counts",
+          "promptMarkdown": "swap",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={\"a\":1,\"b\":2}\nd={v:k for k,v in d.items()}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={1:\"a\",2:\"b\"}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7u8n0bc",
+          "title": "Hard: Unique words",
+          "promptMarkdown": "split",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s={w for w in \"cat cat\".split()}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={\"cat\"}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_wcrxeoi",
+          "title": "Expert: Nested dict",
+          "promptMarkdown": "matrix map",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={(i,j):0 for i in range(1) for j in range(1)}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={(0,0):0}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jjeeng0",
+          "title": "Expert: Conditional value",
+          "promptMarkdown": "sign",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={x:\"neg\" for x in [-1] if x<0}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={-1:\"neg\"}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3ovxc55",
+          "title": "Expert: Union unique",
+          "promptMarkdown": "chars",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s={c for word in [\"ab\",\"bc\"] for c in word}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={\"a\",\"b\",\"c\"}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_c06r3fd",
+          "title": "Expert: len map",
+          "promptMarkdown": "names",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={w:len(w) for w in [\"hi\"]}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={\"hi\":2}"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_m2fj0ai",
+            "type": "mcq",
+            "prompt": "Dict comp uses:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "key: value"
+              },
+              {
+                "id": "b",
+                "label": "only |"
+              },
+              {
+                "id": "c",
+                "label": "//"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2cm3uon",
+            "type": "shortText",
+            "prompt": "Set comp braces:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "{}"
+            }
+          },
+          {
+            "id": "q_at1vq6t",
+            "type": "mcq",
+            "prompt": "Set comp dedupes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "True"
+              },
+              {
+                "id": "b",
+                "label": "False"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2xaqlf6",
+            "type": "shortText",
+            "prompt": "Dict comp creates:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dict"
+            }
+          },
+          {
+            "id": "q_e6flynr",
+            "type": "mcq",
+            "prompt": "items() inversion needs:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "comprehension or loop"
+              },
+              {
+                "id": "b",
+                "label": "only print"
+              },
+              {
+                "id": "c",
+                "label": "socket"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xrh7ecm",
+            "type": "mcq",
+            "prompt": "Expert: {x:x for x in L} keys and values:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Same"
+              },
+              {
+                "id": "b",
+                "label": "Always 0"
+              },
+              {
+                "id": "c",
+                "label": "Random"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1304izy",
+            "type": "mcq",
+            "prompt": "Expert: nested comp in dict:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Possible"
+              },
+              {
+                "id": "b",
+                "label": "Syntax error always"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_s9z493i",
+            "type": "shortText",
+            "prompt": "Expert: set comp removes:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "duplicates"
+            }
+          },
+          {
+            "id": "q_0o4yn2u",
+            "type": "mcq",
+            "prompt": "Expert: comp vs manual:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Often more concise"
+              },
+              {
+                "id": "b",
+                "label": "Always slower"
+              },
+              {
+                "id": "c",
+                "label": "Only for Java"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tvtzsn7",
+            "type": "shortText",
+            "prompt": "Expert: filter with if in comp:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "suffix"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "slicing_indexing",
+      "title": "Slicing and Indexing",
+      "intro": {
+        "title": "Slicing and Indexing",
+        "bodyMarkdown": "Index single elements; slices `start:stop:step` extract subsequences. Slices return new lists for lists; strings stay strings.\n\nOmit start/stop for beginnings/ends. `::-1` reverses.\n\nOut-of-range index raises IndexError; slices clamp gracefully.",
+        "sandboxCode": "s = \"Python\"\nprint(s[0], s[-1], s[1:4], s[::-1])"
+      },
+      "challenges": [
+        {
+          "id": "ch_a5yeg2m",
+          "title": "Easy: First char",
+          "promptMarkdown": "s[0]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "c=\"Python\"[0]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c==\"P\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xhota2u",
+          "title": "Easy: Last",
+          "promptMarkdown": "s[-1]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "c=\"Python\"[-1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c==\"n\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ak82rqa",
+          "title": "Medium: Slice",
+          "promptMarkdown": "[1:4]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "sub=\"Python\"[1:4]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks sub",
+                "assertion": "sub==\"yth\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yb0nxgf",
+          "title": "Medium: step",
+          "promptMarkdown": "[::2]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "sub=\"Python\"[::2]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks sub",
+                "assertion": "sub==\"Pto\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_05ncsvp",
+          "title": "Hard: reverse",
+          "promptMarkdown": "[::-1]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "r=\"Python\"[::-1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r==\"nohtyP\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_113lf6s",
+          "title": "Hard: list slice",
+          "promptMarkdown": "[:2]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=[1,2,3][:2]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[1,2]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2o3khj6",
+          "title": "Expert: copy slice",
+          "promptMarkdown": "[:]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "a=[1,2,3]\nb=a[:]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks b",
+                "assertion": "b==[1,2] and a==[1,2,3]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cmwp0fh",
+          "title": "Expert: empty slice",
+          "promptMarkdown": "[3:3]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "e=\"abc\"[3:3]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks e",
+                "assertion": "e==\"\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6ivdeb0",
+          "title": "Expert: negative step",
+          "promptMarkdown": "[5:0:-1]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=list(range(6))[5:0:-1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[5,4,3,2,1]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1x4ry5d",
+          "title": "Expert: assign slice",
+          "promptMarkdown": "replace",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=[0,1,2]\nl[1:2]=[9]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[0,9,2]"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_b4bfn2a",
+            "type": "mcq",
+            "prompt": "s[1:4] is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Slice"
+              },
+              {
+                "id": "b",
+                "label": "Function"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_riccihc",
+            "type": "shortText",
+            "prompt": "Last index -1 is:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "last"
+            }
+          },
+          {
+            "id": "q_c8qvtnc",
+            "type": "mcq",
+            "prompt": "Step in slice:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Third part"
+              },
+              {
+                "id": "b",
+                "label": "Type"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xsbl0e1",
+            "type": "shortText",
+            "prompt": "Reverse slice:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "::-1"
+            }
+          },
+          {
+            "id": "q_4k9g0gc",
+            "type": "mcq",
+            "prompt": "Index out of range:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "IndexError"
+              },
+              {
+                "id": "b",
+                "label": "Returns None"
+              },
+              {
+                "id": "c",
+                "label": "Clamps"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_cx2awmv",
+            "type": "mcq",
+            "prompt": "s[:] copies:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Shallow list"
+              },
+              {
+                "id": "b",
+                "label": "Deep always"
+              },
+              {
+                "id": "c",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_wpw69x5",
+            "type": "shortText",
+            "prompt": "Slice stop is:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "exclusive"
+            }
+          },
+          {
+            "id": "q_ozp9pzt",
+            "type": "mcq",
+            "prompt": "Expert: [::-1] on list:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Reverses"
+              },
+              {
+                "id": "b",
+                "label": "Sorts"
+              },
+              {
+                "id": "c",
+                "label": "Deletes"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_cuhrfw7",
+            "type": "mcq",
+            "prompt": "Expert: string slice returns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "str"
+              },
+              {
+                "id": "b",
+                "label": "list"
+              },
+              {
+                "id": "c",
+                "label": "int"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_o5u1pnz",
+            "type": "shortText",
+            "prompt": "Expert: omit start means:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "beginning"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "iterating_collections",
+      "title": "Iterating Collections",
+      "intro": {
+        "title": "Iterating Collections",
+        "bodyMarkdown": "Iterate dict keys (default), values, items. Use enumerate for index+value, zip for parallel iteration.\n\nfor loops work on any iterable. Avoid modifying a list while iterating over it directly.\n\nChoosing the right iteration pattern prevents bugs and improves readability.",
+        "sandboxCode": "pairs = [(\"a\", 1), (\"b\", 2)]\nfor k, v in pairs:\n    print(k, v)"
+      },
+      "challenges": [
+        {
+          "id": "ch_yogh3zi",
+          "title": "Easy: for list",
+          "promptMarkdown": "sum",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=0\nfor x in [1,2,3]: s+=x",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6fojcd5",
+          "title": "Easy: for dict keys",
+          "promptMarkdown": "count",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=0\nfor k in {\"a\":1,\"b\":2}: n+=1",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_br3pd9g",
+          "title": "Medium: values",
+          "promptMarkdown": "sum vals",
+          "starterCode": "for v in {\"a\":1,\"b\":2}.values(): s+=v",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3yrzdmj",
+          "title": "Medium: items",
+          "promptMarkdown": "pairs",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=0\nfor k,v in {\"a\":1}.items(): n+=1",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1lu6lir",
+          "title": "Hard: enumerate",
+          "promptMarkdown": "idx of b",
+          "starterCode": "for i,x in enumerate([\"a\",\"b\"]):\n if x==\"b\": break",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks i",
+                "assertion": "i==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xc41fm0",
+          "title": "Hard: zip",
+          "promptMarkdown": "add pairs",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=0\nfor a,b in zip([1,2],[3,4]): s+=a+b",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3st2dfo",
+          "title": "Expert: sorted iterate",
+          "promptMarkdown": "order",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lst=sorted([3,1,2])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lst",
+                "assertion": "lst==[1,2,3]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rfwfon2",
+          "title": "Expert: reversed",
+          "promptMarkdown": "back",
+          "starterCode": "for x in reversed([1,2,3]):\n first=x\n break",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks first",
+                "assertion": "first==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4gy9tob",
+          "title": "Expert: dict comp iter",
+          "promptMarkdown": "keys upper",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={k.upper():v for k,v in {\"a\":1}.items()}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={\"A\":1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3pp46nh",
+          "title": "Expert: nested dict",
+          "promptMarkdown": "sum nested",
+          "starterCode": "for row in [{\"x\":1},{\"x\":2}]:\n s+=row[\"x\"]",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==3"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_6u97eew",
+            "type": "mcq",
+            "prompt": "for k in d: iterates:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Keys"
+              },
+              {
+                "id": "b",
+                "label": "Values default"
+              },
+              {
+                "id": "c",
+                "label": "Files"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qergo4s",
+            "type": "shortText",
+            "prompt": "items() yields:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "key-value pairs"
+            }
+          },
+          {
+            "id": "q_a8gej9a",
+            "type": "mcq",
+            "prompt": "zip combines:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Parallel sequences"
+              },
+              {
+                "id": "b",
+                "label": "Only dicts"
+              },
+              {
+                "id": "c",
+                "label": "Sockets"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_w4fu7we",
+            "type": "shortText",
+            "prompt": "enumerate adds:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "index"
+            }
+          },
+          {
+            "id": "q_ytl22l9",
+            "type": "mcq",
+            "prompt": "Modify list while iterating:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Risky"
+              },
+              {
+                "id": "b",
+                "label": "Always safe"
+              },
+              {
+                "id": "c",
+                "label": "Required"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_otys9hi",
+            "type": "mcq",
+            "prompt": "values() returns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "View of values"
+              },
+              {
+                "id": "b",
+                "label": "Keys"
+              },
+              {
+                "id": "c",
+                "label": "Indices"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2vj7lpu",
+            "type": "shortText",
+            "prompt": "sorted() returns:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "new list"
+            }
+          },
+          {
+            "id": "q_hqfr6ys",
+            "type": "mcq",
+            "prompt": "Expert: for/else no break:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Runs else"
+              },
+              {
+                "id": "b",
+                "label": "Skips else"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_953qhsk",
+            "type": "mcq",
+            "prompt": "Expert: iterating set:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Unordered"
+              },
+              {
+                "id": "b",
+                "label": "By index"
+              },
+              {
+                "id": "c",
+                "label": "Impossible"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_saijdue",
+            "type": "shortText",
+            "prompt": "Expert: .items() in for gives:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "tuple pairs"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "nested_structures",
+      "title": "Nested Data Structures",
+      "intro": {
+        "title": "Nested Data Structures",
+        "bodyMarkdown": "Real data mixes lists of dicts, dicts of lists, JSON trees, and matrices as lists of lists.\n\nAccess with chained indexing: `data[0][\"name\"]`. Copy carefully — aliasing nested mutables surprises beginners.\n\nDesign structure to match your problem: rows as dicts vs tuples vs lists.",
+        "sandboxCode": "matrix = [[1, 2], [3, 4]]\nusers = [{\"name\": \"Ada\", \"scores\": [10, 20]}]\nprint(matrix[1][0], users[0][\"scores\"][1])"
+      },
+      "challenges": [
+        {
+          "id": "ch_486mrp4",
+          "title": "Easy: 2D index",
+          "promptMarkdown": "m[0][1]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "m=[[1,2]]\nv=m[0][1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_u1cdfkz",
+          "title": "Easy: dict list",
+          "promptMarkdown": "users[0][\"n\"]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "v=[{\"n\":1}][0][\"n\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7615kfp",
+          "title": "Medium: append row",
+          "promptMarkdown": "add [3]",
+          "starterCode": "m.append([3])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "m=[[1]]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks m",
+                "assertion": "m==[[1],[3]]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pjsxkfx",
+          "title": "Medium: update nested",
+          "promptMarkdown": "score",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "u={\"s\":[8]}\nu[\"s\"][0]=9",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks u",
+                "assertion": "u[\"s\"][0]==9"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_f2dmsmd",
+          "title": "Hard: sum matrix",
+          "promptMarkdown": "all cells",
+          "starterCode": "for row in [[1,2],[3,4]]:\n for v in row: s+=v",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==10"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_u64u1fe",
+          "title": "Hard: find in list dict",
+          "promptMarkdown": "by name",
+          "starterCode": "for u in [{\"name\":\"Ada\"}]:\n if u[\"name\"]==\"Ada\": found=u[\"name\"]",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "found=None",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks found",
+                "assertion": "found==\"Ada\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_22g8yu0",
+          "title": "Expert: deep copy need",
+          "promptMarkdown": "nested",
+          "starterCode": "import copy\na=[[1]]\nb=copy.deepcopy(a)\na[0][0]=9",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks b",
+                "assertion": "b[0][0]==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_incblbt",
+          "title": "Expert: json-like",
+          "promptMarkdown": "tree",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={\"a\":{\"b\":2}}\nv=d[\"a\"][\"b\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_m5dx6iy",
+          "title": "Expert: matrix row",
+          "promptMarkdown": "row 1",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "r=[[1,2],[3,4]][1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r==[3,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_iw266rk",
+          "title": "Expert: list of sets",
+          "promptMarkdown": "unique tags",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "tags=[{\"t\":{\"a\",\"b\"}}]\nn=len(tags[0][\"t\"])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==2"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_hh5mxqa",
+            "type": "mcq",
+            "prompt": "data[0][\"x\"] is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Chained access"
+              },
+              {
+                "id": "b",
+                "label": "Function def"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_znpdu0y",
+            "type": "shortText",
+            "prompt": "List of dicts common for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "records"
+            }
+          },
+          {
+            "id": "q_6m6saxc",
+            "type": "mcq",
+            "prompt": "Matrix as list of lists:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "2D structure"
+              },
+              {
+                "id": "b",
+                "label": "Invalid"
+              },
+              {
+                "id": "c",
+                "label": "Only JSON"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_uwplosp",
+            "type": "shortText",
+            "prompt": "Aliasing nested mutables:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "shared"
+            }
+          },
+          {
+            "id": "q_3igmu5q",
+            "type": "mcq",
+            "prompt": "deepcopy needed when:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Nested mutables independent"
+              },
+              {
+                "id": "b",
+                "label": "Ints only"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pglepdh",
+            "type": "mcq",
+            "prompt": "JSON arrays map to:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "list"
+              },
+              {
+                "id": "b",
+                "label": "set"
+              },
+              {
+                "id": "c",
+                "label": "tuple only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pxias01",
+            "type": "shortText",
+            "prompt": "Access key missing raises:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "KeyError"
+            }
+          },
+          {
+            "id": "q_x5elsh4",
+            "type": "mcq",
+            "prompt": "Expert: shallow copy nested:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Shares inner"
+              },
+              {
+                "id": "b",
+                "label": "Fully independent always"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_jy2azkj",
+            "type": "mcq",
+            "prompt": "Expert: schema helps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Consistency"
+              },
+              {
+                "id": "b",
+                "label": "Speed only"
+              },
+              {
+                "id": "c",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_6q9uzv4",
+            "type": "shortText",
+            "prompt": "Expert: iterate rows then cells:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "nested loops"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "choosing_structures",
+      "title": "Choosing the Right Structure",
+      "intro": {
+        "title": "Choosing the Right Structure",
+        "bodyMarkdown": "Pick list for ordered mutable sequences; tuple for fixed records; dict for key lookup; set for uniqueness and set ops.\n\nConsider ordering, mutability, hashability, memory, and what operations dominate.\n\nRefactoring to the right structure early saves pain in larger programs.",
+        "sandboxCode": "# list: order + change\n# tuple: fixed point\n# dict: lookup by key\n# set: unique membership\nprint(type([]), type(()), type({}), type(set()))"
+      },
+      "challenges": [
+        {
+          "id": "ch_ezertt7",
+          "title": "Easy: Pick list",
+          "promptMarkdown": "queue order",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "q=[1,2]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks q",
+                "assertion": "q==[1,2]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_e2q8xcj",
+          "title": "Easy: Pick dict",
+          "promptMarkdown": "phone book",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={\"a\":1}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={\"a\":1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_u69y7jx",
+          "title": "Medium: Pick set",
+          "promptMarkdown": "unique",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=set([1,1,2])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={1,2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_n0yvqo6",
+          "title": "Medium: Pick tuple",
+          "promptMarkdown": "coordinates",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "p=(1,2)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks p",
+                "assertion": "p==(1,2)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4xhppnd",
+          "title": "Hard: When dict",
+          "promptMarkdown": "lookup by id",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "users={1:\"a\"}\nok=1 in users",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sb2vh4k",
+          "title": "Hard: When list",
+          "promptMarkdown": "maintain order",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=[3,1,2]!=set([3,1,2])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pe1kcv6",
+          "title": "Expert: Migrate list to set",
+          "promptMarkdown": "dedupe",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "s=set([1,2,2])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s=={1,2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qkvgfuh",
+          "title": "Expert: records list dicts",
+          "promptMarkdown": "users",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=len([{\"id\":1}])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jrf3lta",
+          "title": "Expert: freq dict",
+          "promptMarkdown": "count",
+          "starterCode": "for x in \"aa\": c[x]=c.get(x,0)+1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "c={}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c=={\"a\":2}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9gpeibd",
+          "title": "Expert: immutable key tuple",
+          "promptMarkdown": "dict key",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={(1,2):3}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d[(1,2)]==3"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_x4kxux4",
+            "type": "mcq",
+            "prompt": "Fast key lookup:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "dict"
+              },
+              {
+                "id": "b",
+                "label": "list scan"
+              },
+              {
+                "id": "c",
+                "label": "random"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1jmsuif",
+            "type": "shortText",
+            "prompt": "Unique items use:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "set"
+            }
+          },
+          {
+            "id": "q_r6owemx",
+            "type": "mcq",
+            "prompt": "Fixed (x,y) point:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "tuple"
+              },
+              {
+                "id": "b",
+                "label": "list only"
+              },
+              {
+                "id": "c",
+                "label": "set"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_rrvkyka",
+            "type": "mcq",
+            "prompt": "Order matters:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "list or tuple"
+              },
+              {
+                "id": "b",
+                "label": "set"
+              },
+              {
+                "id": "c",
+                "label": "none"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_6z50qm5",
+            "type": "shortText",
+            "prompt": "Hashable keys required for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dict keys"
+            }
+          },
+          {
+            "id": "q_y07r9wh",
+            "type": "mcq",
+            "prompt": "List as dict key:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Invalid"
+              },
+              {
+                "id": "b",
+                "label": "Fine"
+              },
+              {
+                "id": "c",
+                "label": "Required"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_w2mozft",
+            "type": "mcq",
+            "prompt": "Expert: set loses:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Order"
+              },
+              {
+                "id": "b",
+                "label": "Uniqueness"
+              },
+              {
+                "id": "c",
+                "label": "Membership"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xgnxvxj",
+            "type": "mcq",
+            "prompt": "Expert: count frequencies with:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "dict"
+              },
+              {
+                "id": "b",
+                "label": "only print"
+              },
+              {
+                "id": "c",
+                "label": "socket"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2n4agjp",
+            "type": "shortText",
+            "prompt": "Expert: tuple good for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "immutable records"
+            }
+          },
+          {
+            "id": "q_z9uarnl",
+            "type": "mcq",
+            "prompt": "Expert: choose structure based on:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Operations needed"
+              },
+              {
+                "id": "b",
+                "label": "Color"
+              },
+              {
+                "id": "c",
+                "label": "Font"
+              }
+            ],
+            "correctChoiceId": "a"
           }
         ]
       }

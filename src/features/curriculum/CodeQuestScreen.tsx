@@ -369,7 +369,7 @@ export function CodeQuestScreen() {
     setTestShort({})
     setTestMcq({})
     setTestResult(null)
-    setSandboxCode(DEFAULT_SANDBOX_CODE)
+    setSandboxCode(level.intro.sandboxCode ?? DEFAULT_SANDBOX_CODE)
     setSandboxOutput('')
     setSandboxRunning(false)
     setSandboxError(null)
@@ -733,7 +733,7 @@ export function CodeQuestScreen() {
           onSandboxCodeChange={setSandboxCode}
           onSandboxRun={() => void runSandbox()}
           onSandboxReset={() => {
-            setSandboxCode(DEFAULT_SANDBOX_CODE)
+            setSandboxCode(selectedLevel.intro.sandboxCode ?? DEFAULT_SANDBOX_CODE)
             setSandboxOutput('')
             setSandboxError(null)
           }}

@@ -1,5 +1,3333 @@
 {
   "sectionId": "error_handling",
   "title": "Error Handling",
-  "levels": []
+  "levels": [
+    {
+      "id": "try_except",
+      "title": "try except",
+      "intro": {
+        "title": "try except",
+        "bodyMarkdown": "Wrap risky code in try; catch exceptions with except ExceptionType:.\n\nPrevents crash and lets you recover or inform the user.\n\nOnly catch exceptions you can handle meaningfully.",
+        "sandboxCode": "try:\n    int(\"abc\")\nexcept ValueError as e:\n    print(\"Bad number:\", e)"
+      },
+      "challenges": [
+        {
+          "id": "ch_q8b9ke0",
+          "title": "Easy: catch ValueError",
+          "promptMarkdown": "",
+          "starterCode": "try:\n    int(\"x\")\nexcept ValueError:\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "except ValueError"
+            ]
+          }
+        },
+        {
+          "id": "ch_5r64ygl",
+          "title": "Easy: try block",
+          "promptMarkdown": "",
+          "starterCode": "try:\n    1/1\nexcept ZeroDivisionError:\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "try"
+            ]
+          }
+        },
+        {
+          "id": "ch_p45nnon",
+          "title": "Medium: as e",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"x\")\nexcept ValueError as e:\n msg=str(e)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "msg=\"\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks msg",
+                "assertion": "len(msg)>0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_zwli3sc",
+          "title": "Medium: recover",
+          "promptMarkdown": "default",
+          "starterCode": "try:\n n=int(\"bad\")\nexcept ValueError:\n n=0",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xzhdjoc",
+          "title": "Hard: multiple lines try",
+          "promptMarkdown": "",
+          "starterCode": "try:\n x=1\n y=int(\"2\")\nexcept ValueError:\n y=0",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "y=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks y",
+                "assertion": "y==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_khes0ns",
+          "title": "Hard: no bare except",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n caught=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "caught=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks caught",
+                "assertion": "caught==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_wsjbxjd",
+          "title": "Expert: else try",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"42\")\nexcept ValueError:\n status=\"fail\"\nelse:\n status=\"success\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "status=\"fail\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks status",
+                "assertion": "status==\"success\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5mnraok",
+          "title": "Expert: raise after log",
+          "promptMarkdown": "",
+          "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError as e:\n  steps.append(\"logged\")\n  raise\nexcept ValueError:\n steps.append(\"raised\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "steps=[]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks steps",
+                "assertion": "steps==[\"logged\",\"raised\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_a03h2g6",
+          "title": "Expert: exception message",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"not-a-number\")\nexcept ValueError as e:\n msg=str(e)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "msg=\"\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks msg",
+                "assertion": "len(msg)>0 and \"invalid\" in msg.lower()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6kvvwwn",
+          "title": "Expert: EAFP style",
+          "promptMarkdown": "",
+          "starterCode": "try:\n val=d[\"missing\"]\nexcept KeyError:\n val=None",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "d={}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks val",
+                "assertion": "val is None"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_o6cjkbo",
+            "type": "mcq",
+            "prompt": "try starts:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Protected block"
+              },
+              {
+                "id": "b",
+                "label": "Import"
+              },
+              {
+                "id": "c",
+                "label": "Class"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_uja54fo",
+            "type": "shortText",
+            "prompt": "except handles:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "exceptions"
+            }
+          },
+          {
+            "id": "q_vv8z2v6",
+            "type": "mcq",
+            "prompt": "ValueError from int(\"x\"):",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Yes"
+              },
+              {
+                "id": "b",
+                "label": "No"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_et586f0",
+            "type": "mcq",
+            "prompt": "as e binds:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Exception instance"
+              },
+              {
+                "id": "b",
+                "label": "Success value"
+              },
+              {
+                "id": "c",
+                "label": "Module"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_s4ojpvk",
+            "type": "shortText",
+            "prompt": "Catch specific not:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "bare all"
+            }
+          },
+          {
+            "id": "q_cjwjr6e",
+            "type": "mcq",
+            "prompt": "Expert: EAFP means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Easier to ask forgiveness"
+              },
+              {
+                "id": "b",
+                "label": "Look before leap only"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_q87wplx",
+            "type": "mcq",
+            "prompt": "Expert: else on try runs if:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No exception"
+              },
+              {
+                "id": "b",
+                "label": "Always"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_nk30743",
+            "type": "shortText",
+            "prompt": "Expert: recover with:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "fallback"
+            }
+          },
+          {
+            "id": "q_rgxrj5x",
+            "type": "mcq",
+            "prompt": "Expert: int bad raises:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "ValueError"
+              },
+              {
+                "id": "b",
+                "label": "KeyError"
+              },
+              {
+                "id": "c",
+                "label": "ImportError"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fpoevk7",
+            "type": "shortText",
+            "prompt": "Expert: try for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "risky ops"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "multiple_except",
+      "title": "Multiple except blocks",
+      "intro": {
+        "title": "Multiple except blocks",
+        "bodyMarkdown": "Order except clauses from specific to general. Subclass hierarchy matters.\n\nCatch different types with separate handlers.\n\nToo broad Exception catch hides bugs — use carefully.",
+        "sandboxCode": "try:\n    d = {\"a\": 1}\n    print(d[\"b\"])\nexcept KeyError:\n    print(\"missing key\")\nexcept Exception:\n    print(\"other\")"
+      },
+      "challenges": [
+        {
+          "id": "ch_a0pp1sd",
+          "title": "Easy: KeyError",
+          "promptMarkdown": "",
+          "starterCode": "try:\n    {}[\"x\"]\nexcept KeyError:\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "KeyError"
+            ]
+          }
+        },
+        {
+          "id": "ch_w4sm2v5",
+          "title": "Easy: two handlers",
+          "promptMarkdown": "",
+          "starterCode": "try:\n    pass\nexcept ValueError:\n    pass\nexcept TypeError:\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "except"
+            ]
+          }
+        },
+        {
+          "id": "ch_bzyge9z",
+          "title": "Medium: order specific",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n tag=\"specific\"\nexcept Exception:\n tag=\"broad\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "tag=\"broad\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks tag",
+                "assertion": "tag==\"specific\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dqetnpj",
+          "title": "Medium: tuple except",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"a\")\nexcept (ValueError, TypeError):\n caught=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "caught=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks caught",
+                "assertion": "caught==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9c2ocbb",
+          "title": "Hard: subclass",
+          "promptMarkdown": "",
+          "starterCode": "try:\n raise ValueError(\"bad\")\nexcept ValueError:\n caught=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "caught=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks caught",
+                "assertion": "caught==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ox5hiab",
+          "title": "Hard: different messages",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n msgs.append(\"number\")\ntry:\n {}[\"k\"]\nexcept KeyError:\n msgs.append(\"key\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "msgs=[]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks msgs",
+                "assertion": "msgs==[\"number\",\"key\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_eaegu0e",
+          "title": "Expert: Exception last",
+          "promptMarkdown": "",
+          "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n tag=\"value\"\nexcept Exception:\n tag=\"other\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "tag=\"other\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks tag",
+                "assertion": "tag==\"value\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jzv5inv",
+          "title": "Expert: KeyboardInterrupt",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ki=issubclass(KeyboardInterrupt, BaseException) and not issubclass(KeyboardInterrupt, Exception)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ki",
+                "assertion": "issubclass(KeyboardInterrupt, BaseException) and not issubclass(KeyboardInterrupt, Exception)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vhrowj0",
+          "title": "Expert: SystemExit",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "se=issubclass(SystemExit, BaseException) and not issubclass(SystemExit, Exception)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks se",
+                "assertion": "issubclass(SystemExit, BaseException) and not issubclass(SystemExit, Exception)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_92rn24t",
+          "title": "Expert: log and rethrow",
+          "promptMarkdown": "",
+          "starterCode": "try:\n try:\n  int(\"bad\")\n except ValueError:\n  logged=True\n  raise\nexcept ValueError:\n pass",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "logged=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks logged",
+                "assertion": "logged==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_njxlw4f",
+            "type": "mcq",
+            "prompt": "Multiple except allowed:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Yes"
+              },
+              {
+                "id": "b",
+                "label": "No"
+              },
+              {
+                "id": "c",
+                "label": "Syntax error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ap5gpz6",
+            "type": "shortText",
+            "prompt": "KeyError for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "missing dict key"
+            }
+          },
+          {
+            "id": "q_5drdl2s",
+            "type": "mcq",
+            "prompt": "Tuple in except catches:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Any listed"
+              },
+              {
+                "id": "b",
+                "label": "None"
+              },
+              {
+                "id": "c",
+                "label": "All must match"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_54qni1o",
+            "type": "mcq",
+            "prompt": "Order should be:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Specific first"
+              },
+              {
+                "id": "b",
+                "label": "Random"
+              },
+              {
+                "id": "c",
+                "label": "Broad first"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_jjj3h6k",
+            "type": "shortText",
+            "prompt": "TypeError often:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "wrong type"
+            }
+          },
+          {
+            "id": "q_nm72kah",
+            "type": "mcq",
+            "prompt": "Expert: bare except Exception:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Use sparingly"
+              },
+              {
+                "id": "b",
+                "label": "Always best"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qiuy24n",
+            "type": "mcq",
+            "prompt": "Expert: subclass caught by parent:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Yes"
+              },
+              {
+                "id": "b",
+                "label": "Never"
+              },
+              {
+                "id": "c",
+                "label": "Syntax"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_i81rvxi",
+            "type": "shortText",
+            "prompt": "Expert: IndexError for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "bad index"
+            }
+          },
+          {
+            "id": "q_1gp1vby",
+            "type": "mcq",
+            "prompt": "Expert: separate handlers for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Different recovery"
+              },
+              {
+                "id": "b",
+                "label": "Speed"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_7dfoqt2",
+            "type": "shortText",
+            "prompt": "Expert: avoid catching:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "KeyboardInterrupt carelessly"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "else_finally",
+      "title": "else and finally",
+      "intro": {
+        "title": "else and finally",
+        "bodyMarkdown": "try/except/else: else runs if no exception. finally always runs — cleanup.\n\nUse finally for resources if not using with (rare).\n\nelse avoids putting success-only code in try block.",
+        "sandboxCode": "def demo():\n    try:\n        x = 1\n    except Exception:\n        return \"err\"\n    else:\n        return \"ok\"\n    finally:\n        pass\nprint(demo())"
+      },
+      "challenges": [
+        {
+          "id": "ch_835ke7q",
+          "title": "Easy: finally runs",
+          "promptMarkdown": "",
+          "starterCode": "try:\n    pass\nfinally:\n    done=True",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "finally"
+            ]
+          }
+        },
+        {
+          "id": "ch_hori9hv",
+          "title": "Easy: else no error",
+          "promptMarkdown": "",
+          "starterCode": "try:\n    x=1\nexcept:\n    pass\nelse:\n    y=2",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "else"
+            ]
+          }
+        },
+        {
+          "id": "ch_yfj0si7",
+          "title": "Medium: finally with return",
+          "promptMarkdown": "",
+          "starterCode": "def demo():\n global ran\n try:\n  return 1\n finally:\n  ran=True\nresult=demo()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ran=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ran",
+                "assertion": "ran==True and result==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_m0d41dg",
+          "title": "Medium: else success path",
+          "promptMarkdown": "",
+          "starterCode": "try:\n x=1\nexcept:\n x=0\nelse:\n v=x+1\nv=v",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vazh37s",
+          "title": "Hard: cleanup flag",
+          "promptMarkdown": "",
+          "starterCode": "try:\n pass\nfinally:\n c=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "c=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rz28r72",
+          "title": "Hard: no else on bare except",
+          "promptMarkdown": "",
+          "starterCode": "try:\n x=1\nexcept ValueError:\n v=0\nelse:\n v=x+1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "v=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_avpqg3j",
+          "title": "Expert: return in finally",
+          "promptMarkdown": "",
+          "starterCode": "def f():\n global ran\n try:\n  return 1\n finally:\n  ran=True\nf()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ran=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ran",
+                "assertion": "ran==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_iz843m7",
+          "title": "Expert: suppress in except",
+          "promptMarkdown": "",
+          "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError:\n  pass\n hidden=True\nexcept ValueError:\n hidden=False",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "hidden=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks hidden",
+                "assertion": "hidden==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6lcv4q3",
+          "title": "Expert: else vs try body",
+          "promptMarkdown": "",
+          "starterCode": "try:\n x=1\nexcept ValueError:\n v=0\nelse:\n v=x+2",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "v=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ockppw3",
+          "title": "Expert: with replaces finally",
+          "promptMarkdown": "",
+          "starterCode": "import io\ndata=\"\"\nf=io.StringIO(\"ok\")\nwith f:\n data=f.read()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks data",
+                "assertion": "data==\"ok\""
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_d48hurk",
+            "type": "mcq",
+            "prompt": "finally always:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Runs"
+              },
+              {
+                "id": "b",
+                "label": "Skips on error"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_mzf4btd",
+            "type": "shortText",
+            "prompt": "else runs if:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "no exception"
+            }
+          },
+          {
+            "id": "q_wo9d6us",
+            "type": "mcq",
+            "prompt": "Cleanup belongs in:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "finally or with"
+              },
+              {
+                "id": "b",
+                "label": "except only"
+              },
+              {
+                "id": "c",
+                "label": "import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_w24w5y1",
+            "type": "mcq",
+            "prompt": "else avoids masking:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Success code bugs"
+              },
+              {
+                "id": "b",
+                "label": "Files"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_b5np63b",
+            "type": "shortText",
+            "prompt": "with preferred over:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "manual finally"
+            }
+          },
+          {
+            "id": "q_qchnurb",
+            "type": "mcq",
+            "prompt": "Expert: return in try still runs:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "finally"
+              },
+              {
+                "id": "b",
+                "label": "never finally"
+              },
+              {
+                "id": "c",
+                "label": "import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ckbq424",
+            "type": "mcq",
+            "prompt": "Expert: else not for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Errors"
+              },
+              {
+                "id": "b",
+                "label": "Success"
+              },
+              {
+                "id": "c",
+                "label": "OK path"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_6ty1o4t",
+            "type": "shortText",
+            "prompt": "Expert: finally for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "cleanup"
+            }
+          },
+          {
+            "id": "q_lp191u1",
+            "type": "mcq",
+            "prompt": "Expert: exception in else caught by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "except below"
+              },
+              {
+                "id": "b",
+                "label": "nothing"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_0ffx3s4",
+            "type": "shortText",
+            "prompt": "Expert: try/except/else/finally order:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "standard"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "raising_exceptions",
+      "title": "Raising exceptions",
+      "intro": {
+        "title": "Raising exceptions",
+        "bodyMarkdown": "`raise ValueError(\"msg\")` signals errors. Re-raise with bare `raise`.\n\nValidate inputs and fail fast with clear messages.\n\nDo not use exceptions for normal control flow casually.",
+        "sandboxCode": "def pct(n):\n    if not 0 <= n <= 100:\n        raise ValueError(\"n must be 0-100\")\n    return f\"{n}%\""
+      },
+      "challenges": [
+        {
+          "id": "ch_dq8xg8a",
+          "title": "Easy: raise ValueError",
+          "promptMarkdown": "",
+          "starterCode": "raise ValueError(\"bad\")",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "raise ValueError"
+            ]
+          }
+        },
+        {
+          "id": "ch_j89jops",
+          "title": "Easy: message",
+          "promptMarkdown": "",
+          "starterCode": "raise RuntimeError(\"oops\")",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "raise"
+            ]
+          }
+        },
+        {
+          "id": "ch_3cqxp7e",
+          "title": "Medium: validate",
+          "promptMarkdown": "",
+          "starterCode": "def f(x):\n if x<0: raise ValueError(\"neg\")\n return x\nok=False\ntry:\n f(-1)\nexcept ValueError:\n ok=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qx4h7za",
+          "title": "Medium: reraise",
+          "promptMarkdown": "",
+          "starterCode": "try:\n try:\n  int(\"bad\")\n except ValueError:\n  raise\nexcept ValueError:\n caught=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "caught=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks caught",
+                "assertion": "caught==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9we7jeb",
+          "title": "Hard: raise from",
+          "promptMarkdown": "",
+          "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError as e:\n  raise RuntimeError(\"wrap\") from e\nexcept RuntimeError as err:\n cause=err.__cause__",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "cause=None",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks cause",
+                "assertion": "type(cause).__name__==\"ValueError\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jrj2r6u",
+          "title": "Hard: TypeError",
+          "promptMarkdown": "",
+          "starterCode": "try:\n raise TypeError(\"wrong type\")\nexcept TypeError:\n caught=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "caught=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks caught",
+                "assertion": "caught==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7ar3v90",
+          "title": "Expert: custom later",
+          "promptMarkdown": "",
+          "starterCode": "try:\n raise ValueError(\"use builtin first\")\nexcept ValueError:\n raised=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "raised=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks raised",
+                "assertion": "raised==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2xad8ik",
+          "title": "Expert: fail fast",
+          "promptMarkdown": "",
+          "starterCode": "def pct(n):\n if not 0<=n<=100: raise ValueError(\"range\")\n return n\ntry:\n pct(101)\nexcept ValueError:\n failed=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "failed=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks failed",
+                "assertion": "failed==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_82hx93g",
+          "title": "Expert: not for flow",
+          "promptMarkdown": "",
+          "starterCode": "for i,v in enumerate([10,20,30]):\n if v==20:\n  idx=i\n  break",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "idx=-1",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks idx",
+                "assertion": "idx==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_102hctu",
+          "title": "Expert: document raises",
+          "promptMarkdown": "docstring",
+          "starterCode": "def g():\n    \"\"\"Raises ValueError.\"\"\"\n    raise ValueError",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "raise"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_vy8fwio",
+            "type": "mcq",
+            "prompt": "raise creates:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Exception"
+              },
+              {
+                "id": "b",
+                "label": "Class"
+              },
+              {
+                "id": "c",
+                "label": "Module"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_sgdcsdt",
+            "type": "shortText",
+            "prompt": "Validate inputs:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "early"
+            }
+          },
+          {
+            "id": "q_tky0nmu",
+            "type": "mcq",
+            "prompt": "bare raise:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Re-raises current"
+              },
+              {
+                "id": "b",
+                "label": "New random"
+              },
+              {
+                "id": "c",
+                "label": "Exit OK"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_nxvtkuz",
+            "type": "mcq",
+            "prompt": "ValueError for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Bad value"
+              },
+              {
+                "id": "b",
+                "label": "Missing file"
+              },
+              {
+                "id": "c",
+                "label": "Keyboard"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pp8c75m",
+            "type": "shortText",
+            "prompt": "Fail fast means:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "early error"
+            }
+          },
+          {
+            "id": "q_qidxdo5",
+            "type": "mcq",
+            "prompt": "Expert: raise from preserves:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Chain"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_vaf3ook",
+            "type": "mcq",
+            "prompt": "Expert: exceptions not for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Normal loops"
+              },
+              {
+                "id": "b",
+                "label": "Errors"
+              },
+              {
+                "id": "c",
+                "label": "Invalid input"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_gyer9vi",
+            "type": "shortText",
+            "prompt": "Expert: clear message helps:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "debugging"
+            }
+          },
+          {
+            "id": "q_57n7sdj",
+            "type": "mcq",
+            "prompt": "Expert: RuntimeError:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Generic runtime"
+              },
+              {
+                "id": "b",
+                "label": "Syntax"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2rbnufz",
+            "type": "shortText",
+            "prompt": "Expert: raise stops:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "execution"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "custom_exceptions",
+      "title": "Custom exceptions",
+      "intro": {
+        "title": "Custom exceptions",
+        "bodyMarkdown": "Subclass Exception: `class AppError(Exception): pass`.\n\nDomain-specific errors improve clarity. Add attributes for context.\n\nKeep hierarchy shallow; document when raised.",
+        "sandboxCode": "class ScoreError(Exception):\n    pass\n\ndef set_score(n):\n    if n < 0:\n        raise ScoreError(\"negative score\")\n    return n"
+      },
+      "challenges": [
+        {
+          "id": "ch_uksa20m",
+          "title": "Easy: define class",
+          "promptMarkdown": "",
+          "starterCode": "class MyError(Exception):\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "class",
+              "Exception"
+            ]
+          }
+        },
+        {
+          "id": "ch_j21fqzr",
+          "title": "Easy: raise custom",
+          "promptMarkdown": "",
+          "starterCode": "class E(Exception): pass\nraise E()",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "raise"
+            ]
+          }
+        },
+        {
+          "id": "ch_b1rj8j3",
+          "title": "Medium: inherit Exception",
+          "promptMarkdown": "",
+          "starterCode": "class E(Exception): pass\nok=issubclass(E,Exception)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "issubclass(E,Exception)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sen5mn8",
+          "title": "Medium: message attr",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class E(Exception): pass\ntry:\n raise E(\"bad\")\nexcept E as e:\n m=str(e)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks m",
+                "assertion": "\"bad\" in str(e).lower() or True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_53ogtcs",
+          "title": "Hard: catch custom",
+          "promptMarkdown": "",
+          "starterCode": "class MyError(Exception): pass\ncaught=False\ntry:\n raise MyError()\nexcept MyError:\n caught=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks caught",
+                "assertion": "caught==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cgg1uk7",
+          "title": "Hard: multiple custom",
+          "promptMarkdown": "",
+          "starterCode": "class E1(Exception): pass\nclass E2(Exception): pass\nn=0\nfor exc in (E1,E2):\n try:\n  raise exc()\n except (E1,E2):\n  n+=1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_mmn8k8z",
+          "title": "Expert: extra fields",
+          "promptMarkdown": "",
+          "starterCode": "class HTTPError(Exception):\n def __init__(self,code,msg=\"\"):\n  super().__init__(msg)\n  self.code=code\ntry:\n raise HTTPError(404,\"not found\")\nexcept HTTPError as e:\n code=e.code",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks code",
+                "assertion": "code==404"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6b02kxh",
+          "title": "Expert: HTTP style",
+          "promptMarkdown": "",
+          "starterCode": "class ServiceUnavailable(Exception):\n def __init__(self,code=503,msg=\"\"):\n  super().__init__(msg)\n  self.code=code\nexc=ServiceUnavailable(503)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks exc",
+                "assertion": "exc.code==503"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_faejpsu",
+          "title": "Expert: document",
+          "promptMarkdown": "",
+          "starterCode": "class ScoreError(Exception):\n \"\"\"Raised when score is invalid.\"\"\"\n pass\ndoc=ScoreError.__doc__",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks doc",
+                "assertion": "doc is not None and \"invalid\" in doc.lower()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ulfepir",
+          "title": "Expert: shallow tree",
+          "promptMarkdown": "",
+          "starterCode": "class AppError(Exception): pass\nclass LoginError(AppError): pass\nshallow=issubclass(LoginError, AppError) and issubclass(AppError, Exception)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks shallow",
+                "assertion": "shallow==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_mvlowgh",
+            "type": "mcq",
+            "prompt": "Custom exceptions subclass:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Exception"
+              },
+              {
+                "id": "b",
+                "label": "int"
+              },
+              {
+                "id": "c",
+                "label": "list"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_g6jvqmh",
+            "type": "shortText",
+            "prompt": "Domain errors improve:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "clarity"
+            }
+          },
+          {
+            "id": "q_9b9crv8",
+            "type": "mcq",
+            "prompt": "catch MyError catches:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "MyError"
+              },
+              {
+                "id": "b",
+                "label": "All"
+              },
+              {
+                "id": "c",
+                "label": "None"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_4qj2vqc",
+            "type": "mcq",
+            "prompt": "Add attrs for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Context"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1g7de3w",
+            "type": "shortText",
+            "prompt": "Keep hierarchy:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "shallow"
+            }
+          },
+          {
+            "id": "q_ank84za",
+            "type": "mcq",
+            "prompt": "Expert: AppError pattern:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Common base"
+              },
+              {
+                "id": "b",
+                "label": "Illegal"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_j0wmwhu",
+            "type": "mcq",
+            "prompt": "Expert: str(e) gives:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Message"
+              },
+              {
+                "id": "b",
+                "label": "Stack always"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_loq3vj9",
+            "type": "shortText",
+            "prompt": "Expert: raise MyError in:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "invalid cases"
+            }
+          },
+          {
+            "id": "q_m5hp0lq",
+            "type": "mcq",
+            "prompt": "Expert: dont overuse:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Many subclasses"
+              },
+              {
+                "id": "b",
+                "label": "One Error"
+              },
+              {
+                "id": "c",
+                "label": "try"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_bbx953p",
+            "type": "shortText",
+            "prompt": "Expert: document raised:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "errors"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "exception_hierarchy",
+      "title": "Exception hierarchy",
+      "intro": {
+        "title": "Exception hierarchy",
+        "bodyMarkdown": "BaseException → Exception → many types (ValueError, TypeError, OSError...).\n\nCatch parent to handle group. KeyboardInterrupt inherits BaseException not Exception.\n\nRead traceback bottom-up to find root cause.",
+        "sandboxCode": "print(ValueError.__mro__)\ntry:\n    1/0\nexcept ZeroDivisionError:\n    print(\"math error\")"
+      },
+      "challenges": [
+        {
+          "id": "ch_rjjo6lc",
+          "title": "Easy: ZeroDivisionError",
+          "promptMarkdown": "",
+          "starterCode": "try:\n 1/0\nexcept ZeroDivisionError:\n pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ZeroDivisionError"
+            ]
+          }
+        },
+        {
+          "id": "ch_paywm5z",
+          "title": "Easy: issubclass",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=issubclass(ZeroDivisionError,ArithmeticError)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "issubclass(ZeroDivisionError,ArithmeticError)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_lnhse38",
+          "title": "Medium: catch ArithmeticError",
+          "promptMarkdown": "",
+          "starterCode": "try:\n 1/0\nexcept ArithmeticError:\n caught=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "caught=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks caught",
+                "assertion": "caught==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3egu1xj",
+          "title": "Medium: traceback concept",
+          "promptMarkdown": "",
+          "starterCode": "import traceback\ntry:\n 1/0\nexcept ZeroDivisionError:\n text=traceback.format_exc()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks text",
+                "assertion": "\"Traceback\" in text and \"ZeroDivisionError\" in text"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_uwbhz9j",
+          "title": "Hard: OSError family",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=issubclass(FileNotFoundError,OSError) and issubclass(PermissionError,OSError)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "issubclass(FileNotFoundError,OSError) and issubclass(PermissionError,OSError)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_zu3zu8c",
+          "title": "Hard: LookupError",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=issubclass(KeyError,LookupError)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "issubclass(KeyError,LookupError)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7yjra2u",
+          "title": "Expert: BaseException",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "root=KeyboardInterrupt.__mro__[-1] is BaseException",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks root",
+                "assertion": "KeyboardInterrupt.__mro__[-1] is BaseException"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1gemrhf",
+          "title": "Expert: Exception vs Base",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "sub=issubclass(Exception, BaseException)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks sub",
+                "assertion": "issubclass(Exception, BaseException)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_eagj2fw",
+          "title": "Expert: mro",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "order=ValueError.__mro__",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks order",
+                "assertion": "ValueError in order and Exception in order"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_08rwih0",
+          "title": "Expert: root cause",
+          "promptMarkdown": "",
+          "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError as e:\n  raise RuntimeError(\"wrap\") from e\nexcept RuntimeError as e:\n cause=type(e.__cause__).__name__",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "cause=\"\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks cause",
+                "assertion": "cause==\"ValueError\""
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_nycma7h",
+            "type": "mcq",
+            "prompt": "ValueError subclasses:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Exception"
+              },
+              {
+                "id": "b",
+                "label": "BaseException only"
+              },
+              {
+                "id": "c",
+                "label": "int"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kha9k0t",
+            "type": "shortText",
+            "prompt": "KeyboardInterrupt not caught by:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "except Exception"
+            }
+          },
+          {
+            "id": "q_30febth",
+            "type": "mcq",
+            "prompt": "issubclass checks:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Hierarchy"
+              },
+              {
+                "id": "b",
+                "label": "Values"
+              },
+              {
+                "id": "c",
+                "label": "Speed"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_mg04pbc",
+            "type": "mcq",
+            "prompt": "Traceback shows:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Call stack"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "Fonts"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_aul739r",
+            "type": "shortText",
+            "prompt": "KeyError is LookupError:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "yes"
+            }
+          },
+          {
+            "id": "q_chknnv7",
+            "type": "mcq",
+            "prompt": "Expert: catch broad Exception:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Top-level handler"
+              },
+              {
+                "id": "b",
+                "label": "Always inner loop"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_oj7dco8",
+            "type": "mcq",
+            "prompt": "Expert: ArithmeticError parent of:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "ZeroDivision"
+              },
+              {
+                "id": "b",
+                "label": "KeyError"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_b6dfi6t",
+            "type": "shortText",
+            "prompt": "Expert: read traceback:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "bottom up"
+            }
+          },
+          {
+            "id": "q_k8jb7iw",
+            "type": "mcq",
+            "prompt": "Expert: OSError for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "IO"
+              },
+              {
+                "id": "b",
+                "label": "Syntax"
+              },
+              {
+                "id": "c",
+                "label": "Types"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_b90zjwq",
+            "type": "shortText",
+            "prompt": "Expert: BaseException for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "system exits"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "assertions",
+      "title": "Assertions",
+      "intro": {
+        "title": "Assertions",
+        "bodyMarkdown": "`assert condition, message` — AssertionError if false. For developer checks, not user validation.\n\npython -O removes asserts. Use exceptions for user-facing errors.\n\nDo not assert side effects or IO.",
+        "sandboxCode": "def split_even(total, parts):\n    assert parts > 0, \"parts must be positive\"\n    return total / parts\nprint(split_even(10, 2))"
+      },
+      "challenges": [
+        {
+          "id": "ch_74bw2jl",
+          "title": "Easy: assert true",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "assert True\nok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_nzmmch2",
+          "title": "Easy: assert message",
+          "promptMarkdown": "",
+          "starterCode": "assert 1==1, \"ok\"",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "assert"
+            ]
+          }
+        },
+        {
+          "id": "ch_ys2fgwn",
+          "title": "Medium: AssertionError",
+          "promptMarkdown": "",
+          "starterCode": "try:\n assert 1==2\nexcept AssertionError:\n raised=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "raised=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks raised",
+                "assertion": "raised==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5d1whjy",
+          "title": "Medium: debug check",
+          "promptMarkdown": "",
+          "starterCode": "def f(x):\n assert x>=0\n return x\nok=f(1)==1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_0wuxed8",
+          "title": "Hard: not for user input",
+          "promptMarkdown": "",
+          "starterCode": "def parse_age(s):\n if not s.isdigit(): raise ValueError(\"invalid age\")\n return int(s)\ntry:\n parse_age(\"abc\")\nexcept ValueError as e:\n err=e",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "err=None",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks err",
+                "assertion": "isinstance(err,ValueError)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_m1xb1t6",
+          "title": "Hard: -O removes",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "stripped=not __debug__\n# python -O sets __debug__=False and removes assert bytecode",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks stripped",
+                "assertion": "stripped==(__debug__==False)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_63d3zmx",
+          "title": "Expert: invariant",
+          "promptMarkdown": "",
+          "starterCode": "# invariant: len >= 0\nassert True",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "assert"
+            ]
+          }
+        },
+        {
+          "id": "ch_tfzcaab",
+          "title": "Expert: type check dev",
+          "promptMarkdown": "",
+          "starterCode": "try:\n assert isinstance(\"1\", int), \"dev check\"\nexcept AssertionError:\n failed=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "failed=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks failed",
+                "assertion": "failed==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jqlk70v",
+          "title": "Expert: prefer raise user",
+          "promptMarkdown": "",
+          "starterCode": "def parse_age(s):\n if not s.isdigit(): raise ValueError(\"bad age\")\n return int(s)\ntry:\n parse_age(\"x\")\nexcept ValueError as e:\n err=e",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "err=None",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks err",
+                "assertion": "isinstance(err, ValueError)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_r2iw7op",
+          "title": "Expert: pytest uses assert",
+          "promptMarkdown": "",
+          "starterCode": "passed=False\ndef test_sum():\n assert 1+1==2\ntry:\n test_sum()\n passed=True\nexcept AssertionError:\n passed=False",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks passed",
+                "assertion": "passed==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_ehzctvh",
+            "type": "mcq",
+            "prompt": "assert fails with:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "AssertionError"
+              },
+              {
+                "id": "b",
+                "label": "ValueError"
+              },
+              {
+                "id": "c",
+                "label": "OK"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_igkkg8i",
+            "type": "shortText",
+            "prompt": "assert for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "debug"
+            }
+          },
+          {
+            "id": "q_vxry9lf",
+            "type": "mcq",
+            "prompt": "User bad input use:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "raise"
+              },
+              {
+                "id": "b",
+                "label": "assert only"
+              },
+              {
+                "id": "c",
+                "label": "pass"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ra2hg00",
+            "type": "mcq",
+            "prompt": "-O flag:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Strips asserts"
+              },
+              {
+                "id": "b",
+                "label": "Adds asserts"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_oily1mw",
+            "type": "shortText",
+            "prompt": "AssertionError means:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "condition false"
+            }
+          },
+          {
+            "id": "q_bju73ak",
+            "type": "mcq",
+            "prompt": "Expert: invariant is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Always true assumption"
+              },
+              {
+                "id": "b",
+                "label": "User typo"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_cw3vxii",
+            "type": "mcq",
+            "prompt": "Expert: pytest:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Uses assert"
+              },
+              {
+                "id": "b",
+                "label": "Bans assert"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_nethpkh",
+            "type": "shortText",
+            "prompt": "Expert: never assert on:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "user input"
+            }
+          },
+          {
+            "id": "q_2vhgg6e",
+            "type": "mcq",
+            "prompt": "Expert: message in assert:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Helps debug"
+              },
+              {
+                "id": "b",
+                "label": "Required always"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_282zlvx",
+            "type": "shortText",
+            "prompt": "Expert: production user errors:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "exceptions"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "debugging",
+      "title": "Debugging strategies",
+      "intro": {
+        "title": "Debugging strategies",
+        "bodyMarkdown": "Read traceback, print/log state, reproduce minimally, use debugger (pdb/breakpoint).\n\nRubber duck debugging — explain code line by line.\n\nFix root cause not symptoms; add test to prevent regression.",
+        "sandboxCode": "def buggy(a):\n    return a + 1  # fixed from a + \"1\"\nprint(buggy(2))"
+      },
+      "challenges": [
+        {
+          "id": "ch_4q8ha7d",
+          "title": "Easy: read traceback",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_fe9v90r",
+          "title": "Easy: print debug",
+          "promptMarkdown": "",
+          "starterCode": "x=1\nprint(\"x=\",x)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "print"
+            ]
+          }
+        },
+        {
+          "id": "ch_l3v839f",
+          "title": "Medium: breakpoint",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "fn=breakpoint",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks fn",
+                "assertion": "callable(fn) and fn.__name__==\"breakpoint\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qbyepce",
+          "title": "Medium: minimal repro",
+          "promptMarkdown": "",
+          "starterCode": "def divide(a,b):\n return a/b\nerr=\"\"\ntry:\n divide(1,\"1\")\nexcept TypeError:\n err=\"TypeError\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks err",
+                "assertion": "err==\"TypeError\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_otrgsly",
+          "title": "Hard: logging debug",
+          "promptMarkdown": "",
+          "starterCode": "import logging\norder=logging.DEBUG < logging.INFO",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks order",
+                "assertion": "logging.DEBUG < logging.INFO"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_lag6tn2",
+          "title": "Hard: isolate bug",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def add(a,b): return a+b\ndef mul(a,b): return a*b\nbad=\"\"\nfor name,fn in [(\"add\",lambda: add(1,2),(\"mul\",lambda: mul(2,\"x\"))]:\n try:\n  fn()\n except TypeError:\n  bad=name",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks bad",
+                "assertion": "bad==\"mul\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sthrimc",
+          "title": "Expert: pdb commands",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "breakpoint"
+            ]
+          }
+        },
+        {
+          "id": "ch_h4y58kd",
+          "title": "Expert: regression test",
+          "promptMarkdown": "",
+          "starterCode": "def bug_fixed(v): return v+1\ndef test_bug():\n assert bug_fixed(2)==3\ntests_pass=False\ntry:\n test_bug()\n tests_pass=True\nexcept AssertionError:\n tests_pass=False",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks tests_pass",
+                "assertion": "tests_pass==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_tro0d6k",
+          "title": "Expert: binary search commits",
+          "promptMarkdown": "",
+          "starterCode": "while lo<=hi:\n mid=(lo+hi)//2\n if mid==target:\n  found=True\n  break\n elif mid<target:\n  lo=mid+1\n else:\n  hi=mid-1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "lo,hi=1,10\ntarget=5\nfound=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks found",
+                "assertion": "found==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_h8ju8ni",
+          "title": "Expert: type hints help",
+          "promptMarkdown": "",
+          "starterCode": "def add(a: int, b: int) -> int:\n return a+b\nhinted=add(1,2)==3",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks hinted",
+                "assertion": "hinted==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_bzcepej",
+            "type": "mcq",
+            "prompt": "Traceback shows:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Error location"
+              },
+              {
+                "id": "b",
+                "label": "Weather"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1cyq7as",
+            "type": "shortText",
+            "prompt": "breakpoint() enters:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "debugger"
+            }
+          },
+          {
+            "id": "q_nxrhgg1",
+            "type": "mcq",
+            "prompt": "Minimal repro:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Smallest failing case"
+              },
+              {
+                "id": "b",
+                "label": "Largest app"
+              },
+              {
+                "id": "c",
+                "label": "Random"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_cdkgwa9",
+            "type": "mcq",
+            "prompt": "logging better than print in prod:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Yes"
+              },
+              {
+                "id": "b",
+                "label": "Never"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xy3ysnc",
+            "type": "shortText",
+            "prompt": "Fix:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "root cause"
+            }
+          },
+          {
+            "id": "q_gh3bpms",
+            "type": "mcq",
+            "prompt": "Expert: pdb n steps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Next line"
+              },
+              {
+                "id": "b",
+                "label": "Exit OS"
+              },
+              {
+                "id": "c",
+                "label": "Compile"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_73z0i6t",
+            "type": "mcq",
+            "prompt": "Expert: regression test:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Prevents return"
+              },
+              {
+                "id": "b",
+                "label": "Slows fix"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_me338x3",
+            "type": "shortText",
+            "prompt": "Expert: rubber duck:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "explain aloud"
+            }
+          },
+          {
+            "id": "q_q7jf0lw",
+            "type": "mcq",
+            "prompt": "Expert: TypeError debug check:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Types of operands"
+              },
+              {
+                "id": "b",
+                "label": "CPU temp"
+              },
+              {
+                "id": "c",
+                "label": "Font"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qrmivom",
+            "type": "shortText",
+            "prompt": "Expert: read error:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "bottom first"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "logging_basics",
+      "title": "Logging basics",
+      "intro": {
+        "title": "Logging basics",
+        "bodyMarkdown": "logging module: debug, info, warning, error, critical levels.\n\nBetter than print for apps — timestamps, levels, handlers.\n\nConfigure once at startup; use logger = logging.getLogger(__name__).",
+        "sandboxCode": "import logging\nlogging.basicConfig(level=logging.INFO)\nlog = logging.getLogger(__name__)\nlog.info(\"App started\")\nlog.warning(\"Low disk\")"
+      },
+      "challenges": [
+        {
+          "id": "ch_p7uus7s",
+          "title": "Easy: import logging",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import logging\nok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_useqrg4",
+          "title": "Easy: info level",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import logging\nlogging.basicConfig(level=logging.INFO)\nok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9kt18yy",
+          "title": "Medium: getLogger",
+          "promptMarkdown": "",
+          "starterCode": "import logging\nok=logging.getLogger(\"x\") is not None",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "logging.getLogger(\"x\") is not None"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_f34ub1w",
+          "title": "Medium: warning",
+          "promptMarkdown": "",
+          "starterCode": "import logging\nlvl=logging.WARNING",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lvl",
+                "assertion": "lvl==logging.WARNING"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_49dlu2i",
+          "title": "Hard: error",
+          "promptMarkdown": "",
+          "starterCode": "import logging\nlvl=logging.ERROR",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lvl",
+                "assertion": "lvl==logging.ERROR"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ybxwifm",
+          "title": "Hard: debug lowest",
+          "promptMarkdown": "",
+          "starterCode": "import logging\nok=logging.DEBUG < logging.INFO",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "logging.DEBUG < logging.INFO"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4dm46ik",
+          "title": "Expert: format string",
+          "promptMarkdown": "",
+          "starterCode": "import logging\nconfigured=False\nlogging.basicConfig(format=\"%(levelname)s:%(message)s\", level=logging.INFO)\nconfigured=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks configured",
+                "assertion": "configured==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xgr0tng",
+          "title": "Expert: file handler",
+          "promptMarkdown": "",
+          "starterCode": "import logging\nfrom logging import FileHandler\nhas_handler=issubclass(FileHandler, logging.Handler)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks has_handler",
+                "assertion": "has_handler==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ivgdgwu",
+          "title": "Expert: exc_info True",
+          "promptMarkdown": "",
+          "starterCode": "import logging\nimport io\nlogged_tb=False\nbuf=io.StringIO()\nlog=logging.getLogger(\"t_exc\")\nlog.handlers.clear()\nh=logging.StreamHandler(buf)\nlog.addHandler(h)\nlog.setLevel(logging.ERROR)\ntry:\n int(\"x\")\nexcept ValueError:\n log.error(\"fail\", exc_info=True)\nlogged_tb=\"Traceback\" in buf.getvalue()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks logged_tb",
+                "assertion": "logged_tb==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jpwlo4u",
+          "title": "Expert: module __name__",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=__name__",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "isinstance(__name__,str)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_rrtru5k",
+            "type": "mcq",
+            "prompt": "logging levels include:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "info error"
+              },
+              {
+                "id": "b",
+                "label": "only print"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pimm6ju",
+            "type": "shortText",
+            "prompt": "getLogger(__name__) for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "module logger"
+            }
+          },
+          {
+            "id": "q_91pmxuu",
+            "type": "mcq",
+            "prompt": "basicConfig sets:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Root defaults"
+              },
+              {
+                "id": "b",
+                "label": "CPU"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kped912",
+            "type": "mcq",
+            "prompt": "Prefer logging over print in:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Production apps"
+              },
+              {
+                "id": "b",
+                "label": "Hello world only"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_aznm9ix",
+            "type": "shortText",
+            "prompt": "DEBUG is:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "verbose"
+            }
+          },
+          {
+            "id": "q_g7hz1xj",
+            "type": "mcq",
+            "prompt": "Expert: exc_info logs:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Traceback"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_3jg4x8a",
+            "type": "mcq",
+            "prompt": "Expert: handlers send to:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "File console etc"
+              },
+              {
+                "id": "b",
+                "label": "Only RAM"
+              },
+              {
+                "id": "c",
+                "label": "Nowhere"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_4rimdce",
+            "type": "shortText",
+            "prompt": "Expert: timestamp in:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "format"
+            }
+          },
+          {
+            "id": "q_3d5k4qn",
+            "type": "mcq",
+            "prompt": "Expert: critical highest:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Severity"
+              },
+              {
+                "id": "b",
+                "label": "Alphabet"
+              },
+              {
+                "id": "c",
+                "label": "Random"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xx4viv3",
+            "type": "shortText",
+            "prompt": "Expert: configure logging:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "once"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "defensive_programming",
+      "title": "Defensive programming",
+      "intro": {
+        "title": "Defensive programming",
+        "bodyMarkdown": "Validate inputs, handle edge cases, use defaults, fail with clear errors.\n\nAssume less; document preconditions; write tests for boundaries.\n\nBalance defensiveness with readability — not every line needs a guard.",
+        "sandboxCode": "def average(nums):\n    if not nums:\n        raise ValueError(\"nums cannot be empty\")\n    return sum(nums) / len(nums)\nprint(average([2, 4]))"
+      },
+      "challenges": [
+        {
+          "id": "ch_xnly92e",
+          "title": "Easy: empty check",
+          "promptMarkdown": "",
+          "starterCode": "def f(nums):\n if not nums: return 0\n return sum(nums)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "if not"
+            ]
+          }
+        },
+        {
+          "id": "ch_rsdau91",
+          "title": "Easy: type check",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_i8ut2ty",
+          "title": "Medium: bounds",
+          "promptMarkdown": "",
+          "starterCode": "def in_bounds(i,n): return 0<=i<n\nok=in_bounds(5,3)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_0hpm586",
+          "title": "Medium: default arg None",
+          "promptMarkdown": "",
+          "starterCode": "def add_item(x,lst=None):\n if lst is None: lst=[]\n lst.append(x)\n return lst\na=add_item(1)\nb=add_item(2)\nshared=a is b",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks shared",
+                "assertion": "shared==False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3igtdpv",
+          "title": "Hard: validate range",
+          "promptMarkdown": "",
+          "starterCode": "def pct(n):\n if not 0<=n<=100: raise ValueError(\"range\")\n return n\ntry:\n pct(150)\nexcept ValueError:\n failed=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "failed=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks failed",
+                "assertion": "failed==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_s8ujirm",
+          "title": "Hard: guard clause",
+          "promptMarkdown": "",
+          "starterCode": "def f(x):\n if x is None: return None\n return x*2\nr=f(None)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r is None"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jxozjp5",
+          "title": "Expert: contract docstring",
+          "promptMarkdown": "",
+          "starterCode": "def g(x):\n \"\"\"x must be int.\"\"\"\n return x",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "\"\"\""
+            ]
+          }
+        },
+        {
+          "id": "ch_s2u49qu",
+          "title": "Expert: test boundaries",
+          "promptMarkdown": "",
+          "starterCode": "def avg(nums):\n if not nums: raise ValueError(\"empty\")\n return sum(nums)/len(nums)\nedge=True\ntry:\n avg([])\n edge=False\nexcept ValueError:\n pass",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks edge",
+                "assertion": "edge==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_emrof43",
+          "title": "Expert: avoid silent fail",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "except ValueError",
+              "print"
+            ]
+          }
+        },
+        {
+          "id": "ch_d2qrhly",
+          "title": "Expert: sanitize user path",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import os\nBASE=\"/data\"\ndef safe_path(user):\n p=os.path.normpath(os.path.join(BASE, user))\n if not p.startswith(BASE): raise ValueError(\"traversal\")\n return p\nsafe=safe_path(\"sub/file.txt\").startswith(BASE)\ntry:\n safe_path(\"../etc/passwd\")\n safe=False\nexcept ValueError:\n pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks safe",
+                "assertion": "safe==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_qj3qt4p",
+            "type": "mcq",
+            "prompt": "Defensive code validates:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Inputs"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "Fonts"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ibh4und",
+            "type": "shortText",
+            "prompt": "Fail fast with:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "clear errors"
+            }
+          },
+          {
+            "id": "q_cwd8ux8",
+            "type": "mcq",
+            "prompt": "Empty list average should:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Error or handle"
+              },
+              {
+                "id": "b",
+                "label": "Return infinity always"
+              },
+              {
+                "id": "c",
+                "label": "Crash OS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_psnlj0w",
+            "type": "mcq",
+            "prompt": "Guard clause:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Early return"
+              },
+              {
+                "id": "b",
+                "label": "Late return only"
+              },
+              {
+                "id": "c",
+                "label": "import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_mabtoby",
+            "type": "shortText",
+            "prompt": "Document:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "preconditions"
+            }
+          },
+          {
+            "id": "q_2x10yyw",
+            "type": "mcq",
+            "prompt": "Expert: silent except bad:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Yes"
+              },
+              {
+                "id": "b",
+                "label": "Best practice"
+              },
+              {
+                "id": "c",
+                "label": "Required"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_6abnjxt",
+            "type": "mcq",
+            "prompt": "Expert: tests for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Edge cases"
+              },
+              {
+                "id": "b",
+                "label": "Comments"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tygq09k",
+            "type": "shortText",
+            "prompt": "Expert: balance:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "readability"
+            }
+          },
+          {
+            "id": "q_bon8lp9",
+            "type": "mcq",
+            "prompt": "Expert: sanitize paths prevents:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Traversal"
+              },
+              {
+                "id": "b",
+                "label": "Syntax"
+              },
+              {
+                "id": "c",
+                "label": "Types"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_9c0eb62",
+            "type": "shortText",
+            "prompt": "Expert: None sentinel for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "mutable defaults"
+            }
+          }
+        ]
+      }
+    }
+  ]
 }
