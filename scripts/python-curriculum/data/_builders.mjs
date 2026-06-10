@@ -1,8 +1,5 @@
 /** @typedef {import('../helpers.mjs').*} */
 
-/**
- * @param {object} config
- */
 export function makeTopic(config) {
   return {
     id: config.id,
@@ -13,6 +10,26 @@ export function makeTopic(config) {
     readMore: config.readMore,
     challengeSpecs: config.challenges,
     questionSpecs: config.questions,
+  }
+}
+
+/**
+ * @param {'easy'|'medium'|'hard'} difficulty
+ * @param {object} config
+ */
+export function makeProject(difficulty, config) {
+  const label =
+    difficulty === 'easy' ? 'Easy project' : difficulty === 'medium' ? 'Medium project' : 'Hard project'
+  const title =
+    config.title.startsWith('Easy project') ||
+    config.title.startsWith('Medium project') ||
+    config.title.startsWith('Hard project')
+      ? config.title
+      : `${label}: ${config.title}`
+  return {
+    ...makeTopic({ ...config, title }),
+    kind: 'project',
+    projectDifficulty: difficulty,
   }
 }
 

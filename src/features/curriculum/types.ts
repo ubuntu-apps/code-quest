@@ -54,9 +54,14 @@ export interface TestGradeResult {
   byQuestion: Record<string, boolean>
 }
 
+export type LevelKind = 'topic' | 'project'
+export type ProjectDifficulty = 'easy' | 'medium' | 'hard'
+
 export interface Level {
   id: string
   title: string
+  kind?: LevelKind
+  projectDifficulty?: ProjectDifficulty
   intro: {
     title?: string
     bodyMarkdown: string

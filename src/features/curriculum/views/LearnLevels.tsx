@@ -47,13 +47,26 @@ export function LearnLevels({
           const done = challengesDone && p.testPassed
           const partial = !done && (p.challengesCompleted.length > 0 || p.testPassed)
 
+          const isProject = lvl.kind === 'project'
+          const projectLabel =
+            lvl.projectDifficulty === 'easy' || lvl.projectDifficulty === 'medium'
+              ? 'Required project'
+              : lvl.projectDifficulty === 'hard'
+                ? 'Optional project'
+                : 'Project'
           const statusMeta = locked
             ? 'Locked · pass previous test to unlock'
             : done
-              ? 'Completed'
+              ? isProject
+                ? `${projectLabel} · completed`
+                : 'Completed'
               : partial
-                ? 'In progress'
-                : 'Not started'
+                ? isProject
+                  ? `${projectLabel} · in progress`
+                  : 'In progress'
+                : isProject
+                  ? `${projectLabel} · not started`
+                  : 'Not started'
 
           return (
             <CatalogListItem

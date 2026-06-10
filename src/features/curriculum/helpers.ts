@@ -75,6 +75,33 @@ export function computeSectionXp(languageId: string, levels: Level[]): number {
   return levels.reduce((sum, level) => sum + computeLevelXp(languageId, level), 0)
 }
 
+export function isProjectLevel(level: Level): boolean {
+  return level.kind === 'project'
+}
+
+export function getProjectLevels(levels: Level[]): Level[] {
+  return levels.filter(isProjectLevel)
+}
+
+export function areRequiredSectionProjectsComplete(languageId: string, levels: Level[]): boolean {
+  const required = getProjectLevels(levels).filter(
+    (level) => level.projectDifficulty === 'easy' || level.projectDifficulty === 'medium',
+  )
+  if (required.length === 0) return true
+  return required.every((level) => isLevelComplete(languageId, level))
+}
+
+export function isSectionUnlocked(
+  languageId: string,
+  sections: { file: { levels: Level[] } }[],
+  sectionIndex: number,
+): boolean {
+  if (sectionIndex <= 0) return true
+  const previous = sections[sectionIndex - 1]
+  if (!previous) return true
+  return areRequiredSectionProjectsComplete(languageId, previous.file.levels)
+}
+
 export function pythonErrorLinePointer(
   code: string,
   err: Pick<FriendlyPythonError, 'line' | 'column'> | null | undefined,

@@ -7,6 +7,8 @@ import { CatalogListItem } from '../components/CatalogListItem'
 interface LearnSectionsProps {
   bundle: LanguageBundle
   languageId: string | null
+  isEditMode: boolean
+  isSectionUnlocked: (sectionIndex: number) => boolean
   onSelectSection: (sectionId: string) => void
   onUpdateLanguageTitle: (title: string) => void
   onUpdateSectionTitle: (sectionId: string, title: string, options?: { commit?: boolean }) => void
@@ -18,6 +20,8 @@ interface LearnSectionsProps {
 export function LearnSections({
   bundle,
   languageId,
+  isEditMode,
+  isSectionUnlocked,
   onSelectSection,
   onUpdateLanguageTitle,
   onUpdateSectionTitle,
@@ -47,6 +51,10 @@ export function LearnSections({
             languageId && levels.length > 0
               ? levels.reduce((sum, lvl) => sum + computeLevelXp(languageId, lvl), 0)
               : 0
+          const locked = !isEditMode && !isSectionUnlocked(secIndex)
+          const statusMeta = locked
+            ? 'Locked · complete easy and medium projects in the previous section'
+            : `${completedCount}/${levels.length} levels complete · ${sectionXp} XP`
 
           return (
             <CatalogListItem
@@ -55,12 +63,13 @@ export function LearnSections({
               titlePlaceholder="Section title"
               onTitleChange={(title) => onUpdateSectionTitle(sec.id, title)}
               onTitleCommit={(title) => onUpdateSectionTitle(sec.id, title, { commit: true })}
-              onClick={() => onSelectSection(sec.id)}
-              meta={
-                <span className="cq-card-meta">
-                  {completedCount}/{levels.length} levels complete · {sectionXp} XP
-                </span>
-              }
+              onClick={() => {
+                if (locked) return
+                onSelectSection(sec.id)
+              }}
+              meta={<span className="cq-card-meta">{statusMeta}</span>}
+              locked={locked}
+              disabled={locked}
               progressPercent={pct}
               progressAriaLabel={`${sec.title} progress`}
               listIndex={secIndex}

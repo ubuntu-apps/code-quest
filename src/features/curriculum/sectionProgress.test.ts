@@ -1,6 +1,12 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import type { Level } from './types'
-import { getSectionProgressStatus, isLevelComplete, isLevelStarted } from './helpers'
+import {
+  areRequiredSectionProjectsComplete,
+  getSectionProgressStatus,
+  isLevelComplete,
+  isLevelStarted,
+  isSectionUnlocked,
+} from './helpers'
 import { saveProgress } from './progressStorage'
 
 const levels: Level[] = [
@@ -41,5 +47,48 @@ describe('section progress', () => {
     saveProgress('python', 'l2', { challengesCompleted: [], testPassed: true })
     expect(getSectionProgressStatus('python', levels)).toBe('complete')
     expect(isLevelComplete('python', levels[1])).toBe(true)
+  })
+})
+
+describe('section project gates', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
+  const topic: Level = {
+    id: 'topic1',
+    title: 'Topic',
+    intro: { bodyMarkdown: '' },
+    challenges: [],
+    test: { questions: [] },
+  }
+
+  const project = (id: string, difficulty: 'easy' | 'medium' | 'hard'): Level => ({
+    id,
+    title: `Project ${difficulty}`,
+    kind: 'project',
+    projectDifficulty: difficulty,
+    intro: { bodyMarkdown: '' },
+    challenges: [{ id: 'c1', title: 'C', promptMarkdown: '', validation: { mode: 'equalsNormalized', expected: 'x' } }],
+    test: { questions: [] },
+  })
+
+  it('requires easy and medium projects before the next section unlocks', () => {
+    const sectionA = {
+      file: {
+        levels: [topic, project('easy', 'easy'), project('med', 'medium'), project('hard', 'hard')],
+      },
+    }
+    const sectionB = { file: { levels: [topic] } }
+    const sections = [sectionA, sectionB]
+
+    expect(isSectionUnlocked('python', sections, 1)).toBe(false)
+
+    saveProgress('python', 'easy', { challengesCompleted: ['c1'], testPassed: true })
+    expect(isSectionUnlocked('python', sections, 1)).toBe(false)
+
+    saveProgress('python', 'med', { challengesCompleted: ['c1'], testPassed: true })
+    expect(areRequiredSectionProjectsComplete('python', sectionA.file.levels)).toBe(true)
+    expect(isSectionUnlocked('python', sections, 1)).toBe(true)
   })
 })

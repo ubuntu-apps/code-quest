@@ -31,12 +31,21 @@ type ProgressListItem =
       sectionXp: number
     }
   | {
-      kind: 'topic'
+      kind: 'section-header'
       key: string
       langId: string
       lang: string
       sectionId: string
       section: string
+      levelCount: number
+      completedCount: number
+      sectionXp: number
+    }
+  | {
+      kind: 'topic'
+      key: string
+      langId: string
+      sectionId: string
       level: Level
     }
 
@@ -67,14 +76,28 @@ export function ProgressTab({
       const status = getSectionProgressStatus(lang.id, levels)
 
       if (status === 'in_progress') {
+        const completedCount = levels.filter(
+          (level) => loadProgress(lang.id, level.id).testPassed,
+        ).length
+
+        items.push({
+          kind: 'section-header',
+          key: `${lang.id}-${sectionRef.id}-header`,
+          langId: lang.id,
+          lang: lang.title,
+          sectionId: sectionRef.id,
+          section: sectionRef.title,
+          levelCount: levels.length,
+          completedCount,
+          sectionXp: computeSectionXp(lang.id, levels),
+        })
+
         for (const level of levels) {
           items.push({
             kind: 'topic',
             key: `${lang.id}-${sectionRef.id}-${level.id}`,
             langId: lang.id,
-            lang: lang.title,
             sectionId: sectionRef.id,
-            section: sectionRef.title,
             level,
           })
         }
@@ -113,16 +136,23 @@ export function ProgressTab({
       )}
       <ul className="cq-progress-list">
         {items.map((item) => {
-          if (item.kind === 'section') {
+          if (item.kind === 'section' || item.kind === 'section-header') {
             const statusLabel =
-              item.status === 'complete'
-                ? 'Complete'
-                : item.levelCount === 0
-                  ? 'Empty'
-                  : 'Not started'
+              item.kind === 'section-header'
+                ? 'In progress'
+                : item.status === 'complete'
+                  ? 'Complete'
+                  : item.levelCount === 0
+                    ? 'Empty'
+                    : 'Not started'
 
             return (
-              <li key={item.key} className="cq-progress-row cq-progress-row--section">
+              <li
+                key={item.key}
+                className={`cq-progress-row cq-progress-row--section${
+                  item.kind === 'section-header' ? ' cq-progress-row--section-header' : ''
+                }`}
+              >
                 <div>
                   <EditableText
                     className="cq-progress-title"
@@ -136,7 +166,9 @@ export function ProgressTab({
                 <div className="cq-progress-tags">
                   <span
                     className={
-                      item.status === 'complete' ? 'cq-tag cq-tag--ok' : 'cq-tag'
+                      item.kind === 'section' && item.status === 'complete'
+                        ? 'cq-tag cq-tag--ok'
+                        : 'cq-tag'
                     }
                   >
                     {statusLabel}
@@ -169,9 +201,6 @@ export function ProgressTab({
                     onUpdateLevelTitle(item.langId, item.sectionId, item.level.id, title)
                   }
                 />
-                <div className="cq-progress-meta">
-                  {languageId ? item.section : `${item.lang} · ${item.section}`}
-                </div>
               </div>
               <div className="cq-progress-tags">
                 <span className={challengesOk ? 'cq-tag cq-tag--ok' : 'cq-tag'}>

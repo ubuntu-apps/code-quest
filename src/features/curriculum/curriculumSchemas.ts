@@ -71,6 +71,8 @@ const levelIntroSchema = z.object({
 const levelSchema = z.object({
   id: z.string(),
   title: z.string(),
+  kind: z.enum(['topic', 'project']).optional(),
+  projectDifficulty: z.enum(['easy', 'medium', 'hard']).optional(),
   intro: levelIntroSchema,
   challenges: z.array(challengeSchema),
   test: z.object({

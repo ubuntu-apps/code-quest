@@ -45,6 +45,7 @@ import { progressPath } from './learnPaths'
 import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageStorage'
 import {
   computeLevelXp,
+  isSectionUnlocked as checkSectionUnlocked,
   loadStreakState,
   recordDailyActivity,
 } from './helpers'
@@ -385,6 +386,23 @@ export function CodeQuestScreen() {
     },
     [isEditMode, progressVersion],
   )
+
+  const isSectionUnlockedFor = useCallback(
+    (langId: string, sectionIndex: number): boolean => {
+      void progressVersion
+      if (isEditMode || !bundleForView) return true
+      return checkSectionUnlocked(langId, bundleForView.sections, sectionIndex)
+    },
+    [isEditMode, bundleForView, progressVersion],
+  )
+
+  useEffect(() => {
+    if (isEditMode || !languageId || !sectionId || !bundleForView) return
+    const sectionIndex = bundleForView.index.sections.findIndex((s) => s.id === sectionId)
+    if (sectionIndex >= 0 && !isSectionUnlockedFor(languageId, sectionIndex)) {
+      goToLanguage(languageId)
+    }
+  }, [isEditMode, languageId, sectionId, bundleForView, isSectionUnlockedFor, goToLanguage])
 
   const resetLevelWorkState = useCallback((level: Level, langId: string | null) => {
     const drafts: Record<string, string> = {}
@@ -752,6 +770,8 @@ export function CodeQuestScreen() {
         <LearnSections
           bundle={bundleForView}
           languageId={languageId}
+          isEditMode={isEditMode}
+          isSectionUnlocked={(index) => languageId ? isSectionUnlockedFor(languageId, index) : true}
           onSelectSection={(id) => languageId && goToSection(languageId, id)}
           onUpdateLanguageTitle={(title) => languageId && updateLanguageTitle(languageId, title)}
           onUpdateSectionTitle={(id, title, options) =>

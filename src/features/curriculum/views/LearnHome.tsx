@@ -108,10 +108,6 @@ export function LearnHome({
             title={lang.title}
             onTitleChange={(title) => onUpdateLanguage(lang.id, { title })}
             onClick={() => onOpenLanguage(lang.path, lang.id)}
-            metaEditable={{
-              value: lang.id,
-              onChange: (id) => onUpdateLanguage(lang.id, { id }),
-            }}
             listIndex={langIndex}
             listLength={displayRootIndex.languages.length}
             onMoveUp={() => onMoveLanguage(lang.id, -1)}

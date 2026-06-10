@@ -16,6 +16,7 @@ import { errorHandlingTopics } from './data/error-handling.mjs'
 import { oopTopics } from './data/oop.mjs'
 import { dataApisTopics } from './data/data-apis.mjs'
 import { projectsTopics } from './data/projects.mjs'
+import { sectionProjectsFor } from './data/section-projects.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const outDir = resolve(here, '../../public/content/python')
@@ -44,9 +45,10 @@ function finalizeTopic(topic) {
 }
 
 for (const section of SECTIONS) {
+  const sectionProjects = section.sectionId === 'projects' ? [] : sectionProjectsFor(section.sectionId)
   const file = buildSection({
     ...section,
-    topics: section.topics.map(finalizeTopic),
+    topics: [...section.topics, ...sectionProjects].map(finalizeTopic),
   })
   const path = resolve(outDir, section.filename)
   await writeFile(path, `${JSON.stringify(file, null, 2)}\n`, 'utf8')

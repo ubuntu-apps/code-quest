@@ -79,6 +79,8 @@ export function buildLevel(topic) {
   return {
     id: topic.id,
     title: topic.title,
+    kind: topic.kind ?? 'topic',
+    projectDifficulty: topic.projectDifficulty,
     intro: {
       title: topic.introTitle,
       bodyMarkdown: introBody(topic.paragraphs),
