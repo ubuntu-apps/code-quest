@@ -6,6 +6,33 @@
       "id": "try_except",
       "title": "try except",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "valueerror",
+          "label": "ValueError",
+          "code": "try:\n    int(\"abc\")\nexcept ValueError as e:\n    print(\"Bad number:\", e)"
+        },
+        {
+          "id": "recover",
+          "label": "Recover",
+          "code": "try:\n    n = int(\"bad\")\nexcept ValueError:\n    n = 0\nprint(n)"
+        },
+        {
+          "id": "zerodivision",
+          "label": "ZeroDivision",
+          "code": "try:\n    1 / 0\nexcept ZeroDivisionError:\n    print(\"Cannot divide by zero\")"
+        },
+        {
+          "id": "as_e",
+          "label": "as e",
+          "code": "try:\n    int(\"x\")\nexcept ValueError as e:\n    print(str(e))"
+        },
+        {
+          "id": "eafp_keyerror",
+          "label": "EAFP KeyError",
+          "code": "d = {}\ntry:\n    val = d[\"missing\"]\nexcept KeyError:\n    val = None\nprint(val)"
+        }
+      ],
       "intro": {
         "title": "try except",
         "bodyMarkdown": "Wrap risky code in try; catch exceptions with except ExceptionType:.\n\nPrevents crash and lets you recover or inform the user.\n\nOnly catch exceptions you can handle meaningfully.",
@@ -13,7 +40,7 @@
       },
       "challenges": [
         {
-          "id": "ch_2qsvk5v",
+          "id": "ch_bgwophg",
           "title": "Easy: catch ValueError",
           "promptMarkdown": "",
           "starterCode": "try:\n    int(\"x\")\nexcept ValueError:\n    pass",
@@ -25,7 +52,7 @@
           }
         },
         {
-          "id": "ch_iqjkq1p",
+          "id": "ch_xj1fw6w",
           "title": "Easy: try block",
           "promptMarkdown": "",
           "starterCode": "try:\n    1/1\nexcept ZeroDivisionError:\n    pass",
@@ -37,7 +64,7 @@
           }
         },
         {
-          "id": "ch_2kmjhxl",
+          "id": "ch_0ehsxno",
           "title": "Medium: as e",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"x\")\nexcept ValueError as e:\n msg=str(e)",
@@ -54,7 +81,7 @@
           }
         },
         {
-          "id": "ch_dscxc0r",
+          "id": "ch_46fhvka",
           "title": "Medium: recover",
           "promptMarkdown": "default",
           "starterCode": "try:\n n=int(\"bad\")\nexcept ValueError:\n n=0",
@@ -71,7 +98,7 @@
           }
         },
         {
-          "id": "ch_2umyb13",
+          "id": "ch_fxkmw71",
           "title": "Hard: multiple lines try",
           "promptMarkdown": "",
           "starterCode": "try:\n x=1\n y=int(\"2\")\nexcept ValueError:\n y=0",
@@ -88,7 +115,7 @@
           }
         },
         {
-          "id": "ch_rg19dp7",
+          "id": "ch_cet2cog",
           "title": "Hard: no bare except",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n caught=True",
@@ -105,7 +132,7 @@
           }
         },
         {
-          "id": "ch_a1r7au6",
+          "id": "ch_4bpen5g",
           "title": "Expert: else try",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"42\")\nexcept ValueError:\n status=\"fail\"\nelse:\n status=\"success\"",
@@ -122,7 +149,7 @@
           }
         },
         {
-          "id": "ch_iu89l72",
+          "id": "ch_6f8m3c6",
           "title": "Expert: raise after log",
           "promptMarkdown": "",
           "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError as e:\n  steps.append(\"logged\")\n  raise\nexcept ValueError:\n steps.append(\"raised\")",
@@ -139,7 +166,7 @@
           }
         },
         {
-          "id": "ch_nfri15c",
+          "id": "ch_acl8bk4",
           "title": "Expert: exception message",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"not-a-number\")\nexcept ValueError as e:\n msg=str(e)",
@@ -156,7 +183,7 @@
           }
         },
         {
-          "id": "ch_hhj1oah",
+          "id": "ch_fyoq1wk",
           "title": "Expert: EAFP style",
           "promptMarkdown": "",
           "starterCode": "try:\n val=d[\"missing\"]\nexcept KeyError:\n val=None",
@@ -177,7 +204,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_i1f9cog",
+            "id": "q_dw49iar",
             "type": "mcq",
             "prompt": "try starts:",
             "choices": [
@@ -197,7 +224,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_pxf4nru",
+            "id": "q_ongc5vo",
             "type": "shortText",
             "prompt": "except handles:",
             "validation": {
@@ -206,7 +233,7 @@
             }
           },
           {
-            "id": "q_ykn4hn0",
+            "id": "q_0mchtmr",
             "type": "mcq",
             "prompt": "ValueError from int(\"x\"):",
             "choices": [
@@ -226,7 +253,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_e6oobd5",
+            "id": "q_xlevhkk",
             "type": "mcq",
             "prompt": "as e binds:",
             "choices": [
@@ -246,7 +273,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_6j8gzzi",
+            "id": "q_8t4n4eb",
             "type": "shortText",
             "prompt": "Catch specific not:",
             "validation": {
@@ -255,7 +282,7 @@
             }
           },
           {
-            "id": "q_j0w0olc",
+            "id": "q_e8u9z4k",
             "type": "mcq",
             "prompt": "Expert: EAFP means:",
             "choices": [
@@ -275,7 +302,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nkiqx26",
+            "id": "q_bm9dzof",
             "type": "mcq",
             "prompt": "Expert: else on try runs if:",
             "choices": [
@@ -295,7 +322,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fywz8g3",
+            "id": "q_b7v5191",
             "type": "shortText",
             "prompt": "Expert: recover with:",
             "validation": {
@@ -304,7 +331,7 @@
             }
           },
           {
-            "id": "q_lbmjifw",
+            "id": "q_m9l076u",
             "type": "mcq",
             "prompt": "Expert: int bad raises:",
             "choices": [
@@ -324,7 +351,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7tsa9a8",
+            "id": "q_nj1vnib",
             "type": "shortText",
             "prompt": "Expert: try for:",
             "validation": {
@@ -339,6 +366,28 @@
       "id": "multiple_except",
       "title": "Multiple except blocks",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "keyerror",
+          "label": "KeyError",
+          "code": "try:\n    print({}[\"x\"])\nexcept KeyError:\n    print(\"missing key\")"
+        },
+        {
+          "id": "two_handlers",
+          "label": "Two handlers",
+          "code": "try:\n    int(\"x\")\nexcept ValueError:\n    print(\"value\")\nexcept TypeError:\n    print(\"type\")"
+        },
+        {
+          "id": "tuple_except",
+          "label": "Tuple except",
+          "code": "try:\n    int(\"a\")\nexcept (ValueError, TypeError):\n    print(\"caught\")"
+        },
+        {
+          "id": "specific_first",
+          "label": "Specific first",
+          "code": "try:\n    int(\"x\")\nexcept ValueError:\n    print(\"specific\")\nexcept Exception:\n    print(\"broad\")"
+        }
+      ],
       "intro": {
         "title": "Multiple except blocks",
         "bodyMarkdown": "Order except clauses from specific to general. Subclass hierarchy matters.\n\nCatch different types with separate handlers.\n\nToo broad Exception catch hides bugs — use carefully.",
@@ -346,7 +395,7 @@
       },
       "challenges": [
         {
-          "id": "ch_6shxavq",
+          "id": "ch_kt9nd0j",
           "title": "Easy: KeyError",
           "promptMarkdown": "",
           "starterCode": "try:\n    {}[\"x\"]\nexcept KeyError:\n    pass",
@@ -358,7 +407,7 @@
           }
         },
         {
-          "id": "ch_sg99jom",
+          "id": "ch_192tc6z",
           "title": "Easy: two handlers",
           "promptMarkdown": "",
           "starterCode": "try:\n    pass\nexcept ValueError:\n    pass\nexcept TypeError:\n    pass",
@@ -370,7 +419,7 @@
           }
         },
         {
-          "id": "ch_ayb4bdt",
+          "id": "ch_nkd7bte",
           "title": "Medium: order specific",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n tag=\"specific\"\nexcept Exception:\n tag=\"broad\"",
@@ -387,7 +436,7 @@
           }
         },
         {
-          "id": "ch_1y8z6yv",
+          "id": "ch_vroo7vi",
           "title": "Medium: tuple except",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"a\")\nexcept (ValueError, TypeError):\n caught=True",
@@ -404,7 +453,7 @@
           }
         },
         {
-          "id": "ch_z8mnjc7",
+          "id": "ch_9g6auij",
           "title": "Hard: subclass",
           "promptMarkdown": "",
           "starterCode": "try:\n raise ValueError(\"bad\")\nexcept ValueError:\n caught=True",
@@ -421,7 +470,7 @@
           }
         },
         {
-          "id": "ch_q049ev9",
+          "id": "ch_a5hj0xu",
           "title": "Hard: different messages",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n msgs.append(\"number\")\ntry:\n {}[\"k\"]\nexcept KeyError:\n msgs.append(\"key\")",
@@ -438,7 +487,7 @@
           }
         },
         {
-          "id": "ch_sqjscar",
+          "id": "ch_319pcgt",
           "title": "Expert: Exception last",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"x\")\nexcept ValueError:\n tag=\"value\"\nexcept Exception:\n tag=\"other\"",
@@ -455,7 +504,7 @@
           }
         },
         {
-          "id": "ch_yz2zch3",
+          "id": "ch_kg1dg4f",
           "title": "Expert: KeyboardInterrupt",
           "promptMarkdown": "",
           "starterCode": "",
@@ -472,7 +521,7 @@
           }
         },
         {
-          "id": "ch_wfbauz1",
+          "id": "ch_38fg3nx",
           "title": "Expert: SystemExit",
           "promptMarkdown": "",
           "starterCode": "",
@@ -489,7 +538,7 @@
           }
         },
         {
-          "id": "ch_75oew21",
+          "id": "ch_yh4fvhu",
           "title": "Expert: log and rethrow",
           "promptMarkdown": "",
           "starterCode": "try:\n try:\n  int(\"bad\")\n except ValueError:\n  logged=True\n  raise\nexcept ValueError:\n pass",
@@ -510,7 +559,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_tr8za5c",
+            "id": "q_nnrfaxm",
             "type": "mcq",
             "prompt": "Multiple except allowed:",
             "choices": [
@@ -530,7 +579,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gg8cecw",
+            "id": "q_69ukf2o",
             "type": "shortText",
             "prompt": "KeyError for:",
             "validation": {
@@ -539,7 +588,7 @@
             }
           },
           {
-            "id": "q_e1bfzok",
+            "id": "q_ex0zz3v",
             "type": "mcq",
             "prompt": "Tuple in except catches:",
             "choices": [
@@ -559,7 +608,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rgeaxmm",
+            "id": "q_cln2iv2",
             "type": "mcq",
             "prompt": "Order should be:",
             "choices": [
@@ -579,7 +628,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_djkf1hh",
+            "id": "q_0ova70o",
             "type": "shortText",
             "prompt": "TypeError often:",
             "validation": {
@@ -588,7 +637,7 @@
             }
           },
           {
-            "id": "q_55uld8y",
+            "id": "q_325pvnc",
             "type": "mcq",
             "prompt": "Expert: bare except Exception:",
             "choices": [
@@ -608,7 +657,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gbtzw2e",
+            "id": "q_u9x4q0a",
             "type": "mcq",
             "prompt": "Expert: subclass caught by parent:",
             "choices": [
@@ -628,7 +677,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ynhe0f3",
+            "id": "q_22q2zil",
             "type": "shortText",
             "prompt": "Expert: IndexError for:",
             "validation": {
@@ -637,7 +686,7 @@
             }
           },
           {
-            "id": "q_8b5cthj",
+            "id": "q_d4ypg5p",
             "type": "mcq",
             "prompt": "Expert: separate handlers for:",
             "choices": [
@@ -657,7 +706,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_sz9mdjd",
+            "id": "q_3i6wilv",
             "type": "shortText",
             "prompt": "Expert: avoid catching:",
             "validation": {
@@ -672,6 +721,23 @@
       "id": "else_finally",
       "title": "else and finally",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "try_else",
+          "label": "try/else",
+          "code": "try:\n    int(\"42\")\nexcept ValueError:\n    print(\"fail\")\nelse:\n    print(\"success\")"
+        },
+        {
+          "id": "finally",
+          "label": "finally",
+          "code": "try:\n    print(\"try\")\nfinally:\n    print(\"finally\")"
+        },
+        {
+          "id": "cleanup",
+          "label": "Cleanup",
+          "code": "resource = \"open\"\ntry:\n    print(resource)\nfinally:\n    resource = \"closed\"\nprint(resource)"
+        }
+      ],
       "intro": {
         "title": "else and finally",
         "bodyMarkdown": "try/except/else: else runs if no exception. finally always runs — cleanup.\n\nUse finally for resources if not using with (rare).\n\nelse avoids putting success-only code in try block.",
@@ -679,7 +745,7 @@
       },
       "challenges": [
         {
-          "id": "ch_526bgix",
+          "id": "ch_uqjmzra",
           "title": "Easy: finally runs",
           "promptMarkdown": "",
           "starterCode": "try:\n    pass\nfinally:\n    done=True",
@@ -691,7 +757,7 @@
           }
         },
         {
-          "id": "ch_1z228sv",
+          "id": "ch_lj1f62j",
           "title": "Easy: else no error",
           "promptMarkdown": "",
           "starterCode": "try:\n    x=1\nexcept:\n    pass\nelse:\n    y=2",
@@ -703,7 +769,7 @@
           }
         },
         {
-          "id": "ch_0hvpdfg",
+          "id": "ch_sd3xhpz",
           "title": "Medium: finally with return",
           "promptMarkdown": "",
           "starterCode": "def demo():\n global ran\n try:\n  return 1\n finally:\n  ran=True\nresult=demo()",
@@ -720,7 +786,7 @@
           }
         },
         {
-          "id": "ch_vovznk1",
+          "id": "ch_8f5y11h",
           "title": "Medium: else success path",
           "promptMarkdown": "",
           "starterCode": "try:\n x=1\nexcept:\n x=0\nelse:\n v=x+1\nv=v",
@@ -737,7 +803,7 @@
           }
         },
         {
-          "id": "ch_6zwlkys",
+          "id": "ch_xaenyxg",
           "title": "Hard: cleanup flag",
           "promptMarkdown": "",
           "starterCode": "try:\n pass\nfinally:\n c=True",
@@ -754,7 +820,7 @@
           }
         },
         {
-          "id": "ch_yqqev3k",
+          "id": "ch_1yvckbu",
           "title": "Hard: no else on bare except",
           "promptMarkdown": "",
           "starterCode": "try:\n x=1\nexcept ValueError:\n v=0\nelse:\n v=x+1",
@@ -771,7 +837,7 @@
           }
         },
         {
-          "id": "ch_xm0d4zx",
+          "id": "ch_xkt5kao",
           "title": "Expert: return in finally",
           "promptMarkdown": "",
           "starterCode": "def f():\n global ran\n try:\n  return 1\n finally:\n  ran=True\nf()",
@@ -788,7 +854,7 @@
           }
         },
         {
-          "id": "ch_quvi1eo",
+          "id": "ch_2de3lyj",
           "title": "Expert: suppress in except",
           "promptMarkdown": "",
           "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError:\n  pass\n hidden=True\nexcept ValueError:\n hidden=False",
@@ -805,7 +871,7 @@
           }
         },
         {
-          "id": "ch_sefg15w",
+          "id": "ch_r4rf0c1",
           "title": "Expert: else vs try body",
           "promptMarkdown": "",
           "starterCode": "try:\n x=1\nexcept ValueError:\n v=0\nelse:\n v=x+2",
@@ -822,7 +888,7 @@
           }
         },
         {
-          "id": "ch_gng98ig",
+          "id": "ch_l2bz4pr",
           "title": "Expert: with replaces finally",
           "promptMarkdown": "",
           "starterCode": "import io\ndata=\"\"\nf=io.StringIO(\"ok\")\nwith f:\n data=f.read()",
@@ -843,7 +909,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_euwc8ri",
+            "id": "q_tbnpzoi",
             "type": "mcq",
             "prompt": "finally always:",
             "choices": [
@@ -863,7 +929,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_24w3eog",
+            "id": "q_wfngpub",
             "type": "shortText",
             "prompt": "else runs if:",
             "validation": {
@@ -872,7 +938,7 @@
             }
           },
           {
-            "id": "q_8atuvp6",
+            "id": "q_na2dxv4",
             "type": "mcq",
             "prompt": "Cleanup belongs in:",
             "choices": [
@@ -892,7 +958,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_au6bmil",
+            "id": "q_e3ra18y",
             "type": "mcq",
             "prompt": "else avoids masking:",
             "choices": [
@@ -912,7 +978,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_07znkmu",
+            "id": "q_e3vrprg",
             "type": "shortText",
             "prompt": "with preferred over:",
             "validation": {
@@ -921,7 +987,7 @@
             }
           },
           {
-            "id": "q_okn9hm1",
+            "id": "q_jusk56m",
             "type": "mcq",
             "prompt": "Expert: return in try still runs:",
             "choices": [
@@ -941,7 +1007,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xu17ctd",
+            "id": "q_hve2qjm",
             "type": "mcq",
             "prompt": "Expert: else not for:",
             "choices": [
@@ -961,7 +1027,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_w35ozuv",
+            "id": "q_8lit7c4",
             "type": "shortText",
             "prompt": "Expert: finally for:",
             "validation": {
@@ -970,7 +1036,7 @@
             }
           },
           {
-            "id": "q_vdj1mge",
+            "id": "q_8yq71dk",
             "type": "mcq",
             "prompt": "Expert: exception in else caught by:",
             "choices": [
@@ -990,7 +1056,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_lglzoax",
+            "id": "q_oyh4o1y",
             "type": "shortText",
             "prompt": "Expert: try/except/else/finally order:",
             "validation": {
@@ -1005,6 +1071,23 @@
       "id": "raising_exceptions",
       "title": "Raising exceptions",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "raise_valueerror",
+          "label": "raise ValueError",
+          "code": "def pct(n):\n    if not 0 <= n <= 100:\n        raise ValueError(\"n must be 0-100\")\n    return f\"{n}%\"\nprint(pct(50))"
+        },
+        {
+          "id": "raise_typeerror",
+          "label": "raise TypeError",
+          "code": "def need_int(x):\n    if not isinstance(x, int):\n        raise TypeError(\"int required\")\n    return x\nprint(need_int(3))"
+        },
+        {
+          "id": "fail_fast",
+          "label": "Fail fast",
+          "code": "def divide(a, b):\n    if b == 0:\n        raise ValueError(\"b cannot be 0\")\n    return a / b\nprint(divide(10, 2))"
+        }
+      ],
       "intro": {
         "title": "Raising exceptions",
         "bodyMarkdown": "`raise ValueError(\"msg\")` signals errors. Re-raise with bare `raise`.\n\nValidate inputs and fail fast with clear messages.\n\nDo not use exceptions for normal control flow casually.",
@@ -1012,7 +1095,7 @@
       },
       "challenges": [
         {
-          "id": "ch_8iofz6w",
+          "id": "ch_z3zgw9s",
           "title": "Easy: raise ValueError",
           "promptMarkdown": "",
           "starterCode": "raise ValueError(\"bad\")",
@@ -1024,7 +1107,7 @@
           }
         },
         {
-          "id": "ch_w5unwyd",
+          "id": "ch_tgym5nx",
           "title": "Easy: message",
           "promptMarkdown": "",
           "starterCode": "raise RuntimeError(\"oops\")",
@@ -1036,7 +1119,7 @@
           }
         },
         {
-          "id": "ch_a4tqe07",
+          "id": "ch_ucm8ws8",
           "title": "Medium: validate",
           "promptMarkdown": "",
           "starterCode": "def f(x):\n if x<0: raise ValueError(\"neg\")\n return x\nok=False\ntry:\n f(-1)\nexcept ValueError:\n ok=True",
@@ -1053,7 +1136,7 @@
           }
         },
         {
-          "id": "ch_t8aifxw",
+          "id": "ch_swfk6sd",
           "title": "Medium: reraise",
           "promptMarkdown": "",
           "starterCode": "try:\n try:\n  int(\"bad\")\n except ValueError:\n  raise\nexcept ValueError:\n caught=True",
@@ -1070,7 +1153,7 @@
           }
         },
         {
-          "id": "ch_y4s318s",
+          "id": "ch_28gkttk",
           "title": "Hard: raise from",
           "promptMarkdown": "",
           "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError as e:\n  raise RuntimeError(\"wrap\") from e\nexcept RuntimeError as err:\n cause=err.__cause__",
@@ -1087,7 +1170,7 @@
           }
         },
         {
-          "id": "ch_iow8j9v",
+          "id": "ch_ebjl46w",
           "title": "Hard: TypeError",
           "promptMarkdown": "",
           "starterCode": "try:\n raise TypeError(\"wrong type\")\nexcept TypeError:\n caught=True",
@@ -1104,7 +1187,7 @@
           }
         },
         {
-          "id": "ch_2tyxxhn",
+          "id": "ch_3lxwmoh",
           "title": "Expert: custom later",
           "promptMarkdown": "",
           "starterCode": "try:\n raise ValueError(\"use builtin first\")\nexcept ValueError:\n raised=True",
@@ -1121,7 +1204,7 @@
           }
         },
         {
-          "id": "ch_0ut75l8",
+          "id": "ch_24uq11h",
           "title": "Expert: fail fast",
           "promptMarkdown": "",
           "starterCode": "def pct(n):\n if not 0<=n<=100: raise ValueError(\"range\")\n return n\ntry:\n pct(101)\nexcept ValueError:\n failed=True",
@@ -1138,7 +1221,7 @@
           }
         },
         {
-          "id": "ch_tn72pa4",
+          "id": "ch_9bkakhr",
           "title": "Expert: not for flow",
           "promptMarkdown": "",
           "starterCode": "for i,v in enumerate([10,20,30]):\n if v==20:\n  idx=i\n  break",
@@ -1155,7 +1238,7 @@
           }
         },
         {
-          "id": "ch_yjxxbya",
+          "id": "ch_vl8nh01",
           "title": "Expert: document raises",
           "promptMarkdown": "docstring",
           "starterCode": "def g():\n    \"\"\"Raises ValueError.\"\"\"\n    raise ValueError",
@@ -1171,7 +1254,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_fpecbd9",
+            "id": "q_ktu7i5a",
             "type": "mcq",
             "prompt": "raise creates:",
             "choices": [
@@ -1191,7 +1274,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zk30m57",
+            "id": "q_a6ztp0a",
             "type": "shortText",
             "prompt": "Validate inputs:",
             "validation": {
@@ -1200,7 +1283,7 @@
             }
           },
           {
-            "id": "q_uu4ackc",
+            "id": "q_0q9z6h2",
             "type": "mcq",
             "prompt": "bare raise:",
             "choices": [
@@ -1220,7 +1303,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_t5v272c",
+            "id": "q_h0xm6lz",
             "type": "mcq",
             "prompt": "ValueError for:",
             "choices": [
@@ -1240,7 +1323,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_d0vo8cc",
+            "id": "q_3hzo1jq",
             "type": "shortText",
             "prompt": "Fail fast means:",
             "validation": {
@@ -1249,7 +1332,7 @@
             }
           },
           {
-            "id": "q_aq3mqz8",
+            "id": "q_tbgscdk",
             "type": "mcq",
             "prompt": "Expert: raise from preserves:",
             "choices": [
@@ -1269,7 +1352,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_72h275n",
+            "id": "q_f010p92",
             "type": "mcq",
             "prompt": "Expert: exceptions not for:",
             "choices": [
@@ -1289,7 +1372,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_qv3o6vv",
+            "id": "q_w8n9825",
             "type": "shortText",
             "prompt": "Expert: clear message helps:",
             "validation": {
@@ -1298,7 +1381,7 @@
             }
           },
           {
-            "id": "q_v3hvv2l",
+            "id": "q_freadon",
             "type": "mcq",
             "prompt": "Expert: RuntimeError:",
             "choices": [
@@ -1318,7 +1401,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_loa6r78",
+            "id": "q_j7r9duf",
             "type": "shortText",
             "prompt": "Expert: raise stops:",
             "validation": {
@@ -1333,6 +1416,23 @@
       "id": "custom_exceptions",
       "title": "Custom exceptions",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "custom_class",
+          "label": "Custom class",
+          "code": "class ScoreError(Exception):\n    pass\n\ndef set_score(n):\n    if n < 0:\n        raise ScoreError(\"negative score\")\n    return n\nprint(set_score(10))"
+        },
+        {
+          "id": "with_message",
+          "label": "With message",
+          "code": "class AppError(Exception):\n    pass\n\ntry:\n    raise AppError(\"something went wrong\")\nexcept AppError as e:\n    print(e)"
+        },
+        {
+          "id": "subclass",
+          "label": "Subclass",
+          "code": "class ValidationError(Exception):\n    pass\n\nprint(issubclass(ValidationError, Exception))"
+        }
+      ],
       "intro": {
         "title": "Custom exceptions",
         "bodyMarkdown": "Subclass Exception: `class AppError(Exception): pass`.\n\nDomain-specific errors improve clarity. Add attributes for context.\n\nKeep hierarchy shallow; document when raised.",
@@ -1340,7 +1440,7 @@
       },
       "challenges": [
         {
-          "id": "ch_ltxjsh9",
+          "id": "ch_jyqp3h7",
           "title": "Easy: define class",
           "promptMarkdown": "",
           "starterCode": "class MyError(Exception):\n    pass",
@@ -1353,7 +1453,7 @@
           }
         },
         {
-          "id": "ch_uuoxi1w",
+          "id": "ch_ytyvr2c",
           "title": "Easy: raise custom",
           "promptMarkdown": "",
           "starterCode": "class E(Exception): pass\nraise E()",
@@ -1365,7 +1465,7 @@
           }
         },
         {
-          "id": "ch_jxtbern",
+          "id": "ch_tqsk53k",
           "title": "Medium: inherit Exception",
           "promptMarkdown": "",
           "starterCode": "class E(Exception): pass\nok=issubclass(E,Exception)",
@@ -1382,7 +1482,7 @@
           }
         },
         {
-          "id": "ch_65vmtoi",
+          "id": "ch_0hovafo",
           "title": "Medium: message attr",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1399,7 +1499,7 @@
           }
         },
         {
-          "id": "ch_gpnbepj",
+          "id": "ch_n2ynj6n",
           "title": "Hard: catch custom",
           "promptMarkdown": "",
           "starterCode": "class MyError(Exception): pass\ncaught=False\ntry:\n raise MyError()\nexcept MyError:\n caught=True",
@@ -1416,7 +1516,7 @@
           }
         },
         {
-          "id": "ch_2idld8a",
+          "id": "ch_hviblr5",
           "title": "Hard: multiple custom",
           "promptMarkdown": "",
           "starterCode": "class E1(Exception): pass\nclass E2(Exception): pass\nn=0\nfor exc in (E1,E2):\n try:\n  raise exc()\n except (E1,E2):\n  n+=1",
@@ -1433,7 +1533,7 @@
           }
         },
         {
-          "id": "ch_ktccq4x",
+          "id": "ch_7pnl8q7",
           "title": "Expert: extra fields",
           "promptMarkdown": "",
           "starterCode": "class HTTPError(Exception):\n def __init__(self,code,msg=\"\"):\n  super().__init__(msg)\n  self.code=code\ntry:\n raise HTTPError(404,\"not found\")\nexcept HTTPError as e:\n code=e.code",
@@ -1450,7 +1550,7 @@
           }
         },
         {
-          "id": "ch_pxzfogp",
+          "id": "ch_ajzsums",
           "title": "Expert: HTTP style",
           "promptMarkdown": "",
           "starterCode": "class ServiceUnavailable(Exception):\n def __init__(self,code=503,msg=\"\"):\n  super().__init__(msg)\n  self.code=code\nexc=ServiceUnavailable(503)",
@@ -1467,7 +1567,7 @@
           }
         },
         {
-          "id": "ch_czxc9ny",
+          "id": "ch_mibd8ge",
           "title": "Expert: document",
           "promptMarkdown": "",
           "starterCode": "class ScoreError(Exception):\n \"\"\"Raised when score is invalid.\"\"\"\n pass\ndoc=ScoreError.__doc__",
@@ -1484,7 +1584,7 @@
           }
         },
         {
-          "id": "ch_x4c0ohu",
+          "id": "ch_bhimsnx",
           "title": "Expert: shallow tree",
           "promptMarkdown": "",
           "starterCode": "class AppError(Exception): pass\nclass LoginError(AppError): pass\nshallow=issubclass(LoginError, AppError) and issubclass(AppError, Exception)",
@@ -1505,7 +1605,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_xvrwfo7",
+            "id": "q_8x7ja5y",
             "type": "mcq",
             "prompt": "Custom exceptions subclass:",
             "choices": [
@@ -1525,7 +1625,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ilzzvre",
+            "id": "q_x2v98ar",
             "type": "shortText",
             "prompt": "Domain errors improve:",
             "validation": {
@@ -1534,7 +1634,7 @@
             }
           },
           {
-            "id": "q_73gggpr",
+            "id": "q_avz4vr6",
             "type": "mcq",
             "prompt": "catch MyError catches:",
             "choices": [
@@ -1554,7 +1654,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jct26xk",
+            "id": "q_z7ubpoa",
             "type": "mcq",
             "prompt": "Add attrs for:",
             "choices": [
@@ -1574,7 +1674,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_odgzfy5",
+            "id": "q_vvwfdwb",
             "type": "shortText",
             "prompt": "Keep hierarchy:",
             "validation": {
@@ -1583,7 +1683,7 @@
             }
           },
           {
-            "id": "q_29t6tr5",
+            "id": "q_uhwuee0",
             "type": "mcq",
             "prompt": "Expert: AppError pattern:",
             "choices": [
@@ -1603,7 +1703,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rzu6vr3",
+            "id": "q_t37j4k3",
             "type": "mcq",
             "prompt": "Expert: str(e) gives:",
             "choices": [
@@ -1623,7 +1723,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ppu6su3",
+            "id": "q_4dimus7",
             "type": "shortText",
             "prompt": "Expert: raise MyError in:",
             "validation": {
@@ -1632,7 +1732,7 @@
             }
           },
           {
-            "id": "q_l5oprcl",
+            "id": "q_jc26x5z",
             "type": "mcq",
             "prompt": "Expert: dont overuse:",
             "choices": [
@@ -1652,7 +1752,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_p32ejwx",
+            "id": "q_90yjrq9",
             "type": "shortText",
             "prompt": "Expert: document raised:",
             "validation": {
@@ -1667,6 +1767,28 @@
       "id": "exception_hierarchy",
       "title": "Exception hierarchy",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "mro",
+          "label": "MRO",
+          "code": "print(ValueError.__mro__)"
+        },
+        {
+          "id": "zerodivision",
+          "label": "ZeroDivision",
+          "code": "try:\n    1 / 0\nexcept ZeroDivisionError:\n    print(\"math error\")"
+        },
+        {
+          "id": "catch_parent",
+          "label": "Catch parent",
+          "code": "try:\n    int(\"x\")\nexcept Exception:\n    print(\"caught Exception\")"
+        },
+        {
+          "id": "baseexception",
+          "label": "BaseException",
+          "code": "print(issubclass(KeyboardInterrupt, BaseException))"
+        }
+      ],
       "intro": {
         "title": "Exception hierarchy",
         "bodyMarkdown": "BaseException → Exception → many types (ValueError, TypeError, OSError...).\n\nCatch parent to handle group. KeyboardInterrupt inherits BaseException not Exception.\n\nRead traceback bottom-up to find root cause.",
@@ -1674,7 +1796,7 @@
       },
       "challenges": [
         {
-          "id": "ch_9ytls0h",
+          "id": "ch_xop29gi",
           "title": "Easy: ZeroDivisionError",
           "promptMarkdown": "",
           "starterCode": "try:\n 1/0\nexcept ZeroDivisionError:\n pass",
@@ -1686,7 +1808,7 @@
           }
         },
         {
-          "id": "ch_cp4gxel",
+          "id": "ch_q47hjnh",
           "title": "Easy: issubclass",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1703,7 +1825,7 @@
           }
         },
         {
-          "id": "ch_3mx6djd",
+          "id": "ch_cr6ieo3",
           "title": "Medium: catch ArithmeticError",
           "promptMarkdown": "",
           "starterCode": "try:\n 1/0\nexcept ArithmeticError:\n caught=True",
@@ -1720,7 +1842,7 @@
           }
         },
         {
-          "id": "ch_5t1n920",
+          "id": "ch_aawb31b",
           "title": "Medium: traceback concept",
           "promptMarkdown": "",
           "starterCode": "import traceback\ntry:\n 1/0\nexcept ZeroDivisionError:\n text=traceback.format_exc()",
@@ -1737,7 +1859,7 @@
           }
         },
         {
-          "id": "ch_exaoupl",
+          "id": "ch_gm18udf",
           "title": "Hard: OSError family",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1754,7 +1876,7 @@
           }
         },
         {
-          "id": "ch_uwkje86",
+          "id": "ch_qrx93fn",
           "title": "Hard: LookupError",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1771,7 +1893,7 @@
           }
         },
         {
-          "id": "ch_t6kdxvz",
+          "id": "ch_px1oy5q",
           "title": "Expert: BaseException",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1788,7 +1910,7 @@
           }
         },
         {
-          "id": "ch_g0p79ap",
+          "id": "ch_tysduzi",
           "title": "Expert: Exception vs Base",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1805,7 +1927,7 @@
           }
         },
         {
-          "id": "ch_u7eeyrq",
+          "id": "ch_oz7gkhp",
           "title": "Expert: mro",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1822,7 +1944,7 @@
           }
         },
         {
-          "id": "ch_3ljeas8",
+          "id": "ch_j553q0y",
           "title": "Expert: root cause",
           "promptMarkdown": "",
           "starterCode": "try:\n try:\n  int(\"x\")\n except ValueError as e:\n  raise RuntimeError(\"wrap\") from e\nexcept RuntimeError as e:\n cause=type(e.__cause__).__name__",
@@ -1843,7 +1965,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_rir581i",
+            "id": "q_0eb3yme",
             "type": "mcq",
             "prompt": "ValueError subclasses:",
             "choices": [
@@ -1863,7 +1985,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_lcx00ag",
+            "id": "q_gxhxws6",
             "type": "shortText",
             "prompt": "KeyboardInterrupt not caught by:",
             "validation": {
@@ -1872,7 +1994,7 @@
             }
           },
           {
-            "id": "q_vi8kae1",
+            "id": "q_yklwe38",
             "type": "mcq",
             "prompt": "issubclass checks:",
             "choices": [
@@ -1892,7 +2014,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_24z37ku",
+            "id": "q_cpaklvr",
             "type": "mcq",
             "prompt": "Traceback shows:",
             "choices": [
@@ -1912,7 +2034,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jzb4pkx",
+            "id": "q_3na2u68",
             "type": "shortText",
             "prompt": "KeyError is LookupError:",
             "validation": {
@@ -1921,7 +2043,7 @@
             }
           },
           {
-            "id": "q_li6ggkb",
+            "id": "q_rrekd2z",
             "type": "mcq",
             "prompt": "Expert: catch broad Exception:",
             "choices": [
@@ -1941,7 +2063,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_kefwuzs",
+            "id": "q_3zn7x55",
             "type": "mcq",
             "prompt": "Expert: ArithmeticError parent of:",
             "choices": [
@@ -1961,7 +2083,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_3jhjd4p",
+            "id": "q_6f693r4",
             "type": "shortText",
             "prompt": "Expert: read traceback:",
             "validation": {
@@ -1970,7 +2092,7 @@
             }
           },
           {
-            "id": "q_d2goutr",
+            "id": "q_5vmg5l1",
             "type": "mcq",
             "prompt": "Expert: OSError for:",
             "choices": [
@@ -1990,7 +2112,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_00c5qxr",
+            "id": "q_p5hdb8n",
             "type": "shortText",
             "prompt": "Expert: BaseException for:",
             "validation": {
@@ -2005,6 +2127,23 @@
       "id": "assertions",
       "title": "Assertions",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "assert_basic",
+          "label": "assert basic",
+          "code": "def split_even(total, parts):\n    assert parts > 0, \"parts must be positive\"\n    return total / parts\nprint(split_even(10, 2))"
+        },
+        {
+          "id": "assert_type",
+          "label": "assert type",
+          "code": "value = 5\nassert isinstance(value, int)\nprint(\"ok\")"
+        },
+        {
+          "id": "assert_range",
+          "label": "assert range",
+          "code": "age = 30\nassert age >= 0\nprint(age)"
+        }
+      ],
       "intro": {
         "title": "Assertions",
         "bodyMarkdown": "`assert condition, message` — AssertionError if false. For developer checks, not user validation.\n\npython -O removes asserts. Use exceptions for user-facing errors.\n\nDo not assert side effects or IO.",
@@ -2012,7 +2151,7 @@
       },
       "challenges": [
         {
-          "id": "ch_gu0duov",
+          "id": "ch_79sexjt",
           "title": "Easy: assert true",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2029,7 +2168,7 @@
           }
         },
         {
-          "id": "ch_xmsasid",
+          "id": "ch_gqb514p",
           "title": "Easy: assert message",
           "promptMarkdown": "",
           "starterCode": "assert 1==1, \"ok\"",
@@ -2041,7 +2180,7 @@
           }
         },
         {
-          "id": "ch_8ptvgoa",
+          "id": "ch_86xblm4",
           "title": "Medium: AssertionError",
           "promptMarkdown": "",
           "starterCode": "try:\n assert 1==2\nexcept AssertionError:\n raised=True",
@@ -2058,7 +2197,7 @@
           }
         },
         {
-          "id": "ch_lllfai2",
+          "id": "ch_qipw4lp",
           "title": "Medium: debug check",
           "promptMarkdown": "",
           "starterCode": "def f(x):\n assert x>=0\n return x\nok=f(1)==1",
@@ -2075,7 +2214,7 @@
           }
         },
         {
-          "id": "ch_0jp6ixw",
+          "id": "ch_g4svrkx",
           "title": "Hard: not for user input",
           "promptMarkdown": "",
           "starterCode": "def parse_age(s):\n if not s.isdigit(): raise ValueError(\"invalid age\")\n return int(s)\ntry:\n parse_age(\"abc\")\nexcept ValueError as e:\n err=e",
@@ -2092,7 +2231,7 @@
           }
         },
         {
-          "id": "ch_cyawyov",
+          "id": "ch_ehn4ty8",
           "title": "Hard: -O removes",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2109,7 +2248,7 @@
           }
         },
         {
-          "id": "ch_rba1lyp",
+          "id": "ch_hk9j2xr",
           "title": "Expert: invariant",
           "promptMarkdown": "",
           "starterCode": "# invariant: len >= 0\nassert True",
@@ -2121,7 +2260,7 @@
           }
         },
         {
-          "id": "ch_qg36x6l",
+          "id": "ch_ikx8b42",
           "title": "Expert: type check dev",
           "promptMarkdown": "",
           "starterCode": "try:\n assert isinstance(\"1\", int), \"dev check\"\nexcept AssertionError:\n failed=True",
@@ -2138,7 +2277,7 @@
           }
         },
         {
-          "id": "ch_2cf1vrz",
+          "id": "ch_njjccdx",
           "title": "Expert: prefer raise user",
           "promptMarkdown": "",
           "starterCode": "def parse_age(s):\n if not s.isdigit(): raise ValueError(\"bad age\")\n return int(s)\ntry:\n parse_age(\"x\")\nexcept ValueError as e:\n err=e",
@@ -2155,7 +2294,7 @@
           }
         },
         {
-          "id": "ch_laqx822",
+          "id": "ch_awqqyxg",
           "title": "Expert: pytest uses assert",
           "promptMarkdown": "",
           "starterCode": "passed=False\ndef test_sum():\n assert 1+1==2\ntry:\n test_sum()\n passed=True\nexcept AssertionError:\n passed=False",
@@ -2176,7 +2315,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_1o02eyw",
+            "id": "q_c3kftuw",
             "type": "mcq",
             "prompt": "assert fails with:",
             "choices": [
@@ -2196,7 +2335,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_kbnoalc",
+            "id": "q_dwnibah",
             "type": "shortText",
             "prompt": "assert for:",
             "validation": {
@@ -2205,7 +2344,7 @@
             }
           },
           {
-            "id": "q_hoy4fan",
+            "id": "q_kzrmupv",
             "type": "mcq",
             "prompt": "User bad input use:",
             "choices": [
@@ -2225,7 +2364,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_iohcguu",
+            "id": "q_utwwmlj",
             "type": "mcq",
             "prompt": "-O flag:",
             "choices": [
@@ -2245,7 +2384,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_41kbcs2",
+            "id": "q_kh5faek",
             "type": "shortText",
             "prompt": "AssertionError means:",
             "validation": {
@@ -2254,7 +2393,7 @@
             }
           },
           {
-            "id": "q_b1x5f43",
+            "id": "q_76dfyt0",
             "type": "mcq",
             "prompt": "Expert: invariant is:",
             "choices": [
@@ -2274,7 +2413,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_sa4i568",
+            "id": "q_gibii3q",
             "type": "mcq",
             "prompt": "Expert: pytest:",
             "choices": [
@@ -2294,7 +2433,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_773pa1q",
+            "id": "q_gcc88cv",
             "type": "shortText",
             "prompt": "Expert: never assert on:",
             "validation": {
@@ -2303,7 +2442,7 @@
             }
           },
           {
-            "id": "q_q3wncah",
+            "id": "q_4ogjo0s",
             "type": "mcq",
             "prompt": "Expert: message in assert:",
             "choices": [
@@ -2323,7 +2462,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_pfeaidl",
+            "id": "q_fg2uvq5",
             "type": "shortText",
             "prompt": "Expert: production user errors:",
             "validation": {
@@ -2338,6 +2477,28 @@
       "id": "debugging",
       "title": "Debugging strategies",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "breakpoint",
+          "label": "breakpoint",
+          "code": "# breakpoint()  # debugger pause\nx = 2\nprint(x + 1)"
+        },
+        {
+          "id": "print_debug",
+          "label": "Print debug",
+          "code": "total = 0\nfor n in [1, 2, 3]:\n    total += n\n    print(\"debug total:\", total)"
+        },
+        {
+          "id": "repr_inspect",
+          "label": "repr inspect",
+          "code": "data = {\"a\": 1}\nprint(repr(data))"
+        },
+        {
+          "id": "minimal_repro",
+          "label": "Minimal repro",
+          "code": "def buggy(a):\n    return a + 1\nprint(buggy(2))"
+        }
+      ],
       "intro": {
         "title": "Debugging strategies",
         "bodyMarkdown": "Read traceback, print/log state, reproduce minimally, use debugger (pdb/breakpoint).\n\nRubber duck debugging — explain code line by line.\n\nFix root cause not symptoms; add test to prevent regression.",
@@ -2345,7 +2506,7 @@
       },
       "challenges": [
         {
-          "id": "ch_q5b3vmk",
+          "id": "ch_i7ofl1c",
           "title": "Easy: read traceback",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2362,7 +2523,7 @@
           }
         },
         {
-          "id": "ch_aqqod0c",
+          "id": "ch_ggmcdbu",
           "title": "Easy: print debug",
           "promptMarkdown": "",
           "starterCode": "x=1\nprint(\"x=\",x)",
@@ -2374,7 +2535,7 @@
           }
         },
         {
-          "id": "ch_76hfl75",
+          "id": "ch_an00sip",
           "title": "Medium: breakpoint",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2391,7 +2552,7 @@
           }
         },
         {
-          "id": "ch_4nlpgp3",
+          "id": "ch_rbvzz4s",
           "title": "Medium: minimal repro",
           "promptMarkdown": "",
           "starterCode": "def divide(a,b):\n return a/b\nerr=\"\"\ntry:\n divide(1,\"1\")\nexcept TypeError:\n err=\"TypeError\"",
@@ -2408,7 +2569,7 @@
           }
         },
         {
-          "id": "ch_fcdrxkq",
+          "id": "ch_0yq09li",
           "title": "Hard: logging debug",
           "promptMarkdown": "",
           "starterCode": "import logging\norder=logging.DEBUG < logging.INFO",
@@ -2425,7 +2586,7 @@
           }
         },
         {
-          "id": "ch_08d8w4h",
+          "id": "ch_vg66qyo",
           "title": "Hard: isolate bug",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2442,7 +2603,7 @@
           }
         },
         {
-          "id": "ch_0liujkj",
+          "id": "ch_grbaf06",
           "title": "Expert: pdb commands",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2454,7 +2615,7 @@
           }
         },
         {
-          "id": "ch_4im2q4x",
+          "id": "ch_t5r5qj4",
           "title": "Expert: regression test",
           "promptMarkdown": "",
           "starterCode": "def bug_fixed(v): return v+1\ndef test_bug():\n assert bug_fixed(2)==3\ntests_pass=False\ntry:\n test_bug()\n tests_pass=True\nexcept AssertionError:\n tests_pass=False",
@@ -2471,7 +2632,7 @@
           }
         },
         {
-          "id": "ch_w3f2ux3",
+          "id": "ch_m205uif",
           "title": "Expert: binary search commits",
           "promptMarkdown": "",
           "starterCode": "while lo<=hi:\n mid=(lo+hi)//2\n if mid==target:\n  found=True\n  break\n elif mid<target:\n  lo=mid+1\n else:\n  hi=mid-1",
@@ -2488,7 +2649,7 @@
           }
         },
         {
-          "id": "ch_ewohtew",
+          "id": "ch_a006g1f",
           "title": "Expert: type hints help",
           "promptMarkdown": "",
           "starterCode": "def add(a: int, b: int) -> int:\n return a+b\nhinted=add(1,2)==3",
@@ -2509,7 +2670,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_6pnvde3",
+            "id": "q_ynrgxcm",
             "type": "mcq",
             "prompt": "Traceback shows:",
             "choices": [
@@ -2529,7 +2690,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_3tguexe",
+            "id": "q_2qpt82e",
             "type": "shortText",
             "prompt": "breakpoint() enters:",
             "validation": {
@@ -2538,7 +2699,7 @@
             }
           },
           {
-            "id": "q_d245v28",
+            "id": "q_icbiaea",
             "type": "mcq",
             "prompt": "Minimal repro:",
             "choices": [
@@ -2558,7 +2719,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_s8nqzpx",
+            "id": "q_i6l71kq",
             "type": "mcq",
             "prompt": "logging better than print in prod:",
             "choices": [
@@ -2578,7 +2739,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gn0okvi",
+            "id": "q_mbs8myp",
             "type": "shortText",
             "prompt": "Fix:",
             "validation": {
@@ -2587,7 +2748,7 @@
             }
           },
           {
-            "id": "q_t7vuuwo",
+            "id": "q_tnuhv2c",
             "type": "mcq",
             "prompt": "Expert: pdb n steps:",
             "choices": [
@@ -2607,7 +2768,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_riuen2y",
+            "id": "q_2u9k5in",
             "type": "mcq",
             "prompt": "Expert: regression test:",
             "choices": [
@@ -2627,7 +2788,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_yyhr5zu",
+            "id": "q_rr8wfik",
             "type": "shortText",
             "prompt": "Expert: rubber duck:",
             "validation": {
@@ -2636,7 +2797,7 @@
             }
           },
           {
-            "id": "q_8mvomku",
+            "id": "q_g10wza2",
             "type": "mcq",
             "prompt": "Expert: TypeError debug check:",
             "choices": [
@@ -2656,7 +2817,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_otgr3fq",
+            "id": "q_4t3mcdh",
             "type": "shortText",
             "prompt": "Expert: read error:",
             "validation": {
@@ -2671,6 +2832,28 @@
       "id": "logging_basics",
       "title": "Logging basics",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "basicconfig",
+          "label": "basicConfig",
+          "code": "import logging\nlogging.basicConfig(level=logging.INFO)\nlog = logging.getLogger(__name__)\nlog.info(\"App started\")"
+        },
+        {
+          "id": "warning",
+          "label": "warning",
+          "code": "import logging\nlogging.basicConfig(level=logging.WARNING)\nlogging.warning(\"Low disk\")"
+        },
+        {
+          "id": "error",
+          "label": "error",
+          "code": "import logging\nlogging.basicConfig(level=logging.ERROR)\nlogging.error(\"Failed to connect\")"
+        },
+        {
+          "id": "levels",
+          "label": "levels",
+          "code": "import logging\nprint(logging.INFO, logging.WARNING, logging.ERROR)"
+        }
+      ],
       "intro": {
         "title": "Logging basics",
         "bodyMarkdown": "logging module: debug, info, warning, error, critical levels.\n\nBetter than print for apps — timestamps, levels, handlers.\n\nConfigure once at startup; use logger = logging.getLogger(__name__).",
@@ -2678,7 +2861,7 @@
       },
       "challenges": [
         {
-          "id": "ch_kwq0p2g",
+          "id": "ch_9bgjkbi",
           "title": "Easy: import logging",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2695,7 +2878,7 @@
           }
         },
         {
-          "id": "ch_y3u2xgs",
+          "id": "ch_0yu57ax",
           "title": "Easy: info level",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2712,7 +2895,7 @@
           }
         },
         {
-          "id": "ch_iwoykaz",
+          "id": "ch_ju23bea",
           "title": "Medium: getLogger",
           "promptMarkdown": "",
           "starterCode": "import logging\nok=logging.getLogger(\"x\") is not None",
@@ -2729,7 +2912,7 @@
           }
         },
         {
-          "id": "ch_irvaq52",
+          "id": "ch_f2lvx5p",
           "title": "Medium: warning",
           "promptMarkdown": "",
           "starterCode": "import logging\nlvl=logging.WARNING",
@@ -2746,7 +2929,7 @@
           }
         },
         {
-          "id": "ch_6w964ck",
+          "id": "ch_xinelnf",
           "title": "Hard: error",
           "promptMarkdown": "",
           "starterCode": "import logging\nlvl=logging.ERROR",
@@ -2763,7 +2946,7 @@
           }
         },
         {
-          "id": "ch_2g4n5eo",
+          "id": "ch_95xq14l",
           "title": "Hard: debug lowest",
           "promptMarkdown": "",
           "starterCode": "import logging\nok=logging.DEBUG < logging.INFO",
@@ -2780,7 +2963,7 @@
           }
         },
         {
-          "id": "ch_ip6sy4p",
+          "id": "ch_hofjgdk",
           "title": "Expert: format string",
           "promptMarkdown": "",
           "starterCode": "import logging\nconfigured=False\nlogging.basicConfig(format=\"%(levelname)s:%(message)s\", level=logging.INFO)\nconfigured=True",
@@ -2797,7 +2980,7 @@
           }
         },
         {
-          "id": "ch_z3p29jh",
+          "id": "ch_eilyl2s",
           "title": "Expert: file handler",
           "promptMarkdown": "",
           "starterCode": "import logging\nfrom logging import FileHandler\nhas_handler=issubclass(FileHandler, logging.Handler)",
@@ -2814,7 +2997,7 @@
           }
         },
         {
-          "id": "ch_8x56odb",
+          "id": "ch_m656rx1",
           "title": "Expert: exc_info True",
           "promptMarkdown": "",
           "starterCode": "import logging\nimport io\nlogged_tb=False\nbuf=io.StringIO()\nlog=logging.getLogger(\"t_exc\")\nlog.handlers.clear()\nh=logging.StreamHandler(buf)\nlog.addHandler(h)\nlog.setLevel(logging.ERROR)\ntry:\n int(\"x\")\nexcept ValueError:\n log.error(\"fail\", exc_info=True)\nlogged_tb=\"Traceback\" in buf.getvalue()",
@@ -2831,7 +3014,7 @@
           }
         },
         {
-          "id": "ch_o8t5akw",
+          "id": "ch_8k251y7",
           "title": "Expert: module __name__",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2852,7 +3035,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_1bzza6k",
+            "id": "q_oj2tfkd",
             "type": "mcq",
             "prompt": "logging levels include:",
             "choices": [
@@ -2872,7 +3055,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_hjioh8z",
+            "id": "q_oup68f5",
             "type": "shortText",
             "prompt": "getLogger(__name__) for:",
             "validation": {
@@ -2881,7 +3064,7 @@
             }
           },
           {
-            "id": "q_bebbzwt",
+            "id": "q_bv8gk5l",
             "type": "mcq",
             "prompt": "basicConfig sets:",
             "choices": [
@@ -2901,7 +3084,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2o08dup",
+            "id": "q_bqzf8b9",
             "type": "mcq",
             "prompt": "Prefer logging over print in:",
             "choices": [
@@ -2921,7 +3104,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ab3ogiv",
+            "id": "q_t1obnfv",
             "type": "shortText",
             "prompt": "DEBUG is:",
             "validation": {
@@ -2930,7 +3113,7 @@
             }
           },
           {
-            "id": "q_isqs6tg",
+            "id": "q_lboyrmx",
             "type": "mcq",
             "prompt": "Expert: exc_info logs:",
             "choices": [
@@ -2950,7 +3133,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jp5r8zw",
+            "id": "q_l5x6hg9",
             "type": "mcq",
             "prompt": "Expert: handlers send to:",
             "choices": [
@@ -2970,7 +3153,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_qfife30",
+            "id": "q_6ktv7uk",
             "type": "shortText",
             "prompt": "Expert: timestamp in:",
             "validation": {
@@ -2979,7 +3162,7 @@
             }
           },
           {
-            "id": "q_lay470a",
+            "id": "q_4bln6dm",
             "type": "mcq",
             "prompt": "Expert: critical highest:",
             "choices": [
@@ -2999,7 +3182,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_so9vvw4",
+            "id": "q_led8edz",
             "type": "shortText",
             "prompt": "Expert: configure logging:",
             "validation": {
@@ -3014,6 +3197,33 @@
       "id": "defensive_programming",
       "title": "Defensive programming",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "validate_input",
+          "label": "Validate input",
+          "code": "def average(nums):\n    if not nums:\n        raise ValueError(\"nums cannot be empty\")\n    return sum(nums) / len(nums)\nprint(average([2, 4]))"
+        },
+        {
+          "id": "default_fallback",
+          "label": "Default fallback",
+          "code": "def greet(name=None):\n    name = name or \"guest\"\n    return f\"Hi {name}\"\nprint(greet())"
+        },
+        {
+          "id": "bounds_check",
+          "label": "Bounds check",
+          "code": "def clamp(n, lo, hi):\n    return max(lo, min(hi, n))\nprint(clamp(15, 0, 10))"
+        },
+        {
+          "id": "guard_clause",
+          "label": "Guard clause",
+          "code": "def divide(a, b):\n    if b == 0:\n        raise ValueError(\"b cannot be 0\")\n    return a / b\nprint(divide(10, 2))"
+        },
+        {
+          "id": "type_check",
+          "label": "Type check",
+          "code": "def need_str(x):\n    if not isinstance(x, str):\n        raise TypeError(\"str required\")\n    return x\nprint(need_str(\"ok\"))"
+        }
+      ],
       "intro": {
         "title": "Defensive programming",
         "bodyMarkdown": "Validate inputs, handle edge cases, use defaults, fail with clear errors.\n\nAssume less; document preconditions; write tests for boundaries.\n\nBalance defensiveness with readability — not every line needs a guard.",
@@ -3021,7 +3231,7 @@
       },
       "challenges": [
         {
-          "id": "ch_6tty82b",
+          "id": "ch_oz5c5j0",
           "title": "Easy: empty check",
           "promptMarkdown": "",
           "starterCode": "def f(nums):\n if not nums: return 0\n return sum(nums)",
@@ -3033,7 +3243,7 @@
           }
         },
         {
-          "id": "ch_vrky0yn",
+          "id": "ch_zuw7wm8",
           "title": "Easy: type check",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3050,7 +3260,7 @@
           }
         },
         {
-          "id": "ch_6p0xba1",
+          "id": "ch_pmdt2hf",
           "title": "Medium: bounds",
           "promptMarkdown": "",
           "starterCode": "def in_bounds(i,n): return 0<=i<n\nok=in_bounds(5,3)",
@@ -3067,7 +3277,7 @@
           }
         },
         {
-          "id": "ch_9fdhdti",
+          "id": "ch_l5hj272",
           "title": "Medium: default arg None",
           "promptMarkdown": "",
           "starterCode": "def add_item(x,lst=None):\n if lst is None: lst=[]\n lst.append(x)\n return lst\na=add_item(1)\nb=add_item(2)\nshared=a is b",
@@ -3084,7 +3294,7 @@
           }
         },
         {
-          "id": "ch_50eglyu",
+          "id": "ch_bc294os",
           "title": "Hard: validate range",
           "promptMarkdown": "",
           "starterCode": "def pct(n):\n if not 0<=n<=100: raise ValueError(\"range\")\n return n\ntry:\n pct(150)\nexcept ValueError:\n failed=True",
@@ -3101,7 +3311,7 @@
           }
         },
         {
-          "id": "ch_se3l0pg",
+          "id": "ch_eqq8hye",
           "title": "Hard: guard clause",
           "promptMarkdown": "",
           "starterCode": "def f(x):\n if x is None: return None\n return x*2\nr=f(None)",
@@ -3118,7 +3328,7 @@
           }
         },
         {
-          "id": "ch_ahi4bzk",
+          "id": "ch_4r79gxq",
           "title": "Expert: contract docstring",
           "promptMarkdown": "",
           "starterCode": "def g(x):\n \"\"\"x must be int.\"\"\"\n return x",
@@ -3130,7 +3340,7 @@
           }
         },
         {
-          "id": "ch_8hyb63s",
+          "id": "ch_ngpfx3a",
           "title": "Expert: test boundaries",
           "promptMarkdown": "",
           "starterCode": "def avg(nums):\n if not nums: raise ValueError(\"empty\")\n return sum(nums)/len(nums)\nedge=True\ntry:\n avg([])\n edge=False\nexcept ValueError:\n pass",
@@ -3147,7 +3357,7 @@
           }
         },
         {
-          "id": "ch_7qponkr",
+          "id": "ch_xdg69x7",
           "title": "Expert: avoid silent fail",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3160,7 +3370,7 @@
           }
         },
         {
-          "id": "ch_kzdy3f1",
+          "id": "ch_ivdsmu8",
           "title": "Expert: sanitize user path",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3181,7 +3391,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_yhwddye",
+            "id": "q_jcg571q",
             "type": "mcq",
             "prompt": "Defensive code validates:",
             "choices": [
@@ -3201,7 +3411,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_b3961dq",
+            "id": "q_otaji1q",
             "type": "shortText",
             "prompt": "Fail fast with:",
             "validation": {
@@ -3210,7 +3420,7 @@
             }
           },
           {
-            "id": "q_jh2472r",
+            "id": "q_2nzjqon",
             "type": "mcq",
             "prompt": "Empty list average should:",
             "choices": [
@@ -3230,7 +3440,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ehp33um",
+            "id": "q_0held9j",
             "type": "mcq",
             "prompt": "Guard clause:",
             "choices": [
@@ -3250,7 +3460,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2tdqdxm",
+            "id": "q_zw5oyy4",
             "type": "shortText",
             "prompt": "Document:",
             "validation": {
@@ -3259,7 +3469,7 @@
             }
           },
           {
-            "id": "q_nde7nns",
+            "id": "q_9s6rjql",
             "type": "mcq",
             "prompt": "Expert: silent except bad:",
             "choices": [
@@ -3279,7 +3489,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_47jygvg",
+            "id": "q_zdw0bwn",
             "type": "mcq",
             "prompt": "Expert: tests for:",
             "choices": [
@@ -3299,7 +3509,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_duhsmst",
+            "id": "q_3845glg",
             "type": "shortText",
             "prompt": "Expert: balance:",
             "validation": {
@@ -3308,7 +3518,7 @@
             }
           },
           {
-            "id": "q_civwpbp",
+            "id": "q_ccgzfxs",
             "type": "mcq",
             "prompt": "Expert: sanitize paths prevents:",
             "choices": [
@@ -3328,7 +3538,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ily186x",
+            "id": "q_u8hhsdd",
             "type": "shortText",
             "prompt": "Expert: None sentinel for:",
             "validation": {
@@ -3344,6 +3554,28 @@
       "title": "Easy project: CLI guess the number",
       "kind": "project",
       "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "try_int",
+          "label": "try int",
+          "code": "try:\n    n = int(\"5\")\nexcept ValueError:\n    n = 0\nprint(n)"
+        },
+        {
+          "id": "while_loop",
+          "label": "while loop",
+          "code": "secret = 7\nguess = 7\nprint(\"win\" if guess == secret else \"lose\")"
+        },
+        {
+          "id": "randint",
+          "label": "randint",
+          "code": "import random\nprint(random.randint(1, 10))"
+        },
+        {
+          "id": "recover_input",
+          "label": "Recover input",
+          "code": "try:\n    n = int(\"bad\")\nexcept ValueError:\n    print(\"Invalid number\")"
+        }
+      ],
       "intro": {
         "title": "Easy project: CLI guess the number",
         "bodyMarkdown": "Build a number-guessing game in the terminal. Pick a secret, loop until the player guesses correctly, give higher/lower hints.\n\nUse `random.randint`, a while loop, and int conversion with try/except for bad input.\n\nStructure with a `main()` function and `if __name__ == \"__main__\"` guard.",
@@ -3351,7 +3583,7 @@
       },
       "challenges": [
         {
-          "id": "ch_jyrehvq",
+          "id": "ch_01y45b3",
           "title": "Easy: import random",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3368,7 +3600,7 @@
           }
         },
         {
-          "id": "ch_3ibqv9a",
+          "id": "ch_6atrcsu",
           "title": "Easy: randint range",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3385,7 +3617,7 @@
           }
         },
         {
-          "id": "ch_4y1pssc",
+          "id": "ch_ybt2dtq",
           "title": "Medium: while loop",
           "promptMarkdown": "",
           "starterCode": "while guess!=secret:\n    guess=7",
@@ -3402,7 +3634,7 @@
           }
         },
         {
-          "id": "ch_lo9wvkv",
+          "id": "ch_ts42y3m",
           "title": "Medium: higher lower",
           "promptMarkdown": "",
           "starterCode": "if g<s:\n    hint=\"Higher\"\nelif g>s:\n    hint=\"Lower\"",
@@ -3419,7 +3651,7 @@
           }
         },
         {
-          "id": "ch_2lujbbr",
+          "id": "ch_5y8nz04",
           "title": "Hard: attempt counter",
           "promptMarkdown": "",
           "starterCode": "for _ in range(3): a+=1",
@@ -3436,7 +3668,7 @@
           }
         },
         {
-          "id": "ch_hn54eb9",
+          "id": "ch_fnlaqhe",
           "title": "Hard: main function",
           "promptMarkdown": "",
           "starterCode": "def main():\n    return 42\nresult=main()",
@@ -3457,7 +3689,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_qlphvgq",
+            "id": "q_jcj2aop",
             "type": "mcq",
             "prompt": "randint(1,10) includes:",
             "choices": [
@@ -3477,7 +3709,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_bppkxvw",
+            "id": "q_wy0h1ed",
             "type": "shortText",
             "prompt": "Loop until correct:",
             "validation": {
@@ -3486,7 +3718,7 @@
             }
           },
           {
-            "id": "q_b38pwqe",
+            "id": "q_taqih85",
             "type": "mcq",
             "prompt": "Higher hint when guess:",
             "choices": [
@@ -3506,7 +3738,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ftc43n5",
+            "id": "q_v2execz",
             "type": "mcq",
             "prompt": "__main__ guard runs when:",
             "choices": [
@@ -3526,7 +3758,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_085vdql",
+            "id": "q_c5uramg",
             "type": "shortText",
             "prompt": "Bad int input catch:",
             "validation": {
@@ -3535,7 +3767,7 @@
             }
           },
           {
-            "id": "q_k2gqg36",
+            "id": "q_qwnsres",
             "type": "mcq",
             "prompt": "Expert: seed for:",
             "choices": [
@@ -3562,6 +3794,23 @@
       "title": "Medium project: Quiz app",
       "kind": "project",
       "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "try_json",
+          "label": "try json",
+          "code": "import json\ntry:\n    json.loads(\"{bad}\")\nexcept json.JSONDecodeError:\n    print(\"bad JSON\")"
+        },
+        {
+          "id": "grade_safe",
+          "label": "Grade safe",
+          "code": "questions = [{\"a\": 1}]\nanswers = [1]\nprint(sum(1 for i, a in enumerate(answers) if a == questions[i][\"a\"]))"
+        },
+        {
+          "id": "valueerror",
+          "label": "ValueError",
+          "code": "try:\n    int(\"x\")\nexcept ValueError:\n    print(\"bad int\")"
+        }
+      ],
       "intro": {
         "title": "Medium project: Quiz app",
         "bodyMarkdown": "Questions as list of dicts with prompt, choices, answer index. Score correct answers.\n\nShuffle questions or choices with random.shuffle. Show final percentage.\n\nTime optional; store high score in file.",
@@ -3569,7 +3818,7 @@
       },
       "challenges": [
         {
-          "id": "ch_l21zahi",
+          "id": "ch_uiuo9e2",
           "title": "Easy: question dict",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3586,7 +3835,7 @@
           }
         },
         {
-          "id": "ch_nrjzj2r",
+          "id": "ch_nh0iqcw",
           "title": "Easy: score counter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3603,7 +3852,7 @@
           }
         },
         {
-          "id": "ch_fvkvyek",
+          "id": "ch_rbw4qcj",
           "title": "Medium: enumerate answers",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3620,7 +3869,7 @@
           }
         },
         {
-          "id": "ch_c639a3s",
+          "id": "ch_qxrxbio",
           "title": "Medium: percent score",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3637,7 +3886,7 @@
           }
         },
         {
-          "id": "ch_5rhean1",
+          "id": "ch_4q5bkya",
           "title": "Hard: shuffle",
           "promptMarkdown": "",
           "starterCode": "import random\nlst=[1,2,3]\nrandom.shuffle(lst)\nsame_set=sorted(lst)==[1,2,3]",
@@ -3654,7 +3903,7 @@
           }
         },
         {
-          "id": "ch_sxrgpqd",
+          "id": "ch_yj5hu2x",
           "title": "Hard: input choice index",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3675,7 +3924,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_6axvvu0",
+            "id": "q_9x21fmy",
             "type": "mcq",
             "prompt": "Answer stored as:",
             "choices": [
@@ -3695,7 +3944,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zstfixf",
+            "id": "q_2khawo8",
             "type": "shortText",
             "prompt": "shuffle randomizes:",
             "validation": {
@@ -3704,7 +3953,7 @@
             }
           },
           {
-            "id": "q_bx9dyu9",
+            "id": "q_zfhzkjy",
             "type": "mcq",
             "prompt": "Percent = correct / total *",
             "choices": [
@@ -3724,7 +3973,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9nl7o1f",
+            "id": "q_wco6g1v",
             "type": "mcq",
             "prompt": "enumerate gives:",
             "choices": [
@@ -3744,7 +3993,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_z7rcpbj",
+            "id": "q_u20tdo4",
             "type": "shortText",
             "prompt": "Grade compares:",
             "validation": {
@@ -3753,7 +4002,7 @@
             }
           },
           {
-            "id": "q_jmdx6qk",
+            "id": "q_pzut9xt",
             "type": "mcq",
             "prompt": "Expert: separate data from:",
             "choices": [
@@ -3780,6 +4029,23 @@
       "title": "Hard project: Expense tracker",
       "kind": "project",
       "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "try_float",
+          "label": "try float",
+          "code": "try:\n    amount = float(\"12.5\")\nexcept ValueError:\n    amount = 0\nprint(amount)"
+        },
+        {
+          "id": "try_date",
+          "label": "try date",
+          "code": "from datetime import datetime\ntry:\n    d = datetime.strptime(\"2024-06-01\", \"%Y-%m-%d\")\nexcept ValueError:\n    d = None\nprint(d)"
+        },
+        {
+          "id": "sum_expenses",
+          "label": "Sum expenses",
+          "code": "print(sum(e[\"amount\"] for e in [{\"amount\": 10}, {\"amount\": 5}]))"
+        }
+      ],
       "intro": {
         "title": "Hard project: Expense tracker",
         "bodyMarkdown": "Record expenses: amount, category, date, note. List by month; sum by category.\n\nUse datetime for dates; store list, persist JSON.\n\nReport: total, average, top category.",
@@ -3787,7 +4053,7 @@
       },
       "challenges": [
         {
-          "id": "ch_lq3dsjs",
+          "id": "ch_y1q5045",
           "title": "Easy: append expense",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3804,7 +4070,7 @@
           }
         },
         {
-          "id": "ch_tq03ela",
+          "id": "ch_8tnqmf6",
           "title": "Easy: sum amounts",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3821,7 +4087,7 @@
           }
         },
         {
-          "id": "ch_4nvyhju",
+          "id": "ch_lvy1twq",
           "title": "Medium: strftime date",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\nd=datetime(2024,6,1).strftime(\"%Y-%m-%d\")",
@@ -3838,7 +4104,7 @@
           }
         },
         {
-          "id": "ch_jqpvdjg",
+          "id": "ch_he7l4go",
           "title": "Medium: filter category",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3855,7 +4121,7 @@
           }
         },
         {
-          "id": "ch_65z76ci",
+          "id": "ch_3yulszf",
           "title": "Hard: group sum",
           "promptMarkdown": "",
           "starterCode": "for e in expenses:\n    totals[e[\"category\"]]=totals.get(e[\"category\"],0)+e[\"amount\"]",
@@ -3872,7 +4138,7 @@
           }
         },
         {
-          "id": "ch_u8unhr3",
+          "id": "ch_gs72l17",
           "title": "Hard: month filter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3893,7 +4159,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_jsxe6zl",
+            "id": "q_obasemk",
             "type": "mcq",
             "prompt": "sum with generator sums:",
             "choices": [
@@ -3913,7 +4179,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_anw6ymd",
+            "id": "q_lnpmkti",
             "type": "shortText",
             "prompt": "strftime formats:",
             "validation": {
@@ -3922,7 +4188,7 @@
             }
           },
           {
-            "id": "q_poktyzb",
+            "id": "q_qdfab7k",
             "type": "mcq",
             "prompt": "Filter keeps matching:",
             "choices": [
@@ -3942,7 +4208,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9msso7m",
+            "id": "q_svwmn8v",
             "type": "mcq",
             "prompt": "JSON persist for:",
             "choices": [
@@ -3962,7 +4228,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zv429lj",
+            "id": "q_f96mdmk",
             "type": "shortText",
             "prompt": "Average is total /:",
             "validation": {
@@ -3971,7 +4237,7 @@
             }
           },
           {
-            "id": "q_ju8v2ra",
+            "id": "q_0tipvn2",
             "type": "mcq",
             "prompt": "Expert: groupby category needs:",
             "choices": [

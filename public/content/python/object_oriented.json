@@ -6,6 +6,33 @@
       "id": "classes_basics",
       "title": "Classes and objects",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "define_class",
+          "label": "Define class",
+          "code": "class Cat:\n    pass\n\nc = Cat()\nprint(c)"
+        },
+        {
+          "id": "init",
+          "label": "__init__",
+          "code": "class Dog:\n    def __init__(self, name):\n        self.name = name\n\nd = Dog(\"Rex\")\nprint(d.name)"
+        },
+        {
+          "id": "method",
+          "label": "Method",
+          "code": "class Dog:\n    def bark(self):\n        return \"woof\"\nprint(Dog().bark())"
+        },
+        {
+          "id": "two_instances",
+          "label": "Two instances",
+          "code": "class Point:\n    def __init__(self, x):\n        self.x = x\nprint(Point(1).x, Point(2).x)"
+        },
+        {
+          "id": "isinstance",
+          "label": "isinstance",
+          "code": "class Dog:\n    pass\nprint(isinstance(Dog(), Dog))"
+        }
+      ],
       "intro": {
         "title": "Classes and objects",
         "bodyMarkdown": "A class is a blueprint; an object is an instance. Define with `class Dog:` and instantiate with `Dog()`.\n\nObjects bundle data (attributes) and behavior (methods). `self` refers to the current instance in methods.\n\nClasses organize code around real-world nouns — users, accounts, games.",
@@ -13,7 +40,7 @@
       },
       "challenges": [
         {
-          "id": "ch_c6nyu78",
+          "id": "ch_22yqgiw",
           "title": "Easy: define class",
           "promptMarkdown": "",
           "starterCode": "class Cat:\n    pass",
@@ -25,7 +52,7 @@
           }
         },
         {
-          "id": "ch_dehwl0u",
+          "id": "ch_ku4xmcu",
           "title": "Easy: create instance",
           "promptMarkdown": "",
           "starterCode": "class Cat:\n    pass\nc=Cat()",
@@ -37,7 +64,7 @@
           }
         },
         {
-          "id": "ch_bncjn7r",
+          "id": "ch_ra7dl3t",
           "title": "Medium: __init__",
           "promptMarkdown": "",
           "starterCode": "class P:\n def __init__(self,n): self.n=n\np=P(3)",
@@ -54,7 +81,7 @@
           }
         },
         {
-          "id": "ch_qpvvyf1",
+          "id": "ch_bkvdctp",
           "title": "Medium: self attribute",
           "promptMarkdown": "",
           "starterCode": "class P:\n def __init__(self,n): self.n=n\np=P(3)",
@@ -71,7 +98,7 @@
           }
         },
         {
-          "id": "ch_l1v7ag2",
+          "id": "ch_zggjbku",
           "title": "Hard: method call",
           "promptMarkdown": "",
           "starterCode": "class G:\n def hi(self): return \"hi\"\ns=G().hi()",
@@ -88,7 +115,7 @@
           }
         },
         {
-          "id": "ch_4xf7jt7",
+          "id": "ch_jcyh6ze",
           "title": "Hard: two instances",
           "promptMarkdown": "",
           "starterCode": "class P:\n def __init__(self,n): self.n=n\na=P(1); b=P(2)\nok=a.n!=b.n",
@@ -105,7 +132,7 @@
           }
         },
         {
-          "id": "ch_69mepw3",
+          "id": "ch_j9of600",
           "title": "Expert: repr basics",
           "promptMarkdown": "",
           "starterCode": "class Point:\n def __init__(self,x,y): self.x,self.y=x,y\n def __repr__(self): return f\"Point({self.x}, {self.y})\"\nr=repr(Point(1,2))",
@@ -122,7 +149,7 @@
           }
         },
         {
-          "id": "ch_h833aeu",
+          "id": "ch_6ewi5ht",
           "title": "Expert: class attribute",
           "promptMarkdown": "",
           "starterCode": "class Dog:\n species=\"Canis\"\nd1=Dog(); d2=Dog()\nok=d1.species==d2.species==Dog.species",
@@ -139,7 +166,7 @@
           }
         },
         {
-          "id": "ch_puvpgxz",
+          "id": "ch_n47qh0u",
           "title": "Expert: type check",
           "promptMarkdown": "",
           "starterCode": "",
@@ -156,7 +183,7 @@
           }
         },
         {
-          "id": "ch_53kp4ar",
+          "id": "ch_l3c6ro4",
           "title": "Expert: docstring class",
           "promptMarkdown": "",
           "starterCode": "class X:\n    \"\"\"Model X.\"\"\"\n    pass",
@@ -172,7 +199,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_1kbdfrj",
+            "id": "q_7fd8f86",
             "type": "mcq",
             "prompt": "class defines:",
             "choices": [
@@ -192,7 +219,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_cko5dgv",
+            "id": "q_blp9r9c",
             "type": "shortText",
             "prompt": "Instance created with:",
             "validation": {
@@ -201,7 +228,7 @@
             }
           },
           {
-            "id": "q_u6t25ca",
+            "id": "q_f0w59zy",
             "type": "mcq",
             "prompt": "self in method refers to:",
             "choices": [
@@ -221,7 +248,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_29cxu03",
+            "id": "q_u7uk59k",
             "type": "mcq",
             "prompt": "__init__ is:",
             "choices": [
@@ -241,7 +268,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_s8217jm",
+            "id": "q_7zbow7g",
             "type": "shortText",
             "prompt": "Object bundles data and:",
             "validation": {
@@ -250,7 +277,7 @@
             }
           },
           {
-            "id": "q_fc1jofq",
+            "id": "q_wky44za",
             "type": "mcq",
             "prompt": "Expert: isinstance checks:",
             "choices": [
@@ -270,7 +297,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_j9w1pp8",
+            "id": "q_czocpv1",
             "type": "mcq",
             "prompt": "Expert: two instances:",
             "choices": [
@@ -290,7 +317,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_11fcont",
+            "id": "q_y4vw5kn",
             "type": "shortText",
             "prompt": "Expert: method first param:",
             "validation": {
@@ -299,7 +326,7 @@
             }
           },
           {
-            "id": "q_y915gfc",
+            "id": "q_6gm4bkt",
             "type": "mcq",
             "prompt": "Expert: class attribute shared by:",
             "choices": [
@@ -319,7 +346,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xf5zx7l",
+            "id": "q_3j5vfl2",
             "type": "shortText",
             "prompt": "Expert: instantiate calls:",
             "validation": {
@@ -334,6 +361,28 @@
       "id": "methods",
       "title": "Instance methods",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "inc_counter",
+          "label": "inc counter",
+          "code": "class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n += 1\n    def value(self):\n        return self.n\nc = Counter()\nc.inc()\nprint(c.value())"
+        },
+        {
+          "id": "return_self",
+          "label": "Return self",
+          "code": "class Builder:\n    def add(self, x):\n        self.x = x\n        return self\nb = Builder().add(1)\nprint(b.x)"
+        },
+        {
+          "id": "staticmethod",
+          "label": "staticmethod",
+          "code": "class Math:\n    @staticmethod\n    def add(a, b):\n        return a + b\nprint(Math.add(2, 3))"
+        },
+        {
+          "id": "classmethod",
+          "label": "classmethod",
+          "code": "class User:\n    def __init__(self, name):\n        self.name = name\n    @classmethod\n    def guest(cls):\n        return cls(\"guest\")\nprint(User.guest().name)"
+        }
+      ],
       "intro": {
         "title": "Instance methods",
         "bodyMarkdown": "Methods are functions on the class taking `self` first. Call via `obj.method()`.\n\nThey read and modify instance state. Keep methods focused on one responsibility.\n\nAvoid putting unrelated logic in one giant method — split helpers.",
@@ -341,7 +390,7 @@
       },
       "challenges": [
         {
-          "id": "ch_iwd1f94",
+          "id": "ch_tzsycui",
           "title": "Easy: define method",
           "promptMarkdown": "",
           "starterCode": "class A:\n    def go(self): pass",
@@ -353,7 +402,7 @@
           }
         },
         {
-          "id": "ch_qxu075z",
+          "id": "ch_czb4zpn",
           "title": "Easy: call method",
           "promptMarkdown": "",
           "starterCode": "",
@@ -370,7 +419,7 @@
           }
         },
         {
-          "id": "ch_99hl5vz",
+          "id": "ch_yq3u0ku",
           "title": "Medium: modify self",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self): self.n=0\n def add(self): self.n+=1\nc=C(); c.add(); c.add()",
@@ -387,7 +436,7 @@
           }
         },
         {
-          "id": "ch_vjq6qy4",
+          "id": "ch_gryjlja",
           "title": "Medium: return from method",
           "promptMarkdown": "",
           "starterCode": "class B:\n def ok(self): return \"ok\"\ns=B().ok()",
@@ -404,7 +453,7 @@
           }
         },
         {
-          "id": "ch_fllmo47",
+          "id": "ch_z9g9afn",
           "title": "Hard: chain calls",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self): self.n=0\n def bump(self): self.n+=1; return self\nc=C().bump().bump().bump(); n=c.n",
@@ -421,7 +470,7 @@
           }
         },
         {
-          "id": "ch_6g0mvhb",
+          "id": "ch_rrsihbv",
           "title": "Hard: private convention",
           "promptMarkdown": "",
           "starterCode": "class S:\n def _helper(self): return 1\nv=S()._helper()",
@@ -438,7 +487,7 @@
           }
         },
         {
-          "id": "ch_hl1uzxq",
+          "id": "ch_zuxzk62",
           "title": "Expert: classmethod intro",
           "promptMarkdown": "",
           "starterCode": "class User:\n def __init__(self,name): self.name=name\n @classmethod\n def from_string(cls,s): return cls(s)\nu=User.from_string(\"ana\")",
@@ -455,7 +504,7 @@
           }
         },
         {
-          "id": "ch_1rmbgth",
+          "id": "ch_rt78a7d",
           "title": "Expert: staticmethod intro",
           "promptMarkdown": "",
           "starterCode": "class Math:\n @staticmethod\n def add(a,b): return a+b\nv=Math.add(2,4)",
@@ -472,7 +521,7 @@
           }
         },
         {
-          "id": "ch_7cqd7z0",
+          "id": "ch_0bm4f67",
           "title": "Expert: property later",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self,r): self._r=r\n @property\n def area(self): return self._r**2\na=C(3).area",
@@ -489,7 +538,7 @@
           }
         },
         {
-          "id": "ch_q0rqel8",
+          "id": "ch_pxet3dk",
           "title": "Expert: dunder str",
           "promptMarkdown": "",
           "starterCode": "class G:\n def __str__(self): return \"hello\"\ns=str(G())",
@@ -510,7 +559,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_470fngg",
+            "id": "q_cvkezha",
             "type": "mcq",
             "prompt": "First param of instance method:",
             "choices": [
@@ -530,7 +579,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_qvz9jme",
+            "id": "q_f4qp65h",
             "type": "shortText",
             "prompt": "Call method as:",
             "validation": {
@@ -539,7 +588,7 @@
             }
           },
           {
-            "id": "q_nc6obto",
+            "id": "q_1hxeo9e",
             "type": "mcq",
             "prompt": "Method can modify:",
             "choices": [
@@ -559,7 +608,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4sqcbxd",
+            "id": "q_gv8m1bh",
             "type": "mcq",
             "prompt": "_single leading underscore means:",
             "choices": [
@@ -579,7 +628,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_erea579",
+            "id": "q_a147i06",
             "type": "shortText",
             "prompt": "Keep methods:",
             "validation": {
@@ -588,7 +637,7 @@
             }
           },
           {
-            "id": "q_hv2p8r5",
+            "id": "q_7puoy72",
             "type": "mcq",
             "prompt": "Expert: returning self enables:",
             "choices": [
@@ -608,7 +657,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_binzs8s",
+            "id": "q_feli3c3",
             "type": "mcq",
             "prompt": "Expert: cls is for:",
             "choices": [
@@ -628,7 +677,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_b78cowf",
+            "id": "q_xkdjnrd",
             "type": "shortText",
             "prompt": "Expert: staticmethod no:",
             "validation": {
@@ -637,7 +686,7 @@
             }
           },
           {
-            "id": "q_oh1fdmd",
+            "id": "q_sbt7cf7",
             "type": "mcq",
             "prompt": "Expert: giant method problem:",
             "choices": [
@@ -657,7 +706,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_23ctjc4",
+            "id": "q_phwu1w8",
             "type": "shortText",
             "prompt": "Expert: behavior lives in:",
             "validation": {
@@ -672,6 +721,23 @@
       "id": "inheritance",
       "title": "Inheritance",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "override",
+          "label": "Override",
+          "code": "class Animal:\n    def speak(self):\n        return \"...\"\n\nclass Dog(Animal):\n    def speak(self):\n        return \"woof\"\nprint(Dog().speak())"
+        },
+        {
+          "id": "super",
+          "label": "super()",
+          "code": "class Animal:\n    def __init__(self, name):\n        self.name = name\n\nclass Dog(Animal):\n    def __init__(self, name):\n        super().__init__(name)\n\nd = Dog(\"Rex\")\nprint(d.name)"
+        },
+        {
+          "id": "subclass_check",
+          "label": "Subclass check",
+          "code": "class Animal:\n    pass\nclass Dog(Animal):\n    pass\nprint(issubclass(Dog, Animal))"
+        }
+      ],
       "intro": {
         "title": "Inheritance",
         "bodyMarkdown": "Subclass inherits parent: `class Cat(Animal):`. Override methods for specialized behavior.\n\nUse `super()` to call parent implementation. Favor composition when inheritance is shallow.\n\nLiskov: subclass should be substitutable for parent.",
@@ -679,7 +745,7 @@
       },
       "challenges": [
         {
-          "id": "ch_1500goj",
+          "id": "ch_pnf5qyj",
           "title": "Easy: subclass syntax",
           "promptMarkdown": "",
           "starterCode": "class Child(Parent):\n    pass",
@@ -691,7 +757,7 @@
           }
         },
         {
-          "id": "ch_phsmb2d",
+          "id": "ch_jz9oope",
           "title": "Easy: inherit method",
           "promptMarkdown": "",
           "starterCode": "",
@@ -708,7 +774,7 @@
           }
         },
         {
-          "id": "ch_bir2fto",
+          "id": "ch_92ubndd",
           "title": "Medium: override",
           "promptMarkdown": "",
           "starterCode": "class P:\n def tag(self): return \"parent\"\nclass C(P):\n def tag(self): return \"child\"\ns=C().tag()",
@@ -725,7 +791,7 @@
           }
         },
         {
-          "id": "ch_avq0xb1",
+          "id": "ch_pmscrc1",
           "title": "Medium: super call",
           "promptMarkdown": "",
           "starterCode": "class P:\n def __init__(self): self.x=1\nclass C(P):\n def __init__(self):\n  super().__init__()\nc=C()",
@@ -742,7 +808,7 @@
           }
         },
         {
-          "id": "ch_a78d255",
+          "id": "ch_m1091kz",
           "title": "Hard: isinstance subclass",
           "promptMarkdown": "",
           "starterCode": "class P: pass\nclass C(P): pass\nok=isinstance(C(),P)",
@@ -759,7 +825,7 @@
           }
         },
         {
-          "id": "ch_bdzsytg",
+          "id": "ch_5fr8jw5",
           "title": "Hard: extend __init__",
           "promptMarkdown": "",
           "starterCode": "class P:\n def __init__(self): self.x=1\nclass C(P):\n def __init__(self):\n  super().__init__()\n  self.y=2\nc=C()",
@@ -776,7 +842,7 @@
           }
         },
         {
-          "id": "ch_aq837yz",
+          "id": "ch_dy1u8co",
           "title": "Expert: mro",
           "promptMarkdown": "",
           "starterCode": "class A: pass\nclass B(A): pass\nclass C(B): pass\nmro=C.__mro__",
@@ -793,7 +859,7 @@
           }
         },
         {
-          "id": "ch_reylfxj",
+          "id": "ch_i45g807",
           "title": "Expert: composition over",
           "promptMarkdown": "",
           "starterCode": "class Engine:\n def start(self): return \"vroom\"\nclass Car:\n def __init__(self,e): self.engine=e\n def drive(self): return self.engine.start()\ns=Car(Engine()).drive()",
@@ -810,7 +876,7 @@
           }
         },
         {
-          "id": "ch_v20qi8l",
+          "id": "ch_7i6xpry",
           "title": "Expert: abstract base",
           "promptMarkdown": "",
           "starterCode": "from abc import ABC, abstractmethod\nclass D(ABC):\n @abstractmethod\n def go(self): pass\nok=issubclass(D,ABC)",
@@ -827,7 +893,7 @@
           }
         },
         {
-          "id": "ch_e5kwkbb",
+          "id": "ch_3yuuy8j",
           "title": "Expert: multiple inheritance",
           "promptMarkdown": "",
           "starterCode": "class A:\n def a(self): return 1\nclass B:\n def b(self): return 2\nclass C(A,B): pass\nok=isinstance(C(),(A,B))",
@@ -848,7 +914,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_nj7e0ar",
+            "id": "q_j9ebhh5",
             "type": "mcq",
             "prompt": "Inheritance syntax:",
             "choices": [
@@ -868,7 +934,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1m3s396",
+            "id": "q_49761km",
             "type": "shortText",
             "prompt": "super() calls:",
             "validation": {
@@ -877,7 +943,7 @@
             }
           },
           {
-            "id": "q_eywsann",
+            "id": "q_0eg6u5f",
             "type": "mcq",
             "prompt": "Override means:",
             "choices": [
@@ -897,7 +963,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_cjjbv9a",
+            "id": "q_ofzbmr3",
             "type": "mcq",
             "prompt": "isinstance(sub, Parent):",
             "choices": [
@@ -917,7 +983,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fmhtvy6",
+            "id": "q_pp9ux3b",
             "type": "shortText",
             "prompt": "Favor composition when:",
             "validation": {
@@ -926,7 +992,7 @@
             }
           },
           {
-            "id": "q_5r1q9sl",
+            "id": "q_eoxj8sq",
             "type": "mcq",
             "prompt": "Expert: MRO is:",
             "choices": [
@@ -946,7 +1012,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rmas3jr",
+            "id": "q_o6a5lvm",
             "type": "mcq",
             "prompt": "Expert: Liskov about:",
             "choices": [
@@ -966,7 +1032,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_x5lxqkx",
+            "id": "q_2n9i0he",
             "type": "shortText",
             "prompt": "Expert: super in __init__:",
             "validation": {
@@ -975,7 +1041,7 @@
             }
           },
           {
-            "id": "q_ka3z682",
+            "id": "q_gr5c778",
             "type": "mcq",
             "prompt": "Expert: multiple bases:",
             "choices": [
@@ -995,7 +1061,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_eiig6z7",
+            "id": "q_c4ozyvu",
             "type": "shortText",
             "prompt": "Expert: ABC enforces:",
             "validation": {
@@ -1010,6 +1076,23 @@
       "id": "encapsulation",
       "title": "Encapsulation",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "private_attr",
+          "label": "Private attr",
+          "code": "class BankAccount:\n    def __init__(self, balance=0):\n        self._balance = balance\n    def deposit(self, amount):\n        self._balance += amount\n    def get_balance(self):\n        return self._balance\na = BankAccount(100)\na.deposit(50)\nprint(a.get_balance())"
+        },
+        {
+          "id": "property_getter",
+          "label": "property getter",
+          "code": "class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\nc = Circle(5)\nprint(c.radius)"
+        },
+        {
+          "id": "validate_setter",
+          "label": "Validate setter",
+          "code": "class Circle:\n    def __init__(self, r):\n        self.radius = r\n    @property\n    def radius(self):\n        return self._r\n    @radius.setter\n    def radius(self, value):\n        if value < 0:\n            raise ValueError(\"negative radius\")\n        self._r = value\nc = Circle(3)\nprint(c.radius)"
+        }
+      ],
       "intro": {
         "title": "Encapsulation",
         "bodyMarkdown": "Hide internal details; expose clean public API. Use `_name` convention for internal use.\n\nProperties can guard attribute access. Do not expose mutable internals casually.\n\nEncapsulation reduces coupling between components.",
@@ -1017,7 +1100,7 @@
       },
       "challenges": [
         {
-          "id": "ch_tmg7oui",
+          "id": "ch_qo4x6jc",
           "title": "Easy: underscore attr",
           "promptMarkdown": "",
           "starterCode": "class A:\n    def __init__(self):\n        self._x=1",
@@ -1029,7 +1112,7 @@
           }
         },
         {
-          "id": "ch_clzk6w1",
+          "id": "ch_s9t5zm4",
           "title": "Easy: public method",
           "promptMarkdown": "",
           "starterCode": "class A:\n    def show(self): return 1",
@@ -1041,7 +1124,7 @@
           }
         },
         {
-          "id": "ch_sdee9er",
+          "id": "ch_9lr71e7",
           "title": "Medium: no direct mutate",
           "promptMarkdown": "",
           "starterCode": "class A:\n def __init__(self): self._b=100\n def add(self,n): self._b+=n\na=A(); a.add(50); b=a._b",
@@ -1058,7 +1141,7 @@
           }
         },
         {
-          "id": "ch_3l5zbad",
+          "id": "ch_ot79gs5",
           "title": "Medium: validate in method",
           "promptMarkdown": "",
           "starterCode": "class W:\n def set(self,v):\n  if v>=0: self._v=v\nw=W(); w.set(5)",
@@ -1075,7 +1158,7 @@
           }
         },
         {
-          "id": "ch_wmfr5hg",
+          "id": "ch_jmxxuvy",
           "title": "Hard: property getter",
           "promptMarkdown": "",
           "starterCode": "class Account:\n def __init__(self): self._bal=100\n @property\n def balance(self): return self._bal\nb=Account().balance",
@@ -1092,7 +1175,7 @@
           }
         },
         {
-          "id": "ch_tx0gj7g",
+          "id": "ch_0ly0brn",
           "title": "Hard: read-only pattern",
           "promptMarkdown": "",
           "starterCode": "class RO:\n def __init__(self): self._x=1\n @property\n def x(self): return self._x\nblocked=False\ntry:\n RO().x=2\nexcept AttributeError:\n blocked=True",
@@ -1109,7 +1192,7 @@
           }
         },
         {
-          "id": "ch_o5anldz",
+          "id": "ch_twucx96",
           "title": "Expert: name mangling",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self): self.__secret=42\nok=hasattr(C(),\"_C__secret\")",
@@ -1126,7 +1209,7 @@
           }
         },
         {
-          "id": "ch_i80cwnv",
+          "id": "ch_6wcreio",
           "title": "Expert: facade",
           "promptMarkdown": "",
           "starterCode": "class SubA:\n def step(self): return 1\nclass SubB:\n def step(self): return 2\nclass Facade:\n def __init__(self): self.a=SubA(); self.b=SubB()\n def go(self): return self.a.step()+self.b.step()\nhome=Facade()\nok=home.go()==3",
@@ -1143,7 +1226,7 @@
           }
         },
         {
-          "id": "ch_4gkydak",
+          "id": "ch_ujzvjks",
           "title": "Expert: leaky abstraction",
           "promptMarkdown": "",
           "starterCode": "class Account:\n def __init__(self): self._balance=100\n def deposit(self,n): self._balance+=n\n def balance(self): return self._balance\na=Account(); a.deposit(50); b=a.balance()",
@@ -1160,7 +1243,7 @@
           }
         },
         {
-          "id": "ch_ni8l0jt",
+          "id": "ch_vemd3r0",
           "title": "Expert: dataclass private",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass, field\n@dataclass\nclass User:\n name:str\n password:str=field(repr=False, default=\"secret\")\nu=User(\"Ana\"); s=str(u)",
@@ -1181,7 +1264,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_5apow75",
+            "id": "q_061qna1",
             "type": "mcq",
             "prompt": "Encapsulation hides:",
             "choices": [
@@ -1201,7 +1284,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_lvm7wh1",
+            "id": "q_wmzud7q",
             "type": "shortText",
             "prompt": "_prefix means:",
             "validation": {
@@ -1210,7 +1293,7 @@
             }
           },
           {
-            "id": "q_bl84nlg",
+            "id": "q_3mmyy1h",
             "type": "mcq",
             "prompt": "Public API should be:",
             "choices": [
@@ -1230,7 +1313,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8luchws",
+            "id": "q_5s7yj5p",
             "type": "mcq",
             "prompt": "Validate in setter prevents:",
             "choices": [
@@ -1250,7 +1333,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ppwh6r3",
+            "id": "q_q5uhtzr",
             "type": "shortText",
             "prompt": "Coupling reduced by:",
             "validation": {
@@ -1259,7 +1342,7 @@
             }
           },
           {
-            "id": "q_3nnyz1v",
+            "id": "q_ohfb92x",
             "type": "mcq",
             "prompt": "Expert: __double mangling:",
             "choices": [
@@ -1279,7 +1362,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_drlicyb",
+            "id": "q_l7to6nc",
             "type": "mcq",
             "prompt": "Expert: property exposes:",
             "choices": [
@@ -1299,7 +1382,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2r7p17v",
+            "id": "q_0phv92t",
             "type": "shortText",
             "prompt": "Expert: facade provides:",
             "validation": {
@@ -1308,7 +1391,7 @@
             }
           },
           {
-            "id": "q_k1lckjk",
+            "id": "q_h404m2c",
             "type": "mcq",
             "prompt": "Expert: leaky abstraction:",
             "choices": [
@@ -1328,7 +1411,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ev63nvz",
+            "id": "q_qct2961",
             "type": "shortText",
             "prompt": "Expert: deposit validates:",
             "validation": {
@@ -1343,6 +1426,18 @@
       "id": "polymorphism",
       "title": "Polymorphism",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "duck_typing",
+          "label": "Duck typing",
+          "code": "def announce(animal):\n    print(animal.speak())\n\nclass Cat:\n    def speak(self):\n        return \"meow\"\n\nclass Dog:\n    def speak(self):\n        return \"woof\"\n\nfor a in [Cat(), Dog()]:\n    print(a.speak())"
+        },
+        {
+          "id": "shared_interface",
+          "label": "Shared interface",
+          "code": "class Square:\n    def area(self):\n        return 4\n\nclass Circle:\n    def area(self):\n        return 3\n\nfor shape in [Square(), Circle()]:\n    print(shape.area())"
+        }
+      ],
       "intro": {
         "title": "Polymorphism",
         "bodyMarkdown": "Same interface, different behavior. Duck typing: if it quacks like a duck, use it.\n\nFunctions accepting any object with required methods work polymorphically.\n\nInheritance is one form; protocols and ABCs formalize expectations.",
@@ -1350,7 +1445,7 @@
       },
       "challenges": [
         {
-          "id": "ch_a2hs6yg",
+          "id": "ch_r566rgm",
           "title": "Easy: same method name",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1367,7 +1462,7 @@
           }
         },
         {
-          "id": "ch_rnn351y",
+          "id": "ch_7qkl21l",
           "title": "Easy: loop polymorphic",
           "promptMarkdown": "",
           "starterCode": "animals=[Cat(),Dog()]\nfor a in animals: print(a.speak())",
@@ -1379,7 +1474,7 @@
           }
         },
         {
-          "id": "ch_4nk7nm7",
+          "id": "ch_7cb53m5",
           "title": "Medium: function accepts any",
           "promptMarkdown": "",
           "starterCode": "class Dog:\n def speak(self): return \"woof\"\ndef announce(a): return a.speak()\nok=announce(Dog())",
@@ -1396,7 +1491,7 @@
           }
         },
         {
-          "id": "ch_fr1t6uu",
+          "id": "ch_8oct10d",
           "title": "Medium: duck typing",
           "promptMarkdown": "",
           "starterCode": "class Dog:\n def speak(self): return \"woof\"\ndef announce(a): return a.speak()\nok=announce(Dog())",
@@ -1413,7 +1508,7 @@
           }
         },
         {
-          "id": "ch_sernxif",
+          "id": "ch_k0ourcn",
           "title": "Hard: no isinstance needed",
           "promptMarkdown": "",
           "starterCode": "class Bot:\n def run(self): return \"go\"\ndef go(x): return x.run()\nok=go(Bot())",
@@ -1430,7 +1525,7 @@
           }
         },
         {
-          "id": "ch_sqwng19",
+          "id": "ch_z1vvzqg",
           "title": "Hard: protocol style",
           "promptMarkdown": "",
           "starterCode": "from typing import Protocol\nclass Runner(Protocol):\n def run(self): ...\nclass Bot:\n def run(self): return \"run\"\ndef dispatch(r: Runner): return r.run()\nok=dispatch(Bot())",
@@ -1447,7 +1542,7 @@
           }
         },
         {
-          "id": "ch_ujqohwh",
+          "id": "ch_sae3rdz",
           "title": "Expert: ABC enforce",
           "promptMarkdown": "",
           "starterCode": "from abc import ABC, abstractmethod\nclass Shape(ABC):\n @abstractmethod\n def area(self): pass\nerr=False\ntry:\n Shape()\nexcept TypeError:\n err=True",
@@ -1464,7 +1559,7 @@
           }
         },
         {
-          "id": "ch_u9xw5eg",
+          "id": "ch_d1zvaif",
           "title": "Expert: operator overloading",
           "promptMarkdown": "",
           "starterCode": "class A:\n def __init__(self,v): self.v=v\n def __add__(self,o): return A(self.v+o.v)\nv=(A(1)+A(2)).v",
@@ -1481,7 +1576,7 @@
           }
         },
         {
-          "id": "ch_abmjgzr",
+          "id": "ch_3tz2e47",
           "title": "Expert: double dispatch",
           "promptMarkdown": "",
           "starterCode": "class Length:\n def __init__(self,n,unit=\"cm\"): self.n,self.unit=n,unit\n def __add__(self,o): return Length(self.n+o.n,self.unit)\n def __str__(self): return f\"{self.n}{self.unit}\"\ns=str(Length(1)+Length(2))",
@@ -1498,7 +1593,7 @@
           }
         },
         {
-          "id": "ch_i2oiqqy",
+          "id": "ch_4wk5k83",
           "title": "Expert: structural subtyping",
           "promptMarkdown": "",
           "starterCode": "from typing import Protocol\nclass Drawable(Protocol):\n def draw(self): ...\nclass D:\n def draw(self): return \"drawn\"\ndef render(x: Drawable): return x.draw()\nok=render(D())==\"drawn\"",
@@ -1519,7 +1614,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_xmm57y7",
+            "id": "q_62uawgn",
             "type": "mcq",
             "prompt": "Polymorphism means:",
             "choices": [
@@ -1539,7 +1634,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_tvobw4x",
+            "id": "q_3etq5gh",
             "type": "shortText",
             "prompt": "Duck typing: if it has method:",
             "validation": {
@@ -1548,7 +1643,7 @@
             }
           },
           {
-            "id": "q_u5nbi9n",
+            "id": "q_cllm4gt",
             "type": "mcq",
             "prompt": "announce(animal) works if animal has:",
             "choices": [
@@ -1568,7 +1663,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_bc1xxff",
+            "id": "q_p4lzooh",
             "type": "mcq",
             "prompt": "Loop over types shares:",
             "choices": [
@@ -1588,7 +1683,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nbdjd7z",
+            "id": "q_uyhsxj0",
             "type": "shortText",
             "prompt": "Python checks:",
             "validation": {
@@ -1597,7 +1692,7 @@
             }
           },
           {
-            "id": "q_iov3163",
+            "id": "q_b96v4lf",
             "type": "mcq",
             "prompt": "Expert: isinstance less needed with:",
             "choices": [
@@ -1617,7 +1712,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5wprc9z",
+            "id": "q_u2om9cx",
             "type": "mcq",
             "prompt": "Expert: ABC defines:",
             "choices": [
@@ -1637,7 +1732,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9rdl02u",
+            "id": "q_eoy2rfg",
             "type": "shortText",
             "prompt": "Expert: __add__ enables:",
             "validation": {
@@ -1646,7 +1741,7 @@
             }
           },
           {
-            "id": "q_4kjve51",
+            "id": "q_mbwi45g",
             "type": "mcq",
             "prompt": "Expert: structural subtyping via:",
             "choices": [
@@ -1666,7 +1761,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_okatysm",
+            "id": "q_7l1dns0",
             "type": "shortText",
             "prompt": "Expert: substitute subclass:",
             "validation": {
@@ -1681,6 +1776,28 @@
       "id": "dunder_methods",
       "title": "Dunder methods",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "repr",
+          "label": "__repr__",
+          "code": "class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __repr__(self):\n        return f\"Point({self.x}, {self.y})\"\nprint(repr(Point(1, 2)))"
+        },
+        {
+          "id": "str",
+          "label": "__str__",
+          "code": "class Greeter:\n    def __str__(self):\n        return \"hello\"\nprint(str(Greeter()))"
+        },
+        {
+          "id": "eq",
+          "label": "__eq__",
+          "code": "class Point:\n    def __init__(self, x):\n        self.x = x\n    def __eq__(self, other):\n        return self.x == other.x\nprint(Point(1) == Point(1))"
+        },
+        {
+          "id": "len",
+          "label": "__len__",
+          "code": "class Bag:\n    def __init__(self, items):\n        self.items = items\n    def __len__(self):\n        return len(self.items)\nprint(len(Bag([1, 2, 3])))"
+        }
+      ],
       "intro": {
         "title": "Dunder methods",
         "bodyMarkdown": "Double-underscore methods customize behavior: `__str__`, `__repr__`, `__len__`, `__eq__`.\n\nThey integrate objects with Python syntax — print, len, ==, +.\n\nImplement `__repr__` for developers; `__str__` for users.",
@@ -1688,7 +1805,7 @@
       },
       "challenges": [
         {
-          "id": "ch_q0gahcs",
+          "id": "ch_olwkr8z",
           "title": "Easy: __str__",
           "promptMarkdown": "",
           "starterCode": "class A:\n    def __str__(self): return \"A\"",
@@ -1700,7 +1817,7 @@
           }
         },
         {
-          "id": "ch_iq3za56",
+          "id": "ch_fb87502",
           "title": "Easy: __repr__",
           "promptMarkdown": "",
           "starterCode": "class A:\n    def __repr__(self): return \"A()\"",
@@ -1712,7 +1829,7 @@
           }
         },
         {
-          "id": "ch_xlpktzs",
+          "id": "ch_iygi0t6",
           "title": "Medium: __len__",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __len__(self): return 3\nn=len(C())",
@@ -1729,7 +1846,7 @@
           }
         },
         {
-          "id": "ch_sjljzv2",
+          "id": "ch_xk9tyxz",
           "title": "Medium: __eq__",
           "promptMarkdown": "",
           "starterCode": "class A:\n def __init__(self,v): self.v=v\n def __eq__(self,o): return self.v==o.v\nok=A(1)==A(1)",
@@ -1746,7 +1863,7 @@
           }
         },
         {
-          "id": "ch_a1j8jjc",
+          "id": "ch_ebkxg80",
           "title": "Hard: __add__",
           "promptMarkdown": "",
           "starterCode": "class A:\n def __init__(self,v): self.v=v\n def __add__(self,o): return A(self.v+o.v)\nv=(A(1)+A(2)).v",
@@ -1763,7 +1880,7 @@
           }
         },
         {
-          "id": "ch_3fcp0wi",
+          "id": "ch_g3lymkl",
           "title": "Hard: __bool__",
           "promptMarkdown": "",
           "starterCode": "class A:\n def __bool__(self): return False\nok=bool(A())==False",
@@ -1780,7 +1897,7 @@
           }
         },
         {
-          "id": "ch_pgqn7hk",
+          "id": "ch_x17ew6l",
           "title": "Expert: __iter__",
           "promptMarkdown": "",
           "starterCode": "class Bag:\n def __init__(self,items): self._items=items\n def __iter__(self): return iter(self._items)\nitems=list(Bag([1,2,3]))",
@@ -1797,7 +1914,7 @@
           }
         },
         {
-          "id": "ch_cax380z",
+          "id": "ch_u4fttfs",
           "title": "Expert: __getitem__",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __getitem__(self,i): return \"abc\"[i]\nv=C()[0]",
@@ -1814,7 +1931,7 @@
           }
         },
         {
-          "id": "ch_ln5jt3i",
+          "id": "ch_8cexbw8",
           "title": "Expert: __hash__",
           "promptMarkdown": "",
           "starterCode": "class P:\n def __init__(self,x,y): self.x,self.y=x,y\n def __eq__(self,o): return (self.x,self.y)==(o.x,o.y)\n def __hash__(self): return hash((self.x,self.y))\nok=len({P(1,2):1})==1",
@@ -1831,7 +1948,7 @@
           }
         },
         {
-          "id": "ch_8inims7",
+          "id": "ch_t44hwfi",
           "title": "Expert: __slots__",
           "promptMarkdown": "",
           "starterCode": "class A:\n __slots__=(\"x\",)\n def __init__(self): self.x=1\nok=\"x\" in A.__slots__",
@@ -1852,7 +1969,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_lq68dhj",
+            "id": "q_79hcz00",
             "type": "mcq",
             "prompt": "__str__ used by:",
             "choices": [
@@ -1872,7 +1989,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zrnho0q",
+            "id": "q_bwxcpe3",
             "type": "shortText",
             "prompt": "__repr__ for:",
             "validation": {
@@ -1881,7 +1998,7 @@
             }
           },
           {
-            "id": "q_dw3yfgq",
+            "id": "q_goylgee",
             "type": "mcq",
             "prompt": "len(obj) calls:",
             "choices": [
@@ -1901,7 +2018,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0ca4h4x",
+            "id": "q_prki662",
             "type": "mcq",
             "prompt": "a == b uses:",
             "choices": [
@@ -1921,7 +2038,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_i85fouv",
+            "id": "q_k1qrus7",
             "type": "shortText",
             "prompt": "Dunder means:",
             "validation": {
@@ -1930,7 +2047,7 @@
             }
           },
           {
-            "id": "q_mhghmo5",
+            "id": "q_y754jy3",
             "type": "mcq",
             "prompt": "Expert: __add__ for:",
             "choices": [
@@ -1950,7 +2067,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1y493xa",
+            "id": "q_6bapids",
             "type": "mcq",
             "prompt": "Expert: __bool__ for:",
             "choices": [
@@ -1970,7 +2087,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_186iau5",
+            "id": "q_z7jou73",
             "type": "shortText",
             "prompt": "Expert: __iter__ enables:",
             "validation": {
@@ -1979,7 +2096,7 @@
             }
           },
           {
-            "id": "q_jn7ag6m",
+            "id": "q_bf5hhyv",
             "type": "mcq",
             "prompt": "Expert: mutable eq needs care with:",
             "choices": [
@@ -1999,7 +2116,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0uare6x",
+            "id": "q_eydtx7a",
             "type": "shortText",
             "prompt": "Expert: __getitem__ for:",
             "validation": {
@@ -2014,6 +2131,23 @@
       "id": "properties",
       "title": "Properties",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "read_only",
+          "label": "Read-only",
+          "code": "class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\nc = Circle(5)\nprint(c.radius)"
+        },
+        {
+          "id": "setter",
+          "label": "Setter",
+          "code": "class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\n    @radius.setter\n    def radius(self, value):\n        self._r = value\nc = Circle(5)\nc.radius = 10\nprint(c.radius)"
+        },
+        {
+          "id": "computed",
+          "label": "Computed",
+          "code": "class Rectangle:\n    def __init__(self, w, h):\n        self.w, self.h = w, h\n    @property\n    def area(self):\n        return self.w * self.h\nprint(Rectangle(4, 5).area)"
+        }
+      ],
       "intro": {
         "title": "Properties",
         "bodyMarkdown": "`@property` turns method into attribute access. `@name.setter` validates writes.\n\nPrefer properties over getters/setters when behavior may grow.\n\nRead-only: property without setter.",
@@ -2021,7 +2155,7 @@
       },
       "challenges": [
         {
-          "id": "ch_i69vl07",
+          "id": "ch_00774zq",
           "title": "Easy: @property",
           "promptMarkdown": "",
           "starterCode": "class A:\n    @property\n    def x(self): return 1",
@@ -2033,7 +2167,7 @@
           }
         },
         {
-          "id": "ch_0ibl354",
+          "id": "ch_dzkqwd1",
           "title": "Easy: access like attr",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2050,7 +2184,7 @@
           }
         },
         {
-          "id": "ch_s75p564",
+          "id": "ch_5ywbs28",
           "title": "Medium: setter",
           "promptMarkdown": "",
           "starterCode": "class A:\n @property\n def x(self): return self._x\n @x.setter\n def x(self,v): self._x=v\na=A(); a.x=3",
@@ -2067,7 +2201,7 @@
           }
         },
         {
-          "id": "ch_sehblb8",
+          "id": "ch_g75gusb",
           "title": "Medium: validate setter",
           "promptMarkdown": "",
           "starterCode": "class A:\n @property\n def x(self): return self._x\n @x.setter\n def x(self,v):\n  if v<0: raise ValueError\n  self._x=v\nerr=False\ntry:\n a=A(); a.x=-1\nexcept ValueError:\n err=True",
@@ -2084,7 +2218,7 @@
           }
         },
         {
-          "id": "ch_9x7izyk",
+          "id": "ch_tp4godf",
           "title": "Hard: computed property",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self,r): self._r=r\n @property\n def area(self): return self._r**2\na=C(3).area",
@@ -2101,7 +2235,7 @@
           }
         },
         {
-          "id": "ch_9mhn16l",
+          "id": "ch_c6b62zr",
           "title": "Hard: read only",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self): self._r=5\n @property\n def r(self): return self._r\nblocked=False\ntry:\n C().r=1\nexcept AttributeError:\n blocked=True",
@@ -2118,7 +2252,7 @@
           }
         },
         {
-          "id": "ch_jye3lsg",
+          "id": "ch_iq2w4f8",
           "title": "Expert: deleter",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self): self._x=1\n @property\n def x(self): return self._x\n @x.deleter\n def x(self): del self._x\nc=C(); del c.x; ok=not hasattr(c,\"x\")",
@@ -2135,7 +2269,7 @@
           }
         },
         {
-          "id": "ch_wavd1b1",
+          "id": "ch_ctlj8kb",
           "title": "Expert: property over get_set",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self,r): self._r=r\n @property\n def radius(self): return self._r\nr=C(5).radius",
@@ -2152,7 +2286,7 @@
           }
         },
         {
-          "id": "ch_jdwmbpq",
+          "id": "ch_rz722e9",
           "title": "Expert: cached property",
           "promptMarkdown": "",
           "starterCode": "from functools import cached_property\nclass C:\n _calls=0\n @cached_property\n def value(self):\n  type(self)._calls+=1\n  return 42\nc=C()\n_=c.value\n_=c.value\ncalls=C._calls",
@@ -2169,7 +2303,7 @@
           }
         },
         {
-          "id": "ch_0jopnvs",
+          "id": "ch_ob1fpit",
           "title": "Expert: dataclass field",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass, field\n@dataclass\nclass U:\n name:str\n tags:list=field(default_factory=list)\nu=U(\"a\")",
@@ -2190,7 +2324,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_ho1jwyu",
+            "id": "q_9s6ifhe",
             "type": "mcq",
             "prompt": "@property allows:",
             "choices": [
@@ -2210,7 +2344,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4c7t803",
+            "id": "q_587yacm",
             "type": "shortText",
             "prompt": "Setter decorator:",
             "validation": {
@@ -2219,7 +2353,7 @@
             }
           },
           {
-            "id": "q_1r2r35a",
+            "id": "q_briaw6v",
             "type": "mcq",
             "prompt": "Validate in setter for:",
             "choices": [
@@ -2239,7 +2373,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_v6pt9p5",
+            "id": "q_c0j9vl3",
             "type": "mcq",
             "prompt": "area as property is:",
             "choices": [
@@ -2259,7 +2393,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_oatf8rd",
+            "id": "q_acqtppo",
             "type": "shortText",
             "prompt": "Read-only lacks:",
             "validation": {
@@ -2268,7 +2402,7 @@
             }
           },
           {
-            "id": "q_ypbcgrd",
+            "id": "q_pr2woaa",
             "type": "mcq",
             "prompt": "Expert: property vs public attr when:",
             "choices": [
@@ -2288,7 +2422,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_pjkgcgm",
+            "id": "q_cv6byta",
             "type": "mcq",
             "prompt": "Expert: deleter rare for:",
             "choices": [
@@ -2308,7 +2442,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_m3f4v1p",
+            "id": "q_6gd2ei5",
             "type": "shortText",
             "prompt": "Expert: cached lazy:",
             "validation": {
@@ -2317,7 +2451,7 @@
             }
           },
           {
-            "id": "q_71lrx78",
+            "id": "q_x9486jb",
             "type": "mcq",
             "prompt": "Expert: c.radius calls:",
             "choices": [
@@ -2337,7 +2471,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_arcwsgy",
+            "id": "q_pey6wdv",
             "type": "shortText",
             "prompt": "Expert: negative radius:",
             "validation": {
@@ -2352,6 +2486,23 @@
       "id": "dataclasses",
       "title": "Dataclasses",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "dataclass",
+          "label": "@dataclass",
+          "code": "from dataclasses import dataclass\n\n@dataclass\nclass User:\n    name: str\n    score: int = 0\n\nprint(User(\"Ana\", 42))"
+        },
+        {
+          "id": "default_field",
+          "label": "Default field",
+          "code": "from dataclasses import dataclass, field\n\n@dataclass\nclass Team:\n    name: str\n    members: list = field(default_factory=list)\n\nt = Team(\"A\")\nprint(t)"
+        },
+        {
+          "id": "compare",
+          "label": "Compare",
+          "code": "from dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: int\n    y: int\n\nprint(Point(1, 2) == Point(1, 2))"
+        }
+      ],
       "intro": {
         "title": "Dataclasses",
         "bodyMarkdown": "`@dataclass` auto-generates `__init__`, `__repr__`, comparisons from typed fields.\n\nGreat for data containers — less boilerplate than manual classes.\n\nUse `field(default_factory=list)` for mutable defaults.",
@@ -2359,7 +2510,7 @@
       },
       "challenges": [
         {
-          "id": "ch_ybqyy31",
+          "id": "ch_x9ub8x8",
           "title": "Easy: import dataclass",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass",
@@ -2371,7 +2522,7 @@
           }
         },
         {
-          "id": "ch_vwrdlj5",
+          "id": "ch_zehk9gw",
           "title": "Easy: define fields",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass\n@dataclass\nclass P:\n    x: int",
@@ -2383,7 +2534,7 @@
           }
         },
         {
-          "id": "ch_ckvkn8d",
+          "id": "ch_6pwa14n",
           "title": "Medium: default field",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2400,7 +2551,7 @@
           }
         },
         {
-          "id": "ch_ozjjp1b",
+          "id": "ch_8lbfiqb",
           "title": "Medium: repr auto",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass\n@dataclass\nclass U:\n name:str\nu=U(\"Ana\")\ns=str(u)",
@@ -2417,7 +2568,7 @@
           }
         },
         {
-          "id": "ch_eqp7n16",
+          "id": "ch_zozhhix",
           "title": "Hard: eq compare",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass\n@dataclass\nclass U:\n v:int\nok=U(1)==U(1)",
@@ -2434,7 +2585,7 @@
           }
         },
         {
-          "id": "ch_nvkmr0l",
+          "id": "ch_ii02ke9",
           "title": "Hard: frozen",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass\n@dataclass(frozen=True)\nclass P:\n x:int\nimmutable=False\ntry:\n P(1).x=2\nexcept Exception:\n immutable=True",
@@ -2451,7 +2602,7 @@
           }
         },
         {
-          "id": "ch_aqeixdu",
+          "id": "ch_9fksm95",
           "title": "Expert: field factory",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass, field\n@dataclass\nclass D:\n items:list=field(default_factory=list)\nd1=D(); d2=D()\nok=d1.items is not d2.items",
@@ -2468,7 +2619,7 @@
           }
         },
         {
-          "id": "ch_oook2ih",
+          "id": "ch_1ikc47u",
           "title": "Expert: order True",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass\n@dataclass(order=True)\nclass U:\n score:int\nok=U(1)<U(2)",
@@ -2485,7 +2636,7 @@
           }
         },
         {
-          "id": "ch_mlebmas",
+          "id": "ch_5mcknyt",
           "title": "Expert: slots dataclass",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass\n@dataclass(slots=True)\nclass U:\n name:str\nok=\"name\" in U.__slots__",
@@ -2502,7 +2653,7 @@
           }
         },
         {
-          "id": "ch_067eok3",
+          "id": "ch_fn31j0j",
           "title": "Expert: replace",
           "promptMarkdown": "",
           "starterCode": "from dataclasses import dataclass, replace\n@dataclass\nclass U:\n name:str; score:int\nu=U(\"a\",1); v=replace(u, score=99)",
@@ -2523,7 +2674,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_9gtbr77",
+            "id": "q_9vjoxam",
             "type": "mcq",
             "prompt": "dataclass reduces:",
             "choices": [
@@ -2543,7 +2694,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_s2dwexj",
+            "id": "q_rrv8px3",
             "type": "shortText",
             "prompt": "Decorator name:",
             "validation": {
@@ -2552,7 +2703,7 @@
             }
           },
           {
-            "id": "q_s57wifb",
+            "id": "q_1qfbd0g",
             "type": "mcq",
             "prompt": "Default mutable use:",
             "choices": [
@@ -2572,7 +2723,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_y40sfk9",
+            "id": "q_uu8vw6f",
             "type": "mcq",
             "prompt": "frozen=True makes:",
             "choices": [
@@ -2592,7 +2743,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_minzp0m",
+            "id": "q_jtd9809",
             "type": "shortText",
             "prompt": "Type hints on fields for:",
             "validation": {
@@ -2601,7 +2752,7 @@
             }
           },
           {
-            "id": "q_7goa0cw",
+            "id": "q_82pl0yg",
             "type": "mcq",
             "prompt": "Expert: replace() copies with:",
             "choices": [
@@ -2621,7 +2772,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2bvkpk2",
+            "id": "q_zon2ga9",
             "type": "mcq",
             "prompt": "Expert: order=True enables:",
             "choices": [
@@ -2641,7 +2792,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_sdc6i4y",
+            "id": "q_w0l2lhz",
             "type": "shortText",
             "prompt": "Expert: slots saves:",
             "validation": {
@@ -2650,7 +2801,7 @@
             }
           },
           {
-            "id": "q_ktlmdf6",
+            "id": "q_kugpol6",
             "type": "mcq",
             "prompt": "Expert: not for heavy:",
             "choices": [
@@ -2670,7 +2821,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4ncibat",
+            "id": "q_la4jn6s",
             "type": "shortText",
             "prompt": "Expert: auto __init__ from:",
             "validation": {
@@ -2685,6 +2836,23 @@
       "id": "special_methods_adv",
       "title": "Advanced OOP patterns",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "composition",
+          "label": "Composition",
+          "code": "class Engine:\n    def start(self):\n        return \"vroom\"\n\nclass Car:\n    def __init__(self, engine):\n        self.engine = engine\n    def drive(self):\n        return self.engine.start()\nprint(Car(Engine()).drive())"
+        },
+        {
+          "id": "inject_dependency",
+          "label": "Inject dependency",
+          "code": "class Logger:\n    def log(self, msg):\n        return msg\n\nclass App:\n    def __init__(self, logger):\n        self.logger = logger\n    def run(self):\n        return self.logger.log(\"ok\")\nprint(App(Logger()).run())"
+        },
+        {
+          "id": "factory",
+          "label": "Factory",
+          "code": "def make_user(name):\n    return {\"name\": name, \"active\": True}\nprint(make_user(\"Ana\"))"
+        }
+      ],
       "intro": {
         "title": "Advanced OOP patterns",
         "bodyMarkdown": "Composition, mixins, factory functions, and dependency injection structure larger apps.\n\nKeep inheritance depth low; prefer small focused classes.\n\nDesign for testability — inject dependencies, avoid globals.",
@@ -2692,7 +2860,7 @@
       },
       "challenges": [
         {
-          "id": "ch_1vvrkic",
+          "id": "ch_qf7rd2e",
           "title": "Easy: composition has-a",
           "promptMarkdown": "",
           "starterCode": "class Car:\n    def __init__(self, e):\n        self.engine=e",
@@ -2704,7 +2872,7 @@
           }
         },
         {
-          "id": "ch_3s2xygh",
+          "id": "ch_obpnr5r",
           "title": "Easy: inject dependency",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2721,7 +2889,7 @@
           }
         },
         {
-          "id": "ch_afd1r1h",
+          "id": "ch_vuaqyvr",
           "title": "Medium: factory function",
           "promptMarkdown": "",
           "starterCode": "class Engine: pass\nclass Car:\n def __init__(self,e): self.engine=e\ndef create_car():\n return Car(Engine())\ncar=create_car()",
@@ -2738,7 +2906,7 @@
           }
         },
         {
-          "id": "ch_nmo28np",
+          "id": "ch_t2oogxg",
           "title": "Medium: mixin pattern",
           "promptMarkdown": "",
           "starterCode": "class LogMixin:\n def log(self,msg): return msg.upper()\nclass App(LogMixin):\n def run(self): return self.log(\"ok\")\nok=App().run()",
@@ -2755,7 +2923,7 @@
           }
         },
         {
-          "id": "ch_qgkd2d4",
+          "id": "ch_rivlzbw",
           "title": "Hard: single responsibility",
           "promptMarkdown": "",
           "starterCode": "class EmailSender:\n def send(self,m): return len(m)\nn=EmailSender().send(\"hi\")",
@@ -2772,7 +2940,7 @@
           }
         },
         {
-          "id": "ch_r1pwogu",
+          "id": "ch_bk7g20b",
           "title": "Hard: interface segregation",
           "promptMarkdown": "",
           "starterCode": "class Readable:\n def read(self): return \"data\"\nclass Writable:\n def write(self,d): return len(d)\nnames=[Readable.__name__, Writable.__name__]\nok=len(names)==2",
@@ -2789,7 +2957,7 @@
           }
         },
         {
-          "id": "ch_rbcxjwc",
+          "id": "ch_m0266rm",
           "title": "Expert: dependency injection",
           "promptMarkdown": "",
           "starterCode": "class Mailer:\n def send(self,msg): return msg\nclass Service:\n def __init__(self,mailer): self.mailer=mailer\n def notify(self): return self.mailer.send(\"sent\")\ns=Service(Mailer()).notify()",
@@ -2806,7 +2974,7 @@
           }
         },
         {
-          "id": "ch_7qdyd96",
+          "id": "ch_km7tlc1",
           "title": "Expert: service layer",
           "promptMarkdown": "",
           "starterCode": "class Repo:\n def list_prices(self): return [10,20]\nclass CartService:\n def __init__(self,repo): self.repo=repo\n def total(self): return sum(self.repo.list_prices())\ntotal=CartService(Repo()).total()",
@@ -2823,7 +2991,7 @@
           }
         },
         {
-          "id": "ch_7ku0rcy",
+          "id": "ch_2a6lcq5",
           "title": "Expert: repository pattern",
           "promptMarkdown": "",
           "starterCode": "class UserRepo:\n def __init__(self): self._data={\"1\":\"Ana\"}\n def get(self,id): return self._data[id]\nn=UserRepo().get(\"1\")",
@@ -2840,7 +3008,7 @@
           }
         },
         {
-          "id": "ch_xxtf5jv",
+          "id": "ch_8h5dsm5",
           "title": "Expert: test doubles",
           "promptMarkdown": "",
           "starterCode": "class StubGateway:\n def fetch(self): return \"fake\"\nclass App:\n def __init__(self,gw): self.gw=gw\n def run(self): return self.gw.fetch()\ns=App(StubGateway()).run()",
@@ -2861,7 +3029,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_c6oejii",
+            "id": "q_au6at0k",
             "type": "mcq",
             "prompt": "Composition is has-a:",
             "choices": [
@@ -2881,7 +3049,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_f0u7pxo",
+            "id": "q_xy3r31n",
             "type": "shortText",
             "prompt": "Inject engine for:",
             "validation": {
@@ -2890,7 +3058,7 @@
             }
           },
           {
-            "id": "q_q55g7mv",
+            "id": "q_zedzgrt",
             "type": "mcq",
             "prompt": "Factory function returns:",
             "choices": [
@@ -2910,7 +3078,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7gaech1",
+            "id": "q_a51917u",
             "type": "mcq",
             "prompt": "SRP means:",
             "choices": [
@@ -2930,7 +3098,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_kypmehe",
+            "id": "q_g41ltgx",
             "type": "shortText",
             "prompt": "Low inheritance depth:",
             "validation": {
@@ -2939,7 +3107,7 @@
             }
           },
           {
-            "id": "q_jbjwc9r",
+            "id": "q_s2o7q5r",
             "type": "mcq",
             "prompt": "Expert: DI passes:",
             "choices": [
@@ -2959,7 +3127,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ih9mrj5",
+            "id": "q_encc7d6",
             "type": "mcq",
             "prompt": "Expert: mock in tests:",
             "choices": [
@@ -2979,7 +3147,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wh1vtld",
+            "id": "q_0p9mo1x",
             "type": "shortText",
             "prompt": "Expert: repository hides:",
             "validation": {
@@ -2988,7 +3156,7 @@
             }
           },
           {
-            "id": "q_sr4dzzt",
+            "id": "q_ndfzx6g",
             "type": "mcq",
             "prompt": "Expert: mixin adds:",
             "choices": [
@@ -3008,7 +3176,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8cay6de",
+            "id": "q_cqbhxkf",
             "type": "shortText",
             "prompt": "Expert: Car uses Engine via:",
             "validation": {
@@ -3023,6 +3191,23 @@
       "id": "oop_design",
       "title": "OOP design principles",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "abstract_style",
+          "label": "Abstract style",
+          "code": "class Notifier:\n    def send(self, message: str) -> None:\n        raise NotImplementedError\n\nclass EmailNotifier(Notifier):\n    def send(self, message: str) -> None:\n        print(f\"Email: {message}\")\nEmailNotifier().send(\"Hello\")"
+        },
+        {
+          "id": "single_responsibility",
+          "label": "Single responsibility",
+          "code": "class Report:\n    def build(self, data):\n        return str(data)\n\nclass Printer:\n    def print(self, text):\n        print(text)"
+        },
+        {
+          "id": "interface",
+          "label": "Interface",
+          "code": "class Shape:\n    def area(self):\n        raise NotImplementedError\n\nclass Square(Shape):\n    def area(self):\n        return 1\nprint(Square().area())"
+        }
+      ],
       "intro": {
         "title": "OOP design principles",
         "bodyMarkdown": "SOLID guides maintainable OOP: Single responsibility, Open/closed, Liskov, Interface segregation, Dependency inversion.\n\nName classes after concepts; methods after verbs. Cohesive modules.\n\nRefactor when classes know too much about each other.",
@@ -3030,7 +3215,7 @@
       },
       "challenges": [
         {
-          "id": "ch_hzr3quf",
+          "id": "ch_86r5lt7",
           "title": "Easy: NotImplementedError",
           "promptMarkdown": "",
           "starterCode": "class B:\n    def go(self):\n        raise NotImplementedError",
@@ -3042,7 +3227,7 @@
           }
         },
         {
-          "id": "ch_diud27j",
+          "id": "ch_bo7293z",
           "title": "Easy: subclass implements",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3059,7 +3244,7 @@
           }
         },
         {
-          "id": "ch_suhvrjf",
+          "id": "ch_eptcg3h",
           "title": "Medium: open closed extend",
           "promptMarkdown": "",
           "starterCode": "class Shape:\n def area(self): raise NotImplementedError\nclass Circle(Shape):\n def __init__(self,r): self.r=r\n def area(self): return 3.14*self.r*self.r\nok=Circle(2).area()",
@@ -3076,7 +3261,7 @@
           }
         },
         {
-          "id": "ch_yuueb95",
+          "id": "ch_jef88sb",
           "title": "Medium: small interface",
           "promptMarkdown": "",
           "starterCode": "class Notifier:\n def ping(self,msg): return msg\nok=Notifier().ping(\"hi\")",
@@ -3093,7 +3278,7 @@
           }
         },
         {
-          "id": "ch_lx8we2n",
+          "id": "ch_s59v5wb",
           "title": "Hard: dependency invert",
           "promptMarkdown": "",
           "starterCode": "class Storage:\n def load(self): return 42\nclass Service:\n def __init__(self,storage): self.storage=storage\n def run(self): return self.storage.load()\nv=Service(Storage()).run()",
@@ -3110,7 +3295,7 @@
           }
         },
         {
-          "id": "ch_ez8e0mo",
+          "id": "ch_xg7ld3d",
           "title": "Hard: cohesion",
           "promptMarkdown": "",
           "starterCode": "class ReportBuilder:\n def add_row(self,r): return r\n def build(self,rows): return \"\\\n\".join(rows)\nmethods=[m for m in dir(ReportBuilder) if not m.startswith(\"_\")]\nok=\"add_row\" in methods and \"build\" in methods",
@@ -3127,7 +3312,7 @@
           }
         },
         {
-          "id": "ch_ncwsuo9",
+          "id": "ch_c4ilrc7",
           "title": "Expert: god class smell",
           "promptMarkdown": "",
           "starterCode": "class OrderService: pass\nclass EmailNotifier: pass\nnames=[OrderService.__name__, EmailNotifier.__name__]",
@@ -3144,7 +3329,7 @@
           }
         },
         {
-          "id": "ch_wv7lk8n",
+          "id": "ch_oao2y2n",
           "title": "Expert: tell dont ask",
           "promptMarkdown": "",
           "starterCode": "class Account:\n def __init__(self): self._b=100\n def deposit(self,n): self._b+=n\n def balance(self): return self._b\na=Account(); a.deposit(50); bal=a.balance()",
@@ -3161,7 +3346,7 @@
           }
         },
         {
-          "id": "ch_t7mg363",
+          "id": "ch_yz93vyd",
           "title": "Expert: law of demeter",
           "promptMarkdown": "",
           "starterCode": "class Address:\n def __init__(self,c): self.city=c\nclass Person:\n def __init__(self,a): self.address=a\n def city(self): return self.address.city\ncity=Person(Address(\"NY\")).city()",
@@ -3178,7 +3363,7 @@
           }
         },
         {
-          "id": "ch_399186s",
+          "id": "ch_34yzdvv",
           "title": "Expert: domain model",
           "promptMarkdown": "",
           "starterCode": "class Order:\n def __init__(self,items): self.items=items\n def total(self): return sum(i.price for i in self.items)\nclass Item:\n def __init__(self,p): self.price=p\norder=Order([Item(10),Item(20)])\ntotal=order.total()",
@@ -3199,7 +3384,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_n2na2rx",
+            "id": "q_47f4iwe",
             "type": "mcq",
             "prompt": "S in SOLID:",
             "choices": [
@@ -3219,7 +3404,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ov5pvrb",
+            "id": "q_u23qwyt",
             "type": "shortText",
             "prompt": "Liskov substitution:",
             "validation": {
@@ -3228,7 +3413,7 @@
             }
           },
           {
-            "id": "q_wylao8w",
+            "id": "q_9z4k21u",
             "type": "mcq",
             "prompt": "Open/closed: extend without:",
             "choices": [
@@ -3248,7 +3433,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5y51aw7",
+            "id": "q_n0e64hl",
             "type": "mcq",
             "prompt": "Dependency inversion depends on:",
             "choices": [
@@ -3268,7 +3453,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_a8bp3iz",
+            "id": "q_n5gxyj5",
             "type": "shortText",
             "prompt": "Methods named as:",
             "validation": {
@@ -3277,7 +3462,7 @@
             }
           },
           {
-            "id": "q_64kta63",
+            "id": "q_0fck8lx",
             "type": "mcq",
             "prompt": "Expert: god class:",
             "choices": [
@@ -3297,7 +3482,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_quggo60",
+            "id": "q_hamwwca",
             "type": "mcq",
             "prompt": "Expert: tell dont ask:",
             "choices": [
@@ -3317,7 +3502,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_efltpoz",
+            "id": "q_fcgtruk",
             "type": "shortText",
             "prompt": "Expert: demeter limits:",
             "validation": {
@@ -3326,7 +3511,7 @@
             }
           },
           {
-            "id": "q_pb40hc9",
+            "id": "q_rsav4tg",
             "type": "mcq",
             "prompt": "Expert: NotImplemented in:",
             "choices": [
@@ -3346,7 +3531,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_onm8juk",
+            "id": "q_g61md1j",
             "type": "shortText",
             "prompt": "Expert: cohesive class:",
             "validation": {
@@ -3362,6 +3547,28 @@
       "title": "Easy project: Rectangle class",
       "kind": "project",
       "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "class_def",
+          "label": "class def",
+          "code": "class Rectangle:\n    pass\nprint(Rectangle)"
+        },
+        {
+          "id": "init",
+          "label": "__init__",
+          "code": "class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\nr = Rectangle(4, 5)\nprint(r.width)"
+        },
+        {
+          "id": "area",
+          "label": "area()",
+          "code": "class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\n    def area(self):\n        return self.width * self.height\nprint(Rectangle(4, 5).area())"
+        },
+        {
+          "id": "instance",
+          "label": "Instance",
+          "code": "class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\n    def area(self):\n        return self.width * self.height\nprint(Rectangle(3, 3).area())"
+        }
+      ],
       "intro": {
         "title": "Easy project: Rectangle class",
         "bodyMarkdown": "Model a rectangle with `width` and `height` attributes and an `area()` method.\n\nCreate an instance and print its area.",
@@ -3369,7 +3576,7 @@
       },
       "challenges": [
         {
-          "id": "ch_ft03t9b",
+          "id": "ch_gcd06db",
           "title": "Easy: class keyword",
           "promptMarkdown": "Define `class Rectangle:`.",
           "starterCode": "class Rectangle:\n    pass",
@@ -3381,7 +3588,7 @@
           }
         },
         {
-          "id": "ch_a8d2rkd",
+          "id": "ch_ecokiwk",
           "title": "Medium: __init__",
           "promptMarkdown": "Store width and height on self.",
           "starterCode": "class Rectangle:\n    def __init__(self, width, height):\n        ",
@@ -3393,7 +3600,7 @@
           }
         },
         {
-          "id": "ch_q1mdg65",
+          "id": "ch_j4u7te6",
           "title": "Medium: area method",
           "promptMarkdown": "Return width * height.",
           "starterCode": "",
@@ -3410,7 +3617,7 @@
           }
         },
         {
-          "id": "ch_hwnmf93",
+          "id": "ch_h1bf0ri",
           "title": "Hard: Create instance",
           "promptMarkdown": "Instantiate Rectangle(3, 3).",
           "starterCode": "",
@@ -3427,7 +3634,7 @@
           }
         },
         {
-          "id": "ch_pjgc5e1",
+          "id": "ch_01c41us",
           "title": "Hard: Print area",
           "promptMarkdown": "Print the area of a rectangle.",
           "starterCode": "print(20)",
@@ -3443,7 +3650,7 @@
           }
         },
         {
-          "id": "ch_277fqhn",
+          "id": "ch_1sxnxkt",
           "title": "Expert: self parameter",
           "promptMarkdown": "Methods include self.",
           "starterCode": "class Rectangle:\n    def area(self):\n        return 0",
@@ -3459,7 +3666,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_o6vsm18",
+            "id": "q_11we0av",
             "type": "mcq",
             "prompt": "class defines:",
             "choices": [
@@ -3479,7 +3686,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_sfbi3ii",
+            "id": "q_bp988c4",
             "type": "shortText",
             "prompt": "Constructor method:",
             "validation": {
@@ -3488,7 +3695,7 @@
             }
           },
           {
-            "id": "q_bjskf1j",
+            "id": "q_tf7sla2",
             "type": "mcq",
             "prompt": "self refers to:",
             "choices": [
@@ -3508,7 +3715,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_dj2xdhc",
+            "id": "q_4oi5mv5",
             "type": "shortText",
             "prompt": "Area multiplies:",
             "validation": {
@@ -3517,7 +3724,7 @@
             }
           },
           {
-            "id": "q_ndfv2n5",
+            "id": "q_udtew7w",
             "type": "mcq",
             "prompt": "Methods are:",
             "choices": [
@@ -3537,7 +3744,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gfny6yz",
+            "id": "q_snjegw7",
             "type": "shortText",
             "prompt": "Create object with:",
             "validation": {
@@ -3553,6 +3760,28 @@
       "title": "Medium project: Contact card",
       "kind": "project",
       "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "contact_class",
+          "label": "Contact class",
+          "code": "class Contact:\n    def __init__(self, name, email):\n        self.name, self.email = name, email\n\nc = Contact(\"Ana\", \"ana@mail.com\")\nprint(c.name)"
+        },
+        {
+          "id": "label",
+          "label": "label()",
+          "code": "class Contact:\n    def __init__(self, n, e):\n        self.name, self.email = n, e\n    def label(self):\n        return f\"{self.name} <{self.email}>\"\nprint(Contact(\"Ana\", \"a@b\").label())"
+        },
+        {
+          "id": "contact_list",
+          "label": "Contact list",
+          "code": "book = []\nbook.append(1)\nbook.append(2)\nprint(len(book))"
+        },
+        {
+          "id": "email_check",
+          "label": "Email check",
+          "code": "print(\"@\" in \"ana@mail.com\")"
+        }
+      ],
       "intro": {
         "title": "Medium project: Contact card",
         "bodyMarkdown": "Build a `Contact` class with name, email, and a `label()` method returning a display string.\n\nStore multiple contacts in a list and print each label.",
@@ -3560,7 +3789,7 @@
       },
       "challenges": [
         {
-          "id": "ch_7zw4sxo",
+          "id": "ch_xbdxrzv",
           "title": "Easy: Contact class",
           "promptMarkdown": "Define class with name and email.",
           "starterCode": "class Contact:\n    def __init__(self, name, email):\n        pass",
@@ -3572,7 +3801,7 @@
           }
         },
         {
-          "id": "ch_7us4n9m",
+          "id": "ch_lumql77",
           "title": "Medium: label method",
           "promptMarkdown": "Return formatted string.",
           "starterCode": "",
@@ -3589,7 +3818,7 @@
           }
         },
         {
-          "id": "ch_2x5pxob",
+          "id": "ch_3ufrn6b",
           "title": "Medium: Contact list",
           "promptMarkdown": "Store two contacts.",
           "starterCode": "",
@@ -3606,7 +3835,7 @@
           }
         },
         {
-          "id": "ch_1twyzjc",
+          "id": "ch_8ie47jk",
           "title": "Hard: Loop labels",
           "promptMarkdown": "Print each label.",
           "starterCode": "book = []\n",
@@ -3618,7 +3847,7 @@
           }
         },
         {
-          "id": "ch_5vspttg",
+          "id": "ch_4mamhez",
           "title": "Hard: Validate email",
           "promptMarkdown": "Check email contains @.",
           "starterCode": "",
@@ -3635,7 +3864,7 @@
           }
         },
         {
-          "id": "ch_ooivhn3",
+          "id": "ch_xrg08fy",
           "title": "Expert: repr style",
           "promptMarkdown": "label includes email in brackets.",
           "starterCode": "text = \"Ana <ana@mail.com>\"\n",
@@ -3651,7 +3880,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_hf6yl1k",
+            "id": "q_euxrh8e",
             "type": "mcq",
             "prompt": "Objects bundle:",
             "choices": [
@@ -3671,7 +3900,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_852eki7",
+            "id": "q_oejbtmr",
             "type": "shortText",
             "prompt": "List stores many:",
             "validation": {
@@ -3680,7 +3909,7 @@
             }
           },
           {
-            "id": "q_0h6us1c",
+            "id": "q_ef10lsl",
             "type": "mcq",
             "prompt": "label() should return:",
             "choices": [
@@ -3700,7 +3929,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_oj9ymko",
+            "id": "q_hzqtroj",
             "type": "shortText",
             "prompt": "Email must contain:",
             "validation": {
@@ -3709,7 +3938,7 @@
             }
           },
           {
-            "id": "q_io23ssd",
+            "id": "q_fjjgznp",
             "type": "mcq",
             "prompt": "for loop visits:",
             "choices": [
@@ -3729,7 +3958,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jiiwtr9",
+            "id": "q_cenejds",
             "type": "shortText",
             "prompt": "Attributes live on:",
             "validation": {
@@ -3745,6 +3974,33 @@
       "title": "Hard project: Bank account",
       "kind": "project",
       "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "balance_0",
+          "label": "Balance 0",
+          "code": "balance = 0\nprint(balance)"
+        },
+        {
+          "id": "deposit",
+          "label": "deposit",
+          "code": "balance = 0\nbalance += 50\nprint(balance)"
+        },
+        {
+          "id": "safe_withdraw",
+          "label": "safe withdraw",
+          "code": "balance = 50\namount = 30\nif amount <= balance:\n    balance -= amount\nprint(balance)"
+        },
+        {
+          "id": "transactions",
+          "label": "Transactions",
+          "code": "transactions = 0\ntransactions += 1\ntransactions += 1\nprint(transactions)"
+        },
+        {
+          "id": "full_class",
+          "label": "Full class",
+          "code": "class BankAccount:\n    def __init__(self):\n        self.balance = 0\n    def deposit(self, amount):\n        self.balance += amount\na = BankAccount()\na.deposit(100)\nprint(a.balance)"
+        }
+      ],
       "intro": {
         "title": "Hard project: Bank account",
         "bodyMarkdown": "Create a `BankAccount` class with deposit, withdraw, and balance methods.\n\nPrevent negative balance on withdraw and track transaction count.",
@@ -3752,7 +4008,7 @@
       },
       "challenges": [
         {
-          "id": "ch_sfpsjr4",
+          "id": "ch_fgjcz81",
           "title": "Easy: Start balance",
           "promptMarkdown": "Initialize balance to 0.",
           "starterCode": "",
@@ -3769,7 +4025,7 @@
           }
         },
         {
-          "id": "ch_11iba7e",
+          "id": "ch_sk8klqo",
           "title": "Medium: deposit",
           "promptMarkdown": "Add amount to balance.",
           "starterCode": "",
@@ -3786,7 +4042,7 @@
           }
         },
         {
-          "id": "ch_591fwmt",
+          "id": "ch_wcco0o2",
           "title": "Medium: withdraw safe",
           "promptMarkdown": "Subtract only if enough funds.",
           "starterCode": "",
@@ -3803,7 +4059,7 @@
           }
         },
         {
-          "id": "ch_or2ltis",
+          "id": "ch_nlnwa97",
           "title": "Hard: transaction counter",
           "promptMarkdown": "Increment on each action.",
           "starterCode": "",
@@ -3820,7 +4076,7 @@
           }
         },
         {
-          "id": "ch_y5olcdi",
+          "id": "ch_ow0k4cv",
           "title": "Hard: final balance",
           "promptMarkdown": "End with balance 70 after ops.",
           "starterCode": "",
@@ -3837,7 +4093,7 @@
           }
         },
         {
-          "id": "ch_qvb4jht",
+          "id": "ch_ipkupch",
           "title": "Expert: Print summary",
           "promptMarkdown": "Print balance and transactions.",
           "starterCode": "print(70, 2)",
@@ -3857,7 +4113,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_yaa54sq",
+            "id": "q_e10dnlm",
             "type": "mcq",
             "prompt": "Encapsulation hides:",
             "choices": [
@@ -3877,7 +4133,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_vxdxffs",
+            "id": "q_0ue173o",
             "type": "shortText",
             "prompt": "Prevent overdraft with:",
             "validation": {
@@ -3886,7 +4142,7 @@
             }
           },
           {
-            "id": "q_r1rmy35",
+            "id": "q_1t05p8c",
             "type": "mcq",
             "prompt": "Methods mutate:",
             "choices": [
@@ -3906,7 +4162,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ebbh405",
+            "id": "q_9zh5x21",
             "type": "shortText",
             "prompt": "deposit should:",
             "validation": {
@@ -3915,7 +4171,7 @@
             }
           },
           {
-            "id": "q_qv5yyd4",
+            "id": "q_vyozqfh",
             "type": "mcq",
             "prompt": "withdraw checks:",
             "choices": [
@@ -3935,7 +4191,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_41ddg5h",
+            "id": "q_sj1fxua",
             "type": "shortText",
             "prompt": "Track operations with a:",
             "validation": {

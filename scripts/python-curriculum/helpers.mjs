@@ -1,3 +1,5 @@
+import { sandboxSnippetsFor } from './data/sandbox-snippets.mjs'
+
 /** @typedef {'easy'|'medium'|'hard'|'expert'} Difficulty */
 
 /**
@@ -81,7 +83,7 @@ export function buildLevel(topic) {
     title: topic.title,
     kind: topic.kind ?? 'topic',
     projectDifficulty: topic.projectDifficulty,
-    sandboxSnippets: topic.sandboxSnippets,
+    sandboxSnippets: topic.sandboxSnippets ?? sandboxSnippetsFor(topic.id),
     intro: {
       title: topic.introTitle,
       bodyMarkdown: introBody(topic.paragraphs),

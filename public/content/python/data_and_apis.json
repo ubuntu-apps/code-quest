@@ -6,6 +6,33 @@
       "id": "json_basics",
       "title": "JSON basics",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "dumps",
+          "label": "dumps",
+          "code": "import json\ndata = {\"name\": \"Ana\", \"score\": 95}\nprint(json.dumps(data))"
+        },
+        {
+          "id": "loads",
+          "label": "loads",
+          "code": "import json\nprint(json.loads('{\"name\": \"Ana\"}')[\"name\"])"
+        },
+        {
+          "id": "pretty_print",
+          "label": "Pretty print",
+          "code": "import json\nprint(json.dumps({\"a\": 1}, indent=2))"
+        },
+        {
+          "id": "list_json",
+          "label": "List JSON",
+          "code": "import json\nprint(json.loads(\"[1, 2]\"))"
+        },
+        {
+          "id": "decode_error",
+          "label": "Decode error",
+          "code": "import json\ntry:\n    json.loads(\"{bad}\")\nexcept json.JSONDecodeError:\n    print(\"invalid JSON\")"
+        }
+      ],
       "intro": {
         "title": "JSON basics",
         "bodyMarkdown": "JSON is text format for data exchange. Python `json` module: `loads`, `dumps`.\n\nConvert dict/list to JSON string and back. Keys must be strings in JSON.\n\nAlways handle decode errors when parsing untrusted input.",
@@ -13,7 +40,7 @@
       },
       "challenges": [
         {
-          "id": "ch_9jdo3pr",
+          "id": "ch_nphigs7",
           "title": "Easy: import json",
           "promptMarkdown": "",
           "starterCode": "",
@@ -30,7 +57,7 @@
           }
         },
         {
-          "id": "ch_azjfs9z",
+          "id": "ch_reckp7j",
           "title": "Easy: dumps dict",
           "promptMarkdown": "",
           "starterCode": "",
@@ -47,7 +74,7 @@
           }
         },
         {
-          "id": "ch_n0ut3j9",
+          "id": "ch_qy9pu6c",
           "title": "Medium: loads parse",
           "promptMarkdown": "",
           "starterCode": "import json\nd=json.loads('{\"x\":2}')",
@@ -64,7 +91,7 @@
           }
         },
         {
-          "id": "ch_aybt4j4",
+          "id": "ch_qgz9cj4",
           "title": "Medium: indent pretty",
           "promptMarkdown": "",
           "starterCode": "import json\nprint(json.dumps({\"a\":1}, indent=2))",
@@ -81,7 +108,7 @@
           }
         },
         {
-          "id": "ch_h96nx4o",
+          "id": "ch_hg6442u",
           "title": "Hard: list in json",
           "promptMarkdown": "",
           "starterCode": "import json\nl=json.loads(\"[1,2]\")",
@@ -98,7 +125,7 @@
           }
         },
         {
-          "id": "ch_7spiipy",
+          "id": "ch_c50n4a5",
           "title": "Hard: ensure ascii false",
           "promptMarkdown": "",
           "starterCode": "import json\nt=json.dumps({\"msg\":\"café\"}, ensure_ascii=False)",
@@ -115,7 +142,7 @@
           }
         },
         {
-          "id": "ch_0glpxig",
+          "id": "ch_fyil9an",
           "title": "Expert: JSONDecodeError",
           "promptMarkdown": "",
           "starterCode": "import json\ncaught=False\ntry:\n json.loads(\"{bad}\")\nexcept json.JSONDecodeError:\n caught=True",
@@ -132,7 +159,7 @@
           }
         },
         {
-          "id": "ch_cwze5zt",
+          "id": "ch_ezhsnkr",
           "title": "Expert: custom encoder",
           "promptMarkdown": "",
           "starterCode": "import json\nfrom datetime import datetime\nclass DTEncoder(json.JSONEncoder):\n def default(self,o):\n  if isinstance(o,datetime): return o.strftime(\"%Y-%m-%d\")\n  return super().default(o)\ns=json.dumps({\"d\":datetime(2024,1,1)},cls=DTEncoder)",
@@ -149,7 +176,7 @@
           }
         },
         {
-          "id": "ch_7g42zru",
+          "id": "ch_8f6hzqh",
           "title": "Expert: nested",
           "promptMarkdown": "",
           "starterCode": "import json\nn=json.loads(json.dumps({\"u\":{\"n\":\"A\"}}))[\"u\"][\"n\"]",
@@ -166,7 +193,7 @@
           }
         },
         {
-          "id": "ch_jbby5zq",
+          "id": "ch_7krfkz0",
           "title": "Expert: schema validation",
           "promptMarkdown": "",
           "starterCode": "def validate(d):\n return isinstance(d.get(\"name\"),str) and isinstance(d.get(\"age\"),int) and d[\"age\"]>=0\nvalid=validate({\"name\":\"Ana\",\"age\":30})",
@@ -187,7 +214,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_linjynt",
+            "id": "q_z0plerd",
             "type": "mcq",
             "prompt": "json.dumps converts:",
             "choices": [
@@ -207,7 +234,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ssgq7ab",
+            "id": "q_9i7nqfj",
             "type": "shortText",
             "prompt": "json.loads:",
             "validation": {
@@ -216,7 +243,7 @@
             }
           },
           {
-            "id": "q_xcy7t2l",
+            "id": "q_4yflc9o",
             "type": "mcq",
             "prompt": "JSON keys are:",
             "choices": [
@@ -236,7 +263,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ylwgjdk",
+            "id": "q_70bt3ju",
             "type": "mcq",
             "prompt": "indent=2 for:",
             "choices": [
@@ -256,7 +283,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0sqa0oy",
+            "id": "q_9xgsl21",
             "type": "shortText",
             "prompt": "Invalid JSON raises:",
             "validation": {
@@ -265,7 +292,7 @@
             }
           },
           {
-            "id": "q_phcp6bn",
+            "id": "q_dkaj63c",
             "type": "mcq",
             "prompt": "Expert: dumps list:",
             "choices": [
@@ -285,7 +312,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_m861nxc",
+            "id": "q_y2cuytt",
             "type": "mcq",
             "prompt": "Expert: ensure_ascii False:",
             "choices": [
@@ -305,7 +332,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xp7fqct",
+            "id": "q_hcurcl3",
             "type": "shortText",
             "prompt": "Expert: API payloads often:",
             "validation": {
@@ -314,7 +341,7 @@
             }
           },
           {
-            "id": "q_egwr8w4",
+            "id": "q_sjt184l",
             "type": "mcq",
             "prompt": "Expert: validate untrusted:",
             "choices": [
@@ -334,7 +361,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_3nghval",
+            "id": "q_wzsximc",
             "type": "shortText",
             "prompt": "Expert: nested dict roundtrip:",
             "validation": {
@@ -349,6 +376,28 @@
       "id": "csv_data",
       "title": "CSV data",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "dictreader",
+          "label": "DictReader",
+          "code": "import csv\nfrom io import StringIO\nbuf = StringIO(\"name,score\\nAna,90\\n\")\nrows = list(csv.DictReader(buf))\nprint(rows[0][\"name\"])"
+        },
+        {
+          "id": "csv_writer",
+          "label": "csv writer",
+          "code": "import csv\nfrom io import StringIO\nbuf = StringIO()\ncsv.writer(buf).writerow([\"a\", \"b\"])\nprint(buf.getvalue())"
+        },
+        {
+          "id": "sum_column",
+          "label": "Sum column",
+          "code": "import csv\nfrom io import StringIO\nbuf = StringIO(\"score\\n90\\n85\\n\")\nprint(sum(int(r[\"score\"]) for r in csv.DictReader(buf)))"
+        },
+        {
+          "id": "delimiter",
+          "label": "Delimiter",
+          "code": "import csv\nfrom io import StringIO\nbuf = StringIO()\ncsv.writer(buf, delimiter=\";\").writerow([\"a\", \"b\"])\nprint(buf.getvalue())"
+        }
+      ],
       "intro": {
         "title": "CSV data",
         "bodyMarkdown": "csv module reads/writes comma-separated files. `reader`, `writer`, `DictReader`.\n\nGood for spreadsheets and tabular exports. Mind encoding and headers.\n\nFor huge data consider pandas; csv is stdlib and lightweight.",
@@ -356,7 +405,7 @@
       },
       "challenges": [
         {
-          "id": "ch_nfvx3pm",
+          "id": "ch_a7yc4p8",
           "title": "Easy: import csv",
           "promptMarkdown": "",
           "starterCode": "",
@@ -373,7 +422,7 @@
           }
         },
         {
-          "id": "ch_ltelh7c",
+          "id": "ch_ta0hdc9",
           "title": "Easy: DictReader",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nr=csv.DictReader(StringIO(\"a,b\\n1,2\"))",
@@ -385,7 +434,7 @@
           }
         },
         {
-          "id": "ch_l5j2a7o",
+          "id": "ch_247yxlo",
           "title": "Medium: read row",
           "promptMarkdown": "",
           "starterCode": "",
@@ -402,7 +451,7 @@
           }
         },
         {
-          "id": "ch_modonrx",
+          "id": "ch_zv31fu7",
           "title": "Medium: writer",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nbuf=StringIO()\nw=csv.writer(buf)\nw.writerow([\"a\",\"b\"])\nval=buf.getvalue()",
@@ -419,7 +468,7 @@
           }
         },
         {
-          "id": "ch_o6orfje",
+          "id": "ch_ic2vy3s",
           "title": "Hard: newline empty",
           "promptMarkdown": "",
           "starterCode": "",
@@ -436,7 +485,7 @@
           }
         },
         {
-          "id": "ch_lrfnoju",
+          "id": "ch_in9p7ir",
           "title": "Hard: delimiter",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nbuf=StringIO()\nw=csv.writer(buf, delimiter=\";\")\nw.writerow([\"a\",\"b\"])\nline=buf.getvalue()",
@@ -453,7 +502,7 @@
           }
         },
         {
-          "id": "ch_l7568mm",
+          "id": "ch_i4hsvhc",
           "title": "Expert: quoting",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nbuf=StringIO()\nw=csv.writer(buf,quoting=csv.QUOTE_ALL)\nw.writerow([\"a,b\"])\nrow=buf.getvalue()",
@@ -470,7 +519,7 @@
           }
         },
         {
-          "id": "ch_9vhsw77",
+          "id": "ch_0ketmxa",
           "title": "Expert: encoding utf8",
           "promptMarkdown": "",
           "starterCode": "",
@@ -487,7 +536,7 @@
           }
         },
         {
-          "id": "ch_hhyydqj",
+          "id": "ch_0cng74n",
           "title": "Expert: skip bad rows",
           "promptMarkdown": "",
           "starterCode": "",
@@ -504,7 +553,7 @@
           }
         },
         {
-          "id": "ch_fmgxn8q",
+          "id": "ch_kn0jlot",
           "title": "Expert: aggregate column",
           "promptMarkdown": "",
           "starterCode": "",
@@ -525,7 +574,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_x4i4wss",
+            "id": "q_u2tynsj",
             "type": "mcq",
             "prompt": "CSV stands for:",
             "choices": [
@@ -545,7 +594,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1gv4dv6",
+            "id": "q_m4yepbo",
             "type": "shortText",
             "prompt": "DictReader yields:",
             "validation": {
@@ -554,7 +603,7 @@
             }
           },
           {
-            "id": "q_w1c9x1r",
+            "id": "q_l0pg33l",
             "type": "mcq",
             "prompt": "Header row provides:",
             "choices": [
@@ -574,7 +623,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_k1rsuxq",
+            "id": "q_atz0jli",
             "type": "mcq",
             "prompt": "writerow writes:",
             "choices": [
@@ -594,7 +643,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_vika4tl",
+            "id": "q_i6smloq",
             "type": "shortText",
             "prompt": "Mind file:",
             "validation": {
@@ -603,7 +652,7 @@
             }
           },
           {
-            "id": "q_ybsfb54",
+            "id": "q_1a5yu3c",
             "type": "mcq",
             "prompt": "Expert: open newline=\"\" on Windows:",
             "choices": [
@@ -623,7 +672,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xznp19v",
+            "id": "q_vu2oj67",
             "type": "mcq",
             "prompt": "Expert: delimiter= for:",
             "choices": [
@@ -643,7 +692,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rl9p1hf",
+            "id": "q_7ltgmcx",
             "type": "shortText",
             "prompt": "Expert: sum column needs:",
             "validation": {
@@ -652,7 +701,7 @@
             }
           },
           {
-            "id": "q_pzskzj8",
+            "id": "q_qsiqy8h",
             "type": "mcq",
             "prompt": "Expert: huge files stream:",
             "choices": [
@@ -672,7 +721,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_enxqx0r",
+            "id": "q_z9vrpnh",
             "type": "shortText",
             "prompt": "Expert: csv in:",
             "validation": {
@@ -687,6 +736,28 @@
       "id": "urllib_requests",
       "title": "HTTP with urllib",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "urlopen",
+          "label": "urlopen",
+          "code": "from urllib.request import urlopen\nprint(\"urllib ready\")"
+        },
+        {
+          "id": "parse_url",
+          "label": "Parse url",
+          "code": "from urllib.parse import urlparse\nprint(urlparse(\"https://example.com/path\"))"
+        },
+        {
+          "id": "quote",
+          "label": "quote",
+          "code": "from urllib.parse import quote\nprint(quote(\"hello world\"))"
+        },
+        {
+          "id": "request_headers",
+          "label": "Request headers",
+          "code": "# req = Request(url, headers={\"User-Agent\": \"CodeQuest\"})\nprint(\"custom headers\")"
+        }
+      ],
       "intro": {
         "title": "HTTP with urllib",
         "bodyMarkdown": "`urllib.request` fetches URLs from stdlib. `urlopen`, read, decode.\n\nSet headers, handle HTTP errors, respect timeouts.\n\nFor complex HTTP prefer `requests` library when available.",
@@ -694,7 +765,7 @@
       },
       "challenges": [
         {
-          "id": "ch_wa9zz4n",
+          "id": "ch_3dzkzhw",
           "title": "Easy: import urlopen",
           "promptMarkdown": "",
           "starterCode": "from urllib.request import urlopen",
@@ -706,7 +777,7 @@
           }
         },
         {
-          "id": "ch_iko9fdt",
+          "id": "ch_c1p4ahw",
           "title": "Easy: timeout concept",
           "promptMarkdown": "",
           "starterCode": "",
@@ -723,7 +794,7 @@
           }
         },
         {
-          "id": "ch_y2tke7x",
+          "id": "ch_1yfm06n",
           "title": "Medium: read decode",
           "promptMarkdown": "",
           "starterCode": "",
@@ -740,7 +811,7 @@
           }
         },
         {
-          "id": "ch_kfi1heh",
+          "id": "ch_80emg3g",
           "title": "Medium: Request headers",
           "promptMarkdown": "",
           "starterCode": "from urllib.request import Request\nreq=Request(\"http://example.com\", headers={\"User-Agent\":\"myapp\"})\nua=req.get_header(\"User-agent\")",
@@ -757,7 +828,7 @@
           }
         },
         {
-          "id": "ch_hb18bpx",
+          "id": "ch_gbhcznh",
           "title": "Hard: HTTPError",
           "promptMarkdown": "",
           "starterCode": "from urllib.error import HTTPError\nok=issubclass(HTTPError, Exception)",
@@ -774,7 +845,7 @@
           }
         },
         {
-          "id": "ch_s58aw7t",
+          "id": "ch_vzmqpk2",
           "title": "Hard: with context",
           "promptMarkdown": "",
           "starterCode": "from contextlib import contextmanager\n@contextmanager\ndef cm():\n yield 42\nused=False\nwith cm() as x:\n used=x==42",
@@ -791,7 +862,7 @@
           }
         },
         {
-          "id": "ch_1o4qn26",
+          "id": "ch_1kv48q5",
           "title": "Expert: urlencode",
           "promptMarkdown": "",
           "starterCode": "from urllib.parse import urlencode\nq=urlencode({\"a\":1,\"b\":2})",
@@ -808,7 +879,7 @@
           }
         },
         {
-          "id": "ch_qbcinqq",
+          "id": "ch_cf8g9u9",
           "title": "Expert: POST data",
           "promptMarkdown": "",
           "starterCode": "from urllib.parse import urlencode\nbody=urlencode({\"name\":\"Ana\"}).encode()",
@@ -825,7 +896,7 @@
           }
         },
         {
-          "id": "ch_xwk2z49",
+          "id": "ch_1xeqj54",
           "title": "Expert: ssl context",
           "promptMarkdown": "",
           "starterCode": "import ssl\nctx=ssl.create_default_context()",
@@ -842,7 +913,7 @@
           }
         },
         {
-          "id": "ch_v1yfv7k",
+          "id": "ch_4m0fk0k",
           "title": "Expert: retry backoff",
           "promptMarkdown": "",
           "starterCode": "",
@@ -863,7 +934,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_eo7zrrx",
+            "id": "q_3i9z0vt",
             "type": "mcq",
             "prompt": "urlopen fetches:",
             "choices": [
@@ -883,7 +954,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ej90tda",
+            "id": "q_jq4yki5",
             "type": "shortText",
             "prompt": "decode bytes to:",
             "validation": {
@@ -892,7 +963,7 @@
             }
           },
           {
-            "id": "q_3pdvznn",
+            "id": "q_4vpakkw",
             "type": "mcq",
             "prompt": "timeout prevents:",
             "choices": [
@@ -912,7 +983,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_dyh9ifx",
+            "id": "q_tovchw5",
             "type": "mcq",
             "prompt": "HTTP 404 is:",
             "choices": [
@@ -932,7 +1003,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_u2n125z",
+            "id": "q_aikewph",
             "type": "shortText",
             "prompt": "with closes:",
             "validation": {
@@ -941,7 +1012,7 @@
             }
           },
           {
-            "id": "q_emjf14s",
+            "id": "q_8vemeyi",
             "type": "mcq",
             "prompt": "Expert: User-Agent header:",
             "choices": [
@@ -961,7 +1032,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_78i43gu",
+            "id": "q_og66qoc",
             "type": "mcq",
             "prompt": "Expert: urllib in:",
             "choices": [
@@ -981,7 +1052,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_srwtxv3",
+            "id": "q_mg62bzx",
             "type": "shortText",
             "prompt": "Expert: read returns:",
             "validation": {
@@ -990,7 +1061,7 @@
             }
           },
           {
-            "id": "q_bfu5qbx",
+            "id": "q_hior5lq",
             "type": "mcq",
             "prompt": "Expert: respect:",
             "choices": [
@@ -1010,7 +1081,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gy2zjyy",
+            "id": "q_32ujtn5",
             "type": "shortText",
             "prompt": "Expert: POST sends:",
             "validation": {
@@ -1025,6 +1096,28 @@
       "id": "rest_apis",
       "title": "REST APIs",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "response_dict",
+          "label": "Response dict",
+          "code": "response = {\"status\": 200, \"data\": {\"id\": 1, \"title\": \"Todo\"}}\nprint(response[\"status\"])"
+        },
+        {
+          "id": "status_codes",
+          "label": "Status codes",
+          "code": "print(200, 404, 500)"
+        },
+        {
+          "id": "json_body",
+          "label": "JSON body",
+          "code": "import json\ndata = {\"id\": 1, \"title\": \"Todo\"}\nprint(json.dumps(data))"
+        },
+        {
+          "id": "get_post",
+          "label": "GET POST",
+          "code": "methods = [\"GET\", \"POST\", \"PUT\", \"DELETE\"]\nprint(methods)"
+        }
+      ],
       "intro": {
         "title": "REST APIs",
         "bodyMarkdown": "REST uses HTTP verbs GET POST PUT DELETE on resources identified by URLs.\n\nJSON is common response format. Status codes: 200 OK, 404 not found, 500 server error.\n\nDesign clear endpoints; version APIs; document with OpenAPI.",
@@ -1032,7 +1125,7 @@
       },
       "challenges": [
         {
-          "id": "ch_q0x115f",
+          "id": "ch_auoqwnv",
           "title": "Easy: status 200",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1049,7 +1142,7 @@
           }
         },
         {
-          "id": "ch_f36obmo",
+          "id": "ch_qljb1cr",
           "title": "Easy: GET reads",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1066,7 +1159,7 @@
           }
         },
         {
-          "id": "ch_yc7dtqn",
+          "id": "ch_hsdus2x",
           "title": "Medium: JSON body",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1083,7 +1176,7 @@
           }
         },
         {
-          "id": "ch_1if1gli",
+          "id": "ch_4vujmag",
           "title": "Medium: resource id in url",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1100,7 +1193,7 @@
           }
         },
         {
-          "id": "ch_9bn0ym1",
+          "id": "ch_anptiat",
           "title": "Hard: POST creates",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1117,7 +1210,7 @@
           }
         },
         {
-          "id": "ch_715qjnz",
+          "id": "ch_5pkj50r",
           "title": "Hard: 404 meaning",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1134,7 +1227,7 @@
           }
         },
         {
-          "id": "ch_f62jmmn",
+          "id": "ch_l1nvagi",
           "title": "Expert: idempotent PUT",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1151,7 +1244,7 @@
           }
         },
         {
-          "id": "ch_alwh92g",
+          "id": "ch_catx2y0",
           "title": "Expert: pagination",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1168,7 +1261,7 @@
           }
         },
         {
-          "id": "ch_3e4okck",
+          "id": "ch_3grcj9w",
           "title": "Expert: HATEOAS",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1185,7 +1278,7 @@
           }
         },
         {
-          "id": "ch_8d4dn0k",
+          "id": "ch_qukp9b6",
           "title": "Expert: versioning v1",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1206,7 +1299,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_ymf7hx2",
+            "id": "q_b600eb0",
             "type": "mcq",
             "prompt": "GET typically:",
             "choices": [
@@ -1226,7 +1319,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_m8yvnwr",
+            "id": "q_5onibfb",
             "type": "shortText",
             "prompt": "201 often means:",
             "validation": {
@@ -1235,7 +1328,7 @@
             }
           },
           {
-            "id": "q_aw8u6on",
+            "id": "q_qkx9j77",
             "type": "mcq",
             "prompt": "REST resource identified by:",
             "choices": [
@@ -1255,7 +1348,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_r4ldbvn",
+            "id": "q_wgxiy7m",
             "type": "mcq",
             "prompt": "JSON in API:",
             "choices": [
@@ -1275,7 +1368,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wzt54vm",
+            "id": "q_07bmz44",
             "type": "shortText",
             "prompt": "500 is:",
             "validation": {
@@ -1284,7 +1377,7 @@
             }
           },
           {
-            "id": "q_617h3kf",
+            "id": "q_4s8f433",
             "type": "mcq",
             "prompt": "Expert: DELETE:",
             "choices": [
@@ -1304,7 +1397,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gxk15e5",
+            "id": "q_t8iv37d",
             "type": "mcq",
             "prompt": "Expert: pagination uses:",
             "choices": [
@@ -1324,7 +1417,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9lgv75s",
+            "id": "q_rro9heo",
             "type": "shortText",
             "prompt": "Expert: idempotent safe repeat:",
             "validation": {
@@ -1333,7 +1426,7 @@
             }
           },
           {
-            "id": "q_irluwcx",
+            "id": "q_8v0mrbi",
             "type": "mcq",
             "prompt": "Expert: OpenAPI:",
             "choices": [
@@ -1353,7 +1446,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_w0by81q",
+            "id": "q_4csccxa",
             "type": "shortText",
             "prompt": "Expert: version in path:",
             "validation": {
@@ -1368,6 +1461,28 @@
       "id": "datetime_data",
       "title": "Dates and times",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "now",
+          "label": "now",
+          "code": "from datetime import datetime\nprint(datetime.now().strftime(\"%Y-%m-%d\"))"
+        },
+        {
+          "id": "timedelta",
+          "label": "timedelta",
+          "code": "from datetime import datetime, timedelta\nprint((datetime.now() + timedelta(days=7)).date())"
+        },
+        {
+          "id": "parse",
+          "label": "Parse",
+          "code": "from datetime import datetime\nd = datetime.strptime(\"2024-06-01\", \"%Y-%m-%d\")\nprint(d.month)"
+        },
+        {
+          "id": "iso_date",
+          "label": "ISO date",
+          "code": "from datetime import date\nprint(date.today().isoformat())"
+        }
+      ],
       "intro": {
         "title": "Dates and times",
         "bodyMarkdown": "datetime module: date, time, datetime, timedelta. Parse and format with strftime/strptime.\n\nStore UTC in systems; convert for display. ISO 8601 is interoperable.\n\nBeware naive vs aware datetimes and DST.",
@@ -1375,7 +1490,7 @@
       },
       "challenges": [
         {
-          "id": "ch_wphiodc",
+          "id": "ch_np8h3t5",
           "title": "Easy: import datetime",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1392,7 +1507,7 @@
           }
         },
         {
-          "id": "ch_lwvq8ri",
+          "id": "ch_7zpagcv",
           "title": "Easy: strftime",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\ndatetime.now().strftime(\"%Y\")",
@@ -1404,7 +1519,7 @@
           }
         },
         {
-          "id": "ch_j6hbhpo",
+          "id": "ch_4zw4hsk",
           "title": "Medium: timedelta add",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime, timedelta\nd=(datetime.now()+timedelta(days=1)).day",
@@ -1421,7 +1536,7 @@
           }
         },
         {
-          "id": "ch_4rpo1c2",
+          "id": "ch_scwsuy3",
           "title": "Medium: strptime",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\ny=datetime.strptime(\"2024-01-01\",\"%Y-%m-%d\").year",
@@ -1438,7 +1553,7 @@
           }
         },
         {
-          "id": "ch_ixtd2do",
+          "id": "ch_riioi2o",
           "title": "Hard: isoformat",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\ns=datetime.now().isoformat()",
@@ -1455,7 +1570,7 @@
           }
         },
         {
-          "id": "ch_lhyacvy",
+          "id": "ch_830rfmm",
           "title": "Hard: compare dates",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\nok=datetime(2024,1,2)>datetime(2024,1,1)",
@@ -1472,7 +1587,7 @@
           }
         },
         {
-          "id": "ch_micluzd",
+          "id": "ch_ojh19ht",
           "title": "Expert: timezone utc",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime, timezone\ntz=datetime.now(timezone.utc).tzinfo",
@@ -1489,7 +1604,7 @@
           }
         },
         {
-          "id": "ch_hn3lsqi",
+          "id": "ch_u1s2x4t",
           "title": "Expert: aware naive",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime, timezone\nnaive=datetime.now()\naware=datetime.now(timezone.utc)\ndiff=True",
@@ -1506,7 +1621,7 @@
           }
         },
         {
-          "id": "ch_dm394ku",
+          "id": "ch_x6qvwpg",
           "title": "Expert: relativedelta",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\ntry:\n from dateutil.relativedelta import relativedelta\n m=(datetime(2024,1,1)+relativedelta(months=1)).month\nexcept ImportError:\n m=(datetime(2024,1,1).replace(month=2)).month",
@@ -1523,7 +1638,7 @@
           }
         },
         {
-          "id": "ch_u6j5dfr",
+          "id": "ch_h3eq7te",
           "title": "Expert: epoch timestamp",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\nt=datetime.now().timestamp()",
@@ -1544,7 +1659,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_79qxwqw",
+            "id": "q_qhd7edm",
             "type": "mcq",
             "prompt": "timedelta adds:",
             "choices": [
@@ -1564,7 +1679,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_afp8ich",
+            "id": "q_wlzxw5y",
             "type": "shortText",
             "prompt": "strftime formats:",
             "validation": {
@@ -1573,7 +1688,7 @@
             }
           },
           {
-            "id": "q_pcik7l1",
+            "id": "q_k24y4vb",
             "type": "mcq",
             "prompt": "strptime:",
             "choices": [
@@ -1593,7 +1708,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9qqv1ic",
+            "id": "q_vfck2ew",
             "type": "mcq",
             "prompt": "ISO format good for:",
             "choices": [
@@ -1613,7 +1728,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1tmp4r3",
+            "id": "q_dw5ibst",
             "type": "shortText",
             "prompt": "Store UTC in:",
             "validation": {
@@ -1622,7 +1737,7 @@
             }
           },
           {
-            "id": "q_g7y37ua",
+            "id": "q_4hirmkq",
             "type": "mcq",
             "prompt": "Expert: aware has:",
             "choices": [
@@ -1642,7 +1757,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_82zmabv",
+            "id": "q_845dk6g",
             "type": "mcq",
             "prompt": "Expert: naive lacks:",
             "choices": [
@@ -1662,7 +1777,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5np1500",
+            "id": "q_nch1md4",
             "type": "shortText",
             "prompt": "Expert: timestamp() gives:",
             "validation": {
@@ -1671,7 +1786,7 @@
             }
           },
           {
-            "id": "q_mxyanoj",
+            "id": "q_armts3s",
             "type": "mcq",
             "prompt": "Expert: DST tricky in:",
             "choices": [
@@ -1691,7 +1806,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1kmn2qt",
+            "id": "q_qcbvgq1",
             "type": "shortText",
             "prompt": "Expert: %Y-%m-%d is:",
             "validation": {
@@ -1706,6 +1821,28 @@
       "id": "collections_data",
       "title": "Collections for data",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "counter",
+          "label": "Counter",
+          "code": "from collections import Counter\nprint(Counter(\"aab\"))"
+        },
+        {
+          "id": "most_common",
+          "label": "most_common",
+          "code": "from collections import Counter\nprint(Counter(\"aab\").most_common(1))"
+        },
+        {
+          "id": "defaultdict",
+          "label": "defaultdict",
+          "code": "from collections import defaultdict\ndd = defaultdict(int)\nfor w in [\"a\", \"b\", \"a\"]:\n    dd[w] += 1\nprint(dict(dd))"
+        },
+        {
+          "id": "deque",
+          "label": "deque",
+          "code": "from collections import deque\nd = deque([1, 2])\nd.appendleft(0)\nprint(list(d))"
+        }
+      ],
       "intro": {
         "title": "Collections for data",
         "bodyMarkdown": "collections: Counter, defaultdict, deque, namedtuple for specialized containers.\n\nCounter counts hashables; defaultdict auto-creates missing keys.\n\nChoose right structure for clarity and performance.",
@@ -1713,7 +1850,7 @@
       },
       "challenges": [
         {
-          "id": "ch_rxiuw0b",
+          "id": "ch_iantod0",
           "title": "Easy: Counter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1730,7 +1867,7 @@
           }
         },
         {
-          "id": "ch_4je60tn",
+          "id": "ch_undx86l",
           "title": "Easy: defaultdict",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1747,7 +1884,7 @@
           }
         },
         {
-          "id": "ch_so8qw6w",
+          "id": "ch_m3o17dx",
           "title": "Medium: most_common",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1764,7 +1901,7 @@
           }
         },
         {
-          "id": "ch_414ain6",
+          "id": "ch_bk5q4np",
           "title": "Medium: namedtuple",
           "promptMarkdown": "",
           "starterCode": "from collections import namedtuple\nPoint=namedtuple(\"Point\",[\"x\",\"y\"])\np=Point(1,2)",
@@ -1781,7 +1918,7 @@
           }
         },
         {
-          "id": "ch_c9b367v",
+          "id": "ch_qjhvrm3",
           "title": "Hard: deque append",
           "promptMarkdown": "",
           "starterCode": "from collections import deque\nd=deque([1])\nd.append(2)",
@@ -1798,7 +1935,7 @@
           }
         },
         {
-          "id": "ch_t8das53",
+          "id": "ch_1cgely3",
           "title": "Hard: Counter subtract",
           "promptMarkdown": "",
           "starterCode": "from collections import Counter\nc=Counter(a=5,b=3)-Counter(a=2)\nc=dict(c)",
@@ -1815,7 +1952,7 @@
           }
         },
         {
-          "id": "ch_b7u7vdh",
+          "id": "ch_h9rxmoj",
           "title": "Expert: OrderedDict less needed",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1832,7 +1969,7 @@
           }
         },
         {
-          "id": "ch_8hinqcq",
+          "id": "ch_1u1hu05",
           "title": "Expert: chain map",
           "promptMarkdown": "",
           "starterCode": "from collections import ChainMap\ncm=ChainMap({\"a\":1},{\"a\":2,\"b\":3})\nv=cm[\"a\"]",
@@ -1849,7 +1986,7 @@
           }
         },
         {
-          "id": "ch_nlvzvev",
+          "id": "ch_a19basu",
           "title": "Expert: groupby sorted",
           "promptMarkdown": "",
           "starterCode": "from itertools import groupby\ndata=sorted([(\"a\",1),(\"b\",2),(\"a\",3)])\ngroups=len(list(groupby(data,key=lambda x:x[0])))",
@@ -1866,7 +2003,7 @@
           }
         },
         {
-          "id": "ch_hybyjg9",
+          "id": "ch_2qjpbhh",
           "title": "Expert: heapq top k",
           "promptMarkdown": "",
           "starterCode": "import heapq\ntop=heapq.nlargest(1,[3,5,1,4])[0]",
@@ -1887,7 +2024,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_1lj2225",
+            "id": "q_rx7pgq1",
             "type": "mcq",
             "prompt": "Counter counts:",
             "choices": [
@@ -1907,7 +2044,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8nc6cks",
+            "id": "q_aoto88k",
             "type": "shortText",
             "prompt": "defaultdict factory:",
             "validation": {
@@ -1916,7 +2053,7 @@
             }
           },
           {
-            "id": "q_g4n1zpu",
+            "id": "q_jefaws0",
             "type": "mcq",
             "prompt": "most_common returns:",
             "choices": [
@@ -1936,7 +2073,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_tla5vk0",
+            "id": "q_fle9cbk",
             "type": "mcq",
             "prompt": "namedtuple gives:",
             "choices": [
@@ -1956,7 +2093,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1p9kae6",
+            "id": "q_xyfoopp",
             "type": "shortText",
             "prompt": "deque good for:",
             "validation": {
@@ -1965,7 +2102,7 @@
             }
           },
           {
-            "id": "q_8ggjtba",
+            "id": "q_smhxrvg",
             "type": "mcq",
             "prompt": "Expert: dict preserves insert order since:",
             "choices": [
@@ -1985,7 +2122,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_j4gj30p",
+            "id": "q_6sif0n7",
             "type": "mcq",
             "prompt": "Expert: groupby needs:",
             "choices": [
@@ -2005,7 +2142,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zttv8g2",
+            "id": "q_n3qy9js",
             "type": "shortText",
             "prompt": "Expert: Counter + for:",
             "validation": {
@@ -2014,7 +2151,7 @@
             }
           },
           {
-            "id": "q_l6goi20",
+            "id": "q_c1sq8v4",
             "type": "mcq",
             "prompt": "Expert: ChainMap:",
             "choices": [
@@ -2034,7 +2171,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_eas3ha8",
+            "id": "q_wqylqny",
             "type": "shortText",
             "prompt": "Expert: heapq for:",
             "validation": {
@@ -2049,6 +2186,28 @@
       "id": "pathlib_data",
       "title": "Pathlib for data files",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "join_path",
+          "label": "Join path",
+          "code": "from pathlib import Path\np = Path(\"data\") / \"scores.json\"\nprint(p)"
+        },
+        {
+          "id": "suffix_stem",
+          "label": "suffix stem",
+          "code": "from pathlib import Path\np = Path(\"scores.json\")\nprint(p.suffix, p.stem)"
+        },
+        {
+          "id": "exists",
+          "label": "exists",
+          "code": "from pathlib import Path\nprint(Path(\".\").exists())"
+        },
+        {
+          "id": "glob",
+          "label": "glob",
+          "code": "from pathlib import Path\nprint(list(Path(\".\").glob(\"*.py\"))[:3])"
+        }
+      ],
       "intro": {
         "title": "Pathlib for data files",
         "bodyMarkdown": "pathlib.Path is object-oriented paths. Read/write text, join, glob, exists.\n\nPrefer over os.path for readability. Great for data pipelines.\n\nUse / operator to join path segments.",
@@ -2056,7 +2215,7 @@
       },
       "challenges": [
         {
-          "id": "ch_c85nbht",
+          "id": "ch_nsm35hc",
           "title": "Easy: Path import",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2073,7 +2232,7 @@
           }
         },
         {
-          "id": "ch_rnu014x",
+          "id": "ch_ehny5vl",
           "title": "Easy: join slash",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2090,7 +2249,7 @@
           }
         },
         {
-          "id": "ch_l76qkqc",
+          "id": "ch_k8ymzuy",
           "title": "Medium: suffix",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nx=Path(\"f.csv\").suffix",
@@ -2107,7 +2266,7 @@
           }
         },
         {
-          "id": "ch_50j7doa",
+          "id": "ch_l6xuicy",
           "title": "Medium: stem",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\ns=Path(\"f.csv\").stem",
@@ -2124,7 +2283,7 @@
           }
         },
         {
-          "id": "ch_p9504b5",
+          "id": "ch_uznrqva",
           "title": "Hard: glob pattern",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nhits=list(Path(\".\").glob(\"*.py\"))",
@@ -2141,7 +2300,7 @@
           }
         },
         {
-          "id": "ch_aa62ged",
+          "id": "ch_8pz9fzg",
           "title": "Hard: read_text",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nok=callable(getattr(Path(\"x.txt\"),\"read_text\",None))",
@@ -2158,7 +2317,7 @@
           }
         },
         {
-          "id": "ch_ackaxdr",
+          "id": "ch_ash4s6l",
           "title": "Expert: mkdir parents",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2175,7 +2334,7 @@
           }
         },
         {
-          "id": "ch_2nkubp0",
+          "id": "ch_1q8u32a",
           "title": "Expert: resolve absolute",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\np=Path(\".\").resolve()\nabs=p.is_absolute()",
@@ -2192,7 +2351,7 @@
           }
         },
         {
-          "id": "ch_pebe2ic",
+          "id": "ch_tu5h194",
           "title": "Expert: iterdir",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nitems=list(Path(\".\").iterdir())",
@@ -2209,7 +2368,7 @@
           }
         },
         {
-          "id": "ch_k6u7h2f",
+          "id": "ch_u2f2m26",
           "title": "Expert: home path",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nh=Path.home()",
@@ -2230,7 +2389,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_4rnkc01",
+            "id": "q_ylgb3vk",
             "type": "mcq",
             "prompt": "Path / \"file\" :",
             "choices": [
@@ -2250,7 +2409,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_c8z06cx",
+            "id": "q_56bskda",
             "type": "shortText",
             "prompt": "suffix is:",
             "validation": {
@@ -2259,7 +2418,7 @@
             }
           },
           {
-            "id": "q_o30mx15",
+            "id": "q_fcv4acq",
             "type": "mcq",
             "prompt": ".stem is name:",
             "choices": [
@@ -2279,7 +2438,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_u1ssj35",
+            "id": "q_lg7qj5l",
             "type": "mcq",
             "prompt": "read_text needs:",
             "choices": [
@@ -2299,7 +2458,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nedvwp8",
+            "id": "q_84r2a74",
             "type": "shortText",
             "prompt": "glob finds:",
             "validation": {
@@ -2308,7 +2467,7 @@
             }
           },
           {
-            "id": "q_1shskm5",
+            "id": "q_ghrvavo",
             "type": "mcq",
             "prompt": "Expert: pathlib over os.path:",
             "choices": [
@@ -2328,7 +2487,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4mi1or8",
+            "id": "q_pfbcc3i",
             "type": "mcq",
             "prompt": "Expert: mkdir parents:",
             "choices": [
@@ -2348,7 +2507,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fs6i74o",
+            "id": "q_rf2ruaa",
             "type": "shortText",
             "prompt": "Expert: resolve():",
             "validation": {
@@ -2357,7 +2516,7 @@
             }
           },
           {
-            "id": "q_9icjmvo",
+            "id": "q_j5rh1m4",
             "type": "mcq",
             "prompt": "Expert: write_text for:",
             "choices": [
@@ -2377,7 +2536,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_sjs8xpf",
+            "id": "q_e8zp3am",
             "type": "shortText",
             "prompt": "Expert: data / file.json:",
             "validation": {
@@ -2392,6 +2551,23 @@
       "id": "sqlite_basics",
       "title": "SQLite basics",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "in_memory_db",
+          "label": "In-memory DB",
+          "code": "import sqlite3\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE users (id INTEGER, name TEXT)\")\nconn.execute(\"INSERT INTO users VALUES (1, ?)\", (\"Ana\",))\nprint(conn.execute(\"SELECT name FROM users\").fetchone()[0])"
+        },
+        {
+          "id": "parameterized",
+          "label": "Parameterized",
+          "code": "import sqlite3\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE t (v INTEGER)\")\nconn.execute(\"INSERT INTO t VALUES (?)\", (42,))\nprint(conn.execute(\"SELECT v FROM t WHERE v=?\", (42,)).fetchone()[0])"
+        },
+        {
+          "id": "fetchall",
+          "label": "fetchall",
+          "code": "import sqlite3\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE t (v INTEGER)\")\nconn.executemany(\"INSERT INTO t VALUES (?)\", [(1,), (2,)])\nprint(conn.execute(\"SELECT v FROM t\").fetchall())"
+        }
+      ],
       "intro": {
         "title": "SQLite basics",
         "bodyMarkdown": "sqlite3 in stdlib — embedded SQL database. connect, execute, fetchall.\n\nParameterized queries prevent SQL injection. Use context manager for connection.\n\nGreat for local apps, prototypes, and tests.",
@@ -2399,7 +2575,7 @@
       },
       "challenges": [
         {
-          "id": "ch_hsmnf1u",
+          "id": "ch_yjgdeut",
           "title": "Easy: connect",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nc=sqlite3.connect(\":memory:\")",
@@ -2411,7 +2587,7 @@
           }
         },
         {
-          "id": "ch_cpqi9uk",
+          "id": "ch_twh2d6i",
           "title": "Easy: parameter ?",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nc=sqlite3.connect(\":memory:\")\nc.execute(\"SELECT ?\", (1,))",
@@ -2423,7 +2599,7 @@
           }
         },
         {
-          "id": "ch_64vsvsy",
+          "id": "ch_8m0te2i",
           "title": "Medium: fetchall",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nc=sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(v INT)\")\nc.execute(\"INSERT INTO t VALUES (1),(2)\")\nrows=c.execute(\"SELECT v FROM t\").fetchall()",
@@ -2440,7 +2616,7 @@
           }
         },
         {
-          "id": "ch_ayupexk",
+          "id": "ch_oo9q9js",
           "title": "Medium: CREATE TABLE",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nc=sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t (x INT)\")\nn=c.execute(\"SELECT count(*) FROM sqlite_master WHERE name=\\\"t\\\"\").fetchone()[0]",
@@ -2457,7 +2633,7 @@
           }
         },
         {
-          "id": "ch_52wit1x",
+          "id": "ch_0tnmo1p",
           "title": "Hard: row factory",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nc=sqlite3.connect(\":memory:\")\nc.row_factory=sqlite3.Row\nc.execute(\"CREATE TABLE u(n TEXT)\")\nc.execute(\"INSERT INTO u VALUES (?)\",(\"Ana\",))\nname=c.execute(\"SELECT n FROM u\").fetchone()[\"n\"]",
@@ -2474,7 +2650,7 @@
           }
         },
         {
-          "id": "ch_ryej84h",
+          "id": "ch_wdvc1nj",
           "title": "Hard: commit",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nc=sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(v INT)\")\nc.execute(\"INSERT INTO t VALUES (5)\")\nc.commit()\nv=c.execute(\"SELECT v FROM t\").fetchone()[0]",
@@ -2491,7 +2667,7 @@
           }
         },
         {
-          "id": "ch_pk1rbve",
+          "id": "ch_qqni0d4",
           "title": "Expert: with connect",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nwith sqlite3.connect(\":memory:\") as c:\n    pass",
@@ -2503,7 +2679,7 @@
           }
         },
         {
-          "id": "ch_89aalx9",
+          "id": "ch_6crywg8",
           "title": "Expert: injection prevent",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nconn=sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE u(n TEXT)\")\nconn.execute(\"INSERT INTO u VALUES (?)\",(\"Ana\",))\nsafe=conn.execute(\"SELECT n FROM u WHERE n=?\",(\"Ana\",)).fetchone()[0]",
@@ -2520,7 +2696,7 @@
           }
         },
         {
-          "id": "ch_366rfja",
+          "id": "ch_1uywtch",
           "title": "Expert: aggregate COUNT",
           "promptMarkdown": "",
           "starterCode": "import sqlite3\nc=sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(v INT)\")\nc.executemany(\"INSERT INTO t VALUES (?)\",[(1,),(2,)])\nn=c.execute(\"SELECT COUNT(*) FROM t\").fetchone()[0]",
@@ -2537,7 +2713,7 @@
           }
         },
         {
-          "id": "ch_szk4ryq",
+          "id": "ch_l0tiluk",
           "title": "Expert: schema migrate",
           "promptMarkdown": "",
           "starterCode": "if \"email\" not in schema[\"users\"]:\n schema[\"users\"].append(\"email\")\n ver=2",
@@ -2558,7 +2734,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_66kyy14",
+            "id": "q_29ldrw2",
             "type": "mcq",
             "prompt": "sqlite3 is in:",
             "choices": [
@@ -2578,7 +2754,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5jdnl9b",
+            "id": "q_ax23p94",
             "type": "shortText",
             "prompt": "Use ? for:",
             "validation": {
@@ -2587,7 +2763,7 @@
             }
           },
           {
-            "id": "q_0w3qj9y",
+            "id": "q_nflpiiz",
             "type": "mcq",
             "prompt": "SQL injection prevented by:",
             "choices": [
@@ -2607,7 +2783,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nmckvva",
+            "id": "q_giidjbd",
             "type": "mcq",
             "prompt": ":memory: database:",
             "choices": [
@@ -2627,7 +2803,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_p1qzq8c",
+            "id": "q_jrwb2pf",
             "type": "shortText",
             "prompt": "fetchone gets:",
             "validation": {
@@ -2636,7 +2812,7 @@
             }
           },
           {
-            "id": "q_8sc719w",
+            "id": "q_as7tlyh",
             "type": "mcq",
             "prompt": "Expert: commit persists:",
             "choices": [
@@ -2656,7 +2832,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_731bcbz",
+            "id": "q_93wesvb",
             "type": "mcq",
             "prompt": "Expert: never concatenate:",
             "choices": [
@@ -2676,7 +2852,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_g0eynt3",
+            "id": "q_5m7rf26",
             "type": "shortText",
             "prompt": "Expert: COUNT(*) counts:",
             "validation": {
@@ -2685,7 +2861,7 @@
             }
           },
           {
-            "id": "q_nykn13p",
+            "id": "q_6jdkiio",
             "type": "mcq",
             "prompt": "Expert: row_factory:",
             "choices": [
@@ -2705,7 +2881,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_g35wih0",
+            "id": "q_c06glnk",
             "type": "shortText",
             "prompt": "Expert: close connection:",
             "validation": {
@@ -2720,6 +2896,23 @@
       "id": "pandas_intro",
       "title": "Pandas introduction",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "dataframe",
+          "label": "DataFrame",
+          "code": "try:\n    import pandas as pd\n    df = pd.DataFrame({\"name\": [\"Ana\", \"Bob\"], \"score\": [90, 85]})\n    print(df)\nexcept ImportError:\n    print(\"pandas not installed\")"
+        },
+        {
+          "id": "mean_column",
+          "label": "Mean column",
+          "code": "try:\n    import pandas as pd\n    df = pd.DataFrame({\"score\": [90, 85]})\n    print(df[\"score\"].mean())\nexcept ImportError:\n    print(\"pandas not installed\")"
+        },
+        {
+          "id": "head",
+          "label": "head()",
+          "code": "try:\n    import pandas as pd\n    df = pd.DataFrame({\"a\": [1, 2, 3]})\n    print(df.head(2))\nexcept ImportError:\n    print(\"pandas not installed\")"
+        }
+      ],
       "intro": {
         "title": "Pandas introduction",
         "bodyMarkdown": "pandas DataFrame is tabular data with labeled columns. read_csv, head, filter, groupby.\n\nEssential for data analysis. Built on NumPy.\n\nHandle missing values, types, and aggregates systematically.",
@@ -2727,7 +2920,7 @@
       },
       "challenges": [
         {
-          "id": "ch_7a1do6w",
+          "id": "ch_9kho3xs",
           "title": "Easy: DataFrame",
           "promptMarkdown": "",
           "starterCode": "# import pandas as pd\n# df = pd.DataFrame({\"a\":[1]})",
@@ -2739,7 +2932,7 @@
           }
         },
         {
-          "id": "ch_285e54j",
+          "id": "ch_dp4doli",
           "title": "Easy: column access",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2756,7 +2949,7 @@
           }
         },
         {
-          "id": "ch_aa1dzjl",
+          "id": "ch_em1pl9e",
           "title": "Medium: mean",
           "promptMarkdown": "",
           "starterCode": "try:\n import pandas as pd\n m=float(pd.Series([10,20,30]).mean())\nexcept ImportError:\n m=sum([10,20,30])/3",
@@ -2773,7 +2966,7 @@
           }
         },
         {
-          "id": "ch_wxo59hr",
+          "id": "ch_yk39wvf",
           "title": "Medium: head",
           "promptMarkdown": "",
           "starterCode": "try:\n import pandas as pd\n df=pd.DataFrame({\"a\":[1,2,3]})\n n=len(df.head(2))\nexcept ImportError:\n n=2",
@@ -2790,7 +2983,7 @@
           }
         },
         {
-          "id": "ch_h8avhe8",
+          "id": "ch_t9nq7r4",
           "title": "Hard: filter rows",
           "promptMarkdown": "",
           "starterCode": "try:\n import pandas as pd\n df=pd.DataFrame({\"s\":[1,2,3]})\n n=len(df[df[\"s\"]>1])\nexcept ImportError:\n n=len([x for x in [1,2,3] if x>1])",
@@ -2807,7 +3000,7 @@
           }
         },
         {
-          "id": "ch_uxl781f",
+          "id": "ch_olydxmo",
           "title": "Hard: groupby",
           "promptMarkdown": "",
           "starterCode": "try:\n import pandas as pd\n df=pd.DataFrame({\"g\":[\"a\",\"a\",\"b\"],\"v\":[1,2,3]})\n totals=df.groupby(\"g\")[\"v\"].sum().to_dict()\nexcept ImportError:\n from itertools import groupby\n data=sorted([(\"a\",1),(\"a\",2),(\"b\",3)])\n totals={k:sum(v for _,v in grp) for k,grp in groupby(data,key=lambda x:x[0])}",
@@ -2824,7 +3017,7 @@
           }
         },
         {
-          "id": "ch_hvnz1du",
+          "id": "ch_ddxbo3n",
           "title": "Expert: read_csv",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2841,7 +3034,7 @@
           }
         },
         {
-          "id": "ch_t6nmnox",
+          "id": "ch_we2e38i",
           "title": "Expert: fillna",
           "promptMarkdown": "",
           "starterCode": "try:\n import pandas as pd\n n=int(pd.Series([1,None,3]).fillna(0).iloc[1])\nexcept ImportError:\n vals=[1,None,3]\n n=0 if vals[1] is None else vals[1]",
@@ -2858,7 +3051,7 @@
           }
         },
         {
-          "id": "ch_ttv8kxs",
+          "id": "ch_6413xth",
           "title": "Expert: astype",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2875,7 +3068,7 @@
           }
         },
         {
-          "id": "ch_8ycwmn1",
+          "id": "ch_tqakwhu",
           "title": "Expert: merge",
           "promptMarkdown": "",
           "starterCode": "try:\n import pandas as pd\n a=pd.DataFrame({\"k\":[1,2],\"v\":[\"a\",\"b\"]})\n b=pd.DataFrame({\"k\":[1,2],\"w\":[10,20]})\n n=len(pd.merge(a,b,on=\"k\"))\nexcept ImportError:\n a={1:\"a\",2:\"b\"}\n b={1:10,2:20}\n n=len(set(a)&set(b))",
@@ -2896,7 +3089,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_gs86qlp",
+            "id": "q_cjcfvcb",
             "type": "mcq",
             "prompt": "DataFrame is:",
             "choices": [
@@ -2916,7 +3109,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_yztl1z7",
+            "id": "q_4bv9r4p",
             "type": "shortText",
             "prompt": "read_csv loads:",
             "validation": {
@@ -2925,7 +3118,7 @@
             }
           },
           {
-            "id": "q_32tsiqg",
+            "id": "q_9uvxjsp",
             "type": "mcq",
             "prompt": "df[\"col\"] returns:",
             "choices": [
@@ -2945,7 +3138,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8k2zapc",
+            "id": "q_mp7jxmc",
             "type": "mcq",
             "prompt": "groupby aggregates:",
             "choices": [
@@ -2965,7 +3158,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_qj86edr",
+            "id": "q_d2c0nab",
             "type": "shortText",
             "prompt": "head() shows:",
             "validation": {
@@ -2974,7 +3167,7 @@
             }
           },
           {
-            "id": "q_1p9zoic",
+            "id": "q_eab83pi",
             "type": "mcq",
             "prompt": "Expert: NaN means:",
             "choices": [
@@ -2994,7 +3187,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_awff7z5",
+            "id": "q_16f71q4",
             "type": "mcq",
             "prompt": "Expert: merge like:",
             "choices": [
@@ -3014,7 +3207,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ziug2mb",
+            "id": "q_0smyjin",
             "type": "shortText",
             "prompt": "Expert: astype sets:",
             "validation": {
@@ -3023,7 +3216,7 @@
             }
           },
           {
-            "id": "q_2tetrk5",
+            "id": "q_ctmefmr",
             "type": "mcq",
             "prompt": "Expert: pandas built on:",
             "choices": [
@@ -3043,7 +3236,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_twh6d41",
+            "id": "q_9h7hz6h",
             "type": "shortText",
             "prompt": "Expert: fillna handles:",
             "validation": {
@@ -3058,6 +3251,28 @@
       "id": "data_validation",
       "title": "Data validation",
       "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "validate_user",
+          "label": "Validate user",
+          "code": "def validate_user(data):\n    if \"name\" not in data or not isinstance(data[\"name\"], str):\n        raise ValueError(\"name required string\")\n    if \"age\" in data and data[\"age\"] < 0:\n        raise ValueError(\"age must be non-negative\")\n    return data\nprint(validate_user({\"name\": \"Ana\", \"age\": 30}))"
+        },
+        {
+          "id": "required_fields",
+          "label": "Required fields",
+          "code": "required = [\"name\", \"email\"]\ndata = {\"name\": \"Ana\", \"email\": \"a@b.c\"}\nprint(all(k in data for k in required))"
+        },
+        {
+          "id": "type_check",
+          "label": "Type check",
+          "code": "def is_int(x):\n    return isinstance(x, int)\nprint(is_int(5), is_int(\"5\"))"
+        },
+        {
+          "id": "range_check",
+          "label": "Range check",
+          "code": "age = 30\nprint(0 <= age <= 120)"
+        }
+      ],
       "intro": {
         "title": "Data validation",
         "bodyMarkdown": "Validate shape, types, ranges before processing. Fail early with clear messages.\n\nUse schemas (pydantic, jsonschema) for complex payloads.\n\nSanitize strings, bound numbers, check required fields.",
@@ -3065,7 +3280,7 @@
       },
       "challenges": [
         {
-          "id": "ch_jh49i45",
+          "id": "ch_y6bq6oz",
           "title": "Easy: check key",
           "promptMarkdown": "",
           "starterCode": "def v(d):\n if \"name\" not in d: raise ValueError\n return d",
@@ -3077,7 +3292,7 @@
           }
         },
         {
-          "id": "ch_8ih6nvv",
+          "id": "ch_kwfagw8",
           "title": "Easy: isinstance",
           "promptMarkdown": "",
           "starterCode": "isinstance(\"a\", str)",
@@ -3089,7 +3304,7 @@
           }
         },
         {
-          "id": "ch_ehxz3qs",
+          "id": "ch_qbzfv9f",
           "title": "Medium: range check",
           "promptMarkdown": "",
           "starterCode": "def v(n):\n if n<0: raise ValueError\n return n\nerr=False\ntry:\n v(-1)\nexcept ValueError:\n err=True",
@@ -3106,7 +3321,7 @@
           }
         },
         {
-          "id": "ch_pzx71hs",
+          "id": "ch_lz93qjd",
           "title": "Medium: return cleaned",
           "promptMarkdown": "",
           "starterCode": "def v(d):\n if \"name\" not in d: raise ValueError\n return d\nd=v({\"name\":\"Ana\"})",
@@ -3123,7 +3338,7 @@
           }
         },
         {
-          "id": "ch_55fb1ct",
+          "id": "ch_pii9q0u",
           "title": "Hard: optional field",
           "promptMarkdown": "",
           "starterCode": "def v(d):\n d=dict(d)\n if \"nick\" not in d:\n  d[\"nick\"]=None\n return d\nnick=v({\"name\":\"Ana\"})[\"nick\"]",
@@ -3140,7 +3355,7 @@
           }
         },
         {
-          "id": "ch_6fdc512",
+          "id": "ch_n4ipfeo",
           "title": "Hard: email simple",
           "promptMarkdown": "",
           "starterCode": "def valid_email(e):\n return \"@\" in e and \".\" in e.split(\"@\")[-1]\nok=valid_email(\"a@b.co\") and not valid_email(\"bad\")",
@@ -3157,7 +3372,7 @@
           }
         },
         {
-          "id": "ch_udl8ht6",
+          "id": "ch_zvmke6b",
           "title": "Expert: schema json",
           "promptMarkdown": "",
           "starterCode": "import json\nschema={\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"}}}",
@@ -3174,7 +3389,7 @@
           }
         },
         {
-          "id": "ch_pos7fnf",
+          "id": "ch_8xksxs1",
           "title": "Expert: pydantic model",
           "promptMarkdown": "",
           "starterCode": "try:\n from pydantic import BaseModel\n class User(BaseModel):\n  name:str\n  age:int\n name=User(name=\"Ana\",age=30).name\nexcept ImportError:\n class User:\n  def __init__(self,name,age):\n   self.name=name\n   self.age=age\n name=User(\"Ana\",30).name",
@@ -3191,7 +3406,7 @@
           }
         },
         {
-          "id": "ch_qyh8c83",
+          "id": "ch_g7epxbn",
           "title": "Expert: coerce types",
           "promptMarkdown": "",
           "starterCode": "def coerce(d):\n d=dict(d)\n d[\"age\"]=int(d[\"age\"])\n return d\nage=coerce({\"age\":\"30\"})[\"age\"]",
@@ -3208,7 +3423,7 @@
           }
         },
         {
-          "id": "ch_y53y0rd",
+          "id": "ch_lrhm7s7",
           "title": "Expert: batch validate",
           "promptMarkdown": "",
           "starterCode": "def validate(x):\n return isinstance(x,int) and x>=0\ndata=[1,-1,2,\"x\"]\nbad=sum(1 for x in data if not validate(x))",
@@ -3229,7 +3444,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_qxywtlg",
+            "id": "q_27oo238",
             "type": "mcq",
             "prompt": "Validate before:",
             "choices": [
@@ -3249,7 +3464,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ad6naqr",
+            "id": "q_k9p8ffp",
             "type": "shortText",
             "prompt": "Missing required raises:",
             "validation": {
@@ -3258,7 +3473,7 @@
             }
           },
           {
-            "id": "q_uerh2yt",
+            "id": "q_i3fkn3w",
             "type": "mcq",
             "prompt": "isinstance checks:",
             "choices": [
@@ -3278,7 +3493,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5jy1t51",
+            "id": "q_en7eq4v",
             "type": "mcq",
             "prompt": "Negative age should:",
             "choices": [
@@ -3298,7 +3513,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_faxemei",
+            "id": "q_pl7lmt0",
             "type": "shortText",
             "prompt": "Schema documents:",
             "validation": {
@@ -3307,7 +3522,7 @@
             }
           },
           {
-            "id": "q_0lzksx5",
+            "id": "q_5rrdvpt",
             "type": "mcq",
             "prompt": "Expert: pydantic popular for:",
             "choices": [
@@ -3327,7 +3542,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_vbvv7co",
+            "id": "q_1ac0fzu",
             "type": "mcq",
             "prompt": "Expert: sanitize prevents:",
             "choices": [
@@ -3347,7 +3562,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_i9wn5hi",
+            "id": "q_snigkqb",
             "type": "shortText",
             "prompt": "Expert: fail early:",
             "validation": {
@@ -3356,7 +3571,7 @@
             }
           },
           {
-            "id": "q_ycoltuu",
+            "id": "q_sl88uzp",
             "type": "mcq",
             "prompt": "Expert: optional key:",
             "choices": [
@@ -3376,7 +3591,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_s6r9nbv",
+            "id": "q_sqvqh4n",
             "type": "shortText",
             "prompt": "Expert: batch report all:",
             "validation": {
@@ -3392,6 +3607,28 @@
       "title": "Easy project: Weather CLI (mock API)",
       "kind": "project",
       "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "mock_api",
+          "label": "Mock API",
+          "code": "data = {\"city\": \"London\", \"temp_c\": 18, \"conditions\": \"Cloudy\"}\nprint(data)"
+        },
+        {
+          "id": "format",
+          "label": "Format",
+          "code": "data = {\"city\": \"London\", \"temp_c\": 18, \"conditions\": \"Cloudy\", \"humidity\": 72}\nprint(f\"{data['city']}: {data['temp_c']}C\")"
+        },
+        {
+          "id": "get_safe",
+          "label": "get safe",
+          "code": "data = {}\nprint(data.get(\"wind\", \"Unknown\"))"
+        },
+        {
+          "id": "json",
+          "label": "json",
+          "code": "import json\nprint(json.dumps({\"city\": \"London\"}))"
+        }
+      ],
       "intro": {
         "title": "Easy project: Weather CLI (mock API)",
         "bodyMarkdown": "Model API response as JSON dict; function displays temp, conditions, humidity.\n\nUse requests or mock data for offline demo. Parse nested keys safely with .get.\n\nCache last result to file; argparse for city flag.",
@@ -3399,7 +3636,7 @@
       },
       "challenges": [
         {
-          "id": "ch_ngl4h6v",
+          "id": "ch_3xc4f2a",
           "title": "Easy: mock dict",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3416,7 +3653,7 @@
           }
         },
         {
-          "id": "ch_frhhj84",
+          "id": "ch_ilsobqm",
           "title": "Easy: f-string report",
           "promptMarkdown": "",
           "starterCode": "city=\"A\"\nprint(f\"{city}: 20C\")",
@@ -3428,7 +3665,7 @@
           }
         },
         {
-          "id": "ch_nk8ikvl",
+          "id": "ch_qthnpl4",
           "title": "Medium: get nested",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3445,7 +3682,7 @@
           }
         },
         {
-          "id": "ch_qxhl0d2",
+          "id": "ch_mgndjz1",
           "title": "Medium: json load cache",
           "promptMarkdown": "",
           "starterCode": "import json\njson.loads('{}')",
@@ -3462,7 +3699,7 @@
           }
         },
         {
-          "id": "ch_7w9v5mw",
+          "id": "ch_35ltayh",
           "title": "Hard: argparse city",
           "promptMarkdown": "",
           "starterCode": "import argparse\np=argparse.ArgumentParser()\np.add_argument(\"--city\", default=\"Paris\")\nargs=p.parse_args([])\ncity=args.city",
@@ -3479,7 +3716,7 @@
           }
         },
         {
-          "id": "ch_1d2luam",
+          "id": "ch_htarljg",
           "title": "Hard: missing key safe",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3500,7 +3737,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_jbn56oe",
+            "id": "q_3ceu3xe",
             "type": "mcq",
             "prompt": "Mock API useful for:",
             "choices": [
@@ -3520,7 +3757,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jvqa0hi",
+            "id": "q_3wsxi85",
             "type": "shortText",
             "prompt": "get default avoids:",
             "validation": {
@@ -3529,7 +3766,7 @@
             }
           },
           {
-            "id": "q_1n5c2js",
+            "id": "q_c8si6sz",
             "type": "mcq",
             "prompt": "argparse handles:",
             "choices": [
@@ -3549,7 +3786,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mz2p6s3",
+            "id": "q_t4duygf",
             "type": "mcq",
             "prompt": "Cache file stores:",
             "choices": [
@@ -3569,7 +3806,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5i7puiz",
+            "id": "q_pf5abx4",
             "type": "shortText",
             "prompt": "format_report returns:",
             "validation": {
@@ -3578,7 +3815,7 @@
             }
           },
           {
-            "id": "q_knsygh1",
+            "id": "q_yk3n1rr",
             "type": "mcq",
             "prompt": "Expert: validate schema:",
             "choices": [
@@ -3605,6 +3842,28 @@
       "title": "Medium project: Expense tracker",
       "kind": "project",
       "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "add_expense",
+          "label": "Add expense",
+          "code": "expenses = []\nexpenses.append({\"amount\": 12.5, \"category\": \"food\"})\nprint(expenses)"
+        },
+        {
+          "id": "sum",
+          "label": "Sum",
+          "code": "print(sum(e[\"amount\"] for e in [{\"amount\": 10}, {\"amount\": 5}]))"
+        },
+        {
+          "id": "json_save",
+          "label": "json save",
+          "code": "import json\nprint(json.dumps(expenses := [{\"amount\": 1}]))"
+        },
+        {
+          "id": "filter_month",
+          "label": "Filter month",
+          "code": "expenses = [{\"date\": \"2024-06-01\", \"amount\": 1}]\nprint([e for e in expenses if e[\"date\"].startswith(\"2024-06\")])"
+        }
+      ],
       "intro": {
         "title": "Medium project: Expense tracker",
         "bodyMarkdown": "Record expenses: amount, category, date, note. List by month; sum by category.\n\nUse datetime for dates; store list, persist JSON.\n\nReport: total, average, top category.",
@@ -3612,7 +3871,7 @@
       },
       "challenges": [
         {
-          "id": "ch_3nfv2cc",
+          "id": "ch_fvxlg6t",
           "title": "Easy: append expense",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3629,7 +3888,7 @@
           }
         },
         {
-          "id": "ch_2p8xvaz",
+          "id": "ch_0qh805y",
           "title": "Easy: sum amounts",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3646,7 +3905,7 @@
           }
         },
         {
-          "id": "ch_r1p2myx",
+          "id": "ch_89hl3xf",
           "title": "Medium: strftime date",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\nd=datetime(2024,6,1).strftime(\"%Y-%m-%d\")",
@@ -3663,7 +3922,7 @@
           }
         },
         {
-          "id": "ch_ve5fl00",
+          "id": "ch_m19vh8y",
           "title": "Medium: filter category",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3680,7 +3939,7 @@
           }
         },
         {
-          "id": "ch_scazdka",
+          "id": "ch_b37ix0d",
           "title": "Hard: group sum",
           "promptMarkdown": "",
           "starterCode": "for e in expenses:\n    totals[e[\"category\"]]=totals.get(e[\"category\"],0)+e[\"amount\"]",
@@ -3697,7 +3956,7 @@
           }
         },
         {
-          "id": "ch_beogyhv",
+          "id": "ch_kdk84bp",
           "title": "Hard: month filter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3718,7 +3977,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_6xvzlo1",
+            "id": "q_r195gfy",
             "type": "mcq",
             "prompt": "sum with generator sums:",
             "choices": [
@@ -3738,7 +3997,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ycnudol",
+            "id": "q_xi6xvi8",
             "type": "shortText",
             "prompt": "strftime formats:",
             "validation": {
@@ -3747,7 +4006,7 @@
             }
           },
           {
-            "id": "q_1yvay5w",
+            "id": "q_c9qlsp6",
             "type": "mcq",
             "prompt": "Filter keeps matching:",
             "choices": [
@@ -3767,7 +4026,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_b49r8ac",
+            "id": "q_syv72uh",
             "type": "mcq",
             "prompt": "JSON persist for:",
             "choices": [
@@ -3787,7 +4046,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fmctnbr",
+            "id": "q_bm4rr3b",
             "type": "shortText",
             "prompt": "Average is total /:",
             "validation": {
@@ -3796,7 +4055,7 @@
             }
           },
           {
-            "id": "q_w2opzp1",
+            "id": "q_zmolm0d",
             "type": "mcq",
             "prompt": "Expert: groupby category needs:",
             "choices": [
@@ -3823,6 +4082,28 @@
       "title": "Hard project: Web scraper basics",
       "kind": "project",
       "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "parse_href",
+          "label": "Parse href",
+          "code": "html = '<a href=\"/page\">Link</a>'\nparts = html.split(\"<a href=\")\nprint(parts[1].split(\">\")[0].strip('\"'))"
+        },
+        {
+          "id": "link_list",
+          "label": "Link list",
+          "code": "links = [\"/page\", \"/about\"]\nprint(links)"
+        },
+        {
+          "id": "urlopen",
+          "label": "urlopen",
+          "code": "from urllib.request import urlopen\nprint(\"ready\")"
+        },
+        {
+          "id": "sleep",
+          "label": "sleep",
+          "code": "import time\ntime.sleep(0)\nprint(\"rate limit\")"
+        }
+      ],
       "intro": {
         "title": "Hard project: Web scraper basics",
         "bodyMarkdown": "Fetch HTML with urllib or requests; parse with string methods or html.parser/beautifulsoup conceptually.\n\nRespect robots.txt and rate limits; never scrape private data without permission.\n\nExtract titles, links, or tables into structured list.",
@@ -3830,7 +4111,7 @@
       },
       "challenges": [
         {
-          "id": "ch_ctrxakb",
+          "id": "ch_1dv973s",
           "title": "Easy: html string",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3847,7 +4128,7 @@
           }
         },
         {
-          "id": "ch_1p931yv",
+          "id": "ch_p795so8",
           "title": "Easy: split parse",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3864,7 +4145,7 @@
           }
         },
         {
-          "id": "ch_mk3xh55",
+          "id": "ch_2ujp162",
           "title": "Medium: extract href",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3881,7 +4162,7 @@
           }
         },
         {
-          "id": "ch_72wiitj",
+          "id": "ch_1c7llw9",
           "title": "Medium: strip quotes",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3898,7 +4179,7 @@
           }
         },
         {
-          "id": "ch_w4f0uz8",
+          "id": "ch_v1i78o2",
           "title": "Hard: loop parts",
           "promptMarkdown": "",
           "starterCode": "for part in parts:\n    n+=1",
@@ -3915,7 +4196,7 @@
           }
         },
         {
-          "id": "ch_6vtomrp",
+          "id": "ch_puns1t2",
           "title": "Hard: build list",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3936,7 +4217,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_bkuntur",
+            "id": "q_zv9lzwv",
             "type": "mcq",
             "prompt": "Scrape means:",
             "choices": [
@@ -3956,7 +4237,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_r7qtnco",
+            "id": "q_o8asue6",
             "type": "shortText",
             "prompt": "Respect:",
             "validation": {
@@ -3965,7 +4246,7 @@
             }
           },
           {
-            "id": "q_0n49b6u",
+            "id": "q_jfl5krr",
             "type": "mcq",
             "prompt": "Rate limit prevents:",
             "choices": [
@@ -3985,7 +4266,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_epa97fg",
+            "id": "q_uzyk0x7",
             "type": "mcq",
             "prompt": "split useful for:",
             "choices": [
@@ -4005,7 +4286,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rzwumlu",
+            "id": "q_x52tayt",
             "type": "shortText",
             "prompt": "strip removes:",
             "validation": {
@@ -4014,7 +4295,7 @@
             }
           },
           {
-            "id": "q_kimqbs7",
+            "id": "q_h10gpx1",
             "type": "mcq",
             "prompt": "Expert: BeautifulSoup for:",
             "choices": [
