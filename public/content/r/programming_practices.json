@@ -1,0 +1,4416 @@
+{
+  "sectionId": "programming_practices",
+  "title": "Programming Best Practices in R",
+  "levels": [
+    {
+      "id": "vectorization_deep_dive",
+      "title": "Vectorization Deep Dive",
+      "intro": {
+        "title": "Vectorization Deep Dive",
+        "bodyMarkdown": "Vectorization Deep Dive is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "x <- 1:1e6\nsystem.time(x * 2)"
+      },
+      "challenges": [
+        {
+          "id": "ch_shqrg01",
+          "title": "Easy: Use system.time",
+          "promptMarkdown": "Write R code that uses `system.time` related to **Vectorization Deep Dive**.",
+          "starterCode": "system.time(x * 2)\n",
+          "hints": [
+            "Try system.time() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b7zwd4c",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ksxo5oc",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1fkrk3u",
+          "title": "Medium: Apply Vectorization Deep Dive",
+          "promptMarkdown": "Write code demonstrating **Vectorization Deep Dive**.",
+          "starterCode": "system.time(x * 2)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use system.time",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pr5ga36",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `system.time` and `*` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "system.time",
+              "*"
+            ]
+          }
+        },
+        {
+          "id": "ch_2mwh9b0",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qj80w9e",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_v9ocx5x",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_as3mxn4",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Vectorization Deep Dive** in a short script using `system.time`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "system.time"
+            ]
+          }
+        },
+        {
+          "id": "ch_afp2qhf",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Vectorization Deep Dive** (include `system.time`).",
+          "starterCode": "x <- 1:1e6",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "system.time"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_gkd67qq",
+            "type": "mcq",
+            "prompt": "Vectorized code is usually faster because:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It avoids R-level loops for many operations"
+              },
+              {
+                "id": "b",
+                "label": "It disables C code"
+              },
+              {
+                "id": "c",
+                "label": "It requires more copies always"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_31fyly1",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "system.time"
+            }
+          },
+          {
+            "id": "q_mzsef3o",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_jt0lu1y",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_0oc1sz1",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_p5wofqh",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_b6ceb9k",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_i4hognp",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_37d87ei",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xavy56i",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Vectorization Deep Dive.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "system.time"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "apply_functions",
+      "title": "apply, lapply, sapply",
+      "intro": {
+        "title": "apply, lapply, sapply",
+        "bodyMarkdown": "apply, lapply, sapply is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "lapply(list(a = 1:3, b = 4:6), sum)"
+      },
+      "challenges": [
+        {
+          "id": "ch_pqdfd60",
+          "title": "Easy: Use lapply",
+          "promptMarkdown": "Write R code that uses `lapply` related to **apply, lapply, sapply**.",
+          "starterCode": "lapply(list(a = 1:3, b = 4:6), sum)\n",
+          "hints": [
+            "Try lapply() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xuxnoo7",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bt6j47b",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_t3qescz",
+          "title": "Medium: Apply apply, lapply, sapply",
+          "promptMarkdown": "Write code demonstrating **apply, lapply, sapply**.",
+          "starterCode": "lapply(list(a = 1:3, b = 4:6), sum)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use lapply",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5718je7",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `lapply` and `lapply` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "lapply",
+              "lapply"
+            ]
+          }
+        },
+        {
+          "id": "ch_nmzrkmm",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pknn70j",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_acctcki",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_h4i7guy",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **apply, lapply, sapply** in a short script using `lapply`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "lapply"
+            ]
+          }
+        },
+        {
+          "id": "ch_66odwyj",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **apply, lapply, sapply** (include `lapply`).",
+          "starterCode": "lapply(list(a = 1:3, b = 4:6), sum)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "lapply"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_945p3cj",
+            "type": "mcq",
+            "prompt": "What best describes apply, lapply, sapply?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_miyiykx",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "lapply"
+            }
+          },
+          {
+            "id": "q_p47cyrm",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_exqwqgi",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_ugc4joo",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ze503oh",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_75e2g6h",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_lxkztjl",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_dk8cmb9",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_bbosgov",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from apply, lapply, sapply.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "lapply"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "purrr_map",
+      "title": "purrr and map",
+      "intro": {
+        "title": "purrr and map",
+        "bodyMarkdown": "purrr and map is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(purrr)\nmap(list(1:3, 4:6), sum)"
+      },
+      "challenges": [
+        {
+          "id": "ch_dew3ccz",
+          "title": "Easy: Use purrr",
+          "promptMarkdown": "Write R code that uses `purrr` related to **purrr and map**.",
+          "starterCode": "library(purrr)\n",
+          "hints": [
+            "Try purrr() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qtk3x86",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hmsqmi8",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_gmn8sru",
+          "title": "Medium: Apply purrr and map",
+          "promptMarkdown": "Write code demonstrating **purrr and map**.",
+          "starterCode": "library(purrr)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use purrr",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_19bkg7t",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `purrr` and `map(` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "purrr",
+              "map("
+            ]
+          }
+        },
+        {
+          "id": "ch_wgt375r",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_veaa7j3",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_fqrvjco",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_krked7d",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **purrr and map** in a short script using `purrr`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "purrr"
+            ]
+          }
+        },
+        {
+          "id": "ch_b70ju7t",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **purrr and map** (include `purrr`).",
+          "starterCode": "library(purrr)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "purrr"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_i22k3kx",
+            "type": "mcq",
+            "prompt": "What best describes purrr and map?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qu6r6x9",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "map"
+            }
+          },
+          {
+            "id": "q_uyse3fd",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_x53j3by",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_893twda",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zp12lky",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_pej0a5f",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_e0bp7wr",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_iq9enfq",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hfe1ea2",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from purrr and map.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "map"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "error_handling",
+      "title": "Error Handling",
+      "intro": {
+        "title": "Error Handling",
+        "bodyMarkdown": "Error Handling is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "result <- try(log(\"a\"))\nprint(inherits(result, \"try-error\"))"
+      },
+      "challenges": [
+        {
+          "id": "ch_imz5hb7",
+          "title": "Easy: Use try(",
+          "promptMarkdown": "Write R code that uses `try(` related to **Error Handling**.",
+          "starterCode": "result <- try(log(\"a\"))\n",
+          "hints": [
+            "Try try(() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sfb1u6o",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b7g2qa9",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9ojz1kc",
+          "title": "Medium: Apply Error Handling",
+          "promptMarkdown": "Write code demonstrating **Error Handling**.",
+          "starterCode": "result <- try(log(\"a\"))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use try(",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8d24wkc",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `try(` and `try(` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "try(",
+              "try("
+            ]
+          }
+        },
+        {
+          "id": "ch_plpuuxq",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rb1n7h7",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_g7iec9c",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_gu3u49m",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Error Handling** in a short script using `try(`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "try("
+            ]
+          }
+        },
+        {
+          "id": "ch_98gf7qd",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Error Handling** (include `try(`).",
+          "starterCode": "result <- try(log(\"a\"))",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "try("
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_bk5nsc2",
+            "type": "mcq",
+            "prompt": "What best describes Error Handling?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_3pojm43",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "try"
+            }
+          },
+          {
+            "id": "q_ugut0nu",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_c3smbvy",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_rwcb4r4",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_8rxexqm",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_aojwqoy",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_j5fvimz",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_oeh8dsz",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_nhmddco",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Error Handling.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "try"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "trycatch",
+      "title": "tryCatch",
+      "intro": {
+        "title": "tryCatch",
+        "bodyMarkdown": "tryCatch is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "tryCatch(log(\"a\"), error = function(e) NA)"
+      },
+      "challenges": [
+        {
+          "id": "ch_93bpx30",
+          "title": "Easy: Use tryCatch",
+          "promptMarkdown": "Write R code that uses `tryCatch` related to **tryCatch**.",
+          "starterCode": "tryCatch(log(\"a\"), error = function(e) NA)\n",
+          "hints": [
+            "Try tryCatch() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ehid7fy",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9cyh7wq",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3x65029",
+          "title": "Medium: Apply tryCatch",
+          "promptMarkdown": "Write code demonstrating **tryCatch**.",
+          "starterCode": "tryCatch(log(\"a\"), error = function(e) NA)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use tryCatch",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bqesghc",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `tryCatch` and `error` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "tryCatch",
+              "error"
+            ]
+          }
+        },
+        {
+          "id": "ch_mtumpf5",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_q3d1qzf",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_t3rbazk",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pvgrp7r",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **tryCatch** in a short script using `tryCatch`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "tryCatch"
+            ]
+          }
+        },
+        {
+          "id": "ch_70986qj",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **tryCatch** (include `tryCatch`).",
+          "starterCode": "tryCatch(log(\"a\"), error = function(e) NA)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "tryCatch"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_09wqe2g",
+            "type": "mcq",
+            "prompt": "What best describes tryCatch?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tri6fdd",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "tryCatch"
+            }
+          },
+          {
+            "id": "q_51c0ul8",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_w7a4dbs",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_st5au4n",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hflrupv",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_gxslprv",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_6epc28o",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_uzag5q1",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pe4to41",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from tryCatch.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "tryCatch"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "debugging_basics",
+      "title": "Debugging Basics",
+      "intro": {
+        "title": "Debugging Basics",
+        "bodyMarkdown": "Debugging Basics is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "f <- function(x) x + 1\n# debug(f)\nprint(f(2))"
+      },
+      "challenges": [
+        {
+          "id": "ch_60bugs7",
+          "title": "Easy: Use function",
+          "promptMarkdown": "Write R code that uses `function` related to **Debugging Basics**.",
+          "starterCode": "f <- function(x) x + 1\n",
+          "hints": [
+            "Try function() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xfnr443",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7yti92z",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pi5hyqs",
+          "title": "Medium: Apply Debugging Basics",
+          "promptMarkdown": "Write code demonstrating **Debugging Basics**.",
+          "starterCode": "f <- function(x) x + 1\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use function",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_tspfvnn",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `function` and `debug` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "function",
+              "debug"
+            ]
+          }
+        },
+        {
+          "id": "ch_2itb8ln",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5g2odwf",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_mr3p81j",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_mu3bi5t",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Debugging Basics** in a short script using `function`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "function"
+            ]
+          }
+        },
+        {
+          "id": "ch_mt5emhp",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Debugging Basics** (include `function`).",
+          "starterCode": "f <- function(x) x + 1",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "function"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_q8w6xaj",
+            "type": "mcq",
+            "prompt": "What best describes Debugging Basics?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kj5v5w6",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "debug"
+            }
+          },
+          {
+            "id": "q_sx95lyi",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_9q6ri0d",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_mbg0mvr",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_bxa8t50",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_bfvrkxh",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_h8ysdt2",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_d7dgcxy",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qgkr4nu",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Debugging Basics.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "debug"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "browser_traceback",
+      "title": "browser and traceback",
+      "intro": {
+        "title": "browser and traceback",
+        "bodyMarkdown": "browser and traceback is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "f <- function() stop(\"boom\")\n# try(f()); traceback()"
+      },
+      "challenges": [
+        {
+          "id": "ch_qi6i859",
+          "title": "Easy: Use traceback",
+          "promptMarkdown": "Write R code that uses `traceback` related to **browser and traceback**.",
+          "starterCode": "traceback(",
+          "hints": [
+            "Try traceback() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_l26irs7",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_85bayhr",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7mp4nkb",
+          "title": "Medium: Apply browser and traceback",
+          "promptMarkdown": "Write code demonstrating **browser and traceback**.",
+          "starterCode": "",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use traceback",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_q6nw25r",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `traceback` and `stop` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "traceback",
+              "stop"
+            ]
+          }
+        },
+        {
+          "id": "ch_ft17dam",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xomzdlb",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_596xw73",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_azt99vu",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **browser and traceback** in a short script using `traceback`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "traceback"
+            ]
+          }
+        },
+        {
+          "id": "ch_yw11osc",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **browser and traceback** (include `traceback`).",
+          "starterCode": "f <- function() stop(\"boom\")",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "traceback"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_j8g5md3",
+            "type": "mcq",
+            "prompt": "What best describes browser and traceback?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_5xzl2ap",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "traceback"
+            }
+          },
+          {
+            "id": "q_cpkammd",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_izfjdu0",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_t9xudts",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_urodfkf",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_hrhx29u",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_5jg6uee",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_e304ck6",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tjg9zpa",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from browser and traceback.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "traceback"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "profiling_performance",
+      "title": "Profiling and Performance",
+      "intro": {
+        "title": "Profiling and Performance",
+        "bodyMarkdown": "Profiling and Performance is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "Rprof(\"profile.out\")\nx <- 1:1e5; sum(x^2)\nRprof(NULL)"
+      },
+      "challenges": [
+        {
+          "id": "ch_p74o1dq",
+          "title": "Easy: Use Rprof",
+          "promptMarkdown": "Write R code that uses `Rprof` related to **Profiling and Performance**.",
+          "starterCode": "Rprof(\"profile.out\")\n",
+          "hints": [
+            "Try Rprof() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bm3o4co",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_33kradj",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xh308kj",
+          "title": "Medium: Apply Profiling and Performance",
+          "promptMarkdown": "Write code demonstrating **Profiling and Performance**.",
+          "starterCode": "Rprof(\"profile.out\")\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use Rprof",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_m6nqwi9",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `Rprof` and `Rprof` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "Rprof",
+              "Rprof"
+            ]
+          }
+        },
+        {
+          "id": "ch_spahxw9",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4f51hbd",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hfjn8dz",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_mh64s7k",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Profiling and Performance** in a short script using `Rprof`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "Rprof"
+            ]
+          }
+        },
+        {
+          "id": "ch_kdu2rc7",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Profiling and Performance** (include `Rprof`).",
+          "starterCode": "Rprof(\"profile.out\")",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "Rprof"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_c37ifeg",
+            "type": "mcq",
+            "prompt": "What best describes Profiling and Performance?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_vs2p5lv",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "Rprof"
+            }
+          },
+          {
+            "id": "q_6wqmhrv",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_8bmnym0",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_yha7tho",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ipnbjr6",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_hyaqivx",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2ce95aa",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_qlhm5iw",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_z0f8298",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Profiling and Performance.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "Rprof"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "code_style_guide",
+      "title": "Code Style Guide",
+      "intro": {
+        "title": "Code Style Guide",
+        "bodyMarkdown": "Code Style Guide is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "# Use <- for assignment; snake_case names; spaces around operators\nx <- 1 + 2"
+      },
+      "challenges": [
+        {
+          "id": "ch_xw2ir2y",
+          "title": "Easy: Use <-",
+          "promptMarkdown": "Write R code that uses `<-` related to **Code Style Guide**.",
+          "starterCode": "<-(",
+          "hints": [
+            "Try <-() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_puf666x",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_atx35xw",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_zxc1b35",
+          "title": "Medium: Apply Code Style Guide",
+          "promptMarkdown": "Write code demonstrating **Code Style Guide**.",
+          "starterCode": "",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use <-",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_gm3rf3y",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `<-` and `<-` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "<-",
+              "<-"
+            ]
+          }
+        },
+        {
+          "id": "ch_h9z9cse",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_lhjnmof",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dgsaruy",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b4b4ulc",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Code Style Guide** in a short script using `<-`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "<-"
+            ]
+          }
+        },
+        {
+          "id": "ch_w066yam",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Code Style Guide** (include `<-`).",
+          "starterCode": "# Use <- for assignment; snake_case names; spaces around operators",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "<-"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_ajtfyyz",
+            "type": "mcq",
+            "prompt": "The tidyverse style guide recommends:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Consistent naming and spacing"
+              },
+              {
+                "id": "b",
+                "label": "No comments ever"
+              },
+              {
+                "id": "c",
+                "label": "All caps variable names only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_v0yndwz",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_gupalyb",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1enkyx8",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_1l0emlg",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_q1vf24e",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_vk2avq6",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_00nru1y",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_2e2zth3",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_v9p383y",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Code Style Guide.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "roxygen_documentation",
+      "title": "roxygen2 Documentation",
+      "intro": {
+        "title": "roxygen2 Documentation",
+        "bodyMarkdown": "roxygen2 Documentation is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "#' Add two numbers\n#' @param a numeric\n#' @param b numeric\nadd <- function(a, b) a + b"
+      },
+      "challenges": [
+        {
+          "id": "ch_agffqnt",
+          "title": "Easy: Use #'",
+          "promptMarkdown": "Write R code that uses `#'` related to **roxygen2 Documentation**.",
+          "starterCode": "#'(",
+          "hints": [
+            "Try #'() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9rl8aiu",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_oyu2svs",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2cta5hl",
+          "title": "Medium: Apply roxygen2 Documentation",
+          "promptMarkdown": "Write code demonstrating **roxygen2 Documentation**.",
+          "starterCode": "",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use #'",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_l9nceus",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `#'` and `@param` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "#'",
+              "@param"
+            ]
+          }
+        },
+        {
+          "id": "ch_2inv8pj",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ziqpgvl",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4s9u6fs",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ei3sx6k",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **roxygen2 Documentation** in a short script using `#'`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "#'"
+            ]
+          }
+        },
+        {
+          "id": "ch_sozduii",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **roxygen2 Documentation** (include `#'`).",
+          "starterCode": "#' Add two numbers",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "#'"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_suq87vh",
+            "type": "mcq",
+            "prompt": "What best describes roxygen2 Documentation?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ca4ij93",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "roxygen"
+            }
+          },
+          {
+            "id": "q_x2ed4mn",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_yk9ju2t",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_rz9px9g",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hicj9d4",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_m1aoex6",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_izyjfyt",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_22k8073",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_6rhfups",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from roxygen2 Documentation.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "roxygen"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "testing_intro",
+      "title": "Testing Intro (testthat)",
+      "intro": {
+        "title": "Testing Intro (testthat)",
+        "bodyMarkdown": "Testing Intro (testthat) is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(testthat)\nexpect_equal(2 + 2, 4)"
+      },
+      "challenges": [
+        {
+          "id": "ch_avgahk9",
+          "title": "Easy: Use testthat",
+          "promptMarkdown": "Write R code that uses `testthat` related to **Testing Intro (testthat)**.",
+          "starterCode": "library(testthat)\n",
+          "hints": [
+            "Try testthat() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_iiprr8o",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3w45rzp",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_gk6ln6l",
+          "title": "Medium: Apply Testing Intro (testthat)",
+          "promptMarkdown": "Write code demonstrating **Testing Intro (testthat)**.",
+          "starterCode": "library(testthat)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use testthat",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_03pbh2s",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `testthat` and `expect_equal` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "testthat",
+              "expect_equal"
+            ]
+          }
+        },
+        {
+          "id": "ch_8o3lr1f",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_kdiv5cv",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_34y71qg",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9pyhanm",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Testing Intro (testthat)** in a short script using `testthat`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "testthat"
+            ]
+          }
+        },
+        {
+          "id": "ch_je36ziy",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Testing Intro (testthat)** (include `testthat`).",
+          "starterCode": "library(testthat)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "testthat"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_oqod7du",
+            "type": "mcq",
+            "prompt": "What best describes Testing Intro (testthat)?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1vfm7c3",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "testthat"
+            }
+          },
+          {
+            "id": "q_a8sr9lt",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_h2ra98n",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_buvg1wb",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_s8469j9",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_m8ym6uu",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_d9opnkl",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_57vl7ds",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_sww48sv",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Testing Intro (testthat).",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "testthat"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "functional_programming",
+      "title": "Functional Programming Patterns",
+      "intro": {
+        "title": "Functional Programming Patterns",
+        "bodyMarkdown": "Functional Programming Patterns is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(purrr)\nmap_dbl(1:5, ~ .x ^ 2)"
+      },
+      "challenges": [
+        {
+          "id": "ch_pljxj9d",
+          "title": "Easy: Use map_dbl",
+          "promptMarkdown": "Write R code that uses `map_dbl` related to **Functional Programming Patterns**.",
+          "starterCode": "map_dbl(1:5, ~ .x ^ 2)\n",
+          "hints": [
+            "Try map_dbl() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_v3strw2",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7gba9wg",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_j610ibu",
+          "title": "Medium: Apply Functional Programming Patterns",
+          "promptMarkdown": "Write code demonstrating **Functional Programming Patterns**.",
+          "starterCode": "map_dbl(1:5, ~ .x ^ 2)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use map_dbl",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b2uzm6w",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `map_dbl` and `~` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "map_dbl",
+              "~"
+            ]
+          }
+        },
+        {
+          "id": "ch_zigfeg1",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_al1ye4m",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_oi7wzhm",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_o3tmdrr",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Functional Programming Patterns** in a short script using `map_dbl`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "map_dbl"
+            ]
+          }
+        },
+        {
+          "id": "ch_4tsi2f0",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Functional Programming Patterns** (include `map_dbl`).",
+          "starterCode": "library(purrr)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "map_dbl"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_bqucupb",
+            "type": "mcq",
+            "prompt": "What best describes Functional Programming Patterns?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_bcem7dh",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "map_dbl"
+            }
+          },
+          {
+            "id": "q_gld7hbc",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_u9dorml",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_2edztf8",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_iyscat3",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_goa50w5",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_k6ru1m2",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_adxlbrg",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pug5cnz",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Functional Programming Patterns.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "map_dbl"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "avoiding_common_pitfalls",
+      "title": "Avoiding Common Pitfalls",
+      "intro": {
+        "title": "Avoiding Common Pitfalls",
+        "bodyMarkdown": "Avoiding Common Pitfalls is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "print(c(\"growing vectors in loops\", \"forgetting stringsAsFactors history\", \"partial matching\"))"
+      },
+      "challenges": [
+        {
+          "id": "ch_63573gp",
+          "title": "Easy: Use print",
+          "promptMarkdown": "Write R code that uses `print` related to **Avoiding Common Pitfalls**.",
+          "starterCode": "print(c(\"growing vectors in loops\", \"forgetting stringsAsFactors history\", \"partial matching\"))\n",
+          "hints": [
+            "Try print() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cvoujly",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_axeoawt",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_670y8zd",
+          "title": "Medium: Apply Avoiding Common Pitfalls",
+          "promptMarkdown": "Write code demonstrating **Avoiding Common Pitfalls**.",
+          "starterCode": "print(c(\"growing vectors in loops\", \"forgetting stringsAsFactors history\", \"partial matching\"))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use print",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sc6657u",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `print` and `print` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "print",
+              "print"
+            ]
+          }
+        },
+        {
+          "id": "ch_g5sa4pi",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yyyrbgw",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b475qi3",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dnbiqse",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Avoiding Common Pitfalls** in a short script using `print`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "print"
+            ]
+          }
+        },
+        {
+          "id": "ch_7lqhcga",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Avoiding Common Pitfalls** (include `print`).",
+          "starterCode": "print(c(\"growing vectors in loops\", \"forgetting stringsAsFactors history\", \"partial matching\"))",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "print"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_9j94k5c",
+            "type": "mcq",
+            "prompt": "A common R pitfall is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Growing vectors in a loop instead of preallocating"
+              },
+              {
+                "id": "b",
+                "label": "Using data frames"
+              },
+              {
+                "id": "c",
+                "label": "Using functions"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_k5d7hgr",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "print"
+            }
+          },
+          {
+            "id": "q_b6b7df9",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_uv9gdvz",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_yxfewio",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_8cievvm",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_x40ims0",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pst5y5s",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_552j7sz",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_q8uaqff",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Avoiding Common Pitfalls.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "print"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "memory_management",
+      "title": "Memory Management Basics",
+      "intro": {
+        "title": "Memory Management Basics",
+        "bodyMarkdown": "Memory Management Basics is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "big <- rnorm(1e6)\nrm(big)\ngc()"
+      },
+      "challenges": [
+        {
+          "id": "ch_d04dth2",
+          "title": "Easy: Use rm(",
+          "promptMarkdown": "Write R code that uses `rm(` related to **Memory Management Basics**.",
+          "starterCode": "big <- rnorm(1e6)\n",
+          "hints": [
+            "Try rm(() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ywn2hp9",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8xzkdpc",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7l4ctg6",
+          "title": "Medium: Apply Memory Management Basics",
+          "promptMarkdown": "Write code demonstrating **Memory Management Basics**.",
+          "starterCode": "big <- rnorm(1e6)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "ok <- TRUE\n# use rm(",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == TRUE"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1fw922w",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `rm(` and `gc(` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "rm(",
+              "gc("
+            ]
+          }
+        },
+        {
+          "id": "ch_ypcvz9e",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rkuoq3a",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_82jbp0r",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_h3hre5o",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Memory Management Basics** in a short script using `rm(`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "rm("
+            ]
+          }
+        },
+        {
+          "id": "ch_oa8yotx",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Memory Management Basics** (include `rm(`).",
+          "starterCode": "big <- rnorm(1e6)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "rm("
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_761okpp",
+            "type": "mcq",
+            "prompt": "What best describes Memory Management Basics?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_stx9fen",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "gc"
+            }
+          },
+          {
+            "id": "q_16ntyby",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_lzglyyt",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_hzibv7c",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_smhappd",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_kdgs5nb",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_vrvcz37",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_44aa1cz",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_u7zerpe",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Memory Management Basics.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "gc"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

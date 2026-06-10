@@ -29,8 +29,9 @@ describe('validateAgainst', () => {
     expect(validateAgainst('hello', { mode: 'regex', pattern: '[' })).toBe(false)
   })
 
-  it('python_tests always returns false synchronously', () => {
+  it('python_tests and r_tests always return false synchronously', () => {
     expect(validateAgainst('x', { mode: 'python_tests', tests: [] })).toBe(false)
+    expect(validateAgainst('x', { mode: 'r_tests', tests: [] })).toBe(false)
   })
 })
 

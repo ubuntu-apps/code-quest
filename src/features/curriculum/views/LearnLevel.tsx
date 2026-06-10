@@ -1,7 +1,9 @@
 import type { Challenge, Level, TestGradeResult } from '../types'
 import type { LevelProgress } from '../progressStorage'
 import type { PythonAiHelp } from '../freeAiHelp'
+import type { FriendlySandboxError } from '../components/CodeSandboxSection'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
+import type { RChallengeTestResult } from '../rSandbox'
 import type { LevelStep } from '../constants'
 import { EditableText } from '../../editor'
 import { AddItemButton } from '../../editor'
@@ -26,7 +28,7 @@ interface LearnLevelProps {
   sandboxCode: string
   sandboxOutput: string
   sandboxRunning: boolean
-  sandboxError: FriendlyPythonError | null
+  sandboxError: FriendlySandboxError | null
   sandboxErrorUiEpoch: number
   onSandboxCodeChange: (code: string) => void
   onSandboxRun: () => void
@@ -34,8 +36,8 @@ interface LearnLevelProps {
   onSandboxErrorClear: () => void
   challengeDrafts: Record<string, string>
   challengeStatus: Record<string, 'passed' | 'failed'>
-  challengeTestResults: Record<string, PythonChallengeTestResult[]>
-  challengeRuntimeError: Record<string, FriendlyPythonError | null>
+  challengeTestResults: Record<string, (PythonChallengeTestResult | RChallengeTestResult)[]>
+  challengeRuntimeError: Record<string, FriendlySandboxError | null>
   challengeErrorExpanded: Record<string, boolean>
   challengeErrorUiEpoch: Record<string, number>
   challengeAiHelp: Record<string, PythonAiHelp | null>

@@ -1,10 +1,13 @@
-export type ValidationMode = 'regex' | 'includesAll' | 'equalsNormalized' | 'python_tests'
+export type ValidationMode = 'regex' | 'includesAll' | 'equalsNormalized' | 'python_tests' | 'r_tests'
 
-export interface PythonAssertionTest {
+export interface RuntimeAssertionTest {
   id: string
   label: string
   assertion: string
 }
+
+/** @deprecated Use RuntimeAssertionTest */
+export type PythonAssertionTest = RuntimeAssertionTest
 
 export interface Validation {
   mode: ValidationMode
@@ -12,7 +15,7 @@ export interface Validation {
   needles?: string[]
   expected?: string
   setupCode?: string
-  tests?: PythonAssertionTest[]
+  tests?: RuntimeAssertionTest[]
 }
 
 export interface Challenge {

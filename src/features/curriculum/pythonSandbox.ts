@@ -1,4 +1,4 @@
-import type { PythonAssertionTest } from './types'
+import type { RuntimeAssertionTest } from './types'
 import { explainPythonError, type FriendlyPythonError } from './pythonErrorHelper'
 export type { FriendlyPythonError } from './pythonErrorHelper'
 
@@ -119,7 +119,7 @@ function escapePyTripleSingleQuoted(input: string): string {
 export async function runPythonChallengeTests(
   userCode: string,
   setupCode: string | undefined,
-  tests: PythonAssertionTest[],
+  tests: RuntimeAssertionTest[],
 ): Promise<PythonChallengeRunResult> {
   const pyodide = await getPyodide()
   const safeSetup = escapePyTripleSingleQuoted(setupCode ?? '')

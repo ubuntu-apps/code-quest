@@ -13,6 +13,14 @@ import {
   type FriendlyPythonError,
   type PythonChallengeTestResult,
 } from './pythonSandbox'
+import {
+  runRCode,
+  runRChallengeTests,
+  preloadWebR,
+  type RChallengeTestResult,
+} from './rSandbox'
+import { defaultSandboxForLanguage } from './components/PythonSandboxSection'
+import type { FriendlySandboxError } from './components/CodeSandboxSection'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { detectPlatform, installInstructions } from '../../platform'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
@@ -28,7 +36,6 @@ import {
 } from '../editor'
 import { mergeAboutContent } from '../editor/aboutContent'
 import {
-  DEFAULT_SANDBOX_CODE,
   LAST_LEVEL_STORAGE_KEY,
   PASS_DEFAULT,
   type TabId,
@@ -67,8 +74,8 @@ function clearChallengeAiFeedback(
 
 function clearChallengeFeedback(
   setters: {
-    setTestResults: Dispatch<SetStateAction<Record<string, PythonChallengeTestResult[]>>>
-    setRuntimeError: Dispatch<SetStateAction<Record<string, FriendlyPythonError | null>>>
+    setTestResults: Dispatch<SetStateAction<Record<string, (PythonChallengeTestResult | RChallengeTestResult)[]>>>
+    setRuntimeError: Dispatch<SetStateAction<Record<string, FriendlySandboxError | null>>>
     setErrorExpanded: Dispatch<SetStateAction<Record<string, boolean>>>
     setAiHelp: Dispatch<SetStateAction<Record<string, PythonAiHelp | null>>>
     setAiLoading: Dispatch<SetStateAction<Record<string, boolean>>>
@@ -169,18 +176,22 @@ export function CodeQuestScreen() {
 
   const [challengeDrafts, setChallengeDrafts] = useState<Record<string, string>>({})
   const [challengeStatus, setChallengeStatus] = useState<Record<string, 'passed' | 'failed'>>({})
-  const [challengeTestResults, setChallengeTestResults] = useState<Record<string, PythonChallengeTestResult[]>>({})
-  const [challengeRuntimeError, setChallengeRuntimeError] = useState<Record<string, FriendlyPythonError | null>>({})
+  const [challengeTestResults, setChallengeTestResults] = useState<
+    Record<string, (PythonChallengeTestResult | RChallengeTestResult)[]>
+  >({})
+  const [challengeRuntimeError, setChallengeRuntimeError] = useState<
+    Record<string, FriendlySandboxError | null>
+  >({})
   const [challengeErrorExpanded, setChallengeErrorExpanded] = useState<Record<string, boolean>>({})
   const [testShort, setTestShort] = useState<Record<string, string>>({})
   const [testMcq, setTestMcq] = useState<Record<string, string>>({})
   const [testResult, setTestResult] = useState<TestGradeResult | null>(null)
   const [testSessionReset, setTestSessionReset] = useState(false)
   const [readMoreOpen, setReadMoreOpen] = useState(false)
-  const [sandboxCode, setSandboxCode] = useState(DEFAULT_SANDBOX_CODE)
+  const [sandboxCode, setSandboxCode] = useState(() => defaultSandboxForLanguage('python'))
   const [sandboxOutput, setSandboxOutput] = useState('')
   const [sandboxRunning, setSandboxRunning] = useState(false)
-  const [sandboxError, setSandboxError] = useState<FriendlyPythonError | null>(null)
+  const [sandboxError, setSandboxError] = useState<FriendlySandboxError | null>(null)
   const [sandboxErrorUiEpoch, setSandboxErrorUiEpoch] = useState(0)
   const [challengeErrorUiEpoch, setChallengeErrorUiEpoch] = useState<Record<string, number>>({})
   const [challengeAiHelp, setChallengeAiHelp] = useState<Record<string, PythonAiHelp | null>>({})
@@ -392,7 +403,7 @@ export function CodeQuestScreen() {
     setTestShort({})
     setTestMcq({})
     setTestResult(null)
-    setSandboxCode(level.intro.sandboxCode ?? DEFAULT_SANDBOX_CODE)
+    setSandboxCode(level.intro.sandboxCode ?? defaultSandboxForLanguage(langId ?? 'python'))
     setSandboxOutput('')
     setSandboxRunning(false)
     setSandboxError(null)
@@ -410,6 +421,7 @@ export function CodeQuestScreen() {
   const openLanguage = useCallback(
     async (path: string, id: string): Promise<LanguageBundle | null> => {
       goToLanguage(id)
+      if (id === 'r') preloadWebR()
       if (loadedLanguageId === id && bundle) return bundle
       try {
         const b = await loadLanguageBundle(baseUrl, path, {
@@ -481,6 +493,12 @@ export function CodeQuestScreen() {
       setChallengeRuntimeError((prev) => ({ ...prev, [ch.id]: run.error }))
       clearChallengeAiFeedback(challengeFeedbackSetters, ch.id)
       ok = run.passed
+    } else if (ch.validation.mode === 'r_tests') {
+      const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
+      setChallengeTestResults((prev) => ({ ...prev, [ch.id]: run.tests }))
+      setChallengeRuntimeError((prev) => ({ ...prev, [ch.id]: run.error }))
+      clearChallengeFeedback(challengeFeedbackSetters, ch.id)
+      ok = run.passed
     } else {
       ok = validateAgainst(answer, ch.validation)
       clearChallengeFeedback(challengeFeedbackSetters, ch.id)
@@ -548,10 +566,24 @@ export function CodeQuestScreen() {
   const runSandbox = async () => {
     setSandboxRunning(true)
     setSandboxError(null)
-    setSandboxOutput('Running...')
-    const result = await runPythonCode(sandboxCode)
-    setSandboxOutput(result.output.trim() ? result.output : '[no output]')
-    setSandboxError(result.error)
+    setSandboxOutput(
+      languageId === 'r'
+        ? 'Loading R runtime (first run downloads ~30MB, may take a minute)...'
+        : 'Running...',
+    )
+    try {
+      const result =
+        languageId === 'r' ? await runRCode(sandboxCode) : await runPythonCode(sandboxCode)
+      setSandboxOutput(result.output.trim() ? result.output : '[no output]')
+      setSandboxError(result.error)
+    } catch (error: unknown) {
+      setSandboxOutput('')
+      setSandboxError({
+        title: 'R runtime failed',
+        detail: error instanceof Error ? error.message : 'Could not start R runtime',
+        tip: 'Check your network connection and try again.',
+      })
+    }
     setSandboxErrorUiEpoch((n) => n + 1)
     setSandboxRunning(false)
   }
@@ -789,7 +821,9 @@ export function CodeQuestScreen() {
           onSandboxCodeChange={setSandboxCode}
           onSandboxRun={() => void runSandbox()}
           onSandboxReset={() => {
-            setSandboxCode(selectedLevel.intro.sandboxCode ?? DEFAULT_SANDBOX_CODE)
+            setSandboxCode(
+              selectedLevel.intro.sandboxCode ?? defaultSandboxForLanguage(languageId ?? 'python'),
+            )
             setSandboxOutput('')
             setSandboxError(null)
           }}

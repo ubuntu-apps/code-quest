@@ -20,7 +20,8 @@ export function validateAgainst(answer: string, v: Validation): boolean {
       }
     }
     case 'python_tests':
-      // Runtime-backed checks are handled asynchronously in CodeQuestScreen via Pyodide.
+    case 'r_tests':
+      // Runtime-backed checks are handled asynchronously in CodeQuestScreen.
       return false
     default:
       return false
