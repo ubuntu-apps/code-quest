@@ -21,6 +21,17 @@ export function parseAppPath(pathname: string): ParsedLearnPath {
   if (path === '/progress') {
     return { tab: 'progress', langId: null, sectionId: null, levelId: null, step: 'intro' }
   }
+
+  const progressMatch = path.match(/^\/progress\/([^/]+)$/)
+  if (progressMatch) {
+    return {
+      tab: 'progress',
+      langId: decodeURIComponent(progressMatch[1]),
+      sectionId: null,
+      levelId: null,
+      step: 'intro',
+    }
+  }
   if (path === '/about') {
     return { tab: 'about', langId: null, sectionId: null, levelId: null, step: 'intro' }
   }
@@ -70,8 +81,13 @@ export function learnLevelPath(
   return step === 'intro' ? base : `${base}/${step}`
 }
 
-export function tabPath(tab: TabId): string {
-  if (tab === 'learn') return learnHomePath()
+export function progressPath(langId?: string | null): string {
+  return langId ? `/progress/${encodeURIComponent(langId)}` : '/progress'
+}
+
+export function tabPath(tab: TabId, langId?: string | null): string {
+  if (tab === 'learn') return langId ? learnLanguagePath(langId) : learnHomePath()
+  if (tab === 'progress') return progressPath(langId)
   return `/${tab}`
 }
 

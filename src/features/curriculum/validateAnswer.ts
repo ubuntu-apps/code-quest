@@ -1,4 +1,4 @@
-import type { TestQuestion, Validation } from './types'
+import type { TestGradeResult, TestQuestion, Validation } from './types'
 
 export function normalizeAnswer(s: string): string {
   return s.trim().replace(/\s+/g, ' ').toLowerCase()
@@ -36,4 +36,22 @@ export function gradeQuestion(
     return q.correctChoiceId === mcqSelection
   }
   return validateAgainst(answer ?? '', q.validation)
+}
+
+export function gradeTest(
+  questions: TestQuestion[],
+  short: Record<string, string>,
+  mcq: Record<string, string>,
+  passingScorePercent: number,
+): TestGradeResult {
+  const byQuestion: Record<string, boolean> = {}
+  let correct = 0
+  for (const q of questions) {
+    const ok = gradeQuestion(q, short[q.id], mcq[q.id])
+    byQuestion[q.id] = ok
+    if (ok) correct += 1
+  }
+  const total = questions.length
+  const pct = total === 0 ? 100 : (correct / total) * 100
+  return { correct, total, passed: pct >= passingScorePercent, byQuestion }
 }
