@@ -1,5 +1,3411 @@
 {
   "sectionId": "modules_and_packages",
   "title": "Modules and Packages",
-  "levels": []
+  "levels": [
+    {
+      "id": "import_statements",
+      "title": "import statements",
+      "intro": {
+        "title": "import statements",
+        "bodyMarkdown": "`import math` loads a module; `from math import sqrt` imports names directly.\n\nModules organize code into reusable files. Python has a large standard library.\n\nAvoid `from module import *` — it pollutes namespace and hides origins.",
+        "sandboxCode": "import math\nfrom random import randint\nprint(math.sqrt(16), randint(1, 6))"
+      },
+      "challenges": [
+        {
+          "id": "ch_golsys0",
+          "title": "Easy: import math",
+          "promptMarkdown": "use sqrt",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import math\nv=math.sqrt(16)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==4.0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cevh8i1",
+          "title": "Easy: from import",
+          "promptMarkdown": "from math import pi",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "from math import pi\nv=pi",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v>3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pphsc8i",
+          "title": "Medium: alias",
+          "promptMarkdown": "import as",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import math as m\nv=m.sqrt(25)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==25"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b68fvtp",
+          "title": "Medium: multiple",
+          "promptMarkdown": "",
+          "starterCode": "from os import path\njoined=path.join(\"a\",\"b\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks joined",
+                "assertion": "joined.endswith(\"b\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1slk7ua",
+          "title": "Hard: module attr",
+          "promptMarkdown": "math.pi",
+          "starterCode": "import math\nok=hasattr(math,\"pi\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_srdccbw",
+          "title": "Hard: dir sample",
+          "promptMarkdown": "names",
+          "starterCode": "import math\nok=\"sqrt\" in dir(math)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "\"sqrt\" in dir(math)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xdsm4s9",
+          "title": "Expert: relative concept",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "snippet = \"from . import utils\"\ndots = snippet.split()[1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks dots",
+                "assertion": "dots.startswith(\".\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_k2bfroz",
+          "title": "Expert: stdlib",
+          "promptMarkdown": "use json",
+          "starterCode": "import json\nd=json.loads('{\"a\":1}')",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d=={\"a\":1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_26fkqcw",
+          "title": "Expert: avoid star",
+          "promptMarkdown": "",
+          "starterCode": "from math import sqrt\nv=sqrt(16)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==4.0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_47s8sfl",
+          "title": "Expert: import random",
+          "promptMarkdown": "randint",
+          "starterCode": "import random\nn=random.randint(1,6)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "1<=n<=6"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_5nrvb3o",
+            "type": "mcq",
+            "prompt": "import math loads:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Module"
+              },
+              {
+                "id": "b",
+                "label": "Only variable"
+              },
+              {
+                "id": "c",
+                "label": "OS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2zmryec",
+            "type": "shortText",
+            "prompt": "from X import y imports:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "name"
+            }
+          },
+          {
+            "id": "q_sg2mwri",
+            "type": "mcq",
+            "prompt": "import as creates:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Alias"
+              },
+              {
+                "id": "b",
+                "label": "Class"
+              },
+              {
+                "id": "c",
+                "label": "Thread"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_5r586m1",
+            "type": "shortText",
+            "prompt": "Avoid import * because:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "namespace pollution"
+            }
+          },
+          {
+            "id": "q_2m1rv1c",
+            "type": "mcq",
+            "prompt": "math.sqrt is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Attribute access"
+              },
+              {
+                "id": "b",
+                "label": "Keyword"
+              },
+              {
+                "id": "c",
+                "label": "Comment"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1mfxnzi",
+            "type": "mcq",
+            "prompt": "Standard library ships with:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Python"
+              },
+              {
+                "id": "b",
+                "label": "Browser only"
+              },
+              {
+                "id": "c",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_wxgj0bz",
+            "type": "shortText",
+            "prompt": "Module is a:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "file"
+            }
+          },
+          {
+            "id": "q_nckabxp",
+            "type": "mcq",
+            "prompt": "Expert: dir() shows:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Names"
+              },
+              {
+                "id": "b",
+                "label": "CPU"
+              },
+              {
+                "id": "c",
+                "label": "RAM"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_s11t2dw",
+            "type": "mcq",
+            "prompt": "Expert: json in stdlib:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Yes"
+              },
+              {
+                "id": "b",
+                "label": "No"
+              },
+              {
+                "id": "c",
+                "label": "Only pip"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fl1ki74",
+            "type": "shortText",
+            "prompt": "Expert: explicit imports improve:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "readability"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "stdlib_overview",
+      "title": "Standard library overview",
+      "intro": {
+        "title": "Standard library overview",
+        "bodyMarkdown": "The standard library includes os, sys, pathlib, json, datetime, math, random, re, and more — batteries included.\n\nCheck docs before pip installing — many needs are already covered.\n\nModules group related functionality; learn to browse documentation.",
+        "sandboxCode": "import os, sys\nprint(os.getcwd())\nprint(sys.version_info.major)"
+      },
+      "challenges": [
+        {
+          "id": "ch_c3yq27n",
+          "title": "Easy: os name",
+          "promptMarkdown": "os.name exists",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import os\nok=hasattr(os,\"name\")",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "hasattr(os,\"name\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_tj2ghz2",
+          "title": "Easy: sys version",
+          "promptMarkdown": "major",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import sys\nm=sys.version_info.major",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks m",
+                "assertion": "m>=3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_gm86fn7",
+          "title": "Medium: len builtin",
+          "promptMarkdown": "stdlib vs builtin",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=len([1,2,3])",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ynvp4jh",
+          "title": "Medium: pathlib Path",
+          "promptMarkdown": "Path exists",
+          "starterCode": "from pathlib import Path\nok=Path(\".\") is not None",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9io98ys",
+          "title": "Hard: json module",
+          "promptMarkdown": "loads",
+          "starterCode": "import json\nd=json.loads(\"[1]\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "d==[1]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_csn2x36",
+          "title": "Hard: datetime",
+          "promptMarkdown": "date",
+          "starterCode": "import datetime\nok=hasattr(datetime,\"date\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9cpy9kz",
+          "title": "Expert: re module",
+          "promptMarkdown": "search",
+          "starterCode": "import re\nm=re.search(\"a\",\"cat\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks m",
+                "assertion": "m is not None"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3xx0uj3",
+          "title": "Expert: collections",
+          "promptMarkdown": "Counter",
+          "starterCode": "from collections import Counter\nc=Counter(\"aa\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c[\"a\"]==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yrjb4zy",
+          "title": "Expert: itertools",
+          "promptMarkdown": "chain",
+          "starterCode": "from itertools import chain\nl=list(chain([1],[2]))",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[1,2]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_94twzum",
+          "title": "Expert: urllib parse",
+          "promptMarkdown": "quote",
+          "starterCode": "import urllib.parse\nok=callable(urllib.parse.quote)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_uo5a1qm",
+            "type": "mcq",
+            "prompt": "stdlib ships with:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Python install"
+              },
+              {
+                "id": "b",
+                "label": "Only npm"
+              },
+              {
+                "id": "c",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_0k8qibi",
+            "type": "shortText",
+            "prompt": "json module parses:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "JSON"
+            }
+          },
+          {
+            "id": "q_yze4lq6",
+            "type": "mcq",
+            "prompt": "pathlib replaces some:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "os.path patterns"
+              },
+              {
+                "id": "b",
+                "label": "HTML"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_0hvdpn8",
+            "type": "mcq",
+            "prompt": "re is for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Regex"
+              },
+              {
+                "id": "b",
+                "label": "Graphics"
+              },
+              {
+                "id": "c",
+                "label": "Audio only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_dgqloo1",
+            "type": "shortText",
+            "prompt": "datetime handles:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dates"
+            }
+          },
+          {
+            "id": "q_u8931cv",
+            "type": "mcq",
+            "prompt": "collections has:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Counter deque"
+              },
+              {
+                "id": "b",
+                "label": "Only list"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_9wfxzg6",
+            "type": "shortText",
+            "prompt": "Check stdlib before:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "pip"
+            }
+          },
+          {
+            "id": "q_8xdeanv",
+            "type": "mcq",
+            "prompt": "Expert: os.getcwd returns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Current directory"
+              },
+              {
+                "id": "b",
+                "label": "Random"
+              },
+              {
+                "id": "c",
+                "label": "Version"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2jpfqey",
+            "type": "mcq",
+            "prompt": "Expert: itertools efficient:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Iterators"
+              },
+              {
+                "id": "b",
+                "label": "Only GUI"
+              },
+              {
+                "id": "c",
+                "label": "SQL"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hultkwv",
+            "type": "shortText",
+            "prompt": "Expert: batteries included means:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "rich stdlib"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "math_module",
+      "title": "math module",
+      "intro": {
+        "title": "math module",
+        "bodyMarkdown": "`math` provides sqrt, sin, cos, floor, ceil, log, pi, e, and more for floating-point math.\n\nImport math and call math.function(). For complex numbers use cmath.\n\nAngles in radians unless you convert from degrees.",
+        "sandboxCode": "import math\nprint(math.sqrt(2), math.pi)\nprint(math.degrees(math.pi))"
+      },
+      "challenges": [
+        {
+          "id": "ch_z4tv5je",
+          "title": "Easy: sqrt",
+          "promptMarkdown": "sqrt(9)",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import math\nv=math.sqrt(9)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==3.0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_d9mnc0o",
+          "title": "Easy: pi",
+          "promptMarkdown": "math.pi",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import math\nv=math.pi",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v>3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_h0lcth5",
+          "title": "Medium: floor",
+          "promptMarkdown": "floor 3.9",
+          "starterCode": "import math\nv=math.floor(3.9)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7se9vjk",
+          "title": "Medium: ceil",
+          "promptMarkdown": "ceil 3.1",
+          "starterCode": "import math\nv=math.ceil(3.1)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==4"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_l0l1w4u",
+          "title": "Hard: pow",
+          "promptMarkdown": "math.pow 2,3",
+          "starterCode": "import math\nv=math.pow(2,3)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==8.0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_q8uv56s",
+          "title": "Hard: hypot",
+          "promptMarkdown": "3-4-5",
+          "starterCode": "import math\nv=math.hypot(3,4)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==5.0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_nhuuipr",
+          "title": "Expert: radians",
+          "promptMarkdown": "degrees to rad",
+          "starterCode": "import math\nv=math.radians(180)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "abs(v-math.pi)<0.01"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1bnj2mi",
+          "title": "Expert: log",
+          "promptMarkdown": "log e",
+          "starterCode": "import math\nv=math.log(math.e)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "abs(v-1)<0.01"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ltn7ua4",
+          "title": "Expert: factorial",
+          "promptMarkdown": "math.factorial 5",
+          "starterCode": "import math\nv=math.factorial(5)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==120"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hs3yngf",
+          "title": "Expert: isclose",
+          "promptMarkdown": "float compare",
+          "starterCode": "import math\nok=math.isclose(0.1+0.2,0.3)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "math.isclose(0.1+0.2,0.3)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_z8f3pjr",
+            "type": "mcq",
+            "prompt": "math.sqrt returns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "float"
+              },
+              {
+                "id": "b",
+                "label": "str"
+              },
+              {
+                "id": "c",
+                "label": "list"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ers33qw",
+            "type": "shortText",
+            "prompt": "Pi constant:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "math.pi"
+            }
+          },
+          {
+            "id": "q_kd3nzxv",
+            "type": "mcq",
+            "prompt": "floor(3.9) is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3"
+              },
+              {
+                "id": "b",
+                "label": "4"
+              },
+              {
+                "id": "c",
+                "label": "3.9"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zx4aztb",
+            "type": "shortText",
+            "prompt": "Angles default in:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "radians"
+            }
+          },
+          {
+            "id": "q_3fi47zf",
+            "type": "mcq",
+            "prompt": "hypot(3,4) is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "5"
+              },
+              {
+                "id": "b",
+                "label": "7"
+              },
+              {
+                "id": "c",
+                "label": "1"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_q10bbq8",
+            "type": "mcq",
+            "prompt": "cmath for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Complex"
+              },
+              {
+                "id": "b",
+                "label": "CSV"
+              },
+              {
+                "id": "c",
+                "label": "GUI"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_5a7fj80",
+            "type": "shortText",
+            "prompt": "ceil rounds:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "up"
+            }
+          },
+          {
+            "id": "q_r0wm72z",
+            "type": "mcq",
+            "prompt": "Expert: isclose helps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Float compare"
+              },
+              {
+                "id": "b",
+                "label": "Strings"
+              },
+              {
+                "id": "c",
+                "label": "Files"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_wq8zagx",
+            "type": "mcq",
+            "prompt": "Expert: degrees() converts:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Radians to degrees"
+              },
+              {
+                "id": "b",
+                "label": "Ints to str"
+              },
+              {
+                "id": "c",
+                "label": "JSON"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_sf9ewo4",
+            "type": "shortText",
+            "prompt": "Expert: log natural base:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "e"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "random_module",
+      "title": "random module",
+      "intro": {
+        "title": "random module",
+        "bodyMarkdown": "`random` provides pseudorandom numbers: random(), randint, choice, shuffle, sample.\n\nNot cryptographic — use secrets module for security tokens.\n\nSeed with random.seed() for reproducible tests.",
+        "sandboxCode": "import random\nrandom.seed(0)\nprint(random.randint(1, 10))\nprint(random.choice([\"red\", \"blue\"]))"
+      },
+      "challenges": [
+        {
+          "id": "ch_r0yy728",
+          "title": "Easy: randint",
+          "promptMarkdown": "1-6",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import random\nn=random.randint(1,6)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "1<=n<=6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rw03xtd",
+          "title": "Easy: random float",
+          "promptMarkdown": "0-1",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "import random\nx=random.random()",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "0<=x<1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_t4ro674",
+          "title": "Medium: choice",
+          "promptMarkdown": "pick",
+          "starterCode": "import random\nc=random.choice([\"a\",\"b\"])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c in [\"a\",\"b\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qeuc7om",
+          "title": "Medium: shuffle",
+          "promptMarkdown": "in place",
+          "starterCode": "import random\nlst=[1,2,3]\nrandom.shuffle(lst)\nok=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "len(lst)==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_w0jm84p",
+          "title": "Hard: sample",
+          "promptMarkdown": "no repeat",
+          "starterCode": "import random\ns=random.sample([1,2,3],2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "len(s)==2 and len(set(s))==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_w55sswh",
+          "title": "Hard: seed",
+          "promptMarkdown": "repro",
+          "starterCode": "import random\nrandom.seed(1)\na=random.randint(1,100)\nrandom.seed(1)\nb=random.randint(1,100)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks a",
+                "assertion": "a==b"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_kmdanqd",
+          "title": "Expert: uniform",
+          "promptMarkdown": "range float",
+          "starterCode": "import random\nx=random.uniform(1,2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "1<=x<=2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hmcp9dm",
+          "title": "Expert: choices",
+          "promptMarkdown": "weighted",
+          "starterCode": "import random\nok=callable(random.choices)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vawgnv4",
+          "title": "Expert: randrange",
+          "promptMarkdown": "step",
+          "starterCode": "import random\nn=random.randrange(0,6,2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n in [0,2,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_akbjwom",
+          "title": "Expert: secrets for crypto",
+          "promptMarkdown": "",
+          "starterCode": "import secrets\nt=secrets.token_hex(16)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks t",
+                "assertion": "len(t)==32"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_m00h464",
+            "type": "mcq",
+            "prompt": "randint(1,6) includes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Both ends"
+              },
+              {
+                "id": "b",
+                "label": "Neither"
+              },
+              {
+                "id": "c",
+                "label": "Only 1"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_u6w2xvq",
+            "type": "shortText",
+            "prompt": "choice picks:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "one item"
+            }
+          },
+          {
+            "id": "q_49zwd97",
+            "type": "mcq",
+            "prompt": "shuffle modifies:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "List in place"
+              },
+              {
+                "id": "b",
+                "label": "Tuple"
+              },
+              {
+                "id": "c",
+                "label": "int"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hlhm4qd",
+            "type": "shortText",
+            "prompt": "Security tokens use:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "secrets"
+            }
+          },
+          {
+            "id": "q_rdm6mo6",
+            "type": "mcq",
+            "prompt": "seed makes sequence:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Reproducible"
+              },
+              {
+                "id": "b",
+                "label": "Truly random"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kcxwzz3",
+            "type": "mcq",
+            "prompt": "sample without replacement:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "True"
+              },
+              {
+                "id": "b",
+                "label": "False"
+              },
+              {
+                "id": "c",
+                "label": "N/A"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_vbhedu4",
+            "type": "shortText",
+            "prompt": "random.random in:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "[0,1)"
+            }
+          },
+          {
+            "id": "q_bijmdki",
+            "type": "mcq",
+            "prompt": "Expert: pseudorandom means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Deterministic algorithm"
+              },
+              {
+                "id": "b",
+                "label": "Magic"
+              },
+              {
+                "id": "c",
+                "label": "Quantum only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_n5g63ze",
+            "type": "mcq",
+            "prompt": "Expert: randrange stop:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Exclusive like range"
+              },
+              {
+                "id": "b",
+                "label": "Inclusive always"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_oz52ycc",
+            "type": "shortText",
+            "prompt": "Expert: do not use random for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "passwords"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "datetime_module",
+      "title": "datetime module",
+      "intro": {
+        "title": "datetime module",
+        "bodyMarkdown": "Work with dates and times: date, time, datetime, timedelta.\n\nstrftime formats; strptime parses. Time zones need zoneinfo (3.9+).\n\nStore UTC in systems; convert for display.",
+        "sandboxCode": "from datetime import date, timedelta\ntoday = date.today()\nprint(today, today + timedelta(days=7))"
+      },
+      "challenges": [
+        {
+          "id": "ch_h0eb8t4",
+          "title": "Easy: date.today",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "from datetime import date\nok=date.today() is not None",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2rlmykx",
+          "title": "Easy: timedelta days",
+          "promptMarkdown": "+7",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "from datetime import date,timedelta\nd=date(2020,1,1)+timedelta(days=7)\nok=d.day==8",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_r04iim9",
+          "title": "Medium: datetime construct",
+          "promptMarkdown": "",
+          "starterCode": "from datetime import datetime\ndt=datetime(2024,6,1,12,30)\nok=dt.year==2024",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_j2sydxj",
+          "title": "Medium: strftime",
+          "promptMarkdown": "format",
+          "starterCode": "from datetime import date\ns=date(2024,1,2).strftime(\"%Y-%m-%d\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "len(s)==10"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hvpd5yg",
+          "title": "Hard: strptime",
+          "promptMarkdown": "parse",
+          "starterCode": "from datetime import datetime\ndt=datetime.strptime(\"2024-01-01\",\"%Y-%m-%d\")\nok=dt.month==1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vi9nt7m",
+          "title": "Hard: timedelta hours",
+          "promptMarkdown": "",
+          "starterCode": "from datetime import timedelta\nh=timedelta(hours=48).total_seconds()/3600",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks h",
+                "assertion": "h==48"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_m7tdiko",
+          "title": "Expert: compare dates",
+          "promptMarkdown": "",
+          "starterCode": "from datetime import date\nok=date(2020,1,1)<date(2021,1,1)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "date(2020,1,1)<date(2021,1,1)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ktq3odl",
+          "title": "Expert: isoformat",
+          "promptMarkdown": "",
+          "starterCode": "from datetime import date\nok=\"2024\" in date(2024,1,1).isoformat()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "\"2024\" in date(2024,1,1).isoformat()"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ifzxajs",
+          "title": "Expert: weekday",
+          "promptMarkdown": "",
+          "starterCode": "from datetime import date\nok=0<=date.today().weekday()<=6",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bai18zs",
+          "title": "Expert: utc concept",
+          "promptMarkdown": "",
+          "starterCode": "from datetime import timezone\ntz=timezone.utc",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks tz",
+                "assertion": "str(tz)==\"UTC\""
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_k1dbipl",
+            "type": "mcq",
+            "prompt": "timedelta adds:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Duration"
+              },
+              {
+                "id": "b",
+                "label": "Strings"
+              },
+              {
+                "id": "c",
+                "label": "Files"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_z30tfd6",
+            "type": "shortText",
+            "prompt": "strftime:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "format"
+            }
+          },
+          {
+            "id": "q_ss5ex0i",
+            "type": "mcq",
+            "prompt": "strptime:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Parse string"
+              },
+              {
+                "id": "b",
+                "label": "Print"
+              },
+              {
+                "id": "c",
+                "label": "Delete"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_eppiyp3",
+            "type": "mcq",
+            "prompt": "date.today() returns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Today date"
+              },
+              {
+                "id": "b",
+                "label": "Time only"
+              },
+              {
+                "id": "c",
+                "label": "int"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_z4hmm3e",
+            "type": "shortText",
+            "prompt": "%Y is:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "year"
+            }
+          },
+          {
+            "id": "q_1tmr24s",
+            "type": "mcq",
+            "prompt": "Expert: store UTC for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Systems"
+              },
+              {
+                "id": "b",
+                "label": "CSS"
+              },
+              {
+                "id": "c",
+                "label": "Images only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_iddf6ej",
+            "type": "mcq",
+            "prompt": "Expert: weekday() 0 is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Monday"
+              },
+              {
+                "id": "b",
+                "label": "Sunday always"
+              },
+              {
+                "id": "c",
+                "label": "Friday"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_4je2emn",
+            "type": "shortText",
+            "prompt": "Expert: isoformat useful for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "serialization"
+            }
+          },
+          {
+            "id": "q_4710pmg",
+            "type": "mcq",
+            "prompt": "Expert: datetime combines:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "date and time"
+              },
+              {
+                "id": "b",
+                "label": "only float"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_vt163na",
+            "type": "shortText",
+            "prompt": "Expert: zoneinfo for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "timezones"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "creating_modules",
+      "title": "Creating modules",
+      "intro": {
+        "title": "Creating modules",
+        "bodyMarkdown": "Any .py file is a module. Save functions in `mymath.py` and `import mymath`.\n\nModule name is filename without .py. Package folders need __init__.py (optional in 3.3+ namespace).\n\nKeep modules focused — one clear responsibility per file.",
+        "sandboxCode": "# mymath.py\n# def add(a, b): return a + b\n\n# main.py\n# import mymath\n# print(mymath.add(1, 2))"
+      },
+      "challenges": [
+        {
+          "id": "ch_v04vbbe",
+          "title": "Easy: module is file",
+          "promptMarkdown": ".py",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ewtjjv8",
+          "title": "Easy: attribute fn",
+          "promptMarkdown": "mymath.add concept",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def add(a,b): return a+b\nok=add(1,2)==3",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5p39wta",
+          "title": "Medium: name matches file",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "filename=\"mymath.py\"\nname=filename.removesuffix(\".py\")",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks name",
+                "assertion": "name==\"mymath\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dpdotdm",
+          "title": "Medium: reuse import",
+          "promptMarkdown": "call twice",
+          "starterCode": "def dbl(x): return x*2\nv=dbl(2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==4"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vaci4re",
+          "title": "Hard: __name__",
+          "promptMarkdown": "module",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=__name__",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==\"__main__\" or isinstance(n,str)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_zoh7lyt",
+          "title": "Hard: if __main__ guard",
+          "promptMarkdown": "",
+          "starterCode": "if __name__ == \"__main__\":\n    print(\"run\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "is_main=__name__==\"__main__\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks is_main",
+                "assertion": "is_main==(__name__==\"__main__\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9k0w596",
+          "title": "Expert: split utils",
+          "promptMarkdown": "",
+          "starterCode": "def normalize(text):\n return text.strip().lower()\nr=normalize(\" Hello \")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r==\"hello\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ujz4jny",
+          "title": "Expert: avoid circular",
+          "promptMarkdown": "",
+          "starterCode": "def parse_json(text):\n import json\n return json.loads(text)\ndata=parse_json('{\"a\":1}')",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks data",
+                "assertion": "data=={\"a\":1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_zmiydx2",
+          "title": "Expert: public names",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "names = [n for n in [\"add\", \"_hidden\"] if not n.startswith(\"_\")]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks names",
+                "assertion": "\"add\" in names and \"_hidden\" not in names"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7tggfg5",
+          "title": "Expert: module docstring",
+          "promptMarkdown": "top",
+          "starterCode": "\"\"\"My module.\"\"\"\n",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "\"\"\""
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_pnw9drv",
+            "type": "mcq",
+            "prompt": "Module is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": ".py file"
+              },
+              {
+                "id": "b",
+                "label": "Only JSON"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zs34xle",
+            "type": "shortText",
+            "prompt": "import uses:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "filename"
+            }
+          },
+          {
+            "id": "q_eoq0o9y",
+            "type": "mcq",
+            "prompt": "__name__ == \"__main__\" when:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Run directly"
+              },
+              {
+                "id": "b",
+                "label": "Imported always"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_5fc1gp5",
+            "type": "mcq",
+            "prompt": "Split code for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Reuse"
+              },
+              {
+                "id": "b",
+                "label": "Obfuscation only"
+              },
+              {
+                "id": "c",
+                "label": "Slower code"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_3icqd15",
+            "type": "shortText",
+            "prompt": "Package is folder with:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "modules"
+            }
+          },
+          {
+            "id": "q_86wua95",
+            "type": "mcq",
+            "prompt": "Leading _ means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Internal convention"
+              },
+              {
+                "id": "b",
+                "label": "Private enforced"
+              },
+              {
+                "id": "c",
+                "label": "Syntax error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_96smt73",
+            "type": "shortText",
+            "prompt": "Circular imports:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "avoid"
+            }
+          },
+          {
+            "id": "q_odlg69o",
+            "type": "mcq",
+            "prompt": "Expert: focused module has:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "One responsibility"
+              },
+              {
+                "id": "b",
+                "label": "Everything"
+              },
+              {
+                "id": "c",
+                "label": "No functions"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_o9ehbs6",
+            "type": "mcq",
+            "prompt": "Expert: module docstring at:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Top"
+              },
+              {
+                "id": "b",
+                "label": "Bottom only"
+              },
+              {
+                "id": "c",
+                "label": "Middle"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kx0zu6u",
+            "type": "shortText",
+            "prompt": "Expert: import mymath expects:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "mymath.py"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "packages",
+      "title": "Packages",
+      "intro": {
+        "title": "Packages",
+        "bodyMarkdown": "Packages are directories of modules with __init__.py (can be empty). Import `package.module`.\n\nOrganize large projects hierarchically. __init__ can expose public API.\n\nRelative imports use dots inside packages: `from . import sibling`.",
+        "sandboxCode": "# pkg/__init__.py\n# pkg/utils.py\n# from pkg import utils"
+      },
+      "challenges": [
+        {
+          "id": "ch_b3re18s",
+          "title": "Easy: folder package",
+          "promptMarkdown": "dir",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_etofu09",
+          "title": "Easy: __init__",
+          "promptMarkdown": "file",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_us2kwbn",
+          "title": "Medium: import path",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "imp=\"pkg.utils\"\nparts=imp.split(\".\")",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks parts",
+                "assertion": "parts==[\"pkg\",\"utils\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cr24egj",
+          "title": "Medium: namespace",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pkg_modules=[\"pkg.math\",\"pkg.utils\"]\ncount=len(set(m.split(\".\")[0] for m in pkg_modules))",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks count",
+                "assertion": "count==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_avs1u29",
+          "title": "Hard: __all__",
+          "promptMarkdown": "",
+          "starterCode": "__all__ = [\"foo\"]",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "__all__=[\"foo\"]\nexports=list(__all__)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks exports",
+                "assertion": "exports==[\"foo\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_x1vav33",
+          "title": "Hard: subpackage",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "path=\"pkg.subpkg.mod\"\ndepth=len(path.split(\".\"))",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks depth",
+                "assertion": "depth==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b5kvkzj",
+          "title": "Expert: relative import",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "line = \"from . import sibling\"\nn = line.count(\".\")",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ogojboz",
+          "title": "Expert: absolute preferred",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "imp = \"import os.path\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks imp",
+                "assertion": "imp.startswith(\"import os\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hmh5r9q",
+          "title": "Expert: init reexport",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "line = \"from .utils import helper\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks line",
+                "assertion": "line.startswith(\"from .\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_j4lglya",
+          "title": "Expert: package layout",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "path = \"myproject/src/myproject/__init__.py\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks path",
+                "assertion": "\"/src/\" in path"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_1n6mws3",
+            "type": "mcq",
+            "prompt": "Package is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Module folder"
+              },
+              {
+                "id": "b",
+                "label": "Single variable"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_x5i69ew",
+            "type": "shortText",
+            "prompt": "__init__.py marks:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "package"
+            }
+          },
+          {
+            "id": "q_9t89nla",
+            "type": "mcq",
+            "prompt": "import pkg.mod loads:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Submodule"
+              },
+              {
+                "id": "b",
+                "label": "C++ only"
+              },
+              {
+                "id": "c",
+                "label": "RAM"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_im0l7qp",
+            "type": "mcq",
+            "prompt": "__all__ controls:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "from pkg import *"
+              },
+              {
+                "id": "b",
+                "label": "CPU"
+              },
+              {
+                "id": "c",
+                "label": "Disk format"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_eymn9ht",
+            "type": "shortText",
+            "prompt": "Relative import uses:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dots"
+            }
+          },
+          {
+            "id": "q_cdi4y4j",
+            "type": "mcq",
+            "prompt": "Expert: nested pkg/subpkg is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Valid"
+              },
+              {
+                "id": "b",
+                "label": "Illegal"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_o636r46",
+            "type": "mcq",
+            "prompt": "Expert: empty __init__:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "OK"
+              },
+              {
+                "id": "b",
+                "label": "Syntax error"
+              },
+              {
+                "id": "c",
+                "label": "Forbidden"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_433xtji",
+            "type": "shortText",
+            "prompt": "Expert: organize large code in:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "packages"
+            }
+          },
+          {
+            "id": "q_bhcvlie",
+            "type": "mcq",
+            "prompt": "Expert: absolute imports clearer for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Readers"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "Fonts"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_06a6n7a",
+            "type": "shortText",
+            "prompt": "Expert: public API via:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "__init__"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "pip_venv",
+      "title": "pip and virtual environments",
+      "intro": {
+        "title": "pip and virtual environments",
+        "bodyMarkdown": "pip installs third-party packages from PyPI: `pip install requests`.\n\nVirtual environments isolate project dependencies per project.\n\nActivate venv, then pip install; commit requirements.txt not venv folder.",
+        "sandboxCode": "# python -m venv .venv\n# pip install requests\n# pip freeze > requirements.txt"
+      },
+      "challenges": [
+        {
+          "id": "ch_ycjnmfo",
+          "title": "Easy: pip install",
+          "promptMarkdown": "concept",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_othzb2g",
+          "title": "Easy: import installed",
+          "promptMarkdown": "requests optional",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7yh9934",
+          "title": "Medium: requirements.txt",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "line=\"requests==2.31.0\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks line",
+                "assertion": "line.startswith(\"requests\") and \"==\" in line"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_aqjbkco",
+          "title": "Medium: venv isolate",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "venv_a=\"/project_a/.venv\"\nvenv_b=\"/project_b/.venv\"\nisolated=venv_a!=venv_b",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks isolated",
+                "assertion": "isolated==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ieavapz",
+          "title": "Hard: pip freeze",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "line=\"requests==2.31.0\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks line",
+                "assertion": "\"==\" in line and len(line.split(\"==\"))==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_nsdsvpm",
+          "title": "Hard: python -m pip",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "cmd=\"python -m pip install requests\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks cmd",
+                "assertion": "cmd.startswith(\"python -m pip\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dsboy6z",
+          "title": "Expert: upgrade pip",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "cmd = \"python -m pip install --upgrade pip\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks cmd",
+                "assertion": "\"--upgrade\" in cmd"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_wkpk0nh",
+          "title": "Expert: uninstall",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "cmd = \"pip uninstall requests -y\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks cmd",
+                "assertion": "\"uninstall\" in cmd"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_c02y5dx",
+          "title": "Expert: do not commit venv",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "gitignore = \".venv/\n__pycache__/\n*.pyc\n\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks gitignore",
+                "assertion": "\".venv\" in gitignore"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_36txzbo",
+          "title": "Expert: pyproject.toml",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "text = \"[project]\nname = \"demo\"\nversion = \"0.1.0\"\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks text",
+                "assertion": "\"[project]\" in text"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_u7rk4u2",
+            "type": "mcq",
+            "prompt": "pip installs from:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "PyPI"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "RAM"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pf94qri",
+            "type": "shortText",
+            "prompt": "venv isolates:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dependencies"
+            }
+          },
+          {
+            "id": "q_isd1u7m",
+            "type": "mcq",
+            "prompt": "requirements.txt lists:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Packages"
+              },
+              {
+                "id": "b",
+                "label": "Photos"
+              },
+              {
+                "id": "c",
+                "label": "CPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_emx12vp",
+            "type": "mcq",
+            "prompt": "Commit venv folder:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No"
+              },
+              {
+                "id": "b",
+                "label": "Always"
+              },
+              {
+                "id": "c",
+                "label": "Required"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_wzb9c17",
+            "type": "shortText",
+            "prompt": "Create venv:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "python -m venv"
+            }
+          },
+          {
+            "id": "q_fs8p7d4",
+            "type": "mcq",
+            "prompt": "pip freeze outputs:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Installed versions"
+              },
+              {
+                "id": "b",
+                "label": "Random"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xcrhom2",
+            "type": "shortText",
+            "prompt": "Activate venv before:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "install"
+            }
+          },
+          {
+            "id": "q_7o7thl3",
+            "type": "mcq",
+            "prompt": "Expert: pyproject.toml for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Modern packaging"
+              },
+              {
+                "id": "b",
+                "label": "CSS"
+              },
+              {
+                "id": "c",
+                "label": "Audio"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_e0bdbec",
+            "type": "mcq",
+            "prompt": "Expert: global pip install can:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Conflict projects"
+              },
+              {
+                "id": "b",
+                "label": "Always ideal"
+              },
+              {
+                "id": "c",
+                "label": "Speed CPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1jax430",
+            "type": "shortText",
+            "prompt": "Expert: pin versions for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "reproducibility"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "name_main",
+      "title": "__name__ == \"__main__\"",
+      "intro": {
+        "title": "__name__ == \"__main__\"",
+        "bodyMarkdown": "When a file runs directly, __name__ is \"__main__\". When imported, __name__ is module name.\n\nGuard `if __name__ == \"__main__\":` runs demo/tests only when executed directly.\n\nStandard pattern for scripts that are also importable modules.",
+        "sandboxCode": "def main():\n    print(\"Running main\")\n\nif __name__ == \"__main__\":\n    main()"
+      },
+      "challenges": [
+        {
+          "id": "ch_vn1og1e",
+          "title": "Easy: __name__ exists",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "n=__name__",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "isinstance(__name__,str)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_flz2tnm",
+          "title": "Easy: main guard",
+          "promptMarkdown": "pattern",
+          "starterCode": "if __name__ == \"__main__\":\n    print(1)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "if __name__"
+            ]
+          }
+        },
+        {
+          "id": "ch_lo4xyrw",
+          "title": "Medium: define main",
+          "promptMarkdown": "",
+          "starterCode": "def main():\n return 0\nok=callable(main)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "callable(main)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ic90eeb",
+          "title": "Medium: import sets name",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "direct=False\nname=\"utils\" if not direct else \"__main__\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks name",
+                "assertion": "name==\"utils\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vmrjcxi",
+          "title": "Hard: callable main",
+          "promptMarkdown": "",
+          "starterCode": "def main():\n return 0\ncode=main()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks code",
+                "assertion": "code==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bc6q3ic",
+          "title": "Hard: no run on import",
+          "promptMarkdown": "",
+          "starterCode": "def main():\n global ran\n ran=True\nimported_as=\"utils\"\nif imported_as==\"__main__\":\n main()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ran=False",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ran",
+                "assertion": "ran==False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_mmrpduq",
+          "title": "Expert: argparse in main",
+          "promptMarkdown": "",
+          "starterCode": "import argparse\np=argparse.ArgumentParser()\np.add_argument(\"--n\", type=int, default=1)\nn=p.parse_args([\"--n\",\"1\"]).n",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pdcmbnk",
+          "title": "Expert: unittest in main",
+          "promptMarkdown": "",
+          "starterCode": "import unittest\nclass T(unittest.TestCase):\n def test_ok(self): self.assertTrue(True)\ncount=unittest.TestLoader().loadTestsFromTestCase(T).countTestCases()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks count",
+                "assertion": "count==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_fpusf8b",
+          "title": "Expert: return code",
+          "promptMarkdown": "",
+          "starterCode": "def main():\n return 0\ncode=main()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks code",
+                "assertion": "code==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_u8zt82x",
+          "title": "Expert: library vs script",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "guard = \"if __name__ == \"__main__\":\n    main()\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks guard",
+                "assertion": "guard.startswith(\"if __name__\")"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_6cz90t4",
+            "type": "mcq",
+            "prompt": "Direct run __name__ is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "__main__"
+              },
+              {
+                "id": "b",
+                "label": "main"
+              },
+              {
+                "id": "c",
+                "label": "None"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_bhctqy7",
+            "type": "shortText",
+            "prompt": "Guard pattern uses:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "__name__"
+            }
+          },
+          {
+            "id": "q_8fll1ah",
+            "type": "mcq",
+            "prompt": "Imported module __name__ is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "module name"
+              },
+              {
+                "id": "b",
+                "label": "__main__"
+              },
+              {
+                "id": "c",
+                "label": "random"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qwi9v0j",
+            "type": "mcq",
+            "prompt": "main() function is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Convention"
+              },
+              {
+                "id": "b",
+                "label": "Required keyword"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_lfnw6o6",
+            "type": "shortText",
+            "prompt": "Tests in guard avoid:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "import side effects"
+            }
+          },
+          {
+            "id": "q_3taeiy1",
+            "type": "mcq",
+            "prompt": "Expert: library file should:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Import without running CLI"
+              },
+              {
+                "id": "b",
+                "label": "Always print"
+              },
+              {
+                "id": "c",
+                "label": "Delete sys"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ku8d1y0",
+            "type": "mcq",
+            "prompt": "Expert: script entry:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "__main__ block"
+              },
+              {
+                "id": "b",
+                "label": "HTML"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zxhals6",
+            "type": "shortText",
+            "prompt": "Expert: __name__ is:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "str"
+            }
+          },
+          {
+            "id": "q_xawze8q",
+            "type": "mcq",
+            "prompt": "Expert: argparse goes in:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "main often"
+              },
+              {
+                "id": "b",
+                "label": "class only"
+              },
+              {
+                "id": "c",
+                "label": "comments"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_upvc8mf",
+            "type": "shortText",
+            "prompt": "Expert: reusable module + CLI via:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "name main"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "organizing_projects",
+      "title": "Organizing projects",
+      "intro": {
+        "title": "Organizing projects",
+        "bodyMarkdown": "Structure: src layout, tests/, docs/, requirements.txt, README.md.\n\nSeparate concerns: models, views, utils, config. Consistent naming and imports.\n\nAs projects grow, packages beat one giant file.",
+        "sandboxCode": "# myapp/\n#   __init__.py\n#   main.py\n#   utils.py\n# tests/\n# README.md"
+      },
+      "challenges": [
+        {
+          "id": "ch_iy02n0j",
+          "title": "Easy: README",
+          "promptMarkdown": "docs",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8hd4mvv",
+          "title": "Easy: tests folder",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=True",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ed57wbr",
+          "title": "Medium: separate utils",
+          "promptMarkdown": "",
+          "starterCode": "def add(a,b): return a+b\nresult=add(2,3)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks result",
+                "assertion": "result==5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bwxl70w",
+          "title": "Medium: config module",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "cfg={\"DEBUG\":True,\"DB\":\"local\"}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks cfg",
+                "assertion": "cfg[\"DEBUG\"]==True and cfg[\"DB\"]==\"local\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_u8rk9bm",
+          "title": "Hard: src layout",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "path=\"myproject/src/myapp/__init__.py\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks path",
+                "assertion": "\"/src/\" in path"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_lx9ipj5",
+          "title": "Hard: consistent imports",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "imp=\"from myapp.utils import helper\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks imp",
+                "assertion": "imp.startswith(\"from myapp\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yoxaj8i",
+          "title": "Expert: avoid giant file",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "files = [\"models.py\", \"services.py\", \"views.py\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks files",
+                "assertion": "len(files)>=2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_iam0hxi",
+          "title": "Expert: entry point",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "entry = \"src/myapp/main.py\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks entry",
+                "assertion": "entry.endswith(\"main.py\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1c6nbwl",
+          "title": "Expert: version file",
+          "promptMarkdown": "__version__",
+          "starterCode": "__version__ = \"0.1.0\"",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "__version__"
+            ]
+          }
+        },
+        {
+          "id": "ch_gft4nwc",
+          "title": "Expert: document layout",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "readme = \"# MyApp\n\n## Layout\n- src/\n- tests/\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks readme",
+                "assertion": "readme.startswith(\"# \")"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_mhjdav1",
+            "type": "mcq",
+            "prompt": "tests/ folder for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Automated tests"
+              },
+              {
+                "id": "b",
+                "label": "Images only"
+              },
+              {
+                "id": "c",
+                "label": "Secrets"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_r8q2zi6",
+            "type": "shortText",
+            "prompt": "README explains:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "project"
+            }
+          },
+          {
+            "id": "q_7lza5z1",
+            "type": "mcq",
+            "prompt": "Split modules when:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "File too large"
+              },
+              {
+                "id": "b",
+                "label": "Never"
+              },
+              {
+                "id": "c",
+                "label": "Always one file"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fikjsrn",
+            "type": "mcq",
+            "prompt": "src layout helps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Import clarity"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "Fonts"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_3arsh2n",
+            "type": "shortText",
+            "prompt": "requirements.txt pins:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "deps"
+            }
+          },
+          {
+            "id": "q_k2vin35",
+            "type": "mcq",
+            "prompt": "Expert: config separate from:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Business logic"
+              },
+              {
+                "id": "b",
+                "label": "Everything mixed"
+              },
+              {
+                "id": "c",
+                "label": "CPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_nnls95b",
+            "type": "mcq",
+            "prompt": "Expert: __version__ for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tracking releases"
+              },
+              {
+                "id": "b",
+                "label": "Random"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_y5vmwx3",
+            "type": "shortText",
+            "prompt": "Expert: utils for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "helpers"
+            }
+          },
+          {
+            "id": "q_wsikj88",
+            "type": "mcq",
+            "prompt": "Expert: consistent structure aids:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Collaboration"
+              },
+              {
+                "id": "b",
+                "label": "Obfuscation"
+              },
+              {
+                "id": "c",
+                "label": "Slower code"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_7bpspwd",
+            "type": "shortText",
+            "prompt": "Expert: entry point often:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "main"
+            }
+          }
+        ]
+      }
+    }
+  ]
 }

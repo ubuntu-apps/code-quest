@@ -58,6 +58,7 @@ const challengeSchema = z.object({
 const levelIntroSchema = z.object({
   title: z.string().optional(),
   bodyMarkdown: z.string(),
+  sandboxCode: z.string().optional(),
   readMore: z
     .object({
       label: z.string().optional(),

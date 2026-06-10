@@ -50,6 +50,8 @@ export interface Level {
   intro: {
     title?: string
     bodyMarkdown: string
+    /** Default code loaded into the intro sandbox for this topic. */
+    sandboxCode?: string
     readMore?: {
       label?: string
       url: string

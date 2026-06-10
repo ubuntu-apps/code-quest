@@ -1,5 +1,3351 @@
 {
   "sectionId": "object_oriented",
   "title": "Object Oriented",
-  "levels": []
+  "levels": [
+    {
+      "id": "classes_basics",
+      "title": "Classes and objects",
+      "intro": {
+        "title": "Classes and objects",
+        "bodyMarkdown": "A class is a blueprint; an object is an instance. Define with `class Dog:` and instantiate with `Dog()`.\n\nObjects bundle data (attributes) and behavior (methods). `self` refers to the current instance in methods.\n\nClasses organize code around real-world nouns — users, accounts, games.",
+        "sandboxCode": "class Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        return f\"{self.name} says woof!\"\n\nd = Dog(\"Rex\")\nprint(d.bark())"
+      },
+      "challenges": [
+        {
+          "id": "ch_ep53yg7",
+          "title": "Easy: define class",
+          "promptMarkdown": "",
+          "starterCode": "class Cat:\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "class"
+            ]
+          }
+        },
+        {
+          "id": "ch_ezh3m6k",
+          "title": "Easy: create instance",
+          "promptMarkdown": "",
+          "starterCode": "class Cat:\n    pass\nc=Cat()",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "Cat()"
+            ]
+          }
+        },
+        {
+          "id": "ch_8nk024y",
+          "title": "Medium: __init__",
+          "promptMarkdown": "",
+          "starterCode": "class P:\n def __init__(self,n): self.n=n\np=P(3)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks p",
+                "assertion": "p.n==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yssss14",
+          "title": "Medium: self attribute",
+          "promptMarkdown": "",
+          "starterCode": "class P:\n def __init__(self,n): self.n=n\np=P(3)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks p",
+                "assertion": "p.n==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jva5lr1",
+          "title": "Hard: method call",
+          "promptMarkdown": "",
+          "starterCode": "class G:\n def hi(self): return \"hi\"\ns=G().hi()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"hi\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4ro2lrq",
+          "title": "Hard: two instances",
+          "promptMarkdown": "",
+          "starterCode": "class P:\n def __init__(self,n): self.n=n\na=P(1); b=P(2)\nok=a.n!=b.n",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "a.n!=b.n"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7itlzly",
+          "title": "Expert: repr basics",
+          "promptMarkdown": "",
+          "starterCode": "class Point:\n def __init__(self,x,y): self.x,self.y=x,y\n def __repr__(self): return f\"Point({self.x}, {self.y})\"\nr=repr(Point(1,2))",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r==\"Point(1, 2)\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_w4axe1d",
+          "title": "Expert: class attribute",
+          "promptMarkdown": "",
+          "starterCode": "class Dog:\n species=\"Canis\"\nd1=Dog(); d2=Dog()\nok=d1.species==d2.species==Dog.species",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "d1.species==d2.species==Dog.species"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_z1odi4l",
+          "title": "Expert: type check",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class Dog: pass\nok=isinstance(Dog(\"x\"),Dog)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "isinstance(Dog(\"x\"),Dog)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_z9su5h5",
+          "title": "Expert: docstring class",
+          "promptMarkdown": "",
+          "starterCode": "class X:\n    \"\"\"Model X.\"\"\"\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "\"\"\""
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_omn4kcq",
+            "type": "mcq",
+            "prompt": "class defines:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Blueprint"
+              },
+              {
+                "id": "b",
+                "label": "CPU"
+              },
+              {
+                "id": "c",
+                "label": "File"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qi96n6z",
+            "type": "shortText",
+            "prompt": "Instance created with:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ClassName()"
+            }
+          },
+          {
+            "id": "q_2ps3btj",
+            "type": "mcq",
+            "prompt": "self in method refers to:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Current instance"
+              },
+              {
+                "id": "b",
+                "label": "Module"
+              },
+              {
+                "id": "c",
+                "label": "Global"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ruqn0kd",
+            "type": "mcq",
+            "prompt": "__init__ is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Constructor"
+              },
+              {
+                "id": "b",
+                "label": "Destructor only"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_4iug106",
+            "type": "shortText",
+            "prompt": "Object bundles data and:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "behavior"
+            }
+          },
+          {
+            "id": "q_sm9ueyr",
+            "type": "mcq",
+            "prompt": "Expert: isinstance checks:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Type relationship"
+              },
+              {
+                "id": "b",
+                "label": "Speed"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ittc9mu",
+            "type": "mcq",
+            "prompt": "Expert: two instances:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Separate state"
+              },
+              {
+                "id": "b",
+                "label": "Share all attrs always"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tewicpm",
+            "type": "shortText",
+            "prompt": "Expert: method first param:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "self"
+            }
+          },
+          {
+            "id": "q_u83rexp",
+            "type": "mcq",
+            "prompt": "Expert: class attribute shared by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "All instances"
+              },
+              {
+                "id": "b",
+                "label": "None"
+              },
+              {
+                "id": "c",
+                "label": "One only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_uib201d",
+            "type": "shortText",
+            "prompt": "Expert: instantiate calls:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "__init__"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "methods",
+      "title": "Instance methods",
+      "intro": {
+        "title": "Instance methods",
+        "bodyMarkdown": "Methods are functions on the class taking `self` first. Call via `obj.method()`.\n\nThey read and modify instance state. Keep methods focused on one responsibility.\n\nAvoid putting unrelated logic in one giant method — split helpers.",
+        "sandboxCode": "class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n += 1\n    def value(self):\n        return self.n\nc = Counter()\nc.inc()\nprint(c.value())"
+      },
+      "challenges": [
+        {
+          "id": "ch_ndyxgoh",
+          "title": "Easy: define method",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n    def go(self): pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "def "
+            ]
+          }
+        },
+        {
+          "id": "ch_kurwm2c",
+          "title": "Easy: call method",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class A:\n def one(self): return 1\nv=A().one()",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_i3v4dzl",
+          "title": "Medium: modify self",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self): self.n=0\n def add(self): self.n+=1\nc=C(); c.add(); c.add()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c.n==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dl81ehg",
+          "title": "Medium: return from method",
+          "promptMarkdown": "",
+          "starterCode": "class B:\n def ok(self): return \"ok\"\ns=B().ok()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"ok\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_089n27w",
+          "title": "Hard: chain calls",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self): self.n=0\n def bump(self): self.n+=1; return self\nc=C().bump().bump().bump(); n=c.n",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qwxhhig",
+          "title": "Hard: private convention",
+          "promptMarkdown": "",
+          "starterCode": "class S:\n def _helper(self): return 1\nv=S()._helper()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_da9yvwy",
+          "title": "Expert: classmethod intro",
+          "promptMarkdown": "",
+          "starterCode": "class User:\n def __init__(self,name): self.name=name\n @classmethod\n def from_string(cls,s): return cls(s)\nu=User.from_string(\"ana\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks u",
+                "assertion": "isinstance(u,User)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_56xilhq",
+          "title": "Expert: staticmethod intro",
+          "promptMarkdown": "",
+          "starterCode": "class Math:\n @staticmethod\n def add(a,b): return a+b\nv=Math.add(2,4)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9guav2n",
+          "title": "Expert: property later",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self,r): self._r=r\n @property\n def area(self): return self._r**2\na=C(3).area",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks a",
+                "assertion": "C(3).area==9"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yewnuzn",
+          "title": "Expert: dunder str",
+          "promptMarkdown": "",
+          "starterCode": "class G:\n def __str__(self): return \"hello\"\ns=str(G())",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"hello\""
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_hdf65m2",
+            "type": "mcq",
+            "prompt": "First param of instance method:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "self"
+              },
+              {
+                "id": "b",
+                "label": "cls"
+              },
+              {
+                "id": "c",
+                "label": "this"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_sua2qge",
+            "type": "shortText",
+            "prompt": "Call method as:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "obj.method()"
+            }
+          },
+          {
+            "id": "q_udbwtu9",
+            "type": "mcq",
+            "prompt": "Method can modify:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Instance state"
+              },
+              {
+                "id": "b",
+                "label": "Python version"
+              },
+              {
+                "id": "c",
+                "label": "OS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_clxxlcy",
+            "type": "mcq",
+            "prompt": "_single leading underscore means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Internal convention"
+              },
+              {
+                "id": "b",
+                "label": "Private enforced"
+              },
+              {
+                "id": "c",
+                "label": "Syntax error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_y8uy05e",
+            "type": "shortText",
+            "prompt": "Keep methods:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "focused"
+            }
+          },
+          {
+            "id": "q_1uc1oz9",
+            "type": "mcq",
+            "prompt": "Expert: returning self enables:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Chaining"
+              },
+              {
+                "id": "b",
+                "label": "Import"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_88fqgox",
+            "type": "mcq",
+            "prompt": "Expert: cls is for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "classmethod"
+              },
+              {
+                "id": "b",
+                "label": "Every method"
+              },
+              {
+                "id": "c",
+                "label": "Variables"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_dzdrh33",
+            "type": "shortText",
+            "prompt": "Expert: staticmethod no:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "self"
+            }
+          },
+          {
+            "id": "q_7ie7btb",
+            "type": "mcq",
+            "prompt": "Expert: giant method problem:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Hard to test"
+              },
+              {
+                "id": "b",
+                "label": "Faster"
+              },
+              {
+                "id": "c",
+                "label": "Required"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ysx8cxu",
+            "type": "shortText",
+            "prompt": "Expert: behavior lives in:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "methods"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "inheritance",
+      "title": "Inheritance",
+      "intro": {
+        "title": "Inheritance",
+        "bodyMarkdown": "Subclass inherits parent: `class Cat(Animal):`. Override methods for specialized behavior.\n\nUse `super()` to call parent implementation. Favor composition when inheritance is shallow.\n\nLiskov: subclass should be substitutable for parent.",
+        "sandboxCode": "class Animal:\n    def speak(self):\n        return \"...\"\n\nclass Dog(Animal):\n    def speak(self):\n        return \"woof\"\n\nprint(Dog().speak())"
+      },
+      "challenges": [
+        {
+          "id": "ch_li9kmy7",
+          "title": "Easy: subclass syntax",
+          "promptMarkdown": "",
+          "starterCode": "class Child(Parent):\n    pass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "("
+            ]
+          }
+        },
+        {
+          "id": "ch_l2wtx2r",
+          "title": "Easy: inherit method",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class P:\n def m(self): return 1\nclass Child(P): pass\nok=Child().m()==1",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "Child().m()==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_au3cnrn",
+          "title": "Medium: override",
+          "promptMarkdown": "",
+          "starterCode": "class P:\n def tag(self): return \"parent\"\nclass C(P):\n def tag(self): return \"child\"\ns=C().tag()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"child\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_izi1rno",
+          "title": "Medium: super call",
+          "promptMarkdown": "",
+          "starterCode": "class P:\n def __init__(self): self.x=1\nclass C(P):\n def __init__(self):\n  super().__init__()\nc=C()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c.x==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_m85qa46",
+          "title": "Hard: isinstance subclass",
+          "promptMarkdown": "",
+          "starterCode": "class P: pass\nclass C(P): pass\nok=isinstance(C(),P)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "isinstance(C(),P)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_h7yjhn6",
+          "title": "Hard: extend __init__",
+          "promptMarkdown": "",
+          "starterCode": "class P:\n def __init__(self): self.x=1\nclass C(P):\n def __init__(self):\n  super().__init__()\n  self.y=2\nc=C()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "c.y==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dqy8zlp",
+          "title": "Expert: mro",
+          "promptMarkdown": "",
+          "starterCode": "class A: pass\nclass B(A): pass\nclass C(B): pass\nmro=C.__mro__",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks mro",
+                "assertion": "mro[0].__name__==\"C\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dzamdi3",
+          "title": "Expert: composition over",
+          "promptMarkdown": "",
+          "starterCode": "class Engine:\n def start(self): return \"vroom\"\nclass Car:\n def __init__(self,e): self.engine=e\n def drive(self): return self.engine.start()\ns=Car(Engine()).drive()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"vroom\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1jyvf2f",
+          "title": "Expert: abstract base",
+          "promptMarkdown": "",
+          "starterCode": "from abc import ABC, abstractmethod\nclass D(ABC):\n @abstractmethod\n def go(self): pass\nok=issubclass(D,ABC)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "issubclass(D,ABC)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vtts72d",
+          "title": "Expert: multiple inheritance",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n def a(self): return 1\nclass B:\n def b(self): return 2\nclass C(A,B): pass\nok=isinstance(C(),(A,B))",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "isinstance(C(),(A,B))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_p3ckisy",
+            "type": "mcq",
+            "prompt": "Inheritance syntax:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "class B(A):"
+              },
+              {
+                "id": "b",
+                "label": "class B extends A"
+              },
+              {
+                "id": "c",
+                "label": "inherit B from A"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tyvqjak",
+            "type": "shortText",
+            "prompt": "super() calls:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "parent"
+            }
+          },
+          {
+            "id": "q_7kdpesw",
+            "type": "mcq",
+            "prompt": "Override means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Replace parent method"
+              },
+              {
+                "id": "b",
+                "label": "Delete parent"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tfqea3z",
+            "type": "mcq",
+            "prompt": "isinstance(sub, Parent):",
+            "choices": [
+              {
+                "id": "a",
+                "label": "True"
+              },
+              {
+                "id": "b",
+                "label": "Always false"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_8jml1bi",
+            "type": "shortText",
+            "prompt": "Favor composition when:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "has-a"
+            }
+          },
+          {
+            "id": "q_qt3x6x0",
+            "type": "mcq",
+            "prompt": "Expert: MRO is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Method resolution order"
+              },
+              {
+                "id": "b",
+                "label": "Memory"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_00gzsic",
+            "type": "mcq",
+            "prompt": "Expert: Liskov about:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Substitutability"
+              },
+              {
+                "id": "b",
+                "label": "Speed"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hggvlp5",
+            "type": "shortText",
+            "prompt": "Expert: super in __init__:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "common"
+            }
+          },
+          {
+            "id": "q_hjg5087",
+            "type": "mcq",
+            "prompt": "Expert: multiple bases:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Allowed careful"
+              },
+              {
+                "id": "b",
+                "label": "Illegal"
+              },
+              {
+                "id": "c",
+                "label": "Always best"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_r67gtp0",
+            "type": "shortText",
+            "prompt": "Expert: ABC enforces:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "interface"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "encapsulation",
+      "title": "Encapsulation",
+      "intro": {
+        "title": "Encapsulation",
+        "bodyMarkdown": "Hide internal details; expose clean public API. Use `_name` convention for internal use.\n\nProperties can guard attribute access. Do not expose mutable internals casually.\n\nEncapsulation reduces coupling between components.",
+        "sandboxCode": "class BankAccount:\n    def __init__(self, balance=0):\n        self._balance = balance\n    def deposit(self, amount):\n        if amount > 0:\n            self._balance += amount\n    def get_balance(self):\n        return self._balance\n\na = BankAccount(100)\na.deposit(50)\nprint(a.get_balance())"
+      },
+      "challenges": [
+        {
+          "id": "ch_d4i71t5",
+          "title": "Easy: underscore attr",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n    def __init__(self):\n        self._x=1",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "_"
+            ]
+          }
+        },
+        {
+          "id": "ch_37vha9n",
+          "title": "Easy: public method",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n    def show(self): return 1",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "def deposit"
+            ]
+          }
+        },
+        {
+          "id": "ch_4f2vsqf",
+          "title": "Medium: no direct mutate",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n def __init__(self): self._b=100\n def add(self,n): self._b+=n\na=A(); a.add(50); b=a._b",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks b",
+                "assertion": "b==150"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rmirhb4",
+          "title": "Medium: validate in method",
+          "promptMarkdown": "",
+          "starterCode": "class W:\n def set(self,v):\n  if v>=0: self._v=v\nw=W(); w.set(5)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks w",
+                "assertion": "w._v==5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4tuewpn",
+          "title": "Hard: property getter",
+          "promptMarkdown": "",
+          "starterCode": "class Account:\n def __init__(self): self._bal=100\n @property\n def balance(self): return self._bal\nb=Account().balance",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks b",
+                "assertion": "b==100"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_l47rx07",
+          "title": "Hard: read-only pattern",
+          "promptMarkdown": "",
+          "starterCode": "class RO:\n def __init__(self): self._x=1\n @property\n def x(self): return self._x\nblocked=False\ntry:\n RO().x=2\nexcept AttributeError:\n blocked=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks blocked",
+                "assertion": "blocked==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1f6rrsa",
+          "title": "Expert: name mangling",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self): self.__secret=42\nok=hasattr(C(),\"_C__secret\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "hasattr(C(),\"_C__secret\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_loirwy6",
+          "title": "Expert: facade",
+          "promptMarkdown": "",
+          "starterCode": "class SubA:\n def step(self): return 1\nclass SubB:\n def step(self): return 2\nclass Facade:\n def __init__(self): self.a=SubA(); self.b=SubB()\n def go(self): return self.a.step()+self.b.step()\nhome=Facade()\nok=home.go()==3",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "home.go()==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_frf8zsm",
+          "title": "Expert: leaky abstraction",
+          "promptMarkdown": "",
+          "starterCode": "class Account:\n def __init__(self): self._balance=100\n def deposit(self,n): self._balance+=n\n def balance(self): return self._balance\na=Account(); a.deposit(50); b=a.balance()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks b",
+                "assertion": "b==150"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7vywg7s",
+          "title": "Expert: dataclass private",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass, field\n@dataclass\nclass User:\n name:str\n password:str=field(repr=False, default=\"secret\")\nu=User(\"Ana\"); s=str(u)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "\"password\" not in str(u)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_84rtfya",
+            "type": "mcq",
+            "prompt": "Encapsulation hides:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Implementation details"
+              },
+              {
+                "id": "b",
+                "label": "All code"
+              },
+              {
+                "id": "c",
+                "label": "Python"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_b3innd4",
+            "type": "shortText",
+            "prompt": "_prefix means:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "internal"
+            }
+          },
+          {
+            "id": "q_h3dgpy6",
+            "type": "mcq",
+            "prompt": "Public API should be:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Stable clear"
+              },
+              {
+                "id": "b",
+                "label": "Random"
+              },
+              {
+                "id": "c",
+                "label": "Empty"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_jlvkx9i",
+            "type": "mcq",
+            "prompt": "Validate in setter prevents:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Invalid state"
+              },
+              {
+                "id": "b",
+                "label": "Imports"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_netnug5",
+            "type": "shortText",
+            "prompt": "Coupling reduced by:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "encapsulation"
+            }
+          },
+          {
+            "id": "q_rt72uxv",
+            "type": "mcq",
+            "prompt": "Expert: __double mangling:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Name rewrite"
+              },
+              {
+                "id": "b",
+                "label": "Encryption"
+              },
+              {
+                "id": "c",
+                "label": "Delete"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fp72kmr",
+            "type": "mcq",
+            "prompt": "Expert: property exposes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Controlled access"
+              },
+              {
+                "id": "b",
+                "label": "Raw disk"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fckhgm4",
+            "type": "shortText",
+            "prompt": "Expert: facade provides:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "simple interface"
+            }
+          },
+          {
+            "id": "q_3xocb8c",
+            "type": "mcq",
+            "prompt": "Expert: leaky abstraction:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Internals show through"
+              },
+              {
+                "id": "b",
+                "label": "Perfect"
+              },
+              {
+                "id": "c",
+                "label": "Required"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_e8tim9w",
+            "type": "shortText",
+            "prompt": "Expert: deposit validates:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "amount"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "polymorphism",
+      "title": "Polymorphism",
+      "intro": {
+        "title": "Polymorphism",
+        "bodyMarkdown": "Same interface, different behavior. Duck typing: if it quacks like a duck, use it.\n\nFunctions accepting any object with required methods work polymorphically.\n\nInheritance is one form; protocols and ABCs formalize expectations.",
+        "sandboxCode": "def announce(animal):\n    print(animal.speak())\n\nclass Cat:\n    def speak(self):\n        return \"meow\"\n\nclass Dog:\n    def speak(self):\n        return \"woof\"\n\nfor a in [Cat(), Dog()]:\n    print(a.speak())"
+      },
+      "challenges": [
+        {
+          "id": "ch_warkda1",
+          "title": "Easy: same method name",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class Cat:\n def speak(self): return \"meow\"\nok=Cat().speak()==\"meow\"",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "Cat().speak()==\"meow\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pqi1qj4",
+          "title": "Easy: loop polymorphic",
+          "promptMarkdown": "",
+          "starterCode": "animals=[Cat(),Dog()]\nfor a in animals: print(a.speak())",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "for"
+            ]
+          }
+        },
+        {
+          "id": "ch_29k12cq",
+          "title": "Medium: function accepts any",
+          "promptMarkdown": "",
+          "starterCode": "class Dog:\n def speak(self): return \"woof\"\ndef announce(a): return a.speak()\nok=announce(Dog())",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==\"woof\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_u9ancbj",
+          "title": "Medium: duck typing",
+          "promptMarkdown": "",
+          "starterCode": "class Dog:\n def speak(self): return \"woof\"\ndef announce(a): return a.speak()\nok=announce(Dog())",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==\"woof\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pjmax8u",
+          "title": "Hard: no isinstance needed",
+          "promptMarkdown": "",
+          "starterCode": "class Bot:\n def run(self): return \"go\"\ndef go(x): return x.run()\nok=go(Bot())",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==\"go\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xkkjiex",
+          "title": "Hard: protocol style",
+          "promptMarkdown": "",
+          "starterCode": "from typing import Protocol\nclass Runner(Protocol):\n def run(self): ...\nclass Bot:\n def run(self): return \"run\"\ndef dispatch(r: Runner): return r.run()\nok=dispatch(Bot())",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "dispatch(Bot())==\"run\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_r7ooyec",
+          "title": "Expert: ABC enforce",
+          "promptMarkdown": "",
+          "starterCode": "from abc import ABC, abstractmethod\nclass Shape(ABC):\n @abstractmethod\n def area(self): pass\nerr=False\ntry:\n Shape()\nexcept TypeError:\n err=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks err",
+                "assertion": "err==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qa55irp",
+          "title": "Expert: operator overloading",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n def __init__(self,v): self.v=v\n def __add__(self,o): return A(self.v+o.v)\nv=(A(1)+A(2)).v",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "(A(1)+A(2)).v==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_shqfomi",
+          "title": "Expert: double dispatch",
+          "promptMarkdown": "",
+          "starterCode": "class Length:\n def __init__(self,n,unit=\"cm\"): self.n,self.unit=n,unit\n def __add__(self,o): return Length(self.n+o.n,self.unit)\n def __str__(self): return f\"{self.n}{self.unit}\"\ns=str(Length(1)+Length(2))",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"3cm\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1iv73ga",
+          "title": "Expert: structural subtyping",
+          "promptMarkdown": "",
+          "starterCode": "from typing import Protocol\nclass Drawable(Protocol):\n def draw(self): ...\nclass D:\n def draw(self): return \"drawn\"\ndef render(x: Drawable): return x.draw()\nok=render(D())==\"drawn\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "render(D())==\"drawn\""
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_t8zisjj",
+            "type": "mcq",
+            "prompt": "Polymorphism means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Many forms one interface"
+              },
+              {
+                "id": "b",
+                "label": "One class only"
+              },
+              {
+                "id": "c",
+                "label": "No methods"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_i5l4tir",
+            "type": "shortText",
+            "prompt": "Duck typing: if it has method:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "use it"
+            }
+          },
+          {
+            "id": "q_s0cfu24",
+            "type": "mcq",
+            "prompt": "announce(animal) works if animal has:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "speak()"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kz31w6c",
+            "type": "mcq",
+            "prompt": "Loop over types shares:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Common method"
+              },
+              {
+                "id": "b",
+                "label": "Memory address"
+              },
+              {
+                "id": "c",
+                "label": "File"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2htec96",
+            "type": "shortText",
+            "prompt": "Python checks:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "behavior"
+            }
+          },
+          {
+            "id": "q_cckztp5",
+            "type": "mcq",
+            "prompt": "Expert: isinstance less needed with:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Duck typing"
+              },
+              {
+                "id": "b",
+                "label": "Assembly"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_udb8n0h",
+            "type": "mcq",
+            "prompt": "Expert: ABC defines:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Required methods"
+              },
+              {
+                "id": "b",
+                "label": "CPU"
+              },
+              {
+                "id": "c",
+                "label": "Fonts"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_aecorc0",
+            "type": "shortText",
+            "prompt": "Expert: __add__ enables:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "operator poly"
+            }
+          },
+          {
+            "id": "q_67q4d5e",
+            "type": "mcq",
+            "prompt": "Expert: structural subtyping via:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "typing.Protocol"
+              },
+              {
+                "id": "b",
+                "label": "print"
+              },
+              {
+                "id": "c",
+                "label": "pass"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_f60hqg7",
+            "type": "shortText",
+            "prompt": "Expert: substitute subclass:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "Liskov"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dunder_methods",
+      "title": "Dunder methods",
+      "intro": {
+        "title": "Dunder methods",
+        "bodyMarkdown": "Double-underscore methods customize behavior: `__str__`, `__repr__`, `__len__`, `__eq__`.\n\nThey integrate objects with Python syntax — print, len, ==, +.\n\nImplement `__repr__` for developers; `__str__` for users.",
+        "sandboxCode": "class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __repr__(self):\n        return f\"Point({self.x}, {self.y})\"\n    def __eq__(self, other):\n        return self.x == other.x and self.y == other.y\n\nprint(Point(1, 2))"
+      },
+      "challenges": [
+        {
+          "id": "ch_r8m0hqf",
+          "title": "Easy: __str__",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n    def __str__(self): return \"A\"",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "__str__"
+            ]
+          }
+        },
+        {
+          "id": "ch_m9cm73w",
+          "title": "Easy: __repr__",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n    def __repr__(self): return \"A()\"",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "__repr__"
+            ]
+          }
+        },
+        {
+          "id": "ch_rrukmmt",
+          "title": "Medium: __len__",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __len__(self): return 3\nn=len(C())",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "len(C())==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_id0d6qj",
+          "title": "Medium: __eq__",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n def __init__(self,v): self.v=v\n def __eq__(self,o): return self.v==o.v\nok=A(1)==A(1)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "A(1)==A(1)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3bpuuwr",
+          "title": "Hard: __add__",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n def __init__(self,v): self.v=v\n def __add__(self,o): return A(self.v+o.v)\nv=(A(1)+A(2)).v",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "(A(1)+A(2)).v==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vroefr5",
+          "title": "Hard: __bool__",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n def __bool__(self): return False\nok=bool(A())==False",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "bool(A())==False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_uyevlp2",
+          "title": "Expert: __iter__",
+          "promptMarkdown": "",
+          "starterCode": "class Bag:\n def __init__(self,items): self._items=items\n def __iter__(self): return iter(self._items)\nitems=list(Bag([1,2,3]))",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks items",
+                "assertion": "items==[1,2,3]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_d8kyif9",
+          "title": "Expert: __getitem__",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __getitem__(self,i): return \"abc\"[i]\nv=C()[0]",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "C()[0]==\"a\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1b344wy",
+          "title": "Expert: __hash__",
+          "promptMarkdown": "",
+          "starterCode": "class P:\n def __init__(self,x,y): self.x,self.y=x,y\n def __eq__(self,o): return (self.x,self.y)==(o.x,o.y)\n def __hash__(self): return hash((self.x,self.y))\nok=len({P(1,2):1})==1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "len({P(1,2):1})==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_wb1r78m",
+          "title": "Expert: __slots__",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n __slots__=(\"x\",)\n def __init__(self): self.x=1\nok=\"x\" in A.__slots__",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "\"x\" in A.__slots__"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_lgv37gz",
+            "type": "mcq",
+            "prompt": "__str__ used by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "print user-facing"
+              },
+              {
+                "id": "b",
+                "label": "import only"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_e7d7wct",
+            "type": "shortText",
+            "prompt": "__repr__ for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "developers"
+            }
+          },
+          {
+            "id": "q_vkb8lpn",
+            "type": "mcq",
+            "prompt": "len(obj) calls:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "__len__"
+              },
+              {
+                "id": "b",
+                "label": "__str__"
+              },
+              {
+                "id": "c",
+                "label": "__init__"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ji359uf",
+            "type": "mcq",
+            "prompt": "a == b uses:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "__eq__"
+              },
+              {
+                "id": "b",
+                "label": "__add__"
+              },
+              {
+                "id": "c",
+                "label": "__import__"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_jj1gtv8",
+            "type": "shortText",
+            "prompt": "Dunder means:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "double underscore"
+            }
+          },
+          {
+            "id": "q_w5binzi",
+            "type": "mcq",
+            "prompt": "Expert: __add__ for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "+"
+              },
+              {
+                "id": "b",
+                "label": "=="
+              },
+              {
+                "id": "c",
+                "label": "len"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_77yhgky",
+            "type": "mcq",
+            "prompt": "Expert: __bool__ for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "truthiness"
+              },
+              {
+                "id": "b",
+                "label": "strings only"
+              },
+              {
+                "id": "c",
+                "label": "files"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_x2mu14v",
+            "type": "shortText",
+            "prompt": "Expert: __iter__ enables:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "for loop"
+            }
+          },
+          {
+            "id": "q_d127cdn",
+            "type": "mcq",
+            "prompt": "Expert: mutable eq needs care with:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "hash"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_0ukgmd9",
+            "type": "shortText",
+            "prompt": "Expert: __getitem__ for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "indexing"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "properties",
+      "title": "Properties",
+      "intro": {
+        "title": "Properties",
+        "bodyMarkdown": "`@property` turns method into attribute access. `@name.setter` validates writes.\n\nPrefer properties over getters/setters when behavior may grow.\n\nRead-only: property without setter.",
+        "sandboxCode": "class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\n    @radius.setter\n    def radius(self, value):\n        if value < 0:\n            raise ValueError(\"radius must be >= 0\")\n        self._r = value\n\nc = Circle(5)\nprint(c.radius)\nc.radius = 10"
+      },
+      "challenges": [
+        {
+          "id": "ch_88kakjq",
+          "title": "Easy: @property",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n    @property\n    def x(self): return 1",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "@property"
+            ]
+          }
+        },
+        {
+          "id": "ch_2g78k86",
+          "title": "Easy: access like attr",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class A:\n @property\n def x(self): return 1\nv=A().x",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "A().x==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_k2paxa0",
+          "title": "Medium: setter",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n @property\n def x(self): return self._x\n @x.setter\n def x(self,v): self._x=v\na=A(); a.x=3",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks a",
+                "assertion": "a.x==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_nyrv6ll",
+          "title": "Medium: validate setter",
+          "promptMarkdown": "",
+          "starterCode": "class A:\n @property\n def x(self): return self._x\n @x.setter\n def x(self,v):\n  if v<0: raise ValueError\n  self._x=v\nerr=False\ntry:\n a=A(); a.x=-1\nexcept ValueError:\n err=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks err",
+                "assertion": "err==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_mj5akw0",
+          "title": "Hard: computed property",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self,r): self._r=r\n @property\n def area(self): return self._r**2\na=C(3).area",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks a",
+                "assertion": "C(3).area==9"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_h1joxgb",
+          "title": "Hard: read only",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self): self._r=5\n @property\n def r(self): return self._r\nblocked=False\ntry:\n C().r=1\nexcept AttributeError:\n blocked=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks blocked",
+                "assertion": "blocked==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1lqh5op",
+          "title": "Expert: deleter",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self): self._x=1\n @property\n def x(self): return self._x\n @x.deleter\n def x(self): del self._x\nc=C(); del c.x; ok=not hasattr(c,\"x\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "not hasattr(c,\"x\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_wn88zih",
+          "title": "Expert: property over get_set",
+          "promptMarkdown": "",
+          "starterCode": "class C:\n def __init__(self,r): self._r=r\n @property\n def radius(self): return self._r\nr=C(5).radius",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "C(5).radius==5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5f9kzay",
+          "title": "Expert: cached property",
+          "promptMarkdown": "",
+          "starterCode": "from functools import cached_property\nclass C:\n _calls=0\n @cached_property\n def value(self):\n  type(self)._calls+=1\n  return 42\nc=C()\n_=c.value\n_=c.value\ncalls=C._calls",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks calls",
+                "assertion": "calls==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cvndg1r",
+          "title": "Expert: dataclass field",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass, field\n@dataclass\nclass U:\n name:str\n tags:list=field(default_factory=list)\nu=U(\"a\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks u",
+                "assertion": "u.tags==[]"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_jhmszod",
+            "type": "mcq",
+            "prompt": "@property allows:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Attribute-like access"
+              },
+              {
+                "id": "b",
+                "label": "Import"
+              },
+              {
+                "id": "c",
+                "label": "Compile"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_bkf3sm8",
+            "type": "shortText",
+            "prompt": "Setter decorator:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "name.setter"
+            }
+          },
+          {
+            "id": "q_jklrt14",
+            "type": "mcq",
+            "prompt": "Validate in setter for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Invalid values"
+              },
+              {
+                "id": "b",
+                "label": "Speed"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_9a1de4a",
+            "type": "mcq",
+            "prompt": "area as property is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Computed"
+              },
+              {
+                "id": "b",
+                "label": "Stored always"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_lh3vjcz",
+            "type": "shortText",
+            "prompt": "Read-only lacks:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "setter"
+            }
+          },
+          {
+            "id": "q_8tab61b",
+            "type": "mcq",
+            "prompt": "Expert: property vs public attr when:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "May add logic"
+              },
+              {
+                "id": "b",
+                "label": "Never"
+              },
+              {
+                "id": "c",
+                "label": "Always slower"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_f33ucko",
+            "type": "mcq",
+            "prompt": "Expert: deleter rare for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Cleanup attr"
+              },
+              {
+                "id": "b",
+                "label": "Every field"
+              },
+              {
+                "id": "c",
+                "label": "int"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_b7cc9tr",
+            "type": "shortText",
+            "prompt": "Expert: cached lazy:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "functools"
+            }
+          },
+          {
+            "id": "q_ap31kk2",
+            "type": "mcq",
+            "prompt": "Expert: c.radius calls:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "getter"
+              },
+              {
+                "id": "b",
+                "label": "__init__"
+              },
+              {
+                "id": "c",
+                "label": "import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_lpkj5w8",
+            "type": "shortText",
+            "prompt": "Expert: negative radius:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ValueError"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dataclasses",
+      "title": "Dataclasses",
+      "intro": {
+        "title": "Dataclasses",
+        "bodyMarkdown": "`@dataclass` auto-generates `__init__`, `__repr__`, comparisons from typed fields.\n\nGreat for data containers — less boilerplate than manual classes.\n\nUse `field(default_factory=list)` for mutable defaults.",
+        "sandboxCode": "from dataclasses import dataclass\n\n@dataclass\nclass User:\n    name: str\n    score: int = 0\n\nu = User(\"Ana\", 42)\nprint(u)"
+      },
+      "challenges": [
+        {
+          "id": "ch_zytk3xo",
+          "title": "Easy: import dataclass",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "dataclass"
+            ]
+          }
+        },
+        {
+          "id": "ch_7ytoby8",
+          "title": "Easy: define fields",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass\n@dataclass\nclass P:\n    x: int",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "@dataclass"
+            ]
+          }
+        },
+        {
+          "id": "ch_4w66w7w",
+          "title": "Medium: default field",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "from dataclasses import dataclass\n@dataclass\nclass P:\n x:int\n y:int=0\np=P(1)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks p",
+                "assertion": "P().y==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rk2i3tl",
+          "title": "Medium: repr auto",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass\n@dataclass\nclass U:\n name:str\nu=U(\"Ana\")\ns=str(u)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "\"Ana\" in str(u)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_g1zmdml",
+          "title": "Hard: eq compare",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass\n@dataclass\nclass U:\n v:int\nok=U(1)==U(1)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "U(1)==U(1)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_38oow5t",
+          "title": "Hard: frozen",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass\n@dataclass(frozen=True)\nclass P:\n x:int\nimmutable=False\ntry:\n P(1).x=2\nexcept Exception:\n immutable=True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks immutable",
+                "assertion": "immutable==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8caiti6",
+          "title": "Expert: field factory",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass, field\n@dataclass\nclass D:\n items:list=field(default_factory=list)\nd1=D(); d2=D()\nok=d1.items is not d2.items",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "d1.items is not d2.items"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_73c826m",
+          "title": "Expert: order True",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass\n@dataclass(order=True)\nclass U:\n score:int\nok=U(1)<U(2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "U(1)<U(2)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_h9jufgx",
+          "title": "Expert: slots dataclass",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass\n@dataclass(slots=True)\nclass U:\n name:str\nok=\"name\" in U.__slots__",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "\"name\" in U.__slots__"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2q2c7s7",
+          "title": "Expert: replace",
+          "promptMarkdown": "",
+          "starterCode": "from dataclasses import dataclass, replace\n@dataclass\nclass U:\n name:str; score:int\nu=U(\"a\",1); v=replace(u, score=99)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v.score==99"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_cnq26nm",
+            "type": "mcq",
+            "prompt": "dataclass reduces:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Boilerplate"
+              },
+              {
+                "id": "b",
+                "label": "Python features"
+              },
+              {
+                "id": "c",
+                "label": "Memory always"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_drzvn6r",
+            "type": "shortText",
+            "prompt": "Decorator name:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dataclass"
+            }
+          },
+          {
+            "id": "q_m6adlzb",
+            "type": "mcq",
+            "prompt": "Default mutable use:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "default_factory"
+              },
+              {
+                "id": "b",
+                "label": "=[] inline"
+              },
+              {
+                "id": "c",
+                "label": "None allowed always"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_4pz3twp",
+            "type": "mcq",
+            "prompt": "frozen=True makes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Immutable"
+              },
+              {
+                "id": "b",
+                "label": "Faster GPU"
+              },
+              {
+                "id": "c",
+                "label": "Delete fields"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_enh0l5c",
+            "type": "shortText",
+            "prompt": "Type hints on fields for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "clarity"
+            }
+          },
+          {
+            "id": "q_82mq419",
+            "type": "mcq",
+            "prompt": "Expert: replace() copies with:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Changes"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_p0yc4id",
+            "type": "mcq",
+            "prompt": "Expert: order=True enables:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Sorting"
+              },
+              {
+                "id": "b",
+                "label": "Imports"
+              },
+              {
+                "id": "c",
+                "label": "Files"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_758by4o",
+            "type": "shortText",
+            "prompt": "Expert: slots saves:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "memory"
+            }
+          },
+          {
+            "id": "q_sj5a9mi",
+            "type": "mcq",
+            "prompt": "Expert: not for heavy:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Behavior classes"
+              },
+              {
+                "id": "b",
+                "label": "DTOs"
+              },
+              {
+                "id": "c",
+                "label": "Records"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_bmrf8z1",
+            "type": "shortText",
+            "prompt": "Expert: auto __init__ from:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "fields"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "special_methods_adv",
+      "title": "Advanced OOP patterns",
+      "intro": {
+        "title": "Advanced OOP patterns",
+        "bodyMarkdown": "Composition, mixins, factory functions, and dependency injection structure larger apps.\n\nKeep inheritance depth low; prefer small focused classes.\n\nDesign for testability — inject dependencies, avoid globals.",
+        "sandboxCode": "class Engine:\n    def start(self):\n        return \"vroom\"\n\nclass Car:\n    def __init__(self, engine):\n        self.engine = engine\n    def drive(self):\n        return self.engine.start()\n\nprint(Car(Engine()).drive())"
+      },
+      "challenges": [
+        {
+          "id": "ch_yerxn07",
+          "title": "Easy: composition has-a",
+          "promptMarkdown": "",
+          "starterCode": "class Car:\n    def __init__(self, e):\n        self.engine=e",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "self.engine"
+            ]
+          }
+        },
+        {
+          "id": "ch_jsn34dd",
+          "title": "Easy: inject dependency",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class E:\n def start(self): return \"vroom\"\nclass C:\n def __init__(self,e): self.e=e\n def go(self): return self.e.start()\ns=C(E()).go()",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"vroom\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6r8clfz",
+          "title": "Medium: factory function",
+          "promptMarkdown": "",
+          "starterCode": "class Engine: pass\nclass Car:\n def __init__(self,e): self.engine=e\ndef create_car():\n return Car(Engine())\ncar=create_car()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks car",
+                "assertion": "hasattr(car,\"engine\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xlntglf",
+          "title": "Medium: mixin pattern",
+          "promptMarkdown": "",
+          "starterCode": "class LogMixin:\n def log(self,msg): return msg.upper()\nclass App(LogMixin):\n def run(self): return self.log(\"ok\")\nok=App().run()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==\"OK\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_tbe8wvm",
+          "title": "Hard: single responsibility",
+          "promptMarkdown": "",
+          "starterCode": "class EmailSender:\n def send(self,m): return len(m)\nn=EmailSender().send(\"hi\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_37wugpd",
+          "title": "Hard: interface segregation",
+          "promptMarkdown": "",
+          "starterCode": "class Readable:\n def read(self): return \"data\"\nclass Writable:\n def write(self,d): return len(d)\nnames=[Readable.__name__, Writable.__name__]\nok=len(names)==2",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "len(names)==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ttxttmb",
+          "title": "Expert: dependency injection",
+          "promptMarkdown": "",
+          "starterCode": "class Mailer:\n def send(self,msg): return msg\nclass Service:\n def __init__(self,mailer): self.mailer=mailer\n def notify(self): return self.mailer.send(\"sent\")\ns=Service(Mailer()).notify()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"sent\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_efqi1hu",
+          "title": "Expert: service layer",
+          "promptMarkdown": "",
+          "starterCode": "class Repo:\n def list_prices(self): return [10,20]\nclass CartService:\n def __init__(self,repo): self.repo=repo\n def total(self): return sum(self.repo.list_prices())\ntotal=CartService(Repo()).total()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks total",
+                "assertion": "total==30"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b48x1us",
+          "title": "Expert: repository pattern",
+          "promptMarkdown": "",
+          "starterCode": "class UserRepo:\n def __init__(self): self._data={\"1\":\"Ana\"}\n def get(self,id): return self._data[id]\nn=UserRepo().get(\"1\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==\"Ana\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cj287um",
+          "title": "Expert: test doubles",
+          "promptMarkdown": "",
+          "starterCode": "class StubGateway:\n def fetch(self): return \"fake\"\nclass App:\n def __init__(self,gw): self.gw=gw\n def run(self): return self.gw.fetch()\ns=App(StubGateway()).run()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==\"fake\""
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_dg6rt4l",
+            "type": "mcq",
+            "prompt": "Composition is has-a:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "True"
+              },
+              {
+                "id": "b",
+                "label": "False"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zn9tlck",
+            "type": "shortText",
+            "prompt": "Inject engine for:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "testing"
+            }
+          },
+          {
+            "id": "q_yyjvj5a",
+            "type": "mcq",
+            "prompt": "Factory function returns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Configured object"
+              },
+              {
+                "id": "b",
+                "label": "Module"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_acglao3",
+            "type": "mcq",
+            "prompt": "SRP means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "One reason to change"
+              },
+              {
+                "id": "b",
+                "label": "Many jobs"
+              },
+              {
+                "id": "c",
+                "label": "Speed"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ekazcxl",
+            "type": "shortText",
+            "prompt": "Low inheritance depth:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "good"
+            }
+          },
+          {
+            "id": "q_m4kviui",
+            "type": "mcq",
+            "prompt": "Expert: DI passes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Dependencies in"
+              },
+              {
+                "id": "b",
+                "label": "Globals only"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zuwsyqi",
+            "type": "mcq",
+            "prompt": "Expert: mock in tests:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Isolate unit"
+              },
+              {
+                "id": "b",
+                "label": "Slow network"
+              },
+              {
+                "id": "c",
+                "label": "Required prod"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ua6ui4d",
+            "type": "shortText",
+            "prompt": "Expert: repository hides:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "storage"
+            }
+          },
+          {
+            "id": "q_4jluctx",
+            "type": "mcq",
+            "prompt": "Expert: mixin adds:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Reusable behavior"
+              },
+              {
+                "id": "b",
+                "label": "CPU"
+              },
+              {
+                "id": "c",
+                "label": "Syntax"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_f4or3vj",
+            "type": "shortText",
+            "prompt": "Expert: Car uses Engine via:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "composition"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "oop_design",
+      "title": "OOP design principles",
+      "intro": {
+        "title": "OOP design principles",
+        "bodyMarkdown": "SOLID guides maintainable OOP: Single responsibility, Open/closed, Liskov, Interface segregation, Dependency inversion.\n\nName classes after concepts; methods after verbs. Cohesive modules.\n\nRefactor when classes know too much about each other.",
+        "sandboxCode": "class Notifier:\n    def send(self, message: str) -> None:\n        raise NotImplementedError\n\nclass EmailNotifier(Notifier):\n    def send(self, message: str) -> None:\n        print(f\"Email: {message}\")\n\nEmailNotifier().send(\"Hello\")"
+      },
+      "challenges": [
+        {
+          "id": "ch_7u7ney7",
+          "title": "Easy: NotImplementedError",
+          "promptMarkdown": "",
+          "starterCode": "class B:\n    def go(self):\n        raise NotImplementedError",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "NotImplementedError"
+            ]
+          }
+        },
+        {
+          "id": "ch_49bid3a",
+          "title": "Easy: subclass implements",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "class N:\n def send(self,m): print(m)\nclass EmailNotifier(N):\n def send(self,m): print(\"E\",m)\nok=EmailNotifier().send(\"x\") is None",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "EmailNotifier().send(\"x\") is None"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_70ga19w",
+          "title": "Medium: open closed extend",
+          "promptMarkdown": "",
+          "starterCode": "class Shape:\n def area(self): raise NotImplementedError\nclass Circle(Shape):\n def __init__(self,r): self.r=r\n def area(self): return 3.14*self.r*self.r\nok=Circle(2).area()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok>3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_khp19bi",
+          "title": "Medium: small interface",
+          "promptMarkdown": "",
+          "starterCode": "class Notifier:\n def ping(self,msg): return msg\nok=Notifier().ping(\"hi\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "Notifier().ping(\"hi\")==\"hi\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_nohhpj0",
+          "title": "Hard: dependency invert",
+          "promptMarkdown": "",
+          "starterCode": "class Storage:\n def load(self): return 42\nclass Service:\n def __init__(self,storage): self.storage=storage\n def run(self): return self.storage.load()\nv=Service(Storage()).run()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==42"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hac4qn9",
+          "title": "Hard: cohesion",
+          "promptMarkdown": "",
+          "starterCode": "class ReportBuilder:\n def add_row(self,r): return r\n def build(self,rows): return \"\\\n\".join(rows)\nmethods=[m for m in dir(ReportBuilder) if not m.startswith(\"_\")]\nok=\"add_row\" in methods and \"build\" in methods",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "\"add_row\" in methods and \"build\" in methods"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_tj0luem",
+          "title": "Expert: god class smell",
+          "promptMarkdown": "",
+          "starterCode": "class OrderService: pass\nclass EmailNotifier: pass\nnames=[OrderService.__name__, EmailNotifier.__name__]",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks names",
+                "assertion": "len(names)>=2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2bdtmpy",
+          "title": "Expert: tell dont ask",
+          "promptMarkdown": "",
+          "starterCode": "class Account:\n def __init__(self): self._b=100\n def deposit(self,n): self._b+=n\n def balance(self): return self._b\na=Account(); a.deposit(50); bal=a.balance()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks bal",
+                "assertion": "a.balance()==150"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_oodv2bg",
+          "title": "Expert: law of demeter",
+          "promptMarkdown": "",
+          "starterCode": "class Address:\n def __init__(self,c): self.city=c\nclass Person:\n def __init__(self,a): self.address=a\n def city(self): return self.address.city\ncity=Person(Address(\"NY\")).city()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks city",
+                "assertion": "city==\"NY\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ays6usn",
+          "title": "Expert: domain model",
+          "promptMarkdown": "",
+          "starterCode": "class Order:\n def __init__(self,items): self.items=items\n def total(self): return sum(i.price for i in self.items)\nclass Item:\n def __init__(self,p): self.price=p\norder=Order([Item(10),Item(20)])\ntotal=order.total()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks total",
+                "assertion": "order.total()==30"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_fh2el8v",
+            "type": "mcq",
+            "prompt": "S in SOLID:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Single responsibility"
+              },
+              {
+                "id": "b",
+                "label": "Speed"
+              },
+              {
+                "id": "c",
+                "label": "Syntax"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_31g5trz",
+            "type": "shortText",
+            "prompt": "Liskov substitution:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "subtypes"
+            }
+          },
+          {
+            "id": "q_w3zj9i3",
+            "type": "mcq",
+            "prompt": "Open/closed: extend without:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Modifying core"
+              },
+              {
+                "id": "b",
+                "label": "Classes"
+              },
+              {
+                "id": "c",
+                "label": "Tests"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_w5iolf8",
+            "type": "mcq",
+            "prompt": "Dependency inversion depends on:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Abstractions"
+              },
+              {
+                "id": "b",
+                "label": "Concrete only"
+              },
+              {
+                "id": "c",
+                "label": "GPU"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zv0oiol",
+            "type": "shortText",
+            "prompt": "Methods named as:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "verbs"
+            }
+          },
+          {
+            "id": "q_308ltsm",
+            "type": "mcq",
+            "prompt": "Expert: god class:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Too many duties"
+              },
+              {
+                "id": "b",
+                "label": "Perfect"
+              },
+              {
+                "id": "c",
+                "label": "Required"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ow82b2i",
+            "type": "mcq",
+            "prompt": "Expert: tell dont ask:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Behavior on object"
+              },
+              {
+                "id": "b",
+                "label": "Peek everywhere"
+              },
+              {
+                "id": "c",
+                "label": "No methods"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_0ypuvj0",
+            "type": "shortText",
+            "prompt": "Expert: demeter limits:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "chaining"
+            }
+          },
+          {
+            "id": "q_3g2pi1m",
+            "type": "mcq",
+            "prompt": "Expert: NotImplemented in:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Base stub"
+              },
+              {
+                "id": "b",
+                "label": "main"
+              },
+              {
+                "id": "c",
+                "label": "import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fnefml8",
+            "type": "shortText",
+            "prompt": "Expert: cohesive class:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "related duties"
+            }
+          }
+        ]
+      }
+    }
+  ]
 }
