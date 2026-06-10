@@ -5,12 +5,17 @@ import {
   learnLevelPath,
   learnSectionPath,
   parseAppPath,
+  progressPath,
   tabPath,
 } from './learnPaths'
 
 describe('learnPaths', () => {
   it('parses tab routes', () => {
     expect(parseAppPath('/progress').tab).toBe('progress')
+    expect(parseAppPath('/progress/python')).toMatchObject({
+      tab: 'progress',
+      langId: 'python',
+    })
     expect(parseAppPath('/about').tab).toBe('about')
     expect(parseAppPath('/learn').tab).toBe('learn')
     expect(parseAppPath('/').tab).toBe('learn')
@@ -39,6 +44,10 @@ describe('learnPaths', () => {
     expect(learnLevelPath('python', 'fundamentals', 'l1', 'test')).toBe(
       '/learn/python/fundamentals/l1/test',
     )
+    expect(progressPath()).toBe('/progress')
+    expect(progressPath('python')).toBe('/progress/python')
     expect(tabPath('progress')).toBe('/progress')
+    expect(tabPath('progress', 'python')).toBe('/progress/python')
+    expect(tabPath('learn', 'python')).toBe('/learn/python')
   })
 })

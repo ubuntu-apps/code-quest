@@ -44,6 +44,13 @@ export interface LevelTest {
   questions: TestQuestion[]
 }
 
+export interface TestGradeResult {
+  correct: number
+  total: number
+  passed: boolean
+  byQuestion: Record<string, boolean>
+}
+
 export interface Level {
   id: string
   title: string

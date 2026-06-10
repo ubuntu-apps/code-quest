@@ -2,9 +2,9 @@ import '../../App.css'
 
 import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
 import { BookOpen, ChevronLeft, ExternalLink, Info, ListTodo, X } from 'lucide-react'
-import type { Challenge, LanguageBundle, Level, RootIndex } from './types'
+import type { Challenge, LanguageBundle, Level, RootIndex, TestGradeResult } from './types'
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
-import { gradeQuestion, validateAgainst } from './validateAnswer'
+import { gradeTest, validateAgainst } from './validateAnswer'
 import { loadProgress, saveProgress } from './progressStorage'
 import { getFreePythonAiHelp, type PythonAiHelp } from './freeAiHelp'
 import {
@@ -34,6 +34,8 @@ import {
   type TabId,
 } from './constants'
 import { useLearnRoute } from './hooks/useLearnRoute'
+import { progressPath } from './learnPaths'
+import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageStorage'
 import {
   computeLevelXp,
   loadStreakState,
@@ -142,9 +144,11 @@ export function CodeQuestScreen() {
     tab,
     learnView,
     languageId,
+    activeLanguageId,
     sectionId,
     levelId,
     levelStep,
+    navigate,
     goToTab,
     goToLanguage,
     goToSection,
@@ -170,7 +174,8 @@ export function CodeQuestScreen() {
   const [challengeErrorExpanded, setChallengeErrorExpanded] = useState<Record<string, boolean>>({})
   const [testShort, setTestShort] = useState<Record<string, string>>({})
   const [testMcq, setTestMcq] = useState<Record<string, string>>({})
-  const [testResult, setTestResult] = useState<{ correct: number; total: number; passed: boolean } | null>(null)
+  const [testResult, setTestResult] = useState<TestGradeResult | null>(null)
+  const [testSessionReset, setTestSessionReset] = useState(false)
   const [readMoreOpen, setReadMoreOpen] = useState(false)
   const [sandboxCode, setSandboxCode] = useState(DEFAULT_SANDBOX_CODE)
   const [sandboxOutput, setSandboxOutput] = useState('')
@@ -198,6 +203,16 @@ export function CodeQuestScreen() {
       })
       .catch((e: unknown) => setRootError(e instanceof Error ? e.message : 'Failed to load catalog'))
   }, [baseUrl, syncRootIndex])
+
+  useEffect(() => {
+    if (languageId) saveSelectedLanguage(languageId)
+  }, [languageId])
+
+  useEffect(() => {
+    if (tab === 'progress' && activeLanguageId && !languageId) {
+      navigate(progressPath(activeLanguageId), { replace: true })
+    }
+  }, [tab, activeLanguageId, languageId, navigate])
 
   useEffect(() => {
     if (!languageId || !rootIndex) return
@@ -332,6 +347,14 @@ export function CodeQuestScreen() {
     if (!selectedSection || !levelId) return null
     return selectedSection.file.levels.find((l) => l.id === levelId) ?? null
   }, [selectedSection, levelId])
+
+  const nextLevel = useMemo(() => {
+    if (!selectedSection || !selectedLevel) return null
+    const levels = selectedSection.file.levels
+    const index = levels.findIndex((l) => l.id === selectedLevel.id)
+    if (index < 0 || index >= levels.length - 1) return null
+    return levels[index + 1]
+  }, [selectedSection, selectedLevel])
 
   const resolveBundle = useCallback(
     (langId: string, fallback: LanguageBundle | undefined) => {
@@ -487,20 +510,40 @@ export function CodeQuestScreen() {
 
   const submitTest = () => {
     if (!languageId || !selectedLevel) return
-    const questions = selectedLevel.test.questions
     const passing = selectedLevel.test.passingScorePercent ?? PASS_DEFAULT
-    let correct = 0
-    for (const q of questions) {
-      if (gradeQuestion(q, testShort[q.id], testMcq[q.id])) correct += 1
-    }
-    const total = questions.length
-    const pct = total === 0 ? 100 : (correct / total) * 100
-    const passed = pct >= passing
-    setTestResult({ correct, total, passed })
+    const result = gradeTest(selectedLevel.test.questions, testShort, testMcq, passing)
+    setTestResult(result)
+    if (result.passed) setTestSessionReset(false)
     const prev = loadProgress(languageId, selectedLevel.id)
-    saveProgress(languageId, selectedLevel.id, { ...prev, testPassed: prev.testPassed || passed })
+    saveProgress(languageId, selectedLevel.id, { ...prev, testPassed: prev.testPassed || result.passed })
     setStreakCount(recordDailyActivity())
   }
+
+  const retakeTest = () => {
+    setTestShort({})
+    setTestMcq({})
+    setTestResult(null)
+    setTestSessionReset(true)
+  }
+
+  const clearTestResult = () => {
+    setTestResult(null)
+    setTestSessionReset(true)
+  }
+
+  const goToNextLevel = useCallback(() => {
+    if (!languageId || !sectionId || !nextLevel) return
+    goToLevel(languageId, sectionId, nextLevel.id, 'intro')
+    localStorage.setItem(
+      LAST_LEVEL_STORAGE_KEY,
+      JSON.stringify({
+        languageId,
+        languagePath: displayRootIndex?.languages.find((l) => l.id === languageId)?.path ?? '',
+        sectionId,
+        levelId: nextLevel.id,
+      }),
+    )
+  }, [languageId, sectionId, nextLevel, goToLevel, displayRootIndex])
 
   const runSandbox = async () => {
     setSandboxRunning(true)
@@ -537,6 +580,7 @@ export function CodeQuestScreen() {
 
   const handleRemoveLanguage = (langId: string) => {
     removeLanguage(langId)
+    if (activeLanguageId === langId) clearSelectedLanguage()
     if (languageId === langId) {
       setBundle(null)
       setLoadedLanguageId(null)
@@ -560,11 +604,16 @@ export function CodeQuestScreen() {
     }
   }
 
+  const catalogLanguages = useMemo(() => {
+    if (!displayRootIndex) return []
+    if (!activeLanguageId) return displayRootIndex.languages
+    return displayRootIndex.languages.filter((lang) => lang.id === activeLanguageId)
+  }, [displayRootIndex, activeLanguageId])
+
   const totalXp = useMemo(() => {
     void progressVersion
-    if (!displayRootIndex) return 0
     let xp = 0
-    for (const lang of displayRootIndex.languages) {
+    for (const lang of catalogLanguages) {
       const b = resolveBundle(lang.id, languageBundles[lang.id]) ?? languageBundles[lang.id]
       if (!b) continue
       for (const { file } of b.sections) {
@@ -572,7 +621,7 @@ export function CodeQuestScreen() {
       }
     }
     return xp
-  }, [languageBundles, displayRootIndex, resolveBundle, progressVersion])
+  }, [catalogLanguages, languageBundles, resolveBundle, progressVersion])
 
   const continueTarget = useMemo((): ContinueTarget | null => {
     void progressVersion
@@ -582,13 +631,15 @@ export function CodeQuestScreen() {
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<ContinueTarget>
         if (parsed.languageId && parsed.languagePath && parsed.sectionId && parsed.levelId) {
-          return parsed as ContinueTarget
+          if (!activeLanguageId || parsed.languageId === activeLanguageId) {
+            return parsed as ContinueTarget
+          }
         }
       }
     } catch {
       // ignore malformed local storage
     }
-    for (const lang of displayRootIndex.languages) {
+    for (const lang of catalogLanguages) {
       const b = resolveBundle(lang.id, languageBundles[lang.id]) ?? languageBundles[lang.id]
       if (!b) continue
       for (const section of b.sections) {
@@ -607,7 +658,7 @@ export function CodeQuestScreen() {
       }
     }
     return null
-  }, [displayRootIndex, languageBundles, resolveBundle, isLevelUnlocked, progressVersion])
+  }, [displayRootIndex, catalogLanguages, languageBundles, resolveBundle, isLevelUnlocked, progressVersion, activeLanguageId])
 
   const installSteps = displayAboutContent.installSteps.length
     ? displayAboutContent.installSteps
@@ -713,7 +764,12 @@ export function CodeQuestScreen() {
 
     if (learnView === 'level' && selectedSection && selectedLevel && languageId) {
       const secId = selectedSection.sectionRef.id
+      void progressVersion
       const prog = loadProgress(languageId, selectedLevel.id)
+      const showNext =
+        nextLevel !== null &&
+        (testResult?.passed === true ||
+          (prog.testPassed && !testSessionReset && testResult === null))
 
       return (
         <LearnLevel
@@ -772,8 +828,14 @@ export function CodeQuestScreen() {
           testShort={testShort}
           testMcq={testMcq}
           testResult={testResult}
-          onTestShortChange={(qId, value) => setTestShort((prev) => ({ ...prev, [qId]: value }))}
-          onTestMcqChange={(qId, choiceId) => setTestMcq((prev) => ({ ...prev, [qId]: choiceId }))}
+          onTestShortChange={(qId, value) => {
+            clearTestResult()
+            setTestShort((prev) => ({ ...prev, [qId]: value }))
+          }}
+          onTestMcqChange={(qId, choiceId) => {
+            clearTestResult()
+            setTestMcq((prev) => ({ ...prev, [qId]: choiceId }))
+          }}
           onUpdatePassingScore={(score) =>
             updateTestPassingScore(languageId, secId, selectedLevel.id, score)
           }
@@ -784,6 +846,10 @@ export function CodeQuestScreen() {
           onRemoveQuestion={(qId) => removeTestQuestion(languageId, secId, selectedLevel.id, qId)}
           onAddQuestion={(type) => addTestQuestion(languageId, secId, selectedLevel.id, type)}
           onSubmitTest={submitTest}
+          onRetakeTest={retakeTest}
+          showNext={showNext}
+          nextLevelTitle={nextLevel?.title ?? null}
+          onGoToNextLevel={goToNextLevel}
         />
       )
     }
@@ -835,6 +901,8 @@ export function CodeQuestScreen() {
               displayRootIndex={displayRootIndex}
               bundles={languageBundles}
               resolveBundle={resolveBundle}
+              languageId={activeLanguageId}
+              onUpdateSectionTitle={updateSectionTitle}
               onUpdateLevelTitle={updateLevelTitle}
             />
           ))}

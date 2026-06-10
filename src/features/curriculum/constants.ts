@@ -6,6 +6,7 @@ export const PASS_DEFAULT = 70
 export const DEFAULT_SANDBOX_CODE = 'print("Hello from CodeQuest!")'
 export const STREAK_STORAGE_KEY = 'codequest:streak'
 export const LAST_LEVEL_STORAGE_KEY = 'codequest:lastLevel'
+export const SELECTED_LANGUAGE_STORAGE_KEY = 'codequest:selectedLanguage'
 export const CHALLENGE_XP = 10
 export const TEST_XP = 50
 

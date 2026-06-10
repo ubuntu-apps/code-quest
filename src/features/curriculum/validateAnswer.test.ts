@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { gradeQuestion, normalizeAnswer, validateAgainst } from './validateAnswer'
+import { gradeQuestion, gradeTest, normalizeAnswer, validateAgainst } from './validateAnswer'
 import type { TestQuestion } from './types'
 
 describe('normalizeAnswer', () => {
@@ -60,5 +60,34 @@ describe('gradeQuestion', () => {
     }
     expect(gradeQuestion(shortText, 'print', undefined)).toBe(true)
     expect(gradeQuestion(shortText, 'echo', undefined)).toBe(false)
+  })
+})
+
+describe('gradeTest', () => {
+  const questions: TestQuestion[] = [
+    {
+      id: 'q1',
+      type: 'mcq',
+      prompt: 'Pick one',
+      choices: [
+        { id: 'a', label: 'A' },
+        { id: 'b', label: 'B' },
+      ],
+      correctChoiceId: 'b',
+    },
+    {
+      id: 'q2',
+      type: 'shortText',
+      prompt: 'Name the function',
+      validation: { mode: 'equalsNormalized', expected: 'print' },
+    },
+  ]
+
+  it('returns per-question results and overall pass/fail', () => {
+    const result = gradeTest(questions, { q2: 'print' }, { q1: 'a' }, 51)
+    expect(result.correct).toBe(1)
+    expect(result.total).toBe(2)
+    expect(result.passed).toBe(false)
+    expect(result.byQuestion).toEqual({ q1: false, q2: true })
   })
 })

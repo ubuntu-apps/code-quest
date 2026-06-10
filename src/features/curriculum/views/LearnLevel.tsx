@@ -1,4 +1,4 @@
-import type { Challenge, Level } from '../types'
+import type { Challenge, Level, TestGradeResult } from '../types'
 import type { LevelProgress } from '../progressStorage'
 import type { PythonAiHelp } from '../freeAiHelp'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
@@ -6,8 +6,13 @@ import type { LevelStep } from '../constants'
 import { EditableText } from '../../editor'
 import { AddItemButton } from '../../editor'
 import { ChallengeCard } from '../components/ChallengeCard'
+import { LevelStepNav } from '../components/LevelStepNav'
 import { IntroStep } from './IntroStep'
 import { TestStep } from './TestStep'
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
 
 interface LearnLevelProps {
   level: Level
@@ -47,7 +52,7 @@ interface LearnLevelProps {
   onChallengeFixCopied: (challengeId: string, copied: boolean) => void
   testShort: Record<string, string>
   testMcq: Record<string, string>
-  testResult: { correct: number; total: number; passed: boolean } | null
+  testResult: TestGradeResult | null
   onTestShortChange: (questionId: string, value: string) => void
   onTestMcqChange: (questionId: string, choiceId: string) => void
   onUpdatePassingScore: (score: number) => void
@@ -56,6 +61,10 @@ interface LearnLevelProps {
   onRemoveQuestion: (questionId: string) => void
   onAddQuestion: (type: 'mcq' | 'shortText') => void
   onSubmitTest: () => void
+  onRetakeTest: () => void
+  showNext: boolean
+  nextLevelTitle: string | null
+  onGoToNextLevel: () => void
 }
 
 export function LearnLevel({
@@ -105,12 +114,28 @@ export function LearnLevel({
   onRemoveQuestion,
   onAddQuestion,
   onSubmitTest,
+  onRetakeTest,
+  showNext,
+  nextLevelTitle,
+  onGoToNextLevel,
 }: LearnLevelProps) {
-  const stepTabs: { id: LevelStep; label: string }[] = [
-    { id: 'intro', label: 'Intro' },
-    { id: 'challenges', label: 'Challenges' },
-    { id: 'test', label: 'Test' },
-  ]
+  const handleStepChange = (step: LevelStep) => {
+    onLevelStepChange(step)
+    scrollToTop()
+  }
+
+  const handleGoToNext = () => {
+    onGoToNextLevel()
+    scrollToTop()
+  }
+
+  const stepNavProps = {
+    levelStep,
+    showNext,
+    nextLevelTitle,
+    onLevelStepChange: handleStepChange,
+    onGoToNextLevel: handleGoToNext,
+  }
 
   return (
     <div className="cq-stack cq-level">
@@ -120,20 +145,7 @@ export function LearnLevel({
         value={level.title}
         onChange={onUpdateLevelTitle}
       />
-      <div className="cq-step-tabs" role="tablist">
-        {stepTabs.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            aria-selected={levelStep === t.id}
-            className={`cq-step-tab${levelStep === t.id ? ' cq-step-tab--active' : ''}`}
-            onClick={() => onLevelStepChange(t.id)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+      <LevelStepNav {...stepNavProps} />
 
       {levelStep === 'intro' && (
         <IntroStep
@@ -202,8 +214,11 @@ export function LearnLevel({
           onRemoveQuestion={onRemoveQuestion}
           onAddQuestion={onAddQuestion}
           onSubmit={onSubmitTest}
+          onRetake={onRetakeTest}
         />
       )}
+
+      <LevelStepNav {...stepNavProps} placement="bottom" />
     </div>
   )
 }

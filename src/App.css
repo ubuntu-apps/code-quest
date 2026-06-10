@@ -216,10 +216,24 @@
   color: var(--cq-muted);
 }
 
+.cq-step-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.cq-step-tabs-row--bottom {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cq-border);
+}
+
 .cq-step-tabs {
   display: flex;
   gap: 0.35rem;
   flex-wrap: wrap;
+  flex: 1;
 }
 
 .cq-step-tab {
@@ -238,6 +252,15 @@
   border-color: var(--cq-accent);
   color: var(--cq-text);
   background: var(--cq-accent-dim);
+}
+
+.cq-step-tab--next {
+  flex: 0 0 auto;
+  min-width: 5rem;
+  border-color: var(--cq-success);
+  color: var(--cq-success);
+  background: rgba(74, 222, 128, 0.1);
+  font-weight: 600;
 }
 
 .cq-md-pre {
@@ -289,6 +312,14 @@
 
 .cq-code-input:disabled {
   opacity: 0.65;
+}
+
+.cq-code-input--pass {
+  border-color: rgba(74, 222, 128, 0.55);
+}
+
+.cq-code-input--fail {
+  border-color: rgba(248, 113, 113, 0.55);
 }
 
 /* Line highlight behind textarea (synced scroll; white-space: pre on overlay) */
@@ -583,11 +614,40 @@ textarea.cq-code-editor-overlay {
 
 .cq-test-list {
   margin: 1rem 0;
-  padding-left: 1.25rem;
+  padding-left: 0;
+  list-style: none;
 }
 
 .cq-test-item {
   margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 0.65rem;
+}
+
+.cq-test-item--pass {
+  border-color: rgba(74, 222, 128, 0.45);
+  background: rgba(74, 222, 128, 0.06);
+}
+
+.cq-test-item--fail {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(248, 113, 113, 0.06);
+}
+
+.cq-test-status {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.cq-test-status--pass {
+  color: var(--cq-success);
+}
+
+.cq-test-status--fail {
+  color: var(--cq-danger);
 }
 
 .cq-test-prompt {
@@ -614,6 +674,131 @@ textarea.cq-code-editor-overlay {
   align-items: flex-start;
   cursor: pointer;
   font-size: 0.92rem;
+  border-radius: 8px;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid transparent;
+}
+
+.cq-mcq-opt--correct {
+  border-color: rgba(74, 222, 128, 0.55);
+  background: rgba(74, 222, 128, 0.08);
+  color: var(--cq-success);
+}
+
+.cq-mcq-opt--wrong {
+  border-color: rgba(248, 113, 113, 0.55);
+  background: rgba(248, 113, 113, 0.08);
+  color: var(--cq-danger);
+}
+
+.cq-yesno {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.cq-yesno-prompt {
+  margin: 0;
+}
+
+.cq-yesno-options {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.cq-yesno-opt {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex: 1;
+  min-width: 7rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 10px;
+  background: var(--cq-surface);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  user-select: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.cq-yesno-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.cq-yesno-box {
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--cq-border);
+  border-radius: 4px;
+  background: transparent;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.cq-yesno-box::after {
+  content: '';
+  width: 0.35rem;
+  height: 0.6rem;
+  border: solid transparent;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.12s;
+}
+
+.cq-yesno-opt--selected .cq-yesno-box,
+.cq-yesno-opt--active .cq-yesno-box {
+  border-color: var(--cq-accent);
+  background: var(--cq-accent-dim);
+}
+
+.cq-yesno-opt--selected .cq-yesno-box::after,
+.cq-yesno-opt--active .cq-yesno-box::after {
+  border-color: var(--cq-text);
+  transform: rotate(45deg) scale(1);
+}
+
+.cq-yesno-opt--selected,
+.cq-yesno-opt--active {
+  border-color: var(--cq-accent);
+  background: var(--cq-accent-dim);
+}
+
+.cq-yesno-opt--correct {
+  border-color: rgba(74, 222, 128, 0.55);
+  background: rgba(74, 222, 128, 0.08);
+  color: var(--cq-success);
+}
+
+.cq-yesno-opt--correct .cq-yesno-box {
+  border-color: var(--cq-success);
+  background: rgba(74, 222, 128, 0.15);
+}
+
+.cq-yesno-opt--wrong {
+  border-color: rgba(248, 113, 113, 0.55);
+  background: rgba(248, 113, 113, 0.08);
+  color: var(--cq-danger);
+}
+
+.cq-yesno-opt--wrong .cq-yesno-box {
+  border-color: var(--cq-danger);
+  background: rgba(248, 113, 113, 0.15);
+}
+
+.cq-yesno-hint {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--cq-muted);
 }
 
 .cq-score {
@@ -647,6 +832,11 @@ textarea.cq-code-editor-overlay {
   border-radius: 12px;
   border: 1px solid var(--cq-border);
   background: var(--cq-surface);
+}
+
+.cq-progress-row--topic {
+  margin-left: 0.75rem;
+  border-style: dashed;
 }
 
 .cq-progress-title {

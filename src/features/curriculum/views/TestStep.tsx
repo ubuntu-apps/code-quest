@@ -1,15 +1,17 @@
-import type { Level, TestQuestion } from '../types'
+import type { Level, TestGradeResult, TestQuestion } from '../types'
 import type { LevelProgress } from '../progressStorage'
 import { PASS_DEFAULT } from '../constants'
 import { SimpleMarkdown } from '../SimpleMarkdown'
 import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditorMode } from '../../editor'
+import { YesNoQuestionInput } from '../components/YesNoQuestionInput'
+import { isYesNoQuestion, yesNoCorrectAnswer } from '../testQuestionUtils'
 
 interface TestStepProps {
   level: Level
   prog: LevelProgress
   testShort: Record<string, string>
   testMcq: Record<string, string>
-  testResult: { correct: number; total: number; passed: boolean } | null
+  testResult: TestGradeResult | null
   onTestShortChange: (questionId: string, value: string) => void
   onTestMcqChange: (questionId: string, choiceId: string) => void
   onUpdatePassingScore: (score: number) => void
@@ -18,6 +20,7 @@ interface TestStepProps {
   onRemoveQuestion: (questionId: string) => void
   onAddQuestion: (type: 'mcq' | 'shortText') => void
   onSubmit: () => void
+  onRetake: () => void
 }
 
 export function TestStep({
@@ -34,6 +37,7 @@ export function TestStep({
   onRemoveQuestion,
   onAddQuestion,
   onSubmit,
+  onRetake,
 }: TestStepProps) {
   const { isEditingLocal } = useEditorMode()
 
@@ -56,36 +60,76 @@ export function TestStep({
         )}
         % · {prog.testPassed ? 'You already passed at least once.' : 'Answer all questions, then Submit.'}
       </p>
-      <ol className="cq-test-list">
-        {level.test.questions.map((q, qi) => (
-          <li key={q.id} className="cq-test-item">
+      <ul className="cq-test-list">
+        {level.test.questions.map((q, qi) => {
+          const showFeedback = testResult !== null
+          const questionPassed = testResult?.byQuestion[q.id]
+          const itemClass = showFeedback
+            ? questionPassed
+              ? ' cq-test-item--pass'
+              : ' cq-test-item--fail'
+            : ''
+
+          return (
+          <li key={q.id} className={`cq-test-item${itemClass}`}>
             <div className="cq-test-prompt">
               <span className="cq-test-num">{qi + 1}.</span>
               <div className="cq-test-content">
                 <div className="cq-card-row cq-card-row--panel">
                   <div className="cq-test-body">
+                    {showFeedback && (
+                      <span
+                        className={`cq-test-status${questionPassed ? ' cq-test-status--pass' : ' cq-test-status--fail'}`}
+                      >
+                        {questionPassed ? 'Correct' : 'Incorrect'}
+                      </span>
+                    )}
                     {q.type === 'mcq' ? (
                       <>
                         <p>{q.prompt}</p>
                         <div className="cq-mcq">
-                          {q.choices.map((c) => (
-                            <label key={c.id} className="cq-mcq-opt">
+                          {q.choices.map((c) => {
+                            const selected = testMcq[q.id] === c.id
+                            const isCorrect = q.correctChoiceId === c.id
+                            let optClass = 'cq-mcq-opt'
+                            if (showFeedback) {
+                              if (isCorrect) optClass += ' cq-mcq-opt--correct'
+                              else if (selected) optClass += ' cq-mcq-opt--wrong'
+                            }
+                            return (
+                            <label key={c.id} className={optClass}>
                               <input
                                 type="radio"
                                 name={`mcq-${q.id}`}
-                                checked={testMcq[q.id] === c.id}
+                                checked={selected}
                                 onChange={() => onTestMcqChange(q.id, c.id)}
                               />
                               <span>{c.label}</span>
                             </label>
-                          ))}
+                            )
+                          })}
                         </div>
                       </>
+                    ) : isYesNoQuestion(q) ? (
+                      <YesNoQuestionInput
+                        prompt={q.prompt}
+                        value={testShort[q.id]}
+                        correctAnswer={yesNoCorrectAnswer(q)!}
+                        showFeedback={showFeedback}
+                        questionPassed={questionPassed}
+                        onChange={(value) => onTestShortChange(q.id, value)}
+                      />
                     ) : (
                       <>
                         <SimpleMarkdown text={q.prompt} />
                         <textarea
-                          className="cq-code-input"
+                          className={`cq-code-input${
+                            showFeedback
+                              ? questionPassed
+                                ? ' cq-code-input--pass'
+                                : ' cq-code-input--fail'
+                              : ''
+                          }`}
                           rows={2}
                           spellCheck={false}
                           value={testShort[q.id] ?? ''}
@@ -110,14 +154,19 @@ export function TestStep({
               </div>
             </div>
           </li>
-        ))}
-      </ol>
+          )
+        })}
+      </ul>
       <div className="cq-row cq-test-add-buttons">
         <AddItemButton label="Add MCQ" onClick={() => onAddQuestion('mcq')} />
         <AddItemButton label="Add short-text" onClick={() => onAddQuestion('shortText')} />
       </div>
-      <button type="button" className="cq-btn cq-btn--primary" onClick={onSubmit}>
-        Submit test
+      <button
+        type="button"
+        className="cq-btn cq-btn--primary"
+        onClick={testResult ? onRetake : onSubmit}
+      >
+        {testResult ? 'Retake' : 'Submit test'}
       </button>
       {testResult && (
         <p className={testResult.passed ? 'cq-score cq-score--pass' : 'cq-score cq-score--fail'}>

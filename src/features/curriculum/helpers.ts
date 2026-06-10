@@ -46,6 +46,35 @@ export function computeLevelXp(languageId: string, level: Level): number {
   return challengeXp + testXp
 }
 
+export type SectionProgressStatus = 'not_started' | 'in_progress' | 'complete'
+
+export function isLevelComplete(languageId: string, level: Level): boolean {
+  const p = loadProgress(languageId, level.id)
+  const challengesDone =
+    level.challenges.length === 0 ||
+    level.challenges.every((c) => p.challengesCompleted.includes(c.id))
+  return challengesDone && p.testPassed
+}
+
+export function isLevelStarted(languageId: string, level: Level): boolean {
+  const p = loadProgress(languageId, level.id)
+  return p.challengesCompleted.length > 0 || p.testPassed
+}
+
+export function getSectionProgressStatus(
+  languageId: string,
+  levels: Level[],
+): SectionProgressStatus {
+  if (levels.length === 0) return 'not_started'
+  if (!levels.some((level) => isLevelStarted(languageId, level))) return 'not_started'
+  if (levels.every((level) => isLevelComplete(languageId, level))) return 'complete'
+  return 'in_progress'
+}
+
+export function computeSectionXp(languageId: string, levels: Level[]): number {
+  return levels.reduce((sum, level) => sum + computeLevelXp(languageId, level), 0)
+}
+
 export function pythonErrorLinePointer(
   code: string,
   err: Pick<FriendlyPythonError, 'line' | 'column'> | null | undefined,
