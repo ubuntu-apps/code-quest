@@ -5,6 +5,7 @@
     {
       "id": "opening_files",
       "title": "Opening files",
+      "kind": "topic",
       "intro": {
         "title": "Opening files",
         "bodyMarkdown": "Use `open(path, mode)` — modes include r, w, a, rb, wb. Always close files or use `with`.\n\nFile objects read/write text or bytes depending on mode and encoding.\n\nPaths can be strings or pathlib.Path objects.",
@@ -12,7 +13,7 @@
       },
       "challenges": [
         {
-          "id": "ch_0j42pnb",
+          "id": "ch_afftuqy",
           "title": "Easy: open read mode",
           "promptMarkdown": "\"r\"",
           "starterCode": "",
@@ -29,7 +30,7 @@
           }
         },
         {
-          "id": "ch_vt9b0v3",
+          "id": "ch_z182z9c",
           "title": "Easy: with statement",
           "promptMarkdown": "auto close",
           "starterCode": "# with open(\"f.txt\") as f:\n#     data = f.read()",
@@ -41,7 +42,7 @@
           }
         },
         {
-          "id": "ch_eht81w1",
+          "id": "ch_f1l4tn6",
           "title": "Medium: write mode",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\nb=StringIO(\"old\")\nb.seek(0); b.truncate(0); b.write(\"only\")\ncontent=b.getvalue()",
@@ -58,7 +59,7 @@
           }
         },
         {
-          "id": "ch_7xqlmca",
+          "id": "ch_qihvuo8",
           "title": "Medium: append mode",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\nb=StringIO(\"old\")\nb.seek(0,2); b.write(\"new\")\ncontent=b.getvalue()",
@@ -75,7 +76,7 @@
           }
         },
         {
-          "id": "ch_lw6v9vx",
+          "id": "ch_v4jd4pi",
           "title": "Hard: encoding utf-8",
           "promptMarkdown": "",
           "starterCode": "",
@@ -92,7 +93,7 @@
           }
         },
         {
-          "id": "ch_g64kvig",
+          "id": "ch_g2xto19",
           "title": "Hard: pathlib Path",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nn=Path(\"data.txt\").name",
@@ -109,7 +110,7 @@
           }
         },
         {
-          "id": "ch_rwxuscb",
+          "id": "ch_0bk312p",
           "title": "Expert: binary rb",
           "promptMarkdown": "",
           "starterCode": "",
@@ -126,7 +127,7 @@
           }
         },
         {
-          "id": "ch_m428gik",
+          "id": "ch_5evbbbc",
           "title": "Expert: file object",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\nf=StringIO(\"hi\")\nhas_read=callable(getattr(f,\"read\",None))",
@@ -143,7 +144,7 @@
           }
         },
         {
-          "id": "ch_p73c3ru",
+          "id": "ch_c06hthe",
           "title": "Expert: context manager",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\nused=False\nwith StringIO(\"x\") as f:\n used=f.read()==\"x\"",
@@ -160,7 +161,7 @@
           }
         },
         {
-          "id": "ch_4nyyjfv",
+          "id": "ch_upqif2i",
           "title": "Expert: missing file",
           "promptMarkdown": "",
           "starterCode": "try:\n open(\"cq_nonexistent_zzz.txt\")\nexcept FileNotFoundError:\n caught=True",
@@ -181,7 +182,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_herrr2w",
+            "id": "q_k567ekz",
             "type": "mcq",
             "prompt": "open(\"f\",\"r\") reads:",
             "choices": [
@@ -201,7 +202,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_prae12o",
+            "id": "q_q7cfwgp",
             "type": "shortText",
             "prompt": "with ensures:",
             "validation": {
@@ -210,7 +211,7 @@
             }
           },
           {
-            "id": "q_nxtvub4",
+            "id": "q_00nhsn2",
             "type": "mcq",
             "prompt": "\"w\" mode:",
             "choices": [
@@ -230,7 +231,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_tgl8gcd",
+            "id": "q_li3tcy8",
             "type": "shortText",
             "prompt": "Append mode letter:",
             "validation": {
@@ -239,7 +240,7 @@
             }
           },
           {
-            "id": "q_k7aqaxg",
+            "id": "q_bcoexlb",
             "type": "mcq",
             "prompt": "encoding=\"utf-8\" for:",
             "choices": [
@@ -259,7 +260,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_iekzade",
+            "id": "q_gqio9nl",
             "type": "mcq",
             "prompt": "Path from pathlib is:",
             "choices": [
@@ -279,7 +280,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mju30nx",
+            "id": "q_46zhy2d",
             "type": "shortText",
             "prompt": "Binary mode suffix:",
             "validation": {
@@ -288,7 +289,7 @@
             }
           },
           {
-            "id": "q_shnp0ji",
+            "id": "q_o55q0x1",
             "type": "mcq",
             "prompt": "Expert: forgetting close leaks:",
             "choices": [
@@ -308,7 +309,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8xhf6sp",
+            "id": "q_gf6ihxj",
             "type": "mcq",
             "prompt": "Expert: FileNotFoundError when:",
             "choices": [
@@ -328,7 +329,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_vmp1hb5",
+            "id": "q_yhyyuvn",
             "type": "shortText",
             "prompt": "Expert: pathlib better than:",
             "validation": {
@@ -342,6 +343,7 @@
     {
       "id": "reading_files",
       "title": "Reading files",
+      "kind": "topic",
       "intro": {
         "title": "Reading files",
         "bodyMarkdown": "`.read()` whole file; `.readline()` one line; iterate `for line in f` memory-friendly.\n\n`.readlines()` returns list of lines. Strip newlines when processing.\n\nLarge files: loop lines instead of read() all at once.",
@@ -349,7 +351,7 @@
       },
       "challenges": [
         {
-          "id": "ch_v764ddn",
+          "id": "ch_naevcz1",
           "title": "Easy: read whole",
           "promptMarkdown": "concept",
           "starterCode": "",
@@ -366,7 +368,7 @@
           }
         },
         {
-          "id": "ch_m4ya1wm",
+          "id": "ch_s1f1evd",
           "title": "Easy: strip line",
           "promptMarkdown": "",
           "starterCode": "",
@@ -383,7 +385,7 @@
           }
         },
         {
-          "id": "ch_uh9n0y0",
+          "id": "ch_2nn8w8t",
           "title": "Medium: splitlines",
           "promptMarkdown": "",
           "starterCode": "",
@@ -400,7 +402,7 @@
           }
         },
         {
-          "id": "ch_hkg0b1y",
+          "id": "ch_bjr7872",
           "title": "Medium: for line in",
           "promptMarkdown": "iterate",
           "starterCode": "",
@@ -417,7 +419,7 @@
           }
         },
         {
-          "id": "ch_rfr28ak",
+          "id": "ch_2gmrtj9",
           "title": "Hard: readline concept",
           "promptMarkdown": "",
           "starterCode": "",
@@ -434,7 +436,7 @@
           }
         },
         {
-          "id": "ch_pws7bs7",
+          "id": "ch_d2eou02",
           "title": "Hard: empty file",
           "promptMarkdown": "",
           "starterCode": "",
@@ -451,7 +453,7 @@
           }
         },
         {
-          "id": "ch_5stuwz6",
+          "id": "ch_xjxn005",
           "title": "Expert: large file pattern",
           "promptMarkdown": "",
           "starterCode": "",
@@ -468,7 +470,7 @@
           }
         },
         {
-          "id": "ch_7euu78z",
+          "id": "ch_16e5b8z",
           "title": "Expert: rstrip newline",
           "promptMarkdown": "",
           "starterCode": "",
@@ -485,7 +487,7 @@
           }
         },
         {
-          "id": "ch_jhjfz99",
+          "id": "ch_i6v5psk",
           "title": "Expert: count lines",
           "promptMarkdown": "",
           "starterCode": "",
@@ -502,7 +504,7 @@
           }
         },
         {
-          "id": "ch_uwhq1he",
+          "id": "ch_o4chbax",
           "title": "Expert: filter lines",
           "promptMarkdown": "",
           "starterCode": "",
@@ -523,7 +525,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_3f6dwq0",
+            "id": "q_wfesspm",
             "type": "mcq",
             "prompt": "read() gets:",
             "choices": [
@@ -543,7 +545,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_o7e9mr3",
+            "id": "q_hk6wj53",
             "type": "shortText",
             "prompt": "Iterate lines is:",
             "validation": {
@@ -552,7 +554,7 @@
             }
           },
           {
-            "id": "q_nth8to4",
+            "id": "q_ijhwipn",
             "type": "mcq",
             "prompt": "strip() removes:",
             "choices": [
@@ -572,7 +574,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_vk7w0tm",
+            "id": "q_e0k3ndw",
             "type": "mcq",
             "prompt": "splitlines on str:",
             "choices": [
@@ -592,7 +594,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fwojqyy",
+            "id": "q_cb6hjwg",
             "type": "shortText",
             "prompt": "readline reads:",
             "validation": {
@@ -601,7 +603,7 @@
             }
           },
           {
-            "id": "q_9986g85",
+            "id": "q_5rgooef",
             "type": "mcq",
             "prompt": "Expert: huge file avoid:",
             "choices": [
@@ -621,7 +623,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9wvcqoh",
+            "id": "q_2sa8r60",
             "type": "mcq",
             "prompt": "Expert: newline char often:",
             "choices": [
@@ -641,7 +643,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_o269g20",
+            "id": "q_3t6vskf",
             "type": "shortText",
             "prompt": "Expert: processing pipeline:",
             "validation": {
@@ -650,7 +652,7 @@
             }
           },
           {
-            "id": "q_368rzne",
+            "id": "q_gby0428",
             "type": "mcq",
             "prompt": "Expert: encoding needed for:",
             "choices": [
@@ -670,7 +672,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wowjs4m",
+            "id": "q_6bh1cuu",
             "type": "shortText",
             "prompt": "Expert: rstrip targets:",
             "validation": {
@@ -684,6 +686,7 @@
     {
       "id": "writing_files",
       "title": "Writing files",
+      "kind": "topic",
       "intro": {
         "title": "Writing files",
         "bodyMarkdown": "`.write(string)` writes text; must include newlines yourself. `writelines` writes iterable.\n\nw mode overwrites; a appends. Use with block.\n\nFlush ensures data hits disk before close in some cases.",
@@ -691,7 +694,7 @@
       },
       "challenges": [
         {
-          "id": "ch_mgpdzej",
+          "id": "ch_sdc6tzx",
           "title": "Easy: write string",
           "promptMarkdown": "includes newline",
           "starterCode": "",
@@ -708,7 +711,7 @@
           }
         },
         {
-          "id": "ch_dpnt0kv",
+          "id": "ch_j2usvga",
           "title": "Easy: writelines",
           "promptMarkdown": "list",
           "starterCode": "",
@@ -725,7 +728,7 @@
           }
         },
         {
-          "id": "ch_2hcle4j",
+          "id": "ch_8qz6hyf",
           "title": "Medium: join before write",
           "promptMarkdown": "",
           "starterCode": "",
@@ -742,7 +745,7 @@
           }
         },
         {
-          "id": "ch_a5gv9cf",
+          "id": "ch_3qmdi9p",
           "title": "Medium: overwrite w",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\nf=StringIO(\"original\")\nf.seek(0); f.truncate(0); f.write(\"replacement\")\ns=f.getvalue()",
@@ -759,7 +762,7 @@
           }
         },
         {
-          "id": "ch_cdietg2",
+          "id": "ch_gabnpq1",
           "title": "Hard: append line",
           "promptMarkdown": "",
           "starterCode": "",
@@ -776,7 +779,7 @@
           }
         },
         {
-          "id": "ch_pvijcps",
+          "id": "ch_zy91ymt",
           "title": "Hard: format then write",
           "promptMarkdown": "f-string line",
           "starterCode": "",
@@ -793,7 +796,7 @@
           }
         },
         {
-          "id": "ch_sq0qahm",
+          "id": "ch_h3jurej",
           "title": "Expert: csv manual",
           "promptMarkdown": "comma",
           "starterCode": "",
@@ -810,7 +813,7 @@
           }
         },
         {
-          "id": "ch_af5vmvo",
+          "id": "ch_6sfrn7a",
           "title": "Expert: json dump",
           "promptMarkdown": "",
           "starterCode": "import json\nok=isinstance(json.dumps({\"a\":1}),str)",
@@ -827,7 +830,7 @@
           }
         },
         {
-          "id": "ch_t4zu7ca",
+          "id": "ch_y34uon0",
           "title": "Expert: buffer flush",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\nf=StringIO()\nf.write(\"abc\")\nf.flush()\nn=len(f.getvalue())",
@@ -844,7 +847,7 @@
           }
         },
         {
-          "id": "ch_ir5wi8o",
+          "id": "ch_nh61hg1",
           "title": "Expert: atomic write pattern",
           "promptMarkdown": "",
           "starterCode": "",
@@ -865,7 +868,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_iu9st8a",
+            "id": "q_k9tlyex",
             "type": "mcq",
             "prompt": "write does not add:",
             "choices": [
@@ -885,7 +888,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nk448ri",
+            "id": "q_pwknhbh",
             "type": "shortText",
             "prompt": "w mode on existing:",
             "validation": {
@@ -894,7 +897,7 @@
             }
           },
           {
-            "id": "q_i38bg7f",
+            "id": "q_sferxak",
             "type": "mcq",
             "prompt": "writelines expects:",
             "choices": [
@@ -914,7 +917,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wkzcqc6",
+            "id": "q_phv9mot",
             "type": "mcq",
             "prompt": "a mode:",
             "choices": [
@@ -934,7 +937,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xwnpl6u",
+            "id": "q_i9ntpzf",
             "type": "shortText",
             "prompt": "Include \\n for:",
             "validation": {
@@ -943,7 +946,7 @@
             }
           },
           {
-            "id": "q_eqq62sb",
+            "id": "q_6s33e2n",
             "type": "mcq",
             "prompt": "Expert: atomic replace uses:",
             "choices": [
@@ -963,7 +966,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ppms26e",
+            "id": "q_fl53lzt",
             "type": "mcq",
             "prompt": "Expert: json.dumps for:",
             "choices": [
@@ -983,7 +986,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4gi5yr9",
+            "id": "q_zexkc0q",
             "type": "shortText",
             "prompt": "Expert: flush pushes:",
             "validation": {
@@ -992,7 +995,7 @@
             }
           },
           {
-            "id": "q_upuz5o6",
+            "id": "q_3i4voq3",
             "type": "mcq",
             "prompt": "Expert: never write secrets to:",
             "choices": [
@@ -1012,7 +1015,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_cikmxrw",
+            "id": "q_szo9eib",
             "type": "shortText",
             "prompt": "Expert: join builds:",
             "validation": {
@@ -1026,6 +1029,7 @@
     {
       "id": "appending",
       "title": "Appending",
+      "kind": "topic",
       "intro": {
         "title": "Appending",
         "bodyMarkdown": "Mode `a` opens for append — writes go to end without truncating.\n\nCreate file if missing. Combine with newline-terminated lines for logs.\n\nRead-append-update patterns need careful design or a+ mode.",
@@ -1033,7 +1037,7 @@
       },
       "challenges": [
         {
-          "id": "ch_o3tt5ro",
+          "id": "ch_p7ar3qo",
           "title": "Easy: mode a",
           "promptMarkdown": "append",
           "starterCode": "",
@@ -1050,7 +1054,7 @@
           }
         },
         {
-          "id": "ch_ugt6o7x",
+          "id": "ch_ez4i9tp",
           "title": "Easy: log line",
           "promptMarkdown": "ends with \\n",
           "starterCode": "",
@@ -1067,7 +1071,7 @@
           }
         },
         {
-          "id": "ch_zbkjzxw",
+          "id": "ch_vq4eim2",
           "title": "Medium: multiple append",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1084,7 +1088,7 @@
           }
         },
         {
-          "id": "ch_6yw2y5n",
+          "id": "ch_bul6j49",
           "title": "Medium: timestamp log",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1101,7 +1105,7 @@
           }
         },
         {
-          "id": "ch_h6850ln",
+          "id": "ch_48n9ntr",
           "title": "Hard: read then append",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1118,7 +1122,7 @@
           }
         },
         {
-          "id": "ch_yqp94so",
+          "id": "ch_8aplbmc",
           "title": "Hard: a+ rare",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1135,7 +1139,7 @@
           }
         },
         {
-          "id": "ch_q8n3ups",
+          "id": "ch_xg5ob3q",
           "title": "Expert: rotate logs",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1152,7 +1156,7 @@
           }
         },
         {
-          "id": "ch_j8xgffi",
+          "id": "ch_814zmnq",
           "title": "Expert: concurrent append",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1169,7 +1173,7 @@
           }
         },
         {
-          "id": "ch_58po9jx",
+          "id": "ch_29em5ar",
           "title": "Expert: csv append row",
           "promptMarkdown": "",
           "starterCode": "\"",
@@ -1186,7 +1190,7 @@
           }
         },
         {
-          "id": "ch_5wifjdj",
+          "id": "ch_spjaq7j",
           "title": "Expert: idempotent append guard",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1207,7 +1211,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_5y8w792",
+            "id": "q_e42olzy",
             "type": "mcq",
             "prompt": "\"a\" opens at:",
             "choices": [
@@ -1227,7 +1231,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_yg5xdkp",
+            "id": "q_3saydnp",
             "type": "shortText",
             "prompt": "Append preserves:",
             "validation": {
@@ -1236,7 +1240,7 @@
             }
           },
           {
-            "id": "q_ne35ebg",
+            "id": "q_8cb4mhy",
             "type": "mcq",
             "prompt": "Log lines should end with:",
             "choices": [
@@ -1256,7 +1260,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ft02ycc",
+            "id": "q_9m5kv3y",
             "type": "mcq",
             "prompt": "a creates if missing:",
             "choices": [
@@ -1276,7 +1280,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_6ruetbp",
+            "id": "q_rzq0k6q",
             "type": "shortText",
             "prompt": "Opposite of append truncate:",
             "validation": {
@@ -1285,7 +1289,7 @@
             }
           },
           {
-            "id": "q_jedultv",
+            "id": "q_64zxdcn",
             "type": "mcq",
             "prompt": "Expert: concurrent writes may:",
             "choices": [
@@ -1305,7 +1309,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_hds9vok",
+            "id": "q_qfkglp6",
             "type": "mcq",
             "prompt": "Expert: log rotation manages:",
             "choices": [
@@ -1325,7 +1329,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_c16bil2",
+            "id": "q_m3e0945",
             "type": "shortText",
             "prompt": "Expert: audit trail uses:",
             "validation": {
@@ -1334,7 +1338,7 @@
             }
           },
           {
-            "id": "q_08iihdn",
+            "id": "q_4ha1l9n",
             "type": "mcq",
             "prompt": "Expert: a+ allows:",
             "choices": [
@@ -1354,7 +1358,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2eg5m9t",
+            "id": "q_3c8d9i3",
             "type": "shortText",
             "prompt": "Expert: never log:",
             "validation": {
@@ -1368,6 +1372,7 @@
     {
       "id": "with_statement",
       "title": "with statement",
+      "kind": "topic",
       "intro": {
         "title": "with statement",
         "bodyMarkdown": "Context managers guarantee setup/cleanup — files close even on exceptions.\n\n`with open(...) as f:` is the standard pattern.\n\nImplement __enter__/__exit__ for custom resources.",
@@ -1375,7 +1380,7 @@
       },
       "challenges": [
         {
-          "id": "ch_57kd0ff",
+          "id": "ch_zms12co",
           "title": "Easy: with open",
           "promptMarkdown": "pattern",
           "starterCode": "with open(\"x\",\"w\") as f:\n    pass",
@@ -1387,7 +1392,7 @@
           }
         },
         {
-          "id": "ch_sl11rdq",
+          "id": "ch_ynpnn0q",
           "title": "Easy: auto close",
           "promptMarkdown": "concept",
           "starterCode": "",
@@ -1404,7 +1409,7 @@
           }
         },
         {
-          "id": "ch_7yhoc8h",
+          "id": "ch_95gvg99",
           "title": "Medium: nested with",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\na=\"\"; b=\"\"\nwith StringIO(\"a\") as f1:\n a=f1.read()\n with StringIO(\"b\") as f2:\n  b=f2.read()\nv=a+b",
@@ -1421,7 +1426,7 @@
           }
         },
         {
-          "id": "ch_52qsw3b",
+          "id": "ch_pxs5qx2",
           "title": "Medium: exception still closes",
           "promptMarkdown": "",
           "starterCode": "class C:\n def __init__(self): self.closed=False\n def __enter__(self): return self\n def __exit__(self,*a): self.closed=True\nc=C()\ntry:\n with c:\n  raise ValueError\nexcept ValueError:\n pass\nclosed=c.closed",
@@ -1438,7 +1443,7 @@
           }
         },
         {
-          "id": "ch_8gk0eiw",
+          "id": "ch_hfu58ck",
           "title": "Hard: contextlib",
           "promptMarkdown": "",
           "starterCode": "from contextlib import contextmanager\n@contextmanager\ndef cm():\n yield 1\nwith cm() as val: pass",
@@ -1455,7 +1460,7 @@
           }
         },
         {
-          "id": "ch_suyr1ut",
+          "id": "ch_vrl68t1",
           "title": "Hard: multiple managers",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\nwith StringIO(\"x\") as a, StringIO(\"y\") as b:\n s=a.read()+b.read()",
@@ -1472,7 +1477,7 @@
           }
         },
         {
-          "id": "ch_vq0e4ez",
+          "id": "ch_y2orkl4",
           "title": "Expert: __enter__ returns",
           "promptMarkdown": "resource",
           "starterCode": "class C:\n def __enter__(self): return 1\n def __exit__(self,*a): pass\nwith C() as v: pass",
@@ -1489,7 +1494,7 @@
           }
         },
         {
-          "id": "ch_c6fgcyk",
+          "id": "ch_l7vxhz8",
           "title": "Expert: __exit__ cleanup",
           "promptMarkdown": "",
           "starterCode": "class CM:\n def __enter__(self): return self\n def __exit__(self,*a):\n  global cleaned\n  cleaned=True\nwith CM():\n pass",
@@ -1506,7 +1511,7 @@
           }
         },
         {
-          "id": "ch_9adnc44",
+          "id": "ch_16q9565",
           "title": "Expert: suppress errors",
           "promptMarkdown": "",
           "starterCode": "from contextlib import suppress\nval=0\nwith suppress(ValueError):\n val=int(\"bad\")\n val=99",
@@ -1523,7 +1528,7 @@
           }
         },
         {
-          "id": "ch_tin6968",
+          "id": "ch_k9givrg",
           "title": "Expert: custom CM",
           "promptMarkdown": "class",
           "starterCode": "class CM:\n    def __enter__(self): return self\n    def __exit__(self,*a): pass",
@@ -1540,7 +1545,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_qz8wc0z",
+            "id": "q_12zxxh7",
             "type": "mcq",
             "prompt": "with ensures:",
             "choices": [
@@ -1560,7 +1565,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_n8lkfts",
+            "id": "q_38sofbf",
             "type": "shortText",
             "prompt": "__exit__ runs on:",
             "validation": {
@@ -1569,7 +1574,7 @@
             }
           },
           {
-            "id": "q_mnyv2jt",
+            "id": "q_pwoiuwf",
             "type": "mcq",
             "prompt": "open returns file used as:",
             "choices": [
@@ -1589,7 +1594,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4my1nom",
+            "id": "q_v0jxl6t",
             "type": "mcq",
             "prompt": "Prefer with over:",
             "choices": [
@@ -1609,7 +1614,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wr6z55n",
+            "id": "q_p883qw6",
             "type": "shortText",
             "prompt": "__enter__ sets up:",
             "validation": {
@@ -1618,7 +1623,7 @@
             }
           },
           {
-            "id": "q_p5pmef6",
+            "id": "q_5ntusrm",
             "type": "mcq",
             "prompt": "Expert: nested with for:",
             "choices": [
@@ -1638,7 +1643,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_pu9f6br",
+            "id": "q_dqf2aud",
             "type": "mcq",
             "prompt": "Expert: contextlib.contextmanager:",
             "choices": [
@@ -1658,7 +1663,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jr0a09o",
+            "id": "q_z7f2k8m",
             "type": "shortText",
             "prompt": "Expert: leak without close:",
             "validation": {
@@ -1667,7 +1672,7 @@
             }
           },
           {
-            "id": "q_acvbiuu",
+            "id": "q_fuq3mmx",
             "type": "mcq",
             "prompt": "Expert: with even if:",
             "choices": [
@@ -1687,7 +1692,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_65jm0vh",
+            "id": "q_bhkc39s",
             "type": "shortText",
             "prompt": "Expert: CM protocol:",
             "validation": {
@@ -1701,6 +1706,7 @@
     {
       "id": "file_paths",
       "title": "File paths",
+      "kind": "topic",
       "intro": {
         "title": "File paths",
         "bodyMarkdown": "Use pathlib.Path for cross-platform paths. Join with / operator: `base / \"data\" / \"file.txt\"`.\n\nos.path still common; Path has read_text, write_text, exists, mkdir.\n\nAvoid hard-coding backslashes on Windows.",
@@ -1708,7 +1714,7 @@
       },
       "challenges": [
         {
-          "id": "ch_54gf2ux",
+          "id": "ch_p9eavlp",
           "title": "Easy: Path join",
           "promptMarkdown": "/",
           "starterCode": "",
@@ -1725,7 +1731,7 @@
           }
         },
         {
-          "id": "ch_e1ixfca",
+          "id": "ch_ucdzxbf",
           "title": "Easy: suffix",
           "promptMarkdown": ".csv",
           "starterCode": "",
@@ -1742,7 +1748,7 @@
           }
         },
         {
-          "id": "ch_4q99y7i",
+          "id": "ch_2vba3q9",
           "title": "Medium: parent",
           "promptMarkdown": "dir",
           "starterCode": "from pathlib import Path\np=Path(\"a/b.txt\").parent",
@@ -1759,7 +1765,7 @@
           }
         },
         {
-          "id": "ch_90wmbqw",
+          "id": "ch_ahp3lix",
           "title": "Medium: exists",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nexists=Path(\".\").exists()",
@@ -1776,7 +1782,7 @@
           }
         },
         {
-          "id": "ch_nm7qc68",
+          "id": "ch_0uysj83",
           "title": "Hard: home Path",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nok=Path.home() is not None",
@@ -1793,7 +1799,7 @@
           }
         },
         {
-          "id": "ch_bzqtmt3",
+          "id": "ch_n0jrat3",
           "title": "Hard: resolve",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nabs=Path(\".\").resolve().is_absolute()",
@@ -1810,7 +1816,7 @@
           }
         },
         {
-          "id": "ch_do5b3n5",
+          "id": "ch_bubfqz6",
           "title": "Expert: mkdir parents",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1827,7 +1833,7 @@
           }
         },
         {
-          "id": "ch_neicfmv",
+          "id": "ch_7uescw3",
           "title": "Expert: glob pattern",
           "promptMarkdown": "",
           "starterCode": "from pathlib import Path\nhits=list(Path(\".\").glob(\"*.py\"))",
@@ -1844,7 +1850,7 @@
           }
         },
         {
-          "id": "ch_ggn80wz",
+          "id": "ch_0xjqbfb",
           "title": "Expert: read_text",
           "promptMarkdown": "",
           "starterCode": "from io import StringIO\ntxt=StringIO(\"ok\").read()",
@@ -1861,7 +1867,7 @@
           }
         },
         {
-          "id": "ch_xqusu3o",
+          "id": "ch_vz9n069",
           "title": "Expert: os.path.join alt",
           "promptMarkdown": "",
           "starterCode": "import os\nok=os.path.join(\"a\",\"b\")==\"a\"+os.sep+\"b\"",
@@ -1882,7 +1888,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_ecvbpyx",
+            "id": "q_z1qur38",
             "type": "mcq",
             "prompt": "Path / \"x\" joins:",
             "choices": [
@@ -1902,7 +1908,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_j692k8o",
+            "id": "q_foubqkn",
             "type": "shortText",
             "prompt": "suffix is:",
             "validation": {
@@ -1911,7 +1917,7 @@
             }
           },
           {
-            "id": "q_hh8yi6h",
+            "id": "q_9p7m0lh",
             "type": "mcq",
             "prompt": "parent is:",
             "choices": [
@@ -1931,7 +1937,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_q5igwas",
+            "id": "q_1gba3dn",
             "type": "mcq",
             "prompt": "pathlib preferred for:",
             "choices": [
@@ -1951,7 +1957,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_3uznqnm",
+            "id": "q_5r2gk2l",
             "type": "shortText",
             "prompt": "glob finds:",
             "validation": {
@@ -1960,7 +1966,7 @@
             }
           },
           {
-            "id": "q_kkpbjml",
+            "id": "q_7mxiovi",
             "type": "mcq",
             "prompt": "Expert: hardcode \\ on Windows:",
             "choices": [
@@ -1980,7 +1986,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wud3rqp",
+            "id": "q_ifswtmo",
             "type": "mcq",
             "prompt": "Expert: resolve makes:",
             "choices": [
@@ -2000,7 +2006,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_t3x1wvm",
+            "id": "q_io6766t",
             "type": "shortText",
             "prompt": "Expert: read_text needs:",
             "validation": {
@@ -2009,7 +2015,7 @@
             }
           },
           {
-            "id": "q_iqkjd5v",
+            "id": "q_6dmzwi0",
             "type": "mcq",
             "prompt": "Expert: mkdir parents=True:",
             "choices": [
@@ -2029,7 +2035,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_677fqy4",
+            "id": "q_vzww8qu",
             "type": "shortText",
             "prompt": "Expert: name is:",
             "validation": {
@@ -2043,6 +2049,7 @@
     {
       "id": "csv_files",
       "title": "CSV files",
+      "kind": "topic",
       "intro": {
         "title": "CSV files",
         "bodyMarkdown": "csv module: reader, writer, DictReader, DictWriter for tabular data.\n\nComma-separated; handle quoting and headers. Not for Excel-only features.\n\nAlways specify newline=\"\" on open in csv docs pattern for Windows.",
@@ -2050,7 +2057,7 @@
       },
       "challenges": [
         {
-          "id": "ch_wf7mepr",
+          "id": "ch_ze0l3ve",
           "title": "Easy: csv string",
           "promptMarkdown": "split simple",
           "starterCode": "",
@@ -2067,7 +2074,7 @@
           }
         },
         {
-          "id": "ch_josox9c",
+          "id": "ch_wfpuhh1",
           "title": "Easy: header row",
           "promptMarkdown": "name,score",
           "starterCode": "",
@@ -2084,7 +2091,7 @@
           }
         },
         {
-          "id": "ch_7glqi0i",
+          "id": "ch_idaxyz3",
           "title": "Medium: DictReader",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2101,7 +2108,7 @@
           }
         },
         {
-          "id": "ch_cex9noc",
+          "id": "ch_co26hgt",
           "title": "Medium: writerow",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nbuf=StringIO()\nw=csv.writer(buf)\nw.writerow([\"a\",\"b\"])\nrow=buf.getvalue()",
@@ -2118,7 +2125,7 @@
           }
         },
         {
-          "id": "ch_yumf8la",
+          "id": "ch_noqn5um",
           "title": "Hard: quote fields",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nbuf=StringIO()\nw=csv.writer(buf,quoting=csv.QUOTE_ALL)\nw.writerow([\"a,b\"])\nrow=buf.getvalue()",
@@ -2135,7 +2142,7 @@
           }
         },
         {
-          "id": "ch_ady26r3",
+          "id": "ch_dx46epg",
           "title": "Hard: join csv line",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2152,7 +2159,7 @@
           }
         },
         {
-          "id": "ch_fvzw2dd",
+          "id": "ch_ruv0pyo",
           "title": "Expert: dialect",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nbuf=StringIO()\nw=csv.writer(buf,delimiter=\";\")\nw.writerow([\"a\",\"b\"])\nline=buf.getvalue()",
@@ -2169,7 +2176,7 @@
           }
         },
         {
-          "id": "ch_a60danv",
+          "id": "ch_ot1ythv",
           "title": "Expert: parse int field",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2186,7 +2193,7 @@
           }
         },
         {
-          "id": "ch_r1xgtc8",
+          "id": "ch_433o3uo",
           "title": "Expert: write header",
           "promptMarkdown": "",
           "starterCode": "import csv\nfrom io import StringIO\nbuf=StringIO()\nw=csv.DictWriter(buf,fieldnames=[\"name\",\"score\"])\nw.writeheader()\nhdr=buf.getvalue()",
@@ -2203,7 +2210,7 @@
           }
         },
         {
-          "id": "ch_w4y1fau",
+          "id": "ch_fs22x38",
           "title": "Expert: errors utf-8",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2224,7 +2231,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_ah1zu7d",
+            "id": "q_ykw0lxz",
             "type": "mcq",
             "prompt": "csv module for:",
             "choices": [
@@ -2244,7 +2251,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_om7yez2",
+            "id": "q_s3axi3o",
             "type": "shortText",
             "prompt": "DictReader yields:",
             "validation": {
@@ -2253,7 +2260,7 @@
             }
           },
           {
-            "id": "q_5jwa59l",
+            "id": "q_owl8h1j",
             "type": "mcq",
             "prompt": "Delimiter often:",
             "choices": [
@@ -2273,7 +2280,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_coyn4a6",
+            "id": "q_baburu4",
             "type": "mcq",
             "prompt": "Header row gives:",
             "choices": [
@@ -2293,7 +2300,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_3yc4j7n",
+            "id": "q_eexx9bh",
             "type": "shortText",
             "prompt": "writerow writes:",
             "validation": {
@@ -2302,7 +2309,7 @@
             }
           },
           {
-            "id": "q_bvib45u",
+            "id": "q_esvulv4",
             "type": "mcq",
             "prompt": "Expert: newline=\"\" on open for csv:",
             "choices": [
@@ -2322,7 +2329,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_tp65cwv",
+            "id": "q_ozofmum",
             "type": "mcq",
             "prompt": "Expert: not for complex Excel:",
             "choices": [
@@ -2342,7 +2349,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_dscob75",
+            "id": "q_nzosd89",
             "type": "shortText",
             "prompt": "Expert: convert types after:",
             "validation": {
@@ -2351,7 +2358,7 @@
             }
           },
           {
-            "id": "q_bmjdrmd",
+            "id": "q_337m67t",
             "type": "mcq",
             "prompt": "Expert: quoting handles:",
             "choices": [
@@ -2371,7 +2378,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jujmthu",
+            "id": "q_6fjxdsg",
             "type": "shortText",
             "prompt": "Expert: export data format:",
             "validation": {
@@ -2385,6 +2392,7 @@
     {
       "id": "json_files",
       "title": "JSON files",
+      "kind": "topic",
       "intro": {
         "title": "JSON files",
         "bodyMarkdown": "json.loads/dumps for strings; load/dump for file objects. Maps to dict/list.\n\nGreat for config and APIs. Not all Python types serializable (datetime needs custom).\n\nPretty-print with indent=2 for readability.",
@@ -2392,7 +2400,7 @@
       },
       "challenges": [
         {
-          "id": "ch_p00m9lt",
+          "id": "ch_jy5qhuh",
           "title": "Easy: dumps",
           "promptMarkdown": "to str",
           "starterCode": "",
@@ -2409,7 +2417,7 @@
           }
         },
         {
-          "id": "ch_e5puc63",
+          "id": "ch_n8ex7qn",
           "title": "Easy: loads",
           "promptMarkdown": "from str",
           "starterCode": "",
@@ -2426,7 +2434,7 @@
           }
         },
         {
-          "id": "ch_6wmmt0q",
+          "id": "ch_uy0nzf0",
           "title": "Medium: indent",
           "promptMarkdown": "pretty",
           "starterCode": "",
@@ -2443,7 +2451,7 @@
           }
         },
         {
-          "id": "ch_0txstpm",
+          "id": "ch_k6pgn39",
           "title": "Medium: list json",
           "promptMarkdown": "",
           "starterCode": "import json\nl=json.loads(\"[1,2]\")",
@@ -2460,7 +2468,7 @@
           }
         },
         {
-          "id": "ch_w7rsfoh",
+          "id": "ch_l27s26x",
           "title": "Hard: nested",
           "promptMarkdown": "",
           "starterCode": "import json\nd=json.loads('{\"u\":{\"n\":2}}')\nv=d[\"u\"][\"n\"]",
@@ -2477,7 +2485,7 @@
           }
         },
         {
-          "id": "ch_jnyy57j",
+          "id": "ch_kit6g6j",
           "title": "Hard: dump to file concept",
           "promptMarkdown": "",
           "starterCode": "import json\ns=json.dumps({\"key\":1})",
@@ -2494,7 +2502,7 @@
           }
         },
         {
-          "id": "ch_hjxmxhz",
+          "id": "ch_flttiux",
           "title": "Expert: ensure_ascii False",
           "promptMarkdown": "unicode",
           "starterCode": "import json\nok=json.dumps({\"x\":\"é\"},ensure_ascii=False)!=\"\"",
@@ -2511,7 +2519,7 @@
           }
         },
         {
-          "id": "ch_445nqy8",
+          "id": "ch_ybi2krq",
           "title": "Expert: KeyError missing",
           "promptMarkdown": "",
           "starterCode": "import json\ncaught=False\ntry:\n d=json.loads('{\"a\":1}')\n _=d[\"missing\"]\nexcept KeyError:\n caught=True",
@@ -2528,7 +2536,7 @@
           }
         },
         {
-          "id": "ch_oc3ckim",
+          "id": "ch_4askrpt",
           "title": "Expert: custom encoder",
           "promptMarkdown": "",
           "starterCode": "import json\nfrom datetime import datetime\nclass E(json.JSONEncoder):\n def default(self,o):\n  if isinstance(o,datetime): return o.strftime(\"%Y-%m-%d\")\n  return super().default(o)\ns=json.dumps({\"d\":datetime(2024,6,1)},cls=E)",
@@ -2545,7 +2553,7 @@
           }
         },
         {
-          "id": "ch_dqv7iw2",
+          "id": "ch_x4ax0vm",
           "title": "Expert: validate schema",
           "promptMarkdown": "",
           "starterCode": "def has_keys(d,keys):\n return all(k in d for k in keys)\nmissing=not has_keys({\"a\":1},[\"a\",\"b\"])",
@@ -2566,7 +2574,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_zu1gj0b",
+            "id": "q_d74tncq",
             "type": "mcq",
             "prompt": "json.loads parses:",
             "choices": [
@@ -2586,7 +2594,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8ahqn7w",
+            "id": "q_utgstoj",
             "type": "shortText",
             "prompt": "dumps serializes to:",
             "validation": {
@@ -2595,7 +2603,7 @@
             }
           },
           {
-            "id": "q_q285qtf",
+            "id": "q_sb6w8rj",
             "type": "mcq",
             "prompt": "JSON object maps to:",
             "choices": [
@@ -2615,7 +2623,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_z8146h8",
+            "id": "q_e4igssv",
             "type": "mcq",
             "prompt": "JSON array maps to:",
             "choices": [
@@ -2635,7 +2643,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wh4vacy",
+            "id": "q_jq8y7st",
             "type": "shortText",
             "prompt": "indent prettifies:",
             "validation": {
@@ -2644,7 +2652,7 @@
             }
           },
           {
-            "id": "q_rn9jry2",
+            "id": "q_jpn7l3j",
             "type": "mcq",
             "prompt": "Expert: datetime default:",
             "choices": [
@@ -2664,7 +2672,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4ossxxe",
+            "id": "q_i37w7fe",
             "type": "mcq",
             "prompt": "Expert: APIs use:",
             "choices": [
@@ -2684,7 +2692,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_h8o6s0k",
+            "id": "q_9nr8dqz",
             "type": "shortText",
             "prompt": "Expert: load reads from:",
             "validation": {
@@ -2693,7 +2701,7 @@
             }
           },
           {
-            "id": "q_udcd2wj",
+            "id": "q_hyjzfn7",
             "type": "mcq",
             "prompt": "Expert: ensure_ascii False keeps:",
             "choices": [
@@ -2713,7 +2721,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_6vxtqrl",
+            "id": "q_fuong13",
             "type": "shortText",
             "prompt": "Expert: validate external JSON:",
             "validation": {
@@ -2727,6 +2735,7 @@
     {
       "id": "text_vs_binary",
       "title": "Text vs binary",
+      "kind": "topic",
       "intro": {
         "title": "Text vs binary",
         "bodyMarkdown": "Text modes expect str with encoding; binary modes use bytes — no decoding.\n\nImages, PDFs, pickles use rb/wb. Never decode arbitrary binary as UTF-8.\n\nb\"hello\" is bytes literal; encode()/decode() convert str↔bytes.",
@@ -2734,7 +2743,7 @@
       },
       "challenges": [
         {
-          "id": "ch_gh07q79",
+          "id": "ch_880ucih",
           "title": "Easy: bytes literal",
           "promptMarkdown": "b\"\"",
           "starterCode": "",
@@ -2751,7 +2760,7 @@
           }
         },
         {
-          "id": "ch_98fgq3v",
+          "id": "ch_5s338qw",
           "title": "Easy: encode",
           "promptMarkdown": "utf-8",
           "starterCode": "",
@@ -2768,7 +2777,7 @@
           }
         },
         {
-          "id": "ch_y7e8x75",
+          "id": "ch_iur82nw",
           "title": "Medium: decode",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2785,7 +2794,7 @@
           }
         },
         {
-          "id": "ch_9e6xxma",
+          "id": "ch_97q3of3",
           "title": "Medium: rb mode",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2802,7 +2811,7 @@
           }
         },
         {
-          "id": "ch_v3vj1eu",
+          "id": "ch_6f4u0z5",
           "title": "Hard: len bytes",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2819,7 +2828,7 @@
           }
         },
         {
-          "id": "ch_99if9z7",
+          "id": "ch_6470rwz",
           "title": "Hard: hex bytes",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2836,7 +2845,7 @@
           }
         },
         {
-          "id": "ch_oprl1b9",
+          "id": "ch_honpbfy",
           "title": "Expert: wrong decode",
           "promptMarkdown": "",
           "starterCode": "try:\n bytes([0xff,0xfe,0x00]).decode(\"utf-8\")\nexcept UnicodeDecodeError:\n failed=True",
@@ -2853,7 +2862,7 @@
           }
         },
         {
-          "id": "ch_fmi04fu",
+          "id": "ch_guvmx1r",
           "title": "Expert: image binary",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2870,7 +2879,7 @@
           }
         },
         {
-          "id": "ch_4d2l661",
+          "id": "ch_cttk4bz",
           "title": "Expert: bytearray",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2887,7 +2896,7 @@
           }
         },
         {
-          "id": "ch_vd6cop5",
+          "id": "ch_wa31t55",
           "title": "Expert: chardet concept",
           "promptMarkdown": "",
           "starterCode": "try:\n import chardet\n enc=chardet.detect(raw)[\"encoding\"]\nexcept ImportError:\n enc=raw.decode(\"utf-8\") and \"utf-8\"",
@@ -2908,7 +2917,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_8wj4q9a",
+            "id": "q_1j6kehq",
             "type": "mcq",
             "prompt": "bytes type for:",
             "choices": [
@@ -2928,7 +2937,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_hbh7vl4",
+            "id": "q_p45ob0y",
             "type": "shortText",
             "prompt": "encode str to:",
             "validation": {
@@ -2937,7 +2946,7 @@
             }
           },
           {
-            "id": "q_1d1ajd8",
+            "id": "q_mc41toa",
             "type": "mcq",
             "prompt": "decode bytes to:",
             "choices": [
@@ -2957,7 +2966,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_swthy04",
+            "id": "q_8q7rpng",
             "type": "mcq",
             "prompt": "rb mode reads:",
             "choices": [
@@ -2977,7 +2986,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ngifxam",
+            "id": "q_fvg09ca",
             "type": "shortText",
             "prompt": "b prefix means:",
             "validation": {
@@ -2986,7 +2995,7 @@
             }
           },
           {
-            "id": "q_jay1zyj",
+            "id": "q_lxp5how",
             "type": "mcq",
             "prompt": "Expert: never json.load binary image:",
             "choices": [
@@ -3006,7 +3015,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_a3igu72",
+            "id": "q_hwtlo5f",
             "type": "mcq",
             "prompt": "Expert: UTF-8 for:",
             "choices": [
@@ -3026,7 +3035,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gjzz4vg",
+            "id": "q_41g1lga",
             "type": "shortText",
             "prompt": "Expert: bytearray is:",
             "validation": {
@@ -3035,7 +3044,7 @@
             }
           },
           {
-            "id": "q_76lz7wc",
+            "id": "q_lw1dhpc",
             "type": "mcq",
             "prompt": "Expert: pickle is:",
             "choices": [
@@ -3055,7 +3064,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7jurv8r",
+            "id": "q_o4ci4f3",
             "type": "shortText",
             "prompt": "Expert: decode needs correct:",
             "validation": {
@@ -3069,6 +3078,7 @@
     {
       "id": "file_errors",
       "title": "Error handling with files",
+      "kind": "topic",
       "intro": {
         "title": "Error handling with files",
         "bodyMarkdown": "Expect FileNotFoundError, PermissionError, IsADirectoryError. Use try/except around IO.\n\nValidate paths before open; provide friendly messages.\n\nFinally/with ensures cleanup even on errors.",
@@ -3076,7 +3086,7 @@
       },
       "challenges": [
         {
-          "id": "ch_newg7va",
+          "id": "ch_zx1x96a",
           "title": "Easy: try open",
           "promptMarkdown": "",
           "starterCode": "try:\n    open(\"nope.txt\")\nexcept FileNotFoundError:\n    pass",
@@ -3088,7 +3098,7 @@
           }
         },
         {
-          "id": "ch_muvto65",
+          "id": "ch_d9utaxr",
           "title": "Easy: FileNotFoundError",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3105,7 +3115,7 @@
           }
         },
         {
-          "id": "ch_picrbn7",
+          "id": "ch_atvvovt",
           "title": "Medium: permission",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3122,7 +3132,7 @@
           }
         },
         {
-          "id": "ch_732sa70",
+          "id": "ch_52yevi2",
           "title": "Medium: friendly message",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3139,7 +3149,7 @@
           }
         },
         {
-          "id": "ch_ztoigi0",
+          "id": "ch_a4pdq4e",
           "title": "Hard: check exists first",
           "promptMarkdown": "Path",
           "starterCode": "from pathlib import Path\nok=not Path(\"nope_zzz\").exists()",
@@ -3156,7 +3166,7 @@
           }
         },
         {
-          "id": "ch_9p8vlyu",
+          "id": "ch_f78bi4d",
           "title": "Hard: reraise",
           "promptMarkdown": "",
           "starterCode": "try:\n try:\n  open(\"__nope_cq__.txt\")\n except FileNotFoundError:\n  raise\nexcept FileNotFoundError:\n raised=True",
@@ -3173,7 +3183,7 @@
           }
         },
         {
-          "id": "ch_8of9s9o",
+          "id": "ch_wou9zc7",
           "title": "Expert: multiple except",
           "promptMarkdown": "",
           "starterCode": "try:\n int(\"x\")\nexcept (ValueError,TypeError):\n handled=True",
@@ -3190,7 +3200,7 @@
           }
         },
         {
-          "id": "ch_q7qt1tt",
+          "id": "ch_3c99hym",
           "title": "Expert: else clause",
           "promptMarkdown": "",
           "starterCode": "try:\n x=1\nexcept:\n x=0\nelse:\n ran=True",
@@ -3207,7 +3217,7 @@
           }
         },
         {
-          "id": "ch_l4ayrtm",
+          "id": "ch_dfz5kfa",
           "title": "Expert: logging errors",
           "promptMarkdown": "",
           "starterCode": "import logging\nlogging.basicConfig(level=logging.ERROR)\nlogged=True\ntry:\n 1/0\nexcept ZeroDivisionError:\n logging.exception(\"fail\")",
@@ -3224,7 +3234,7 @@
           }
         },
         {
-          "id": "ch_plb40ty",
+          "id": "ch_fbys953",
           "title": "Expert: retry pattern",
           "promptMarkdown": "",
           "starterCode": "for _ in range(3):\n tries+=1",
@@ -3245,7 +3255,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_dnu7dy2",
+            "id": "q_p01fpsk",
             "type": "mcq",
             "prompt": "Missing file raises:",
             "choices": [
@@ -3265,7 +3275,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_hzcbrt1",
+            "id": "q_1tqnggg",
             "type": "shortText",
             "prompt": "with closes on:",
             "validation": {
@@ -3274,7 +3284,7 @@
             }
           },
           {
-            "id": "q_sq2jp0z",
+            "id": "q_6607tw9",
             "type": "mcq",
             "prompt": "Check exists with:",
             "choices": [
@@ -3294,7 +3304,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mr7dvb5",
+            "id": "q_xhronwe",
             "type": "mcq",
             "prompt": "PermissionError means:",
             "choices": [
@@ -3314,7 +3324,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1ltplsk",
+            "id": "q_kkwggr5",
             "type": "shortText",
             "prompt": "Validate paths before:",
             "validation": {
@@ -3323,7 +3333,7 @@
             }
           },
           {
-            "id": "q_8eeaqhn",
+            "id": "q_uphguk9",
             "type": "mcq",
             "prompt": "Expert: log IO errors for:",
             "choices": [
@@ -3343,7 +3353,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_90c9dw6",
+            "id": "q_59wb9ig",
             "type": "mcq",
             "prompt": "Expert: retry useful for:",
             "choices": [
@@ -3363,7 +3373,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_tfhblv0",
+            "id": "q_xywskoy",
             "type": "shortText",
             "prompt": "Expert: user-friendly errors:",
             "validation": {
@@ -3372,7 +3382,7 @@
             }
           },
           {
-            "id": "q_mpyoofe",
+            "id": "q_xmtixpp",
             "type": "mcq",
             "prompt": "Expert: never swallow:",
             "choices": [
@@ -3392,13 +3402,640 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7fesxoo",
+            "id": "q_5bcwcyy",
             "type": "shortText",
             "prompt": "Expert: finally always:",
             "validation": {
               "mode": "equalsNormalized",
               "expected": "runs"
             }
+          }
+        ]
+      }
+    },
+    {
+      "id": "line_counter",
+      "title": "Easy project: Line counter",
+      "kind": "project",
+      "projectDifficulty": "easy",
+      "intro": {
+        "title": "Easy project: Line counter",
+        "bodyMarkdown": "Read a multi-line string, split it into lines, and count how many lines are non-empty.\n\nPractice string splitting and basic file-content processing.",
+        "sandboxCode": "text = \"alpha\\nbeta\\n\\ngamma\"\nlines = text.splitlines()\nnon_empty = [line for line in lines if line.strip()]\nprint(len(non_empty))"
+      },
+      "challenges": [
+        {
+          "id": "ch_u9ep1ip",
+          "title": "Easy: splitlines",
+          "promptMarkdown": "Split `text` into lines.",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "text=\"a\\nb\\n\\nc\"\nlines=text.splitlines()",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks lines",
+                "assertion": "len(lines) == 4"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_r90eetq",
+          "title": "Medium: strip blank",
+          "promptMarkdown": "Detect empty line after strip.",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "blank = len(\"   \".strip()) == 0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks blank",
+                "assertion": "blank == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_kzemwh6",
+          "title": "Medium: Count non-empty",
+          "promptMarkdown": "Count lines with text.",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "text=\"a\\nb\\n\\nc\"\nn=0",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n == 3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_uf9k39d",
+          "title": "Hard: List comprehension",
+          "promptMarkdown": "Build filtered list.",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "kept=[line for line in [\"a\",\"\",\"b\"] if line.strip()]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks kept",
+                "assertion": "len(kept) == 2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_km2focj",
+          "title": "Hard: Print count",
+          "promptMarkdown": "Print the final count.",
+          "starterCode": "print(3)",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"3\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hazivjr",
+          "title": "Expert: Handle whitespace",
+          "promptMarkdown": "Strip before checking emptiness.",
+          "starterCode": "line = \"  hi  \"\n",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "strip"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_ydjss9t",
+            "type": "mcq",
+            "prompt": "splitlines breaks on:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Line breaks"
+              },
+              {
+                "id": "b",
+                "label": "Commas only"
+              },
+              {
+                "id": "c",
+                "label": "Spaces only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_rfs54m9",
+            "type": "shortText",
+            "prompt": "strip removes:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "edges"
+            }
+          },
+          {
+            "id": "q_j51ocjn",
+            "type": "mcq",
+            "prompt": "Empty line after strip has length:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "0"
+              },
+              {
+                "id": "b",
+                "label": "1 always"
+              },
+              {
+                "id": "c",
+                "label": "10"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_23154p8",
+            "type": "shortText",
+            "prompt": "Read file text into a:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "string"
+            }
+          },
+          {
+            "id": "q_xqzs9uf",
+            "type": "mcq",
+            "prompt": "Counting lines is useful for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Logs and diaries"
+              },
+              {
+                "id": "b",
+                "label": "GPU drivers"
+              },
+              {
+                "id": "c",
+                "label": "CSS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_eoqwe47",
+            "type": "shortText",
+            "prompt": "Filter with:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "comprehension"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_file_handling_todo_list",
+      "title": "Medium project: Todo list app",
+      "kind": "project",
+      "projectDifficulty": "medium",
+      "intro": {
+        "title": "Medium project: Todo list app",
+        "bodyMarkdown": "Store tasks in a list of dicts: `{id, text, done}`. Support add, list, complete, and delete.\n\nPersist to JSON file on quit; load on start. Use functions for each command.\n\nCLI menu loop: print options, read choice, dispatch action.",
+        "sandboxCode": "import json\n\ntodos = [{\"id\": 1, \"text\": \"Learn Python\", \"done\": False}]\n\ndef add_task(text):\n    todos.append({\"id\": len(todos)+1, \"text\": text, \"done\": False})\n\ndef list_tasks():\n    for t in todos:\n        mark = \"x\" if t[\"done\"] else \" \"\n        print(f\"[{mark}] {t[\"text\"]}\")\n\nadd_task(\"Build project\")\nlist_tasks()"
+      },
+      "challenges": [
+        {
+          "id": "ch_uarmo34",
+          "title": "Easy: list of dicts",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "todos=[{\"id\":1,\"text\":\"a\",\"done\":False}]\nn=len(todos)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "len(todos)==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_o0vefb9",
+          "title": "Easy: add function",
+          "promptMarkdown": "",
+          "starterCode": "def add_task(text):\n    todos.append({\"text\":text})",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "def add"
+            ]
+          }
+        },
+        {
+          "id": "ch_927xhrw",
+          "title": "Medium: done flag",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "todos=[{\"done\":False}]\nd=todos[0][\"done\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks d",
+                "assertion": "todos[0][\"done\"]==False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ha6ernd",
+          "title": "Medium: list display",
+          "promptMarkdown": "",
+          "starterCode": "for t in todos:\n    shown.append(t[\"text\"])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "todos=[{\"text\":\"a\"},{\"text\":\"b\"}]\nshown=[]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks shown",
+                "assertion": "shown==[\"a\",\"b\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5gz7r15",
+          "title": "Hard: complete by id",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "todos=[{\"id\":1,\"done\":False}]\ntodos[0][\"done\"]=True\nok=todos[0][\"done\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_dzpyr4b",
+          "title": "Hard: json dumps save",
+          "promptMarkdown": "",
+          "starterCode": "import json\ntodos=[{\"text\":\"a\"}]\nsaved=json.dumps(todos)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks saved",
+                "assertion": "\"text\" in saved and \"a\" in saved"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_ydtoi2s",
+            "type": "mcq",
+            "prompt": "Each todo needs:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Identifiable fields"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_cg5dfn9",
+            "type": "shortText",
+            "prompt": "Persist format:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "JSON"
+            }
+          },
+          {
+            "id": "q_v480y7f",
+            "type": "mcq",
+            "prompt": "Filter list comprehension removes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Matching items"
+              },
+              {
+                "id": "b",
+                "label": "Python"
+              },
+              {
+                "id": "c",
+                "label": "OS"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kh4mapa",
+            "type": "mcq",
+            "prompt": "done True means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Completed"
+              },
+              {
+                "id": "b",
+                "label": "Deleted"
+              },
+              {
+                "id": "c",
+                "label": "New"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_a1n617s",
+            "type": "shortText",
+            "prompt": "Load on:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "startup"
+            }
+          },
+          {
+            "id": "q_lgj5oyr",
+            "type": "mcq",
+            "prompt": "Expert: id helps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Update one task"
+              },
+              {
+                "id": "b",
+                "label": "Random"
+              },
+              {
+                "id": "c",
+                "label": "Compile"
+              }
+            ],
+            "correctChoiceId": "a"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_file_handling_contact_book",
+      "title": "Hard project: Contact book",
+      "kind": "project",
+      "projectDifficulty": "hard",
+      "intro": {
+        "title": "Hard project: Contact book",
+        "bodyMarkdown": "Dict keyed by name or list with search. Fields: name, phone, email.\n\nCommands: add, find, update, delete. Save JSON to disk.\n\nNormalize phone digits for comparison; validate email contains @.",
+        "sandboxCode": "contacts = {}\n\ndef add_contact(name, phone, email):\n    contacts[name.lower()] = {\"phone\": phone, \"email\": email}\n\ndef find(name):\n    return contacts.get(name.lower())\n\nadd_contact(\"Ana\", \"555-0100\", \"ana@mail.com\")\nprint(find(\"ana\"))"
+      },
+      "challenges": [
+        {
+          "id": "ch_ah6p263",
+          "title": "Easy: dict storage",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "contacts={}\ncontacts[\"ana\"]={}\nc=\"ana\" in contacts",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks c",
+                "assertion": "\"ana\" in contacts"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cd6q8w2",
+          "title": "Easy: add function",
+          "promptMarkdown": "",
+          "starterCode": "def add_contact(name, phone):\n    contacts[name]=phone",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "def add"
+            ]
+          }
+        },
+        {
+          "id": "ch_iww6lpr",
+          "title": "Medium: get lookup",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "contacts={}\nv=contacts.get(\"x\")",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v is None"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_uwm6jto",
+          "title": "Medium: lower key",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "k=\"BoB\".lower()",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks k",
+                "assertion": "k==\"bob\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sfvotbr",
+          "title": "Hard: update merge",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "contacts={\"a\":{\"phone\":\"1\"}}\ncontacts[\"a\"][\"phone\"]=\"2\"\np=contacts[\"a\"][\"phone\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks p",
+                "assertion": "contacts[\"a\"][\"phone\"]==\"2\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jfjuoij",
+          "title": "Hard: delete pop",
+          "promptMarkdown": "",
+          "starterCode": "contacts.pop(\"a\",None)\nn=len(contacts)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "contacts={\"a\":1}",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "len(contacts)==0"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_vddjd5e",
+            "type": "mcq",
+            "prompt": "dict get avoids:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "KeyError on miss"
+              },
+              {
+                "id": "b",
+                "label": "All errors"
+              },
+              {
+                "id": "c",
+                "label": "Storage"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_i0x2iby",
+            "type": "shortText",
+            "prompt": "Normalize name with:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "lower"
+            }
+          },
+          {
+            "id": "q_i1fents",
+            "type": "mcq",
+            "prompt": "pop removes:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Key if exists"
+              },
+              {
+                "id": "b",
+                "label": "All keys always"
+              },
+              {
+                "id": "c",
+                "label": "Python"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_beegrch",
+            "type": "mcq",
+            "prompt": "Email validation minimal:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Contains @"
+              },
+              {
+                "id": "b",
+                "label": "GPU check"
+              },
+              {
+                "id": "c",
+                "label": "None"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_23gd2h7",
+            "type": "shortText",
+            "prompt": "Persist contacts:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "JSON"
+            }
+          },
+          {
+            "id": "q_wc0xfnp",
+            "type": "mcq",
+            "prompt": "Expert: partial search uses:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "in keyword"
+              },
+              {
+                "id": "b",
+                "label": "GPU"
+              },
+              {
+                "id": "c",
+                "label": "compile"
+              }
+            ],
+            "correctChoiceId": "a"
           }
         ]
       }
