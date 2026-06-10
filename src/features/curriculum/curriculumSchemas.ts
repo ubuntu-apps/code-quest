@@ -6,19 +6,19 @@ import type {
   SectionFile,
 } from './types'
 
-const pythonAssertionTestSchema = z.object({
+const runtimeAssertionTestSchema = z.object({
   id: z.string(),
   label: z.string(),
   assertion: z.string(),
 })
 
 const validationSchema = z.object({
-  mode: z.enum(['regex', 'includesAll', 'equalsNormalized', 'python_tests']),
+  mode: z.enum(['regex', 'includesAll', 'equalsNormalized', 'python_tests', 'r_tests']),
   pattern: z.string().optional(),
   needles: z.array(z.string()).optional(),
   expected: z.string().optional(),
   setupCode: z.string().optional(),
-  tests: z.array(pythonAssertionTestSchema).optional(),
+  tests: z.array(runtimeAssertionTestSchema).optional(),
 })
 
 const mcqChoiceSchema = z.object({

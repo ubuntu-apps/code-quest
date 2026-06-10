@@ -6,8 +6,8 @@ import {
   EditableTextarea,
   useEditorMode,
 } from '../../editor'
-import { PythonSandboxSection } from '../components/PythonSandboxSection'
-import type { FriendlyPythonError } from '../pythonSandbox'
+import { CodeSandboxSection } from '../components/CodeSandboxSection'
+import type { FriendlySandboxError } from '../components/CodeSandboxSection'
 
 interface IntroStepProps {
   level: Level
@@ -15,7 +15,7 @@ interface IntroStepProps {
   sandboxCode: string
   sandboxOutput: string
   sandboxRunning: boolean
-  sandboxError: FriendlyPythonError | null
+  sandboxError: FriendlySandboxError | null
   sandboxErrorUiEpoch: number
   onUpdateIntro: (patch: Partial<Level['intro']>) => void
   onReadMoreOpen: () => void
@@ -122,8 +122,9 @@ export function IntroStep({
           />
         </EditableBlock>
       )}
-      {languageId === 'python' && (
-        <PythonSandboxSection
+      {(languageId === 'python' || languageId === 'r') && (
+        <CodeSandboxSection
+          languageId={languageId}
           code={sandboxCode}
           onCodeChange={onSandboxCodeChange}
           output={sandboxOutput}

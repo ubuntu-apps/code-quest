@@ -1,0 +1,4671 @@
+{
+  "sectionId": "visualization",
+  "title": "Data Visualization with ggplot2",
+  "levels": [
+    {
+      "id": "grammar_of_graphics",
+      "title": "Grammar of Graphics",
+      "intro": {
+        "title": "Grammar of Graphics",
+        "bodyMarkdown": "Grammar of Graphics is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nprint(\"Data + aesthetics + geoms + scales + theme\")"
+      },
+      "challenges": [
+        {
+          "id": "ch_rgdz3fy",
+          "title": "Easy: Use ggplot2",
+          "promptMarkdown": "Write R code that uses `ggplot2` related to **Grammar of Graphics**.",
+          "starterCode": "library(ggplot2)\n",
+          "hints": [
+            "Try ggplot2() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Data + aesthetics + geoms + scales + theme\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8ozm2qp",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_nt6kmx4",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sije701",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_2mwd7ds",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `ggplot2` and `ggplot2` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot2",
+              "ggplot2"
+            ]
+          }
+        },
+        {
+          "id": "ch_zj5nept",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ihq6sqn",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_umejqul",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_j9s6oqq",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Grammar of Graphics** in a short script using `ggplot2`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot2"
+            ]
+          }
+        },
+        {
+          "id": "ch_b0c6d21",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Grammar of Graphics** (include `ggplot2`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot2"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_r1ih7tw",
+            "type": "mcq",
+            "prompt": "What best describes Grammar of Graphics?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1459zok",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ggplot2"
+            }
+          },
+          {
+            "id": "q_03t9xgu",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ck7sahd",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_efdf149",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zsaqw6i",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_ivh111q",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_e8pc98h",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_72atojx",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_wyfc6hu",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Grammar of Graphics.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ggplot2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "ggplot_basics",
+      "title": "ggplot Basics",
+      "intro": {
+        "title": "ggplot Basics",
+        "bodyMarkdown": "ggplot Basics is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()"
+      },
+      "challenges": [
+        {
+          "id": "ch_ecchpgj",
+          "title": "Easy: Use ggplot",
+          "promptMarkdown": "Write R code that uses `ggplot` related to **ggplot Basics**.",
+          "starterCode": "library(ggplot2)\n",
+          "hints": [
+            "Try ggplot() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_3zzr700",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_x088drw",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_df4wcgq",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_4wh9wsd",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `ggplot` and `geom_point` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_o5ut5fu",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qevv6bj",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_19g8984",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_8dckzxb",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **ggplot Basics** in a short script using `ggplot`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot"
+            ]
+          }
+        },
+        {
+          "id": "ch_orss2k8",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **ggplot Basics** (include `ggplot`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_lwt4fqt",
+            "type": "mcq",
+            "prompt": "What best describes ggplot Basics?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_b8veowf",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ggplot"
+            }
+          },
+          {
+            "id": "q_f69kubv",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_47fjeas",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_kvpjklf",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_t5yasud",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_e364sly",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_we4v8e6",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_6ydc431",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_si8hwgb",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from ggplot Basics.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ggplot"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "aesthetics_mapping",
+      "title": "Aesthetics Mapping",
+      "intro": {
+        "title": "Aesthetics Mapping",
+        "bodyMarkdown": "Aesthetics Mapping is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) + geom_point()"
+      },
+      "challenges": [
+        {
+          "id": "ch_njragpy",
+          "title": "Easy: Use aes(",
+          "promptMarkdown": "Write R code that uses `aes(` related to **Aesthetics Mapping**.",
+          "starterCode": "ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) + geom_point()\n",
+          "hints": [
+            "Try aes(() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_q3wquwn",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_zm62rde",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yx4mq7m",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_pddng8h",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `aes(` and `color` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "aes(",
+              "color"
+            ]
+          }
+        },
+        {
+          "id": "ch_q9y5igs",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_q85f8e1",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_nnzz4g5",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2p20gxg",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Aesthetics Mapping** in a short script using `aes(`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "aes("
+            ]
+          }
+        },
+        {
+          "id": "ch_up4cgn3",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Aesthetics Mapping** (include `aes(`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "aes("
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_jpq32u2",
+            "type": "mcq",
+            "prompt": "What best describes Aesthetics Mapping?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tjyhbjn",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "aes"
+            }
+          },
+          {
+            "id": "q_zj0li2l",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_8iii1y8",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_f2mzq2d",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_nhq70fq",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_oup2wfg",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_tuhjd02",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_puomdee",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_szur60s",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Aesthetics Mapping.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "aes"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "geoms_scatter",
+      "title": "Scatter Plots",
+      "intro": {
+        "title": "Scatter Plots",
+        "bodyMarkdown": "Scatter Plots is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + geom_point()"
+      },
+      "challenges": [
+        {
+          "id": "ch_lbb1dop",
+          "title": "Easy: Use geom_point",
+          "promptMarkdown": "Write R code that uses `geom_point` related to **Scatter Plots**.",
+          "starterCode": "ggplot(mtcars, aes(wt, mpg)) + geom_point()\n",
+          "hints": [
+            "Try geom_point() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_r3mimab",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_a9on79r",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_5ez1qgw",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_ly1yu2x",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `geom_point` and `geom_point` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_point",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_sa1cs94",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_w6ac1fw",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_tula5lf",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_6h1anqb",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Scatter Plots** in a short script using `geom_point`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_yyigem1",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Scatter Plots** (include `geom_point`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_point"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_8hnl62b",
+            "type": "mcq",
+            "prompt": "What best describes Scatter Plots?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_8831ldw",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_point"
+            }
+          },
+          {
+            "id": "q_068eptq",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_82og3fv",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_lya2avx",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_r3x90j3",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_oyzw9we",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_z1s8w5d",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_kbnxnwt",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_pakg697",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Scatter Plots.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_point"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "geoms_bar",
+      "title": "Bar Charts",
+      "intro": {
+        "title": "Bar Charts",
+        "bodyMarkdown": "Bar Charts is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(factor(cyl))) + geom_bar()"
+      },
+      "challenges": [
+        {
+          "id": "ch_47hxwcf",
+          "title": "Easy: Use geom_bar",
+          "promptMarkdown": "Write R code that uses `geom_bar` related to **Bar Charts**.",
+          "starterCode": "ggplot(mtcars, aes(factor(cyl))) + geom_bar()\n",
+          "hints": [
+            "Try geom_bar() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_96h1g6c",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_equnsvd",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_22j46ac",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_bx0k56j",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `geom_bar` and `geom_bar` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_bar",
+              "geom_bar"
+            ]
+          }
+        },
+        {
+          "id": "ch_zp3jzvg",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_s9l0b0q",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ejsl3yl",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_j3pvcvd",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Bar Charts** in a short script using `geom_bar`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_bar"
+            ]
+          }
+        },
+        {
+          "id": "ch_z4epykx",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Bar Charts** (include `geom_bar`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_bar"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_1j42g9a",
+            "type": "mcq",
+            "prompt": "What best describes Bar Charts?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_p41q4gj",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_bar"
+            }
+          },
+          {
+            "id": "q_th03zbf",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_af4359i",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_bnwvr8q",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_fj29w2w",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_9yb7ule",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_utiqt3c",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_4kcql73",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_s61khv3",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Bar Charts.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_bar"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "geoms_histogram",
+      "title": "Histograms",
+      "intro": {
+        "title": "Histograms",
+        "bodyMarkdown": "Histograms is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(mpg)) + geom_histogram(bins = 10)"
+      },
+      "challenges": [
+        {
+          "id": "ch_3p0y8kd",
+          "title": "Easy: Use geom_histogram",
+          "promptMarkdown": "Write R code that uses `geom_histogram` related to **Histograms**.",
+          "starterCode": "ggplot(mtcars, aes(mpg)) + geom_histogram(bins = 10)\n",
+          "hints": [
+            "Try geom_histogram() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_jk9d3u5",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_djqeiso",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bgn8x6v",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_xnkpkfx",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `geom_histogram` and `geom_histogram` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_histogram",
+              "geom_histogram"
+            ]
+          }
+        },
+        {
+          "id": "ch_59mmb1h",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_2xs2zuj",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_l7m5bu1",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_niw2r53",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Histograms** in a short script using `geom_histogram`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_histogram"
+            ]
+          }
+        },
+        {
+          "id": "ch_s4o7nat",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Histograms** (include `geom_histogram`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_histogram"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_9lwj919",
+            "type": "mcq",
+            "prompt": "What best describes Histograms?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_9ud2xuy",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_histogram"
+            }
+          },
+          {
+            "id": "q_fa83yqq",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_or3euwf",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_1ka6mzx",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_qf1dk61",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_tc37e28",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_7llg71l",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_7v2lc65",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_btw1ehl",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Histograms.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_histogram"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "geoms_boxplot",
+      "title": "Boxplots",
+      "intro": {
+        "title": "Boxplots",
+        "bodyMarkdown": "Boxplots is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(factor(cyl), mpg)) + geom_boxplot()"
+      },
+      "challenges": [
+        {
+          "id": "ch_2bp2fj0",
+          "title": "Easy: Use geom_boxplot",
+          "promptMarkdown": "Write R code that uses `geom_boxplot` related to **Boxplots**.",
+          "starterCode": "ggplot(mtcars, aes(factor(cyl), mpg)) + geom_boxplot()\n",
+          "hints": [
+            "Try geom_boxplot() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_setdl9i",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_owpbtk7",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_36l2ktc",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_artdgqy",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `geom_boxplot` and `geom_boxplot` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_boxplot",
+              "geom_boxplot"
+            ]
+          }
+        },
+        {
+          "id": "ch_sj2875h",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4lfzrjb",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bkha4hb",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9mnfr2z",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Boxplots** in a short script using `geom_boxplot`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_boxplot"
+            ]
+          }
+        },
+        {
+          "id": "ch_dz81v8x",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Boxplots** (include `geom_boxplot`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_boxplot"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_7ebiavr",
+            "type": "mcq",
+            "prompt": "What best describes Boxplots?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_9090due",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_boxplot"
+            }
+          },
+          {
+            "id": "q_o3v45nc",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_v99bgpr",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_c4nrpfg",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_oao5rdd",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_jrkz8du",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_50vkso3",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_ywsykpb",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xhp3fz3",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Boxplots.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_boxplot"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "geoms_line",
+      "title": "Line Charts",
+      "intro": {
+        "title": "Line Charts",
+        "bodyMarkdown": "Line Charts is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(economics, aes(date, unemploy)) + geom_line()"
+      },
+      "challenges": [
+        {
+          "id": "ch_vlb88f6",
+          "title": "Easy: Use geom_line",
+          "promptMarkdown": "Write R code that uses `geom_line` related to **Line Charts**.",
+          "starterCode": "ggplot(economics, aes(date, unemploy)) + geom_line()\n",
+          "hints": [
+            "Try geom_line() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bpyz2x1",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_856z9zw",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xleoj1r",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_af7v6uk",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `geom_line` and `geom_line` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_line",
+              "geom_line"
+            ]
+          }
+        },
+        {
+          "id": "ch_qfo1pct",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_rgfeupq",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_fpy1h5v",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ujra8m7",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Line Charts** in a short script using `geom_line`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_line"
+            ]
+          }
+        },
+        {
+          "id": "ch_8x8g2ch",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Line Charts** (include `geom_line`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "geom_line"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_cfmj97y",
+            "type": "mcq",
+            "prompt": "What best describes Line Charts?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_rhnyr15",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_line"
+            }
+          },
+          {
+            "id": "q_fv55smf",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_t6hov94",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_2kyc0ap",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_h5w047l",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_7ghqc3l",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1es6ong",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_ovxfpt9",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ymmrp4o",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Line Charts.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "geom_line"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "facets",
+      "title": "Facets",
+      "intro": {
+        "title": "Facets",
+        "bodyMarkdown": "Facets is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + geom_point() + facet_wrap(~ cyl)"
+      },
+      "challenges": [
+        {
+          "id": "ch_6c505tb",
+          "title": "Easy: Use facet_wrap",
+          "promptMarkdown": "Write R code that uses `facet_wrap` related to **Facets**.",
+          "starterCode": "ggplot(mtcars, aes(wt, mpg)) + geom_point() + facet_wrap(~ cyl)\n",
+          "hints": [
+            "Try facet_wrap() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_fgju2hm",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yx8j2zu",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_fcykgzh",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_goxa5zp",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `facet_wrap` and `facet_wrap` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "facet_wrap",
+              "facet_wrap"
+            ]
+          }
+        },
+        {
+          "id": "ch_pui9heo",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_1c2a0f6",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_vhizsa3",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_mt333fp",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Facets** in a short script using `facet_wrap`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "facet_wrap"
+            ]
+          }
+        },
+        {
+          "id": "ch_exauenq",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Facets** (include `facet_wrap`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "facet_wrap"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_5ufkrs1",
+            "type": "mcq",
+            "prompt": "What best describes Facets?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ezhq0u9",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "facet_wrap"
+            }
+          },
+          {
+            "id": "q_hmxtk2x",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_l244nqr",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_dvk6bv1",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2gjpetw",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_6hr5rbk",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_plre9ru",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_9lwfsa5",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_gt9dmps",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Facets.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "facet_wrap"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "scales",
+      "title": "Scales",
+      "intro": {
+        "title": "Scales",
+        "bodyMarkdown": "Scales is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + geom_point() + scale_x_continuous(limits = c(1, 6))"
+      },
+      "challenges": [
+        {
+          "id": "ch_tvc0ts2",
+          "title": "Easy: Use scale_",
+          "promptMarkdown": "Write R code that uses `scale_` related to **Scales**.",
+          "starterCode": "ggplot(mtcars, aes(wt, mpg)) + geom_point() + scale_x_continuous(limits = c(1, 6))\n",
+          "hints": [
+            "Try scale_() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_g6wt0ra",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ddfgpoe",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9zvlxe8",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_pl00dz1",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `scale_` and `scale_` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "scale_",
+              "scale_"
+            ]
+          }
+        },
+        {
+          "id": "ch_kzrp0dj",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_7bzcop3",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ig38jnf",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pzkcr69",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Scales** in a short script using `scale_`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "scale_"
+            ]
+          }
+        },
+        {
+          "id": "ch_z9feich",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Scales** (include `scale_`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "scale_"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_kczc6ne",
+            "type": "mcq",
+            "prompt": "What best describes Scales?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_zp8edpc",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "scale"
+            }
+          },
+          {
+            "id": "q_xrqfe91",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_kq90qmf",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_90vrx1i",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_p5xlpdl",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_9ohwr15",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ypuvcpa",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_2r9ff4n",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_vtqjrgb",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Scales.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "scale"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "themes",
+      "title": "Themes",
+      "intro": {
+        "title": "Themes",
+        "bodyMarkdown": "Themes is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_minimal()"
+      },
+      "challenges": [
+        {
+          "id": "ch_zj2egid",
+          "title": "Easy: Use theme_minimal",
+          "promptMarkdown": "Write R code that uses `theme_minimal` related to **Themes**.",
+          "starterCode": "ggplot(mtcars, aes(wt, mpg)) + geom_point() + theme_minimal()\n",
+          "hints": [
+            "Try theme_minimal() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_4hq1725",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_x9akxig",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ziueqhx",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_uupmpus",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `theme_minimal` and `theme_minimal` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "theme_minimal",
+              "theme_minimal"
+            ]
+          }
+        },
+        {
+          "id": "ch_ow41sh5",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_14ntih3",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_254q354",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_bdhou0m",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Themes** in a short script using `theme_minimal`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "theme_minimal"
+            ]
+          }
+        },
+        {
+          "id": "ch_xkpgc8d",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Themes** (include `theme_minimal`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "theme_minimal"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_pl11i4d",
+            "type": "mcq",
+            "prompt": "What best describes Themes?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_0tit87o",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "theme"
+            }
+          },
+          {
+            "id": "q_4ov1qt1",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hsmohwn",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_7o3so8u",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_t2p83i8",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_chde2ib",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_afroevb",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_7ptoj5n",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ijy05i4",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Themes.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "theme"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "labels_titles",
+      "title": "Labels and Titles",
+      "intro": {
+        "title": "Labels and Titles",
+        "bodyMarkdown": "Labels and Titles is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + geom_point() + labs(title = \"MPG vs weight\")"
+      },
+      "challenges": [
+        {
+          "id": "ch_des42sm",
+          "title": "Easy: Use labs(",
+          "promptMarkdown": "Write R code that uses `labs(` related to **Labels and Titles**.",
+          "starterCode": "ggplot(mtcars, aes(wt, mpg)) + geom_point() + labs(title = \"MPG vs weight\")\n",
+          "hints": [
+            "Try labs(() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_tc7t40p",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_z2ppu66",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_yqlhen9",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_njbnw14",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `labs(` and `labs(` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "labs(",
+              "labs("
+            ]
+          }
+        },
+        {
+          "id": "ch_jqog6wr",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_pwysuxf",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_xnbz0ds",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_hz1lu2m",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Labels and Titles** in a short script using `labs(`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "labs("
+            ]
+          }
+        },
+        {
+          "id": "ch_zsjjdvl",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Labels and Titles** (include `labs(`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "labs("
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_8yl6vwg",
+            "type": "mcq",
+            "prompt": "What best describes Labels and Titles?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_f6hgy2o",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "labs"
+            }
+          },
+          {
+            "id": "q_zifi1t1",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_4srxoyg",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_19wth8m",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1d5qong",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_7mvfms5",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_un7rdq5",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_finpwq6",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_brta2t9",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Labels and Titles.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "labs"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "color_palettes",
+      "title": "Color Palettes",
+      "intro": {
+        "title": "Color Palettes",
+        "bodyMarkdown": "Color Palettes is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg, color = factor(cyl))) + geom_point() + scale_color_brewer(palette = \"Set1\")"
+      },
+      "challenges": [
+        {
+          "id": "ch_921yp8u",
+          "title": "Easy: Use scale_color",
+          "promptMarkdown": "Write R code that uses `scale_color` related to **Color Palettes**.",
+          "starterCode": "ggplot(mtcars, aes(wt, mpg, color = factor(cyl))) + geom_point() + scale_color_brewer(palette = \"Set1\")\n",
+          "hints": [
+            "Try scale_color() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_cm370g8",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_g9xkyhb",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_o4jjh3j",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_ebxhp4y",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `scale_color` and `scale_color` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "scale_color",
+              "scale_color"
+            ]
+          }
+        },
+        {
+          "id": "ch_kmda7pu",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_sjldwth",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9o2leqb",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_x7iw7j8",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Color Palettes** in a short script using `scale_color`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "scale_color"
+            ]
+          }
+        },
+        {
+          "id": "ch_1fy097s",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Color Palettes** (include `scale_color`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "scale_color"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_31pud96",
+            "type": "mcq",
+            "prompt": "What best describes Color Palettes?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ro40tdl",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "scale_color"
+            }
+          },
+          {
+            "id": "q_ysscgq7",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_wsgwp32",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_tmgpfvg",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_htx9des",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_2svvm7f",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_hfwo1kf",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_83wljxy",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_xw56nrr",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Color Palettes.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "scale_color"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "saving_plots",
+      "title": "Saving Plots",
+      "intro": {
+        "title": "Saving Plots",
+        "bodyMarkdown": "Saving Plots is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "library(ggplot2)\np <- ggplot(mtcars, aes(wt, mpg)) + geom_point()\n# ggsave(\"plot.png\", p, width = 6, height = 4)"
+      },
+      "challenges": [
+        {
+          "id": "ch_m8lhx8h",
+          "title": "Easy: Use ggsave",
+          "promptMarkdown": "Write R code that uses `ggsave` related to **Saving Plots**.",
+          "starterCode": "ggsave(",
+          "hints": [
+            "Try ggsave() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_fxdgxvm",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_b82ar9a",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_9p704fo",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_xtobph9",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `ggsave` and `ggsave` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggsave",
+              "ggsave"
+            ]
+          }
+        },
+        {
+          "id": "ch_9spo5qx",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_avjcprl",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ir5ztjo",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_a8fv9e8",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Saving Plots** in a short script using `ggsave`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggsave"
+            ]
+          }
+        },
+        {
+          "id": "ch_84f0mig",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Saving Plots** (include `ggsave`).",
+          "starterCode": "library(ggplot2)",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggsave"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_8ujvhyr",
+            "type": "mcq",
+            "prompt": "What best describes Saving Plots?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A core R concept for data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Unrelated to R"
+              },
+              {
+                "id": "c",
+                "label": "Only for compiled languages"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_b4ini6n",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ggsave"
+            }
+          },
+          {
+            "id": "q_3fe1n8i",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_a3wl562",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_e0035tk",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_3scfcjl",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_yph0p9v",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_1lyrb6h",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_tjv6x5l",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_2qtztq6",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Saving Plots.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ggsave"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "chart_selection",
+      "title": "Choosing Chart Types",
+      "intro": {
+        "title": "Choosing Chart Types",
+        "bodyMarkdown": "Choosing Chart Types is a core topic when learning R for data analysis, statistics, and reproducible research.\n\nPracticing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.\n\nRun the sample code below, experiment in the editor, then work through the challenges.",
+        "sandboxCode": "print(c(\"scatter: relationship\", \"bar: counts\", \"line: trend\", \"box: distribution\"))"
+      },
+      "challenges": [
+        {
+          "id": "ch_xs8n099",
+          "title": "Easy: Use print",
+          "promptMarkdown": "Write R code that uses `print` related to **Choosing Chart Types**.",
+          "starterCode": "print(c(\"scatter: relationship\", \"bar: counts\", \"line: trend\", \"box: distribution\"))\n",
+          "hints": [
+            "Try print() in R."
+          ],
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"Hello, R\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_wc6087l",
+          "title": "Easy: Print a number",
+          "promptMarkdown": "Print the number `100` using `print()`.",
+          "starterCode": "print(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"100\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_c8ikytg",
+          "title": "Easy: Assign a variable",
+          "promptMarkdown": "Create variable `x` with `<-` and set it to `5`, then print `x`.",
+          "starterCode": "x <- ",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_qpv26zb",
+          "title": "Medium: ggplot scatter",
+          "promptMarkdown": "Load ggplot2 and create a scatter plot of `mpg` vs `wt` from `mtcars`.",
+          "starterCode": "library(ggplot2)\nggplot(mtcars, aes(wt, mpg)) + ",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "ggplot",
+              "geom_point"
+            ]
+          }
+        },
+        {
+          "id": "ch_b9uqzsw",
+          "title": "Medium: Two-step snippet",
+          "promptMarkdown": "Use `print` and `print` in one script.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "print",
+              "print"
+            ]
+          }
+        },
+        {
+          "id": "ch_j7w3mxl",
+          "title": "Medium: Vector basics",
+          "promptMarkdown": "Create `v <- c(1, 2, 3)` and print `sum(v)`.",
+          "starterCode": "v <- c(1, 2, 3)\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"6\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_a58z0al",
+          "title": "Hard: Conditional output",
+          "promptMarkdown": "Set `n <- 10`. If `n > 0`, print `\"positive\"`.",
+          "starterCode": "n <- 10\n",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"positive\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_65w8j92",
+          "title": "Hard: Function call",
+          "promptMarkdown": "Use `length()` on `c(4, 8, 15)` and print the result.",
+          "starterCode": "print(length(",
+          "validation": {
+            "mode": "r_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "identical(trimws(_cq_stdout), \"3\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ch_ixexmex",
+          "title": "Expert: Topic practice",
+          "promptMarkdown": "Combine ideas from **Choosing Chart Types** in a short script using `print`.",
+          "starterCode": "",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "print"
+            ]
+          }
+        },
+        {
+          "id": "ch_n8gfvnb",
+          "title": "Expert: Multi-line script",
+          "promptMarkdown": "Write at least two lines of R related to **Choosing Chart Types** (include `print`).",
+          "starterCode": "print(c(\"scatter: relationship\", \"bar: counts\", \"line: trend\", \"box: distribution\"))",
+          "validation": {
+            "mode": "includesAll",
+            "needles": [
+              "print"
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "q_pvls9ws",
+            "type": "mcq",
+            "prompt": "A boxplot is best for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Showing distribution across groups"
+              },
+              {
+                "id": "b",
+                "label": "Showing geographic maps only"
+              },
+              {
+                "id": "c",
+                "label": "Replacing all tables"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_ylfigrb",
+            "type": "shortText",
+            "prompt": "Which function prints output in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "print"
+            }
+          },
+          {
+            "id": "q_uqbtgtx",
+            "type": "mcq",
+            "prompt": "R is widely used for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Statistics and data analysis"
+              },
+              {
+                "id": "b",
+                "label": "Only mobile UI"
+              },
+              {
+                "id": "c",
+                "label": "Only hardware drivers"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_m2c6g09",
+            "type": "shortText",
+            "prompt": "What assignment operator is preferred in R?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            }
+          },
+          {
+            "id": "q_wj65gjq",
+            "type": "mcq",
+            "prompt": "Missing values in R are represented by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NA"
+              },
+              {
+                "id": "b",
+                "label": "NULL"
+              },
+              {
+                "id": "c",
+                "label": "NaN only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_iimceu7",
+            "type": "shortText",
+            "prompt": "Which function combines values into a vector?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "c"
+            }
+          },
+          {
+            "id": "q_asspy4v",
+            "type": "mcq",
+            "prompt": "Data frames are:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Tabular structures with columns"
+              },
+              {
+                "id": "b",
+                "label": "GPU shaders"
+              },
+              {
+                "id": "c",
+                "label": "Browser cookies"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_yjqogh2",
+            "type": "shortText",
+            "prompt": "Type the function to get help on a topic.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "?"
+            }
+          },
+          {
+            "id": "q_itk0umd",
+            "type": "mcq",
+            "prompt": "Expert: Vectorized operations in R:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Apply element-wise without loops"
+              },
+              {
+                "id": "b",
+                "label": "Require for loops always"
+              },
+              {
+                "id": "c",
+                "label": "Disable c()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "q_milhmvg",
+            "type": "shortText",
+            "prompt": "Expert: Name one keyword from Choosing Chart Types.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "print"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

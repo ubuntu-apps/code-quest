@@ -1,4 +1,6 @@
-/** @typedef {'easy'|'medium'|'hard'} Difficulty */
+/** @typedef {'easy'|'medium'|'hard'|'expert'} Difficulty */
+
+import { expandTopicChallenges, expandTopicQuestions } from './data/_builders.mjs'
 
 /**
  * @param {string} prefix
@@ -48,7 +50,13 @@ export function shortText(prompt, expected) {
  */
 export function challengeTitle(difficulty, title) {
   const label =
-    difficulty === 'easy' ? 'Easy' : difficulty === 'medium' ? 'Medium' : 'Hard'
+    difficulty === 'easy'
+      ? 'Easy'
+      : difficulty === 'medium'
+        ? 'Medium'
+        : difficulty === 'hard'
+          ? 'Hard'
+          : 'Expert'
   return `${label}: ${title}`
 }
 
@@ -88,7 +96,7 @@ export function buildLevel(topic) {
 }
 
 /**
- * @param {object} section
+ * @param {object} topic
  */
 export function buildSection(section) {
   return {
@@ -98,78 +106,52 @@ export function buildSection(section) {
   }
 }
 
-export function includes(...needles) {
-  return { mode: 'includesAll', needles }
-}
-
-export function regex(pattern) {
-  return { mode: 'regex', pattern }
+/**
+ * @param {string} id
+ * @param {string} title
+ * @param {object} [opts]
+ */
+export function topic(id, title, opts = {}) {
+  const sandbox = opts.sandbox ?? `# ${title}\nprint("Hello, R")`
+  const needles = opts.needles ?? ['print']
+  return {
+    id,
+    title,
+    introTitle: opts.introTitle ?? title,
+    paragraphs: opts.paragraphs ?? [
+      opts.lead ?? `${title} is a core topic when learning R for data analysis, statistics, and reproducible research.`,
+      opts.detail ??
+        'Practicing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.',
+      'Run the sample code below, experiment in the editor, then work through the challenges.',
+    ],
+    sandboxCode: sandbox,
+    readMore: opts.readMore,
+    needles,
+    regex: opts.regex,
+    starterCode: opts.starterCode,
+    challengePrompt: opts.challengePrompt,
+    hardPrompt: opts.hardPrompt,
+    mcqPrompt: opts.mcqPrompt,
+    mcqChoices: opts.mcqChoices,
+    mcqCorrect: opts.mcqCorrect,
+    shortPrompt: opts.shortPrompt,
+    shortAnswer: opts.shortAnswer,
+    mcq2Prompt: opts.mcq2Prompt,
+    mcq2Choices: opts.mcq2Choices,
+    mcq2Correct: opts.mcq2Correct,
+  }
 }
 
 /**
- * @param {object} config
+ * @param {object} topic
+ * @param {string} sectionId
  */
-export function scaffoldTopic(config) {
-  const needles = config.needles ?? []
-  const challenges = [
-    challenge({
-      difficulty: 'easy',
-      title: `Recognize ${config.title}`,
-      prompt: `Write R code related to **${config.title}**. Include: \`${needles[0] ?? 'print'}\`.`,
-      starterCode: config.starterCode ?? '',
-      validation: includes(...(needles.length ? needles : ['print'])),
-    }),
-    challenge({
-      difficulty: 'medium',
-      title: 'Complete the pattern',
-      prompt: config.challengePrompt ?? `Complete code that demonstrates **${config.title}**.`,
-      starterCode: config.starterCode ?? config.sandboxCode.split('\n')[0] + '\n',
-      validation: config.regex
-        ? regex(config.regex)
-        : includes(...(needles.length > 1 ? needles.slice(0, 2) : needles.length ? needles : ['print'])),
-    }),
-    challenge({
-      difficulty: 'hard',
-      title: 'Apply the concept',
-      prompt: config.hardPrompt ?? `Apply **${config.title}** in a short R snippet.`,
-      starterCode: '',
-      validation: includes(...needles.slice(0, Math.max(1, needles.length))),
-    }),
-  ]
-
-  const questions = [
-    mcq(
-      config.mcqPrompt ?? `What best describes ${config.title}?`,
-      config.mcqChoices ?? [
-        { id: 'a', label: config.mcqA ?? 'A core R concept covered in this topic' },
-        { id: 'b', label: 'Unrelated to R programming' },
-        { id: 'c', label: 'Only used in compiled languages' },
-      ],
-      config.mcqCorrect ?? 'a',
-    ),
-    shortText(
-      config.shortPrompt ?? `Name one R keyword or function from this topic.`,
-      config.shortAnswer ?? needles[0] ?? 'print',
-    ),
-    mcq(
-      config.mcq2Prompt ?? 'This topic is important in R because:',
-      config.mcq2Choices ?? [
-        { id: 'a', label: 'It supports data analysis workflows' },
-        { id: 'b', label: 'It replaces the operating system' },
-        { id: 'c', label: 'It disables vectorization' },
-      ],
-      config.mcq2Correct ?? 'a',
-    ),
-  ]
-
+export function finalizeTopic(topic, sectionId) {
   return {
-    id: config.id,
-    title: config.title,
-    introTitle: config.introTitle ?? config.title,
-    paragraphs: config.paragraphs,
-    sandboxCode: config.sandboxCode,
-    readMore: config.readMore,
-    challenges,
-    questions,
+    ...topic,
+    challenges: expandTopicChallenges(sectionId, topic).map(challenge),
+    questions: expandTopicQuestions(topic).map((q) =>
+      q.type === 'mcq' ? mcq(q.prompt, q.choices, q.correct) : shortText(q.prompt, q.expected),
+    ),
   }
 }

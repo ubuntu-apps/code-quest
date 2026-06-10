@@ -1,40 +1,4 @@
-import { scaffoldTopic } from './helpers.mjs'
-
-/**
- * @param {string} id
- * @param {string} title
- * @param {object} [opts]
- */
-function topic(id, title, opts = {}) {
-  const sandbox = opts.sandbox ?? `# ${title}\nprint("Hello, R")`
-  const needles = opts.needles ?? ['print']
-  return scaffoldTopic({
-    id,
-    title,
-    introTitle: opts.introTitle ?? title,
-    paragraphs: opts.paragraphs ?? [
-      opts.lead ?? `${title} is a core topic when learning R for data analysis, statistics, and reproducible research.`,
-      opts.detail ??
-        'Practicing this topic builds fluency with R syntax, data structures, and the tidyverse ecosystem.',
-      'Run the sample code below, experiment in the editor, then work through the challenges.',
-    ],
-    sandboxCode: sandbox,
-    readMore: opts.readMore,
-    needles,
-    regex: opts.regex,
-    starterCode: opts.starterCode,
-    challengePrompt: opts.challengePrompt,
-    hardPrompt: opts.hardPrompt,
-    mcqPrompt: opts.mcqPrompt,
-    mcqChoices: opts.mcqChoices,
-    mcqCorrect: opts.mcqCorrect,
-    shortPrompt: opts.shortPrompt,
-    shortAnswer: opts.shortAnswer,
-    mcq2Prompt: opts.mcq2Prompt,
-    mcq2Choices: opts.mcq2Choices,
-    mcq2Correct: opts.mcq2Correct,
-  })
-}
+import { topic } from './helpers.mjs'
 
 export const sections = [
   {

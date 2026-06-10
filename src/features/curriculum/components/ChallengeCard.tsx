@@ -1,8 +1,10 @@
 import type { Challenge } from '../types'
 import type { PythonAiHelp } from '../freeAiHelp'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
+import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
 import { CodeTextareaWithErrorLine } from '../codeEditor'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
+import { rErrorSummaryLine } from '../rErrorHelper'
 import { PythonErrorPanel } from './PythonErrorPanel'
 import {
   EditableMarkdown,
@@ -20,8 +22,8 @@ interface ChallengeCardProps {
   draft: string
   done: boolean
   status: 'passed' | 'failed' | undefined
-  testResults: PythonChallengeTestResult[]
-  runtimeError: FriendlyPythonError | null
+  testResults: (PythonChallengeTestResult | RChallengeTestResult)[]
+  runtimeError: FriendlyPythonError | FriendlyRError | null
   errorExpanded: boolean
   errorUiEpoch: number
   aiHelp: PythonAiHelp | null
@@ -61,6 +63,9 @@ export function ChallengeCard({
   onFixCopied,
 }: ChallengeCardProps) {
   const { isEditingLocal } = useEditorMode()
+  const isRuntimeTests =
+    ch.validation.mode === 'python_tests' || ch.validation.mode === 'r_tests'
+  const showAiHelp = ch.validation.mode === 'python_tests'
 
   return (
     <div className="cq-panel cq-challenge-card">
@@ -116,16 +121,16 @@ export function ChallengeCard({
         spellCheck={false}
         value={draft}
         onChange={(e) => onDraftChange(e.target.value)}
-        errorLine={
-          ch.validation.mode === 'python_tests' && pyRuntimeErr?.line != null ? pyRuntimeErr.line : null
-        }
+        errorLine={isRuntimeTests && pyRuntimeErr?.line != null ? pyRuntimeErr.line : null}
         errorSummary={
-          ch.validation.mode === 'python_tests' && pyRuntimeErr?.detail
-            ? pythonErrorSummaryLine(pyRuntimeErr.detail)
+          isRuntimeTests && pyRuntimeErr?.detail
+            ? ch.validation.mode === 'r_tests'
+              ? rErrorSummaryLine(pyRuntimeErr.detail)
+              : pythonErrorSummaryLine(pyRuntimeErr.detail)
             : null
         }
-        errorTitle={ch.validation.mode === 'python_tests' ? (pyRuntimeErr?.title ?? null) : null}
-        errorColumn={ch.validation.mode === 'python_tests' ? (pyRuntimeErr?.column ?? null) : null}
+        errorTitle={isRuntimeTests ? (pyRuntimeErr?.title ?? null) : null}
+        errorColumn={isRuntimeTests ? (pyRuntimeErr?.column ?? null) : null}
         errorUiEpoch={errorUiEpoch}
       />
       {ch.hints && ch.hints.length > 0 && (
@@ -146,16 +151,16 @@ export function ChallengeCard({
           <span className="cq-badge cq-badge--ok">Challenge complete</span>
         ) : null}
       </div>
-      {ch.validation.mode === 'python_tests' && pyRuntimeErr && (
+      {isRuntimeTests && pyRuntimeErr && (
         <PythonErrorPanel
-          error={pyRuntimeErr}
+          error={pyRuntimeErr as FriendlyPythonError}
           code={draft}
           expanded={pyErrExpanded}
           onToggleExpanded={onToggleErrorExpanded}
-          aiHelp={pyAiHelp}
-          aiLoading={pyAiLoading}
-          fixCopied={pyFixCopied}
-          onRequestAiHelp={onRequestAiHelp}
+          aiHelp={showAiHelp ? pyAiHelp : null}
+          aiLoading={showAiHelp ? pyAiLoading : false}
+          fixCopied={showAiHelp ? pyFixCopied : false}
+          onRequestAiHelp={showAiHelp ? onRequestAiHelp : () => {}}
           onFixCopied={onFixCopied}
         />
       )}
