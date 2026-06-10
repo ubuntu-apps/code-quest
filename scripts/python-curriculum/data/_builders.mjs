@@ -7,10 +7,23 @@ export function makeTopic(config) {
     introTitle: config.introTitle ?? config.title,
     paragraphs: config.paragraphs,
     sandboxCode: config.sandboxCode,
+    sandboxSnippets: config.sandboxSnippets,
     readMore: config.readMore,
     challengeSpecs: config.challenges,
     questionSpecs: config.questions,
   }
+}
+
+/**
+ * @param {string} label
+ * @param {string} code
+ */
+export function snippet(label, code) {
+  const id = label
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_|_$/g, '')
+  return { id: id || 'snippet', label, code }
 }
 
 /**

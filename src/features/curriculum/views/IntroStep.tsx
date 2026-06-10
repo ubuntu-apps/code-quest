@@ -125,6 +125,7 @@ export function IntroStep({
       {(languageId === 'python' || languageId === 'r') && (
         <CodeSandboxSection
           languageId={languageId}
+          snippets={level.sandboxSnippets}
           code={sandboxCode}
           onCodeChange={onSandboxCodeChange}
           output={sandboxOutput}

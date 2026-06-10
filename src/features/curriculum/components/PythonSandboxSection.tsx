@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { CodeTextareaWithErrorLine } from '../codeEditor'
 import { DEFAULT_SANDBOX_CODE, SANDBOX_SNIPPETS } from '../constants'
+import type { SandboxSnippet } from '../types'
 import { PythonErrorPanel } from './PythonErrorPanel'
 import { usePythonAiHelp } from '../hooks/usePythonAiHelp'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
@@ -12,6 +13,7 @@ type FriendlySandboxError = FriendlyPythonError | FriendlyRError
 
 interface PythonSandboxSectionProps {
   languageId: 'python' | 'r'
+  snippets?: SandboxSnippet[]
   code: string
   onCodeChange: (code: string) => void
   output: string
@@ -30,6 +32,7 @@ function errorSummary(error: FriendlySandboxError | null, languageId: 'python' |
 
 export function PythonSandboxSection({
   languageId,
+  snippets: snippetsOverride,
   code,
   onCodeChange,
   output,
@@ -43,7 +46,8 @@ export function PythonSandboxSection({
   const [expanded, setExpanded] = useState(false)
   const { aiHelp, loading, fixCopied, setFixCopied, request, reset: resetAi } = usePythonAiHelp('sandbox')
   const languageLabel = languageId === 'r' ? 'R' : 'Python'
-  const snippets = SANDBOX_SNIPPETS[languageId] ?? SANDBOX_SNIPPETS.python
+  const snippets =
+    snippetsOverride ?? SANDBOX_SNIPPETS[languageId] ?? SANDBOX_SNIPPETS.python
   const aiEnabled = languageId === 'python'
 
   const handleReset = () => {

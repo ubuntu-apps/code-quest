@@ -1,4 +1,4 @@
-import { makeProject, ch, qMcq, qShort, pyVar, pyOut, includes } from './_builders.mjs'
+import { makeProject, snippet, ch, qMcq, qShort, pyVar, pyOut, includes } from './_builders.mjs'
 import { projectsTopics } from './projects.mjs'
 
 function projectSource(id) {
@@ -7,13 +7,14 @@ function projectSource(id) {
   return topic
 }
 
-function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions = 6) {
+function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions = 6, sandboxSnippets) {
   const src = projectSource(sourceId)
   return makeProject(difficulty, {
     id,
     title: src.title,
     paragraphs: src.paragraphs,
     sandboxCode: src.sandboxCode,
+    sandboxSnippets,
     challenges: src.challengeSpecs.slice(0, maxChallenges),
     questions: src.questionSpecs.slice(0, maxQuestions),
   })
@@ -27,6 +28,12 @@ const fundamentalsEasy = makeProject('easy', {
     'Keep the output on one line so it is easy to test. Use clear variable names like `name` and `age`.',
   ],
   sandboxCode: 'name = "Alex"\nage = 12\nprint(f"Hi, I am {name} and I am {age} years old.")',
+  sandboxSnippets: [
+    snippet('Name variable', 'name = "Alex"'),
+    snippet('Age variable', 'age = 12'),
+    snippet('f-string greeting', 'name = "Sam"\nage = 9\nprint(f"Hi, I am {name} and I am {age} years old.")'),
+    snippet('Add hobby', 'name = "Sam"\nage = 9\nhobby = "coding"\nprint(f"Hi, I am {name}, {age}, and I like {hobby}.")'),
+  ],
   challenges: [
     ch('easy', 'Name variable', 'Set `name` to your first name as a string.', pyVar('name', 'isinstance(name, str) && len(name) > 0'), { starterCode: 'name = ' }),
     ch('easy', 'Age variable', 'Set `age` to a whole number.', pyVar('age', 'isinstance(age, int)'), { starterCode: 'age = ' }),
@@ -231,8 +238,18 @@ const oopHard = makeProject('hard', {
 export const SECTION_PROJECTS = {
   fundamentals: [
     fundamentalsEasy,
-    fromExisting('unit_converter', 'medium', 'proj_fundamentals_unit_converter'),
-    fromExisting('password_generator', 'hard', 'proj_fundamentals_password_generator'),
+    fromExisting('unit_converter', 'medium', 'proj_fundamentals_unit_converter', 6, 6, [
+      snippet('km to miles', 'KM_TO_MI = 0.621371\n\ndef km_to_miles(km):\n    return km * KM_TO_MI\n\nprint(km_to_miles(10))'),
+      snippet('C to F', 'def c_to_f(c):\n    return c * 9/5 + 32\n\nprint(c_to_f(0))'),
+      snippet('Convert value', 'km = 5\nmiles = km * 0.621371\nprint(f"{km} km = {miles:.2f} mi")'),
+      snippet('Unit dict', 'factors = {"km": 1000, "m": 1}\nprint(factors["km"])'),
+    ]),
+    fromExisting('password_generator', 'hard', 'proj_fundamentals_password_generator', 6, 6, [
+      snippet('Random char', 'import random\nimport string\nprint(random.choice(string.ascii_letters))'),
+      snippet('Join chars', 'import random\nimport string\nchars = string.ascii_letters + string.digits\nprint("".join(random.choice(chars) for _ in range(8)))'),
+      snippet('Password fn', 'import random\nimport string\n\ndef generate_password(n=12):\n    chars = string.ascii_letters + string.digits\n    return "".join(random.choice(chars) for _ in range(n))\n\nprint(generate_password(8))'),
+      snippet('Length option', 'length = 12\nprint(f"Password length: {length}")'),
+    ]),
   ],
   control_flow: [
     fromExisting('cli_guess_game', 'easy', 'proj_control_flow_guess_game'),
