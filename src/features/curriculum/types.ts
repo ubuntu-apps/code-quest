@@ -57,11 +57,18 @@ export interface TestGradeResult {
 export type LevelKind = 'topic' | 'project'
 export type ProjectDifficulty = 'easy' | 'medium' | 'hard'
 
+export interface SandboxSnippet {
+  id: string
+  label: string
+  code: string
+}
+
 export interface Level {
   id: string
   title: string
   kind?: LevelKind
   projectDifficulty?: ProjectDifficulty
+  sandboxSnippets?: SandboxSnippet[]
   intro: {
     title?: string
     bodyMarkdown: string

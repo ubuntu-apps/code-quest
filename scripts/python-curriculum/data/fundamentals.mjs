@@ -1,4 +1,4 @@
-import { makeTopic, ch, qMcq, qShort, pyOut, pyVar, regex, includes } from './_builders.mjs'
+import { makeTopic, snippet, ch, qMcq, qShort, pyOut, pyVar, regex, includes } from './_builders.mjs'
 
 export const fundamentalsTopics = [
   makeTopic({
@@ -11,6 +11,13 @@ export const fundamentalsTopics = [
       'In CodeQuest you will write Python in the browser sandbox, solve challenges, and pass tests. Start by running the sample code below, then change it and experiment.',
     ],
     sandboxCode: 'print("Hello from Python!")\nprint(2 + 2)\nprint("Python", 3.11)',
+    sandboxSnippets: [
+      snippet('Hello', 'print("Hello, Python!")'),
+      snippet('Math', 'print(6 * 7)'),
+      snippet('Multiple values', 'print("Python", 3.11)'),
+      snippet('Power', 'print(2 ** 10)'),
+      snippet('Three lines', 'print("Alex")\nprint(12)\nprint("Ready to code!")'),
+    ],
     readMore: { label: 'About Python', url: 'https://www.python.org/about/', source: 'Python Software Foundation' },
     challenges: [
       ch('easy', 'Print your name', 'Print your first name as text.', pyOut('Alex'), { starterCode: 'print(' }),
@@ -48,6 +55,13 @@ export const fundamentalsTopics = [
       'Use `sep` and `end` keyword arguments for finer control: `print(1, 2, sep="-")` prints `1-2`, and `end=""` avoids the trailing newline.',
     ],
     sandboxCode: 'name = "Sam"\nprint("Hello,", name)\nprint(10, 20, 30, sep=" | ")\nprint("no newline", end="")\nprint(" continued")',
+    sandboxSnippets: [
+      snippet('Exact text', 'print("Hello, CodeQuest!")'),
+      snippet('Print variable', 'x = 5\nprint(x)'),
+      snippet('sep argument', 'print("a", "b", "c", sep=",")'),
+      snippet('f-string', 'score = 88\nprint(f"Score: {score}")'),
+      snippet('end argument', 'print("Loading", end="")\nprint("...")'),
+    ],
     readMore: { label: 'Python tutorial — output', url: 'https://docs.python.org/3/tutorial/inputoutput.html', source: 'Python docs' },
     challenges: [
       ch('easy', 'Hello CodeQuest', 'Print exactly `Hello, CodeQuest!`', pyOut('Hello, CodeQuest!'), { starterCode: 'print(' }),
@@ -85,6 +99,13 @@ export const fundamentalsTopics = [
       'You can reassign variables, combine them in expressions, and pass them to functions. Good naming makes programs easier to read and maintain.',
     ],
     sandboxCode: 'count = 0\ncount = count + 1\nname = "Riley"\nactive = True\nprint(name, count, active)',
+    sandboxSnippets: [
+      snippet('Assign int', 'answer = 42'),
+      snippet('Assign string', 'greeting = "hello"'),
+      snippet('Boolean', 'is_ready = True'),
+      snippet('Increment', 'count = 5\ncount = count + 1\nprint(count)'),
+      snippet('Multiple assign', 'x, y = 10, 20\nprint(x, y)'),
+    ],
     readMore: { label: 'First steps', url: 'https://docs.python.org/3/tutorial/introduction.html#first-steps-towards-programming', source: 'Python docs' },
     challenges: [
       ch('easy', 'Assign integer', 'Assign `42` to `answer`.', pyVar('answer', 'answer == 42'), { starterCode: 'answer = ' }),
@@ -122,6 +143,13 @@ export const fundamentalsTopics = [
       'Assignment shortcuts like `+=` and `*=` update variables in place. Understanding operators is essential for control flow and loops.',
     ],
     sandboxCode: 'a, b = 10, 3\nprint(a + b, a // b, a % b, a ** 2)\nprint(a > b, a == 10, not False)',
+    sandboxSnippets: [
+      snippet('Floor div', 'q = 17 // 5\nprint(q)'),
+      snippet('Power', 'p = 2 ** 8\nprint(p)'),
+      snippet('Modulo', 'print(10 % 3)'),
+      snippet('Logical and', 'result = True and False\nprint(result)'),
+      snippet('Chained compare', 'ok = 1 < 2 < 3\nprint(ok)'),
+    ],
     readMore: { label: 'Operators', url: 'https://docs.python.org/3/reference/expressions.html#operator-precedence', source: 'Python docs' },
     challenges: [
       ch('easy', 'Addition', 'Write expression `10 + 5`.', includes('10', '+', '5'), { starterCode: '' }),
@@ -159,6 +187,13 @@ export const fundamentalsTopics = [
       'Python is dynamically typed, but values still have types at runtime. Learning to recognize types prevents many common errors.',
     ],
     sandboxCode: 'values = [42, 3.14, "hi", True, None]\nfor v in values:\n    print(v, type(v).__name__)',
+    sandboxSnippets: [
+      snippet('type()', 'print(type(3), type(3.14), type("hi"))'),
+      snippet('None', 'data = None\nprint(data)'),
+      snippet('bool from compare', 'ok = 5 > 2\nprint(ok)'),
+      snippet('isinstance', 'flag = isinstance(3.0, float)\nprint(flag)'),
+      snippet('Float division', 'r = 7 / 2\nprint(r, type(r).__name__)'),
+    ],
     challenges: [
       ch('easy', 'Integer literal', 'Assign int `7` to `n`.', pyVar('n', 'type(n) == int'), { starterCode: 'n = ' }),
       ch('easy', 'Float literal', 'Assign `3.5` to `x`.', pyVar('x', 'type(x) == float'), { starterCode: 'x = ' }),
@@ -195,6 +230,13 @@ export const fundamentalsTopics = [
       'Strings are immutable: methods return new strings rather than changing the original. Indexing starts at 0; negative indices count from the end.',
     ],
     sandboxCode: 'name = "python"\nprint(name.upper(), len(name))\nprint(name[0], name[-1])\nprint(f"Learning {name}!")',
+    sandboxSnippets: [
+      snippet('upper()', 'loud = "hi".upper()\nprint(loud)'),
+      snippet('len()', 's = "abc"\nprint(len(s))'),
+      snippet('Slice', 'word = "code"\nprint(word[0], word[-1])'),
+      snippet('f-string', 'n = 3\nprint(f"Count: {n}")'),
+      snippet('strip()', 't = "  hi  ".strip()\nprint(t)'),
+    ],
     challenges: [
       ch('easy', 'Create string', 'Assign `"cat"` to `pet`.', pyVar('pet', "pet == 'cat'"), { starterCode: 'pet = ' }),
       ch('easy', 'Concatenate', 'Set `msg` to `"Hello" + "!"`.', pyVar('msg', "msg == 'Hello!'"), { starterCode: 'msg = ' }),
@@ -231,6 +273,13 @@ export const fundamentalsTopics = [
       'In the browser sandbox, `input()` may be simulated or limited; still learn the pattern for local Python and projects.',
     ],
     sandboxCode: '# Simulated input pattern\nuser = "42"  # pretend input returned "42"\nprint("You entered:", user)\nprint("Double:", int(user) * 2)',
+    sandboxSnippets: [
+      snippet('Parse int', 'n = int("12")\nprint(n)'),
+      snippet('input pattern', 'name = input("Name? ")\nprint(name)'),
+      snippet('Convert float', 'x = float("3.5")\nprint(x)'),
+      snippet('Simulated input', 'user = "42"\nprint("Double:", int(user) * 2)'),
+      snippet('strip input', 'raw = "  5  "\nprint(int(raw.strip()))'),
+    ],
     challenges: [
       ch('easy', 'Print prompt result', 'Print `Enter name:` (simulating a prompt label).', pyOut('Enter name:'), { starterCode: 'print(' }),
       ch('easy', 'Parse int string', 'Convert `"12"` to int in `n`.', pyVar('n', 'n == 12'), { starterCode: 'n = int(' }),
@@ -267,6 +316,13 @@ export const fundamentalsTopics = [
       'Readable code reduces bugs and helps collaborators. Consistent style matters as much as correct syntax in real projects.',
     ],
     sandboxCode: '# Greet the user\nname = "Dev"  # short variable ok in sandbox\n\ndef greet(person):\n    """Return a greeting string."""\n    return f"Hello, {person}!"\n\nprint(greet(name))',
+    sandboxSnippets: [
+      snippet('Comment', '# learning python'),
+      snippet('Inline comment', 'x = 1  # start value'),
+      snippet('snake_case', 'user_name = "Alex"\nprint(user_name)'),
+      snippet('Docstring', 'def add(a, b):\n    """Add two numbers."""\n    return a + b\n\nprint(add(2, 3))'),
+      snippet('PEP 8 spacing', 'y = 2\nprint(y)'),
+    ],
     challenges: [
       ch('easy', 'Add comment', 'Write a comment line `# learning python`.', regex('^\\s*#\\s*learning python'), { starterCode: '' }),
       ch('easy', 'Inline comment', 'After `x = 1` add comment `# start`.', regex('x\\s*=\\s*1.*#\\s*start'), { starterCode: 'x = 1 ' }),
@@ -303,6 +359,13 @@ export const fundamentalsTopics = [
       'Truthy/falsy rules: `0`, `""`, `[]`, and `None` are falsy; most other values are truthy. `bool(1)` is True.',
     ],
     sandboxCode: 'print(int("10") + 5)\nprint(str(3.14))\nprint(bool(0), bool("0"))\nprint(float(7))',
+    sandboxSnippets: [
+      snippet('str to int', 'n = int("8")\nprint(n)'),
+      snippet('int to str', 's = str(99)\nprint(s, type(s).__name__)'),
+      snippet('bool()', 'print(bool(0), bool(""))'),
+      snippet('float()', 'x = float("2.5")\nprint(x)'),
+      snippet('Chained convert', 's = str(int("7"))\nprint(s)'),
+    ],
     challenges: [
       ch('easy', 'str to int', 'int("8") into `n`.', pyVar('n', 'n == 8'), { starterCode: 'n = int(' }),
       ch('easy', 'int to str', 'str(99) into `s`.', pyVar('s', "s == '99'"), { starterCode: 's = str(' }),
@@ -339,6 +402,13 @@ export const fundamentalsTopics = [
       'Remember `/` always returns float in Python 3; use `//` for integer division when you need whole numbers.',
     ],
     sandboxCode: 'import math\nprint(abs(-5), round(2.675, 2))\nprint(math.sqrt(16), math.pi)\nprint(0.1 + 0.2)  # float surprise',
+    sandboxSnippets: [
+      snippet('abs()', 'print(abs(-7))'),
+      snippet('round()', 'print(round(4.6))'),
+      snippet('min / max', 'print(max(1, 9, 3))'),
+      snippet('math.sqrt', 'import math\nprint(math.sqrt(25))'),
+      snippet('divmod', 'q, rem = divmod(17, 5)\nprint(q, rem)'),
+    ],
     challenges: [
       ch('easy', 'abs()', 'abs(-7) into `n`.', pyVar('n', 'n == 7'), { starterCode: 'n = abs(-7)' }),
       ch('easy', 'round()', 'round(4.6) into `r`.', pyVar('r', 'r == 5'), { starterCode: 'r = round(4.6)' }),

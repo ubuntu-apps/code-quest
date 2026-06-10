@@ -68,11 +68,18 @@ const levelIntroSchema = z.object({
     .optional(),
 })
 
+const sandboxSnippetSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  code: z.string(),
+})
+
 const levelSchema = z.object({
   id: z.string(),
   title: z.string(),
   kind: z.enum(['topic', 'project']).optional(),
   projectDifficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+  sandboxSnippets: z.array(sandboxSnippetSchema).optional(),
   intro: levelIntroSchema,
   challenges: z.array(challengeSchema),
   test: z.object({
