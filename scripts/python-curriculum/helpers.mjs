@@ -69,6 +69,8 @@ export function challenge(spec) {
     title: challengeTitle(spec.difficulty, spec.title),
     promptMarkdown: spec.prompt,
     starterCode: spec.starterCode ?? '',
+    hint: spec.hint,
+    solution: spec.solution,
     hints: spec.hints,
     validation: spec.validation,
   }
