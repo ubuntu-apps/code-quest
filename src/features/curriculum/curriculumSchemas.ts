@@ -52,6 +52,8 @@ const challengeSchema = z.object({
   promptMarkdown: z.string(),
   starterCode: z.string().optional(),
   hints: z.array(z.string()).optional(),
+  hint: z.string().optional(),
+  solution: z.string().optional(),
   validation: validationSchema,
 })
 

@@ -82,6 +82,8 @@ export function ch(difficulty, title, prompt, validation, extra = {}) {
     title,
     prompt,
     starterCode: extra.starterCode ?? '',
+    hint: extra.hint,
+    solution: extra.solution,
     hints: extra.hints,
     validation,
   }

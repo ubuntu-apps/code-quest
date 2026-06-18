@@ -23,7 +23,10 @@ export interface Challenge {
   title: string
   promptMarkdown: string
   starterCode?: string
+  /** @deprecated Prefer `hint` for the Hint button */
   hints?: string[]
+  hint?: string
+  solution?: string
   validation: Validation
 }
 

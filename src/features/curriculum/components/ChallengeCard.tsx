@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { Challenge } from '../types'
 import type { PythonAiHelp } from '../freeAiHelp'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
@@ -63,6 +64,9 @@ export function ChallengeCard({
   onFixCopied,
 }: ChallengeCardProps) {
   const { isEditingLocal } = useEditorMode()
+  const [showHint, setShowHint] = useState(false)
+  const [showAnswer, setShowAnswer] = useState(false)
+  const hintText = ch.hint ?? ch.hints?.[0]
   const isRuntimeTests =
     ch.validation.mode === 'python_tests' || ch.validation.mode === 'r_tests'
   const showAiHelp = ch.validation.mode === 'python_tests'
@@ -98,12 +102,16 @@ export function ChallengeCard({
             onChange={(starterCode) => onUpdateChallenge({ starterCode })}
           />
           <EditableTextarea
-            label="Hints (one per line)"
+            label="Hint"
             rows={2}
-            value={(ch.hints ?? []).join('\n')}
-            onChange={(raw) =>
-              onUpdateChallenge({ hints: raw.split('\n').filter((h) => h.length > 0) })
-            }
+            value={ch.hint ?? ch.hints?.[0] ?? ''}
+            onChange={(hint) => onUpdateChallenge({ hint, hints: undefined })}
+          />
+          <EditableTextarea
+            label="Solution (answer code)"
+            rows={4}
+            value={ch.solution ?? ''}
+            onChange={(solution) => onUpdateChallenge({ solution })}
           />
           <EditableValidationEditor
             validation={ch.validation}
@@ -111,6 +119,24 @@ export function ChallengeCard({
           />
         </>
       )}
+      <div className="cq-challenge-help-row">
+        <button type="button" className="cq-btn cq-btn--sm" onClick={() => setShowHint((v) => !v)}>
+          {showHint ? 'Hide hint' : 'Hint'}
+        </button>
+        <button type="button" className="cq-btn cq-btn--sm" onClick={() => setShowAnswer((v) => !v)}>
+          {showAnswer ? 'Hide answer' : 'Answer'}
+        </button>
+      </div>
+      {showHint ? (
+        <div className="cq-challenge-reveal cq-challenge-reveal--hint">
+          {hintText ?? 'No hint available for this challenge yet.'}
+        </div>
+      ) : null}
+      {showAnswer ? (
+        <pre className="cq-challenge-reveal cq-challenge-reveal--answer">
+          {ch.solution ?? 'No answer available for this challenge yet.'}
+        </pre>
+      ) : null}
       <label className="cq-label" htmlFor={`code-${ch.id}`}>
         Your answer
       </label>
@@ -133,16 +159,6 @@ export function ChallengeCard({
         errorColumn={isRuntimeTests ? (pyRuntimeErr?.column ?? null) : null}
         errorUiEpoch={errorUiEpoch}
       />
-      {ch.hints && ch.hints.length > 0 && (
-        <details className="cq-hints">
-          <summary>Hints</summary>
-          <ul>
-            {ch.hints.map((h, i) => (
-              <li key={i}>{h}</li>
-            ))}
-          </ul>
-        </details>
-      )}
       <div className="cq-row">
         <button type="button" className="cq-btn cq-btn--primary" onClick={onCheck}>
           {status === 'failed' ? 'Try again' : done ? 'Check again' : 'Check'}
