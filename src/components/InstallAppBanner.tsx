@@ -81,7 +81,9 @@ export function InstallAppBanner() {
             Install app
           </button>
         ) : (
-          <p className="cq-install-banner__hint">On iPhone: tap Share, then Add to Home Screen.</p>
+          <p className="cq-install-banner__hint">
+            On iPhone: open in Safari, tap Share, then Add to Home Screen.
+          </p>
         )}
       </div>
       <button type="button" className="cq-install-banner__close" onClick={onDismiss} aria-label="Dismiss install prompt">

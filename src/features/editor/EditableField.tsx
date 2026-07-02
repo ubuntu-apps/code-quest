@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { CodeTextarea } from '../curriculum/codeEditor'
 import { SimpleMarkdown } from '../curriculum/SimpleMarkdown'
 import { useEditorMode } from './editorHooks'
 
@@ -78,7 +79,7 @@ export function EditableTextarea({
   return (
     <label className="cq-editable-field">
       {label && <span className="cq-label">{label}</span>}
-      <textarea
+      <CodeTextarea
         className={`cq-editable-textarea${className ? ` ${className}` : ''}`}
         rows={rows}
         value={value}
@@ -104,7 +105,7 @@ export function EditableMarkdown({ value, onChange, label }: EditableMarkdownPro
   return (
     <div className="cq-editable-markdown">
       {label && <div className="cq-label">{label}</div>}
-      <textarea
+      <CodeTextarea
         className="cq-editable-textarea cq-editable-textarea--markdown"
         rows={8}
         value={value}
