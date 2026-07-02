@@ -4,6 +4,7 @@ import { PASS_DEFAULT } from '../constants'
 import { SimpleMarkdown } from '../SimpleMarkdown'
 import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditorMode } from '../../editor'
 import { YesNoQuestionInput } from '../components/YesNoQuestionInput'
+import { CodeTextarea } from '../codeEditor'
 import { isYesNoQuestion, yesNoCorrectAnswer } from '../testQuestionUtils'
 
 interface TestStepProps {
@@ -122,7 +123,7 @@ export function TestStep({
                     ) : (
                       <>
                         <SimpleMarkdown text={q.prompt} />
-                        <textarea
+                        <CodeTextarea
                           className={`cq-code-input${
                             showFeedback
                               ? questionPassed

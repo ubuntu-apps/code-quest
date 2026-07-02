@@ -1,3 +1,4 @@
+export { CodeTextarea, type CodeTextareaProps } from './CodeTextarea'
 export { CodeTextareaWithErrorLine, type CodeTextareaWithErrorLineProps } from './CodeTextareaWithErrorLine'
 export { DraggableErrorPopover, type DraggableErrorPopoverProps } from './DraggableErrorPopover'
 export { CodeEditorLineGutter } from './CodeEditorLineGutter'

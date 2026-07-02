@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { CodeEditorLineGutter } from './CodeEditorLineGutter'
+import { CodeTextarea } from './CodeTextarea'
 import { DraggableErrorPopover } from './DraggableErrorPopover'
 import { useCodeEditorScrollSync } from './useCodeEditorScrollSync'
 
@@ -60,7 +61,7 @@ export function CodeTextareaWithErrorLine({
 
   if (!showHighlight) {
     return (
-      <textarea
+      <CodeTextarea
         id={id}
         ref={taRef}
         className={className}
@@ -79,7 +80,7 @@ export function CodeTextareaWithErrorLine({
           <CodeEditorLineGutter lineCount={lineCount} errorLine={errorLine!} mode="highlight" />
         </div>
       </div>
-      <textarea
+      <CodeTextarea
         id={id}
         ref={taRef}
         className={`${className ?? ''} cq-code-editor-overlay`.trim()}

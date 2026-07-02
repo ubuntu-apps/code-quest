@@ -139,11 +139,6 @@ export function CodeQuestScreen() {
     aboutContent,
     initAboutContent,
     updateAboutLead,
-    updateAboutInstallIntro,
-    updateAboutInstallStep,
-    addAboutInstallStep,
-    removeAboutInstallStep,
-    moveAboutInstallStep,
   } = useEditorAbout()
   const { importFromGitHub } = useEditorGitHub()
   const { requestConfirm } = useEditorConfirm()
@@ -710,12 +705,6 @@ export function CodeQuestScreen() {
     return null
   }, [displayRootIndex, catalogLanguages, languageBundles, resolveBundle, isLevelUnlocked, progressVersion, activeLanguageId])
 
-  const installSteps = displayAboutContent.installSteps.length
-    ? displayAboutContent.installSteps
-    : installInstructions(platform).split('\n').slice(1)
-  const installIntro =
-    displayAboutContent.installIntro || installInstructions(platform).split('\n')[0]
-
   useEffect(() => {
     initAboutContent(installInstructions(platform).split('\n').slice(1))
   }, [platform, initAboutContent])
@@ -963,15 +952,8 @@ export function CodeQuestScreen() {
         {tab === 'about' && (
           <AboutTab
             aboutLead={displayAboutContent.lead}
-            installIntro={installIntro}
-            installSteps={installSteps}
             installResetNotice={installResetNotice}
             onUpdateLead={updateAboutLead}
-            onUpdateInstallIntro={updateAboutInstallIntro}
-            onUpdateInstallStep={updateAboutInstallStep}
-            onMoveInstallStep={moveAboutInstallStep}
-            onRemoveInstallStep={removeAboutInstallStep}
-            onAddInstallStep={addAboutInstallStep}
             onResetInstallPrompt={() => {
               resetInstallBannerPreference()
               setInstallResetNotice('Install prompt banner reset for this device.')

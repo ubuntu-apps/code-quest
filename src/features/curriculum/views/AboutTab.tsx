@@ -1,78 +1,53 @@
 import { APP_VERSION } from '../../../version'
-import { AddItemButton, EditableText, ListEditorActions, useEditorMode } from '../../editor'
+import { detectPlatform, INSTALL_GUIDES } from '../../../platform'
+import { EditableText, useEditorMode } from '../../editor'
 
 interface AboutTabProps {
   aboutLead: string
-  installIntro: string
-  installSteps: string[]
   installResetNotice: string | null
   onUpdateLead: (text: string) => void
-  onUpdateInstallIntro: (text: string) => void
-  onUpdateInstallStep: (index: number, text: string) => void
-  onMoveInstallStep: (index: number, direction: -1 | 1) => void
-  onRemoveInstallStep: (index: number) => void
-  onAddInstallStep: () => void
   onResetInstallPrompt: () => void
 }
 
 export function AboutTab({
   aboutLead,
-  installIntro,
-  installSteps,
   installResetNotice,
   onUpdateLead,
-  onUpdateInstallIntro,
-  onUpdateInstallStep,
-  onMoveInstallStep,
-  onRemoveInstallStep,
-  onAddInstallStep,
   onResetInstallPrompt,
 }: AboutTabProps) {
   const { isEditingLocal } = useEditorMode()
+  const currentPlatform = detectPlatform()
 
   return (
     <div className="cq-stack cq-about">
       <h1 className="cq-title">About</h1>
       <EditableText as="p" className="cq-lead" value={aboutLead} onChange={onUpdateLead} />
       <section>
-        <h2 className="cq-subtitle">Install on your phone</h2>
-        <EditableText
-          as="p"
-          className="cq-muted cq-install-intro"
-          value={installIntro}
-          onChange={onUpdateInstallIntro}
-        />
-        <ol className="cq-install-steps">
-          {installSteps.map((step, i) => (
-            <li key={`${i}-${step.slice(0, 20)}`} className="cq-install-step-row">
-              <div className="cq-card-row">
-                {isEditingLocal ? (
-                  <EditableText
-                    value={step.replace(/^\d+\.\s*/, '')}
-                    onChange={(text) => onUpdateInstallStep(i, text)}
-                  />
-                ) : (
-                  step.replace(/^\d+\.\s*/, '')
-                )}
-                <ListEditorActions
-                  canMoveUp={i > 0}
-                  canMoveDown={i < installSteps.length - 1}
-                  onMoveUp={() => onMoveInstallStep(i, -1)}
-                  onMoveDown={() => onMoveInstallStep(i, 1)}
-                  confirmMessage="Delete this install step?"
-                  onDelete={() => onRemoveInstallStep(i)}
-                />
-              </div>
-            </li>
-          ))}
-        </ol>
-        <AddItemButton label="Add install step" onClick={onAddInstallStep} />
-        <div className="cq-row cq-about-actions">
-          <button type="button" className="cq-btn" onClick={onResetInstallPrompt}>
-            Reset install prompt
-          </button>
-          {installResetNotice ? <span className="cq-muted">{installResetNotice}</span> : null}
-        </div>
+        <h2 className="cq-subtitle">Install CodeQuest</h2>
+        <p className="cq-muted cq-install-intro">
+          Add CodeQuest to your device for quick access and an app-like experience.
+        </p>
+        {INSTALL_GUIDES.map((guide) => (
+          <div
+            key={guide.platform}
+            className={`cq-install-guide${guide.platform === currentPlatform ? ' cq-install-guide--current' : ''}`}
+          >
+            <h3 className="cq-install-guide-title">{guide.title}</h3>
+            <ol className="cq-install-steps">
+              {guide.steps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ol>
+          </div>
+        ))}
+        {!isEditingLocal ? (
+          <div className="cq-row cq-about-actions">
+            <button type="button" className="cq-btn" onClick={onResetInstallPrompt}>
+              Reset install prompt
+            </button>
+            {installResetNotice ? <span className="cq-muted">{installResetNotice}</span> : null}
+          </div>
+        ) : null}
       </section>
       <p className="cq-muted">Version {APP_VERSION}</p>
     </div>
