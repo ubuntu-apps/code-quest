@@ -1,5 +1,4 @@
-const SHARE_MESSAGE =
-  'Learn coding with CodeQuest — a free app with lessons, challenges, and quizzes. Install it here:'
+import { formatInstallGuidesText } from '../platform'
 
 export function getAppShareUrl(): string {
   if (typeof window === 'undefined') return ''
@@ -7,7 +6,7 @@ export function getAppShareUrl(): string {
 }
 
 export function buildShareText(): string {
-  return `${SHARE_MESSAGE}\n${getAppShareUrl()}`
+  return formatInstallGuidesText(getAppShareUrl())
 }
 
 export type ShareAppResult = 'shared' | 'copied' | 'cancelled' | 'unsupported'

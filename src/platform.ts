@@ -8,15 +8,6 @@ export type InstallGuide = {
 
 export const INSTALL_GUIDES: InstallGuide[] = [
   {
-    platform: 'android',
-    title: 'Install on Android',
-    steps: [
-      'Open CodeQuest in Chrome.',
-      'Tap the menu (⋮), then Install app or Add to Home screen.',
-      'Confirm Install — CodeQuest opens like a native app.',
-    ],
-  },
-  {
     platform: 'ios',
     title: 'Install on iPhone / iPad',
     steps: [
@@ -24,6 +15,15 @@ export const INSTALL_GUIDES: InstallGuide[] = [
       'Tap the Share button at the bottom of the screen (square with an arrow pointing up).',
       'Scroll the share sheet and tap Add to Home Screen.',
       'Tap Add in the top-right corner — CodeQuest appears on your home screen.',
+    ],
+  },
+  {
+    platform: 'android',
+    title: 'Install on Android',
+    steps: [
+      'Open CodeQuest in Chrome.',
+      'Tap the menu (⋮), then Install app or Add to Home screen.',
+      'Confirm Install — CodeQuest opens like a native app.',
     ],
   },
   {
@@ -36,6 +36,19 @@ export const INSTALL_GUIDES: InstallGuide[] = [
     ],
   },
 ]
+
+export function formatInstallGuidesText(url: string): string {
+  const intro =
+    'CodeQuest is a free app for learning coding — lessons, challenges, and quizzes.\n\n' +
+    `Open or install: ${url}`
+
+  const sections = INSTALL_GUIDES.map((guide) => {
+    const steps = guide.steps.map((step, i) => `${i + 1}. ${step}`).join('\n')
+    return `${guide.title}:\n${steps}`
+  })
+
+  return `${intro}\n\n${sections.join('\n\n')}`
+}
 
 type NavigatorLike = Navigator & { vendor?: string }
 type WindowLike = Window & { opera?: string }

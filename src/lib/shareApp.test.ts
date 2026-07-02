@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { formatInstallGuidesText } from '../platform'
 import { buildShareText, getAppShareUrl, shareApp } from './shareApp'
 
 function expectedShareUrl(origin: string): string {
@@ -15,11 +16,17 @@ describe('shareApp', () => {
     expect(getAppShareUrl()).toBe(expectedShareUrl('https://example.github.io'))
   })
 
-  it('includes message and link in share text', () => {
+  it('includes intro, link, and install guides in share order', () => {
     vi.stubGlobal('window', { location: { origin: 'https://example.github.io' } })
-    expect(buildShareText()).toBe(
-      `Learn coding with CodeQuest — a free app with lessons, challenges, and quizzes. Install it here:\n${expectedShareUrl('https://example.github.io')}`,
-    )
+    const url = expectedShareUrl('https://example.github.io')
+    const text = buildShareText()
+
+    expect(text).toBe(formatInstallGuidesText(url))
+    expect(text).toContain('Open or install: ' + url)
+    expect(text.indexOf('Install on iPhone / iPad')).toBeLessThan(text.indexOf('Install on Android'))
+    expect(text.indexOf('Install on Android')).toBeLessThan(text.indexOf('Install on desktop'))
+    expect(text).toContain('1. Open CodeQuest in Safari')
+    expect(text).toContain('1. Open CodeQuest in Chrome.')
   })
 
   it('uses native share when available', async () => {
