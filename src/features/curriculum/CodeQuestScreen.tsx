@@ -6,11 +6,9 @@ import type { Challenge, LanguageBundle, Level, RootIndex, TestGradeResult } fro
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
 import { gradeTest, validateAgainst } from './validateAnswer'
 import { loadProgress, saveProgress } from './progressStorage'
-import { getFreePythonAiHelp, type PythonAiHelp } from './freeAiHelp'
 import {
   runPythonCode,
   runPythonChallengeTests,
-  type FriendlyPythonError,
   type PythonChallengeTestResult,
 } from './pythonSandbox'
 import {
@@ -22,7 +20,8 @@ import {
 import { defaultSandboxForLanguage } from './components/PythonSandboxSection'
 import type { FriendlySandboxError } from './components/CodeSandboxSection'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
-import { shareApp } from '../../lib/shareApp'
+import { shareApp, type ShareVariant } from '../../lib/shareApp'
+import { ShareSheet } from '../../components/ShareSheet'
 import { detectPlatform, installInstructions } from '../../platform'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
@@ -59,35 +58,17 @@ import { LearnLevel } from './views/LearnLevel'
 import { ProgressTab } from './views/ProgressTab'
 import { AboutTab } from './views/AboutTab'
 
-function clearChallengeAiFeedback(
-  setters: {
-    setErrorExpanded: Dispatch<SetStateAction<Record<string, boolean>>>
-    setAiHelp: Dispatch<SetStateAction<Record<string, PythonAiHelp | null>>>
-    setAiLoading: Dispatch<SetStateAction<Record<string, boolean>>>
-    setFixCopied: Dispatch<SetStateAction<Record<string, boolean>>>
-  },
-  challengeId: string,
-) {
-  setters.setErrorExpanded((prev) => ({ ...prev, [challengeId]: false }))
-  setters.setAiHelp((prev) => ({ ...prev, [challengeId]: null }))
-  setters.setAiLoading((prev) => ({ ...prev, [challengeId]: false }))
-  setters.setFixCopied((prev) => ({ ...prev, [challengeId]: false }))
-}
-
 function clearChallengeFeedback(
   setters: {
     setTestResults: Dispatch<SetStateAction<Record<string, (PythonChallengeTestResult | RChallengeTestResult)[]>>>
     setRuntimeError: Dispatch<SetStateAction<Record<string, FriendlySandboxError | null>>>
     setErrorExpanded: Dispatch<SetStateAction<Record<string, boolean>>>
-    setAiHelp: Dispatch<SetStateAction<Record<string, PythonAiHelp | null>>>
-    setAiLoading: Dispatch<SetStateAction<Record<string, boolean>>>
-    setFixCopied: Dispatch<SetStateAction<Record<string, boolean>>>
   },
   challengeId: string,
 ) {
   setters.setTestResults((prev) => ({ ...prev, [challengeId]: [] }))
   setters.setRuntimeError((prev) => ({ ...prev, [challengeId]: null }))
-  clearChallengeAiFeedback(setters, challengeId)
+  setters.setErrorExpanded((prev) => ({ ...prev, [challengeId]: false }))
 }
 
 export function CodeQuestScreen() {
@@ -191,14 +172,13 @@ export function CodeQuestScreen() {
   const [sandboxError, setSandboxError] = useState<FriendlySandboxError | null>(null)
   const [sandboxErrorUiEpoch, setSandboxErrorUiEpoch] = useState(0)
   const [challengeErrorUiEpoch, setChallengeErrorUiEpoch] = useState<Record<string, number>>({})
-  const [challengeAiHelp, setChallengeAiHelp] = useState<Record<string, PythonAiHelp | null>>({})
-  const [challengeAiLoading, setChallengeAiLoading] = useState<Record<string, boolean>>({})
-  const [challengeFixCopied, setChallengeFixCopied] = useState<Record<string, boolean>>({})
   const [installResetNotice, setInstallResetNotice] = useState<string | null>(null)
   const [shareNotice, setShareNotice] = useState<string | null>(null)
+  const [shareSheetOpen, setShareSheetOpen] = useState(false)
 
-  const handleShare = useCallback(async () => {
-    const result = await shareApp()
+  const handleShareSelect = useCallback(async (variant: ShareVariant) => {
+    setShareSheetOpen(false)
+    const result = await shareApp(variant)
     if (result === 'copied') {
       setShareNotice('Install link copied to clipboard.')
     } else if (result === 'unsupported') {
@@ -427,9 +407,6 @@ export function CodeQuestScreen() {
     setChallengeTestResults({})
     setChallengeRuntimeError({})
     setChallengeErrorExpanded({})
-    setChallengeAiHelp({})
-    setChallengeAiLoading({})
-    setChallengeFixCopied({})
     setTestShort({})
     setTestMcq({})
     setTestResult(null)
@@ -499,9 +476,6 @@ export function CodeQuestScreen() {
       setTestResults: setChallengeTestResults,
       setRuntimeError: setChallengeRuntimeError,
       setErrorExpanded: setChallengeErrorExpanded,
-      setAiHelp: setChallengeAiHelp,
-      setAiLoading: setChallengeAiLoading,
-      setFixCopied: setChallengeFixCopied,
     }),
     [],
   )
@@ -521,7 +495,7 @@ export function CodeQuestScreen() {
       const run = await runPythonChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
       setChallengeTestResults((prev) => ({ ...prev, [ch.id]: run.tests }))
       setChallengeRuntimeError((prev) => ({ ...prev, [ch.id]: run.error }))
-      clearChallengeAiFeedback(challengeFeedbackSetters, ch.id)
+      setChallengeErrorExpanded((prev) => ({ ...prev, [ch.id]: false }))
       ok = run.passed
     } else if (ch.validation.mode === 'r_tests') {
       const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
@@ -616,28 +590,6 @@ export function CodeQuestScreen() {
     }
     setSandboxErrorUiEpoch((n) => n + 1)
     setSandboxRunning(false)
-  }
-
-  const requestChallengeAiHelp = async (
-    challengeId: string,
-    userCode: string,
-    error: FriendlyPythonError,
-  ) => {
-    if (challengeAiLoading[challengeId]) return
-    setChallengeAiLoading((prev) => ({ ...prev, [challengeId]: true }))
-    setChallengeFixCopied((prev) => ({ ...prev, [challengeId]: false }))
-    try {
-      const help = await getFreePythonAiHelp({ userCode, error, context: 'challenge' })
-      setChallengeAiHelp((prev) => ({ ...prev, [challengeId]: help }))
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'AI Help failed. Please try again.'
-      setChallengeAiHelp((prev) => ({
-        ...prev,
-        [challengeId]: { explanation: message, fix: '', nextStep: '', text: message },
-      }))
-    } finally {
-      setChallengeAiLoading((prev) => ({ ...prev, [challengeId]: false }))
-    }
   }
 
   const handleRemoveLanguage = (langId: string) => {
@@ -860,9 +812,6 @@ export function CodeQuestScreen() {
           challengeRuntimeError={challengeRuntimeError}
           challengeErrorExpanded={challengeErrorExpanded}
           challengeErrorUiEpoch={challengeErrorUiEpoch}
-          challengeAiHelp={challengeAiHelp}
-          challengeAiLoading={challengeAiLoading}
-          challengeFixCopied={challengeFixCopied}
           onChallengeDraftChange={(chId, value) => {
             setChallengeDrafts((prev) => ({ ...prev, [chId]: value }))
             const p = loadProgress(languageId, selectedLevel.id)
@@ -880,10 +829,6 @@ export function CodeQuestScreen() {
           onAddChallenge={() => addChallenge(languageId, secId, selectedLevel.id)}
           onToggleChallengeErrorExpanded={(chId) =>
             setChallengeErrorExpanded((prev) => ({ ...prev, [chId]: !(prev[chId] ?? false) }))
-          }
-          onRequestChallengeAiHelp={requestChallengeAiHelp}
-          onChallengeFixCopied={(chId, copied) =>
-            setChallengeFixCopied((prev) => ({ ...prev, [chId]: copied }))
           }
           testShort={testShort}
           testMcq={testMcq}
@@ -929,7 +874,7 @@ export function CodeQuestScreen() {
     { id: 'learn', label: 'Learn', icon: BookOpen },
     { id: 'progress', label: 'Progress', icon: ListTodo },
     { id: 'about', label: 'About', icon: Info },
-    { id: 'share', label: 'Share', icon: Share2, onAction: () => void handleShare() },
+    { id: 'share', label: 'Share', icon: Share2, onAction: () => setShareSheetOpen(true) },
   ]
 
   return (
@@ -987,6 +932,10 @@ export function CodeQuestScreen() {
       ) : null}
 
       <BottomNav items={navItems} activeId={tab} onSelect={(id) => goToTab(id as TabId)} />
+
+      {shareSheetOpen ? (
+        <ShareSheet onSelect={(variant) => void handleShareSelect(variant)} onClose={() => setShareSheetOpen(false)} />
+      ) : null}
 
       {readMoreOpen && selectedLevel?.intro.readMore && (
         <div

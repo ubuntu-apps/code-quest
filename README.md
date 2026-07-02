@@ -2,16 +2,6 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Free AI Help setup (Ollama)
-
-CodeQuest can show AI explanations for Python runtime errors when you click `AI Help`, using a local Ollama model (no paid API required).
-
-1. Install [Ollama](https://ollama.com/)
-2. Pull a model (default): `ollama pull deepseek-coder:6.7b`
-3. Copy `.env.example` to `.env.local`
-4. (Optional) change `VITE_OLLAMA_MODEL` or `VITE_OLLAMA_BASE_URL`
-5. Restart the dev server
-
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)

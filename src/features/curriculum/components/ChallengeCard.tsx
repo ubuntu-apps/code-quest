@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import type { Challenge } from '../types'
-import type { PythonAiHelp } from '../freeAiHelp'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
 import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
 import { CodeTextareaWithErrorLine } from '../codeEditor'
@@ -27,17 +26,12 @@ interface ChallengeCardProps {
   runtimeError: FriendlyPythonError | FriendlyRError | null
   errorExpanded: boolean
   errorUiEpoch: number
-  aiHelp: PythonAiHelp | null
-  aiLoading: boolean
-  fixCopied: boolean
   onDraftChange: (value: string) => void
   onCheck: () => void
   onUpdateChallenge: (patch: Partial<Challenge>) => void
   onMove: (direction: -1 | 1) => void
   onDelete: () => void
   onToggleErrorExpanded: () => void
-  onRequestAiHelp: () => void
-  onFixCopied: (copied: boolean) => void
 }
 
 export function ChallengeCard({
@@ -51,17 +45,12 @@ export function ChallengeCard({
   runtimeError: pyRuntimeErr,
   errorExpanded: pyErrExpanded,
   errorUiEpoch,
-  aiHelp: pyAiHelp,
-  aiLoading: pyAiLoading,
-  fixCopied: pyFixCopied,
   onDraftChange,
   onCheck,
   onUpdateChallenge,
   onMove,
   onDelete,
   onToggleErrorExpanded,
-  onRequestAiHelp,
-  onFixCopied,
 }: ChallengeCardProps) {
   const { isEditingLocal } = useEditorMode()
   const [showHint, setShowHint] = useState(false)
@@ -69,7 +58,6 @@ export function ChallengeCard({
   const hintText = ch.hint ?? ch.hints?.[0]
   const isRuntimeTests =
     ch.validation.mode === 'python_tests' || ch.validation.mode === 'r_tests'
-  const showAiHelp = ch.validation.mode === 'python_tests'
 
   return (
     <div className="cq-panel cq-challenge-card">
@@ -173,11 +161,6 @@ export function ChallengeCard({
           code={draft}
           expanded={pyErrExpanded}
           onToggleExpanded={onToggleErrorExpanded}
-          aiHelp={showAiHelp ? pyAiHelp : null}
-          aiLoading={showAiHelp ? pyAiLoading : false}
-          fixCopied={showAiHelp ? pyFixCopied : false}
-          onRequestAiHelp={showAiHelp ? onRequestAiHelp : () => {}}
-          onFixCopied={onFixCopied}
         />
       )}
       {testResults.length > 0 && (

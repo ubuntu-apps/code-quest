@@ -1,8 +1,7 @@
 import type { Challenge, Level, TestGradeResult } from '../types'
 import type { LevelProgress } from '../progressStorage'
-import type { PythonAiHelp } from '../freeAiHelp'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
-import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
+import type { PythonChallengeTestResult } from '../pythonSandbox'
 import type { RChallengeTestResult } from '../rSandbox'
 import type { LevelStep } from '../constants'
 import { EditableText } from '../../editor'
@@ -40,9 +39,6 @@ interface LearnLevelProps {
   challengeRuntimeError: Record<string, FriendlySandboxError | null>
   challengeErrorExpanded: Record<string, boolean>
   challengeErrorUiEpoch: Record<string, number>
-  challengeAiHelp: Record<string, PythonAiHelp | null>
-  challengeAiLoading: Record<string, boolean>
-  challengeFixCopied: Record<string, boolean>
   onChallengeDraftChange: (challengeId: string, value: string) => void
   onCheckChallenge: (challenge: Challenge) => void
   onUpdateChallenge: (challengeId: string, patch: Partial<Challenge>) => void
@@ -50,8 +46,6 @@ interface LearnLevelProps {
   onRemoveChallenge: (challengeId: string) => void
   onAddChallenge: () => void
   onToggleChallengeErrorExpanded: (challengeId: string) => void
-  onRequestChallengeAiHelp: (challengeId: string, userCode: string, error: FriendlyPythonError) => void
-  onChallengeFixCopied: (challengeId: string, copied: boolean) => void
   testShort: Record<string, string>
   testMcq: Record<string, string>
   testResult: TestGradeResult | null
@@ -93,9 +87,6 @@ export function LearnLevel({
   challengeRuntimeError,
   challengeErrorExpanded,
   challengeErrorUiEpoch,
-  challengeAiHelp,
-  challengeAiLoading,
-  challengeFixCopied,
   onChallengeDraftChange,
   onCheckChallenge,
   onUpdateChallenge,
@@ -103,8 +94,6 @@ export function LearnLevel({
   onRemoveChallenge,
   onAddChallenge,
   onToggleChallengeErrorExpanded,
-  onRequestChallengeAiHelp,
-  onChallengeFixCopied,
   testShort,
   testMcq,
   testResult,
@@ -182,19 +171,12 @@ export function LearnLevel({
               runtimeError={challengeRuntimeError[ch.id] ?? null}
               errorExpanded={challengeErrorExpanded[ch.id] ?? false}
               errorUiEpoch={challengeErrorUiEpoch[ch.id] ?? 0}
-              aiHelp={challengeAiHelp[ch.id] ?? null}
-              aiLoading={challengeAiLoading[ch.id] ?? false}
-              fixCopied={challengeFixCopied[ch.id] ?? false}
               onDraftChange={(value) => onChallengeDraftChange(ch.id, value)}
               onCheck={() => onCheckChallenge(ch)}
               onUpdateChallenge={(patch) => onUpdateChallenge(ch.id, patch)}
               onMove={(dir) => onMoveChallenge(ch.id, dir)}
               onDelete={() => onRemoveChallenge(ch.id)}
               onToggleErrorExpanded={() => onToggleChallengeErrorExpanded(ch.id)}
-              onRequestAiHelp={() =>
-                onRequestChallengeAiHelp(ch.id, challengeDrafts[ch.id] ?? '', challengeRuntimeError[ch.id]!)
-              }
-              onFixCopied={(copied) => onChallengeFixCopied(ch.id, copied)}
             />
           ))}
           <AddItemButton label="Add challenge" onClick={onAddChallenge} />

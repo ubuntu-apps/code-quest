@@ -1,31 +1,15 @@
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import type { PythonAiHelp } from '../freeAiHelp'
 import type { FriendlyPythonError } from '../pythonSandbox'
-import { copyToClipboard, pythonErrorLinePointer } from '../helpers'
+import { pythonErrorLinePointer } from '../helpers'
 
 interface PythonErrorPanelProps {
   error: FriendlyPythonError
   code: string
   expanded: boolean
   onToggleExpanded: () => void
-  aiHelp: PythonAiHelp | null
-  aiLoading: boolean
-  fixCopied: boolean
-  onRequestAiHelp: () => void
-  onFixCopied: (copied: boolean) => void
 }
 
-export function PythonErrorPanel({
-  error,
-  code,
-  expanded,
-  onToggleExpanded,
-  aiHelp,
-  aiLoading,
-  fixCopied,
-  onRequestAiHelp,
-  onFixCopied,
-}: PythonErrorPanelProps) {
+export function PythonErrorPanel({ error, code, expanded, onToggleExpanded }: PythonErrorPanelProps) {
   const pointer = pythonErrorLinePointer(code, error)
 
   return (
@@ -48,31 +32,7 @@ export function PythonErrorPanel({
           </>
         )}
       </button>
-      <button
-        type="button"
-        className="cq-sandbox-error-toggle"
-        onClick={onRequestAiHelp}
-        disabled={aiLoading}
-      >
-        {aiLoading ? 'AI is thinking...' : 'AI Help'}
-      </button>
       {expanded && <div className="cq-sandbox-error-detail">{error.detail}</div>}
-      {aiHelp && (
-        <>
-          <div className="cq-ai-help-text">{aiHelp.text}</div>
-          {aiHelp.fix && (
-            <div className="cq-ai-help-actions">
-              <button
-                type="button"
-                className="cq-sandbox-error-toggle"
-                onClick={() => void copyToClipboard(aiHelp.fix).then(onFixCopied)}
-              >
-                {fixCopied ? 'Copied!' : 'Copy fix'}
-              </button>
-            </div>
-          )}
-        </>
-      )}
       {pointer && (
         <pre className="cq-sandbox-error-pointer">
           {`Line ${pointer.line}${pointer.column ? `, Col ${pointer.column}` : ''}

@@ -1,18 +1,21 @@
-import { formatInstallGuidesText } from '../platform'
+import { formatInstallGuidesText, formatInstallGuidesTextShort } from '../platform'
+
+export type ShareVariant = 'full' | 'text'
 
 export function getAppShareUrl(): string {
   if (typeof window === 'undefined') return ''
   return new URL(import.meta.env.BASE_URL, window.location.origin).href
 }
 
-export function buildShareText(): string {
-  return formatInstallGuidesText(getAppShareUrl())
+export function buildShareText(variant: ShareVariant = 'full'): string {
+  const url = getAppShareUrl()
+  return variant === 'text' ? formatInstallGuidesTextShort(url) : formatInstallGuidesText(url)
 }
 
 export type ShareAppResult = 'shared' | 'copied' | 'cancelled' | 'unsupported'
 
-export async function shareApp(): Promise<ShareAppResult> {
-  const text = buildShareText()
+export async function shareApp(variant: ShareVariant = 'full'): Promise<ShareAppResult> {
+  const text = buildShareText(variant)
 
   if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
     try {
