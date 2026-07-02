@@ -50,6 +50,18 @@ export function formatInstallGuidesText(url: string): string {
   return `${intro}\n\n${sections.join('\n\n')}`
 }
 
+export function formatInstallGuidesTextShort(url: string): string {
+  return [
+    'CodeQuest is a free app for learning coding — lessons, challenges, and quizzes.',
+    '',
+    `Install: ${url}`,
+    '',
+    'iPhone/iPad: open in Safari, tap Share, then Add to Home Screen',
+    'Android: open in Chrome, tap menu, then Install app',
+    'Desktop: Chrome or Edge → Install in the address bar',
+  ].join('\n')
+}
+
 type NavigatorLike = Navigator & { vendor?: string }
 type WindowLike = Window & { opera?: string }
 

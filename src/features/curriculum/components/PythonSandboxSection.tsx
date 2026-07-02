@@ -3,7 +3,6 @@ import { CodeTextareaWithErrorLine } from '../codeEditor'
 import { DEFAULT_SANDBOX_CODE, SANDBOX_SNIPPETS } from '../constants'
 import type { SandboxSnippet } from '../types'
 import { PythonErrorPanel } from './PythonErrorPanel'
-import { usePythonAiHelp } from '../hooks/usePythonAiHelp'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
 import { rErrorSummaryLine } from '../rErrorHelper'
 import type { FriendlyPythonError } from '../pythonSandbox'
@@ -44,21 +43,17 @@ export function PythonSandboxSection({
   onErrorClear,
 }: PythonSandboxSectionProps) {
   const [expanded, setExpanded] = useState(false)
-  const { aiHelp, loading, fixCopied, setFixCopied, request, reset: resetAi } = usePythonAiHelp('sandbox')
   const languageLabel = languageId === 'r' ? 'R' : 'Python'
   const snippets =
     snippetsOverride ?? SANDBOX_SNIPPETS[languageId] ?? SANDBOX_SNIPPETS.python
-  const aiEnabled = languageId === 'python'
 
   const handleReset = () => {
     onReset()
     setExpanded(false)
-    resetAi()
     onErrorClear()
   }
 
   const handleRun = () => {
-    resetAi()
     setExpanded(false)
     onRun()
   }
@@ -111,11 +106,6 @@ export function PythonSandboxSection({
           code={code}
           expanded={expanded}
           onToggleExpanded={() => setExpanded((v) => !v)}
-          aiHelp={aiEnabled ? aiHelp : null}
-          aiLoading={aiEnabled ? loading : false}
-          fixCopied={aiEnabled ? fixCopied : false}
-          onRequestAiHelp={aiEnabled ? () => void request(code, error as FriendlyPythonError) : () => {}}
-          onFixCopied={setFixCopied}
         />
       )}
     </section>
