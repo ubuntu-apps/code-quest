@@ -1,7 +1,7 @@
 import '../../App.css'
 
 import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { BookOpen, ChevronLeft, ExternalLink, Info, ListTodo, X } from 'lucide-react'
+import { BookOpen, ChevronLeft, ExternalLink, Info, ListTodo, Share2, X } from 'lucide-react'
 import type { Challenge, LanguageBundle, Level, RootIndex, TestGradeResult } from './types'
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
 import { gradeTest, validateAgainst } from './validateAnswer'
@@ -22,6 +22,7 @@ import {
 import { defaultSandboxForLanguage } from './components/PythonSandboxSection'
 import type { FriendlySandboxError } from './components/CodeSandboxSection'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
+import { shareApp } from '../../lib/shareApp'
 import { detectPlatform, installInstructions } from '../../platform'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
@@ -194,6 +195,22 @@ export function CodeQuestScreen() {
   const [challengeAiLoading, setChallengeAiLoading] = useState<Record<string, boolean>>({})
   const [challengeFixCopied, setChallengeFixCopied] = useState<Record<string, boolean>>({})
   const [installResetNotice, setInstallResetNotice] = useState<string | null>(null)
+  const [shareNotice, setShareNotice] = useState<string | null>(null)
+
+  const handleShare = useCallback(async () => {
+    const result = await shareApp()
+    if (result === 'copied') {
+      setShareNotice('Install link copied to clipboard.')
+    } else if (result === 'unsupported') {
+      setShareNotice('Sharing is not available in this browser.')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!shareNotice) return
+    const timer = window.setTimeout(() => setShareNotice(null), 3000)
+    return () => window.clearTimeout(timer)
+  }, [shareNotice])
 
   const { bundles: languageBundles, loading: bundlesLoading, error: bundlesError } = useLanguageBundles(
     rootIndex,
@@ -912,6 +929,7 @@ export function CodeQuestScreen() {
     { id: 'learn', label: 'Learn', icon: BookOpen },
     { id: 'progress', label: 'Progress', icon: ListTodo },
     { id: 'about', label: 'About', icon: Info },
+    { id: 'share', label: 'Share', icon: Share2, onAction: () => void handleShare() },
   ]
 
   return (
@@ -961,6 +979,12 @@ export function CodeQuestScreen() {
           />
         )}
       </main>
+
+      {shareNotice ? (
+        <p className="cq-share-notice" role="status" aria-live="polite">
+          {shareNotice}
+        </p>
+      ) : null}
 
       <BottomNav items={navItems} activeId={tab} onSelect={(id) => goToTab(id as TabId)} />
 

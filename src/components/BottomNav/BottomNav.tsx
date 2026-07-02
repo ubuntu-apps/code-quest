@@ -5,6 +5,8 @@ export interface BottomNavItem {
   id: string
   label: string
   icon: LucideIcon
+  /** Runs instead of tab navigation (e.g. Share sheet). */
+  onAction?: () => void
 }
 
 export interface BottomNavProps {
@@ -24,7 +26,7 @@ export const BottomNav: FC<BottomNavProps> = ({ items, activeId, onSelect }) => 
             key={item.id}
             type="button"
             className={`cq-nav-btn${active ? ' cq-nav-btn--active' : ''}`}
-            onClick={() => onSelect(item.id)}
+            onClick={() => (item.onAction ? item.onAction() : onSelect(item.id))}
             aria-current={active ? 'page' : undefined}
           >
             <Icon size={22} strokeWidth={2} aria-hidden />
