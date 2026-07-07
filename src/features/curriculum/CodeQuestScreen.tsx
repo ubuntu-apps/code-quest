@@ -17,7 +17,7 @@ import {
   preloadWebR,
   type RChallengeTestResult,
 } from './rSandbox'
-import { defaultSandboxForLanguage } from './components/PythonSandboxSection'
+import { defaultSandboxForLanguage } from './sandboxDefaults'
 import type { FriendlySandboxError } from './components/CodeSandboxSection'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { shareApp, type ShareVariant } from '../../lib/shareApp'
