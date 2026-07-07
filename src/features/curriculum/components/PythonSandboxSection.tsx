@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { CodeTextareaWithErrorLine } from '../codeEditor'
-import { DEFAULT_SANDBOX_CODE, SANDBOX_SNIPPETS } from '../constants'
+import { SANDBOX_SNIPPETS } from '../constants'
 import type { SandboxSnippet } from '../types'
 import { PythonErrorPanel } from './PythonErrorPanel'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
@@ -110,8 +110,4 @@ export function PythonSandboxSection({
       )}
     </section>
   )
-}
-
-export function defaultSandboxForLanguage(languageId: string): string {
-  return DEFAULT_SANDBOX_CODE[languageId] ?? DEFAULT_SANDBOX_CODE.python
 }
