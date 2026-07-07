@@ -7,6 +7,12 @@ import { curriculumSavePlugin } from './scripts/vite-curriculum-save-plugin'
 // https://vite.dev/config/
 export default defineConfig({
   base: '/code-quest/',
+  build: {
+    // iPhone 6 tops out at iOS 12 / Safari 12, which cannot parse optional
+    // chaining (?.), nullish coalescing (??) or logical-assignment operators.
+    // Down-level the whole bundle so the app boots on these old browsers.
+    target: ['es2015', 'safari12'],
+  },
   plugins: [
     react(),
     curriculumSavePlugin(),
