@@ -59,7 +59,12 @@ function ensureScript(): Promise<void> {
     script.async = true
     script.dataset.codequestPyodide = '1'
     script.onload = () => resolve()
-    script.onerror = () => reject(new Error('Failed to load Pyodide script'))
+    script.onerror = () =>
+      reject(
+        new Error(
+          'Could not load the Python runtime. Check your internet connection, or try a newer browser (Python needs Safari 16.4+ or a recent Chrome/Firefox).',
+        ),
+      )
     document.head.appendChild(script)
   })
 }
@@ -69,7 +74,9 @@ async function getPyodide(): Promise<PyodideApi> {
     loaderPromise = (async () => {
       await ensureScript()
       if (!window.loadPyodide) {
-        throw new Error('Pyodide loader not available')
+        throw new Error(
+          'The Python runtime is not available in this browser. It needs a newer browser (Safari 16.4+, or a recent Chrome/Firefox).',
+        )
       }
       return window.loadPyodide({
         indexURL: `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`,

@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { CodeTextareaWithErrorLine } from '../codeEditor'
 import { SANDBOX_SNIPPETS } from '../constants'
+import {
+  CODE_RUNTIME_UNSUPPORTED_MESSAGE,
+  isCodeRuntimeSupported,
+} from '../sandboxSupport'
 import type { SandboxSnippet } from '../types'
 import { PythonErrorPanel } from './PythonErrorPanel'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
@@ -44,6 +48,7 @@ export function PythonSandboxSection({
 }: PythonSandboxSectionProps) {
   const [expanded, setExpanded] = useState(false)
   const languageLabel = languageId === 'r' ? 'R' : 'Python'
+  const runtimeSupported = isCodeRuntimeSupported()
   const snippets =
     snippetsOverride ?? SANDBOX_SNIPPETS[languageId] ?? SANDBOX_SNIPPETS.python
 
@@ -90,8 +95,18 @@ export function PythonSandboxSection({
         errorColumn={error?.column ?? null}
         errorUiEpoch={errorUiEpoch}
       />
+      {!runtimeSupported && (
+        <p className="cq-muted cq-sandbox-unsupported" role="note">
+          {CODE_RUNTIME_UNSUPPORTED_MESSAGE}
+        </p>
+      )}
       <div className="cq-row">
-        <button type="button" className="cq-btn cq-btn--primary" onClick={handleRun} disabled={running}>
+        <button
+          type="button"
+          className="cq-btn cq-btn--primary"
+          onClick={handleRun}
+          disabled={running || !runtimeSupported}
+        >
           {running ? 'Running...' : 'Run code'}
         </button>
         <button type="button" className="cq-btn" onClick={handleReset} disabled={running}>
