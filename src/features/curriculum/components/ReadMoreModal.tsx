@@ -1,0 +1,52 @@
+import { useEffect } from 'react'
+import { ExternalLink, X } from 'lucide-react'
+
+interface ReadMoreModalProps {
+  levelTitle: string
+  url: string
+  source: string
+  onClose: () => void
+}
+
+/** Full-screen dialog that shows a level's "Read more" article in an iframe. */
+export function ReadMoreModal({ levelTitle, url, source, onClose }: ReadMoreModalProps) {
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [onClose])
+
+  return (
+    <div
+      className="cq-modal-backdrop"
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+    >
+      <div className="cq-modal" role="dialog" aria-modal="true" aria-label={`${levelTitle} read more`}>
+        <div className="cq-modal-header">
+          <div className="cq-modal-title">Read more</div>
+          <button type="button" className="cq-icon-btn" aria-label="Close article" onClick={onClose}>
+            <X size={18} />
+          </button>
+        </div>
+        <div className="cq-modal-credit">
+          Source: {source}
+          {' · '}
+          <a href={url} target="_blank" rel="noreferrer">
+            Open original <ExternalLink size={14} />
+          </a>
+        </div>
+        <iframe className="cq-modal-frame" title={`${levelTitle} reference`} src={url} />
+        <div className="cq-modal-actions">
+          <button type="button" className="cq-btn" onClick={onClose}>
+            Close and return
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}

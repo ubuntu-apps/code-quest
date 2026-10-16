@@ -1,25 +1,12 @@
 import '../../App.css'
 
-import { useCallback, useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react'
-import { BookOpen, ChevronLeft, ExternalLink, Info, ListTodo, Share2, X } from 'lucide-react'
-import type { Challenge, LanguageBundle, Level, RootIndex, TestGradeResult } from './types'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { BookOpen, ChevronLeft, Info, ListTodo, Share2 } from 'lucide-react'
+import type { LanguageBundle, Level, RootIndex } from './types'
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
-import { gradeTest, validateAgainst } from './validateAnswer'
-import { loadProgress, saveProgress } from './progressStorage'
-import {
-  runPythonCode,
-  runPythonChallengeTests,
-  stopPythonRun,
-  type PythonChallengeTestResult,
-} from './pythonSandbox'
-import {
-  runRCode,
-  runRChallengeTests,
-  preloadWebR,
-  type RChallengeTestResult,
-} from './rSandbox'
-import { defaultSandboxForLanguage } from './sandboxDefaults'
-import type { FriendlySandboxError } from './components/CodeSandboxSection'
+import { loadProgress } from './progressStorage'
+import { preloadWebR } from './rSandbox'
+import { ReadMoreModal } from './components/ReadMoreModal'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { shareApp, type ShareVariant } from '../../lib/shareApp'
 import { ShareSheet } from '../../components/ShareSheet'
@@ -36,11 +23,7 @@ import {
   useEditorConfirm,
 } from '../editor'
 import { mergeAboutContent } from '../editor/aboutContent'
-import {
-  LAST_LEVEL_STORAGE_KEY,
-  PASS_DEFAULT,
-  type TabId,
-} from './constants'
+import { LAST_LEVEL_STORAGE_KEY, type TabId } from './constants'
 import { useLearnRoute } from './hooks/useLearnRoute'
 import { progressPath } from './learnPaths'
 import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageStorage'
@@ -50,7 +33,10 @@ import {
   loadStreakState,
   recordDailyActivity,
 } from './helpers'
+import { useChallenges } from './hooks/useChallenges'
 import { useLanguageBundles } from './hooks/useLanguageBundles'
+import { useLevelTest } from './hooks/useLevelTest'
+import { useSandbox } from './hooks/useSandbox'
 import { useProgressVersion } from './hooks/useProgressVersion'
 import { LearnHome, type ContinueTarget } from './views/LearnHome'
 import { LearnSections } from './views/LearnSections'
@@ -58,19 +44,6 @@ import { LearnLevels } from './views/LearnLevels'
 import { LearnLevel } from './views/LearnLevel'
 import { ProgressTab } from './views/ProgressTab'
 import { AboutTab } from './views/AboutTab'
-
-function clearChallengeFeedback(
-  setters: {
-    setTestResults: Dispatch<SetStateAction<Record<string, (PythonChallengeTestResult | RChallengeTestResult)[]>>>
-    setRuntimeError: Dispatch<SetStateAction<Record<string, FriendlySandboxError | null>>>
-    setErrorExpanded: Dispatch<SetStateAction<Record<string, boolean>>>
-  },
-  challengeId: string,
-) {
-  setters.setTestResults((prev) => ({ ...prev, [challengeId]: [] }))
-  setters.setRuntimeError((prev) => ({ ...prev, [challengeId]: null }))
-  setters.setErrorExpanded((prev) => ({ ...prev, [challengeId]: false }))
-}
 
 export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
@@ -153,26 +126,7 @@ export function CodeQuestScreen() {
 
   const prevLevelIdRef = useRef<string | null>(null)
 
-  const [challengeDrafts, setChallengeDrafts] = useState<Record<string, string>>({})
-  const [challengeStatus, setChallengeStatus] = useState<Record<string, 'passed' | 'failed'>>({})
-  const [challengeTestResults, setChallengeTestResults] = useState<
-    Record<string, (PythonChallengeTestResult | RChallengeTestResult)[]>
-  >({})
-  const [challengeRuntimeError, setChallengeRuntimeError] = useState<
-    Record<string, FriendlySandboxError | null>
-  >({})
-  const [challengeErrorExpanded, setChallengeErrorExpanded] = useState<Record<string, boolean>>({})
-  const [testShort, setTestShort] = useState<Record<string, string>>({})
-  const [testMcq, setTestMcq] = useState<Record<string, string>>({})
-  const [testResult, setTestResult] = useState<TestGradeResult | null>(null)
-  const [testSessionReset, setTestSessionReset] = useState(false)
   const [readMoreOpen, setReadMoreOpen] = useState(false)
-  const [sandboxCode, setSandboxCode] = useState(() => defaultSandboxForLanguage('python'))
-  const [sandboxOutput, setSandboxOutput] = useState('')
-  const [sandboxRunning, setSandboxRunning] = useState(false)
-  const [sandboxError, setSandboxError] = useState<FriendlySandboxError | null>(null)
-  const [sandboxErrorUiEpoch, setSandboxErrorUiEpoch] = useState(0)
-  const [challengeErrorUiEpoch, setChallengeErrorUiEpoch] = useState<Record<string, number>>({})
   const [installResetNotice, setInstallResetNotice] = useState<string | null>(null)
   const [shareNotice, setShareNotice] = useState<string | null>(null)
   const [shareSheetOpen, setShareSheetOpen] = useState(false)
@@ -314,15 +268,6 @@ export function CodeQuestScreen() {
     editableRootIndex,
   ])
 
-  useEffect(() => {
-    if (!readMoreOpen) return
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setReadMoreOpen(false)
-    }
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [readMoreOpen])
-
   const useLocalContent = isEditMode && contentSource === 'local'
 
   const displayRootIndex = useLocalContent ? (editableRootIndex ?? rootIndex) : rootIndex
@@ -361,6 +306,14 @@ export function CodeQuestScreen() {
     return levels[index + 1]
   }, [selectedSection, selectedLevel])
 
+  const recordActivity = useCallback(() => setStreakCount(recordDailyActivity()), [])
+  const sandbox = useSandbox(languageId)
+  const challenges = useChallenges(languageId, selectedLevel, recordActivity)
+  const levelTest = useLevelTest(languageId, selectedLevel, recordActivity)
+  const { resetForLevel: resetSandboxForLevel } = sandbox
+  const { resetForLevel: resetChallengesForLevel } = challenges
+  const { resetForLevel: resetTestForLevel } = levelTest
+
   const resolveBundle = useCallback(
     (langId: string, fallback: LanguageBundle | undefined) => {
       if (!useLocalContent) return fallback ?? null
@@ -397,27 +350,14 @@ export function CodeQuestScreen() {
     }
   }, [isEditMode, languageId, sectionId, bundleForView, isSectionUnlockedFor, goToLanguage])
 
-  const resetLevelWorkState = useCallback((level: Level, langId: string | null) => {
-    const drafts: Record<string, string> = {}
-    const saved = langId ? loadProgress(langId, level.id).challengeAnswers ?? {} : {}
-    for (const ch of level.challenges) {
-      drafts[ch.id] = saved[ch.id] ?? ch.starterCode ?? ''
-    }
-    setChallengeDrafts(drafts)
-    setChallengeStatus({})
-    setChallengeTestResults({})
-    setChallengeRuntimeError({})
-    setChallengeErrorExpanded({})
-    setTestShort({})
-    setTestMcq({})
-    setTestResult(null)
-    setSandboxCode(level.intro.sandboxCode ?? defaultSandboxForLanguage(langId ?? 'python'))
-    setSandboxOutput('')
-    setSandboxRunning(false)
-    setSandboxError(null)
-    setSandboxErrorUiEpoch(0)
-    setChallengeErrorUiEpoch({})
-  }, [])
+  const resetLevelWorkState = useCallback(
+    (level: Level, langId: string | null) => {
+      resetChallengesForLevel(level, langId)
+      resetTestForLevel()
+      resetSandboxForLevel(level, langId)
+    },
+    [resetChallengesForLevel, resetTestForLevel, resetSandboxForLevel],
+  )
 
   useEffect(() => {
     if (levelId === prevLevelIdRef.current) return
@@ -468,90 +408,8 @@ export function CodeQuestScreen() {
   )
 
   const back = () => {
-    setTestResult(null)
+    levelTest.dismissResult()
     backFromLearn()
-  }
-
-  const challengeFeedbackSetters = useMemo(
-    () => ({
-      setTestResults: setChallengeTestResults,
-      setRuntimeError: setChallengeRuntimeError,
-      setErrorExpanded: setChallengeErrorExpanded,
-    }),
-    [],
-  )
-
-  const checkChallenge = async (ch: Challenge) => {
-    if (!languageId || !selectedLevel || !selectedSection) return
-    setChallengeErrorUiEpoch((prev) => ({ ...prev, [ch.id]: (prev[ch.id] ?? 0) + 1 }))
-    const answer = challengeDrafts[ch.id] ?? ''
-    const before = loadProgress(languageId, selectedLevel.id)
-    saveProgress(languageId, selectedLevel.id, {
-      ...before,
-      challengeAnswers: { ...(before.challengeAnswers ?? {}), [ch.id]: answer },
-    })
-
-    let ok: boolean
-    if (ch.validation.mode === 'python_tests') {
-      const run = await runPythonChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
-      setChallengeTestResults((prev) => ({ ...prev, [ch.id]: run.tests }))
-      setChallengeRuntimeError((prev) => ({ ...prev, [ch.id]: run.error }))
-      setChallengeErrorExpanded((prev) => ({ ...prev, [ch.id]: false }))
-      ok = run.passed
-    } else if (ch.validation.mode === 'r_tests') {
-      const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
-      setChallengeTestResults((prev) => ({ ...prev, [ch.id]: run.tests }))
-      setChallengeRuntimeError((prev) => ({ ...prev, [ch.id]: run.error }))
-      clearChallengeFeedback(challengeFeedbackSetters, ch.id)
-      ok = run.passed
-    } else {
-      ok = validateAgainst(answer, ch.validation)
-      clearChallengeFeedback(challengeFeedbackSetters, ch.id)
-    }
-
-    if (!ok) {
-      setChallengeStatus((prev) => ({ ...prev, [ch.id]: 'failed' }))
-      const prev = loadProgress(languageId, selectedLevel.id)
-      if (prev.challengesCompleted.includes(ch.id)) {
-        saveProgress(languageId, selectedLevel.id, {
-          ...prev,
-          challengesCompleted: prev.challengesCompleted.filter((id) => id !== ch.id),
-        })
-      }
-      return
-    }
-
-    setChallengeStatus((prev) => ({ ...prev, [ch.id]: 'passed' }))
-    const prev = loadProgress(languageId, selectedLevel.id)
-    saveProgress(languageId, selectedLevel.id, {
-      ...prev,
-      challengesCompleted: [...new Set([...prev.challengesCompleted, ch.id])],
-      challengeAnswers: { ...(prev.challengeAnswers ?? {}), [ch.id]: answer },
-    })
-    setStreakCount(recordDailyActivity())
-  }
-
-  const submitTest = () => {
-    if (!languageId || !selectedLevel) return
-    const passing = selectedLevel.test.passingScorePercent ?? PASS_DEFAULT
-    const result = gradeTest(selectedLevel.test.questions, testShort, testMcq, passing)
-    setTestResult(result)
-    if (result.passed) setTestSessionReset(false)
-    const prev = loadProgress(languageId, selectedLevel.id)
-    saveProgress(languageId, selectedLevel.id, { ...prev, testPassed: prev.testPassed || result.passed })
-    setStreakCount(recordDailyActivity())
-  }
-
-  const retakeTest = () => {
-    setTestShort({})
-    setTestMcq({})
-    setTestResult(null)
-    setTestSessionReset(true)
-  }
-
-  const clearTestResult = () => {
-    setTestResult(null)
-    setTestSessionReset(true)
   }
 
   const goToNextLevel = useCallback(() => {
@@ -567,32 +425,6 @@ export function CodeQuestScreen() {
       }),
     )
   }, [languageId, sectionId, nextLevel, goToLevel, displayRootIndex])
-
-  const runSandbox = async (stdin = '') => {
-    setSandboxRunning(true)
-    setSandboxError(null)
-    setSandboxOutput(
-      languageId === 'r'
-        ? 'Loading R runtime (first run downloads ~30MB, may take a minute)...'
-        : 'Running...',
-    )
-    try {
-      const result =
-        languageId === 'r' ? await runRCode(sandboxCode) : await runPythonCode(sandboxCode, stdin)
-      setSandboxOutput(result.output.trim() ? result.output : '[no output]')
-      setSandboxError(result.error)
-    } catch (error: unknown) {
-      setSandboxOutput('')
-      const runtimeName = languageId === 'r' ? 'R' : 'Python'
-      setSandboxError({
-        title: `${runtimeName} runtime failed`,
-        detail: error instanceof Error ? error.message : `Could not start the ${runtimeName} runtime`,
-        tip: 'Check your network connection and try again.',
-      })
-    }
-    setSandboxErrorUiEpoch((n) => n + 1)
-    setSandboxRunning(false)
-  }
 
   const handleRemoveLanguage = (langId: string) => {
     removeLanguage(langId)
@@ -780,8 +612,8 @@ export function CodeQuestScreen() {
       const prog = loadProgress(languageId, selectedLevel.id)
       const showNext =
         nextLevel !== null &&
-        (testResult?.passed === true ||
-          (prog.testPassed && !testSessionReset && testResult === null))
+        (levelTest.result?.passed === true ||
+          (prog.testPassed && !levelTest.sessionReset && levelTest.result === null))
 
       return (
         <LearnLevel
@@ -793,57 +625,36 @@ export function CodeQuestScreen() {
           onUpdateLevelTitle={(title) => updateLevelTitle(languageId, secId, selectedLevel.id, title)}
           onUpdateIntro={(patch) => updateLevelIntro(languageId, secId, selectedLevel.id, patch)}
           onReadMoreOpen={() => setReadMoreOpen(true)}
-          sandboxCode={sandboxCode}
-          sandboxOutput={sandboxOutput}
-          sandboxRunning={sandboxRunning}
-          sandboxError={sandboxError}
-          sandboxErrorUiEpoch={sandboxErrorUiEpoch}
-          onSandboxCodeChange={setSandboxCode}
-          onSandboxRun={(stdin) => void runSandbox(stdin)}
-          onSandboxStop={stopPythonRun}
-          onSandboxReset={() => {
-            setSandboxCode(
-              selectedLevel.intro.sandboxCode ?? defaultSandboxForLanguage(languageId ?? 'python'),
-            )
-            setSandboxOutput('')
-            setSandboxError(null)
-          }}
-          onSandboxErrorClear={() => setSandboxError(null)}
-          challengeDrafts={challengeDrafts}
-          challengeStatus={challengeStatus}
-          challengeTestResults={challengeTestResults}
-          challengeRuntimeError={challengeRuntimeError}
-          challengeErrorExpanded={challengeErrorExpanded}
-          challengeErrorUiEpoch={challengeErrorUiEpoch}
-          onChallengeDraftChange={(chId, value) => {
-            setChallengeDrafts((prev) => ({ ...prev, [chId]: value }))
-            const p = loadProgress(languageId, selectedLevel.id)
-            saveProgress(languageId, selectedLevel.id, {
-              ...p,
-              challengeAnswers: { ...(p.challengeAnswers ?? {}), [chId]: value },
-            })
-          }}
-          onCheckChallenge={(ch) => void checkChallenge(ch)}
+          sandboxCode={sandbox.code}
+          sandboxOutput={sandbox.output}
+          sandboxRunning={sandbox.running}
+          sandboxError={sandbox.error}
+          sandboxErrorUiEpoch={sandbox.errorUiEpoch}
+          onSandboxCodeChange={sandbox.setCode}
+          onSandboxRun={(stdin) => void sandbox.run(stdin)}
+          onSandboxStop={sandbox.stop}
+          onSandboxReset={() => sandbox.reset(selectedLevel)}
+          onSandboxErrorClear={sandbox.clearError}
+          challengeDrafts={challenges.drafts}
+          challengeStatus={challenges.status}
+          challengeTestResults={challenges.testResults}
+          challengeRuntimeError={challenges.runtimeError}
+          challengeErrorExpanded={challenges.errorExpanded}
+          challengeErrorUiEpoch={challenges.errorUiEpoch}
+          onChallengeDraftChange={challenges.changeDraft}
+          onCheckChallenge={(ch) => void challenges.check(ch)}
           onUpdateChallenge={(chId, patch) =>
             updateChallenge(languageId, secId, selectedLevel.id, chId, patch)
           }
           onMoveChallenge={(chId, dir) => moveChallenge(languageId, secId, selectedLevel.id, chId, dir)}
           onRemoveChallenge={(chId) => removeChallenge(languageId, secId, selectedLevel.id, chId)}
           onAddChallenge={() => addChallenge(languageId, secId, selectedLevel.id)}
-          onToggleChallengeErrorExpanded={(chId) =>
-            setChallengeErrorExpanded((prev) => ({ ...prev, [chId]: !(prev[chId] ?? false) }))
-          }
-          testShort={testShort}
-          testMcq={testMcq}
-          testResult={testResult}
-          onTestShortChange={(qId, value) => {
-            clearTestResult()
-            setTestShort((prev) => ({ ...prev, [qId]: value }))
-          }}
-          onTestMcqChange={(qId, choiceId) => {
-            clearTestResult()
-            setTestMcq((prev) => ({ ...prev, [qId]: choiceId }))
-          }}
+          onToggleChallengeErrorExpanded={challenges.toggleErrorExpanded}
+          testShort={levelTest.short}
+          testMcq={levelTest.mcq}
+          testResult={levelTest.result}
+          onTestShortChange={levelTest.changeShort}
+          onTestMcqChange={levelTest.changeMcq}
           onUpdatePassingScore={(score) =>
             updateTestPassingScore(languageId, secId, selectedLevel.id, score)
           }
@@ -853,8 +664,8 @@ export function CodeQuestScreen() {
           onMoveQuestion={(qId, dir) => moveTestQuestion(languageId, secId, selectedLevel.id, qId, dir)}
           onRemoveQuestion={(qId) => removeTestQuestion(languageId, secId, selectedLevel.id, qId)}
           onAddQuestion={(type) => addTestQuestion(languageId, secId, selectedLevel.id, type)}
-          onSubmitTest={submitTest}
-          onRetakeTest={retakeTest}
+          onSubmitTest={levelTest.submit}
+          onRetakeTest={levelTest.retake}
           showNext={showNext}
           nextLevelTitle={nextLevel?.title ?? null}
           onGoToNextLevel={goToNextLevel}
@@ -941,44 +752,12 @@ export function CodeQuestScreen() {
       ) : null}
 
       {readMoreOpen && selectedLevel?.intro.readMore && (
-        <div
-          className="cq-modal-backdrop"
-          role="presentation"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setReadMoreOpen(false)
-          }}
-        >
-          <div className="cq-modal" role="dialog" aria-modal="true" aria-label={`${selectedLevel.title} read more`}>
-            <div className="cq-modal-header">
-              <div className="cq-modal-title">Read more</div>
-              <button
-                type="button"
-                className="cq-icon-btn"
-                aria-label="Close article"
-                onClick={() => setReadMoreOpen(false)}
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <div className="cq-modal-credit">
-              Source: {selectedLevel.intro.readMore.source}
-              {' · '}
-              <a href={selectedLevel.intro.readMore.url} target="_blank" rel="noreferrer">
-                Open original <ExternalLink size={14} />
-              </a>
-            </div>
-            <iframe
-              className="cq-modal-frame"
-              title={`${selectedLevel.title} reference`}
-              src={selectedLevel.intro.readMore.url}
-            />
-            <div className="cq-modal-actions">
-              <button type="button" className="cq-btn" onClick={() => setReadMoreOpen(false)}>
-                Close and return
-              </button>
-            </div>
-          </div>
-        </div>
+        <ReadMoreModal
+          levelTitle={selectedLevel.title}
+          url={selectedLevel.intro.readMore.url}
+          source={selectedLevel.intro.readMore.source}
+          onClose={() => setReadMoreOpen(false)}
+        />
       )}
     </div>
   )

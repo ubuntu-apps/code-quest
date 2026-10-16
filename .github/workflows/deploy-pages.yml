@@ -26,14 +26,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
-      - name: Build
-        run: npm run build
+      # Lint and tests gate the deploy, so a broken build never goes live.
+      - name: Lint, test, and build
+        run: npm run check
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
