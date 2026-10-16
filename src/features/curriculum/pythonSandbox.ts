@@ -2,8 +2,7 @@ import type { RuntimeAssertionTest } from './types'
 import { explainPythonError, type FriendlyPythonError } from './pythonErrorHelper'
 export type { FriendlyPythonError } from './pythonErrorHelper'
 
-const PYODIDE_VERSION = '0.27.2'
-const PYODIDE_CDN_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`
+import { PYODIDE_CDN_BASE } from '../../runtimeVersions'
 
 /** How long learner code may run before it is stopped (infinite-loop guard). */
 export const PYTHON_RUN_TIME_LIMIT_MS = 10_000
@@ -13,6 +12,9 @@ const PYTHON_LOAD_TIME_LIMIT_MS = 120_000
 
 /** How long downloading extra packages a run imports (e.g. pandas) may take. */
 const PACKAGE_LOAD_TIME_LIMIT_MS = 120_000
+
+/** How long "Download for offline" may spend fetching every lesson package. */
+const PRELOAD_TIME_LIMIT_MS = 600_000
 
 const RUNTIME_LOAD_ERROR =
   'Could not load the Python runtime. Check your internet connection, or try a newer browser (Python needs Safari 16.4+ or a recent Chrome/Firefox).'
@@ -44,7 +46,9 @@ type TestsRequest = {
   tests: RuntimeAssertionTest[]
   stdin: string
 }
-type WorkerRequest = RunRequest | TestsRequest
+/** Downloads the packages imported by `code` without running it. */
+type PreloadRequest = { type: 'preload'; code: string }
+type WorkerRequest = RunRequest | TestsRequest | PreloadRequest
 
 type RunPayload = { output: string; error: string | null }
 type TestsPayload = { tests: PythonChallengeTestResult[]; error: string | null }
@@ -174,7 +178,7 @@ async function runJob(request: WorkerRequest): Promise<JobOutcome> {
       start: () => limit(PYTHON_RUN_TIME_LIMIT_MS, { kind: 'timeout' }),
     }
     // First the worker downloads any packages the code imports, then the run limit applies.
-    limit(PACKAGE_LOAD_TIME_LIMIT_MS, { kind: 'package-timeout' })
+    limit(request.type === 'preload' ? PRELOAD_TIME_LIMIT_MS : PACKAGE_LOAD_TIME_LIMIT_MS, { kind: 'package-timeout' })
     activeJob = job
     w.postMessage({ ...request, id, cdnBase: PYODIDE_CDN_BASE })
   })
@@ -185,6 +189,27 @@ function enqueue(request: WorkerRequest): Promise<JobOutcome> {
   const next = queue.then(() => runJob(request))
   queue = next.catch(() => undefined)
   return next
+}
+
+/**
+ * Downloads the Python runtime plus every package that `lessonCode` imports, so
+ * they are cached for offline use. Throws an Error with a learner-friendly message.
+ */
+export async function preparePythonOffline(lessonCode: string): Promise<void> {
+  let outcome: JobOutcome
+  try {
+    outcome = await enqueue({ type: 'preload', code: lessonCode })
+  } catch (error: unknown) {
+    throw new Error(error instanceof RunStoppedError ? 'The download was stopped.' : RUNTIME_LOAD_ERROR, {
+      cause: error,
+    })
+  }
+  if (outcome.kind === 'result') return
+  if (outcome.kind === 'stopped') throw new Error('The download was stopped.')
+  if (outcome.kind === 'crash') {
+    throw new Error('Could not download the Python packages. Check your internet connection and try again.')
+  }
+  throw new Error('Downloading Python took too long. Check your internet connection and try again.')
 }
 
 /** Stops whatever Python code is running now. The next run starts a fresh runtime. */

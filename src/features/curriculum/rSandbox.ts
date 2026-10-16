@@ -2,9 +2,10 @@ import type { RuntimeAssertionTest } from './types'
 import { explainRError, type FriendlyRError } from './rErrorHelper'
 export type { FriendlyRError } from './rErrorHelper'
 
-/** Pinned release — avoid `latest` drift and match documented API. */
-const WEBR_VERSION = 'v0.4.2'
-const WEBR_CDN = `https://webr.r-wasm.org/${WEBR_VERSION}/webr.mjs`
+import { WEBR_CDN_BASE } from '../../runtimeVersions'
+
+/** Pinned release (see runtimeVersions.ts): avoids `latest` drift and matches the documented API. */
+const WEBR_CDN = `${WEBR_CDN_BASE}webr.mjs`
 
 /** PostMessage works without cross-origin isolation (GitHub Pages, local Vite). */
 const CHANNEL_POST_MESSAGE = 3
@@ -89,6 +90,11 @@ async function getWebR(): Promise<WebRInstance> {
     })
   }
   return loaderPromise
+}
+
+/** Downloads and starts the R runtime (used by "Download for offline"). */
+export async function prepareROffline(): Promise<void> {
+  await getWebR()
 }
 
 /** Start downloading WebR in the background when the user opens R. */

@@ -135,6 +135,17 @@ self.onmessage = async function (event) {
     return
   }
 
+  // "Download for offline": fetch every package the lessons import, without running anything.
+  if (msg.type === 'preload') {
+    try {
+      await pyodide.loadPackagesFromImports(msg.code || '')
+      self.postMessage({ id: msg.id, type: 'result', payload: { ok: true } })
+    } catch (err) {
+      self.postMessage({ id: msg.id, type: 'crash', message: String((err && err.message) || err) })
+    }
+    return
+  }
+
   // Some modules ship as separate Pyodide packages (sqlite3, pandas, numpy, ...).
   // Download the ones this code imports before running it. The page's run time
   // limit starts only after this, when we post 'started'.

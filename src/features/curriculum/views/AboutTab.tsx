@@ -1,12 +1,16 @@
 import { APP_VERSION } from '../../../version'
 import { detectPlatform, INSTALL_GUIDES } from '../../../platform'
 import { EditableText, useEditorMode } from '../../editor'
+import { OfflinePanel } from '../components/OfflinePanel'
 
 interface AboutTabProps {
   aboutLead: string
   installResetNotice: string | null
   onUpdateLead: (text: string) => void
   onResetInstallPrompt: () => void
+  baseUrl: string
+  courses: { id: string; title: string }[]
+  activeCourseId: string | null
 }
 
 export function AboutTab({
@@ -14,6 +18,9 @@ export function AboutTab({
   installResetNotice,
   onUpdateLead,
   onResetInstallPrompt,
+  baseUrl,
+  courses,
+  activeCourseId,
 }: AboutTabProps) {
   const { isEditingLocal } = useEditorMode()
   const currentPlatform = detectPlatform()
@@ -49,6 +56,7 @@ export function AboutTab({
           </div>
         ) : null}
       </section>
+      <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
       <p className="cq-muted">Version {APP_VERSION}</p>
     </div>
   )

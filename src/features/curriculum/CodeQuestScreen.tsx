@@ -743,6 +743,9 @@ export function CodeQuestScreen() {
               resetInstallBannerPreference()
               setInstallResetNotice('Install prompt banner reset for this device.')
             }}
+            baseUrl={baseUrl}
+            courses={displayRootIndex?.languages ?? []}
+            activeCourseId={activeLanguageId ?? null}
           />
         )}
       </main>
