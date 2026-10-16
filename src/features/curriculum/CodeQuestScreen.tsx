@@ -9,6 +9,7 @@ import { loadProgress, saveProgress } from './progressStorage'
 import {
   runPythonCode,
   runPythonChallengeTests,
+  stopPythonRun,
   type PythonChallengeTestResult,
 } from './pythonSandbox'
 import {
@@ -567,7 +568,7 @@ export function CodeQuestScreen() {
     )
   }, [languageId, sectionId, nextLevel, goToLevel, displayRootIndex])
 
-  const runSandbox = async () => {
+  const runSandbox = async (stdin = '') => {
     setSandboxRunning(true)
     setSandboxError(null)
     setSandboxOutput(
@@ -577,14 +578,15 @@ export function CodeQuestScreen() {
     )
     try {
       const result =
-        languageId === 'r' ? await runRCode(sandboxCode) : await runPythonCode(sandboxCode)
+        languageId === 'r' ? await runRCode(sandboxCode) : await runPythonCode(sandboxCode, stdin)
       setSandboxOutput(result.output.trim() ? result.output : '[no output]')
       setSandboxError(result.error)
     } catch (error: unknown) {
       setSandboxOutput('')
+      const runtimeName = languageId === 'r' ? 'R' : 'Python'
       setSandboxError({
-        title: 'R runtime failed',
-        detail: error instanceof Error ? error.message : 'Could not start R runtime',
+        title: `${runtimeName} runtime failed`,
+        detail: error instanceof Error ? error.message : `Could not start the ${runtimeName} runtime`,
         tip: 'Check your network connection and try again.',
       })
     }
@@ -797,7 +799,8 @@ export function CodeQuestScreen() {
           sandboxError={sandboxError}
           sandboxErrorUiEpoch={sandboxErrorUiEpoch}
           onSandboxCodeChange={setSandboxCode}
-          onSandboxRun={() => void runSandbox()}
+          onSandboxRun={(stdin) => void runSandbox(stdin)}
+          onSandboxStop={stopPythonRun}
           onSandboxReset={() => {
             setSandboxCode(
               selectedLevel.intro.sandboxCode ?? defaultSandboxForLanguage(languageId ?? 'python'),

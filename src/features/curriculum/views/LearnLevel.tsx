@@ -30,7 +30,8 @@ interface LearnLevelProps {
   sandboxError: FriendlySandboxError | null
   sandboxErrorUiEpoch: number
   onSandboxCodeChange: (code: string) => void
-  onSandboxRun: () => void
+  onSandboxRun: (stdin: string) => void
+  onSandboxStop: () => void
   onSandboxReset: () => void
   onSandboxErrorClear: () => void
   challengeDrafts: Record<string, string>
@@ -79,6 +80,7 @@ export function LearnLevel({
   sandboxErrorUiEpoch,
   onSandboxCodeChange,
   onSandboxRun,
+  onSandboxStop,
   onSandboxReset,
   onSandboxErrorClear,
   challengeDrafts,
@@ -151,6 +153,7 @@ export function LearnLevel({
           onReadMoreOpen={onReadMoreOpen}
           onSandboxCodeChange={onSandboxCodeChange}
           onSandboxRun={onSandboxRun}
+          onSandboxStop={onSandboxStop}
           onSandboxReset={onSandboxReset}
           onSandboxErrorClear={onSandboxErrorClear}
         />

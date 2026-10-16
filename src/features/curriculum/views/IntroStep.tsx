@@ -20,7 +20,8 @@ interface IntroStepProps {
   onUpdateIntro: (patch: Partial<Level['intro']>) => void
   onReadMoreOpen: () => void
   onSandboxCodeChange: (code: string) => void
-  onSandboxRun: () => void
+  onSandboxRun: (stdin: string) => void
+  onSandboxStop: () => void
   onSandboxReset: () => void
   onSandboxErrorClear: () => void
 }
@@ -37,6 +38,7 @@ export function IntroStep({
   onReadMoreOpen,
   onSandboxCodeChange,
   onSandboxRun,
+  onSandboxStop,
   onSandboxReset,
   onSandboxErrorClear,
 }: IntroStepProps) {
@@ -133,6 +135,7 @@ export function IntroStep({
           error={sandboxError}
           errorUiEpoch={sandboxErrorUiEpoch}
           onRun={onSandboxRun}
+          onStop={onSandboxStop}
           onReset={onSandboxReset}
           onErrorClear={onSandboxErrorClear}
         />

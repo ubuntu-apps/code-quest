@@ -14,7 +14,8 @@ interface CodeSandboxSectionProps {
   running: boolean
   error: FriendlySandboxError | null
   errorUiEpoch: number
-  onRun: () => void
+  onRun: (stdin: string) => void
+  onStop?: () => void
   onReset: () => void
   onErrorClear: () => void
 }
