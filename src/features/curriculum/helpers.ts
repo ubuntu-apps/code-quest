@@ -5,8 +5,11 @@ import { loadProgress } from './progressStorage'
 
 type StreakState = { lastDate: string; count: number }
 
-function dateKey(d: Date): string {
-  return d.toISOString().slice(0, 10)
+/** Calendar day in the learner's own time zone (toISOString() would use UTC). */
+export function localDateKey(d: Date): string {
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${d.getFullYear()}-${month}-${day}`
 }
 
 export function loadStreakState(): StreakState {
@@ -23,9 +26,11 @@ export function loadStreakState(): StreakState {
   }
 }
 
-export function recordDailyActivity(): number {
-  const today = dateKey(new Date())
-  const yesterday = dateKey(new Date(Date.now() - 24 * 60 * 60 * 1000))
+export function recordDailyActivity(now: Date = new Date()): number {
+  const today = localDateKey(now)
+  // Step back one calendar day (not 24 hours) so DST changes can't skip or repeat a day.
+  const yesterdayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
+  const yesterday = localDateKey(yesterdayDate)
   const curr = loadStreakState()
   let next: StreakState
   if (curr.lastDate === today) {

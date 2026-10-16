@@ -23,7 +23,8 @@ interface PythonSandboxSectionProps {
   running: boolean
   error: FriendlySandboxError | null
   errorUiEpoch: number
-  onRun: () => void
+  onRun: (stdin: string) => void
+  onStop?: () => void
   onReset: () => void
   onErrorClear: () => void
 }
@@ -43,10 +44,14 @@ export function PythonSandboxSection({
   error,
   errorUiEpoch,
   onRun,
+  onStop,
   onReset,
   onErrorClear,
 }: PythonSandboxSectionProps) {
   const [expanded, setExpanded] = useState(false)
+  const [stdin, setStdin] = useState('')
+  // Input and Stop are Python-only: the R runtime has no stdin hook or stop control here.
+  const isPython = languageId === 'python'
   const languageLabel = languageId === 'r' ? 'R' : 'Python'
   const runtimeSupported = isCodeRuntimeSupported()
   const snippets =
@@ -60,7 +65,7 @@ export function PythonSandboxSection({
 
   const handleRun = () => {
     setExpanded(false)
-    onRun()
+    onRun(isPython ? stdin : '')
   }
 
   return (
@@ -95,6 +100,24 @@ export function PythonSandboxSection({
         errorColumn={error?.column ?? null}
         errorUiEpoch={errorUiEpoch}
       />
+      {isPython && (
+        <>
+          <label className="cq-label" htmlFor={`${languageId}-sandbox-stdin`}>
+            Input (optional, one line per <code className="cq-md-code">input()</code> call)
+          </label>
+          <textarea
+            id={`${languageId}-sandbox-stdin`}
+            className="cq-code-input cq-sandbox-stdin"
+            rows={2}
+            spellCheck={false}
+            autoCapitalize="off"
+            autoCorrect="off"
+            autoComplete="off"
+            value={stdin}
+            onChange={(e) => setStdin(e.target.value)}
+          />
+        </>
+      )}
       {!runtimeSupported && (
         <p className="cq-muted cq-sandbox-unsupported" role="note">
           {CODE_RUNTIME_UNSUPPORTED_MESSAGE}
@@ -109,6 +132,11 @@ export function PythonSandboxSection({
         >
           {running ? 'Running...' : 'Run code'}
         </button>
+        {running && isPython && onStop ? (
+          <button type="button" className="cq-btn" onClick={onStop}>
+            Stop
+          </button>
+        ) : null}
         <button type="button" className="cq-btn" onClick={handleReset} disabled={running}>
           Reset code
         </button>
