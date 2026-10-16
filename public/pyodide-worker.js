@@ -135,6 +135,25 @@ self.onmessage = async function (event) {
     return
   }
 
+  // Some modules ship as separate Pyodide packages (sqlite3, pandas, numpy, ...).
+  // Download the ones this code imports before running it. The page's run time
+  // limit starts only after this, when we post 'started'.
+  var source = msg.type === 'run' ? msg.code : (msg.setupCode || '') + '\n' + (msg.userCode || '')
+  try {
+    await pyodide.loadPackagesFromImports(source)
+  } catch (err) {
+    self.postMessage({
+      id: msg.id,
+      type: 'crash',
+      message:
+        'Could not download a Python package this code needs. Check your internet connection and try again. (' +
+        String((err && err.message) || err) +
+        ')',
+    })
+    return
+  }
+  self.postMessage({ id: msg.id, type: 'started' })
+
   try {
     var raw
     if (msg.type === 'run') {

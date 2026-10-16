@@ -11,6 +11,9 @@ export const PYTHON_RUN_TIME_LIMIT_MS = 10_000
 /** How long the first download of the Python runtime may take before we give up. */
 const PYTHON_LOAD_TIME_LIMIT_MS = 120_000
 
+/** How long downloading extra packages a run imports (e.g. pandas) may take. */
+const PACKAGE_LOAD_TIME_LIMIT_MS = 120_000
+
 const RUNTIME_LOAD_ERROR =
   'Could not load the Python runtime. Check your internet connection, or try a newer browser (Python needs Safari 16.4+ or a recent Chrome/Firefox).'
 
@@ -49,6 +52,7 @@ type TestsPayload = { tests: PythonChallengeTestResult[]; error: string | null }
 type WorkerReply =
   | { type: 'ready' }
   | { type: 'load-error'; message: string }
+  | { id: number; type: 'started' }
   | { id: number; type: 'result'; payload: unknown }
   | { id: number; type: 'crash'; message: string }
 
@@ -56,12 +60,15 @@ type JobOutcome =
   | { kind: 'result'; payload: unknown }
   | { kind: 'crash'; message: string }
   | { kind: 'timeout' }
+  | { kind: 'package-timeout' }
   | { kind: 'stopped' }
 
 interface ActiveJob {
   id: number
   timer: ReturnType<typeof setTimeout> | null
   settle: (outcome: JobOutcome) => void
+  /** Called when the worker has its packages and starts running the code. */
+  start: () => void
 }
 
 /** Thrown when the learner presses Stop while the runtime is still loading. */
@@ -94,6 +101,10 @@ function handleWorkerMessage(reply: WorkerReply): void {
   if (!('id' in reply)) return
   const job = activeJob
   if (!job || job.id !== reply.id) return
+  if (reply.type === 'started') {
+    job.start()
+    return
+  }
   job.settle(
     reply.type === 'result'
       ? { kind: 'result', payload: reply.payload }
@@ -144,6 +155,14 @@ async function runJob(request: WorkerRequest): Promise<JobOutcome> {
   if (!w) return { kind: 'stopped' }
   const id = nextJobId++
   return new Promise<JobOutcome>((resolve) => {
+    // The only way to interrupt a busy Pyodide is to kill its worker.
+    const limit = (ms: number, outcome: JobOutcome) => {
+      if (job.timer) clearTimeout(job.timer)
+      job.timer = setTimeout(() => {
+        discardWorker()
+        job.settle(outcome)
+      }, ms)
+    }
     const job: ActiveJob = {
       id,
       timer: null,
@@ -152,12 +171,10 @@ async function runJob(request: WorkerRequest): Promise<JobOutcome> {
         if (activeJob === job) activeJob = null
         resolve(outcome)
       },
+      start: () => limit(PYTHON_RUN_TIME_LIMIT_MS, { kind: 'timeout' }),
     }
-    job.timer = setTimeout(() => {
-      // The only way to interrupt a busy Pyodide is to kill its worker.
-      discardWorker()
-      job.settle({ kind: 'timeout' })
-    }, PYTHON_RUN_TIME_LIMIT_MS)
+    // First the worker downloads any packages the code imports, then the run limit applies.
+    limit(PACKAGE_LOAD_TIME_LIMIT_MS, { kind: 'package-timeout' })
     activeJob = job
     w.postMessage({ ...request, id, cdnBase: PYODIDE_CDN_BASE })
   })
@@ -206,6 +223,14 @@ function stoppedError(): FriendlyPythonError {
 
 async function outcomeError(outcome: Exclude<JobOutcome, { kind: 'result' }>): Promise<FriendlyPythonError> {
   if (outcome.kind === 'timeout') return timeLimitError()
+  if (outcome.kind === 'package-timeout') {
+    return {
+      title: 'Python packages took too long to download',
+      detail: 'This code imports a package (such as pandas) that has to be downloaded first, and the download did not finish.',
+      tip: 'Check your internet connection and run the code again.',
+      errorType: 'PackageTimeout',
+    }
+  }
   if (outcome.kind === 'stopped') return stoppedError()
   return explainPythonError(outcome.message)
 }

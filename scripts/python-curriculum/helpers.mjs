@@ -92,10 +92,11 @@ export function buildLevel(topic) {
       sandboxCode: topic.sandboxCode,
       readMore: topic.readMore,
     },
-    challenges: topic.challenges,
+    // Stable IDs (topic + position) so regenerating keeps learners' saved progress.
+    challenges: topic.challenges.map((c, i) => ({ ...c, id: `${topic.id}_ch${i + 1}` })),
     test: {
       passingScorePercent: 70,
-      questions: topic.questions,
+      questions: topic.questions.map((q, i) => ({ ...q, id: `${topic.id}_q${i + 1}` })),
     },
   }
 }

@@ -7,6 +7,7 @@ import {
   type SectionProgressStatus,
 } from '../helpers'
 import { EditableText } from '../../editor'
+import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
 
 interface ProgressTabProps {
   displayRootIndex: RootIndex
@@ -127,9 +128,7 @@ export function ProgressTab({
     <div className="cq-stack">
       <h1 className="cq-title">Progress</h1>
       <p className="cq-lead">
-        {languageTitle
-          ? `${languageTitle} only · stored on this device (localStorage).`
-          : 'Stored only on this device (`localStorage`).'}
+        {languageTitle ? `${languageTitle} only · saved on this device.` : 'Saved on this device.'}
       </p>
       {languageId && languages.length === 0 && (
         <p className="cq-panel cq-muted">Language not found in catalog.</p>
@@ -214,6 +213,7 @@ export function ProgressTab({
           )
         })}
       </ul>
+      <ProgressBackupPanel />
     </div>
   )
 }

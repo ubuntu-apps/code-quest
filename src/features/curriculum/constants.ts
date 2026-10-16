@@ -11,6 +11,8 @@ export const STREAK_STORAGE_KEY = 'codequest:streak'
 export const LAST_LEVEL_STORAGE_KEY = 'codequest:lastLevel'
 export const SELECTED_LANGUAGE_STORAGE_KEY = 'codequest:selectedLanguage'
 export const CHALLENGE_XP = 10
+/** XP for a challenge solved after revealing its answer. */
+export const CHALLENGE_XP_AFTER_ANSWER = 5
 export const TEST_XP = 50
 
 export const SANDBOX_SNIPPETS: Record<string, { id: string; label: string; code: string }[]> = {

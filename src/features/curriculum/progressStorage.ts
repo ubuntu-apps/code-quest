@@ -1,9 +1,13 @@
+import { requestPersistentStorageOnce } from './storagePersistence'
+
 const PREFIX = 'codequest:progress:'
 
 export interface LevelProgress {
   challengesCompleted: string[]
   testPassed: boolean
   challengeAnswers?: Record<string, string>
+  /** Challenges whose answer was revealed before they were solved (they earn less XP). */
+  answersViewed?: string[]
 }
 
 export function progressKey(languageId: string, levelId: string): string {
@@ -24,6 +28,7 @@ export function loadProgress(languageId: string, levelId: string): LevelProgress
         parsed.challengeAnswers && typeof parsed.challengeAnswers === 'object'
           ? parsed.challengeAnswers
           : {},
+      ...(Array.isArray(parsed.answersViewed) ? { answersViewed: parsed.answersViewed } : {}),
     }
   } catch {
     return { challengesCompleted: [], testPassed: false, challengeAnswers: {} }
@@ -32,6 +37,7 @@ export function loadProgress(languageId: string, levelId: string): LevelProgress
 
 export function saveProgress(languageId: string, levelId: string, p: LevelProgress): void {
   localStorage.setItem(progressKey(languageId, levelId), JSON.stringify(p))
+  requestPersistentStorageOnce()
   notifyProgressChanged()
 }
 
@@ -47,7 +53,8 @@ export function getProgressSnapshot(): number {
   return progressVersion
 }
 
-function notifyProgressChanged(): void {
+/** Tells progress-driven views to re-read storage (e.g. after a backup is restored). */
+export function notifyProgressChanged(): void {
   progressVersion += 1
   for (const listener of progressListeners) listener()
 }

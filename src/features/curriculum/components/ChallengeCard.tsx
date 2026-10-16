@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
+import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import type { Challenge } from '../types'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
 import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
@@ -22,12 +23,15 @@ interface ChallengeCardProps {
   draft: string
   done: boolean
   status: 'passed' | 'failed' | undefined
+  /** The answer was revealed before this challenge was solved. */
+  answerViewed: boolean
   testResults: (PythonChallengeTestResult | RChallengeTestResult)[]
   runtimeError: FriendlyPythonError | FriendlyRError | null
   errorExpanded: boolean
   errorUiEpoch: number
   onDraftChange: (value: string) => void
   onCheck: () => void
+  onRevealAnswer: () => void
   onUpdateChallenge: (patch: Partial<Challenge>) => void
   onMove: (direction: -1 | 1) => void
   onDelete: () => void
@@ -41,12 +45,14 @@ export function ChallengeCard({
   draft,
   done,
   status,
+  answerViewed,
   testResults,
   runtimeError: pyRuntimeErr,
   errorExpanded: pyErrExpanded,
   errorUiEpoch,
   onDraftChange,
   onCheck,
+  onRevealAnswer,
   onUpdateChallenge,
   onMove,
   onDelete,
@@ -56,6 +62,19 @@ export function ChallengeCard({
   const [showHint, setShowHint] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const hintText = ch.hint ?? ch.hints?.[0]
+  const answerNoteId = useId()
+  // The answer unlocks after one Check attempt, so learners try first.
+  const answerUnlocked = isEditingLocal || done || answerViewed || status !== undefined
+  const answerNote = !answerUnlocked
+    ? 'Press Check once to unlock the answer.'
+    : !done && !answerViewed && !isEditingLocal
+      ? `Solving after viewing the answer earns ${CHALLENGE_XP_AFTER_ANSWER} XP instead of ${CHALLENGE_XP}.`
+      : null
+
+  const toggleAnswer = () => {
+    if (!showAnswer && !done && !answerViewed && !isEditingLocal) onRevealAnswer()
+    setShowAnswer((v) => !v)
+  }
   const isRuntimeTests =
     ch.validation.mode === 'python_tests' || ch.validation.mode === 'r_tests'
 
@@ -111,10 +130,21 @@ export function ChallengeCard({
         <button type="button" className="cq-btn cq-btn--sm" onClick={() => setShowHint((v) => !v)}>
           {showHint ? 'Hide hint' : 'Hint'}
         </button>
-        <button type="button" className="cq-btn cq-btn--sm" onClick={() => setShowAnswer((v) => !v)}>
+        <button
+          type="button"
+          className="cq-btn cq-btn--sm"
+          onClick={toggleAnswer}
+          disabled={!answerUnlocked}
+          aria-describedby={answerNote && !showAnswer ? answerNoteId : undefined}
+        >
           {showAnswer ? 'Hide answer' : 'Answer'}
         </button>
       </div>
+      {answerNote && !showAnswer ? (
+        <p id={answerNoteId} className="cq-muted cq-answer-note">
+          {answerNote}
+        </p>
+      ) : null}
       {showHint ? (
         <div className="cq-challenge-reveal cq-challenge-reveal--hint">
           {hintText ?? 'No hint available for this challenge yet.'}

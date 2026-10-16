@@ -1,6 +1,8 @@
 /**
  * Generates Python curriculum section JSON files.
- * Run: node scripts/python-curriculum/generate.mjs
+ * Run: node scripts/python-curriculum/generate.mjs [--only <sectionId>]
+ *
+ * --only data_and_apis   regenerate just that section (other JSON files are left alone)
  */
 import { readdir, unlink, writeFile } from 'node:fs/promises'
 import { resolve, dirname } from 'node:path'
@@ -17,6 +19,17 @@ import { oopTopics } from './data/oop.mjs'
 import { dataApisTopics } from './data/data-apis.mjs'
 import { projectsTopics } from './data/projects.mjs'
 import { sectionProjectsFor } from './data/section-projects.mjs'
+
+/**
+ * Sections that get their "Easy/Medium/Hard project" levels (data/section-projects.mjs).
+ * Matches what is live today. The others copy from the Projects section, which still
+ * needs rewriting; add a section here once its projects are ready.
+ * Note: easy and medium projects must be completed to unlock the next section.
+ */
+const SECTIONS_WITH_PROJECTS = new Set(['fundamentals', 'control_flow'])
+
+const args = process.argv.slice(2)
+const onlySection = args.includes('--only') ? args[args.indexOf('--only') + 1] : null
 
 const here = dirname(fileURLToPath(import.meta.url))
 const outDir = resolve(here, '../../public/content/python')
@@ -44,8 +57,14 @@ function finalizeTopic(topic) {
   }
 }
 
+if (onlySection && !SECTIONS.some((s) => s.sectionId === onlySection)) {
+  throw new Error(`Unknown section "${onlySection}". Known: ${SECTIONS.map((s) => s.sectionId).join(', ')}`)
+}
+
 for (const section of SECTIONS) {
-  const sectionProjects = section.sectionId === 'projects' ? [] : sectionProjectsFor(section.sectionId)
+  if (onlySection && section.sectionId !== onlySection) continue
+  const sectionProjects =
+    SECTIONS_WITH_PROJECTS.has(section.sectionId) ? sectionProjectsFor(section.sectionId) : []
   const file = buildSection({
     ...section,
     topics: [...section.topics, ...sectionProjects].map(finalizeTopic),
