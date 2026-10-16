@@ -105,3 +105,47 @@ export function qMcq(prompt, choices, correct) {
 export function qShort(prompt, expected) {
   return { type: 'shortText', prompt, expected }
 }
+
+/** Tag for Python code: backslashes stay exactly as written (String.raw). */
+export const py = String.raw
+
+/**
+ * A Python challenge graded by running tests in the app's sandbox.
+ * `tests` are [label, assertion] pairs, evaluated after the learner's code runs;
+ * `_cq_stdout` holds everything it printed. Use `__import__('json')` etc. in
+ * assertions so they don't depend on what the learner imported.
+ *
+ * @param {'easy'|'medium'|'hard'|'expert'} difficulty
+ * @param {string} title
+ * @param {{ prompt: string, starter?: string, hint: string, solution: string, tests: [string, string][], setup?: string }} spec
+ */
+export function task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '' }) {
+  return ch(
+    difficulty,
+    title,
+    prompt,
+    {
+      mode: 'python_tests',
+      setupCode: setup,
+      tests: tests.map(([label, assertion], i) => ({ id: `t${i + 1}`, label, assertion })),
+    },
+    { starterCode: starter, hint, solution },
+  )
+}
+
+/**
+ * Multiple-choice question. `options` are labels; `correct` is the index of the right one.
+ * Vary `correct` across questions: the app shows choices in this order.
+ *
+ * @param {string} prompt
+ * @param {string[]} options
+ * @param {number} correct
+ */
+export function mc(prompt, options, correct) {
+  const ids = 'abcdefgh'
+  return qMcq(
+    prompt,
+    options.map((label, i) => ({ id: ids[i], label })),
+    ids[correct],
+  )
+}

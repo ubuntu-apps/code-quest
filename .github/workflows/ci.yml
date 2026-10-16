@@ -27,7 +27,18 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund
 
       - name: Lint, test, and build
         run: npm run check
+
+      # Runs every Python challenge's solution, starter and empty code (see scripts/check-curriculum.mjs).
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check lesson content
+        run: |
+          pip install pandas
+          npm run check:content

@@ -19,7 +19,7 @@ The Java files in `public/content/java/` are kept for later. To publish them, ad
 Requires Node 24 (see `.nvmrc`).
 
 ```bash
-npm ci
+npm install
 npm run dev        # http://localhost:5173/code-quest/
 ```
 
@@ -28,6 +28,7 @@ npm run dev        # http://localhost:5173/code-quest/
 | `npm run dev` | Dev server with the content editor enabled |
 | `npm run build` | Type-check, build to `dist/`, and add `404.html` for GitHub Pages routing |
 | `npm run check` | Lint, run tests, and build (what CI runs) |
+| `npm run check:content` | Run every lesson challenge to check it works (needs Python 3; pandas for the pandas lessons) |
 | `npm test` | Vitest in watch mode (`npm run test:run` for a single run) |
 | `npm run lint` | ESLint |
 | `npm run preview` | Serve the production build locally |
@@ -66,7 +67,16 @@ node scripts/python-curriculum/generate.mjs
 node scripts/r-curriculum/generate.mjs
 ```
 
-Edit the `data/*.mjs` files, then regenerate. Challenge IDs are random, so regenerating a section resets learners' saved progress for it.
+Edit the `data/*.mjs` files, then regenerate. Add `--only <sectionId>` to regenerate one section, e.g. `--only data_and_apis`. Challenge IDs come from the topic and position (`json_basics_ch3`), so regenerating keeps learners' progress unless you reorder challenges.
+
+Write new challenges with the `task()` and `mc()` builders in `scripts/python-curriculum/data/_builders.mjs`; see `data/data-apis/` for examples. Then run the content check:
+
+```bash
+npm run check:content                                 # summary of every section
+node scripts/check-curriculum.mjs --section python/data_and_apis --verbose
+```
+
+For every challenge it runs the solution (must pass), the starter code and empty code (must fail), using the same Python helpers as the app. It also flags missing prompts, hints and solutions, text-matched grading, and quizzes whose answers are always in the same position. Sections listed in `scripts/curriculum-check.json` must be clean or CI fails; add a section there once it has been rewritten.
 
 You can also edit lessons in the app. In `npm run dev`, use the editor button in the header; **Save** writes straight to `public/content/`.
 
