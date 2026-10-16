@@ -3,6 +3,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { curriculumSavePlugin } from './scripts/vite-curriculum-save-plugin'
+import { PYODIDE_CDN_BASE, WEBR_CDN_BASE } from './src/runtimeVersions'
+
+/** Matches URLs that start with `base` (workbox matches cross-origin RegExps from the start). */
+function startsWith(base: string): RegExp {
+  return new RegExp(`^${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -21,6 +27,41 @@ export default defineConfig({
       devOptions: {
         enabled: true,
         suppressWarnings: true,
+      },
+      // Offline support. The app shell, including public/pyodide-worker.js, is precached
+      // by the default glob. Everything else is cached as it is used:
+      workbox: {
+        runtimeCaching: [
+          {
+            // Lessons: always try the network so content updates show up, and fall
+            // back to the last copy when offline.
+            urlPattern: /\/content\/.+\.json(\?.*)?$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'codequest-content',
+              networkTimeoutSeconds: 4,
+              cacheableResponse: { statuses: [200] },
+            },
+          },
+          {
+            // Python runtime and packages. The URL is versioned, so files never change.
+            urlPattern: startsWith(PYODIDE_CDN_BASE),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'codequest-pyodide',
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            // R runtime, also versioned.
+            urlPattern: startsWith(WEBR_CDN_BASE),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'codequest-webr',
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
       includeAssets: [
         'favicon.svg',
