@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, ChevronLeft, Info, ListTodo, Share2 } from 'lucide-react'
 import type { LanguageBundle, Level, RootIndex } from './types'
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
-import { loadProgress } from './progressStorage'
+import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { preloadWebR } from './rSandbox'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
@@ -118,7 +118,6 @@ export function CodeQuestScreen() {
 
   const [rootIndex, setRootIndex] = useState<RootIndex | null>(null)
   const [rootError, setRootError] = useState<string | null>(null)
-  const [streakCount, setStreakCount] = useState(() => loadStreakState().count)
 
   const [bundle, setBundle] = useState<LanguageBundle | null>(null)
   const [bundleError, setBundleError] = useState<string | null>(null)
@@ -306,7 +305,15 @@ export function CodeQuestScreen() {
     return levels[index + 1]
   }, [selectedSection, selectedLevel])
 
-  const recordActivity = useCallback(() => setStreakCount(recordDailyActivity()), [])
+  // Read from storage on every progress change, so a restored backup shows its streak too.
+  const streakCount = useMemo(() => {
+    void progressVersion
+    return loadStreakState().count
+  }, [progressVersion])
+  const recordActivity = useCallback(() => {
+    recordDailyActivity()
+    notifyProgressChanged()
+  }, [])
   const sandbox = useSandbox(languageId)
   const challenges = useChallenges(languageId, selectedLevel, recordActivity)
   const levelTest = useLevelTest(languageId, selectedLevel, recordActivity)
@@ -643,6 +650,7 @@ export function CodeQuestScreen() {
           challengeErrorUiEpoch={challenges.errorUiEpoch}
           onChallengeDraftChange={challenges.changeDraft}
           onCheckChallenge={(ch) => void challenges.check(ch)}
+          onRevealAnswer={challenges.revealAnswer}
           onUpdateChallenge={(chId, patch) =>
             updateChallenge(languageId, secId, selectedLevel.id, chId, patch)
           }

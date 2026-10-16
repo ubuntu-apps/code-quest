@@ -89,6 +89,15 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     if (languageId && level) saveAnswer(languageId, level.id, challengeId, value)
   }
 
+  /** Records that the answer was revealed before the challenge was solved (it then earns less XP). */
+  const revealAnswer = (challengeId: string) => {
+    if (!languageId || !level) return
+    const prev = loadProgress(languageId, level.id)
+    const viewed = prev.answersViewed ?? []
+    if (prev.challengesCompleted.includes(challengeId) || viewed.includes(challengeId)) return
+    saveProgress(languageId, level.id, { ...prev, answersViewed: [...viewed, challengeId] })
+  }
+
   const toggleErrorExpanded = (challengeId: string) =>
     setErrorExpanded((prev) => ({ ...prev, [challengeId]: !(prev[challengeId] ?? false) }))
 
@@ -116,6 +125,7 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     errorUiEpoch,
     check,
     changeDraft,
+    revealAnswer,
     toggleErrorExpanded,
     resetForLevel,
   }

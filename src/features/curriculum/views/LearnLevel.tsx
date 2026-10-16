@@ -42,6 +42,7 @@ interface LearnLevelProps {
   challengeErrorUiEpoch: Record<string, number>
   onChallengeDraftChange: (challengeId: string, value: string) => void
   onCheckChallenge: (challenge: Challenge) => void
+  onRevealAnswer: (challengeId: string) => void
   onUpdateChallenge: (challengeId: string, patch: Partial<Challenge>) => void
   onMoveChallenge: (challengeId: string, direction: -1 | 1) => void
   onRemoveChallenge: (challengeId: string) => void
@@ -91,6 +92,7 @@ export function LearnLevel({
   challengeErrorUiEpoch,
   onChallengeDraftChange,
   onCheckChallenge,
+  onRevealAnswer,
   onUpdateChallenge,
   onMoveChallenge,
   onRemoveChallenge,
@@ -170,12 +172,14 @@ export function LearnLevel({
               draft={challengeDrafts[ch.id] ?? ''}
               done={prog.challengesCompleted.includes(ch.id)}
               status={challengeStatus[ch.id]}
+              answerViewed={prog.answersViewed?.includes(ch.id) ?? false}
               testResults={challengeTestResults[ch.id] ?? []}
               runtimeError={challengeRuntimeError[ch.id] ?? null}
               errorExpanded={challengeErrorExpanded[ch.id] ?? false}
               errorUiEpoch={challengeErrorUiEpoch[ch.id] ?? 0}
               onDraftChange={(value) => onChallengeDraftChange(ch.id, value)}
               onCheck={() => onCheckChallenge(ch)}
+              onRevealAnswer={() => onRevealAnswer(ch.id)}
               onUpdateChallenge={(patch) => onUpdateChallenge(ch.id, patch)}
               onMove={(dir) => onMoveChallenge(ch.id, dir)}
               onDelete={() => onRemoveChallenge(ch.id)}

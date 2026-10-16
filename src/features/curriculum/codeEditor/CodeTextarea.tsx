@@ -1,6 +1,5 @@
-import { forwardRef, useCallback } from 'react'
-
-const TAB_INSERT = '    '
+import { forwardRef, useCallback, useId, useRef } from 'react'
+import { applyTextEdit, computeKeyEdit, type TextEdit } from './editing'
 
 export type CodeTextareaProps = Omit<
   React.TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -9,57 +8,76 @@ export type CodeTextareaProps = Omit<
   spellCheck?: boolean
 }
 
-function insertTab(
-  value: string,
-  selectionStart: number,
-  selectionEnd: number,
-): { nextValue: string; nextCursor: number } {
-  const nextValue = value.slice(0, selectionStart) + TAB_INSERT + value.slice(selectionEnd)
-  return { nextValue, nextCursor: selectionStart + TAB_INSERT.length }
+/**
+ * Replaces text the way typing would, so the browser's undo history and React's
+ * onChange both see the edit. Falls back to setRangeText where execCommand is missing.
+ */
+function applyEdit(el: HTMLTextAreaElement, edit: TextEdit): void {
+  const expected = applyTextEdit(el.value, edit)
+  el.setSelectionRange(edit.start, edit.end)
+  let applied: boolean
+  try {
+    applied =
+      edit.text === ''
+        ? document.execCommand('delete', false)
+        : document.execCommand('insertText', false, edit.text)
+  } catch {
+    applied = false
+  }
+  if (!applied || el.value !== expected) {
+    el.value = expected
+    el.dispatchEvent(new Event('input', { bubbles: true }))
+  }
+  el.setSelectionRange(edit.selectionStart, edit.selectionEnd)
 }
 
 export const CodeTextarea = forwardRef<HTMLTextAreaElement, CodeTextareaProps>(function CodeTextarea(
-  { onKeyDown, onChange, value, spellCheck = false, ...rest },
+  { onKeyDown, spellCheck = false, 'aria-describedby': describedBy, ...rest },
   ref,
 ) {
+  const hintId = useId()
+  // After Escape, the next Tab moves focus out instead of indenting (WCAG 2.1.2, no keyboard trap).
+  const escapePressedRef = useRef(false)
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Tab') {
-        e.preventDefault()
-        const el = e.currentTarget
-        const start = el.selectionStart ?? 0
-        const end = el.selectionEnd ?? 0
-        const currentValue = typeof value === 'string' ? value : el.value
-        const { nextValue, nextCursor } = insertTab(currentValue, start, end)
+      onKeyDown?.(e)
+      if (e.defaultPrevented) return
 
-        onChange?.({
-          ...e,
-          target: { ...el, value: nextValue },
-          currentTarget: { ...el, value: nextValue },
-        } as React.ChangeEvent<HTMLTextAreaElement>)
-
-        requestAnimationFrame(() => {
-          el.selectionStart = nextCursor
-          el.selectionEnd = nextCursor
-        })
+      if (e.key === 'Escape') {
+        escapePressedRef.current = true
         return
       }
-      onKeyDown?.(e)
+      const releaseFocus = escapePressedRef.current && e.key === 'Tab'
+      escapePressedRef.current = false
+      if (releaseFocus) return
+
+      const el = e.currentTarget
+      const edit = computeKeyEdit(el.value, el.selectionStart ?? 0, el.selectionEnd ?? 0, e)
+      // Keep plain Tab / Shift+Tab inside the editor even when there is nothing to change.
+      if (e.key === 'Tab' && !e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault()
+      if (!edit) return
+      e.preventDefault()
+      applyEdit(el, edit)
     },
-    [onChange, onKeyDown, value],
+    [onKeyDown],
   )
 
   return (
-    <textarea
-      ref={ref}
-      value={value}
-      spellCheck={spellCheck}
-      autoCapitalize="off"
-      autoCorrect="off"
-      autoComplete="off"
-      onChange={onChange}
-      onKeyDown={handleKeyDown}
-      {...rest}
-    />
+    <>
+      <textarea
+        ref={ref}
+        spellCheck={spellCheck}
+        autoCapitalize="off"
+        autoCorrect="off"
+        autoComplete="off"
+        onKeyDown={handleKeyDown}
+        aria-describedby={describedBy ? `${describedBy} ${hintId}` : hintId}
+        {...rest}
+      />
+      <span id={hintId} className="cq-sr-only">
+        Tab indents. Press Escape, then Tab, to move to the next control.
+      </span>
+    </>
   )
 })

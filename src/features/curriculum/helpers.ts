@@ -1,6 +1,6 @@
 import type { FriendlyPythonError } from './pythonSandbox'
 import type { Level } from './types'
-import { CHALLENGE_XP, STREAK_STORAGE_KEY, TEST_XP } from './constants'
+import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER, STREAK_STORAGE_KEY, TEST_XP } from './constants'
 import { loadProgress } from './progressStorage'
 
 type StreakState = { lastDate: string; count: number }
@@ -46,7 +46,12 @@ export function recordDailyActivity(now: Date = new Date()): number {
 
 export function computeLevelXp(languageId: string, level: Level): number {
   const p = loadProgress(languageId, level.id)
-  const challengeXp = Math.min(p.challengesCompleted.length, level.challenges.length) * CHALLENGE_XP
+  const solvedAfterAnswer = (p.answersViewed ?? []).filter((id) => p.challengesCompleted.includes(id)).length
+  const challengeXp = Math.max(
+    0,
+    Math.min(p.challengesCompleted.length, level.challenges.length) * CHALLENGE_XP -
+      solvedAfterAnswer * (CHALLENGE_XP - CHALLENGE_XP_AFTER_ANSWER),
+  )
   const testXp = p.testPassed ? TEST_XP : 0
   return challengeXp + testXp
 }
