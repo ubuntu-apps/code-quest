@@ -9,8 +9,11 @@ import { initPwa } from './pwaUpdate'
 initPwa()
 
 if ('serviceWorker' in navigator) {
+  // On a first visit the new service worker also takes control (clientsClaim);
+  // that isn't an update, so only log when a previous version was in charge.
+  const hadController = navigator.serviceWorker.controller !== null
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    console.log(`CodeQuest updated to v${APP_VERSION}`)
+    if (hadController) console.log(`CodeQuest updated to v${APP_VERSION}`)
   })
 }
 

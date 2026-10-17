@@ -40,6 +40,9 @@ export function TestStep({
   onRetake,
 }: TestStepProps) {
   const { isEditingLocal } = useEditorMode()
+  // Right answers are shown only once the quiz is passed (now or before), so a
+  // failed attempt can't be turned into a pass by reading the feedback.
+  const revealAnswers = testResult !== null && (testResult.passed || prog.testPassed)
 
   return (
     <section className="cq-panel cq-test">
@@ -93,8 +96,8 @@ export function TestStep({
                             const isCorrect = q.correctChoiceId === c.id
                             let optClass = 'cq-mcq-opt'
                             if (showFeedback) {
-                              if (isCorrect) optClass += ' cq-mcq-opt--correct'
-                              else if (selected) optClass += ' cq-mcq-opt--wrong'
+                              if (selected) optClass += questionPassed ? ' cq-mcq-opt--correct' : ' cq-mcq-opt--wrong'
+                              else if (revealAnswers && isCorrect) optClass += ' cq-mcq-opt--correct'
                             }
                             return (
                             <label key={c.id} className={optClass}>
@@ -118,6 +121,7 @@ export function TestStep({
                         value={testShort[q.id]}
                         correctAnswer={yesNoCorrectAnswer(q)!}
                         showFeedback={showFeedback}
+                        revealAnswer={revealAnswers}
                         questionPassed={questionPassed}
                         onChange={(value) => onTestShortChange(q.id, value)}
                       />
@@ -141,6 +145,11 @@ export function TestStep({
                           value={testShort[q.id] ?? ''}
                           onChange={(e) => onTestShortChange(q.id, e.target.value)}
                         />
+                        {revealAnswers && !questionPassed && q.validation.expected && (
+                          <p className="cq-test-answer">
+                            Answer: <code>{q.validation.expected}</code>
+                          </p>
+                        )}
                       </>
                     )}
                   </div>
@@ -179,6 +188,7 @@ export function TestStep({
           Score {testResult.correct}/{testResult.total} (
           {Math.round((testResult.correct / Math.max(testResult.total, 1)) * 100)}%){' '}
           {testResult.passed ? 'Passed' : 'Not passed'}
+          {!revealAnswers && ' · Correct answers are shown once you pass.'}
         </p>
       )}
     </section>

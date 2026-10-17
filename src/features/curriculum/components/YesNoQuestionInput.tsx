@@ -6,6 +6,8 @@ interface YesNoQuestionInputProps {
   value: string | undefined
   correctAnswer: 'yes' | 'no'
   showFeedback: boolean
+  /** Highlight the right answer even when it wasn't picked (only after the quiz is passed). */
+  revealAnswer: boolean
   questionPassed: boolean | undefined
   onChange: (value: 'yes' | 'no') => void
 }
@@ -15,6 +17,7 @@ export function YesNoQuestionInput({
   value,
   correctAnswer,
   showFeedback,
+  revealAnswer,
   questionPassed,
   onChange,
 }: YesNoQuestionInputProps) {
@@ -28,8 +31,8 @@ export function YesNoQuestionInput({
     if (isSelected) cls += ' cq-yesno-opt--selected'
 
     if (showFeedback) {
-      if (isCorrect) cls += ' cq-yesno-opt--correct'
-      else if (isSelected) cls += ' cq-yesno-opt--wrong'
+      if (isSelected) cls += isCorrect ? ' cq-yesno-opt--correct' : ' cq-yesno-opt--wrong'
+      else if (revealAnswer && isCorrect) cls += ' cq-yesno-opt--correct'
     } else if (isSelected) {
       cls += ' cq-yesno-opt--active'
     }
