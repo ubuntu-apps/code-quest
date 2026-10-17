@@ -9,6 +9,8 @@ interface LearnLevelsProps {
   languageId: string
   isEditMode: boolean
   isLevelUnlocked: (levels: Level[], index: number) => boolean
+  /** Set when the section's prerequisite isn't met yet: why its levels are locked. */
+  sectionLockedHint: string | null
   onOpenLevel: (level: Level) => void
   onUpdateSectionTitle: (title: string) => void
   onUpdateLevelTitle: (levelId: string, title: string) => void
@@ -22,6 +24,7 @@ export function LearnLevels({
   languageId,
   isEditMode,
   isLevelUnlocked,
+  sectionLockedHint,
   onOpenLevel,
   onUpdateSectionTitle,
   onUpdateLevelTitle,
@@ -37,6 +40,7 @@ export function LearnLevels({
         value={selectedSection.sectionRef.title}
         onChange={onUpdateSectionTitle}
       />
+      {sectionLockedHint && !isEditMode ? <p className="cq-muted cq-section-preview-note">{sectionLockedHint}</p> : null}
       <ul className="cq-card-list">
         {selectedSection.file.levels.map((lvl, lvlIndex) => {
           const levelIndex = selectedSection.file.levels.findIndex((v) => v.id === lvl.id)
@@ -56,7 +60,9 @@ export function LearnLevels({
                 ? 'Optional project'
                 : 'Project'
           const statusMeta = locked
-            ? 'Locked · pass previous test to unlock'
+            ? sectionLockedHint
+              ? 'Locked'
+              : 'Locked · pass previous test to unlock'
             : done
               ? isProject
                 ? `${projectLabel} · completed`

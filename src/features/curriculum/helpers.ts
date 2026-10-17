@@ -149,11 +149,18 @@ export function isSectionUnlocked(
   return levels.every((level) => loadProgress(languageId, level.id).testPassed)
 }
 
-/** Explains what unlocks the section after `previousLevels`. */
-export function sectionUnlockHint(previousLevels: Level[]): string {
+/** Shown inside a section whose prerequisite isn't met: what to do to start it. */
+export function sectionStartHint(previousLevels: Level[], previousTitle: string): string {
   return hasRequiredProjects(previousLevels)
-    ? 'Locked · complete the easy and medium projects in the previous section'
-    : 'Locked · pass every topic quiz in the previous section'
+    ? `You can look around. To start this section, complete the easy and medium projects in ${previousTitle}.`
+    : `You can look around. To start this section, pass every quiz in ${previousTitle}.`
+}
+
+/** Explains what unlocks the section that comes after `previousLevels` (titled `previousTitle`). */
+export function sectionUnlockHint(previousLevels: Level[], previousTitle: string): string {
+  return hasRequiredProjects(previousLevels)
+    ? `Preview · complete the easy and medium projects in ${previousTitle} to start`
+    : `Preview · pass every quiz in ${previousTitle} to start`
 }
 
 export function pythonErrorLinePointer(

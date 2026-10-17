@@ -2,6 +2,7 @@ import { useId, useState } from 'react'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported } from '../sandboxSupport'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
+import { useAdminMode } from '../adminMode'
 import type { Challenge } from '../types'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
 import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
@@ -66,6 +67,8 @@ export function ChallengeCard({
   onToggleErrorExpanded,
 }: ChallengeCardProps) {
   const { isEditingLocal } = useEditorMode()
+  // Admin mode (for testing) opens answers straight away, without the XP penalty.
+  const isAdmin = useAdminMode()
   const [showHint, setShowHint] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const hintText = ch.hint ?? ch.hints?.[0]
@@ -77,15 +80,15 @@ export function ChallengeCard({
   const checking = checkingMessage !== null
   // The answer unlocks after one Check attempt, so learners try first.
   // (Where code can't run, Check is unavailable, so the answer is open from the start.)
-  const answerUnlocked = isEditingLocal || done || answerViewed || status !== undefined || cannotRun
+  const answerUnlocked = isEditingLocal || isAdmin || done || answerViewed || status !== undefined || cannotRun
   const answerNote = !answerUnlocked
     ? 'Press Check once to unlock the answer.'
-    : !done && !answerViewed && !isEditingLocal && !cannotRun
+    : !done && !answerViewed && !isEditingLocal && !isAdmin && !cannotRun
       ? `Solving after viewing the answer earns ${CHALLENGE_XP_AFTER_ANSWER} XP instead of ${CHALLENGE_XP}.`
       : null
 
   const toggleAnswer = () => {
-    if (!showAnswer && !done && !answerViewed && !isEditingLocal) onRevealAnswer()
+    if (!showAnswer && !done && !answerViewed && !isEditingLocal && !isAdmin) onRevealAnswer()
     setShowAnswer((v) => !v)
   }
 

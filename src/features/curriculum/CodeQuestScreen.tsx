@@ -2,7 +2,8 @@ import '../../App.css'
 
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, ChevronLeft, Info, ListTodo, Share2 } from 'lucide-react'
-import type { LanguageBundle, Level, RootIndex } from './types'
+import type { LanguageBundle, Level, LoadedSection, RootIndex } from './types'
+import { useAdminMode } from './adminMode'
 import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { preloadWebR } from './rSandbox'
@@ -34,6 +35,7 @@ import {
   currentStreak,
   loadStreakState,
   recordDailyActivity,
+  sectionStartHint,
 } from './helpers'
 import { useChallenges } from './hooks/useChallenges'
 import { useLanguageBundles } from './hooks/useLanguageBundles'
@@ -337,43 +339,50 @@ export function CodeQuestScreen() {
     [getBundle, useLocalContent],
   )
 
+  const isAdmin = useAdminMode()
+  /** The editor and admin mode can open everything. */
+  const unlockAll = isEditMode || isAdmin
+
+  /**
+   * Every section can be opened to preview its lessons, but a section's levels
+   * stay locked until its prerequisite is met (see isSectionUnlocked). Inside a
+   * section, each level unlocks when the previous level's quiz is passed.
+   */
   const isLevelUnlocked = useCallback(
-    (langId: string, levels: Level[], index: number): boolean => {
+    (langId: string, sections: LoadedSection[], sectionIndex: number, index: number): boolean => {
       void progressVersion
-      if (isEditMode) return true
+      if (unlockAll) return true
+      if (!checkSectionUnlocked(langId, sections, sectionIndex)) return false
       if (index === 0) return true
-      const prev = levels[index - 1]
-      return loadProgress(langId, prev.id).testPassed
+      const prev = sections[sectionIndex]?.file.levels[index - 1]
+      return prev ? loadProgress(langId, prev.id).testPassed : true
     },
-    [isEditMode, progressVersion],
+    [unlockAll, progressVersion],
   )
 
   const isSectionUnlockedFor = useCallback(
     (langId: string, sectionIndex: number): boolean => {
       void progressVersion
-      if (isEditMode || !bundleForView) return true
+      if (unlockAll || !bundleForView) return true
       return checkSectionUnlocked(langId, bundleForView.sections, sectionIndex)
     },
-    [isEditMode, bundleForView, progressVersion],
+    [unlockAll, bundleForView, progressVersion],
   )
 
-  useEffect(() => {
-    if (isEditMode || !languageId || !sectionId || !bundleForView) return
-    const sectionIndex = bundleForView.index.sections.findIndex((s) => s.id === sectionId)
-    if (sectionIndex >= 0 && !isSectionUnlockedFor(languageId, sectionIndex)) {
-      goToLanguage(languageId)
-    }
-  }, [isEditMode, languageId, sectionId, bundleForView, isSectionUnlockedFor, goToLanguage])
+  /** Index of the open section within the bundle, or -1. */
+  const selectedSectionIndex =
+    bundleForView && selectedSection
+      ? bundleForView.sections.findIndex((s) => s.sectionRef.id === selectedSection.sectionRef.id)
+      : -1
 
-  // Same for a locked level opened directly by URL.
+  // A locked level opened directly by URL goes back to its section's list.
   useEffect(() => {
-    if (isEditMode || learnView !== 'level' || !languageId || !selectedSection || !levelId) return
-    const levels = selectedSection.file.levels
-    const index = levels.findIndex((l) => l.id === levelId)
-    if (index > 0 && !isLevelUnlocked(languageId, levels, index)) {
+    if (unlockAll || learnView !== 'level' || !languageId || !selectedSection || !levelId || !bundleForView) return
+    const index = selectedSection.file.levels.findIndex((l) => l.id === levelId)
+    if (index >= 0 && selectedSectionIndex >= 0 && !isLevelUnlocked(languageId, bundleForView.sections, selectedSectionIndex, index)) {
       goToSection(languageId, selectedSection.sectionRef.id)
     }
-  }, [isEditMode, learnView, languageId, selectedSection, levelId, isLevelUnlocked, goToSection])
+  }, [unlockAll, learnView, languageId, selectedSection, selectedSectionIndex, levelId, bundleForView, isLevelUnlocked, goToSection])
 
   const resetLevelWorkState = useCallback(
     (level: Level, langId: string | null) => {
@@ -419,11 +428,12 @@ export function CodeQuestScreen() {
     async (opts: ContinueTarget) => {
       const b = await openLanguage(opts.languagePath, opts.languageId)
       if (!b) return
-      const section = b.sections.find((s) => s.sectionRef.id === opts.sectionId)
+      const sectionIndex = b.sections.findIndex((s) => s.sectionRef.id === opts.sectionId)
+      const section = b.sections[sectionIndex]
       if (!section) return
       const levelIndex = section.file.levels.findIndex((l) => l.id === opts.levelId)
       if (levelIndex < 0) return
-      if (!isLevelUnlocked(opts.languageId, section.file.levels, levelIndex)) return
+      if (!isLevelUnlocked(opts.languageId, b.sections, sectionIndex, levelIndex)) return
       const level = section.file.levels[levelIndex]
       goToLevel(opts.languageId, opts.sectionId, level.id, 'intro')
       resetLevelWorkState(level, opts.languageId)
@@ -515,10 +525,10 @@ export function CodeQuestScreen() {
     for (const lang of catalogLanguages) {
       const b = resolveBundle(lang.id, languageBundles[lang.id]) ?? languageBundles[lang.id]
       if (!b) continue
-      for (const section of b.sections) {
+      for (const [sectionIndex, section] of b.sections.entries()) {
         for (let i = 0; i < section.file.levels.length; i += 1) {
           const lvl = section.file.levels[i]
-          if (!isLevelUnlocked(lang.id, section.file.levels, i)) continue
+          if (!isLevelUnlocked(lang.id, b.sections, sectionIndex, i)) continue
           if (!loadProgress(lang.id, lvl.id).testPassed) {
             return {
               languageId: lang.id,
@@ -607,7 +617,17 @@ export function CodeQuestScreen() {
           selectedSection={selectedSection}
           languageId={languageId}
           isEditMode={isEditMode}
-          isLevelUnlocked={(levels, index) => isLevelUnlocked(languageId, levels, index)}
+          isLevelUnlocked={(_levels, index) =>
+            bundleForView ? isLevelUnlocked(languageId, bundleForView.sections, selectedSectionIndex, index) : true
+          }
+          sectionLockedHint={
+            bundleForView && selectedSectionIndex > 0 && !isSectionUnlockedFor(languageId, selectedSectionIndex)
+              ? sectionStartHint(
+                  bundleForView.sections[selectedSectionIndex - 1].file.levels,
+                  bundleForView.sections[selectedSectionIndex - 1].sectionRef.title,
+                )
+              : null
+          }
           onOpenLevel={(lvl) => {
             if (!languageId || !secId) return
             goToLevel(languageId, secId, lvl.id, 'intro')
@@ -731,6 +751,7 @@ export function CodeQuestScreen() {
         )}
         <div className="cq-brand">
           CodeQuest <span className="cq-brand-version">(v. {APP_VERSION})</span>
+          {isAdmin ? <span className="cq-admin-badge">Admin</span> : null}
         </div>
         <EditorHeaderButton />
       </header>
