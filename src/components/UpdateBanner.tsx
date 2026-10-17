@@ -8,9 +8,11 @@ export function UpdateBanner() {
   if (!ready || dismissed) return null
 
   return (
-    <section className="cq-install-banner cq-update-banner" aria-label="App update" role="status">
+    <section className="cq-install-banner cq-update-banner" aria-labelledby="cq-update-banner-title">
       <div className="cq-install-banner__content">
-        <p className="cq-install-banner__title">A new version of CodeQuest is ready.</p>
+        <h2 id="cq-update-banner-title" className="cq-install-banner__title">
+          A new version of CodeQuest is ready.
+        </h2>
         <button type="button" className="cq-btn cq-btn--primary" onClick={reloadToUpdate}>
           Reload
         </button>

@@ -84,7 +84,7 @@ export default defineConfig({
         background_color: '#0f172a',
         display: 'standalone',
         display_override: ['standalone', 'fullscreen'],
-        orientation: 'portrait',
+        orientation: 'any',
         start_url: '/code-quest/',
         scope: '/code-quest/',
         icons: [
