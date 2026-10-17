@@ -12,6 +12,9 @@ import inventoryTracker from './data-structures/project-inventory-tracker.mjs'
 import textTools from './functions/project-text-tools.mjs'
 import passwordChecker from './functions/project-password-checker.mjs'
 import bankAccounts from './functions/project-bank-accounts.mjs'
+import safeCalculator from './error-handling/project-safe-calculator.mjs'
+import signupForm from './error-handling/project-signup-form.mjs'
+import dataImporter from './error-handling/project-data-importer.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -178,11 +181,7 @@ export const SECTION_PROJECTS = {
     fromExisting('todo_list', 'medium', 'proj_file_handling_todo_list'),
     fromExisting('contact_book', 'hard', 'proj_file_handling_contact_book'),
   ],
-  error_handling: [
-    fromExisting('cli_guess_game', 'easy', 'proj_error_handling_guess_game'),
-    fromExisting('quiz_app', 'medium', 'proj_error_handling_quiz_app'),
-    fromExisting('expense_tracker', 'hard', 'proj_error_handling_expense_tracker'),
-  ],
+  error_handling: [safeCalculator, signupForm, dataImporter],
   object_oriented: [oopEasy, oopMedium, oopHard],
   data_and_apis: [
     fromExisting('weather_cli', 'easy', 'proj_data_apis_weather_cli'),

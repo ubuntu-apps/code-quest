@@ -104,66 +104,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Safe message', 'path = "data.txt"\ntry:\n    open(path)\nexcept FileNotFoundError:\n    print(f"Could not open {path}")'),
   ],
 
-  // ── Errors and exceptions ────────────────────────────────────────────
-  try_except: [
-    snippet('ValueError', 'try:\n    int("abc")\nexcept ValueError as e:\n    print("Bad number:", e)'),
-    snippet('Recover', 'try:\n    n = int("bad")\nexcept ValueError:\n    n = 0\nprint(n)'),
-    snippet('ZeroDivision', 'try:\n    1 / 0\nexcept ZeroDivisionError:\n    print("Cannot divide by zero")'),
-    snippet('as e', 'try:\n    int("x")\nexcept ValueError as e:\n    print(str(e))'),
-    snippet('EAFP KeyError', 'd = {}\ntry:\n    val = d["missing"]\nexcept KeyError:\n    val = None\nprint(val)'),
-  ],
-  multiple_except: [
-    snippet('KeyError', 'try:\n    print({}["x"])\nexcept KeyError:\n    print("missing key")'),
-    snippet('Two handlers', 'try:\n    int("x")\nexcept ValueError:\n    print("value")\nexcept TypeError:\n    print("type")'),
-    snippet('Tuple except', 'try:\n    int("a")\nexcept (ValueError, TypeError):\n    print("caught")'),
-    snippet('Specific first', 'try:\n    int("x")\nexcept ValueError:\n    print("specific")\nexcept Exception:\n    print("broad")'),
-  ],
-  else_finally: [
-    snippet('try/else', 'try:\n    int("42")\nexcept ValueError:\n    print("fail")\nelse:\n    print("success")'),
-    snippet('finally', 'try:\n    print("try")\nfinally:\n    print("finally")'),
-    snippet('Cleanup', 'resource = "open"\ntry:\n    print(resource)\nfinally:\n    resource = "closed"\nprint(resource)'),
-  ],
-  raising_exceptions: [
-    snippet('raise ValueError', 'def pct(n):\n    if not 0 <= n <= 100:\n        raise ValueError("n must be 0-100")\n    return f"{n}%"\nprint(pct(50))'),
-    snippet('raise TypeError', 'def need_int(x):\n    if not isinstance(x, int):\n        raise TypeError("int required")\n    return x\nprint(need_int(3))'),
-    snippet('Fail fast', 'def divide(a, b):\n    if b == 0:\n        raise ValueError("b cannot be 0")\n    return a / b\nprint(divide(10, 2))'),
-  ],
-  custom_exceptions: [
-    snippet('Custom class', 'class ScoreError(Exception):\n    pass\n\ndef set_score(n):\n    if n < 0:\n        raise ScoreError("negative score")\n    return n\nprint(set_score(10))'),
-    snippet('With message', 'class AppError(Exception):\n    pass\n\ntry:\n    raise AppError("something went wrong")\nexcept AppError as e:\n    print(e)'),
-    snippet('Subclass', 'class ValidationError(Exception):\n    pass\n\nprint(issubclass(ValidationError, Exception))'),
-  ],
-  exception_hierarchy: [
-    snippet('MRO', 'print(ValueError.__mro__)'),
-    snippet('ZeroDivision', 'try:\n    1 / 0\nexcept ZeroDivisionError:\n    print("math error")'),
-    snippet('Catch parent', 'try:\n    int("x")\nexcept Exception:\n    print("caught Exception")'),
-    snippet('BaseException', 'print(issubclass(KeyboardInterrupt, BaseException))'),
-  ],
-  assertions: [
-    snippet('assert basic', 'def split_even(total, parts):\n    assert parts > 0, "parts must be positive"\n    return total / parts\nprint(split_even(10, 2))'),
-    snippet('assert type', 'value = 5\nassert isinstance(value, int)\nprint("ok")'),
-    snippet('assert range', 'age = 30\nassert age >= 0\nprint(age)'),
-  ],
-  debugging: [
-    snippet('breakpoint', '# breakpoint()  # debugger pause\nx = 2\nprint(x + 1)'),
-    snippet('Print debug', 'total = 0\nfor n in [1, 2, 3]:\n    total += n\n    print("debug total:", total)'),
-    snippet('repr inspect', 'data = {"a": 1}\nprint(repr(data))'),
-    snippet('Minimal repro', 'def buggy(a):\n    return a + 1\nprint(buggy(2))'),
-  ],
-  logging_basics: [
-    snippet('basicConfig', 'import logging\nlogging.basicConfig(level=logging.INFO)\nlog = logging.getLogger(__name__)\nlog.info("App started")'),
-    snippet('warning', 'import logging\nlogging.basicConfig(level=logging.WARNING)\nlogging.warning("Low disk")'),
-    snippet('error', 'import logging\nlogging.basicConfig(level=logging.ERROR)\nlogging.error("Failed to connect")'),
-    snippet('levels', 'import logging\nprint(logging.INFO, logging.WARNING, logging.ERROR)'),
-  ],
-  defensive_programming: [
-    snippet('Validate input', 'def average(nums):\n    if not nums:\n        raise ValueError("nums cannot be empty")\n    return sum(nums) / len(nums)\nprint(average([2, 4]))'),
-    snippet('Default fallback', 'def greet(name=None):\n    name = name or "guest"\n    return f"Hi {name}"\nprint(greet())'),
-    snippet('Bounds check', 'def clamp(n, lo, hi):\n    return max(lo, min(hi, n))\nprint(clamp(15, 0, 10))'),
-    snippet('Guard clause', 'def divide(a, b):\n    if b == 0:\n        raise ValueError("b cannot be 0")\n    return a / b\nprint(divide(10, 2))'),
-    snippet('Type check', 'def need_str(x):\n    if not isinstance(x, str):\n        raise TypeError("str required")\n    return x\nprint(need_str("ok"))'),
-  ],
-
   // ── Classes and objects ───────────────────────────────────────────
   classes_basics: [
     snippet('Define class', 'class Cat:\n    pass\n\nc = Cat()\nprint(c)'),
@@ -399,22 +339,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('json loads', 'import json\nprint(json.loads(\'{"ana": {"phone": "555"}}\'))'),
     snippet('Dict contacts', 'contacts = {}\ncontacts["ana"] = {"phone": "555"}\nprint(contacts)'),
     snippet('pop delete', 'contacts = {"a": 1}\ncontacts.pop("a", None)\nprint(contacts)'),
-  ],
-  proj_error_handling_guess_game: [
-    snippet('try int', 'try:\n    n = int("5")\nexcept ValueError:\n    n = 0\nprint(n)'),
-    snippet('while loop', 'secret = 7\nguess = 7\nprint("win" if guess == secret else "lose")'),
-    snippet('randint', 'import random\nprint(random.randint(1, 10))'),
-    snippet('Recover input', 'try:\n    n = int("bad")\nexcept ValueError:\n    print("Invalid number")'),
-  ],
-  proj_error_handling_quiz_app: [
-    snippet('try json', 'import json\ntry:\n    json.loads("{bad}")\nexcept json.JSONDecodeError:\n    print("bad JSON")'),
-    snippet('Grade safe', 'questions = [{"a": 1}]\nanswers = [1]\nprint(sum(1 for i, a in enumerate(answers) if a == questions[i]["a"]))'),
-    snippet('ValueError', 'try:\n    int("x")\nexcept ValueError:\n    print("bad int")'),
-  ],
-  proj_error_handling_expense_tracker: [
-    snippet('try float', 'try:\n    amount = float("12.5")\nexcept ValueError:\n    amount = 0\nprint(amount)'),
-    snippet('try date', 'from datetime import datetime\ntry:\n    d = datetime.strptime("2024-06-01", "%Y-%m-%d")\nexcept ValueError:\n    d = None\nprint(d)'),
-    snippet('Sum expenses', 'print(sum(e["amount"] for e in [{"amount": 10}, {"amount": 5}]))'),
   ],
   proj_data_apis_weather_cli: [
     snippet('Mock API', 'data = {"city": "London", "temp_c": 18, "conditions": "Cloudy"}\nprint(data)'),
