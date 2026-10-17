@@ -8,7 +8,7 @@ function chHelp(topicId, index, difficulty, title, prompt, validation, extra = {
 export const controlFlowTopics = [
   makeTopic({
     id: 'if_elif_else',
-    title: 'if elif else',
+    title: 'if, elif and else',
     paragraphs: [
       'Conditional statements let your program choose different paths. `if condition:` runs a block when the condition is true; `elif` checks another condition; `else` runs when none matched.',
       'Indentation defines which lines belong to each branch. Conditions are expressions that evaluate to True or False.',
@@ -43,7 +43,7 @@ export const controlFlowTopics = [
 
   makeTopic({
     id: 'boolean_logic',
-    title: 'Boolean Logic',
+    title: 'Combining conditions',
     paragraphs: [
       'Booleans represent truth: `True` and `False`. Combine conditions with `and`, `or`, and `not`. Short-circuit evaluation skips right side when result is already determined.',
       'Comparison operators produce booleans. Membership `in` and identity `is` also return True/False.',
@@ -78,7 +78,7 @@ export const controlFlowTopics = [
 
   makeTopic({
     id: 'comparison_operators',
-    title: 'Comparison Operators',
+    title: 'Comparisons',
     paragraphs: [
       'Compare values with `==`, `!=`, `<`, `>`, `<=`, `>=`. They return True or False without modifying operands.',
       'Chained comparisons like `1 < x < 10` are idiomatic Python. Strings compare lexicographically; types must usually be compatible.',
@@ -113,7 +113,7 @@ export const controlFlowTopics = [
 
   makeTopic({
     id: 'while_loops',
-    title: 'while Loops',
+    title: 'while loops',
     paragraphs: [
       'A `while condition:` loop repeats its body while the condition is true. Update variables inside the loop to avoid infinite loops.',
       'while suits unknown iteration counts — reading until sentinel, retrying input, or game loops.',
@@ -148,7 +148,7 @@ export const controlFlowTopics = [
 
   makeTopic({
     id: 'for_loops',
-    title: 'for Loops',
+    title: 'for loops',
     paragraphs: [
       '`for item in iterable:` visits each element in a sequence or collection. It is the preferred loop when you know what you are iterating over.',
       'Loop over strings, lists, ranges, dict keys, and file lines. The loop variable takes each value in turn.',
@@ -253,7 +253,7 @@ export const controlFlowTopics = [
 
   makeTopic({
     id: 'nested_loops',
-    title: 'Nested Loops',
+    title: 'Nested loops',
     paragraphs: [
       'Place one loop inside another to process grids, pairs, or combinations. Inner loop runs completely for each outer iteration.',
       'Common for multiplication tables, 2D lists, and comparing all pairs. Watch complexity — double loops over large data can be slow.',
@@ -288,7 +288,7 @@ export const controlFlowTopics = [
 
   makeTopic({
     id: 'match_case',
-    title: 'match case',
+    title: 'match and case',
     paragraphs: [
       'Python 3.10+ adds `match value:` with `case pattern:` branches — structural pattern matching similar to switch in other languages but more powerful.',
       'Match literals, capture variables, use `|` for alternatives, and `case _:` as wildcard default.',
@@ -323,7 +323,7 @@ export const controlFlowTopics = [
 
   makeTopic({
     id: 'loop_patterns',
-    title: 'Loop Patterns and Algorithms',
+    title: 'Loop patterns',
     paragraphs: [
       'Common patterns: accumulate (sum/product), search (find first match), filter (build new list), and map (transform each item).',
       'Recognizing patterns helps you pick for vs while and avoid bugs. Many algorithms are loops with careful state updates.',

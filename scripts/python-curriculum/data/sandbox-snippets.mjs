@@ -2,7 +2,7 @@ import { snippet } from './_builders.mjs'
 
 /** @type {Record<string, { id: string, label: string, code: string }[]>} */
 export const SANDBOX_SNIPPETS_BY_LEVEL = {
-  // ── Control Flow ──────────────────────────────────────────────
+  // ── Decisions and loops ──────────────────────────────────────────────
   if_elif_else: [
     snippet('Grade A', 'score = 95\nif score >= 90:\n    print("A")'),
     snippet('elif chain', 'score = 85\nif score >= 90:\n    print("A")\nelif score >= 80:\n    print("B")\nelse:\n    print("C")'),
@@ -218,26 +218,12 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('collections', 'from collections import Counter\nprint(Counter("aab"))'),
     snippet('datetime', 'import datetime\nprint(datetime.date.today())'),
   ],
-  math_module: [
-    snippet('sqrt', 'import math\nprint(math.sqrt(16))'),
-    snippet('pi', 'import math\nprint(round(math.pi, 2))'),
-    snippet('floor / ceil', 'import math\nprint(math.floor(3.9), math.ceil(3.1))'),
-    snippet('degrees', 'import math\nprint(math.degrees(math.pi))'),
-    snippet('pow', 'import math\nprint(math.pow(2, 8))'),
-  ],
   random_module: [
     snippet('randint', 'import random\nprint(random.randint(1, 10))'),
     snippet('choice', 'import random\nprint(random.choice(["red", "blue", "green"]))'),
     snippet('shuffle', 'import random\nlst = [1, 2, 3]\nrandom.shuffle(lst)\nprint(lst)'),
     snippet('seed', 'import random\nrandom.seed(0)\nprint(random.randint(1, 100))'),
     snippet('random()', 'import random\nprint(round(random.random(), 2))'),
-  ],
-  datetime_module: [
-    snippet('today', 'from datetime import date\ntoday = date.today()\nprint(today)'),
-    snippet('timedelta', 'from datetime import date, timedelta\nprint(date.today() + timedelta(days=7))'),
-    snippet('strftime', 'from datetime import datetime\nprint(datetime.now().strftime("%Y-%m-%d"))'),
-    snippet('datetime now', 'from datetime import datetime\nprint(datetime.now().year)'),
-    snippet('Parse date', 'from datetime import datetime\nd = datetime.strptime("2024-06-01", "%Y-%m-%d")\nprint(d.month)'),
   ],
   creating_modules: [
     snippet('Function module', 'def add(a, b):\n    return a + b\nprint(add(1, 2))'),
@@ -270,7 +256,7 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('src layout', '# src/myapp/__init__.py\nprint("src layout")'),
   ],
 
-  // ── File Handling ─────────────────────────────────────────────
+  // ── Files ─────────────────────────────────────────────
   opening_files: [
     snippet('with open', '# with open("notes.txt") as f:\n#     data = f.read()\nprint("with open pattern")'),
     snippet('pathlib Path', 'from pathlib import Path\np = Path("data.txt")\nprint(p.name, p.suffix)'),
@@ -307,18 +293,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('exists check', 'from pathlib import Path\nprint(Path(".").exists())'),
     snippet('stem', 'from pathlib import Path\nprint(Path("report.csv").stem)'),
   ],
-  csv_files: [
-    snippet('DictReader', 'import csv\nfrom io import StringIO\nbuf = StringIO("name,score\\nAda,99\\n")\nrows = list(csv.DictReader(buf))\nprint(rows[0])'),
-    snippet('csv writer', 'import csv\nfrom io import StringIO\nbuf = StringIO()\nw = csv.writer(buf)\nw.writerow(["a", "b"])\nprint(buf.getvalue())'),
-    snippet('Read rows', 'import csv\nfrom io import StringIO\ndata = "a,b\\n1,2\\n"\nprint(list(csv.reader(StringIO(data))))'),
-    snippet('Delimiter', 'import csv\nfrom io import StringIO\nbuf = StringIO()\ncsv.writer(buf, delimiter=";").writerow(["a", "b"])\nprint(buf.getvalue())'),
-  ],
-  json_files: [
-    snippet('dumps', 'import json\ndata = {"name": "Ada", "scores": [10, 20]}\nprint(json.dumps(data, indent=2))'),
-    snippet('loads', 'import json\nback = json.loads(\'{"name": "Ada"}\')\nprint(back["name"])'),
-    snippet('Round trip', 'import json\ndata = {"a": 1}\nprint(json.loads(json.dumps(data)))'),
-    snippet('List JSON', 'import json\nprint(json.loads("[1, 2, 3]"))'),
-  ],
   text_vs_binary: [
     snippet('encode', 'text = "hi"\nb = text.encode("utf-8")\nprint(b)'),
     snippet('decode', 'b = b"hello"\nprint(b.decode("utf-8"))'),
@@ -331,7 +305,7 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Safe message', 'path = "data.txt"\ntry:\n    open(path)\nexcept FileNotFoundError:\n    print(f"Could not open {path}")'),
   ],
 
-  // ── Error Handling ────────────────────────────────────────────
+  // ── Errors and exceptions ────────────────────────────────────────────
   try_except: [
     snippet('ValueError', 'try:\n    int("abc")\nexcept ValueError as e:\n    print("Bad number:", e)'),
     snippet('Recover', 'try:\n    n = int("bad")\nexcept ValueError:\n    n = 0\nprint(n)'),
@@ -391,7 +365,7 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Type check', 'def need_str(x):\n    if not isinstance(x, str):\n        raise TypeError("str required")\n    return x\nprint(need_str("ok"))'),
   ],
 
-  // ── Object Oriented ───────────────────────────────────────────
+  // ── Classes and objects ───────────────────────────────────────────
   classes_basics: [
     snippet('Define class', 'class Cat:\n    pass\n\nc = Cat()\nprint(c)'),
     snippet('__init__', 'class Dog:\n    def __init__(self, name):\n        self.name = name\n\nd = Dog("Rex")\nprint(d.name)'),
@@ -507,7 +481,7 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Range check', 'age = 30\nprint(0 <= age <= 120)'),
   ],
 
-  // ── Projects section topics ───────────────────────────────────
+  // ── Capstone projects ───────────────────────────────────
   cli_guess_game: [
     snippet('randint', 'import random\nprint(random.randint(1, 10))'),
     snippet('while guess', 'secret = 7\nguess = 0\nwhile guess != secret:\n    guess = 7\nprint("win")'),

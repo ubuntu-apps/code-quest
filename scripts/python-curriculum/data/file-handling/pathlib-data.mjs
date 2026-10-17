@@ -2,7 +2,7 @@ import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'pathlib_data',
-  title: 'Pathlib for data files',
+  title: 'Working with pathlib',
   paragraphs: [
     "Data lives in files, and `pathlib.Path` is the modern way to work with file paths. A `Path` is an object rather than a plain string, so it knows how to join, split and inspect itself, and it uses the right separator on Windows, macOS and Linux.",
     "Join parts with `/`, as in `Path(\"data\") / \"2026\" / \"scores.csv\"`. Then ask about the parts: `.name` is the file name (`scores.csv`), `.suffix` the last extension (`.csv`), `.stem` the name without the last extension (`scores`; for `a.tar.gz` it is `a.tar`), and `.parent` the folder it's in.",
@@ -229,15 +229,15 @@ depth = len(rel.parent.parts)`,
     }),
   ],
   questions: [
-    mc('What does `Path("data") / "a.csv"` do?', ['Divides two numbers', 'Raises a TypeError', 'Joins the parts into one path', 'Opens the file'], 2),
+    mc("What does `Path(\"data\") / \"a.csv\"` do?", ["Divides two numbers","Raises a `TypeError`","Joins the parts into one path","Opens the file"], 2),
     qShort('Which `Path` attribute gives the extension, like `.csv`? (attribute name)', 'suffix'),
-    mc('`Path("a/b.tar.gz").stem` is…', ['b.tar', 'b', 'b.tar.gz', 'a/b'], 0),
+    mc("`Path(\"a/b.tar.gz\").stem` is…", ["`b.tar`","`b`","`b.tar.gz`","`a/b`"], 0),
     mc('What does `mkdir(parents=True, exist_ok=True)` add over plain `mkdir()`?', ['Deletes old folders', 'Creates missing parents and doesn\'t fail if it exists', 'Sets permissions', 'Nothing'], 1),
     mc('How is `rglob("*.log")` different from `glob("*.log")`?', ['It is faster', 'It ignores hidden files', 'It returns strings', 'It also searches subfolders'], 3),
     mc('Why pass `encoding="utf-8"` to `read_text`?', ['So the file reads the same on every system', 'It is faster', 'It compresses the text', 'Paths require it'], 0),
     qShort('Which `Path` method swaps the extension, like `.csv` to `.json`? (name only)', 'with_suffix'),
-    mc('`p.exists()` returns…', ['The file contents', 'True or False', 'The file size', 'A new Path'], 1),
-    mc('Which gives a file\'s size in bytes?', ['len(p)', 'p.size', 'p.stat().st_size', 'p.bytes()'], 2),
+    mc("`p.exists()` returns…", ["The file contents","`True` or `False`","The file size","A new `Path`"], 1),
+    mc("Which gives a file's size in bytes?", ["`len(p)`","`p.size`","`p.stat().st_size`","`p.bytes()`"], 2),
     mc('Why prefer `pathlib` over string paths?', ['Strings can\'t hold paths', 'It is the only way to open files', 'It is always faster', 'Joining and inspecting paths is clearer and works across systems'], 3),
   ],
 })

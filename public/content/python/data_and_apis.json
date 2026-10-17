@@ -325,15 +325,15 @@
             "choices": [
               {
                 "id": "a",
-                "label": "dict"
+                "label": "`dict`"
               },
               {
                 "id": "b",
-                "label": "str"
+                "label": "`str`"
               },
               {
                 "id": "c",
-                "label": "bytes"
+                "label": "`bytes`"
               },
               {
                 "id": "d",
@@ -358,15 +358,15 @@
             "choices": [
               {
                 "id": "a",
-                "label": "\"None\""
+                "label": "`\"None\"`"
               },
               {
                 "id": "b",
-                "label": "nil"
+                "label": "`nil`"
               },
               {
                 "id": "c",
-                "label": "null"
+                "label": "`null`"
               },
               {
                 "id": "d",
@@ -410,15 +410,15 @@
               },
               {
                 "id": "b",
-                "label": "{1: \"a\"}"
+                "label": "`{1: \"a\"}`"
               },
               {
                 "id": "c",
-                "label": "[1, \"a\"]"
+                "label": "`[1, \"a\"]`"
               },
               {
                 "id": "d",
-                "label": "{\"1\": \"a\"}"
+                "label": "`{\"1\": \"a\"}`"
               }
             ],
             "correctChoiceId": "d"
@@ -487,7 +487,7 @@
             "choices": [
               {
                 "id": "a",
-                "label": "(1, 2)"
+                "label": "`(1, 2)`"
               },
               {
                 "id": "b",
@@ -495,11 +495,11 @@
               },
               {
                 "id": "c",
-                "label": "[1, 2]"
+                "label": "`[1, 2]`"
               },
               {
                 "id": "d",
-                "label": "{\"0\": 1, \"1\": 2}"
+                "label": "`{\"0\": 1, \"1\": 2}`"
               }
             ],
             "correctChoiceId": "c"
@@ -828,7 +828,7 @@
             "choices": [
               {
                 "id": "a",
-                "label": "str"
+                "label": "`str`"
               },
               {
                 "id": "b",
@@ -836,11 +836,11 @@
               },
               {
                 "id": "c",
-                "label": "bytes"
+                "label": "`bytes`"
               },
               {
                 "id": "d",
-                "label": "int or str"
+                "label": "`int` or `str`"
               }
             ],
             "correctChoiceId": "a"
@@ -861,19 +861,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "write"
+                "label": "`write`"
               },
               {
                 "id": "b",
-                "label": "row"
+                "label": "`row`"
               },
               {
                 "id": "c",
-                "label": "append"
+                "label": "`append`"
               },
               {
                 "id": "d",
-                "label": "writerow"
+                "label": "`writerow`"
               }
             ],
             "correctChoiceId": "d"
@@ -942,19 +942,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "writeheader"
+                "label": "`writeheader`"
               },
               {
                 "id": "b",
-                "label": "header"
+                "label": "`header`"
               },
               {
                 "id": "c",
-                "label": "writekeys"
+                "label": "`writekeys`"
               },
               {
                 "id": "d",
-                "label": "writerow(None)"
+                "label": "`writerow(None)`"
               }
             ],
             "correctChoiceId": "a"
@@ -974,7 +974,7 @@
               },
               {
                 "id": "c",
-                "label": "sum needs a list"
+                "label": "`sum` needs a list"
               },
               {
                 "id": "d",
@@ -1003,6 +1003,525 @@
               {
                 "id": "d",
                 "label": "Analyzing large tables with filtering and grouping"
+              }
+            ],
+            "correctChoiceId": "d"
+          }
+        ]
+      }
+    },
+    {
+      "id": "datetime_data",
+      "title": "Dates and times",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "dates_and_timedelta",
+          "label": "Dates and timedelta",
+          "code": "from datetime import date, timedelta\n\nd = date(2026, 1, 31)\nprint(d + timedelta(days=1))\nprint((date(2026, 3, 1) - d).days)"
+        },
+        {
+          "id": "format",
+          "label": "Format",
+          "code": "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nprint(dt.strftime(\"%d/%m/%Y %H:%M\"))\nprint(dt.strftime(\"%A, %d %b %y\"))"
+        },
+        {
+          "id": "parse",
+          "label": "Parse",
+          "code": "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\nprint(parsed, parsed.year)"
+        },
+        {
+          "id": "iso_8601",
+          "label": "ISO 8601",
+          "code": "from datetime import datetime, timedelta\n\nwhen = datetime.fromisoformat(\"2026-10-16T09:30:00\")\nprint((when + timedelta(minutes=90)).isoformat())"
+        },
+        {
+          "id": "time_zones",
+          "label": "Time zones",
+          "code": "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nprint(utc_time.astimezone(timezone(timedelta(hours=-4))))\nprint(utc_time.astimezone(timezone(timedelta(hours=2))))"
+        }
+      ],
+      "intro": {
+        "title": "Dates and times",
+        "bodyMarkdown": "The `datetime` module has a type for each job: `date` for a day (16 October 2026), `datetime` for a day and a time, and `timedelta` for a length of time, such as 30 days or 90 minutes.\n\n```\nfrom datetime import date, datetime, timedelta\n\nd = date(2026, 10, 16)\nmeeting = datetime(2026, 10, 16, 9, 30)\nprint(d + timedelta(days=30))   # 2026-11-15\n```\n\nDate arithmetic follows the calendar: adding `timedelta(days=1)` to 31 January gives 1 February. Subtracting two dates gives a `timedelta`, and its `.days` is the number of days between them (negative if the second date is later). Dates compare with `<` and `>`, and tuples help compare parts of them: `(today.month, today.day) < (birth.month, birth.day)` is true while this year's birthday is still to come.\n\n`strftime` (\"string format time\") turns a date into text using codes: `%Y` is the 4-digit year (`%y` gives only 2 digits), `%m` the month number, `%d` the day, `%H:%M` the 24-hour time, `%A` the weekday name and `%b` the short month name. `strptime` (\"string parse time\") goes the other way, reading text with the same codes:\n\n```\nprint(meeting.strftime(\"%d/%m/%Y %H:%M\"))   # 16/10/2026 09:30\nprint(meeting.strftime(\"%A\"))               # Friday\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\n```\n\nAPIs usually send times in the **ISO 8601** format, `2026-10-16T09:30:00`, because it sorts correctly and means the same everywhere. `.isoformat()` writes it and `datetime.fromisoformat(text)` (or `date.fromisoformat`) reads it.\n\n`d.weekday()` returns 0 for Monday up to 6 for Sunday, which makes weekends easy to skip, and `d.isocalendar().week` gives the ISO week number, handy for weekly reports.\n\n**Time zones.** A plain `datetime` is **naive**: it has no time zone, so 09:30 could be anywhere. An **aware** datetime carries one in `tzinfo`. Servers store times in UTC, which is the same everywhere and has no daylight-saving jumps, and convert to local time only to show it. `astimezone` converts:\n\n```\nfrom datetime import timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = timezone(timedelta(hours=-4))\nprint(utc_time.astimezone(new_york))   # 2026-10-16 09:00:00-04:00\n```\n\nPython won't compare a naive datetime with an aware one: it raises `TypeError` instead of guessing. The fixed offset above is fine for a single date; for a real place, whose offset changes with daylight saving, use `zoneinfo.ZoneInfo(\"America/New_York\")`.",
+        "sandboxCode": "from datetime import date, datetime, timedelta\n\ntoday = date(2026, 10, 16)\nprint(today.strftime(\"%A %d %B %Y\"))\nprint(today + timedelta(days=30))\nprint((date(2026, 12, 25) - today).days, \"days until 25 December\")",
+        "readMore": {
+          "label": "Python docs: the datetime module",
+          "url": "https://docs.python.org/3/library/datetime.html",
+          "source": "Python docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "datetime_data_ch1",
+          "title": "Easy: Make a date",
+          "promptMarkdown": "Create the date 16 October 2026 as `d`, then set `day_name` to its weekday name (like `\"Monday\"`) using `strftime`.",
+          "starterCode": "from datetime import date\n\nd = ___\nday_name = ___",
+          "hint": "`date(year, month, day)`, and `%A` in `strftime` is the full weekday name.",
+          "solution": "from datetime import date\n\nd = date(2026, 10, 16)\nday_name = d.strftime(\"%A\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "d is the right date",
+                "assertion": "d == __import__('datetime').date(2026, 10, 16)"
+              },
+              {
+                "id": "t2",
+                "label": "day_name",
+                "assertion": "day_name == \"Friday\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch2",
+          "title": "Easy: Format for display",
+          "promptMarkdown": "Format `dt` as `05/03/2026 14:30` (day/month/year, 24-hour time). Store it in `label`.",
+          "starterCode": "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nlabel = dt.strftime(___)",
+          "hint": "Use `%d/%m/%Y %H:%M`.",
+          "solution": "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nlabel = dt.strftime(\"%d/%m/%Y %H:%M\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "label",
+                "assertion": "label == \"05/03/2026 14:30\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch3",
+          "title": "Medium: Parse a date string",
+          "promptMarkdown": "Parse the text `\"16 Oct 2026\"` into a `datetime` called `parsed` with `strptime`.",
+          "starterCode": "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", ___)",
+          "hint": "`%d` is the day, `%b` the short month name and `%Y` the 4-digit year.",
+          "solution": "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "parsed",
+                "assertion": "parsed == __import__('datetime').datetime(2026, 10, 16)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch4",
+          "title": "Medium: Add days",
+          "promptMarkdown": "An invoice dated `issued` is due 30 days later. Compute `due` with `timedelta`.",
+          "starterCode": "from datetime import date, timedelta\n\nissued = date(2026, 1, 15)\ndue = ___",
+          "hint": "`issued + timedelta(days=30)`.",
+          "solution": "from datetime import date, timedelta\n\nissued = date(2026, 1, 15)\ndue = issued + timedelta(days=30)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "due rolls into February",
+                "assertion": "due == __import__('datetime').date(2026, 2, 14)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch5",
+          "title": "Hard: Days until",
+          "promptMarkdown": "Write `days_until(today, target)` that returns how many days are left (an int). It is negative if `target` has passed.",
+          "starterCode": "from datetime import date\n\ndef days_until(today, target):\n    ___",
+          "hint": "Subtracting two dates gives a `timedelta`; use its `.days`.",
+          "solution": "from datetime import date\n\ndef days_until(today, target):\n    return (target - today).days",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "from datetime import date",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Across a month",
+                "assertion": "days_until(date(2026, 10, 16), date(2026, 11, 1)) == 16"
+              },
+              {
+                "id": "t2",
+                "label": "Across a year",
+                "assertion": "days_until(date(2026, 12, 25), date(2027, 1, 1)) == 7"
+              },
+              {
+                "id": "t3",
+                "label": "Past dates are negative",
+                "assertion": "days_until(date(2026, 10, 16), date(2026, 10, 10)) == -6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch6",
+          "title": "Hard: ISO 8601 in and out",
+          "promptMarkdown": "APIs send times like `\"2026-10-16T09:30:00\"`. Parse `stamp` into `when` with `fromisoformat`, add 90 minutes, and store the result back as an ISO string in `later`.",
+          "starterCode": "from datetime import datetime, timedelta\n\nstamp = \"2026-10-16T09:30:00\"\nwhen = ___\nlater = ___",
+          "hint": "`datetime.fromisoformat(stamp)`; then `(when + timedelta(minutes=90)).isoformat()`.",
+          "solution": "from datetime import datetime, timedelta\n\nstamp = \"2026-10-16T09:30:00\"\nwhen = datetime.fromisoformat(stamp)\nlater = (when + timedelta(minutes=90)).isoformat()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "when is a datetime",
+                "assertion": "when == __import__('datetime').datetime(2026, 10, 16, 9, 30)"
+              },
+              {
+                "id": "t2",
+                "label": "later is ISO text",
+                "assertion": "later == \"2026-10-16T11:00:00\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch7",
+          "title": "Expert: Age in years",
+          "promptMarkdown": "Write `age(birth, today)` that returns a person's age in whole years. Someone hasn't aged yet if their birthday is later this year.",
+          "starterCode": "from datetime import date\n\ndef age(birth, today):\n    ___",
+          "hint": "Start with `today.year - birth.year`, then subtract 1 if `(today.month, today.day) < (birth.month, birth.day)`.",
+          "solution": "from datetime import date\n\ndef age(birth, today):\n    years = today.year - birth.year\n    if (today.month, today.day) < (birth.month, birth.day):\n        years -= 1\n    return years",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "from datetime import date",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Birthday already passed",
+                "assertion": "age(date(2000, 3, 1), date(2026, 10, 16)) == 26"
+              },
+              {
+                "id": "t2",
+                "label": "Birthday tomorrow",
+                "assertion": "age(date(2000, 10, 17), date(2026, 10, 16)) == 25"
+              },
+              {
+                "id": "t3",
+                "label": "Birthday today",
+                "assertion": "age(date(2000, 10, 16), date(2026, 10, 16)) == 26"
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch8",
+          "title": "Expert: UTC to local time",
+          "promptMarkdown": "Servers store times in UTC. Convert `utc_time` to New York summer time (UTC−4) and store it in `local`. Use a fixed offset with `timezone(timedelta(hours=-4))`.",
+          "starterCode": "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = ___\nlocal = ___",
+          "hint": "Aware datetimes convert with `.astimezone(new_york)`.",
+          "solution": "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = timezone(timedelta(hours=-4))\nlocal = utc_time.astimezone(new_york)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Hour is shifted",
+                "assertion": "local.hour == 9"
+              },
+              {
+                "id": "t2",
+                "label": "Offset is -4 hours",
+                "assertion": "local.utcoffset() == __import__('datetime').timedelta(hours=-4)"
+              },
+              {
+                "id": "t3",
+                "label": "Same moment in time",
+                "assertion": "local == utc_time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch9",
+          "title": "Expert: Count by week",
+          "promptMarkdown": "Count how many `orders` fall in each ISO week. Store a dict in `per_week` that maps the week number to the count.",
+          "starterCode": "from datetime import date\n\norders = [\"2026-10-05\", \"2026-10-07\", \"2026-10-12\", \"2026-10-16\", \"2026-10-18\", \"2026-10-19\"]\nper_week = {}\n___",
+          "hint": "Parse with `date.fromisoformat(s)`; `.isocalendar().week` gives the week number.",
+          "solution": "from datetime import date\n\norders = [\"2026-10-05\", \"2026-10-07\", \"2026-10-12\", \"2026-10-16\", \"2026-10-18\", \"2026-10-19\"]\nper_week = {}\nfor s in orders:\n    week = date.fromisoformat(s).isocalendar().week\n    per_week[week] = per_week.get(week, 0) + 1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Counts per ISO week",
+                "assertion": "per_week == {41: 2, 42: 3, 43: 1}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "datetime_data_ch10",
+          "title": "Expert: Business days",
+          "promptMarkdown": "Write `business_days(start, end)` that counts Monday–Friday days from `start` up to but not including `end`.",
+          "starterCode": "from datetime import date, timedelta\n\ndef business_days(start, end):\n    ___",
+          "hint": "Step one day at a time with `timedelta(days=1)`; `d.weekday() < 5` is a weekday.",
+          "solution": "from datetime import date, timedelta\n\ndef business_days(start, end):\n    count = 0\n    day = start\n    while day < end:\n        if day.weekday() < 5:\n            count += 1\n        day += timedelta(days=1)\n    return count",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "from datetime import date",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "One full week",
+                "assertion": "business_days(date(2026, 10, 12), date(2026, 10, 19)) == 5"
+              },
+              {
+                "id": "t2",
+                "label": "Weekend only",
+                "assertion": "business_days(date(2026, 10, 17), date(2026, 10, 19)) == 0"
+              },
+              {
+                "id": "t3",
+                "label": "Two weeks",
+                "assertion": "business_days(date(2026, 10, 1), date(2026, 10, 15)) == 10"
+              },
+              {
+                "id": "t4",
+                "label": "Empty range",
+                "assertion": "business_days(date(2026, 10, 16), date(2026, 10, 16)) == 0"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "datetime_data_q1",
+            "type": "mcq",
+            "prompt": "What do you get from `date(2026, 1, 31) + timedelta(days=1)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2026-01-32`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`2026-02-01`"
+              },
+              {
+                "id": "d",
+                "label": "`2026-01-01`"
+              }
+            ],
+            "correctChoiceId": "c"
+          },
+          {
+            "id": "datetime_data_q2",
+            "type": "shortText",
+            "prompt": "Which method turns a datetime into text with a format like `%Y-%m-%d`? (name only)",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "strftime"
+            }
+          },
+          {
+            "id": "datetime_data_q3",
+            "type": "mcq",
+            "prompt": "Which method parses text into a datetime with a format string?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`strptime`"
+              },
+              {
+                "id": "b",
+                "label": "`strftime`"
+              },
+              {
+                "id": "c",
+                "label": "`isoformat`"
+              },
+              {
+                "id": "d",
+                "label": "`parse`"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "datetime_data_q4",
+            "type": "mcq",
+            "prompt": "Subtracting two `date` objects gives…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An `int`"
+              },
+              {
+                "id": "b",
+                "label": "A `timedelta`"
+              },
+              {
+                "id": "c",
+                "label": "A `date`"
+              },
+              {
+                "id": "d",
+                "label": "A `float`"
+              }
+            ],
+            "correctChoiceId": "b"
+          },
+          {
+            "id": "datetime_data_q5",
+            "type": "mcq",
+            "prompt": "What is a \"naive\" datetime?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "One in UTC"
+              },
+              {
+                "id": "b",
+                "label": "One before 1970"
+              },
+              {
+                "id": "c",
+                "label": "One with only a date"
+              },
+              {
+                "id": "d",
+                "label": "One with no time zone attached"
+              }
+            ],
+            "correctChoiceId": "d"
+          },
+          {
+            "id": "datetime_data_q6",
+            "type": "mcq",
+            "prompt": "Why store times in UTC on servers?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "UTC has no daylight-saving jumps and is the same everywhere"
+              },
+              {
+                "id": "b",
+                "label": "It uses less memory"
+              },
+              {
+                "id": "c",
+                "label": "Python requires it"
+              },
+              {
+                "id": "d",
+                "label": "It is more precise"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "datetime_data_q7",
+            "type": "mcq",
+            "prompt": "In `strftime`, which code gives the 4-digit year, like `2026`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`%y`"
+              },
+              {
+                "id": "b",
+                "label": "`%D`"
+              },
+              {
+                "id": "c",
+                "label": "`%Y`"
+              },
+              {
+                "id": "d",
+                "label": "`%j`"
+              }
+            ],
+            "correctChoiceId": "c"
+          },
+          {
+            "id": "datetime_data_q8",
+            "type": "mcq",
+            "prompt": "What does `datetime(2026, 10, 16, 9, 30).isoformat()` return?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`16/10/2026 09:30`"
+              },
+              {
+                "id": "b",
+                "label": "`2026-10-16T09:30:00`"
+              },
+              {
+                "id": "c",
+                "label": "`Oct 16 2026`"
+              },
+              {
+                "id": "d",
+                "label": "`1792145400`"
+              }
+            ],
+            "correctChoiceId": "b"
+          },
+          {
+            "id": "datetime_data_q9",
+            "type": "mcq",
+            "prompt": "`d.weekday()` returns 0 for…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Sunday"
+              },
+              {
+                "id": "b",
+                "label": "Saturday"
+              },
+              {
+                "id": "c",
+                "label": "Monday"
+              },
+              {
+                "id": "d",
+                "label": "January"
+              }
+            ],
+            "correctChoiceId": "c"
+          },
+          {
+            "id": "datetime_data_q10",
+            "type": "mcq",
+            "prompt": "Comparing a naive datetime with an aware one…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Treats the naive one as UTC"
+              },
+              {
+                "id": "b",
+                "label": "Uses your computer's time zone"
+              },
+              {
+                "id": "c",
+                "label": "Ignores the time zone"
+              },
+              {
+                "id": "d",
+                "label": "Raises a `TypeError`"
               }
             ],
             "correctChoiceId": "d"
@@ -1333,15 +1852,15 @@
             "choices": [
               {
                 "id": "a",
-                "label": "str"
+                "label": "`str`"
               },
               {
                 "id": "b",
-                "label": "dict"
+                "label": "`dict`"
               },
               {
                 "id": "c",
-                "label": "bytes"
+                "label": "`bytes`"
               },
               {
                 "id": "d",
@@ -1414,19 +1933,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "ValueError"
+                "label": "`ValueError`"
               },
               {
                 "id": "b",
-                "label": "TimeoutError"
+                "label": "`TimeoutError`"
               },
               {
                 "id": "c",
-                "label": "JSONDecodeError"
+                "label": "`JSONDecodeError`"
               },
               {
                 "id": "d",
-                "label": "HTTPError"
+                "label": "`HTTPError`"
               }
             ],
             "correctChoiceId": "d"
@@ -1438,15 +1957,15 @@
             "choices": [
               {
                 "id": "a",
-                "label": "bytes"
+                "label": "`bytes`"
               },
               {
                 "id": "b",
-                "label": "A dict"
+                "label": "A `dict`"
               },
               {
                 "id": "c",
-                "label": "A str"
+                "label": "A `str`"
               },
               {
                 "id": "d",
@@ -1872,19 +2391,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "POST"
+                "label": "`POST`"
               },
               {
                 "id": "b",
-                "label": "GET"
+                "label": "`GET`"
               },
               {
                 "id": "c",
-                "label": "PUT"
+                "label": "`PUT`"
               },
               {
                 "id": "d",
-                "label": "DELETE"
+                "label": "`DELETE`"
               }
             ],
             "correctChoiceId": "b"
@@ -1953,19 +2472,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "GET"
+                "label": "`GET`"
               },
               {
                 "id": "b",
-                "label": "POST"
+                "label": "`POST`"
               },
               {
                 "id": "c",
-                "label": "PATCH"
+                "label": "`PATCH`"
               },
               {
                 "id": "d",
-                "label": "PUT"
+                "label": "`PUT`"
               }
             ],
             "correctChoiceId": "d"
@@ -2071,1538 +2590,6 @@
               {
                 "id": "d",
                 "label": "So the API can change without breaking existing clients"
-              }
-            ],
-            "correctChoiceId": "d"
-          }
-        ]
-      }
-    },
-    {
-      "id": "datetime_data",
-      "title": "Dates and times",
-      "kind": "topic",
-      "sandboxSnippets": [
-        {
-          "id": "dates_and_timedelta",
-          "label": "Dates and timedelta",
-          "code": "from datetime import date, timedelta\n\nd = date(2026, 1, 31)\nprint(d + timedelta(days=1))\nprint((date(2026, 3, 1) - d).days)"
-        },
-        {
-          "id": "format",
-          "label": "Format",
-          "code": "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nprint(dt.strftime(\"%d/%m/%Y %H:%M\"))\nprint(dt.strftime(\"%A, %d %b %y\"))"
-        },
-        {
-          "id": "parse",
-          "label": "Parse",
-          "code": "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\nprint(parsed, parsed.year)"
-        },
-        {
-          "id": "iso_8601",
-          "label": "ISO 8601",
-          "code": "from datetime import datetime, timedelta\n\nwhen = datetime.fromisoformat(\"2026-10-16T09:30:00\")\nprint((when + timedelta(minutes=90)).isoformat())"
-        },
-        {
-          "id": "time_zones",
-          "label": "Time zones",
-          "code": "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nprint(utc_time.astimezone(timezone(timedelta(hours=-4))))\nprint(utc_time.astimezone(timezone(timedelta(hours=2))))"
-        }
-      ],
-      "intro": {
-        "title": "Dates and times",
-        "bodyMarkdown": "The `datetime` module has a type for each job: `date` for a day (16 October 2026), `datetime` for a day and a time, and `timedelta` for a length of time, such as 30 days or 90 minutes.\n\n```\nfrom datetime import date, datetime, timedelta\n\nd = date(2026, 10, 16)\nmeeting = datetime(2026, 10, 16, 9, 30)\nprint(d + timedelta(days=30))   # 2026-11-15\n```\n\nDate arithmetic follows the calendar: adding `timedelta(days=1)` to 31 January gives 1 February. Subtracting two dates gives a `timedelta`, and its `.days` is the number of days between them (negative if the second date is later). Dates compare with `<` and `>`, and tuples help compare parts of them: `(today.month, today.day) < (birth.month, birth.day)` is true while this year's birthday is still to come.\n\n`strftime` (\"string format time\") turns a date into text using codes: `%Y` is the 4-digit year (`%y` gives only 2 digits), `%m` the month number, `%d` the day, `%H:%M` the 24-hour time, `%A` the weekday name and `%b` the short month name. `strptime` (\"string parse time\") goes the other way, reading text with the same codes:\n\n```\nprint(meeting.strftime(\"%d/%m/%Y %H:%M\"))   # 16/10/2026 09:30\nprint(meeting.strftime(\"%A\"))               # Friday\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\n```\n\nAPIs usually send times in the **ISO 8601** format, `2026-10-16T09:30:00`, because it sorts correctly and means the same everywhere. `.isoformat()` writes it and `datetime.fromisoformat(text)` (or `date.fromisoformat`) reads it.\n\n`d.weekday()` returns 0 for Monday up to 6 for Sunday, which makes weekends easy to skip, and `d.isocalendar().week` gives the ISO week number, handy for weekly reports.\n\n**Time zones.** A plain `datetime` is **naive**: it has no time zone, so 09:30 could be anywhere. An **aware** datetime carries one in `tzinfo`. Servers store times in UTC, which is the same everywhere and has no daylight-saving jumps, and convert to local time only to show it. `astimezone` converts:\n\n```\nfrom datetime import timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = timezone(timedelta(hours=-4))\nprint(utc_time.astimezone(new_york))   # 2026-10-16 09:00:00-04:00\n```\n\nPython won't compare a naive datetime with an aware one: it raises `TypeError` instead of guessing. The fixed offset above is fine for a single date; for a real place, whose offset changes with daylight saving, use `zoneinfo.ZoneInfo(\"America/New_York\")`.",
-        "sandboxCode": "from datetime import date, datetime, timedelta\n\ntoday = date(2026, 10, 16)\nprint(today.strftime(\"%A %d %B %Y\"))\nprint(today + timedelta(days=30))\nprint((date(2026, 12, 25) - today).days, \"days until 25 December\")",
-        "readMore": {
-          "label": "Python docs: the datetime module",
-          "url": "https://docs.python.org/3/library/datetime.html",
-          "source": "Python docs"
-        }
-      },
-      "challenges": [
-        {
-          "id": "datetime_data_ch1",
-          "title": "Easy: Make a date",
-          "promptMarkdown": "Create the date 16 October 2026 as `d`, then set `day_name` to its weekday name (like `\"Monday\"`) using `strftime`.",
-          "starterCode": "from datetime import date\n\nd = ___\nday_name = ___",
-          "hint": "`date(year, month, day)`, and `%A` in `strftime` is the full weekday name.",
-          "solution": "from datetime import date\n\nd = date(2026, 10, 16)\nday_name = d.strftime(\"%A\")",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "d is the right date",
-                "assertion": "d == __import__('datetime').date(2026, 10, 16)"
-              },
-              {
-                "id": "t2",
-                "label": "day_name",
-                "assertion": "day_name == \"Friday\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch2",
-          "title": "Easy: Format for display",
-          "promptMarkdown": "Format `dt` as `05/03/2026 14:30` (day/month/year, 24-hour time). Store it in `label`.",
-          "starterCode": "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nlabel = dt.strftime(___)",
-          "hint": "Use `%d/%m/%Y %H:%M`.",
-          "solution": "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nlabel = dt.strftime(\"%d/%m/%Y %H:%M\")",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "label",
-                "assertion": "label == \"05/03/2026 14:30\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch3",
-          "title": "Medium: Parse a date string",
-          "promptMarkdown": "Parse the text `\"16 Oct 2026\"` into a `datetime` called `parsed` with `strptime`.",
-          "starterCode": "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", ___)",
-          "hint": "`%d` is the day, `%b` the short month name and `%Y` the 4-digit year.",
-          "solution": "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "parsed",
-                "assertion": "parsed == __import__('datetime').datetime(2026, 10, 16)"
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch4",
-          "title": "Medium: Add days",
-          "promptMarkdown": "An invoice dated `issued` is due 30 days later. Compute `due` with `timedelta`.",
-          "starterCode": "from datetime import date, timedelta\n\nissued = date(2026, 1, 15)\ndue = ___",
-          "hint": "`issued + timedelta(days=30)`.",
-          "solution": "from datetime import date, timedelta\n\nissued = date(2026, 1, 15)\ndue = issued + timedelta(days=30)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "due rolls into February",
-                "assertion": "due == __import__('datetime').date(2026, 2, 14)"
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch5",
-          "title": "Hard: Days until",
-          "promptMarkdown": "Write `days_until(today, target)` that returns how many days are left (an int). It is negative if `target` has passed.",
-          "starterCode": "from datetime import date\n\ndef days_until(today, target):\n    ___",
-          "hint": "Subtracting two dates gives a `timedelta`; use its `.days`.",
-          "solution": "from datetime import date\n\ndef days_until(today, target):\n    return (target - today).days",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "from datetime import date",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Across a month",
-                "assertion": "days_until(date(2026, 10, 16), date(2026, 11, 1)) == 16"
-              },
-              {
-                "id": "t2",
-                "label": "Across a year",
-                "assertion": "days_until(date(2026, 12, 25), date(2027, 1, 1)) == 7"
-              },
-              {
-                "id": "t3",
-                "label": "Past dates are negative",
-                "assertion": "days_until(date(2026, 10, 16), date(2026, 10, 10)) == -6"
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch6",
-          "title": "Hard: ISO 8601 in and out",
-          "promptMarkdown": "APIs send times like `\"2026-10-16T09:30:00\"`. Parse `stamp` into `when` with `fromisoformat`, add 90 minutes, and store the result back as an ISO string in `later`.",
-          "starterCode": "from datetime import datetime, timedelta\n\nstamp = \"2026-10-16T09:30:00\"\nwhen = ___\nlater = ___",
-          "hint": "`datetime.fromisoformat(stamp)`; then `(when + timedelta(minutes=90)).isoformat()`.",
-          "solution": "from datetime import datetime, timedelta\n\nstamp = \"2026-10-16T09:30:00\"\nwhen = datetime.fromisoformat(stamp)\nlater = (when + timedelta(minutes=90)).isoformat()",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "when is a datetime",
-                "assertion": "when == __import__('datetime').datetime(2026, 10, 16, 9, 30)"
-              },
-              {
-                "id": "t2",
-                "label": "later is ISO text",
-                "assertion": "later == \"2026-10-16T11:00:00\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch7",
-          "title": "Expert: Age in years",
-          "promptMarkdown": "Write `age(birth, today)` that returns a person's age in whole years. Someone hasn't aged yet if their birthday is later this year.",
-          "starterCode": "from datetime import date\n\ndef age(birth, today):\n    ___",
-          "hint": "Start with `today.year - birth.year`, then subtract 1 if `(today.month, today.day) < (birth.month, birth.day)`.",
-          "solution": "from datetime import date\n\ndef age(birth, today):\n    years = today.year - birth.year\n    if (today.month, today.day) < (birth.month, birth.day):\n        years -= 1\n    return years",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "from datetime import date",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Birthday already passed",
-                "assertion": "age(date(2000, 3, 1), date(2026, 10, 16)) == 26"
-              },
-              {
-                "id": "t2",
-                "label": "Birthday tomorrow",
-                "assertion": "age(date(2000, 10, 17), date(2026, 10, 16)) == 25"
-              },
-              {
-                "id": "t3",
-                "label": "Birthday today",
-                "assertion": "age(date(2000, 10, 16), date(2026, 10, 16)) == 26"
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch8",
-          "title": "Expert: UTC to local time",
-          "promptMarkdown": "Servers store times in UTC. Convert `utc_time` to New York summer time (UTC−4) and store it in `local`. Use a fixed offset with `timezone(timedelta(hours=-4))`.",
-          "starterCode": "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = ___\nlocal = ___",
-          "hint": "Aware datetimes convert with `.astimezone(new_york)`.",
-          "solution": "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = timezone(timedelta(hours=-4))\nlocal = utc_time.astimezone(new_york)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Hour is shifted",
-                "assertion": "local.hour == 9"
-              },
-              {
-                "id": "t2",
-                "label": "Offset is -4 hours",
-                "assertion": "local.utcoffset() == __import__('datetime').timedelta(hours=-4)"
-              },
-              {
-                "id": "t3",
-                "label": "Same moment in time",
-                "assertion": "local == utc_time"
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch9",
-          "title": "Expert: Count by week",
-          "promptMarkdown": "Count how many `orders` fall in each ISO week. Store a dict in `per_week` that maps the week number to the count.",
-          "starterCode": "from datetime import date\n\norders = [\"2026-10-05\", \"2026-10-07\", \"2026-10-12\", \"2026-10-16\", \"2026-10-18\", \"2026-10-19\"]\nper_week = {}\n___",
-          "hint": "Parse with `date.fromisoformat(s)`; `.isocalendar().week` gives the week number.",
-          "solution": "from datetime import date\n\norders = [\"2026-10-05\", \"2026-10-07\", \"2026-10-12\", \"2026-10-16\", \"2026-10-18\", \"2026-10-19\"]\nper_week = {}\nfor s in orders:\n    week = date.fromisoformat(s).isocalendar().week\n    per_week[week] = per_week.get(week, 0) + 1",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Counts per ISO week",
-                "assertion": "per_week == {41: 2, 42: 3, 43: 1}"
-              }
-            ]
-          }
-        },
-        {
-          "id": "datetime_data_ch10",
-          "title": "Expert: Business days",
-          "promptMarkdown": "Write `business_days(start, end)` that counts Monday–Friday days from `start` up to but not including `end`.",
-          "starterCode": "from datetime import date, timedelta\n\ndef business_days(start, end):\n    ___",
-          "hint": "Step one day at a time with `timedelta(days=1)`; `d.weekday() < 5` is a weekday.",
-          "solution": "from datetime import date, timedelta\n\ndef business_days(start, end):\n    count = 0\n    day = start\n    while day < end:\n        if day.weekday() < 5:\n            count += 1\n        day += timedelta(days=1)\n    return count",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "from datetime import date",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "One full week",
-                "assertion": "business_days(date(2026, 10, 12), date(2026, 10, 19)) == 5"
-              },
-              {
-                "id": "t2",
-                "label": "Weekend only",
-                "assertion": "business_days(date(2026, 10, 17), date(2026, 10, 19)) == 0"
-              },
-              {
-                "id": "t3",
-                "label": "Two weeks",
-                "assertion": "business_days(date(2026, 10, 1), date(2026, 10, 15)) == 10"
-              },
-              {
-                "id": "t4",
-                "label": "Empty range",
-                "assertion": "business_days(date(2026, 10, 16), date(2026, 10, 16)) == 0"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "datetime_data_q1",
-            "type": "mcq",
-            "prompt": "What do you get from `date(2026, 1, 31) + timedelta(days=1)`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "2026-01-32"
-              },
-              {
-                "id": "b",
-                "label": "An error"
-              },
-              {
-                "id": "c",
-                "label": "2026-02-01"
-              },
-              {
-                "id": "d",
-                "label": "2026-01-01"
-              }
-            ],
-            "correctChoiceId": "c"
-          },
-          {
-            "id": "datetime_data_q2",
-            "type": "shortText",
-            "prompt": "Which method turns a datetime into text with a format like `%Y-%m-%d`? (name only)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "strftime"
-            }
-          },
-          {
-            "id": "datetime_data_q3",
-            "type": "mcq",
-            "prompt": "Which method parses text into a datetime with a format string?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "strptime"
-              },
-              {
-                "id": "b",
-                "label": "strftime"
-              },
-              {
-                "id": "c",
-                "label": "isoformat"
-              },
-              {
-                "id": "d",
-                "label": "parse"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "datetime_data_q4",
-            "type": "mcq",
-            "prompt": "Subtracting two `date` objects gives…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "An int"
-              },
-              {
-                "id": "b",
-                "label": "A timedelta"
-              },
-              {
-                "id": "c",
-                "label": "A date"
-              },
-              {
-                "id": "d",
-                "label": "A float"
-              }
-            ],
-            "correctChoiceId": "b"
-          },
-          {
-            "id": "datetime_data_q5",
-            "type": "mcq",
-            "prompt": "What is a \"naive\" datetime?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "One in UTC"
-              },
-              {
-                "id": "b",
-                "label": "One before 1970"
-              },
-              {
-                "id": "c",
-                "label": "One with only a date"
-              },
-              {
-                "id": "d",
-                "label": "One with no time zone attached"
-              }
-            ],
-            "correctChoiceId": "d"
-          },
-          {
-            "id": "datetime_data_q6",
-            "type": "mcq",
-            "prompt": "Why store times in UTC on servers?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "UTC has no daylight-saving jumps and is the same everywhere"
-              },
-              {
-                "id": "b",
-                "label": "It uses less memory"
-              },
-              {
-                "id": "c",
-                "label": "Python requires it"
-              },
-              {
-                "id": "d",
-                "label": "It is more precise"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "datetime_data_q7",
-            "type": "mcq",
-            "prompt": "In `strftime`, which code gives the 4-digit year, like `2026`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`%y`"
-              },
-              {
-                "id": "b",
-                "label": "`%D`"
-              },
-              {
-                "id": "c",
-                "label": "`%Y`"
-              },
-              {
-                "id": "d",
-                "label": "`%j`"
-              }
-            ],
-            "correctChoiceId": "c"
-          },
-          {
-            "id": "datetime_data_q8",
-            "type": "mcq",
-            "prompt": "What does `datetime(2026, 10, 16, 9, 30).isoformat()` return?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "16/10/2026 09:30"
-              },
-              {
-                "id": "b",
-                "label": "2026-10-16T09:30:00"
-              },
-              {
-                "id": "c",
-                "label": "Oct 16 2026"
-              },
-              {
-                "id": "d",
-                "label": "1792145400"
-              }
-            ],
-            "correctChoiceId": "b"
-          },
-          {
-            "id": "datetime_data_q9",
-            "type": "mcq",
-            "prompt": "`d.weekday()` returns 0 for…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Sunday"
-              },
-              {
-                "id": "b",
-                "label": "Saturday"
-              },
-              {
-                "id": "c",
-                "label": "Monday"
-              },
-              {
-                "id": "d",
-                "label": "January"
-              }
-            ],
-            "correctChoiceId": "c"
-          },
-          {
-            "id": "datetime_data_q10",
-            "type": "mcq",
-            "prompt": "Comparing a naive datetime with an aware one…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Treats the naive one as UTC"
-              },
-              {
-                "id": "b",
-                "label": "Uses your computer's time zone"
-              },
-              {
-                "id": "c",
-                "label": "Ignores the time zone"
-              },
-              {
-                "id": "d",
-                "label": "Raises a TypeError"
-              }
-            ],
-            "correctChoiceId": "d"
-          }
-        ]
-      }
-    },
-    {
-      "id": "collections_data",
-      "title": "Collections for data",
-      "kind": "topic",
-      "sandboxSnippets": [
-        {
-          "id": "counter",
-          "label": "Counter",
-          "code": "from collections import Counter\n\nstock = Counter({\"apple\": 10, \"pear\": 4, \"fig\": 2})\nsold = Counter({\"apple\": 3, \"fig\": 2})\nprint(stock - sold)\nprint(Counter(\"mississippi\").most_common(2))"
-        },
-        {
-          "id": "defaultdict",
-          "label": "defaultdict",
-          "code": "from collections import defaultdict\n\ndocs = {1: \"python loves data\", 2: \"data beats opinion\"}\nindex = defaultdict(set)\nfor doc_id, text in docs.items():\n    for word in text.split():\n        index[word].add(doc_id)\nprint(sorted(index[\"data\"]))"
-        },
-        {
-          "id": "namedtuple",
-          "label": "namedtuple",
-          "code": "from collections import namedtuple\n\nProduct = namedtuple(\"Product\", [\"name\", \"price\"])\nproducts = [Product(\"Pen\", 1.5), Product(\"Book\", 12.0)]\ncheapest = min(products, key=lambda p: p.price)\nprint(cheapest.name, cheapest)"
-        },
-        {
-          "id": "deque",
-          "label": "deque",
-          "code": "from collections import deque\n\nrecent = deque(maxlen=3)\nfor reading in [21.5, 22.0, 22.4, 23.1]:\n    recent.append(reading)\n    print(list(recent))"
-        },
-        {
-          "id": "chainmap_and_heapq",
-          "label": "ChainMap and heapq",
-          "code": "import heapq\nfrom collections import ChainMap\n\nsettings = ChainMap({\"debug\": True}, {\"port\": 9000}, {\"port\": 8000, \"debug\": False})\nprint(settings[\"port\"], settings[\"debug\"])\n\nscores = {\"Ana\": 91, \"Ben\": 78, \"Cy\": 85}\nprint(heapq.nlargest(2, scores.items(), key=lambda item: item[1]))"
-        }
-      ],
-      "intro": {
-        "title": "Collections for data",
-        "bodyMarkdown": "The `collections` module has containers made for everyday data jobs. Each one behaves like a dict, list or tuple you already know, with one extra skill.\n\n`Counter` counts things. Give it any list (or string) and it maps each item to how often it appears. `most_common(n)` returns the top `n` as `(item, count)` pairs, and a missing key counts as 0 instead of raising `KeyError`.\n\n```\nfrom collections import Counter\n\ncounts = Counter([\"apple\", \"pear\", \"apple\"])\nprint(counts[\"apple\"], counts[\"fig\"])   # 2 0\nprint(Counter(\"banana\").most_common(1))   # [('a', 3)]\n```\n\nCounters can also do arithmetic: `stock - sold` subtracts the counts and drops every item that reaches zero or less, so `Counter(a=1) - Counter(a=3)` is an empty Counter.\n\n`defaultdict` creates a value the first time you use a missing key. With `defaultdict(list)`, a new key starts as an empty list, so you can group items without first checking `if key not in d`. `defaultdict(set)` collects unique values the same way.\n\n```\nfrom collections import defaultdict\n\nby_letter = defaultdict(list)\nfor name in [\"Ana\", \"Ben\", \"Amir\"]:\n    by_letter[name[0]].append(name)\nprint(dict(by_letter))   # {'A': ['Ana', 'Amir'], 'B': ['Ben']}\n```\n\n`namedtuple` makes a small record type with named fields: after `Product = namedtuple(\"Product\", [\"name\", \"price\"])` you can write `p.price` instead of `p[1]`, which makes code much easier to read. It is still a tuple, so it works anywhere a tuple does.\n\n`deque` (say \"deck\") is a list built for adding and removing at both ends. A list is slow at the front, because every other item has to move along, so a deque is the better choice for a queue. With `maxlen=3` a deque keeps only the last 3 items: appending a fourth drops the oldest. That's exactly what you want for \"the latest readings\" or a moving window.\n\n`ChainMap(cli, env, defaults)` looks a key up in each dict in turn and returns the first match, so earlier dicts override later ones without copying anything. It's a neat way to layer settings.\n\nOutside `collections`, the `heapq` module finds the largest or smallest items quickly: `heapq.nlargest(3, items, key=...)` returns the top 3, biggest first. And since Python 3.7, a plain `dict` keeps its keys in the order you added them.",
-        "sandboxCode": "from collections import Counter, defaultdict\n\nwords = \"the cat and the dog and the bird\".split()\nprint(Counter(words).most_common(2))\n\nby_length = defaultdict(list)\nfor word in words:\n    by_length[len(word)].append(word)\nprint(dict(by_length))",
-        "readMore": {
-          "label": "Python docs: the collections module",
-          "url": "https://docs.python.org/3/library/collections.html",
-          "source": "Python docs"
-        }
-      },
-      "challenges": [
-        {
-          "id": "collections_data_ch1",
-          "title": "Easy: Count things",
-          "promptMarkdown": "Count how often each fruit appears in `basket` using `Counter`. Store it in `counts`.",
-          "starterCode": "from collections import Counter\n\nbasket = [\"apple\", \"pear\", \"apple\", \"fig\", \"apple\", \"pear\"]\ncounts = ___",
-          "hint": "`Counter(basket)` does all the counting.",
-          "solution": "from collections import Counter\n\nbasket = [\"apple\", \"pear\", \"apple\", \"fig\", \"apple\", \"pear\"]\ncounts = Counter(basket)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "apples",
-                "assertion": "counts[\"apple\"] == 3"
-              },
-              {
-                "id": "t2",
-                "label": "pears and figs",
-                "assertion": "counts[\"pear\"] == 2 and counts[\"fig\"] == 1"
-              },
-              {
-                "id": "t3",
-                "label": "Missing items count as 0",
-                "assertion": "counts[\"kiwi\"] == 0"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch2",
-          "title": "Easy: Group with defaultdict",
-          "promptMarkdown": "Group `names` by their first letter: `by_letter[\"A\"]` should be the list of names starting with A. Use `defaultdict(list)`.",
-          "starterCode": "from collections import defaultdict\n\nnames = [\"Ana\", \"Ben\", \"Amir\", \"Bea\", \"Cleo\"]\nby_letter = defaultdict(list)\n___",
-          "hint": "Loop over the names and `append` each one to `by_letter[name[0]]`. Missing keys start as an empty list.",
-          "solution": "from collections import defaultdict\n\nnames = [\"Ana\", \"Ben\", \"Amir\", \"Bea\", \"Cleo\"]\nby_letter = defaultdict(list)\nfor name in names:\n    by_letter[name[0]].append(name)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "A names",
-                "assertion": "by_letter[\"A\"] == [\"Ana\", \"Amir\"]"
-              },
-              {
-                "id": "t2",
-                "label": "B and C names",
-                "assertion": "by_letter[\"B\"] == [\"Ben\", \"Bea\"] and by_letter[\"C\"] == [\"Cleo\"]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch3",
-          "title": "Medium: Most common",
-          "promptMarkdown": "Find the two most common words in `text`. Store them in `top2` as a list of `(word, count)` pairs.",
-          "starterCode": "from collections import Counter\n\ntext = \"the cat and the dog and the bird\"\ntop2 = ___",
-          "hint": "Split into words, count them, then call `.most_common(2)`.",
-          "solution": "from collections import Counter\n\ntext = \"the cat and the dog and the bird\"\ntop2 = Counter(text.split()).most_common(2)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Top two words",
-                "assertion": "top2 == [(\"the\", 3), (\"and\", 2)]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch4",
-          "title": "Medium: Named tuples",
-          "promptMarkdown": "Define a `Product` namedtuple with fields `name` and `price`, build the three products below, and set `cheapest` to the name of the cheapest one.",
-          "starterCode": "from collections import namedtuple\n\nProduct = ___\nproducts = [Product(\"Pen\", 1.5), Product(\"Book\", 12.0), Product(\"Cup\", 4.25)]\ncheapest = ___",
-          "hint": "`namedtuple(\"Product\", [\"name\", \"price\"])`; then `min(products, key=lambda p: p.price).name`.",
-          "solution": "from collections import namedtuple\n\nProduct = namedtuple(\"Product\", [\"name\", \"price\"])\nproducts = [Product(\"Pen\", 1.5), Product(\"Book\", 12.0), Product(\"Cup\", 4.25)]\ncheapest = min(products, key=lambda p: p.price).name",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Fields work by name",
-                "assertion": "products[1].price == 12.0 and products[1].name == \"Book\""
-              },
-              {
-                "id": "t2",
-                "label": "cheapest",
-                "assertion": "cheapest == \"Pen\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch5",
-          "title": "Hard: Keep the last few readings",
-          "promptMarkdown": "A sensor sends `readings` one at a time. Keep only the 3 most recent in a `deque` called `recent` (use `maxlen`).",
-          "starterCode": "from collections import deque\n\nreadings = [21.5, 22.0, 22.4, 23.1, 22.8]\nrecent = deque(___)\nfor r in readings:\n    ___",
-          "hint": "`deque(maxlen=3)` drops the oldest item automatically when you `append` a fourth.",
-          "solution": "from collections import deque\n\nreadings = [21.5, 22.0, 22.4, 23.1, 22.8]\nrecent = deque(maxlen=3)\nfor r in readings:\n    recent.append(r)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Only the last 3",
-                "assertion": "list(recent) == [22.4, 23.1, 22.8]"
-              },
-              {
-                "id": "t2",
-                "label": "Bounded to 3",
-                "assertion": "recent.maxlen == 3"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch6",
-          "title": "Hard: Stock left after sales",
-          "promptMarkdown": "Subtract `sold` from `stock` with `Counter` arithmetic. Store it in `remaining`. Items that sold out should disappear.",
-          "starterCode": "from collections import Counter\n\nstock = Counter({\"apple\": 10, \"pear\": 4, \"fig\": 2})\nsold = Counter({\"apple\": 3, \"fig\": 2})\nremaining = ___",
-          "hint": "`stock - sold` keeps only positive counts.",
-          "solution": "from collections import Counter\n\nstock = Counter({\"apple\": 10, \"pear\": 4, \"fig\": 2})\nsold = Counter({\"apple\": 3, \"fig\": 2})\nremaining = stock - sold",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Counts reduced",
-                "assertion": "remaining[\"apple\"] == 7 and remaining[\"pear\"] == 4"
-              },
-              {
-                "id": "t2",
-                "label": "Sold-out items removed",
-                "assertion": "\"fig\" not in remaining"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch7",
-          "title": "Expert: Build a search index",
-          "promptMarkdown": "Build `index`, mapping each lowercase word to the set of document ids it appears in. Then write `search(word)` that returns those ids as a sorted list.",
-          "starterCode": "from collections import defaultdict\n\ndocs = {1: \"Python loves data\", 2: \"Data beats opinion\", 3: \"Python is fun\"}\nindex = defaultdict(set)\n___\n\ndef search(word):\n    ___",
-          "hint": "For each `doc_id, text` in `docs.items()`, add the id to `index[word.lower()]` for every word. `search` returns `sorted(index.get(word.lower(), set()))`.",
-          "solution": "from collections import defaultdict\n\ndocs = {1: \"Python loves data\", 2: \"Data beats opinion\", 3: \"Python is fun\"}\nindex = defaultdict(set)\nfor doc_id, text in docs.items():\n    for word in text.split():\n        index[word.lower()].add(doc_id)\n\ndef search(word):\n    return sorted(index.get(word.lower(), set()))",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Word in two docs",
-                "assertion": "search(\"python\") == [1, 3]"
-              },
-              {
-                "id": "t2",
-                "label": "Case-insensitive",
-                "assertion": "search(\"DATA\") == [1, 2]"
-              },
-              {
-                "id": "t3",
-                "label": "Unknown word",
-                "assertion": "search(\"java\") == []"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch8",
-          "title": "Expert: Moving average",
-          "promptMarkdown": "Write `moving_average(values, n)` that returns the average of each run of `n` consecutive values. Use a `deque(maxlen=n)` as the window.",
-          "starterCode": "from collections import deque\n\ndef moving_average(values, n):\n    ___",
-          "hint": "Append each value to the window; once `len(window) == n`, append `sum(window) / n` to the result.",
-          "solution": "from collections import deque\n\ndef moving_average(values, n):\n    window = deque(maxlen=n)\n    result = []\n    for v in values:\n        window.append(v)\n        if len(window) == n:\n            result.append(sum(window) / n)\n    return result",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Window of 3",
-                "assertion": "moving_average([1, 2, 3, 4, 5], 3) == [2.0, 3.0, 4.0]"
-              },
-              {
-                "id": "t2",
-                "label": "Window of 2",
-                "assertion": "moving_average([10, 20, 30], 2) == [15.0, 25.0]"
-              },
-              {
-                "id": "t3",
-                "label": "Too few values",
-                "assertion": "moving_average([1, 2], 3) == []"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch9",
-          "title": "Expert: Layered settings",
-          "promptMarkdown": "Settings come from three places: command-line flags beat environment values, which beat defaults. Combine them with `ChainMap` into `settings`.",
-          "starterCode": "from collections import ChainMap\n\ndefaults = {\"port\": 8000, \"debug\": False, \"host\": \"localhost\"}\nenv = {\"port\": 9000}\ncli = {\"debug\": True}\nsettings = ___",
-          "hint": "`ChainMap(cli, env, defaults)` looks keys up left to right.",
-          "solution": "from collections import ChainMap\n\ndefaults = {\"port\": 8000, \"debug\": False, \"host\": \"localhost\"}\nenv = {\"port\": 9000}\ncli = {\"debug\": True}\nsettings = ChainMap(cli, env, defaults)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Environment beats defaults",
-                "assertion": "settings[\"port\"] == 9000"
-              },
-              {
-                "id": "t2",
-                "label": "Command line beats both",
-                "assertion": "settings[\"debug\"] is True"
-              },
-              {
-                "id": "t3",
-                "label": "Defaults fill the gaps",
-                "assertion": "settings[\"host\"] == \"localhost\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch10",
-          "title": "Expert: Top scores with heapq",
-          "promptMarkdown": "Write `top_scores(scores, k)` that returns the `k` best `(name, score)` pairs from the `scores` dict, highest first. Use `heapq.nlargest`.",
-          "starterCode": "import heapq\n\ndef top_scores(scores, k):\n    ___",
-          "hint": "`heapq.nlargest(k, scores.items(), key=lambda item: item[1])`.",
-          "solution": "import heapq\n\ndef top_scores(scores, k):\n    return heapq.nlargest(k, scores.items(), key=lambda item: item[1])",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "SCORES = {\"Ana\": 88, \"Ben\": 95, \"Cy\": 72, \"Dee\": 91}",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Top 2",
-                "assertion": "top_scores(SCORES, 2) == [(\"Ben\", 95), (\"Dee\", 91)]"
-              },
-              {
-                "id": "t2",
-                "label": "Top 1",
-                "assertion": "top_scores(SCORES, 1) == [(\"Ben\", 95)]"
-              },
-              {
-                "id": "t3",
-                "label": "k larger than the data",
-                "assertion": "len(top_scores(SCORES, 10)) == 4"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "collections_data_q1",
-            "type": "mcq",
-            "prompt": "What does `Counter(\"banana\")[\"a\"]` return?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "1"
-              },
-              {
-                "id": "b",
-                "label": "2"
-              },
-              {
-                "id": "c",
-                "label": "3"
-              },
-              {
-                "id": "d",
-                "label": "An error"
-              }
-            ],
-            "correctChoiceId": "c"
-          },
-          {
-            "id": "collections_data_q2",
-            "type": "shortText",
-            "prompt": "Which `Counter` method returns the most frequent items? (name only)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "most_common"
-            }
-          },
-          {
-            "id": "collections_data_q3",
-            "type": "mcq",
-            "prompt": "What happens when you read a missing key from `defaultdict(list)`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "KeyError"
-              },
-              {
-                "id": "b",
-                "label": "It returns and stores an empty list"
-              },
-              {
-                "id": "c",
-                "label": "It returns None"
-              },
-              {
-                "id": "d",
-                "label": "It returns 0"
-              }
-            ],
-            "correctChoiceId": "b"
-          },
-          {
-            "id": "collections_data_q4",
-            "type": "mcq",
-            "prompt": "Why use a `namedtuple` instead of a plain tuple?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Fields can be read by name"
-              },
-              {
-                "id": "b",
-                "label": "It is mutable"
-              },
-              {
-                "id": "c",
-                "label": "It sorts itself"
-              },
-              {
-                "id": "d",
-                "label": "It uses less memory than any tuple"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "collections_data_q5",
-            "type": "mcq",
-            "prompt": "What does `deque(maxlen=3)` do when a fourth item is appended?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Raises an error"
-              },
-              {
-                "id": "b",
-                "label": "Grows to 4"
-              },
-              {
-                "id": "c",
-                "label": "Ignores the new item"
-              },
-              {
-                "id": "d",
-                "label": "Drops the oldest item"
-              }
-            ],
-            "correctChoiceId": "d"
-          },
-          {
-            "id": "collections_data_q6",
-            "type": "mcq",
-            "prompt": "Why is a `deque` better than a list for a queue?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Adding and removing at both ends is fast"
-              },
-              {
-                "id": "b",
-                "label": "It sorts items"
-              },
-              {
-                "id": "c",
-                "label": "It can hold more items"
-              },
-              {
-                "id": "d",
-                "label": "It is immutable"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "collections_data_q7",
-            "type": "shortText",
-            "prompt": "Which `collections` class looks keys up through several dicts in order? (class name)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "ChainMap"
-            }
-          },
-          {
-            "id": "collections_data_q8",
-            "type": "mcq",
-            "prompt": "`Counter(a=1) - Counter(a=3)` gives…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Counter({\"a\": -2})"
-              },
-              {
-                "id": "b",
-                "label": "An error"
-              },
-              {
-                "id": "c",
-                "label": "Counter() (empty)"
-              },
-              {
-                "id": "d",
-                "label": "Counter({\"a\": 2})"
-              }
-            ],
-            "correctChoiceId": "c"
-          },
-          {
-            "id": "collections_data_q9",
-            "type": "mcq",
-            "prompt": "Which `heapq` function returns the k largest items?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "nlargest"
-              },
-              {
-                "id": "b",
-                "label": "heappop"
-              },
-              {
-                "id": "c",
-                "label": "max"
-              },
-              {
-                "id": "d",
-                "label": "topk"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "collections_data_q10",
-            "type": "mcq",
-            "prompt": "Since Python 3.7 a plain `dict`…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Is sorted by key"
-              },
-              {
-                "id": "b",
-                "label": "Keeps insertion order"
-              },
-              {
-                "id": "c",
-                "label": "Is immutable"
-              },
-              {
-                "id": "d",
-                "label": "Allows duplicate keys"
-              }
-            ],
-            "correctChoiceId": "b"
-          }
-        ]
-      }
-    },
-    {
-      "id": "pathlib_data",
-      "title": "Pathlib for data files",
-      "kind": "topic",
-      "sandboxSnippets": [
-        {
-          "id": "path_parts",
-          "label": "Path parts",
-          "code": "from pathlib import Path\n\nreport = Path(\"reports/summary.final.pdf\")\nprint(report.name, report.stem, report.suffix, report.parent)\nprint(report.with_suffix(\".txt\"))"
-        },
-        {
-          "id": "write_and_read",
-          "label": "Write and read",
-          "code": "from pathlib import Path\n\np = Path(\"greeting.txt\")\np.write_text(\"Grüezi!\\n\", encoding=\"utf-8\")\nprint(p.read_text(encoding=\"utf-8\").strip())\nprint(p.stat().st_size, \"bytes (ü takes 2)\")"
-        },
-        {
-          "id": "find_files",
-          "label": "Find files",
-          "code": "from pathlib import Path\n\nbase = Path(\"demo_logs\")\n(base / \"old\").mkdir(parents=True, exist_ok=True)\nfor name in [\"a.log\", \"b.txt\", \"old/c.log\"]:\n    (base / name).write_text(\"x\", encoding=\"utf-8\")\nprint(sorted(p.name for p in base.glob(\"*.log\")))\nprint(sorted(p.name for p in base.rglob(\"*.log\")))"
-        },
-        {
-          "id": "rename",
-          "label": "Rename",
-          "code": "from pathlib import Path\n\nphotos = Path(\"photos\")\nphotos.mkdir(exist_ok=True)\nfor n in (1, 2):\n    (photos / f\"IMG_{n}.jpg\").write_text(\"\", encoding=\"utf-8\")\nfor p in list(photos.glob(\"IMG_*.jpg\")):\n    p.rename(p.with_name(p.name.replace(\"IMG_\", \"holiday_\")))\nprint(sorted(p.name for p in photos.iterdir()))"
-        },
-        {
-          "id": "relative_paths",
-          "label": "Relative paths",
-          "code": "from pathlib import PurePosixPath\n\nroot = PurePosixPath(\"/home/ana/projects\")\nscript = PurePosixPath(\"/home/ana/projects/app/src/main.py\")\nrel = script.relative_to(root)\nprint(rel, rel.parts)"
-        }
-      ],
-      "intro": {
-        "title": "Pathlib for data files",
-        "bodyMarkdown": "Data lives in files, and `pathlib.Path` is the modern way to work with file paths. A `Path` is an object rather than a plain string, so it knows how to join, split and inspect itself, and it uses the right separator on Windows, macOS and Linux.\n\nJoin parts with `/`, as in `Path(\"data\") / \"2026\" / \"scores.csv\"`. Then ask about the parts: `.name` is the file name (`scores.csv`), `.suffix` the last extension (`.csv`), `.stem` the name without the last extension (`scores`; for `a.tar.gz` it is `a.tar`), and `.parent` the folder it's in.\n\n```\nfrom pathlib import Path\n\np = Path(\"data\") / \"2026\" / \"scores.csv\"\nprint(p.name, p.stem, p.suffix, p.parent)\nprint(p.with_suffix(\".json\"), p.with_name(\"backup.csv\"))\n```\n\n`with_suffix(\".json\")` and `with_name(\"backup.csv\")` return a new path with the extension or the name swapped. The original path doesn't change: like strings, paths can't be modified.\n\nReading and writing a small text file takes one call: `p.write_text(text, encoding=\"utf-8\")` and `p.read_text(encoding=\"utf-8\")`. Always give the encoding; otherwise Python uses the computer's default, which differs between systems and can garble letters like ü.\n\n`p.exists()` returns `True` or `False`, and `p.is_file()` and `p.is_dir()` tell you what kind of thing is there. `folder.mkdir(parents=True, exist_ok=True)` creates a folder together with any missing parent folders, and doesn't complain if it already exists.\n\nTo find files, `folder.glob(\"*.log\")` matches names directly inside the folder, while `folder.rglob(\"*.log\")` also searches every subfolder. `p.stat().st_size` is a file's size in bytes, and `p.rename(new_path)` renames or moves it. If you rename files while looping over a glob, turn the glob into a `list` first.\n\n```\nlogs = Path(\"logs\")\nlogs.mkdir(exist_ok=True)\n(logs / \"app.log\").write_text(\"started\\n\", encoding=\"utf-8\")\nprint([f.name for f in logs.glob(\"*.log\")])\n```\n\n`relative_to` gives one path relative to another: `Path(\"/home/ana/projects/app/main.py\").relative_to(\"/home/ana/projects\")` is `app/main.py`. `PurePosixPath` does the same path calculations with `/` on every system, without touching the disk.\n\nThe code runner here has its own temporary folder, which is wiped when the page reloads, so the file examples are safe to try.",
-        "sandboxCode": "from pathlib import Path\n\nnotes = Path(\"notes\") / \"today.txt\"\nnotes.parent.mkdir(parents=True, exist_ok=True)\nnotes.write_text(\"hello\\nworld\\n\", encoding=\"utf-8\")\nprint(notes.read_text(encoding=\"utf-8\").splitlines())\nprint(notes.name, notes.suffix, notes.exists())",
-        "readMore": {
-          "label": "Python docs: the pathlib module",
-          "url": "https://docs.python.org/3/library/pathlib.html",
-          "source": "Python docs"
-        }
-      },
-      "challenges": [
-        {
-          "id": "pathlib_data_ch1",
-          "title": "Easy: Join paths",
-          "promptMarkdown": "Build the path `data/2026/scores.csv` from its three parts using the `/` operator. Store it in `p`.",
-          "starterCode": "from pathlib import Path\n\np = ___",
-          "hint": "`Path(\"data\") / \"2026\" / \"scores.csv\"`.",
-          "solution": "from pathlib import Path\n\np = Path(\"data\") / \"2026\" / \"scores.csv\"",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "p is a Path",
-                "assertion": "isinstance(p, __import__('pathlib').Path)"
-              },
-              {
-                "id": "t2",
-                "label": "Parts joined",
-                "assertion": "p.as_posix() == \"data/2026/scores.csv\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch2",
-          "title": "Easy: Name, stem and suffix",
-          "promptMarkdown": "For `report`, set `name` to the file name, `stem` to the name without the last extension, and `suffix` to the extension.",
-          "starterCode": "from pathlib import Path\n\nreport = Path(\"reports/summary.final.pdf\")\nname = ___\nstem = ___\nsuffix = ___",
-          "hint": "Paths have `.name`, `.stem` and `.suffix` attributes.",
-          "solution": "from pathlib import Path\n\nreport = Path(\"reports/summary.final.pdf\")\nname = report.name\nstem = report.stem\nsuffix = report.suffix",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "name",
-                "assertion": "name == \"summary.final.pdf\""
-              },
-              {
-                "id": "t2",
-                "label": "stem keeps the inner dot",
-                "assertion": "stem == \"summary.final\""
-              },
-              {
-                "id": "t3",
-                "label": "suffix",
-                "assertion": "suffix == \".pdf\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch3",
-          "title": "Medium: Write and read a text file",
-          "promptMarkdown": "Write the two lines `hello` and `world` to `notes.txt` with `write_text`, then read the file back and store its lines (without newlines) in `lines`.",
-          "starterCode": "from pathlib import Path\n\nnotes = Path(\"notes.txt\")\n___\nlines = ___",
-          "hint": "`notes.write_text(\"hello\\nworld\\n\", encoding=\"utf-8\")`, then `notes.read_text(encoding=\"utf-8\").splitlines()`.",
-          "solution": "from pathlib import Path\n\nnotes = Path(\"notes.txt\")\nnotes.write_text(\"hello\\nworld\\n\", encoding=\"utf-8\")\nlines = notes.read_text(encoding=\"utf-8\").splitlines()",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The file exists",
-                "assertion": "__import__('pathlib').Path(\"notes.txt\").is_file()"
-              },
-              {
-                "id": "t2",
-                "label": "lines",
-                "assertion": "lines == [\"hello\", \"world\"]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch4",
-          "title": "Medium: Make sure a folder exists",
-          "promptMarkdown": "Write `ensure_dir(path)` that creates the folder (and any missing parent folders), does nothing if it already exists, and returns it as a `Path`.",
-          "starterCode": "from pathlib import Path\n\ndef ensure_dir(path):\n    ___",
-          "hint": "`Path(path).mkdir(parents=True, exist_ok=True)`.",
-          "solution": "from pathlib import Path\n\ndef ensure_dir(path):\n    folder = Path(path)\n    folder.mkdir(parents=True, exist_ok=True)\n    return folder",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Creates nested folders",
-                "assertion": "ensure_dir(\"out/2026/oct\").is_dir()"
-              },
-              {
-                "id": "t2",
-                "label": "Calling it again is fine",
-                "assertion": "ensure_dir(\"out/2026/oct\").as_posix() == \"out/2026/oct\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch5",
-          "title": "Hard: Find files with glob",
-          "promptMarkdown": "The `logs` folder has files and a subfolder. Set `top_logs` to the names of `.log` files directly in `logs`, and `all_logs` to every `.log` file name at any depth. Sort both lists.",
-          "starterCode": "from pathlib import Path\n\nlogs = Path(\"logs\")\ntop_logs = ___\nall_logs = ___",
-          "hint": "`logs.glob(\"*.log\")` looks in one folder; `logs.rglob(\"*.log\")` also searches subfolders. Use `p.name` and `sorted(...)`.",
-          "solution": "from pathlib import Path\n\nlogs = Path(\"logs\")\ntop_logs = sorted(p.name for p in logs.glob(\"*.log\"))\nall_logs = sorted(p.name for p in logs.rglob(\"*.log\"))",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "from pathlib import Path\nfor name in [\"logs/a.log\", \"logs/b.log\", \"logs/readme.txt\", \"logs/old/c.log\"]:\n    Path(name).parent.mkdir(parents=True, exist_ok=True)\n    Path(name).write_text(\"x\", encoding=\"utf-8\")",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Only the top folder",
-                "assertion": "top_logs == [\"a.log\", \"b.log\"]"
-              },
-              {
-                "id": "t2",
-                "label": "Subfolders too",
-                "assertion": "all_logs == [\"a.log\", \"b.log\", \"c.log\"]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch6",
-          "title": "Hard: Change the extension",
-          "promptMarkdown": "From `source`, make `json_path` (same name, `.json` extension) and `backup` (same folder, named `backup.csv`).",
-          "starterCode": "from pathlib import Path\n\nsource = Path(\"exports/report.csv\")\njson_path = ___\nbackup = ___",
-          "hint": "`source.with_suffix(\".json\")` and `source.with_name(\"backup.csv\")`.",
-          "solution": "from pathlib import Path\n\nsource = Path(\"exports/report.csv\")\njson_path = source.with_suffix(\".json\")\nbackup = source.with_name(\"backup.csv\")",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "json_path",
-                "assertion": "json_path.as_posix() == \"exports/report.json\""
-              },
-              {
-                "id": "t2",
-                "label": "backup",
-                "assertion": "backup.as_posix() == \"exports/backup.csv\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch7",
-          "title": "Expert: Save and load JSON files",
-          "promptMarkdown": "Write `save_json(path, data)`, which creates any missing folders and writes `data` as JSON, and `load_json(path)`, which reads it back.",
-          "starterCode": "import json\nfrom pathlib import Path\n\ndef save_json(path, data):\n    ___\n\ndef load_json(path):\n    ___",
-          "hint": "Create the folder with `path.parent.mkdir(parents=True, exist_ok=True)`, then `path.write_text(json.dumps(data), encoding=\"utf-8\")`.",
-          "solution": "import json\nfrom pathlib import Path\n\ndef save_json(path, data):\n    path = Path(path)\n    path.parent.mkdir(parents=True, exist_ok=True)\n    path.write_text(json.dumps(data), encoding=\"utf-8\")\n\ndef load_json(path):\n    return json.loads(Path(path).read_text(encoding=\"utf-8\"))",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Round trip",
-                "assertion": "(save_json(\"data/users/ana.json\", {\"name\": \"Ana\", \"tags\": [\"x\"]}), load_json(\"data/users/ana.json\"))[1] == {\"name\": \"Ana\", \"tags\": [\"x\"]}"
-              },
-              {
-                "id": "t2",
-                "label": "Folders were created",
-                "assertion": "__import__('pathlib').Path(\"data/users\").is_dir()"
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch8",
-          "title": "Expert: Folder size",
-          "promptMarkdown": "Add up the size in bytes of every file under `project` (including subfolders). Store it in `total_bytes`.",
-          "starterCode": "from pathlib import Path\n\nproject = Path(\"project\")\ntotal_bytes = ___",
-          "hint": "Loop over `project.rglob(\"*\")`, keep `p.is_file()`, and add `p.stat().st_size`.",
-          "solution": "from pathlib import Path\n\nproject = Path(\"project\")\ntotal_bytes = sum(p.stat().st_size for p in project.rglob(\"*\") if p.is_file())",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "from pathlib import Path\nPath(\"project/src\").mkdir(parents=True, exist_ok=True)\nPath(\"project/README.md\").write_bytes(b\"x\" * 120)\nPath(\"project/src/main.py\").write_bytes(b\"x\" * 300)\nPath(\"project/src/util.py\").write_bytes(b\"x\" * 80)",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Total size",
-                "assertion": "total_bytes == 500"
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch9",
-          "title": "Expert: Rename a batch of files",
-          "promptMarkdown": "Rename every `IMG_<n>.jpg` in `photos` to `holiday_<n>.jpg`. Then set `names` to the sorted file names now in the folder.",
-          "starterCode": "from pathlib import Path\n\nphotos = Path(\"photos\")\n___\nnames = sorted(p.name for p in photos.iterdir())",
-          "hint": "For each `p` in `photos.glob(\"IMG_*.jpg\")`, call `p.rename(p.with_name(p.name.replace(\"IMG_\", \"holiday_\")))`.",
-          "solution": "from pathlib import Path\n\nphotos = Path(\"photos\")\nfor p in list(photos.glob(\"IMG_*.jpg\")):\n    p.rename(p.with_name(p.name.replace(\"IMG_\", \"holiday_\")))\nnames = sorted(p.name for p in photos.iterdir())",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "from pathlib import Path\nPath(\"photos\").mkdir(exist_ok=True)\nfor n in [1, 2, 3]:\n    Path(f\"photos/IMG_{n}.jpg\").write_text(\"img\", encoding=\"utf-8\")\nPath(\"photos/notes.txt\").write_text(\"keep\", encoding=\"utf-8\")",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Renamed, other files untouched",
-                "assertion": "names == [\"holiday_1.jpg\", \"holiday_2.jpg\", \"holiday_3.jpg\", \"notes.txt\"]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "pathlib_data_ch10",
-          "title": "Expert: Relative paths",
-          "promptMarkdown": "Set `rel` to the path of `script` relative to `root`, and `depth` to how many folders `rel` is inside. Use `PurePosixPath`, which works the same on every system.",
-          "starterCode": "from pathlib import PurePosixPath\n\nroot = PurePosixPath(\"/home/ana/projects\")\nscript = PurePosixPath(\"/home/ana/projects/app/src/main.py\")\nrel = ___\ndepth = ___",
-          "hint": "`script.relative_to(root)`; the folders are `rel.parent.parts`.",
-          "solution": "from pathlib import PurePosixPath\n\nroot = PurePosixPath(\"/home/ana/projects\")\nscript = PurePosixPath(\"/home/ana/projects/app/src/main.py\")\nrel = script.relative_to(root)\ndepth = len(rel.parent.parts)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "rel",
-                "assertion": "str(rel) == \"app/src/main.py\""
-              },
-              {
-                "id": "t2",
-                "label": "depth",
-                "assertion": "depth == 2"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "pathlib_data_q1",
-            "type": "mcq",
-            "prompt": "What does `Path(\"data\") / \"a.csv\"` do?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Divides two numbers"
-              },
-              {
-                "id": "b",
-                "label": "Raises a TypeError"
-              },
-              {
-                "id": "c",
-                "label": "Joins the parts into one path"
-              },
-              {
-                "id": "d",
-                "label": "Opens the file"
-              }
-            ],
-            "correctChoiceId": "c"
-          },
-          {
-            "id": "pathlib_data_q2",
-            "type": "shortText",
-            "prompt": "Which `Path` attribute gives the extension, like `.csv`? (attribute name)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "suffix"
-            }
-          },
-          {
-            "id": "pathlib_data_q3",
-            "type": "mcq",
-            "prompt": "`Path(\"a/b.tar.gz\").stem` is…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "b.tar"
-              },
-              {
-                "id": "b",
-                "label": "b"
-              },
-              {
-                "id": "c",
-                "label": "b.tar.gz"
-              },
-              {
-                "id": "d",
-                "label": "a/b"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "pathlib_data_q4",
-            "type": "mcq",
-            "prompt": "What does `mkdir(parents=True, exist_ok=True)` add over plain `mkdir()`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Deletes old folders"
-              },
-              {
-                "id": "b",
-                "label": "Creates missing parents and doesn't fail if it exists"
-              },
-              {
-                "id": "c",
-                "label": "Sets permissions"
-              },
-              {
-                "id": "d",
-                "label": "Nothing"
-              }
-            ],
-            "correctChoiceId": "b"
-          },
-          {
-            "id": "pathlib_data_q5",
-            "type": "mcq",
-            "prompt": "How is `rglob(\"*.log\")` different from `glob(\"*.log\")`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "It is faster"
-              },
-              {
-                "id": "b",
-                "label": "It ignores hidden files"
-              },
-              {
-                "id": "c",
-                "label": "It returns strings"
-              },
-              {
-                "id": "d",
-                "label": "It also searches subfolders"
-              }
-            ],
-            "correctChoiceId": "d"
-          },
-          {
-            "id": "pathlib_data_q6",
-            "type": "mcq",
-            "prompt": "Why pass `encoding=\"utf-8\"` to `read_text`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "So the file reads the same on every system"
-              },
-              {
-                "id": "b",
-                "label": "It is faster"
-              },
-              {
-                "id": "c",
-                "label": "It compresses the text"
-              },
-              {
-                "id": "d",
-                "label": "Paths require it"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "pathlib_data_q7",
-            "type": "shortText",
-            "prompt": "Which `Path` method swaps the extension, like `.csv` to `.json`? (name only)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "with_suffix"
-            }
-          },
-          {
-            "id": "pathlib_data_q8",
-            "type": "mcq",
-            "prompt": "`p.exists()` returns…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "The file contents"
-              },
-              {
-                "id": "b",
-                "label": "True or False"
-              },
-              {
-                "id": "c",
-                "label": "The file size"
-              },
-              {
-                "id": "d",
-                "label": "A new Path"
-              }
-            ],
-            "correctChoiceId": "b"
-          },
-          {
-            "id": "pathlib_data_q9",
-            "type": "mcq",
-            "prompt": "Which gives a file's size in bytes?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "len(p)"
-              },
-              {
-                "id": "b",
-                "label": "p.size"
-              },
-              {
-                "id": "c",
-                "label": "p.stat().st_size"
-              },
-              {
-                "id": "d",
-                "label": "p.bytes()"
-              }
-            ],
-            "correctChoiceId": "c"
-          },
-          {
-            "id": "pathlib_data_q10",
-            "type": "mcq",
-            "prompt": "Why prefer `pathlib` over string paths?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Strings can't hold paths"
-              },
-              {
-                "id": "b",
-                "label": "It is the only way to open files"
-              },
-              {
-                "id": "c",
-                "label": "It is always faster"
-              },
-              {
-                "id": "d",
-                "label": "Joining and inspecting paths is clearer and works across systems"
               }
             ],
             "correctChoiceId": "d"
@@ -3964,7 +2951,7 @@
               },
               {
                 "id": "b",
-                "label": "The next row as a tuple, or None"
+                "label": "The next row as a tuple, or `None`"
               },
               {
                 "id": "c",
@@ -3972,7 +2959,7 @@
               },
               {
                 "id": "d",
-                "label": "A dict"
+                "label": "A `dict`"
               }
             ],
             "correctChoiceId": "b"
@@ -3984,19 +2971,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "execute"
+                "label": "`execute`"
               },
               {
                 "id": "b",
-                "label": "insertmany"
+                "label": "`insertmany`"
               },
               {
                 "id": "c",
-                "label": "fetchall"
+                "label": "`fetchall`"
               },
               {
                 "id": "d",
-                "label": "executemany"
+                "label": "`executemany`"
               }
             ],
             "correctChoiceId": "d"
@@ -4089,19 +3076,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "WHERE EXISTS"
+                "label": "`WHERE EXISTS`"
               },
               {
                 "id": "b",
-                "label": "REPLACE INTO"
+                "label": "`REPLACE INTO`"
               },
               {
                 "id": "c",
-                "label": "UNION"
+                "label": "`UNION`"
               },
               {
                 "id": "d",
-                "label": "ON CONFLICT … DO UPDATE"
+                "label": "`ON CONFLICT … DO UPDATE`"
               }
             ],
             "correctChoiceId": "d"
@@ -4420,19 +3407,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "A DataFrame"
+                "label": "A `DataFrame`"
               },
               {
                 "id": "b",
-                "label": "A list"
+                "label": "A `list`"
               },
               {
                 "id": "c",
-                "label": "A Series (one column)"
+                "label": "A `Series` (one column)"
               },
               {
                 "id": "d",
-                "label": "A dict"
+                "label": "A `dict`"
               }
             ],
             "correctChoiceId": "c"
@@ -4468,19 +3455,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "df.filter(score > 80)"
+                "label": "`df.filter(score > 80)`"
               },
               {
                 "id": "b",
-                "label": "df.where(80)"
+                "label": "`df.where(80)`"
               },
               {
                 "id": "c",
-                "label": "df[\"score\" > 80]"
+                "label": "`df[\"score\" > 80]`"
               },
               {
                 "id": "d",
-                "label": "df[df[\"score\"] > 80]"
+                "label": "`df[df[\"score\"] > 80]`"
               }
             ],
             "correctChoiceId": "d"
@@ -4549,19 +3536,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "concat"
+                "label": "`concat`"
               },
               {
                 "id": "b",
-                "label": "append"
+                "label": "`append`"
               },
               {
                 "id": "c",
-                "label": "merge"
+                "label": "`merge`"
               },
               {
                 "id": "d",
-                "label": "zip"
+                "label": "`zip`"
               }
             ],
             "correctChoiceId": "c"
@@ -4959,7 +3946,7 @@
               },
               {
                 "id": "b",
-                "label": "bool is a subclass of int, so it returns True"
+                "label": "`bool` is a subclass of `int`, so it returns `True`"
               },
               {
                 "id": "c",
@@ -4967,7 +3954,7 @@
               },
               {
                 "id": "d",
-                "label": "It returns False"
+                "label": "It returns `False`"
               }
             ],
             "correctChoiceId": "b"
@@ -5069,19 +4056,19 @@
             "choices": [
               {
                 "id": "a",
-                "label": "requests"
+                "label": "`requests`"
               },
               {
                 "id": "b",
-                "label": "pydantic"
+                "label": "`pydantic`"
               },
               {
                 "id": "c",
-                "label": "pathlib"
+                "label": "`pathlib`"
               },
               {
                 "id": "d",
-                "label": "csv"
+                "label": "`csv`"
               }
             ],
             "correctChoiceId": "b"
@@ -5097,7 +4084,7 @@
               },
               {
                 "id": "b",
-                "label": "Says only \"invalid\""
+                "label": "Says only `\"invalid\"`"
               },
               {
                 "id": "c",
@@ -5121,7 +4108,7 @@
               },
               {
                 "id": "b",
-                "label": "Returns None"
+                "label": "Returns `None`"
               },
               {
                 "id": "c",

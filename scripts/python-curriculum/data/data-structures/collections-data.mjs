@@ -2,7 +2,7 @@ import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'collections_data',
-  title: 'Collections for data',
+  title: 'The collections module',
   paragraphs: [
     "The `collections` module has containers made for everyday data jobs. Each one behaves like a dict, list or tuple you already know, with one extra skill.",
     "`Counter` counts things. Give it any list (or string) and it maps each item to how often it appears. `most_common(n)` returns the top `n` as `(item, count)` pairs, and a missing key counts as 0 instead of raising `KeyError`.",
@@ -228,15 +228,15 @@ def top_scores(scores, k):
     }),
   ],
   questions: [
-    mc('What does `Counter("banana")["a"]` return?', ['1', '2', '3', 'An error'], 2),
+    mc("What does `Counter(\"banana\")[\"a\"]` return?", ["`1`","`2`","`3`","An error"], 2),
     qShort('Which `Counter` method returns the most frequent items? (name only)', 'most_common'),
-    mc('What happens when you read a missing key from `defaultdict(list)`?', ['KeyError', 'It returns and stores an empty list', 'It returns None', 'It returns 0'], 1),
+    mc("What happens when you read a missing key from `defaultdict(list)`?", ["`KeyError`","It returns and stores an empty list","It returns `None`","It returns 0"], 1),
     mc('Why use a `namedtuple` instead of a plain tuple?', ['Fields can be read by name', 'It is mutable', 'It sorts itself', 'It uses less memory than any tuple'], 0),
     mc('What does `deque(maxlen=3)` do when a fourth item is appended?', ['Raises an error', 'Grows to 4', 'Ignores the new item', 'Drops the oldest item'], 3),
     mc('Why is a `deque` better than a list for a queue?', ['Adding and removing at both ends is fast', 'It sorts items', 'It can hold more items', 'It is immutable'], 0),
     qShort('Which `collections` class looks keys up through several dicts in order? (class name)', 'ChainMap'),
-    mc('`Counter(a=1) - Counter(a=3)` gives…', ['Counter({"a": -2})', 'An error', 'Counter() (empty)', 'Counter({"a": 2})'], 2),
-    mc('Which `heapq` function returns the k largest items?', ['nlargest', 'heappop', 'max', 'topk'], 0),
+    mc("`Counter(a=1) - Counter(a=3)` gives…", ["`Counter({\"a\": -2})`","An error","`Counter()` (empty)","`Counter({\"a\": 2})`"], 2),
+    mc("Which `heapq` function returns the k largest items?", ["`nlargest`","`heappop`","`max`","`topk`"], 0),
     mc('Since Python 3.7 a plain `dict`…', ['Is sorted by key', 'Keeps insertion order', 'Is immutable', 'Allows duplicate keys'], 1),
   ],
 })

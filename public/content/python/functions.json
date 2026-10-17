@@ -4,15 +4,43 @@
   "levels": [
     {
       "id": "defining_functions",
-      "title": "Defining Functions",
+      "title": "Defining functions",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "simple_def",
+          "label": "Simple def",
+          "code": "def greet(name):\n    return f\"Hello, {name}!\"\nprint(greet(\"Ada\"))"
+        },
+        {
+          "id": "no_args",
+          "label": "No args",
+          "code": "def hi():\n    return \"hi\"\nprint(hi())"
+        },
+        {
+          "id": "two_params",
+          "label": "Two params",
+          "code": "def add(a, b):\n    return a + b\nprint(add(2, 3))"
+        },
+        {
+          "id": "early_return",
+          "label": "Early return",
+          "code": "def abs_val(x):\n    if x < 0:\n        return -x\n    return x\nprint(abs_val(-5))"
+        },
+        {
+          "id": "no_return",
+          "label": "No return",
+          "code": "def f():\n    pass\nprint(f())"
+        }
+      ],
       "intro": {
-        "title": "Defining Functions",
+        "title": "Defining functions",
         "bodyMarkdown": "Define with `def name(params):` followed by an indented body. Functions group reusable steps.\n\nCall with `name(args)`. Functions can return values with `return` or implicitly return `None`.\n\nSmall focused functions are easier to test and reuse.",
         "sandboxCode": "def greet(name):\n    return f\"Hello, {name}!\"\n\nprint(greet(\"Ada\"))"
       },
       "challenges": [
         {
-          "id": "ch_ezqxgt8",
+          "id": "defining_functions_ch1",
           "title": "Easy: def no args",
           "promptMarkdown": "def hi(): return \"hi\"",
           "starterCode": "",
@@ -29,7 +57,7 @@
           }
         },
         {
-          "id": "ch_fu2n2g7",
+          "id": "defining_functions_ch2",
           "title": "Easy: one param",
           "promptMarkdown": "def dbl(x): return x*2",
           "starterCode": "",
@@ -46,7 +74,7 @@
           }
         },
         {
-          "id": "ch_xqn6gz5",
+          "id": "defining_functions_ch3",
           "title": "Medium: two params",
           "promptMarkdown": "add",
           "starterCode": "def add(a,b): return a+b\nv=add(2,3)",
@@ -63,7 +91,7 @@
           }
         },
         {
-          "id": "ch_np8gfw3",
+          "id": "defining_functions_ch4",
           "title": "Medium: print vs return",
           "promptMarkdown": "return 1",
           "starterCode": "def f(): return 1\nv=f()",
@@ -80,7 +108,7 @@
           }
         },
         {
-          "id": "ch_sw5yqww",
+          "id": "defining_functions_ch5",
           "title": "Hard: multi return",
           "promptMarkdown": "swap tuple",
           "starterCode": "def sw(a,b): return b,a\nt=sw(1,2)",
@@ -97,7 +125,7 @@
           }
         },
         {
-          "id": "ch_xycogo1",
+          "id": "defining_functions_ch6",
           "title": "Hard: default none",
           "promptMarkdown": "no return",
           "starterCode": "def f(): pass\nv=f()",
@@ -114,7 +142,7 @@
           }
         },
         {
-          "id": "ch_3s6x3tw",
+          "id": "defining_functions_ch7",
           "title": "Expert: early return",
           "promptMarkdown": "guard",
           "starterCode": "def f(x):\n if x<0: return 0\n return x\nv=f(-5)",
@@ -131,7 +159,7 @@
           }
         },
         {
-          "id": "ch_jl38bpo",
+          "id": "defining_functions_ch8",
           "title": "Expert: local vars",
           "promptMarkdown": "scope",
           "starterCode": "def f():\n x=3\n return x\nv=f()",
@@ -148,7 +176,7 @@
           }
         },
         {
-          "id": "ch_vt2yw19",
+          "id": "defining_functions_ch9",
           "title": "Expert: call in expr",
           "promptMarkdown": "nest",
           "starterCode": "",
@@ -165,7 +193,7 @@
           }
         },
         {
-          "id": "ch_a3im76y",
+          "id": "defining_functions_ch10",
           "title": "Expert: bool return",
           "promptMarkdown": "is_even",
           "starterCode": "def is_even(n): return n%2==0\nf=is_even",
@@ -186,7 +214,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_wv08w72",
+            "id": "defining_functions_q1",
             "type": "mcq",
             "prompt": "def starts:",
             "choices": [
@@ -206,7 +234,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fh94i4m",
+            "id": "defining_functions_q2",
             "type": "shortText",
             "prompt": "Keyword to send value back?",
             "validation": {
@@ -215,7 +243,7 @@
             }
           },
           {
-            "id": "q_8gvmso2",
+            "id": "defining_functions_q3",
             "type": "mcq",
             "prompt": "Function without return gives:",
             "choices": [
@@ -235,7 +263,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_v1i4744",
+            "id": "defining_functions_q4",
             "type": "shortText",
             "prompt": "Call function with:",
             "validation": {
@@ -244,7 +272,7 @@
             }
           },
           {
-            "id": "q_3e6zt4n",
+            "id": "defining_functions_q5",
             "type": "mcq",
             "prompt": "Parameters are:",
             "choices": [
@@ -264,7 +292,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_01l79y6",
+            "id": "defining_functions_q6",
             "type": "mcq",
             "prompt": "Body is:",
             "choices": [
@@ -284,7 +312,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xcv74rn",
+            "id": "defining_functions_q7",
             "type": "shortText",
             "prompt": "Reuse code via:",
             "validation": {
@@ -293,7 +321,7 @@
             }
           },
           {
-            "id": "q_cgrjbbg",
+            "id": "defining_functions_q8",
             "type": "mcq",
             "prompt": "Expert: return ends:",
             "choices": [
@@ -313,7 +341,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zo6a65b",
+            "id": "defining_functions_q9",
             "type": "mcq",
             "prompt": "Expert: f() executes:",
             "choices": [
@@ -333,7 +361,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xfycie0",
+            "id": "defining_functions_q10",
             "type": "shortText",
             "prompt": "Expert: parameters in def are:",
             "validation": {
@@ -346,15 +374,43 @@
     },
     {
       "id": "parameters_arguments",
-      "title": "Parameters and Arguments",
+      "title": "Parameters and arguments",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "positional",
+          "label": "Positional",
+          "code": "def power(base, exp):\n    return base ** exp\nprint(power(2, 10))"
+        },
+        {
+          "id": "order_matters",
+          "label": "Order matters",
+          "code": "def sub(a, b):\n    return a - b\nprint(sub(5, 2))"
+        },
+        {
+          "id": "three_args",
+          "label": "Three args",
+          "code": "def sum3(a, b, c):\n    return a + b + c\nprint(sum3(1, 2, 3))"
+        },
+        {
+          "id": "keyword_call",
+          "label": "Keyword call",
+          "code": "def connect(host, port):\n    return f\"{host}:{port}\"\nprint(connect(port=443, host=\"localhost\"))"
+        },
+        {
+          "id": "nested_call",
+          "label": "Nested call",
+          "code": "def double(x):\n    return x * 2\nprint(double(double(2)))"
+        }
+      ],
       "intro": {
-        "title": "Parameters and Arguments",
+        "title": "Parameters and arguments",
         "bodyMarkdown": "Parameters are names in the definition; arguments are values passed at call time.\n\nPositional args match left-to-right; order matters.\n\nToo few or too many args raises TypeError.",
         "sandboxCode": "def power(base, exp):\n    return base ** exp\n\nprint(power(2, 10))"
       },
       "challenges": [
         {
-          "id": "ch_l2e6gxj",
+          "id": "parameters_arguments_ch1",
           "title": "Easy: two args",
           "promptMarkdown": "positional",
           "starterCode": "",
@@ -371,7 +427,7 @@
           }
         },
         {
-          "id": "ch_yxixgm6",
+          "id": "parameters_arguments_ch2",
           "title": "Easy: order matters",
           "promptMarkdown": "sub",
           "starterCode": "",
@@ -388,7 +444,7 @@
           }
         },
         {
-          "id": "ch_vos8tsa",
+          "id": "parameters_arguments_ch3",
           "title": "Medium: three args",
           "promptMarkdown": "sum3",
           "starterCode": "def s(a,b,c): return a+b+c\nv=s(1,2,3)",
@@ -405,7 +461,7 @@
           }
         },
         {
-          "id": "ch_jx3hilx",
+          "id": "parameters_arguments_ch4",
           "title": "Medium: pass literal",
           "promptMarkdown": "call",
           "starterCode": "def sq(x): return x*x\nv=sq(3)",
@@ -422,7 +478,7 @@
           }
         },
         {
-          "id": "ch_cx4o4wq",
+          "id": "parameters_arguments_ch5",
           "title": "Hard: pass expr",
           "promptMarkdown": "call add",
           "starterCode": "def f(x): return x+1\nv=f(2+4)",
@@ -439,7 +495,7 @@
           }
         },
         {
-          "id": "ch_bb7wjrt",
+          "id": "parameters_arguments_ch6",
           "title": "Hard: variable args",
           "promptMarkdown": "use names",
           "starterCode": "def f(a,b): return a*b\nx,y=5,1\nv=f(x,y)",
@@ -456,7 +512,7 @@
           }
         },
         {
-          "id": "ch_z7b7njm",
+          "id": "parameters_arguments_ch7",
           "title": "Expert: TypeError concept",
           "promptMarkdown": "arity",
           "starterCode": "def f(a): pass\nok=True",
@@ -473,7 +529,7 @@
           }
         },
         {
-          "id": "ch_chg8kce",
+          "id": "parameters_arguments_ch8",
           "title": "Expert: nested call",
           "promptMarkdown": "f(g())",
           "starterCode": "",
@@ -490,7 +546,7 @@
           }
         },
         {
-          "id": "ch_6plhgj4",
+          "id": "parameters_arguments_ch9",
           "title": "Expert: default later",
           "promptMarkdown": "skip",
           "starterCode": "def f(a,b=0): return a+b\nv=f(1)",
@@ -507,7 +563,7 @@
           }
         },
         {
-          "id": "ch_70cpxdp",
+          "id": "parameters_arguments_ch10",
           "title": "Expert: keyword call",
           "promptMarkdown": "name=",
           "starterCode": "def f(a,b): return a+b\nv=f(b=2,a=3)",
@@ -528,7 +584,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_brdmiwj",
+            "id": "parameters_arguments_q1",
             "type": "mcq",
             "prompt": "Arguments are:",
             "choices": [
@@ -548,7 +604,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2kjsyy5",
+            "id": "parameters_arguments_q2",
             "type": "shortText",
             "prompt": "Positional args match by:",
             "validation": {
@@ -557,7 +613,7 @@
             }
           },
           {
-            "id": "q_irvwwz2",
+            "id": "parameters_arguments_q3",
             "type": "mcq",
             "prompt": "Too many args:",
             "choices": [
@@ -577,7 +633,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nyxithr",
+            "id": "parameters_arguments_q4",
             "type": "mcq",
             "prompt": "Parameters listed in:",
             "choices": [
@@ -597,7 +653,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_hzyt0i7",
+            "id": "parameters_arguments_q5",
             "type": "shortText",
             "prompt": "Call uses:",
             "validation": {
@@ -606,7 +662,7 @@
             }
           },
           {
-            "id": "q_xemay37",
+            "id": "parameters_arguments_q6",
             "type": "mcq",
             "prompt": "Expert: keyword args use:",
             "choices": [
@@ -626,7 +682,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gg08bz6",
+            "id": "parameters_arguments_q7",
             "type": "mcq",
             "prompt": "Expert: arity means:",
             "choices": [
@@ -646,7 +702,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nqz4kx4",
+            "id": "parameters_arguments_q8",
             "type": "shortText",
             "prompt": "Expert: def f(a,b) has arity:",
             "validation": {
@@ -655,7 +711,7 @@
             }
           },
           {
-            "id": "q_9wg4r1b",
+            "id": "parameters_arguments_q9",
             "type": "mcq",
             "prompt": "Expert: f(1,2,3) with 2 params:",
             "choices": [
@@ -675,7 +731,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8bierri",
+            "id": "parameters_arguments_q10",
             "type": "shortText",
             "prompt": "Expert: arguments can be:",
             "validation": {
@@ -688,15 +744,38 @@
     },
     {
       "id": "return_values",
-      "title": "Return Values",
+      "title": "Return values",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "return_int",
+          "label": "Return int",
+          "code": "def square(n):\n    return n * n\nprint(square(4))"
+        },
+        {
+          "id": "multiple_values",
+          "label": "Multiple values",
+          "code": "def min_max(nums):\n    return min(nums), max(nums)\nlo, hi = min_max([3, 1, 4])\nprint(lo, hi)"
+        },
+        {
+          "id": "return_list",
+          "label": "Return list",
+          "code": "def evens(n):\n    return [x for x in range(n) if x % 2 == 0]\nprint(evens(6))"
+        },
+        {
+          "id": "guard_return",
+          "label": "Guard return",
+          "code": "def safe_div(a, b):\n    if b == 0:\n        return None\n    return a / b\nprint(safe_div(10, 2))"
+        }
+      ],
       "intro": {
-        "title": "Return Values",
+        "title": "Return values",
         "bodyMarkdown": "`return` sends a result to the caller. You can return any object — number, string, list, dict, or tuple.\n\nMultiple values are returned as one tuple: `return x, y`.\n\nEarly return simplifies guard clauses.",
         "sandboxCode": "def stats(nums):\n    return min(nums), max(nums), sum(nums)\n\nlo, hi, total = stats([3, 1, 4])"
       },
       "challenges": [
         {
-          "id": "ch_2slp2vm",
+          "id": "return_values_ch1",
           "title": "Easy: return int",
           "promptMarkdown": "return 7",
           "starterCode": "",
@@ -713,7 +792,7 @@
           }
         },
         {
-          "id": "ch_jflyjdo",
+          "id": "return_values_ch2",
           "title": "Easy: return str",
           "promptMarkdown": "return \"ok\"",
           "starterCode": "",
@@ -730,7 +809,7 @@
           }
         },
         {
-          "id": "ch_2hav8p3",
+          "id": "return_values_ch3",
           "title": "Medium: return list",
           "promptMarkdown": "[1,2]",
           "starterCode": "def f(): return [1,2]\nv=f()",
@@ -747,7 +826,7 @@
           }
         },
         {
-          "id": "ch_dex0nba",
+          "id": "return_values_ch4",
           "title": "Medium: tuple return",
           "promptMarkdown": "a,b",
           "starterCode": "def f(): return 1,2\nt=f()",
@@ -764,7 +843,7 @@
           }
         },
         {
-          "id": "ch_rjm9zk0",
+          "id": "return_values_ch5",
           "title": "Hard: unpack return",
           "promptMarkdown": "lo,hi",
           "starterCode": "def f(): return 1,9\nlo,hi=f()",
@@ -781,7 +860,7 @@
           }
         },
         {
-          "id": "ch_8m6eisq",
+          "id": "return_values_ch6",
           "title": "Hard: return expression",
           "promptMarkdown": "x*2",
           "starterCode": "def f(x): return x*2\nv=f(4)",
@@ -798,7 +877,7 @@
           }
         },
         {
-          "id": "ch_wm17qkr",
+          "id": "return_values_ch7",
           "title": "Expert: conditional return",
           "promptMarkdown": "abs",
           "starterCode": "def ab(x): return x if x>=0 else -x\nv=ab(-5)",
@@ -815,7 +894,7 @@
           }
         },
         {
-          "id": "ch_kaz154s",
+          "id": "return_values_ch8",
           "title": "Expert: return None explicit",
           "promptMarkdown": "None",
           "starterCode": "def f(): return None\nv=f()",
@@ -832,7 +911,7 @@
           }
         },
         {
-          "id": "ch_q53z0bn",
+          "id": "return_values_ch9",
           "title": "Expert: return dict",
           "promptMarkdown": "build",
           "starterCode": "def f(): return {\"a\":1}\nd=f()",
@@ -849,7 +928,7 @@
           }
         },
         {
-          "id": "ch_xmif703",
+          "id": "return_values_ch10",
           "title": "Expert: generator later",
           "promptMarkdown": "list comp fn",
           "starterCode": "def sq(): return [n*n for n in range(3)]\nl=sq()",
@@ -870,7 +949,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_ye0y6o2",
+            "id": "return_values_q1",
             "type": "mcq",
             "prompt": "return sends value to:",
             "choices": [
@@ -890,7 +969,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_eaxpe8k",
+            "id": "return_values_q2",
             "type": "shortText",
             "prompt": "No return means:",
             "validation": {
@@ -899,7 +978,7 @@
             }
           },
           {
-            "id": "q_i8qk6o0",
+            "id": "return_values_q3",
             "type": "mcq",
             "prompt": "return a,b is:",
             "choices": [
@@ -919,7 +998,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_3drzeha",
+            "id": "return_values_q4",
             "type": "mcq",
             "prompt": "Early return helps:",
             "choices": [
@@ -939,7 +1018,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_tjhozta",
+            "id": "return_values_q5",
             "type": "shortText",
             "prompt": "Unpack with:",
             "validation": {
@@ -948,7 +1027,7 @@
             }
           },
           {
-            "id": "q_l4ddj17",
+            "id": "return_values_q6",
             "type": "mcq",
             "prompt": "return exits:",
             "choices": [
@@ -968,7 +1047,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_vuljjmv",
+            "id": "return_values_q7",
             "type": "shortText",
             "prompt": "Can return:",
             "validation": {
@@ -977,7 +1056,7 @@
             }
           },
           {
-            "id": "q_2pynobc",
+            "id": "return_values_q8",
             "type": "mcq",
             "prompt": "Expert: return [1,2] returns:",
             "choices": [
@@ -997,7 +1076,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jtr4t8u",
+            "id": "return_values_q9",
             "type": "mcq",
             "prompt": "Expert: multiple names =",
             "choices": [
@@ -1017,7 +1096,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_x5e1pb6",
+            "id": "return_values_q10",
             "type": "shortText",
             "prompt": "Expert: bare return gives:",
             "validation": {
@@ -1030,15 +1109,33 @@
     },
     {
       "id": "default_parameters",
-      "title": "Default Parameters",
+      "title": "Default values",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "default_arg",
+          "label": "Default arg",
+          "code": "def greet(name, punct=\"!\"):\n    return f\"Hi {name}{punct}\"\nprint(greet(\"Ada\"), greet(\"Bob\", \"?\"))"
+        },
+        {
+          "id": "optional_flag",
+          "label": "Optional flag",
+          "code": "def connect(ssl=True):\n    return f\"ssl={ssl}\"\nprint(connect(), connect(ssl=False))"
+        },
+        {
+          "id": "none_sentinel",
+          "label": "None sentinel",
+          "code": "def append_item(lst=None):\n    if lst is None:\n        lst = []\n    lst.append(1)\n    return lst\nprint(append_item())"
+        }
+      ],
       "intro": {
-        "title": "Default Parameters",
+        "title": "Default values",
         "bodyMarkdown": "Defaults in def: `def f(x, y=10):`. Callers can omit that argument.\n\nDefaults evaluate once at function definition — mutable defaults are a common bug (use None sentinel).\n\nDefaults must come after non-default parameters.",
         "sandboxCode": "def greet(name, punct=\"!\"):\n    return f\"Hi {name}{punct}\"\n\nprint(greet(\"Ada\"), greet(\"Bob\", \"?\"))"
       },
       "challenges": [
         {
-          "id": "ch_97wn6rh",
+          "id": "default_parameters_ch1",
           "title": "Easy: one default",
           "promptMarkdown": "y=2",
           "starterCode": "",
@@ -1055,7 +1152,7 @@
           }
         },
         {
-          "id": "ch_qsnivla",
+          "id": "default_parameters_ch2",
           "title": "Easy: omit default",
           "promptMarkdown": "call",
           "starterCode": "",
@@ -1072,7 +1169,7 @@
           }
         },
         {
-          "id": "ch_dwbjgf3",
+          "id": "default_parameters_ch3",
           "title": "Medium: override default",
           "promptMarkdown": "pass 5",
           "starterCode": "def f(x,y=2): return x+y\nv=f(3,5)",
@@ -1089,7 +1186,7 @@
           }
         },
         {
-          "id": "ch_ndhc42n",
+          "id": "default_parameters_ch4",
           "title": "Hard: None sentinel",
           "promptMarkdown": "lst=None",
           "starterCode": "def f(lst=None):\n if lst is None: lst=[]\n return lst\nl=f()",
@@ -1106,7 +1203,7 @@
           }
         },
         {
-          "id": "ch_7jjcpan",
+          "id": "default_parameters_ch5",
           "title": "Hard: string default",
           "promptMarkdown": "sep",
           "starterCode": "def f(sep=\",\"): return sep\ns=f()",
@@ -1123,7 +1220,7 @@
           }
         },
         {
-          "id": "ch_cribmuf",
+          "id": "default_parameters_ch6",
           "title": "Expert: order rule",
           "promptMarkdown": "nondefault first",
           "starterCode": "def ok(a, b=1): return a+b",
@@ -1133,7 +1230,7 @@
           }
         },
         {
-          "id": "ch_r7nrc05",
+          "id": "default_parameters_ch7",
           "title": "Expert: mutable bug aware",
           "promptMarkdown": "new list each call",
           "starterCode": "def f(l=None):\n if l is None: l=[]\n return l\na=f()\nb=f()",
@@ -1150,7 +1247,7 @@
           }
         },
         {
-          "id": "ch_tpjruhf",
+          "id": "default_parameters_ch8",
           "title": "Expert: bool default",
           "promptMarkdown": "flag=False",
           "starterCode": "def f(flag=False): return flag\nv=f()",
@@ -1167,7 +1264,7 @@
           }
         },
         {
-          "id": "ch_foqulpd",
+          "id": "default_parameters_ch9",
           "title": "Expert: multiple defaults",
           "promptMarkdown": "a,b",
           "starterCode": "def f(a=1,b=2): return a+b\nv=f()",
@@ -1184,7 +1281,7 @@
           }
         },
         {
-          "id": "ch_selw2em",
+          "id": "default_parameters_ch10",
           "title": "Expert: partial override",
           "promptMarkdown": "",
           "starterCode": "def f(a,b=1,c=1): return a+b+c\nv=f(2,c=1)",
@@ -1205,7 +1302,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_fdq4cs5",
+            "id": "default_parameters_q1",
             "type": "mcq",
             "prompt": "Default written as:",
             "choices": [
@@ -1225,7 +1322,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_sz2s6fy",
+            "id": "default_parameters_q2",
             "type": "shortText",
             "prompt": "Mutable default danger uses:",
             "validation": {
@@ -1234,7 +1331,7 @@
             }
           },
           {
-            "id": "q_en1gy6l",
+            "id": "default_parameters_q3",
             "type": "mcq",
             "prompt": "Defaults must follow:",
             "choices": [
@@ -1254,7 +1351,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ez1o3kf",
+            "id": "default_parameters_q4",
             "type": "mcq",
             "prompt": "Omitting arg uses:",
             "choices": [
@@ -1274,7 +1371,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9ggxq57",
+            "id": "default_parameters_q5",
             "type": "shortText",
             "prompt": "def f(x=1) call f() gives:",
             "validation": {
@@ -1283,7 +1380,7 @@
             }
           },
           {
-            "id": "q_8nyrmif",
+            "id": "default_parameters_q6",
             "type": "mcq",
             "prompt": "Expert: def time eval defaults:",
             "choices": [
@@ -1303,7 +1400,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mw27q4z",
+            "id": "default_parameters_q7",
             "type": "mcq",
             "prompt": "Expert: lst=[] default bug:",
             "choices": [
@@ -1323,7 +1420,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7643fei",
+            "id": "default_parameters_q8",
             "type": "shortText",
             "prompt": "Expert: None check pattern:",
             "validation": {
@@ -1332,7 +1429,7 @@
             }
           },
           {
-            "id": "q_f103zu9",
+            "id": "default_parameters_q9",
             "type": "mcq",
             "prompt": "Expert: override default by:",
             "choices": [
@@ -1352,7 +1449,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_j1ju2an",
+            "id": "default_parameters_q10",
             "type": "shortText",
             "prompt": "Expert: keyword can override:",
             "validation": {
@@ -1365,15 +1462,33 @@
     },
     {
       "id": "keyword_arguments",
-      "title": "Keyword Arguments",
+      "title": "Keyword arguments",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "named_args",
+          "label": "Named args",
+          "code": "def connect(host, port, ssl=True):\n    return f\"{host}:{port} ssl={ssl}\"\nprint(connect(\"localhost\", port=443))"
+        },
+        {
+          "id": "skip_default",
+          "label": "Skip default",
+          "code": "def f(a, b=10):\n    return a + b\nprint(f(5))"
+        },
+        {
+          "id": "clear_call",
+          "label": "Clear call",
+          "code": "def create_user(name, role=\"guest\", active=True):\n    return {\"name\": name, \"role\": role, \"active\": active}\nprint(create_user(\"Ana\", role=\"admin\"))"
+        }
+      ],
       "intro": {
-        "title": "Keyword Arguments",
+        "title": "Keyword arguments",
         "bodyMarkdown": "Call `f(a=1, b=2)` using parameter names. Order can differ from definition.\n\nImproves clarity at call sites with many parameters.\n\nCombine positional then keyword; positional must come first.",
         "sandboxCode": "def connect(host, port, ssl=True):\n    return f\"{host}:{port} ssl={ssl}\"\n\nprint(connect(\"localhost\", port=443, ssl=True))"
       },
       "challenges": [
         {
-          "id": "ch_fa3ile6",
+          "id": "keyword_arguments_ch1",
           "title": "Easy: keyword call",
           "promptMarkdown": "a=1",
           "starterCode": "",
@@ -1390,7 +1505,7 @@
           }
         },
         {
-          "id": "ch_9bos0mr",
+          "id": "keyword_arguments_ch2",
           "title": "Easy: reorder",
           "promptMarkdown": "b before a",
           "starterCode": "",
@@ -1407,7 +1522,7 @@
           }
         },
         {
-          "id": "ch_vtpi9vx",
+          "id": "keyword_arguments_ch3",
           "title": "Medium: mixed",
           "promptMarkdown": "pos + key",
           "starterCode": "def f(a,b,c): return a+b+c\nv=f(1,c=3,b=1)",
@@ -1424,7 +1539,7 @@
           }
         },
         {
-          "id": "ch_2c84gb8",
+          "id": "keyword_arguments_ch4",
           "title": "Medium: bool keyword",
           "promptMarkdown": "ssl=True",
           "starterCode": "def f(ssl=False): return \"T\" if ssl else \"F\"\ns=f(ssl=True)",
@@ -1441,7 +1556,7 @@
           }
         },
         {
-          "id": "ch_sujvj45",
+          "id": "keyword_arguments_ch5",
           "title": "Hard: skip middle default",
           "promptMarkdown": "",
           "starterCode": "def f(a,b=0,c=0): return a+b+c\nv=f(4)",
@@ -1458,7 +1573,7 @@
           }
         },
         {
-          "id": "ch_ob1b5jp",
+          "id": "keyword_arguments_ch6",
           "title": "Hard: named only",
           "promptMarkdown": "all kw",
           "starterCode": "def f(x,y): return x*y\nv=f(x=2,y=3)",
@@ -1475,7 +1590,7 @@
           }
         },
         {
-          "id": "ch_6ctsxzp",
+          "id": "keyword_arguments_ch7",
           "title": "Expert: clarity",
           "promptMarkdown": "many params",
           "starterCode": "def send(host,port,timeout,retry): return 1\nv=send(\"h\",port=80,timeout=1,retry=0)",
@@ -1492,7 +1607,7 @@
           }
         },
         {
-          "id": "ch_2the22v",
+          "id": "keyword_arguments_ch8",
           "title": "Expert: override default kw",
           "promptMarkdown": "",
           "starterCode": "def f(n=5): return n\nv=f(n=10)",
@@ -1509,7 +1624,7 @@
           }
         },
         {
-          "id": "ch_vvioqdo",
+          "id": "keyword_arguments_ch9",
           "title": "Expert: error order",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1526,7 +1641,7 @@
           }
         },
         {
-          "id": "ch_0wbk16a",
+          "id": "keyword_arguments_ch10",
           "title": "Expert: kwargs prep",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1547,7 +1662,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_qez6jm0",
+            "id": "keyword_arguments_q1",
             "type": "mcq",
             "prompt": "Keyword args use:",
             "choices": [
@@ -1567,7 +1682,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_f21ypco",
+            "id": "keyword_arguments_q2",
             "type": "shortText",
             "prompt": "Keyword can change:",
             "validation": {
@@ -1576,7 +1691,7 @@
             }
           },
           {
-            "id": "q_aqz9zcn",
+            "id": "keyword_arguments_q3",
             "type": "mcq",
             "prompt": "Positional before keyword:",
             "choices": [
@@ -1596,7 +1711,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ejuhrsr",
+            "id": "keyword_arguments_q4",
             "type": "mcq",
             "prompt": "f(x=1) passes:",
             "choices": [
@@ -1616,7 +1731,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rhy10gg",
+            "id": "keyword_arguments_q5",
             "type": "shortText",
             "prompt": "Improves:",
             "validation": {
@@ -1625,7 +1740,7 @@
             }
           },
           {
-            "id": "q_4q7x4b2",
+            "id": "keyword_arguments_q6",
             "type": "mcq",
             "prompt": "Expert: f(1,y=2) mixes:",
             "choices": [
@@ -1645,7 +1760,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fslbn3s",
+            "id": "keyword_arguments_q7",
             "type": "mcq",
             "prompt": "Expert: no param name:",
             "choices": [
@@ -1665,7 +1780,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ne60ev0",
+            "id": "keyword_arguments_q8",
             "type": "shortText",
             "prompt": "Expert: API design uses kw for:",
             "validation": {
@@ -1674,7 +1789,7 @@
             }
           },
           {
-            "id": "q_z1r9s7p",
+            "id": "keyword_arguments_q9",
             "type": "mcq",
             "prompt": "Expert: connect(host, port=80) port is:",
             "choices": [
@@ -1694,7 +1809,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ev5conk",
+            "id": "keyword_arguments_q10",
             "type": "shortText",
             "prompt": "Expert: named args match:",
             "validation": {
@@ -1706,358 +1821,39 @@
       }
     },
     {
-      "id": "args_kwargs",
-      "title": "*args and **kwargs",
-      "intro": {
-        "title": "*args and **kwargs",
-        "bodyMarkdown": "`*args` collects extra positional args as tuple; `**kwargs` collects extra keyword args as dict.\n\nUseful for wrappers and flexible APIs. Unpack with `*seq` and `**dict` at call time.\n\nOrder: positional, *args, keyword-only, **kwargs in definitions.",
-        "sandboxCode": "def flexible(a, *args, kwonly, **kwargs):\n    return (a, args, kwonly, kwargs)\n\nprint(flexible(1, 2, 3, kwonly=0, extra=True))"
-      },
-      "challenges": [
+      "id": "scope_globals",
+      "title": "Scope",
+      "kind": "topic",
+      "sandboxSnippets": [
         {
-          "id": "ch_gtpgk5t",
-          "title": "Easy: *args sum",
-          "promptMarkdown": "def f(*a): return sum(a)",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "def f(*a): return sum(a)\nv=f(1,2,3)",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==6"
-              }
-            ]
-          }
+          "id": "global",
+          "label": "global",
+          "code": "count = 0\n\ndef inc():\n    global count\n    count += 1\n\ninc()\nprint(count)"
         },
         {
-          "id": "ch_0cf76hd",
-          "title": "Easy: **kwargs get",
-          "promptMarkdown": "def f(**k): return k[\"x\"]",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "def f(**k): return k[\"x\"]\nv=f(x=1)",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==1"
-              }
-            ]
-          }
+          "id": "local_shadow",
+          "label": "Local shadow",
+          "code": "x = 1\ndef f():\n    x = 2\n    return x\nprint(f(), x)"
         },
         {
-          "id": "ch_3o1navu",
-          "title": "Medium: args tuple",
-          "promptMarkdown": "len",
-          "starterCode": "def f(*a): return len(a)\nn=f(1,2)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks n",
-                "assertion": "n==2"
-              }
-            ]
-          }
+          "id": "read_global",
+          "label": "Read global",
+          "code": "name = \"Ada\"\ndef greet():\n    return f\"Hi {name}\"\nprint(greet())"
         },
         {
-          "id": "ch_kvir88t",
-          "title": "Medium: kwargs dict",
-          "promptMarkdown": "keys",
-          "starterCode": "def f(**k): return len(k)\nn=f(a=1)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks n",
-                "assertion": "n==1"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_ch4m7d3",
-          "title": "Hard: unpack call",
-          "promptMarkdown": "*lst",
-          "starterCode": "def add(a,b,c): return a+b+c\nv=add(*[1,2,3])",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==6"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_mzlwbyt",
-          "title": "Hard: unpack kw",
-          "promptMarkdown": "**d",
-          "starterCode": "def f(a,b): return a+b\nv=f(**{\"a\":1,\"b\":2})",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==3"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_cpebpu8",
-          "title": "Expert: wrapper pattern",
-          "promptMarkdown": "pass through",
-          "starterCode": "def wrap(**k):\n return k.get(\"x\")\nv=wrap(x=1)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==1"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_2iu9d6h",
-          "title": "Expert: combine",
-          "promptMarkdown": "* and **",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "def f(a,*b,**c): ok=True\nf(1,2,x=3)\nok=ok",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks ok",
-                "assertion": "ok==True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_n7xqwec",
-          "title": "Expert: empty args",
-          "promptMarkdown": "*()",
-          "starterCode": "def f(*a): return len(a)\nv=f()",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==0"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_wrld49r",
-          "title": "Expert: merge kwargs",
-          "promptMarkdown": "update",
-          "starterCode": "def f(**k): return k.get(\"a\",0)+k.get(\"b\",0)\nv=f(a=1,b=2)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==3"
-              }
-            ]
-          }
+          "id": "legb",
+          "label": "LEGB",
+          "code": "def outer():\n    msg = \"hi\"\n    def inner():\n        return msg\n    return inner()\nprint(outer())"
         }
       ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "q_nvmdigj",
-            "type": "mcq",
-            "prompt": "*args is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Extra positional tuple"
-              },
-              {
-                "id": "b",
-                "label": "Dict"
-              },
-              {
-                "id": "c",
-                "label": "List only name"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_gdst62l",
-            "type": "shortText",
-            "prompt": "**kwargs is:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "dict"
-            }
-          },
-          {
-            "id": "q_t76yz2s",
-            "type": "mcq",
-            "prompt": "Unpack list at call:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "*list"
-              },
-              {
-                "id": "b",
-                "label": "**list"
-              },
-              {
-                "id": "c",
-                "label": "@list"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_foos6qo",
-            "type": "mcq",
-            "prompt": "Unpack dict at call:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "**dict"
-              },
-              {
-                "id": "b",
-                "label": "*dict"
-              },
-              {
-                "id": "c",
-                "label": "dict()"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_gi8byz9",
-            "type": "shortText",
-            "prompt": "* in def collects:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "positional extras"
-            }
-          },
-          {
-            "id": "q_fvu4jwr",
-            "type": "mcq",
-            "prompt": "Expert: f(*[1,2]) spreads:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Arguments"
-              },
-              {
-                "id": "b",
-                "label": "Keywords"
-              },
-              {
-                "id": "c",
-                "label": "Imports"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_hh9hb29",
-            "type": "mcq",
-            "prompt": "Expert: kwargs keyword-only after *:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Possible in Py3"
-              },
-              {
-                "id": "b",
-                "label": "Never"
-              },
-              {
-                "id": "c",
-                "label": "Illegal always"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_ow9l1nm",
-            "type": "shortText",
-            "prompt": "Expert: ** unpack maps keys to:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "parameter names"
-            }
-          },
-          {
-            "id": "q_9go2h4r",
-            "type": "mcq",
-            "prompt": "Expert: empty *args:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "()"
-              },
-              {
-                "id": "b",
-                "label": "None"
-              },
-              {
-                "id": "c",
-                "label": "[]"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_g4ltsf5",
-            "type": "shortText",
-            "prompt": "Expert: flexible APIs use:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "args kwargs"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "scope_globals",
-      "title": "Scope and Globals",
       "intro": {
-        "title": "Scope and Globals",
+        "title": "Scope",
         "bodyMarkdown": "LEGB: Local, Enclosing, Global, Built-in. Assignment creates local unless `global` declared.\n\nRead global names without global statement; assignment needs `global x` to modify module-level x.\n\nAvoid excessive globals; prefer parameters and return values.",
         "sandboxCode": "count = 0\n\ndef inc():\n    global count\n    count += 1\n\ninc()\nprint(count)"
       },
       "challenges": [
         {
-          "id": "ch_d1o17mi",
+          "id": "scope_globals_ch1",
           "title": "Easy: local assign",
           "promptMarkdown": "x inside",
           "starterCode": "",
@@ -2074,7 +1870,7 @@
           }
         },
         {
-          "id": "ch_7ii4to3",
+          "id": "scope_globals_ch2",
           "title": "Easy: read global",
           "promptMarkdown": "print global",
           "starterCode": "",
@@ -2091,7 +1887,7 @@
           }
         },
         {
-          "id": "ch_b8dfwwi",
+          "id": "scope_globals_ch3",
           "title": "Medium: global modify",
           "promptMarkdown": "inc",
           "starterCode": "def f():\n global n\n n+=1\nf()",
@@ -2108,7 +1904,7 @@
           }
         },
         {
-          "id": "ch_gd0segj",
+          "id": "scope_globals_ch4",
           "title": "Medium: enclosing",
           "promptMarkdown": "nested",
           "starterCode": "def outer():\n x=2\n def inner(): return x\n return inner()\nv=outer()",
@@ -2125,7 +1921,7 @@
           }
         },
         {
-          "id": "ch_xog6u6l",
+          "id": "scope_globals_ch5",
           "title": "Hard: local shadows",
           "promptMarkdown": "",
           "starterCode": "def f():\n x=1\n return x\nv=f()",
@@ -2142,7 +1938,7 @@
           }
         },
         {
-          "id": "ch_3i0838f",
+          "id": "scope_globals_ch6",
           "title": "Hard: no global read ok",
           "promptMarkdown": "",
           "starterCode": "def f(): return TOTAL\nv=f()",
@@ -2159,7 +1955,7 @@
           }
         },
         {
-          "id": "ch_wqdxpfh",
+          "id": "scope_globals_ch7",
           "title": "Expert: nonlocal",
           "promptMarkdown": "closure counter",
           "starterCode": "def make():\n c=0\n def inc():\n  nonlocal c\n  c+=1\n  return c\n return inc\nf=make()\nv=f()",
@@ -2176,7 +1972,7 @@
           }
         },
         {
-          "id": "ch_a705056",
+          "id": "scope_globals_ch8",
           "title": "Expert: builtin",
           "promptMarkdown": "len",
           "starterCode": "",
@@ -2193,7 +1989,7 @@
           }
         },
         {
-          "id": "ch_au7qknu",
+          "id": "scope_globals_ch9",
           "title": "Expert: global list mutate",
           "promptMarkdown": "no global for .append?",
           "starterCode": "def f(): lst.append(1)\nf()",
@@ -2210,7 +2006,7 @@
           }
         },
         {
-          "id": "ch_h6o587j",
+          "id": "scope_globals_ch10",
           "title": "Expert: LEGB",
           "promptMarkdown": "local first",
           "starterCode": "def f():\n v=0\n return v\nv=f()",
@@ -2231,7 +2027,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_49qe5cg",
+            "id": "scope_globals_q1",
             "type": "mcq",
             "prompt": "Assignment in function creates:",
             "choices": [
@@ -2251,7 +2047,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_n12i8av",
+            "id": "scope_globals_q2",
             "type": "shortText",
             "prompt": "Modify global needs:",
             "validation": {
@@ -2260,7 +2056,7 @@
             }
           },
           {
-            "id": "q_3itewf9",
+            "id": "scope_globals_q3",
             "type": "mcq",
             "prompt": "LEGB order starts with:",
             "choices": [
@@ -2280,7 +2076,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_nf8beac",
+            "id": "scope_globals_q4",
             "type": "mcq",
             "prompt": "nonlocal modifies:",
             "choices": [
@@ -2300,7 +2096,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_15bg50f",
+            "id": "scope_globals_q5",
             "type": "shortText",
             "prompt": "Read global without:",
             "validation": {
@@ -2309,7 +2105,7 @@
             }
           },
           {
-            "id": "q_dueghk5",
+            "id": "scope_globals_q6",
             "type": "mcq",
             "prompt": "Expert: shadowing hides:",
             "choices": [
@@ -2329,7 +2125,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_6eq7bfk",
+            "id": "scope_globals_q7",
             "type": "mcq",
             "prompt": "Expert: excessive globals:",
             "choices": [
@@ -2349,7 +2145,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7otzy70",
+            "id": "scope_globals_q8",
             "type": "shortText",
             "prompt": "Expert: nested def can access:",
             "validation": {
@@ -2358,7 +2154,7 @@
             }
           },
           {
-            "id": "q_iv8hs4f",
+            "id": "scope_globals_q9",
             "type": "mcq",
             "prompt": "Expert: builtins like len in:",
             "choices": [
@@ -2378,7 +2174,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wj1h7ni",
+            "id": "scope_globals_q10",
             "type": "shortText",
             "prompt": "Expert: prefer params over:",
             "validation": {
@@ -2390,700 +2186,39 @@
       }
     },
     {
-      "id": "lambda_functions",
-      "title": "Lambda Functions",
-      "intro": {
-        "title": "Lambda Functions",
-        "bodyMarkdown": "`lambda args: expr` creates small anonymous functions for one-line expressions.\n\nCommon with `sorted(key=...)`, `map`, and `filter`.\n\nUse def for anything multi-line or complex — lambdas hurt readability when overused.",
-        "sandboxCode": "nums = [3, 1, 4, 1, 5]\nprint(sorted(nums, key=lambda x: -x))\nprint(list(map(lambda x: x * 2, nums)))"
-      },
-      "challenges": [
-        {
-          "id": "ch_ansxnel",
-          "title": "Easy: lambda add",
-          "promptMarkdown": "lambda x: x+1",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "f=lambda x:x+1",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks f",
-                "assertion": "f(2)==3"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_o1661tg",
-          "title": "Easy: lambda mul",
-          "promptMarkdown": "two args",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "f=lambda a,b:a*b",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks f",
-                "assertion": "f(2,3)==6"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_8976e9j",
-          "title": "Medium: sorted key",
-          "promptMarkdown": "last char",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "w=sorted([\"cab\",\"ab\"], key=lambda s:len(s))",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks w",
-                "assertion": "w==[\"cab\",\"ab\"]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_w8vz70i",
-          "title": "Medium: map",
-          "promptMarkdown": "double",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "l=list(map(lambda x:x*2,[1,2]))",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks l",
-                "assertion": "l==[2,4]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_bq2zvpo",
-          "title": "Hard: filter",
-          "promptMarkdown": "evens",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "l=list(filter(lambda x:x%2==0,[1,2,3,4]))",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks l",
-                "assertion": "l==[2,4]"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_m32h0ak",
-          "title": "Hard: max key",
-          "promptMarkdown": "tuple",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pairs=[(1,3),(2,1)]\nv=max(pairs,key=lambda p:p[1])[1]",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==3"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_0tzslp3",
-          "title": "Expert: nested lambda",
-          "promptMarkdown": "compose",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "f=lambda x: (lambda y:x+y)(2)\nv=f(3)",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==5"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_1easu6g",
-          "title": "Expert: conditional lambda",
-          "promptMarkdown": "",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "f=lambda x: 0 if x<0 else x",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks f",
-                "assertion": "f(-1)==0"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_7q2zbsj",
-          "title": "Expert: list sort dicts",
-          "promptMarkdown": "",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "rows=[{\"s\":2},{\"s\":1}]\nrows.sort(key=lambda r:r[\"s\"])\nn=rows[0][\"s\"]",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks n",
-                "assertion": "n==2"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_64dky4a",
-          "title": "Expert: lambda vs def",
-          "promptMarkdown": "one expr only",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "ok=callable(lambda:1)",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks ok",
-                "assertion": "ok==True"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "q_kicqkz8",
-            "type": "mcq",
-            "prompt": "lambda creates:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Anonymous function"
-              },
-              {
-                "id": "b",
-                "label": "Class"
-              },
-              {
-                "id": "c",
-                "label": "Module"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_n50n2ik",
-            "type": "shortText",
-            "prompt": "lambda body is single:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "expression"
-            }
-          },
-          {
-            "id": "q_wu5wrwz",
-            "type": "mcq",
-            "prompt": "sorted(..., key=lambda x: ...) uses lambda for:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Sort key"
-              },
-              {
-                "id": "b",
-                "label": "Import"
-              },
-              {
-                "id": "c",
-                "label": "File IO"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_fkm6anu",
-            "type": "mcq",
-            "prompt": "map returns:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Iterator"
-              },
-              {
-                "id": "b",
-                "label": "Only list always"
-              },
-              {
-                "id": "c",
-                "label": "Dict"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_js7995l",
-            "type": "shortText",
-            "prompt": "Prefer def when:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "multiline"
-            }
-          },
-          {
-            "id": "q_5jel8au",
-            "type": "mcq",
-            "prompt": "Expert: lambda in key sorts by:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Computed value"
-              },
-              {
-                "id": "b",
-                "label": "Random"
-              },
-              {
-                "id": "c",
-                "label": "Syntax only"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_kl2b2v1",
-            "type": "mcq",
-            "prompt": "Expert: filter keeps:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Truthy results"
-              },
-              {
-                "id": "b",
-                "label": "All"
-              },
-              {
-                "id": "c",
-                "label": "None"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_8ntaoz6",
-            "type": "shortText",
-            "prompt": "Expert: lambda args like:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "def params"
-            }
-          },
-          {
-            "id": "q_eptlt8l",
-            "type": "mcq",
-            "prompt": "Expert: overuse hurts:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Readability"
-              },
-              {
-                "id": "b",
-                "label": "Speed only"
-              },
-              {
-                "id": "c",
-                "label": "Nothing"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_mzgdb16",
-            "type": "shortText",
-            "prompt": "Expert: map applies function to:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "each item"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "recursion",
-      "title": "Recursion",
-      "intro": {
-        "title": "Recursion",
-        "bodyMarkdown": "A function that calls itself must reach a base case to stop. Classic examples: factorial, Fibonacci, tree walks.\n\nEach call uses stack space — deep recursion can hit RecursionError.\n\nRecursion mirrors problem structure; loops often work too.",
-        "sandboxCode": "def fact(n):\n    return 1 if n <= 1 else n * fact(n - 1)\n\nprint(fact(5))"
-      },
-      "challenges": [
-        {
-          "id": "ch_rdvvpcq",
-          "title": "Easy: base case",
-          "promptMarkdown": "fact 0",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "def f(n):\n if n<=0: return 1\n return n*f(n-1)",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks f",
-                "assertion": "f(0)==1"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_dnjdp2a",
-          "title": "Easy: sum recursive",
-          "promptMarkdown": "sum to n",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "def s(n):\n if n<=0: return 0\n return n+s(n-1)\ns=s(3)",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks s",
-                "assertion": "s==6"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_0k24uh1",
-          "title": "Medium: factorial 5",
-          "promptMarkdown": "120",
-          "starterCode": "def fact(n):\n if n<=1: return 1\n return n*fact(n-1)\nv=fact(5)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==120"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_squqm0n",
-          "title": "Medium: countdown",
-          "promptMarkdown": "print concept",
-          "starterCode": "",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "def cd(n):\n if n<=0: return 0\n return cd(n-1)+1\nn=cd(3)",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks n",
-                "assertion": "n==0"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_vik4955",
-          "title": "Hard: fib",
-          "promptMarkdown": "fib(5)=5",
-          "starterCode": "def fib(n):\n if n<=1: return n\n return fib(n-1)+fib(n-2)\nv=fib(5)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==5"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_r8kfb4d",
-          "title": "Hard: list sum rec",
-          "promptMarkdown": "",
-          "starterCode": "def s(lst):\n if not lst: return 0\n return lst[0]+s(lst[1:])\ns=s([1,2,3])",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks s",
-                "assertion": "s==6"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_u0c8r6i",
-          "title": "Expert: power",
-          "promptMarkdown": "2**10",
-          "starterCode": "def p(b,e):\n if e==0: return 1\n return b*p(b,e-1)\nv=p(2,10)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v==1024"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_wlbwoib",
-          "title": "Expert: len recursive",
-          "promptMarkdown": "",
-          "starterCode": "def ln(lst):\n if not lst: return 0\n return 1+ln(lst[1:])\nn=ln([1,2,3])",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks n",
-                "assertion": "n==3"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_lcj6nw7",
-          "title": "Expert: gcd",
-          "promptMarkdown": "",
-          "starterCode": "def gcd(a,b):\n if b==0: return a\n return gcd(b,a%b)\ng=gcd(54,24)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks g",
-                "assertion": "g==6"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_zl5xztu",
-          "title": "Expert: base required",
-          "promptMarkdown": "",
-          "starterCode": "def f(n):\n if n<=0: return 0\n return 1+f(n-1)\nok=f(1)==1",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "pass",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks ok",
-                "assertion": "ok==True"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "q_2o1ohkg",
-            "type": "mcq",
-            "prompt": "Recursion needs:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Base case"
-              },
-              {
-                "id": "b",
-                "label": "No calls"
-              },
-              {
-                "id": "c",
-                "label": "Only globals"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_3c0wmz6",
-            "type": "shortText",
-            "prompt": "Function calls itself in:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "recursion"
-            }
-          },
-          {
-            "id": "q_uqwbcwt",
-            "type": "mcq",
-            "prompt": "Deep recursion may raise:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "RecursionError"
-              },
-              {
-                "id": "b",
-                "label": "SyntaxError"
-              },
-              {
-                "id": "c",
-                "label": "ImportError"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_96typ2s",
-            "type": "mcq",
-            "prompt": "factorial classic uses:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Recursion or loop"
-              },
-              {
-                "id": "b",
-                "label": "Only CSS"
-              },
-              {
-                "id": "c",
-                "label": "HTML"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_2jq8l95",
-            "type": "shortText",
-            "prompt": "Each call uses:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "stack"
-            }
-          },
-          {
-            "id": "q_agbuidm",
-            "type": "mcq",
-            "prompt": "Expert: tail recursion in Python:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Not optimized specially"
-              },
-              {
-                "id": "b",
-                "label": "Always fastest"
-              },
-              {
-                "id": "c",
-                "label": "Illegal"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_2vc9wz1",
-            "type": "mcq",
-            "prompt": "Expert: fib naive is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Exponential time"
-              },
-              {
-                "id": "b",
-                "label": "O(1)"
-              },
-              {
-                "id": "c",
-                "label": "Constant memory always"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_bsi7x8u",
-            "type": "shortText",
-            "prompt": "Expert: base case stops:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "recursion"
-            }
-          },
-          {
-            "id": "q_0hp6xc5",
-            "type": "mcq",
-            "prompt": "Expert: gcd recursion called:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Euclid"
-              },
-              {
-                "id": "b",
-                "label": "HTML"
-              },
-              {
-                "id": "c",
-                "label": "JSON"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_o55i27o",
-            "type": "shortText",
-            "prompt": "Expert: loop alternative to:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "recursion"
-            }
-          }
-        ]
-      }
-    },
-    {
       "id": "docstrings_hints",
-      "title": "Docstrings and Type Hints",
+      "title": "Docstrings and type hints",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "docstring",
+          "label": "Docstring",
+          "code": "def area(radius: float) -> float:\n    \"\"\"Return circle area.\"\"\"\n    return 3.14159 * radius * radius\nprint(area.__doc__)"
+        },
+        {
+          "id": "type_hints",
+          "label": "Type hints",
+          "code": "def greet(name: str) -> str:\n    return f\"Hello, {name}\"\nprint(greet(\"Ada\"))"
+        },
+        {
+          "id": "annotated_def",
+          "label": "Annotated def",
+          "code": "def add(a: int, b: int) -> int:\n    return a + b\nprint(add(2, 3))"
+        },
+        {
+          "id": "help",
+          "label": "help()",
+          "code": "def double(x):\n    \"\"\"Double a number.\"\"\"\n    return x * 2\nprint(double.__doc__)"
+        }
+      ],
       "intro": {
-        "title": "Docstrings and Type Hints",
+        "title": "Docstrings and type hints",
         "bodyMarkdown": "Docstrings in triple quotes right after def document behavior. `help(f)` displays them.\n\nType hints annotate intent: `def f(x: int) -> str:`. Not enforced at runtime by default.\n\nUse hints for readability and tooling (mypy, IDE). Docstrings explain why and how.",
         "sandboxCode": "def area(radius: float) -> float:\n    \"\"\"Return circle area.\"\"\"\n    return 3.14159 * radius * radius\n\nprint(area.__doc__)"
       },
       "challenges": [
         {
-          "id": "ch_csqj9gt",
+          "id": "docstrings_hints_ch1",
           "title": "Easy: docstring",
           "promptMarkdown": "triple quote",
           "starterCode": "def f():\n    \"\"\"help\"\"\"\n    pass",
@@ -3095,7 +2230,7 @@
           }
         },
         {
-          "id": "ch_0cacjtj",
+          "id": "docstrings_hints_ch2",
           "title": "Easy: annotation",
           "promptMarkdown": "x: int",
           "starterCode": "def f(x: int): return x",
@@ -3105,7 +2240,7 @@
           }
         },
         {
-          "id": "ch_ibxi0dl",
+          "id": "docstrings_hints_ch3",
           "title": "Medium: return hint",
           "promptMarkdown": "-> str",
           "starterCode": "def f() -> str: return \"a\"",
@@ -3115,7 +2250,7 @@
           }
         },
         {
-          "id": "ch_8s3fe6m",
+          "id": "docstrings_hints_ch4",
           "title": "Medium: __doc__",
           "promptMarkdown": "access",
           "starterCode": "def f():\n \"\"\"hi\"\"\"\n pass\nd=f.__doc__",
@@ -3132,7 +2267,7 @@
           }
         },
         {
-          "id": "ch_kk6lds3",
+          "id": "docstrings_hints_ch5",
           "title": "Hard: help exists",
           "promptMarkdown": "callable",
           "starterCode": "",
@@ -3149,7 +2284,7 @@
           }
         },
         {
-          "id": "ch_16kp5t1",
+          "id": "docstrings_hints_ch6",
           "title": "Hard: multiple hints",
           "promptMarkdown": "a:int,b:str",
           "starterCode": "def g(a: int, b: str): return str(a)+b",
@@ -3159,7 +2294,7 @@
           }
         },
         {
-          "id": "ch_8pw3r3t",
+          "id": "docstrings_hints_ch7",
           "title": "Expert: optional hint",
           "promptMarkdown": "Optional concept",
           "starterCode": "",
@@ -3176,7 +2311,7 @@
           }
         },
         {
-          "id": "ch_vcn2ciu",
+          "id": "docstrings_hints_ch8",
           "title": "Expert: list hint",
           "promptMarkdown": "list[int]",
           "starterCode": "def f(nums: list) -> int: return len(nums)\nok=f([1])==1",
@@ -3193,7 +2328,7 @@
           }
         },
         {
-          "id": "ch_cfii364",
+          "id": "docstrings_hints_ch9",
           "title": "Expert: document params",
           "promptMarkdown": "in docstring",
           "starterCode": "def add(a, b):\n    \"\"\"Add a and b.\"\"\"\n    return a+b",
@@ -3206,7 +2341,7 @@
           }
         },
         {
-          "id": "ch_8xhxor7",
+          "id": "docstrings_hints_ch10",
           "title": "Expert: mypy concept",
           "promptMarkdown": "hints optional runtime",
           "starterCode": "def f(x: int): return x\nok=f(\"s\")==\"s\"",
@@ -3227,7 +2362,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_22fqaee",
+            "id": "docstrings_hints_q1",
             "type": "mcq",
             "prompt": "Docstring uses:",
             "choices": [
@@ -3247,7 +2382,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mvjl42j",
+            "id": "docstrings_hints_q2",
             "type": "shortText",
             "prompt": "Type hints after colon on:",
             "validation": {
@@ -3256,7 +2391,7 @@
             }
           },
           {
-            "id": "q_mudqicm",
+            "id": "docstrings_hints_q3",
             "type": "mcq",
             "prompt": "-> in def means:",
             "choices": [
@@ -3276,7 +2411,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_351i95b",
+            "id": "docstrings_hints_q4",
             "type": "mcq",
             "prompt": "Hints enforced at runtime by default:",
             "choices": [
@@ -3296,7 +2431,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mp63wa6",
+            "id": "docstrings_hints_q5",
             "type": "shortText",
             "prompt": "__doc__ holds:",
             "validation": {
@@ -3305,7 +2440,7 @@
             }
           },
           {
-            "id": "q_6txezi7",
+            "id": "docstrings_hints_q6",
             "type": "mcq",
             "prompt": "help() shows:",
             "choices": [
@@ -3325,7 +2460,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rga1257",
+            "id": "docstrings_hints_q7",
             "type": "shortText",
             "prompt": "Tool for static type check:",
             "validation": {
@@ -3334,7 +2469,7 @@
             }
           },
           {
-            "id": "q_k57uywv",
+            "id": "docstrings_hints_q8",
             "type": "mcq",
             "prompt": "Expert: hints help:",
             "choices": [
@@ -3354,7 +2489,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_aube4yk",
+            "id": "docstrings_hints_q9",
             "type": "mcq",
             "prompt": "Expert: good doc explains:",
             "choices": [
@@ -3374,12 +2509,1107 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1qmsba2",
+            "id": "docstrings_hints_q10",
             "type": "shortText",
             "prompt": "Expert: annotations stored in:",
             "validation": {
               "mode": "equalsNormalized",
               "expected": "__annotations__"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "lambda_functions",
+      "title": "Lambda functions",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "lambda_sort",
+          "label": "lambda sort",
+          "code": "nums = [3, 1, 4]\nprint(sorted(nums, key=lambda x: -x))"
+        },
+        {
+          "id": "lambda_map",
+          "label": "lambda map",
+          "code": "print(list(map(lambda x: x * 2, [1, 2, 3])))"
+        },
+        {
+          "id": "lambda_filter",
+          "label": "lambda filter",
+          "code": "print(list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4])))"
+        },
+        {
+          "id": "lambda_max_key",
+          "label": "lambda max key",
+          "code": "words = [\"hi\", \"hello\", \"hey\"]\nprint(max(words, key=lambda w: len(w)))"
+        }
+      ],
+      "intro": {
+        "title": "Lambda functions",
+        "bodyMarkdown": "`lambda args: expr` creates small anonymous functions for one-line expressions.\n\nCommon with `sorted(key=...)`, `map`, and `filter`.\n\nUse def for anything multi-line or complex — lambdas hurt readability when overused.",
+        "sandboxCode": "nums = [3, 1, 4, 1, 5]\nprint(sorted(nums, key=lambda x: -x))\nprint(list(map(lambda x: x * 2, nums)))"
+      },
+      "challenges": [
+        {
+          "id": "lambda_functions_ch1",
+          "title": "Easy: lambda add",
+          "promptMarkdown": "lambda x: x+1",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "f=lambda x:x+1",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks f",
+                "assertion": "f(2)==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch2",
+          "title": "Easy: lambda mul",
+          "promptMarkdown": "two args",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "f=lambda a,b:a*b",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks f",
+                "assertion": "f(2,3)==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch3",
+          "title": "Medium: sorted key",
+          "promptMarkdown": "last char",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "w=sorted([\"cab\",\"ab\"], key=lambda s:len(s))",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks w",
+                "assertion": "w==[\"cab\",\"ab\"]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch4",
+          "title": "Medium: map",
+          "promptMarkdown": "double",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=list(map(lambda x:x*2,[1,2]))",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[2,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch5",
+          "title": "Hard: filter",
+          "promptMarkdown": "evens",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "l=list(filter(lambda x:x%2==0,[1,2,3,4]))",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks l",
+                "assertion": "l==[2,4]"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch6",
+          "title": "Hard: max key",
+          "promptMarkdown": "tuple",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pairs=[(1,3),(2,1)]\nv=max(pairs,key=lambda p:p[1])[1]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch7",
+          "title": "Expert: nested lambda",
+          "promptMarkdown": "compose",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "f=lambda x: (lambda y:x+y)(2)\nv=f(3)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch8",
+          "title": "Expert: conditional lambda",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "f=lambda x: 0 if x<0 else x",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks f",
+                "assertion": "f(-1)==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch9",
+          "title": "Expert: list sort dicts",
+          "promptMarkdown": "",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "rows=[{\"s\":2},{\"s\":1}]\nrows.sort(key=lambda r:r[\"s\"])\nn=rows[0][\"s\"]",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lambda_functions_ch10",
+          "title": "Expert: lambda vs def",
+          "promptMarkdown": "one expr only",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "ok=callable(lambda:1)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "lambda_functions_q1",
+            "type": "mcq",
+            "prompt": "lambda creates:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Anonymous function"
+              },
+              {
+                "id": "b",
+                "label": "Class"
+              },
+              {
+                "id": "c",
+                "label": "Module"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "lambda_functions_q2",
+            "type": "shortText",
+            "prompt": "lambda body is single:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "expression"
+            }
+          },
+          {
+            "id": "lambda_functions_q3",
+            "type": "mcq",
+            "prompt": "sorted(..., key=lambda x: ...) uses lambda for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Sort key"
+              },
+              {
+                "id": "b",
+                "label": "Import"
+              },
+              {
+                "id": "c",
+                "label": "File IO"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "lambda_functions_q4",
+            "type": "mcq",
+            "prompt": "map returns:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Iterator"
+              },
+              {
+                "id": "b",
+                "label": "Only list always"
+              },
+              {
+                "id": "c",
+                "label": "Dict"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "lambda_functions_q5",
+            "type": "shortText",
+            "prompt": "Prefer def when:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "multiline"
+            }
+          },
+          {
+            "id": "lambda_functions_q6",
+            "type": "mcq",
+            "prompt": "Expert: lambda in key sorts by:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Computed value"
+              },
+              {
+                "id": "b",
+                "label": "Random"
+              },
+              {
+                "id": "c",
+                "label": "Syntax only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "lambda_functions_q7",
+            "type": "mcq",
+            "prompt": "Expert: filter keeps:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Truthy results"
+              },
+              {
+                "id": "b",
+                "label": "All"
+              },
+              {
+                "id": "c",
+                "label": "None"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "lambda_functions_q8",
+            "type": "shortText",
+            "prompt": "Expert: lambda args like:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "def params"
+            }
+          },
+          {
+            "id": "lambda_functions_q9",
+            "type": "mcq",
+            "prompt": "Expert: overuse hurts:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Readability"
+              },
+              {
+                "id": "b",
+                "label": "Speed only"
+              },
+              {
+                "id": "c",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "lambda_functions_q10",
+            "type": "shortText",
+            "prompt": "Expert: map applies function to:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "each item"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "args_kwargs",
+      "title": "*args and **kwargs",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "args",
+          "label": "*args",
+          "code": "def total(*nums):\n    return sum(nums)\nprint(total(1, 2, 3))"
+        },
+        {
+          "id": "kwargs",
+          "label": "**kwargs",
+          "code": "def show(**info):\n    return info\nprint(show(name=\"Ada\", score=90))"
+        },
+        {
+          "id": "unpack_call",
+          "label": "Unpack call",
+          "code": "def add(a, b):\n    return a + b\nprint(add(*(2, 3)))"
+        },
+        {
+          "id": "combined",
+          "label": "Combined",
+          "code": "def flex(a, *args, kwonly=0, **kwargs):\n    return (a, args, kwonly, kwargs)\nprint(flex(1, 2, kwonly=0, extra=True))"
+        }
+      ],
+      "intro": {
+        "title": "*args and **kwargs",
+        "bodyMarkdown": "`*args` collects extra positional args as tuple; `**kwargs` collects extra keyword args as dict.\n\nUseful for wrappers and flexible APIs. Unpack with `*seq` and `**dict` at call time.\n\nOrder: positional, *args, keyword-only, **kwargs in definitions.",
+        "sandboxCode": "def flexible(a, *args, kwonly, **kwargs):\n    return (a, args, kwonly, kwargs)\n\nprint(flexible(1, 2, 3, kwonly=0, extra=True))"
+      },
+      "challenges": [
+        {
+          "id": "args_kwargs_ch1",
+          "title": "Easy: *args sum",
+          "promptMarkdown": "def f(*a): return sum(a)",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def f(*a): return sum(a)\nv=f(1,2,3)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch2",
+          "title": "Easy: **kwargs get",
+          "promptMarkdown": "def f(**k): return k[\"x\"]",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def f(**k): return k[\"x\"]\nv=f(x=1)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch3",
+          "title": "Medium: args tuple",
+          "promptMarkdown": "len",
+          "starterCode": "def f(*a): return len(a)\nn=f(1,2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch4",
+          "title": "Medium: kwargs dict",
+          "promptMarkdown": "keys",
+          "starterCode": "def f(**k): return len(k)\nn=f(a=1)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch5",
+          "title": "Hard: unpack call",
+          "promptMarkdown": "*lst",
+          "starterCode": "def add(a,b,c): return a+b+c\nv=add(*[1,2,3])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch6",
+          "title": "Hard: unpack kw",
+          "promptMarkdown": "**d",
+          "starterCode": "def f(a,b): return a+b\nv=f(**{\"a\":1,\"b\":2})",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch7",
+          "title": "Expert: wrapper pattern",
+          "promptMarkdown": "pass through",
+          "starterCode": "def wrap(**k):\n return k.get(\"x\")\nv=wrap(x=1)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch8",
+          "title": "Expert: combine",
+          "promptMarkdown": "* and **",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def f(a,*b,**c): ok=True\nf(1,2,x=3)\nok=ok",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch9",
+          "title": "Expert: empty args",
+          "promptMarkdown": "*()",
+          "starterCode": "def f(*a): return len(a)\nv=f()",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "args_kwargs_ch10",
+          "title": "Expert: merge kwargs",
+          "promptMarkdown": "update",
+          "starterCode": "def f(**k): return k.get(\"a\",0)+k.get(\"b\",0)\nv=f(a=1,b=2)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==3"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "args_kwargs_q1",
+            "type": "mcq",
+            "prompt": "*args is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Extra positional tuple"
+              },
+              {
+                "id": "b",
+                "label": "Dict"
+              },
+              {
+                "id": "c",
+                "label": "List only name"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "args_kwargs_q2",
+            "type": "shortText",
+            "prompt": "**kwargs is:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "dict"
+            }
+          },
+          {
+            "id": "args_kwargs_q3",
+            "type": "mcq",
+            "prompt": "Unpack list at call:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "*list"
+              },
+              {
+                "id": "b",
+                "label": "**list"
+              },
+              {
+                "id": "c",
+                "label": "@list"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "args_kwargs_q4",
+            "type": "mcq",
+            "prompt": "Unpack dict at call:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "**dict"
+              },
+              {
+                "id": "b",
+                "label": "*dict"
+              },
+              {
+                "id": "c",
+                "label": "dict()"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "args_kwargs_q5",
+            "type": "shortText",
+            "prompt": "* in def collects:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "positional extras"
+            }
+          },
+          {
+            "id": "args_kwargs_q6",
+            "type": "mcq",
+            "prompt": "Expert: f(*[1,2]) spreads:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Arguments"
+              },
+              {
+                "id": "b",
+                "label": "Keywords"
+              },
+              {
+                "id": "c",
+                "label": "Imports"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "args_kwargs_q7",
+            "type": "mcq",
+            "prompt": "Expert: kwargs keyword-only after *:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Possible in Py3"
+              },
+              {
+                "id": "b",
+                "label": "Never"
+              },
+              {
+                "id": "c",
+                "label": "Illegal always"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "args_kwargs_q8",
+            "type": "shortText",
+            "prompt": "Expert: ** unpack maps keys to:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "parameter names"
+            }
+          },
+          {
+            "id": "args_kwargs_q9",
+            "type": "mcq",
+            "prompt": "Expert: empty *args:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "()"
+              },
+              {
+                "id": "b",
+                "label": "None"
+              },
+              {
+                "id": "c",
+                "label": "[]"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "args_kwargs_q10",
+            "type": "shortText",
+            "prompt": "Expert: flexible APIs use:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "args kwargs"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "recursion",
+      "title": "Recursion",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "factorial",
+          "label": "Factorial",
+          "code": "def fact(n):\n    return 1 if n <= 1 else n * fact(n - 1)\nprint(fact(5))"
+        },
+        {
+          "id": "countdown",
+          "label": "Countdown",
+          "code": "def down(n):\n    if n == 0:\n        return\n    print(n)\n    down(n - 1)\ndown(3)"
+        },
+        {
+          "id": "sum_list",
+          "label": "Sum list",
+          "code": "def sum_list(nums):\n    if not nums:\n        return 0\n    return nums[0] + sum_list(nums[1:])\nprint(sum_list([1, 2, 3]))"
+        },
+        {
+          "id": "fibonacci",
+          "label": "Fibonacci",
+          "code": "def fib(n):\n    if n <= 1:\n        return n\n    return fib(n - 1) + fib(n - 2)\nprint(fib(6))"
+        }
+      ],
+      "intro": {
+        "title": "Recursion",
+        "bodyMarkdown": "A function that calls itself must reach a base case to stop. Classic examples: factorial, Fibonacci, tree walks.\n\nEach call uses stack space — deep recursion can hit RecursionError.\n\nRecursion mirrors problem structure; loops often work too.",
+        "sandboxCode": "def fact(n):\n    return 1 if n <= 1 else n * fact(n - 1)\n\nprint(fact(5))"
+      },
+      "challenges": [
+        {
+          "id": "recursion_ch1",
+          "title": "Easy: base case",
+          "promptMarkdown": "fact 0",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def f(n):\n if n<=0: return 1\n return n*f(n-1)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks f",
+                "assertion": "f(0)==1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch2",
+          "title": "Easy: sum recursive",
+          "promptMarkdown": "sum to n",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def s(n):\n if n<=0: return 0\n return n+s(n-1)\ns=s(3)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch3",
+          "title": "Medium: factorial 5",
+          "promptMarkdown": "120",
+          "starterCode": "def fact(n):\n if n<=1: return 1\n return n*fact(n-1)\nv=fact(5)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==120"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch4",
+          "title": "Medium: countdown",
+          "promptMarkdown": "print concept",
+          "starterCode": "",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "def cd(n):\n if n<=0: return 0\n return cd(n-1)+1\nn=cd(3)",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch5",
+          "title": "Hard: fib",
+          "promptMarkdown": "fib(5)=5",
+          "starterCode": "def fib(n):\n if n<=1: return n\n return fib(n-1)+fib(n-2)\nv=fib(5)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch6",
+          "title": "Hard: list sum rec",
+          "promptMarkdown": "",
+          "starterCode": "def s(lst):\n if not lst: return 0\n return lst[0]+s(lst[1:])\ns=s([1,2,3])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch7",
+          "title": "Expert: power",
+          "promptMarkdown": "2**10",
+          "starterCode": "def p(b,e):\n if e==0: return 1\n return b*p(b,e-1)\nv=p(2,10)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v==1024"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch8",
+          "title": "Expert: len recursive",
+          "promptMarkdown": "",
+          "starterCode": "def ln(lst):\n if not lst: return 0\n return 1+ln(lst[1:])\nn=ln([1,2,3])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks n",
+                "assertion": "n==3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch9",
+          "title": "Expert: gcd",
+          "promptMarkdown": "",
+          "starterCode": "def gcd(a,b):\n if b==0: return a\n return gcd(b,a%b)\ng=gcd(54,24)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks g",
+                "assertion": "g==6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recursion_ch10",
+          "title": "Expert: base required",
+          "promptMarkdown": "",
+          "starterCode": "def f(n):\n if n<=0: return 0\n return 1+f(n-1)\nok=f(1)==1",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "pass",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok==True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "recursion_q1",
+            "type": "mcq",
+            "prompt": "Recursion needs:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Base case"
+              },
+              {
+                "id": "b",
+                "label": "No calls"
+              },
+              {
+                "id": "c",
+                "label": "Only globals"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "recursion_q2",
+            "type": "shortText",
+            "prompt": "Function calls itself in:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "recursion"
+            }
+          },
+          {
+            "id": "recursion_q3",
+            "type": "mcq",
+            "prompt": "Deep recursion may raise:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "RecursionError"
+              },
+              {
+                "id": "b",
+                "label": "SyntaxError"
+              },
+              {
+                "id": "c",
+                "label": "ImportError"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "recursion_q4",
+            "type": "mcq",
+            "prompt": "factorial classic uses:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Recursion or loop"
+              },
+              {
+                "id": "b",
+                "label": "Only CSS"
+              },
+              {
+                "id": "c",
+                "label": "HTML"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "recursion_q5",
+            "type": "shortText",
+            "prompt": "Each call uses:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "stack"
+            }
+          },
+          {
+            "id": "recursion_q6",
+            "type": "mcq",
+            "prompt": "Expert: tail recursion in Python:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Not optimized specially"
+              },
+              {
+                "id": "b",
+                "label": "Always fastest"
+              },
+              {
+                "id": "c",
+                "label": "Illegal"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "recursion_q7",
+            "type": "mcq",
+            "prompt": "Expert: fib naive is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Exponential time"
+              },
+              {
+                "id": "b",
+                "label": "O(1)"
+              },
+              {
+                "id": "c",
+                "label": "Constant memory always"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "recursion_q8",
+            "type": "shortText",
+            "prompt": "Expert: base case stops:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "recursion"
+            }
+          },
+          {
+            "id": "recursion_q9",
+            "type": "mcq",
+            "prompt": "Expert: gcd recursion called:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Euclid"
+              },
+              {
+                "id": "b",
+                "label": "HTML"
+              },
+              {
+                "id": "c",
+                "label": "JSON"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "recursion_q10",
+            "type": "shortText",
+            "prompt": "Expert: loop alternative to:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "recursion"
             }
           }
         ]

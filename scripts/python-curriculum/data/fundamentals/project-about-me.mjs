@@ -77,10 +77,10 @@ export default makeProject("easy", {
   ],
   questions: [
     mc("Why keep the details in variables at the top?", ["So you can change them in one place", "Python requires it", "It makes the program faster", "Variables are printed automatically"], 0),
-    mc("What does `\"sam rivera\".upper()` give?", ["Sam Rivera", "SAM RIVERA", "sam rivera", "SAM rivera"], 1),
-    mc("What does `f\"{10220:,}\"` give?", ["10220", "10.220", "10,220", "10 220"], 2),
-    mc("What does `\"=\" * 5` give?", ["=5", "5=", "An error", "====="], 3),
-    mc("What is `2026 - 1998`?", ["27", "28", "29", "2026"], 1),
+    mc("What does `\"sam rivera\".upper()` give?", ["`Sam Rivera`","`SAM RIVERA`","`sam rivera`","`SAM rivera`"], 1),
+    mc("What does `f\"{10220:,}\"` give?", ["`10220`","`10.220`","`10,220`","`10 220`"], 2),
+    mc("What does `\"=\" * 5` give?", ["`=5`","`5=`","An error","`=====`"], 3),
+    mc("What is `2026 - 1998`?", ["`27`","`28`","`29`","`2026`"], 1),
     qShort("Which string method turns every letter into a capital? (name only)", "upper"),
   ],
 })
