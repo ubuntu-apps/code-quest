@@ -1,0 +1,151 @@
+// Modules and packages topic: Scripts and the main guard. Lesson, Try-it snippets, challenges and quiz.
+import { makeTopic, mc, qShort, snippet, task, typedInput } from '../_builders.mjs'
+
+export default makeTopic({
+  id: "name_main",
+  title: "Scripts and the main guard",
+  paragraphs: [
+    "A Python file can be used in two ways: **run** directly, as a program, or **imported** by another file for its functions. Often a file wants to do something when it's run, like show a menu or play a game, but nothing at all when it's imported, because the importer only wants the functions. Python makes this possible with a special variable.",
+    "Every module has a variable called `__name__`. When the file is imported, it holds the module's name, such as `\"greetings\"`. When the file is the program being run, Python sets it to `\"__main__\"` instead.",
+    "```\nprint(__name__)   # __main__: this code is the program being run\n```",
+    "So a check of `__name__` tells the file which way it's being used. This is called the **main guard**, and you'll see it at the bottom of most Python programs:",
+    "```\ndef hello(name):\n    return f\"Hello, {name}!\"\n\ndef main():\n    print(hello(\"Ana\"))\n\nif __name__ == \"__main__\":\n    main()   # runs the program; skipped when imported\n```",
+    "Run this file and it prints the greeting. Import it, and `__name__` is `\"greetings\"`, the `if` is false, and only the function definitions happen, so `hello` is ready to use and nothing else runs. Putting the program's steps into a `main()` function is a habit worth keeping: its variables stay local, the file reads as \"definitions, then go\", and a test can call `main()` itself.",
+    "The code below writes a guarded module and imports it, so you can see the difference:",
+    "```\nfrom pathlib import Path\n\nPath(\"greetings.py\").write_text(\"\"\"\ndef hello(name):\n    return f\"Hello, {name}!\"\n\nprint(\"__name__ is\", __name__)\n\nif __name__ == \"__main__\":\n    print(\"Running as a program\")\n\"\"\")\n\nimport greetings              # __name__ is greetings\nprint(greetings.hello(\"Ben\"))  # Hello, Ben!\n```",
+    "When a program is started from a terminal, the words typed after its name arrive in `sys.argv`, a list of strings: `python add.py 3 4` gives `[\"add.py\", \"3\", \"4\"]`. Guarded code often reads them with `main(sys.argv[1:])`. In this app nobody types arguments, so a `main(args)` like that is easiest to try by calling it with a list yourself: `main([\"3\", \"4\"])`.",
+    "In the challenges, your code is run as the program (so `__name__` is `\"__main__\"`), and the checks then import it as a module too. With a main guard, the program part runs once when your code runs and stays quiet on import. An `input()` that runs on import is an error, because nobody is there to type.",
+  ],
+  sandboxCode: "def c_to_f(c):\n    return c * 9 / 5 + 32\n\ndef main():\n    for c in [0, 20, 37, 100]:\n        print(f\"{c}°C is {c_to_f(c):.1f}°F\")\n\nprint(\"__name__ is\", __name__)\nif __name__ == \"__main__\":\n    main()",
+  sandboxSnippets: [
+    snippet("Which name?", "print(__name__)"),
+    snippet("A guarded module", "from pathlib import Path\nPath(\"demo_mod.py\").write_text(\"if __name__ == '__main__':\\n    print('running')\\nelse:\\n    print('imported as', __name__)\\n\")\nimport demo_mod"),
+    snippet("main()", "def main():\n    total = sum(range(1, 11))\n    print(\"Total:\", total)\n\nif __name__ == \"__main__\":\n    main()"),
+    snippet("main(args)", "def main(args):\n    if len(args) != 2:\n        print(\"Usage: add.py A B\")\n        return\n    print(int(args[0]) + int(args[1]))\n\nmain([\"3\", \"4\"])\nmain([])"),
+  ],
+  readMore: { label: "Python docs: __main__", url: "https://docs.python.org/3/library/__main__.html", source: "Python docs" },
+  challenges: [
+    task("easy", "What is my name?", {
+      prompt: "Set `run_name` to the value of `__name__` while your code runs.",
+      starter: "run_name = \"\"\n",
+      hint: "Just `run_name = __name__`.",
+      solution: "run_name = __name__",
+      tests: [
+        ["run_name is \"__main__\"", "run_name == \"__main__\""],
+      ],
+    }),
+    task("easy", "Add the guard", {
+      prompt: "Your code is `greet.py`. Running it should print `Hello, World!`, but importing it should print nothing. Add a main guard.",
+      starter: "def greet(name):\n    return f\"Hello, {name}!\"\n\nprint(greet(\"World\"))\n",
+      hint: "Indent the `print` under `if __name__ == \"__main__\":`.",
+      solution: "def greet(name):\n    return f\"Hello, {name}!\"\n\nif __name__ == \"__main__\":\n    print(greet(\"World\"))",
+      setup: "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\n",
+      tests: [
+        ["Running it prints the greeting", "_cq_stdout == \"Hello, World!\\n\""],
+        ["Importing prints nothing", "_import_prints(\"greet.py\") == \"\""],
+        ["greet still works", "_module(\"greet.py\").greet(\"Ana\") == \"Hello, Ana!\""],
+      ],
+    }),
+    task("easy", "A main function", {
+      prompt: "Your code is `app.py`. Define `main()` that prints `Starting...`, and call it under a main guard.",
+      hint: "`def main(): print(\"Starting...\")`, then `if __name__ == \"__main__\": main()`.",
+      solution: "def main():\n    print(\"Starting...\")\n\nif __name__ == \"__main__\":\n    main()",
+      setup: "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\nimport io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\n",
+      tests: [
+        ["Running prints Starting...", "_cq_stdout == \"Starting...\\n\""],
+        ["Importing prints nothing", "_import_prints(\"app.py\") == \"\""],
+        ["main can be called", "_out(_module(\"app.py\").main) == \"Starting...\\n\""],
+      ],
+    }),
+    task("medium", "Guard the input", {
+      prompt: "Your code is `doubler.py`. Importing it asks for input, which fails. Move the program part into `main()` under a main guard, keeping `double`.",
+      starter: "def double(n):\n    return n * 2\n\nn = int(input(\"Number: \"))\nprint(double(n))\n",
+      hint: "Put the `input` and `print` lines in `def main():`, then call `main()` under the guard.",
+      solution: "def double(n):\n    return n * 2\n\ndef main():\n    n = int(input(\"Number: \"))\n    print(double(n))\n\nif __name__ == \"__main__\":\n    main()",
+      setup: typedInput("21") + "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\n",
+      tests: [
+        ["Running it works", "_cq_stdout.strip().splitlines()[-1] == \"42\""],
+        ["Importing asks nothing and prints nothing", "_import_prints(\"doubler.py\") == \"\""],
+        ["double works", "_module(\"doubler.py\").double(5) == 10"],
+      ],
+    }),
+    task("medium", "Run or imported?", {
+      prompt: "Your code is `whoami.py`. Define `describe()` that returns `run directly` when the file is the program, or `imported as <name>` when it was imported.",
+      hint: "Inside the function, check `__name__ == \"__main__\"`; otherwise use `__name__` in the text.",
+      solution: "def describe():\n    if __name__ == \"__main__\":\n        return \"run directly\"\n    return f\"imported as {__name__}\"",
+      setup: "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\n",
+      tests: [
+        ["Run directly", "describe() == \"run directly\""],
+        ["Imported", "_module(\"whoami.py\").describe() == \"imported as whoami\""],
+      ],
+    }),
+    task("medium", "A built-in self-test", {
+      prompt: "Your code is `evens.py`. Define `is_even(n)`. Under a main guard, `assert` that 4 is even and 7 isn't, then print `All tests passed`.",
+      hint: "Two `assert` lines and a `print`, all indented under the guard.",
+      solution: "def is_even(n):\n    return n % 2 == 0\n\nif __name__ == \"__main__\":\n    assert is_even(4)\n    assert not is_even(7)\n    print(\"All tests passed\")",
+      setup: "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\n",
+      tests: [
+        ["The self-test runs", "_cq_stdout == \"All tests passed\\n\""],
+        ["Importing prints nothing", "_import_prints(\"evens.py\") == \"\""],
+        ["is_even works", "_module(\"evens.py\").is_even(10) is True and _module(\"evens.py\").is_even(3) is False"],
+      ],
+    }),
+    task("hard", "Command-line numbers", {
+      prompt: "Your code is `add.py`. Define `main(args)` that takes a list of two number strings and prints their sum, or prints `Usage: add.py A B` if it doesn't get exactly two. Call `main(sys.argv[1:])` under a main guard.",
+      starter: "import sys\n",
+      hint: "Check `len(args) != 2` first, then `print(int(args[0]) + int(args[1]))`.",
+      solution: "import sys\n\ndef main(args):\n    if len(args) != 2:\n        print(\"Usage: add.py A B\")\n        return\n    print(int(args[0]) + int(args[1]))\n\nif __name__ == \"__main__\":\n    main(sys.argv[1:])",
+      setup: "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\nimport io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\n",
+      tests: [
+        ["Two numbers", "_out(_module(\"add.py\").main, [\"3\", \"4\"]) == \"7\\n\""],
+        ["No numbers", "_out(_module(\"add.py\").main, []) == \"Usage: add.py A B\\n\""],
+        ["Importing prints nothing", "_import_prints(\"add.py\") == \"\""],
+      ],
+    }),
+    task("hard", "A temperature table", {
+      prompt: "Your code is `temps.py`. Define `c_to_f(c)`, and a `main()` that prints a line like `0C = 32.0F` for 0, 10, 20 and 30. Run `main()` only when the file is the program.",
+      hint: "`c * 9 / 5 + 32`; loop over `[0, 10, 20, 30]` in `main`.",
+      solution: "def c_to_f(c):\n    return c * 9 / 5 + 32\n\ndef main():\n    for c in [0, 10, 20, 30]:\n        print(f\"{c}C = {c_to_f(c)}F\")\n\nif __name__ == \"__main__\":\n    main()",
+      setup: "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\n",
+      tests: [
+        ["The table", "_cq_stdout.splitlines() == [\"0C = 32.0F\", \"10C = 50.0F\", \"20C = 68.0F\", \"30C = 86.0F\"]"],
+        ["Importing prints nothing", "_import_prints(\"temps.py\") == \"\""],
+        ["c_to_f works", "_module(\"temps.py\").c_to_f(100) == 212.0"],
+      ],
+    }),
+    task("expert", "A tiny quiz", {
+      prompt: "Your code is `quiz.py`. Define `check(answer, correct)` (ignore case and spaces) and `main()`, which asks `What is 2 + 2? ` and `Capital of France? `, then prints `Score: <n>/2`. Run `main()` only when the file is the program.",
+      starter: "QUESTIONS = [(\"What is 2 + 2? \", \"4\"), (\"Capital of France? \", \"Paris\")]\n",
+      hint: "`check` compares `answer.strip().lower()` with `correct.lower()`. `main` loops over `QUESTIONS`, counting correct answers.",
+      solution: "QUESTIONS = [(\"What is 2 + 2? \", \"4\"), (\"Capital of France? \", \"Paris\")]\n\ndef check(answer, correct):\n    return answer.strip().lower() == correct.lower()\n\ndef main():\n    score = 0\n    for question, correct in QUESTIONS:\n        if check(input(question), correct):\n            score += 1\n    print(f\"Score: {score}/{len(QUESTIONS)}\")\n\nif __name__ == \"__main__\":\n    main()",
+      setup: typedInput("4", "London") + "def _import_both(path):\n    import importlib as _il, sys as _sys, os as _os, io as _io, contextlib as _cl\n    folder = _os.path.dirname(path)\n    if folder:\n        _os.makedirs(folder, exist_ok=True)\n    with open(path, \"w\", encoding=\"utf-8\") as _f:\n        _f.write(_cq_source)\n    name = path[:-3].replace(\"/\", \".\")\n    if name.endswith(\".__init__\"):\n        name = name[:-9]\n    for _k in [k for k in _sys.modules if k == name or k.startswith(name + \".\")]:\n        del _sys.modules[_k]\n    _il.invalidate_caches()\n    import builtins as _bi\n    def _no_input(prompt=\"\"):\n        raise RuntimeError(\"input() ran while the module was being imported: put that code under the main guard\")\n    buf = _io.StringIO()\n    real_input = _bi.input\n    _bi.input = _no_input\n    try:\n        with _cl.redirect_stdout(buf):\n            mod = _il.import_module(name)\n    finally:\n        _bi.input = real_input\n    return mod, buf.getvalue()\ndef _module(path):\n    return _import_both(path)[0]\ndef _import_prints(path):\n    return _import_both(path)[1]\n",
+      tests: [
+        ["Running it plays the quiz", "_cq_stdout.strip().splitlines()[-1] == \"Score: 1/2\""],
+        ["Importing asks nothing", "_import_prints(\"quiz.py\") == \"\""],
+        ["check ignores case and spaces", "_module(\"quiz.py\").check(\" paris \", \"Paris\") is True"],
+      ],
+    }),
+    task("expert", "Use a guarded module", {
+      prompt: "The folder has `tools.py`, with `slugify(text)` and a demo under its main guard. Write a program that imports it and, under your own main guard, prints `slugify(\"Hello World\")`. The demo in `tools.py` must not run.",
+      hint: "`import tools`, then `print(tools.slugify(\"Hello World\"))` inside `main()`.",
+      solution: "import tools\n\ndef main():\n    print(tools.slugify(\"Hello World\"))\n\nif __name__ == \"__main__\":\n    main()",
+      setup: "import os as _os\nwith open('tools.py', \"w\", encoding=\"utf-8\") as _f:\n    _f.write('def slugify(text):\\n    return \"-\".join(text.lower().split())\\n\\nif __name__ == \"__main__\":\\n    print(\"tools demo:\", slugify(\"A Demo Title\"))\\n')\n",
+      tests: [
+        ["Prints the slug only", "_cq_stdout == \"hello-world\\n\""],
+        ["tools is imported", "tools.__name__ == \"tools\""],
+      ],
+    }),
+  ],
+  questions: [
+    mc("What is `__name__` when a file is run directly?", ["The file name", "`\"__main__\"`", "`None`", "`\"main.py\"`"], 1),
+    mc("What is `__name__` inside `greetings.py` when another file imports it?", ["`\"__main__\"`", "`\"greetings.py\"`", "`\"greetings\"`", "`\"import\"`"], 2),
+    mc("What does `if __name__ == \"__main__\":` let a file do?", ["Run some code only when it is the program, not when imported", "Import itself", "Run faster", "Hide its functions"], 0),
+    mc("Why put a program's steps in a `main()` function?", ["Python requires it", "It runs twice", "It hides errors", "Its variables stay local and it is easy to call or test"], 3),
+    mc("A module without a guard calls `input()` at the top level. What happens when it is imported?", ["Nothing", "It asks for input during the import", "The input is skipped", "It is imported twice"], 1),
+    mc("What is in `sys.argv` for `python add.py 3 4`?", ["`[\"add.py\", \"3\", \"4\"]`", "`[3, 4]`", "`\"3 4\"`", "`[\"3\", \"4\", \"add.py\"]`"], 0),
+    qShort("What value does `__name__` have in the file being run? (include the underscores)", "__main__"),
+    mc("After `import greetings`, which part of a guarded `greetings.py` runs?", ["Only the guarded part", "Nothing at all", "Everything", "Everything except the guarded part"], 3),
+    mc("Why does `sys.argv[1:]` skip the first item?", ["It is always empty", "It is a number", "The first item is the program's own name", "It is a secret"], 2),
+    mc("Where does the main guard usually go?", ["At the bottom of the file", "At the top", "Inside `main()`", "In a separate file"], 0),
+  ],
+})

@@ -18,6 +18,9 @@ import dataImporter from './error-handling/project-data-importer.mjs'
 import notesKeeper from './file-handling/project-notes-keeper.mjs'
 import logAnalyser from './file-handling/project-log-analyser.mjs'
 import savedTodo from './file-handling/project-saved-todo.mjs'
+import diceRoller from './modules/project-dice-roller.mjs'
+import habitTracker from './modules/project-habit-tracker.mjs'
+import shopPackage from './modules/project-shop-package.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -37,32 +40,6 @@ function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions 
     questions: src.questionSpecs.slice(0, maxQuestions),
   })
 }
-
-const modulesEasy = makeProject('easy', {
-  id: 'greet_module',
-  title: 'Greeting module',
-  paragraphs: [
-    'Split a tiny greeting program into `greet(name)` and a main block that calls it twice.',
-    'Practice functions, imports conceptually, and the `if __name__ == "__main__"` pattern.',
-  ],
-  sandboxCode: 'def greet(name):\n    return f"Hello, {name}!"\n\nif __name__ == "__main__":\n    print(greet("World"))\n    print(greet("Python"))',
-  challenges: [
-    ch('easy', 'greet function', 'Define `greet` returning a string with the name.', includes('def greet'), { starterCode: 'def greet(name):\n    return ' }),
-    ch('medium', 'Return greeting', 'Return `"Hello, Ada!"` when called with `"Ada"`.', pyVar('msg', 'msg == "Hello, Ada!"', 'msg = greet("Ada")'), { starterCode: 'def greet(name):\n    return f"Hello, {name}!"' }),
-    ch('medium', 'main guard', 'Use `if __name__ == "__main__":`.', includes('__name__'), { starterCode: 'if __name__ == "__main__":\n    pass' }),
-    ch('hard', 'Call twice', 'Call greet twice in main.', includes('greet('), { starterCode: 'if __name__ == "__main__":\n    ' }),
-    ch('hard', 'Print results', 'Print both greetings.', pyOut('Hello, World!\nHello, Python!'), { starterCode: '' }),
-    ch('expert', 'Separate logic', 'Keep greet pure (return only).', includes('return'), { starterCode: 'def greet(name):\n    return f"Hi, {name}"' }),
-  ],
-  questions: [
-    qMcq('Functions group:', [{ id: 'a', label: 'Reusable logic' }, { id: 'b', label: 'Only comments' }, { id: 'c', label: 'Hardware' }], 'a'),
-    qShort('Main guard checks:', '__name__'),
-    qMcq('return sends value to:', [{ id: 'a', label: 'Caller' }, { id: 'b', label: 'Internet' }, { id: 'c', label: 'GPU' }], 'a'),
-    qShort('Module files end with:', '.py'),
-    qMcq('Splitting code helps:', [{ id: 'a', label: 'Organization' }, { id: 'b', label: 'Deleting data' }, { id: 'c', label: 'Compilation only' }], 'a'),
-    qShort('Call a function with:', 'parentheses'),
-  ],
-})
 
 const oopEasy = makeProject('easy', {
   id: 'rectangle_class',
@@ -148,11 +125,7 @@ export const SECTION_PROJECTS = {
   control_flow: [guessTheNumber, quizGame, primeFinder],
   data_structures: [gradeBook, wordCounter, inventoryTracker],
   functions: [textTools, passwordChecker, bankAccounts],
-  modules_and_packages: [
-    modulesEasy,
-    fromExisting('capstone_planning', 'medium', 'proj_modules_capstone_planning'),
-    fromExisting('contact_book', 'hard', 'proj_modules_contact_book'),
-  ],
+  modules_and_packages: [diceRoller, habitTracker, shopPackage],
   file_handling: [notesKeeper, logAnalyser, savedTodo],
   error_handling: [safeCalculator, signupForm, dataImporter],
   object_oriented: [oopEasy, oopMedium, oopHard],
