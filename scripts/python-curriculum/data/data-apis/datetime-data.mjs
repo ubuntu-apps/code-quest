@@ -1,19 +1,29 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'datetime_data',
   title: 'Dates and times',
   paragraphs: [
-    'datetime module: date, time, datetime, timedelta. Parse and format with strftime/strptime.',
-    'Store UTC in systems; convert for display. ISO 8601 is interoperable.',
-    'Beware naive vs aware datetimes and DST.',
+    "The `datetime` module has a type for each job: `date` for a day (16 October 2026), `datetime` for a day and a time, and `timedelta` for a length of time, such as 30 days or 90 minutes.",
+    "```\nfrom datetime import date, datetime, timedelta\n\nd = date(2026, 10, 16)\nmeeting = datetime(2026, 10, 16, 9, 30)\nprint(d + timedelta(days=30))   # 2026-11-15\n```",
+    "Date arithmetic follows the calendar: adding `timedelta(days=1)` to 31 January gives 1 February. Subtracting two dates gives a `timedelta`, and its `.days` is the number of days between them (negative if the second date is later). Dates compare with `<` and `>`, and tuples help compare parts of them: `(today.month, today.day) < (birth.month, birth.day)` is true while this year's birthday is still to come.",
+    "`strftime` (\"string format time\") turns a date into text using codes: `%Y` is the 4-digit year (`%y` gives only 2 digits), `%m` the month number, `%d` the day, `%H:%M` the 24-hour time, `%A` the weekday name and `%b` the short month name. `strptime` (\"string parse time\") goes the other way, reading text with the same codes:",
+    "```\nprint(meeting.strftime(\"%d/%m/%Y %H:%M\"))   # 16/10/2026 09:30\nprint(meeting.strftime(\"%A\"))               # Friday\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\n```",
+    "APIs usually send times in the **ISO 8601** format, `2026-10-16T09:30:00`, because it sorts correctly and means the same everywhere. `.isoformat()` writes it and `datetime.fromisoformat(text)` (or `date.fromisoformat`) reads it.",
+    "`d.weekday()` returns 0 for Monday up to 6 for Sunday, which makes weekends easy to skip, and `d.isocalendar().week` gives the ISO week number, handy for weekly reports.",
+    "**Time zones.** A plain `datetime` is **naive**: it has no time zone, so 09:30 could be anywhere. An **aware** datetime carries one in `tzinfo`. Servers store times in UTC, which is the same everywhere and has no daylight-saving jumps, and convert to local time only to show it. `astimezone` converts:",
+    "```\nfrom datetime import timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = timezone(timedelta(hours=-4))\nprint(utc_time.astimezone(new_york))   # 2026-10-16 09:00:00-04:00\n```",
+    "Python won't compare a naive datetime with an aware one: it raises `TypeError` instead of guessing. The fixed offset above is fine for a single date; for a real place, whose offset changes with daylight saving, use `zoneinfo.ZoneInfo(\"America/New_York\")`.",
   ],
-  sandboxCode: py`from datetime import datetime, timedelta
-
-now = datetime.now()
-print(now.strftime("%Y-%m-%d"))
-future = now + timedelta(days=7)
-print(future.date())`,
+  sandboxCode: "from datetime import date, datetime, timedelta\n\ntoday = date(2026, 10, 16)\nprint(today.strftime(\"%A %d %B %Y\"))\nprint(today + timedelta(days=30))\nprint((date(2026, 12, 25) - today).days, \"days until 25 December\")",
+  sandboxSnippets: [
+    snippet("Dates and timedelta", "from datetime import date, timedelta\n\nd = date(2026, 1, 31)\nprint(d + timedelta(days=1))\nprint((date(2026, 3, 1) - d).days)"),
+    snippet("Format", "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nprint(dt.strftime(\"%d/%m/%Y %H:%M\"))\nprint(dt.strftime(\"%A, %d %b %y\"))"),
+    snippet("Parse", "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\nprint(parsed, parsed.year)"),
+    snippet("ISO 8601", "from datetime import datetime, timedelta\n\nwhen = datetime.fromisoformat(\"2026-10-16T09:30:00\")\nprint((when + timedelta(minutes=90)).isoformat())"),
+    snippet("Time zones", "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nprint(utc_time.astimezone(timezone(timedelta(hours=-4))))\nprint(utc_time.astimezone(timezone(timedelta(hours=2))))"),
+  ],
+  readMore: { label: "Python docs: the datetime module", url: "https://docs.python.org/3/library/datetime.html", source: "Python docs" },
   challenges: [
     task('easy', 'Make a date', {
       prompt: 'Create the date 16 October 2026 as `d`, then set `day_name` to its weekday name (like `"Monday"`) using `strftime`.',

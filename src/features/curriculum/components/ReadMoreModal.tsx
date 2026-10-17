@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { ExternalLink, X } from 'lucide-react'
 
 interface ReadMoreModalProps {
@@ -10,6 +10,15 @@ interface ReadMoreModalProps {
 
 /** Full-screen dialog that shows a level's "Read more" article in an iframe. */
 export function ReadMoreModal({ levelTitle, url, source, onClose }: ReadMoreModalProps) {
+  const closeRef = useRef<HTMLButtonElement>(null)
+
+  // Move keyboard focus into the dialog, and back to the "Read more" button when it closes.
+  useEffect(() => {
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    closeRef.current?.focus()
+    return () => previous?.focus()
+  }, [])
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -29,7 +38,7 @@ export function ReadMoreModal({ levelTitle, url, source, onClose }: ReadMoreModa
       <div className="cq-modal" role="dialog" aria-modal="true" aria-label={`${levelTitle} read more`}>
         <div className="cq-modal-header">
           <div className="cq-modal-title">Read more</div>
-          <button type="button" className="cq-icon-btn" aria-label="Close article" onClick={onClose}>
+          <button ref={closeRef} type="button" className="cq-icon-btn" aria-label="Close article" onClick={onClose}>
             <X size={18} />
           </button>
         </div>

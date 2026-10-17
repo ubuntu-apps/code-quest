@@ -3,10 +3,11 @@ import '../../App.css'
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, ChevronLeft, Info, ListTodo, Share2 } from 'lucide-react'
 import type { LanguageBundle, Level, RootIndex } from './types'
-import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
+import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { preloadWebR } from './rSandbox'
 import { ReadMoreModal } from './components/ReadMoreModal'
+import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { shareApp, type ShareVariant } from '../../lib/shareApp'
 import { ShareSheet } from '../../components/ShareSheet'
@@ -165,7 +166,7 @@ export function CodeQuestScreen() {
         setRootIndex(data)
         syncRootIndex(data)
       })
-      .catch((e: unknown) => setRootError(e instanceof Error ? e.message : 'Failed to load catalog'))
+      .catch((e: unknown) => setRootError(lessonLoadErrorMessage(e, 'Failed to load catalog')))
   }, [baseUrl, syncRootIndex])
 
   useEffect(() => {
@@ -212,7 +213,7 @@ export function CodeQuestScreen() {
         if (cancelled) return
         setLoadedLanguageId(null)
         setBundle(null)
-        setBundleError(e instanceof Error ? e.message : 'Failed to load language')
+        setBundleError(lessonLoadErrorMessage(e, 'Failed to load language'))
       })
 
     return () => {
@@ -406,7 +407,7 @@ export function CodeQuestScreen() {
       } catch (e: unknown) {
         setLoadedLanguageId(null)
         setBundle(null)
-        setBundleError(e instanceof Error ? e.message : 'Failed to load language')
+        setBundleError(lessonLoadErrorMessage(e, 'Failed to load language'))
         return null
       }
     },
@@ -536,7 +537,7 @@ export function CodeQuestScreen() {
   }, [platform, initAboutContent])
 
   const renderLearn = () => {
-    if (rootError) return <div className="cq-panel cq-error">{rootError}</div>
+    if (rootError) return <LoadErrorPanel message={rootError} />
     if (!displayRootIndex) return <div className="cq-panel cq-muted">Loading catalog…</div>
 
     if (learnView === 'languages') {
@@ -576,9 +577,8 @@ export function CodeQuestScreen() {
       )
     }
 
-    if (bundleError || !bundleForView) {
-      return <div className="cq-panel cq-error">{bundleError ?? 'Loading…'}</div>
-    }
+    if (bundleError) return <LoadErrorPanel message={bundleError} />
+    if (!bundleForView) return <div className="cq-panel cq-muted">Loading…</div>
 
     if (learnView === 'sections') {
       return (
@@ -635,7 +635,7 @@ export function CodeQuestScreen() {
       const prog = loadProgress(languageId, selectedLevel.id)
       const showNext =
         nextLevel !== null &&
-        (levelTest.result?.passed === true ||
+        ((levelTest.resultCurrent && levelTest.result?.passed === true) ||
           (prog.testPassed && !levelTest.sessionReset && levelTest.result === null))
 
       return (
@@ -664,8 +664,10 @@ export function CodeQuestScreen() {
           challengeRuntimeError={challenges.runtimeError}
           challengeErrorExpanded={challenges.errorExpanded}
           challengeErrorUiEpoch={challenges.errorUiEpoch}
+          challengeChecking={challenges.checking}
           onChallengeDraftChange={challenges.changeDraft}
           onCheckChallenge={(ch) => void challenges.check(ch)}
+          onStopChallengeCheck={challenges.stopCheck}
           onRevealAnswer={challenges.revealAnswer}
           onUpdateChallenge={(chId, patch) =>
             updateChallenge(languageId, secId, selectedLevel.id, chId, patch)
@@ -677,6 +679,7 @@ export function CodeQuestScreen() {
           testShort={levelTest.short}
           testMcq={levelTest.mcq}
           testResult={levelTest.result}
+          testEdited={levelTest.edited}
           onTestShortChange={levelTest.changeShort}
           onTestMcqChange={levelTest.changeMcq}
           onUpdatePassingScore={(score) =>
@@ -741,7 +744,7 @@ export function CodeQuestScreen() {
           (bundlesLoading ? (
             <div className="cq-panel cq-muted">Loading progress…</div>
           ) : bundlesError ? (
-            <div className="cq-panel cq-error">{bundlesError}</div>
+            <LoadErrorPanel message={bundlesError} />
           ) : !displayRootIndex ? (
             <div className="cq-panel cq-muted">Open the Learn tab once to load catalog.</div>
           ) : (

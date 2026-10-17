@@ -31,8 +31,11 @@ interface ChallengeCardProps {
   runtimeError: FriendlyPythonError | FriendlyRError | null
   errorExpanded: boolean
   errorUiEpoch: number
+  /** Set while the answer is being checked ("Checking…", "Downloading Python…"). */
+  checkingMessage: string | null
   onDraftChange: (value: string) => void
   onCheck: () => void
+  onStopCheck: () => void
   onRevealAnswer: () => void
   onUpdateChallenge: (patch: Partial<Challenge>) => void
   onMove: (direction: -1 | 1) => void
@@ -52,8 +55,10 @@ export function ChallengeCard({
   runtimeError: pyRuntimeErr,
   errorExpanded: pyErrExpanded,
   errorUiEpoch,
+  checkingMessage,
   onDraftChange,
   onCheck,
+  onStopCheck,
   onRevealAnswer,
   onUpdateChallenge,
   onMove,
@@ -69,6 +74,7 @@ export function ChallengeCard({
   // Very old browsers can't run the code runtimes, so these challenges can't be checked there.
   const cannotRun = isRuntimeTests && !isCodeRuntimeSupported()
   const answerNoteId = useId()
+  const checking = checkingMessage !== null
   // The answer unlocks after one Check attempt, so learners try first.
   // (Where code can't run, Check is unavailable, so the answer is open from the start.)
   const answerUnlocked = isEditingLocal || done || answerViewed || status !== undefined || cannotRun
@@ -188,13 +194,30 @@ export function ChallengeCard({
         </p>
       ) : null}
       <div className="cq-row">
-        <button type="button" className="cq-btn cq-btn--primary" onClick={onCheck} disabled={cannotRun}>
-          {status === 'failed' ? 'Try again' : done ? 'Check again' : 'Check'}
+        <button
+          type="button"
+          className="cq-btn cq-btn--primary"
+          onClick={onCheck}
+          disabled={cannotRun || checking}
+        >
+          {checking ? 'Checking…' : status === 'failed' ? 'Try again' : done ? 'Check again' : 'Check'}
         </button>
-        {done && status !== 'failed' && draft.trim() !== '' ? (
+        {checking && ch.validation.mode === 'python_tests' ? (
+          <button type="button" className="cq-btn" onClick={onStopCheck}>
+            Stop
+          </button>
+        ) : null}
+        {done && status !== 'failed' && !checking && draft.trim() !== '' ? (
           <span className="cq-badge cq-badge--ok">Challenge complete</span>
         ) : null}
       </div>
+      <p className="cq-muted cq-check-status" role="status" aria-live="polite">
+        {checking && checkingMessage !== 'Checking…'
+          ? checkingMessage
+          : done && status === 'failed' && !checking
+            ? 'You solved this challenge before, so it stays complete. This answer did not pass.'
+            : ''}
+      </p>
       {isRuntimeTests && pyRuntimeErr && (
         <PythonErrorPanel
           error={pyRuntimeErr as FriendlyPythonError}

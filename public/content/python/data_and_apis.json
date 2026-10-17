@@ -8,35 +8,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "dumps",
-          "label": "dumps",
-          "code": "import json\ndata = {\"name\": \"Ana\", \"score\": 95}\nprint(json.dumps(data))"
-        },
-        {
-          "id": "loads",
-          "label": "loads",
-          "code": "import json\nprint(json.loads('{\"name\": \"Ana\"}')[\"name\"])"
+          "id": "round_trip",
+          "label": "Round trip",
+          "code": "import json\n\nscores = [88, 92, 79]\ntext = json.dumps(scores)\nprint(type(text), text)\nprint(json.loads(text) == scores)"
         },
         {
           "id": "pretty_print",
           "label": "Pretty print",
-          "code": "import json\nprint(json.dumps({\"a\": 1}, indent=2))"
+          "code": "import json\n\nconfig = {\"theme\": \"dark\", \"font_size\": 14, \"city\": \"Zürich\"}\nprint(json.dumps(config, indent=2, sort_keys=True, ensure_ascii=False))"
         },
         {
-          "id": "list_json",
-          "label": "List JSON",
-          "code": "import json\nprint(json.loads(\"[1, 2]\"))"
+          "id": "nested_data",
+          "label": "Nested data",
+          "code": "import json\n\nraw = '{\"customer\": {\"name\": \"Lee\"}, \"items\": [{\"sku\": \"A1\", \"qty\": 2}, {\"sku\": \"B4\", \"qty\": 3}]}'\norder = json.loads(raw)\nprint(order[\"customer\"][\"name\"])\nprint(sum(item[\"qty\"] for item in order[\"items\"]))"
         },
         {
-          "id": "decode_error",
-          "label": "Decode error",
-          "code": "import json\ntry:\n    json.loads(\"{bad}\")\nexcept json.JSONDecodeError:\n    print(\"invalid JSON\")"
+          "id": "bad_json",
+          "label": "Bad JSON",
+          "code": "import json\n\nfor text in ['{\"ok\": true}', '{oops}']:\n    try:\n        print(json.loads(text))\n    except json.JSONDecodeError as err:\n        print(\"Not valid JSON:\", err)"
+        },
+        {
+          "id": "dates",
+          "label": "Dates",
+          "code": "import json\nfrom datetime import date\n\ndef encode(value):\n    if isinstance(value, date):\n        return value.isoformat()\n    raise TypeError(f\"Can't turn {type(value).__name__} into JSON\")\n\nprint(json.dumps({\"launch\": date(2026, 10, 16)}, default=encode))"
         }
       ],
       "intro": {
         "title": "JSON basics",
-        "bodyMarkdown": "JSON is text format for data exchange. Python `json` module: `loads`, `dumps`.\n\nConvert dict/list to JSON string and back. Keys must be strings in JSON.\n\nAlways handle decode errors when parsing untrusted input.",
-        "sandboxCode": "import json\n\ndata = {\"name\": \"Ana\", \"score\": 95}\ntext = json.dumps(data)\nprint(text)\nprint(json.loads(text)[\"name\"])"
+        "bodyMarkdown": "JSON (JavaScript Object Notation) is the text format most web APIs and settings files use to exchange data. It looks almost like Python: an object `{...}` is like a dict, an array `[...]` is like a list, and the values are strings, numbers, `true`, `false` and `null`.\n\nPython's built-in `json` module converts between the two. `json.dumps(data)` turns Python data into a JSON **string** (\"dump to string\"), and `json.loads(text)` turns a JSON string back into Python data (\"load from string\").\n\n```\nimport json\n\nbook = {\"title\": \"Dune\", \"year\": 1965, \"read\": True, \"rating\": None}\ntext = json.dumps(book)\nprint(text)   # {\"title\": \"Dune\", \"year\": 1965, \"read\": true, \"rating\": null}\n\ndata = json.loads('{\"name\": \"Ana\", \"scores\": [9, 7]}')\nprint(data[\"scores\"][0])   # 9\n```\n\nSome values change on the way. `True` becomes `true` and `None` becomes `null`. JSON has no tuples, so `(1, 2)` becomes an array and comes back as the list `[1, 2]`. JSON object keys are always strings: `json.dumps({1: \"a\"})` gives `{\"1\": \"a\"}`.\n\n`json.dumps` has options for output people will read. `indent=2` puts each item on its own line, indented by 2 spaces, and `sort_keys=True` sorts the keys alphabetically. By default, letters outside plain English are escaped (`\"Zürich\"` becomes `\"Zürich\"`); `ensure_ascii=False` keeps them as they are.\n\n```\nsettings = {\"theme\": \"dark\", \"city\": \"Zürich\"}\nprint(json.dumps(settings, indent=2, sort_keys=True, ensure_ascii=False))\n```\n\nData from APIs is often nested: a dict that holds lists of dicts. Read it one step at a time with keys and indexes, like `order[\"items\"][0][\"qty\"]`, or loop over the list. To combine two dicts, `{**defaults, **user}` makes a new dict in which the keys from `user` win.\n\nText from outside your program can be broken. `json.loads` raises `json.JSONDecodeError` for invalid JSON, so catch it whenever the text isn't yours:\n\n```\ntry:\n    data = json.loads(\"{not json}\")\nexcept json.JSONDecodeError:\n    data = None\nprint(data)   # None\n```\n\nSome Python types have no JSON version, such as `date` and `datetime`, so `json.dumps` raises `TypeError` for them. Pass a function as `default=`: `json.dumps` calls it for every value it can't handle and uses what it returns, for example `value.isoformat()` for a date.\n\nFor files, use `json.dump(data, f)` and `json.load(f)` (no **s**). They write to and read from an open file instead of a string.",
+        "sandboxCode": "import json\n\nbook = {\"title\": \"Dune\", \"year\": 1965, \"read\": True, \"rating\": None}\ntext = json.dumps(book)\nprint(text)\n\nback = json.loads(text)\nprint(back[\"title\"], back[\"read\"])",
+        "readMore": {
+          "label": "Python docs: the json module",
+          "url": "https://docs.python.org/3/library/json.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {
@@ -532,30 +537,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "dictreader",
-          "label": "DictReader",
-          "code": "import csv\nfrom io import StringIO\nbuf = StringIO(\"name,score\\nAna,90\\n\")\nrows = list(csv.DictReader(buf))\nprint(rows[0][\"name\"])"
+          "id": "rows_as_lists",
+          "label": "Rows as lists",
+          "code": "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\n\"\nfor row in csv.reader(StringIO(data)):\n    print(row)"
         },
         {
-          "id": "csv_writer",
-          "label": "csv writer",
-          "code": "import csv\nfrom io import StringIO\nbuf = StringIO()\ncsv.writer(buf).writerow([\"a\", \"b\"])\nprint(buf.getvalue())"
+          "id": "rows_as_dicts",
+          "label": "Rows as dicts",
+          "code": "import csv\nfrom io import StringIO\n\ndata = \"name,city\\nAna,Oslo\\nBob,Lima\\n\"\nfor person in csv.DictReader(StringIO(data)):\n    print(person[\"name\"], \"lives in\", person[\"city\"])"
         },
         {
-          "id": "sum_column",
-          "label": "Sum column",
-          "code": "import csv\nfrom io import StringIO\nbuf = StringIO(\"score\\n90\\n85\\n\")\nprint(sum(int(r[\"score\"]) for r in csv.DictReader(buf)))"
+          "id": "write_csv",
+          "label": "Write CSV",
+          "code": "import csv\nfrom io import StringIO\n\nbuf = StringIO()\nwriter = csv.DictWriter(buf, fieldnames=[\"name\", \"city\"])\nwriter.writeheader()\nwriter.writerows([{\"name\": \"Lee, Jr.\", \"city\": \"NYC\"}, {\"name\": \"Ana\", \"city\": \"Oslo\"}])\nprint(buf.getvalue())"
         },
         {
-          "id": "delimiter",
-          "label": "Delimiter",
-          "code": "import csv\nfrom io import StringIO\nbuf = StringIO()\ncsv.writer(buf, delimiter=\";\").writerow([\"a\", \"b\"])\nprint(buf.getvalue())"
+          "id": "semicolons",
+          "label": "Semicolons",
+          "code": "import csv\nfrom io import StringIO\n\ndata = \"item;price\\napple;1,5\\npear;2,25\\n\"\nfor row in csv.DictReader(StringIO(data), delimiter=\";\"):\n    print(row[\"item\"], float(row[\"price\"].replace(\",\", \".\")))"
+        },
+        {
+          "id": "totals_per_group",
+          "label": "Totals per group",
+          "code": "import csv\nfrom io import StringIO\n\ndata = \"region,amount\\nnorth,10\\nsouth,25\\nnorth,20\\n\"\ntotals = {}\nfor row in csv.DictReader(StringIO(data)):\n    totals[row[\"region\"]] = totals.get(row[\"region\"], 0) + int(row[\"amount\"])\nprint(totals)"
         }
       ],
       "intro": {
         "title": "CSV data",
-        "bodyMarkdown": "csv module reads/writes comma-separated files. `reader`, `writer`, `DictReader`.\n\nGood for spreadsheets and tabular exports. Mind encoding and headers.\n\nFor huge data consider pandas; csv is stdlib and lightweight.",
-        "sandboxCode": "import csv\nfrom io import StringIO\n\nbuf = StringIO(\"name,score\\nAna,90\\nBob,85\\n\")\nrows = list(csv.DictReader(buf))\nprint(rows[0][\"name\"], rows[0][\"score\"])"
+        "bodyMarkdown": "CSV (\"comma-separated values\") is the simplest table format: one row per line, values separated by commas, and usually a first line (the header) with the column names. Spreadsheets and databases can all export it.\n\n```\nname,score\nAna,90\nBob,85\n```\n\nPython's `csv` module reads and writes CSV correctly, including tricky cases, so you don't have to split lines yourself. It works with files and with `io.StringIO`, which wraps a string so it behaves like an open file. The examples here use `StringIO`, so you can try everything without creating files.\n\n`csv.reader` gives you each row as a list of strings. `csv.DictReader` reads the header first and gives each row as a dict, so you can write `row[\"score\"]` instead of remembering that the score is `row[1]`.\n\n```\nimport csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\n\"\nfor row in csv.DictReader(StringIO(data)):\n    print(row[\"name\"], row[\"score\"])\n```\n\nEvery value csv reads is a **string**, even `90`, so `sum(row[\"score\"] for row in rows)` fails. Convert first with `int(...)` or `float(...)`. If some rows may be empty or broken, put the conversion in `try`/`except ValueError` and skip those rows.\n\nTo write, create a `csv.writer` and call `writerow` for one row or `writerows` for many. `csv.DictWriter` writes dicts: give it the `fieldnames`, call `writeheader()` to write the header row, then `writerows`. When a value contains a comma, csv puts it in quotes, like `\"Lee, Jr.\"`, so it stays one value.\n\n```\nbuf = StringIO()\nwriter = csv.writer(buf)\nwriter.writerow([\"name\", \"score\"])\nwriter.writerows([[\"Ana\", 90], [\"Lee, Jr.\", 85]])\nprint(buf.getvalue())\n```\n\nNot every CSV uses commas. Many European exports separate values with `;`, because there the comma is the decimal point (`1,5`). Pass `delimiter=\";\"` to the reader, and swap the decimal comma before converting: `float(\"1,5\".replace(\",\", \".\"))`.\n\nWith real files, open them with `newline=\"\"`, because the csv module handles line endings itself (otherwise you can get blank rows on Windows), and with `encoding=\"utf-8\"`, so names like Zoë survive: `open(\"people.csv\", \"w\", newline=\"\", encoding=\"utf-8\")`.\n\nTo total a column per group, loop over the rows and add to a dict: `totals[region] = totals.get(region, 0) + amount`. For bigger analyses, pandas (later in this chapter) reads a CSV into a table you can filter and group in one line.",
+        "sandboxCode": "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\nCleo,80\\n\"\nrows = list(csv.DictReader(StringIO(data)))\nprint(rows[0])\nprint(sum(int(row[\"score\"]) for row in rows))",
+        "readMore": {
+          "label": "Python docs: the csv module",
+          "url": "https://docs.python.org/3/library/csv.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {
@@ -1001,30 +1016,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "urlopen",
-          "label": "urlopen",
-          "code": "from urllib.request import urlopen\nprint(\"urllib ready\")"
+          "id": "split_a_url",
+          "label": "Split a URL",
+          "code": "from urllib.parse import urlparse\n\nparts = urlparse(\"https://api.example.com/v1/users?limit=10\")\nprint(parts.scheme, parts.netloc, parts.path, parts.query)"
         },
         {
-          "id": "parse_url",
-          "label": "Parse url",
-          "code": "from urllib.parse import urlparse\nprint(urlparse(\"https://example.com/path\"))"
+          "id": "query_strings",
+          "label": "Query strings",
+          "code": "from urllib.parse import parse_qs, urlencode\n\nprint(parse_qs(\"limit=10&tag=python&tag=csv\"))\nprint(urlencode({\"q\": \"python csv\", \"page\": 2}))"
         },
         {
-          "id": "quote",
-          "label": "quote",
-          "code": "from urllib.parse import quote\nprint(quote(\"hello world\"))"
+          "id": "safe_paths",
+          "label": "Safe paths",
+          "code": "from urllib.parse import quote\n\nname = \"Ana / Bob\"\nprint(\"https://api.example.com/users/\" + quote(name, safe=\"\"))"
         },
         {
-          "id": "request_headers",
-          "label": "Request headers",
-          "code": "# req = Request(url, headers={\"User-Agent\": \"CodeQuest\"})\nprint(\"custom headers\")"
+          "id": "build_a_request",
+          "label": "Build a request",
+          "code": "from urllib.parse import urlencode\nfrom urllib.request import Request\n\nreq = Request(\n    \"https://api.example.com/signup\",\n    data=urlencode({\"name\": \"Ana\", \"age\": 30}).encode(),\n    headers={\"Accept\": \"application/json\"},\n    method=\"POST\",\n)\nprint(req.get_method(), req.full_url)\nprint(req.data)\nprint(req.header_items())"
+        },
+        {
+          "id": "decode_a_response",
+          "label": "Decode a response",
+          "code": "import json\n\nraw = b'{\"ok\": true, \"items\": [\"caf\\xc3\\xa9\", \"tea\"]}'\nbody = raw.decode(\"utf-8\")\nprint(json.loads(body)[\"items\"])"
         }
       ],
       "intro": {
         "title": "HTTP with urllib",
-        "bodyMarkdown": "`urllib.request` fetches URLs from stdlib. `urlopen`, read, decode.\n\nSet headers, handle HTTP errors, respect timeouts.\n\nFor complex HTTP prefer `requests` library when available.\n\nThe sandbox here has no internet access, so the challenges practise everything around a request: building URLs and requests, decoding responses, and handling errors and retries.",
-        "sandboxCode": "from urllib.request import urlopen\n\n# Example structure (may not run offline):\n# with urlopen(\"https://example.com\", timeout=5) as r:\n#     html = r.read().decode()\nprint(\"urllib ready\")"
+        "bodyMarkdown": "When a program talks to a web API, it sends an HTTP **request** to a URL and gets a **response** back: a status code (200 means OK), headers, and a body, which is often JSON. Python's standard library does this with the `urllib` package.\n\n**No internet here.** The code runner in this app can't reach other websites, so this lesson practises everything around a request: building URLs, preparing requests, decoding responses and handling errors. On your own computer, a complete request looks like this:\n\n```\nimport json\nfrom urllib.request import urlopen\n\nwith urlopen(\"https://api.example.com/users\", timeout=5) as response:\n    body = response.read().decode(\"utf-8\")\n    users = json.loads(body)\n```\n\n`timeout=5` gives up after 5 seconds instead of waiting forever for a server that doesn't answer. `response.read()` returns **bytes**, not text; `.decode(\"utf-8\")` turns them into a string you can give to `json.loads`.\n\nA URL has parts. For `https://api.example.com/v1/users?limit=10`, `urllib.parse.urlparse` gives you `.scheme` (`https`), `.netloc`, the domain (`api.example.com`), `.path` (`/v1/users`) and `.query` (`limit=10`). `parse_qs(query)` turns the query into a dict of lists, like `{\"limit\": [\"10\"]}`. They are lists because a name can appear more than once, as in `tag=a&tag=b`.\n\nGoing the other way, `urlencode({\"q\": \"python csv\", \"page\": 2})` builds `q=python+csv&page=2` and escapes spaces and symbols for you. Inside a path, use `quote(name, safe=\"\")`: a space becomes `%20` and a `/` becomes `%2F`, so user input can't break the path.\n\n```\nfrom urllib.parse import urlparse, parse_qs, urlencode, quote\n\nparts = urlparse(\"https://api.example.com/v1/users?limit=10&tag=a&tag=b\")\nprint(parts.netloc, parts.path, parse_qs(parts.query))\nprint(urlencode({\"q\": \"python csv\", \"page\": 2}))\nprint(quote(\"Ana / Bob\", safe=\"\"))\n```\n\nTo send headers or a body, build a `Request`. Headers are a dict, such as `{\"Accept\": \"application/json\"}`. A body (`data=`) must be **bytes**, for example `urlencode(form).encode()`, and `method=\"POST\"` says the request sends data instead of only reading it.\n\n```\nfrom urllib.request import Request\n\nreq = Request(\n    \"https://api.example.com/signup\",\n    data=urlencode({\"name\": \"Ana\"}).encode(),\n    headers={\"User-Agent\": \"CodeQuest/1.0\"},\n    method=\"POST\",\n)\nprint(req.get_method(), req.full_url, req.data)\n```\n\nRequests fail. For a 4xx or 5xx status, `urlopen` raises `urllib.error.HTTPError`, which has the status in `.code`. A 404 (not found) is often an answer to handle rather than a crash: catch it, and re-raise anything else with a bare `raise`. When the server can't be reached at all, you get `URLError`. `HTTPError` is a kind of `URLError`, so if you catch both, put `HTTPError` first.\n\nNetwork failures and 5xx errors are often temporary, so trying again a few times can help. A 4xx error means the request itself is wrong, and repeating it won't fix it.\n\nBig result sets come in **pages**: you ask for `?page=1&per_page=20`, then page 2, and so on, and `math.ceil(total / per_page)` tells you how many pages there are. Many projects use the third-party `requests` library instead of urllib because it's shorter to write, but the ideas are the same.",
+        "sandboxCode": "from urllib.parse import urlparse, parse_qs, urlencode\n\nparts = urlparse(\"https://api.example.com/v1/users?limit=10\")\nprint(parts.netloc)\nprint(parts.path)\nprint(parse_qs(parts.query))\nprint(urlencode({\"q\": \"python csv\", \"page\": 2}))",
+        "readMore": {
+          "label": "Python docs: fetching URLs with urllib",
+          "url": "https://docs.python.org/3/howto/urllib2.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {
@@ -1520,36 +1545,46 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "response_dict",
-          "label": "Response dict",
-          "code": "response = {\"status\": 200, \"data\": {\"id\": 1, \"title\": \"Todo\"}}\nprint(response[\"status\"])"
+          "id": "get_a_list",
+          "label": "GET a list",
+          "code": "import json\nfrom urllib.parse import urlparse, parse_qs\n\n_todos = {\n    1: {\"id\": 1, \"title\": \"Buy milk\", \"done\": False},\n    2: {\"id\": 2, \"title\": \"Walk dog\", \"done\": True},\n    3: {\"id\": 3, \"title\": \"Write report\", \"done\": False},\n}\napi_calls = []\n\ndef _reply(status, data):\n    return status, json.dumps(data)\n\ndef api(method, path, body=None):\n    \"\"\"Pretend REST API for todos. Returns (status_code, response_text).\"\"\"\n    api_calls.append((method, path))\n    url = urlparse(path)\n    parts = [p for p in url.path.split(\"/\") if p]\n    query = {k: v[0] for k, v in parse_qs(url.query).items()}\n    if not parts or parts[0] != \"todos\" or len(parts) > 2:\n        return _reply(404, {\"error\": \"not found\"})\n    if len(parts) == 1:\n        if method == \"GET\":\n            items = sorted(_todos.values(), key=lambda t: t[\"id\"])\n            if \"done\" in query:\n                items = [t for t in items if t[\"done\"] == (query[\"done\"] == \"true\")]\n            if \"page\" in query:\n                page, per_page = int(query[\"page\"]), int(query.get(\"per_page\", 2))\n                start = (page - 1) * per_page\n                next_page = page + 1 if start + per_page < len(items) else None\n                return _reply(200, {\"items\": items[start:start + per_page], \"next_page\": next_page})\n            return _reply(200, items)\n        if method == \"POST\":\n            data = json.loads(body or \"{}\")\n            if not str(data.get(\"title\", \"\")).strip():\n                return _reply(400, {\"error\": \"title is required\"})\n            new_id = max(_todos, default=0) + 1\n            _todos[new_id] = {\"id\": new_id, \"title\": data[\"title\"], \"done\": bool(data.get(\"done\", False))}\n            return _reply(201, _todos[new_id])\n        return _reply(405, {\"error\": \"method not allowed\"})\n    if not parts[1].isdigit() or int(parts[1]) not in _todos:\n        return _reply(404, {\"error\": \"not found\"})\n    todo_id = int(parts[1])\n    if method == \"GET\":\n        return _reply(200, _todos[todo_id])\n    if method == \"PUT\":\n        data = json.loads(body or \"{}\")\n        if \"title\" not in data or \"done\" not in data:\n            return _reply(400, {\"error\": \"PUT needs title and done\"})\n        _todos[todo_id] = {\"id\": todo_id, \"title\": data[\"title\"], \"done\": bool(data[\"done\"])}\n        return _reply(200, _todos[todo_id])\n    if method == \"DELETE\":\n        del _todos[todo_id]\n        return 204, \"\"\n    return _reply(405, {\"error\": \"method not allowed\"})\n\n# ----- Try it -----\nstatus, text = api(\"GET\", \"/todos?done=false\")\nprint(status, [todo[\"title\"] for todo in json.loads(text)])"
         },
         {
-          "id": "status_codes",
-          "label": "Status codes",
-          "code": "print(200, 404, 500)"
+          "id": "get_one",
+          "label": "GET one",
+          "code": "import json\nfrom urllib.parse import urlparse, parse_qs\n\n_todos = {\n    1: {\"id\": 1, \"title\": \"Buy milk\", \"done\": False},\n    2: {\"id\": 2, \"title\": \"Walk dog\", \"done\": True},\n    3: {\"id\": 3, \"title\": \"Write report\", \"done\": False},\n}\napi_calls = []\n\ndef _reply(status, data):\n    return status, json.dumps(data)\n\ndef api(method, path, body=None):\n    \"\"\"Pretend REST API for todos. Returns (status_code, response_text).\"\"\"\n    api_calls.append((method, path))\n    url = urlparse(path)\n    parts = [p for p in url.path.split(\"/\") if p]\n    query = {k: v[0] for k, v in parse_qs(url.query).items()}\n    if not parts or parts[0] != \"todos\" or len(parts) > 2:\n        return _reply(404, {\"error\": \"not found\"})\n    if len(parts) == 1:\n        if method == \"GET\":\n            items = sorted(_todos.values(), key=lambda t: t[\"id\"])\n            if \"done\" in query:\n                items = [t for t in items if t[\"done\"] == (query[\"done\"] == \"true\")]\n            if \"page\" in query:\n                page, per_page = int(query[\"page\"]), int(query.get(\"per_page\", 2))\n                start = (page - 1) * per_page\n                next_page = page + 1 if start + per_page < len(items) else None\n                return _reply(200, {\"items\": items[start:start + per_page], \"next_page\": next_page})\n            return _reply(200, items)\n        if method == \"POST\":\n            data = json.loads(body or \"{}\")\n            if not str(data.get(\"title\", \"\")).strip():\n                return _reply(400, {\"error\": \"title is required\"})\n            new_id = max(_todos, default=0) + 1\n            _todos[new_id] = {\"id\": new_id, \"title\": data[\"title\"], \"done\": bool(data.get(\"done\", False))}\n            return _reply(201, _todos[new_id])\n        return _reply(405, {\"error\": \"method not allowed\"})\n    if not parts[1].isdigit() or int(parts[1]) not in _todos:\n        return _reply(404, {\"error\": \"not found\"})\n    todo_id = int(parts[1])\n    if method == \"GET\":\n        return _reply(200, _todos[todo_id])\n    if method == \"PUT\":\n        data = json.loads(body or \"{}\")\n        if \"title\" not in data or \"done\" not in data:\n            return _reply(400, {\"error\": \"PUT needs title and done\"})\n        _todos[todo_id] = {\"id\": todo_id, \"title\": data[\"title\"], \"done\": bool(data[\"done\"])}\n        return _reply(200, _todos[todo_id])\n    if method == \"DELETE\":\n        del _todos[todo_id]\n        return 204, \"\"\n    return _reply(405, {\"error\": \"method not allowed\"})\n\n# ----- Try it -----\nprint(api(\"GET\", \"/todos/2\"))\nprint(api(\"GET\", \"/todos/99\"))"
         },
         {
-          "id": "json_body",
-          "label": "JSON body",
-          "code": "import json\ndata = {\"id\": 1, \"title\": \"Todo\"}\nprint(json.dumps(data))"
+          "id": "post",
+          "label": "POST",
+          "code": "import json\nfrom urllib.parse import urlparse, parse_qs\n\n_todos = {\n    1: {\"id\": 1, \"title\": \"Buy milk\", \"done\": False},\n    2: {\"id\": 2, \"title\": \"Walk dog\", \"done\": True},\n    3: {\"id\": 3, \"title\": \"Write report\", \"done\": False},\n}\napi_calls = []\n\ndef _reply(status, data):\n    return status, json.dumps(data)\n\ndef api(method, path, body=None):\n    \"\"\"Pretend REST API for todos. Returns (status_code, response_text).\"\"\"\n    api_calls.append((method, path))\n    url = urlparse(path)\n    parts = [p for p in url.path.split(\"/\") if p]\n    query = {k: v[0] for k, v in parse_qs(url.query).items()}\n    if not parts or parts[0] != \"todos\" or len(parts) > 2:\n        return _reply(404, {\"error\": \"not found\"})\n    if len(parts) == 1:\n        if method == \"GET\":\n            items = sorted(_todos.values(), key=lambda t: t[\"id\"])\n            if \"done\" in query:\n                items = [t for t in items if t[\"done\"] == (query[\"done\"] == \"true\")]\n            if \"page\" in query:\n                page, per_page = int(query[\"page\"]), int(query.get(\"per_page\", 2))\n                start = (page - 1) * per_page\n                next_page = page + 1 if start + per_page < len(items) else None\n                return _reply(200, {\"items\": items[start:start + per_page], \"next_page\": next_page})\n            return _reply(200, items)\n        if method == \"POST\":\n            data = json.loads(body or \"{}\")\n            if not str(data.get(\"title\", \"\")).strip():\n                return _reply(400, {\"error\": \"title is required\"})\n            new_id = max(_todos, default=0) + 1\n            _todos[new_id] = {\"id\": new_id, \"title\": data[\"title\"], \"done\": bool(data.get(\"done\", False))}\n            return _reply(201, _todos[new_id])\n        return _reply(405, {\"error\": \"method not allowed\"})\n    if not parts[1].isdigit() or int(parts[1]) not in _todos:\n        return _reply(404, {\"error\": \"not found\"})\n    todo_id = int(parts[1])\n    if method == \"GET\":\n        return _reply(200, _todos[todo_id])\n    if method == \"PUT\":\n        data = json.loads(body or \"{}\")\n        if \"title\" not in data or \"done\" not in data:\n            return _reply(400, {\"error\": \"PUT needs title and done\"})\n        _todos[todo_id] = {\"id\": todo_id, \"title\": data[\"title\"], \"done\": bool(data[\"done\"])}\n        return _reply(200, _todos[todo_id])\n    if method == \"DELETE\":\n        del _todos[todo_id]\n        return 204, \"\"\n    return _reply(405, {\"error\": \"method not allowed\"})\n\n# ----- Try it -----\nstatus, text = api(\"POST\", \"/todos\", json.dumps({\"title\": \"Read book\"}))\nprint(status, json.loads(text))\nprint(api(\"POST\", \"/todos\", json.dumps({\"title\": \"\"})))"
         },
         {
-          "id": "get_post",
-          "label": "GET POST",
-          "code": "methods = [\"GET\", \"POST\", \"PUT\", \"DELETE\"]\nprint(methods)"
+          "id": "put_and_delete",
+          "label": "PUT and DELETE",
+          "code": "import json\nfrom urllib.parse import urlparse, parse_qs\n\n_todos = {\n    1: {\"id\": 1, \"title\": \"Buy milk\", \"done\": False},\n    2: {\"id\": 2, \"title\": \"Walk dog\", \"done\": True},\n    3: {\"id\": 3, \"title\": \"Write report\", \"done\": False},\n}\napi_calls = []\n\ndef _reply(status, data):\n    return status, json.dumps(data)\n\ndef api(method, path, body=None):\n    \"\"\"Pretend REST API for todos. Returns (status_code, response_text).\"\"\"\n    api_calls.append((method, path))\n    url = urlparse(path)\n    parts = [p for p in url.path.split(\"/\") if p]\n    query = {k: v[0] for k, v in parse_qs(url.query).items()}\n    if not parts or parts[0] != \"todos\" or len(parts) > 2:\n        return _reply(404, {\"error\": \"not found\"})\n    if len(parts) == 1:\n        if method == \"GET\":\n            items = sorted(_todos.values(), key=lambda t: t[\"id\"])\n            if \"done\" in query:\n                items = [t for t in items if t[\"done\"] == (query[\"done\"] == \"true\")]\n            if \"page\" in query:\n                page, per_page = int(query[\"page\"]), int(query.get(\"per_page\", 2))\n                start = (page - 1) * per_page\n                next_page = page + 1 if start + per_page < len(items) else None\n                return _reply(200, {\"items\": items[start:start + per_page], \"next_page\": next_page})\n            return _reply(200, items)\n        if method == \"POST\":\n            data = json.loads(body or \"{}\")\n            if not str(data.get(\"title\", \"\")).strip():\n                return _reply(400, {\"error\": \"title is required\"})\n            new_id = max(_todos, default=0) + 1\n            _todos[new_id] = {\"id\": new_id, \"title\": data[\"title\"], \"done\": bool(data.get(\"done\", False))}\n            return _reply(201, _todos[new_id])\n        return _reply(405, {\"error\": \"method not allowed\"})\n    if not parts[1].isdigit() or int(parts[1]) not in _todos:\n        return _reply(404, {\"error\": \"not found\"})\n    todo_id = int(parts[1])\n    if method == \"GET\":\n        return _reply(200, _todos[todo_id])\n    if method == \"PUT\":\n        data = json.loads(body or \"{}\")\n        if \"title\" not in data or \"done\" not in data:\n            return _reply(400, {\"error\": \"PUT needs title and done\"})\n        _todos[todo_id] = {\"id\": todo_id, \"title\": data[\"title\"], \"done\": bool(data[\"done\"])}\n        return _reply(200, _todos[todo_id])\n    if method == \"DELETE\":\n        del _todos[todo_id]\n        return 204, \"\"\n    return _reply(405, {\"error\": \"method not allowed\"})\n\n# ----- Try it -----\nprint(api(\"PUT\", \"/todos/1\", json.dumps({\"title\": \"Buy milk\", \"done\": True})))\nprint(api(\"DELETE\", \"/todos/3\"))\nprint(api(\"GET\", \"/todos/3\"))"
+        },
+        {
+          "id": "pages",
+          "label": "Pages",
+          "code": "import json\nfrom urllib.parse import urlparse, parse_qs\n\n_todos = {\n    1: {\"id\": 1, \"title\": \"Buy milk\", \"done\": False},\n    2: {\"id\": 2, \"title\": \"Walk dog\", \"done\": True},\n    3: {\"id\": 3, \"title\": \"Write report\", \"done\": False},\n}\napi_calls = []\n\ndef _reply(status, data):\n    return status, json.dumps(data)\n\ndef api(method, path, body=None):\n    \"\"\"Pretend REST API for todos. Returns (status_code, response_text).\"\"\"\n    api_calls.append((method, path))\n    url = urlparse(path)\n    parts = [p for p in url.path.split(\"/\") if p]\n    query = {k: v[0] for k, v in parse_qs(url.query).items()}\n    if not parts or parts[0] != \"todos\" or len(parts) > 2:\n        return _reply(404, {\"error\": \"not found\"})\n    if len(parts) == 1:\n        if method == \"GET\":\n            items = sorted(_todos.values(), key=lambda t: t[\"id\"])\n            if \"done\" in query:\n                items = [t for t in items if t[\"done\"] == (query[\"done\"] == \"true\")]\n            if \"page\" in query:\n                page, per_page = int(query[\"page\"]), int(query.get(\"per_page\", 2))\n                start = (page - 1) * per_page\n                next_page = page + 1 if start + per_page < len(items) else None\n                return _reply(200, {\"items\": items[start:start + per_page], \"next_page\": next_page})\n            return _reply(200, items)\n        if method == \"POST\":\n            data = json.loads(body or \"{}\")\n            if not str(data.get(\"title\", \"\")).strip():\n                return _reply(400, {\"error\": \"title is required\"})\n            new_id = max(_todos, default=0) + 1\n            _todos[new_id] = {\"id\": new_id, \"title\": data[\"title\"], \"done\": bool(data.get(\"done\", False))}\n            return _reply(201, _todos[new_id])\n        return _reply(405, {\"error\": \"method not allowed\"})\n    if not parts[1].isdigit() or int(parts[1]) not in _todos:\n        return _reply(404, {\"error\": \"not found\"})\n    todo_id = int(parts[1])\n    if method == \"GET\":\n        return _reply(200, _todos[todo_id])\n    if method == \"PUT\":\n        data = json.loads(body or \"{}\")\n        if \"title\" not in data or \"done\" not in data:\n            return _reply(400, {\"error\": \"PUT needs title and done\"})\n        _todos[todo_id] = {\"id\": todo_id, \"title\": data[\"title\"], \"done\": bool(data[\"done\"])}\n        return _reply(200, _todos[todo_id])\n    if method == \"DELETE\":\n        del _todos[todo_id]\n        return 204, \"\"\n    return _reply(405, {\"error\": \"method not allowed\"})\n\n# ----- Try it -----\npage = 1\nwhile page is not None:\n    data = json.loads(api(\"GET\", f\"/todos?page={page}&per_page=2\")[1])\n    print(\"page\", page, [todo[\"id\"] for todo in data[\"items\"]])\n    page = data[\"next_page\"]"
         }
       ],
       "intro": {
         "title": "REST APIs",
-        "bodyMarkdown": "REST uses HTTP verbs GET POST PUT DELETE on resources identified by URLs.\n\nJSON is common response format. Status codes: 200 OK, 404 not found, 500 server error.\n\nDesign clear endpoints; version APIs; document with OpenAPI.\n\nIn the challenges you talk to a pretend todo API with `api(method, path, body=None)`. It returns `(status, text)` like a real HTTP call: `GET /todos`, `GET /todos/1`, `POST /todos`, `PUT /todos/1` and `DELETE /todos/1`.",
-        "sandboxCode": "import json\n\n# Conceptual API response\nresponse = {\"status\": 200, \"data\": {\"id\": 1, \"title\": \"Todo\"}}\nprint(response[\"status\"])\nprint(json.dumps(response[\"data\"]))"
+        "bodyMarkdown": "Most web APIs follow a style called **REST**. The server holds **resources**, such as todos, users or orders, and each one has its own URL: `/todos` is the whole collection, and `/todos/1` is the todo with id 1.\n\nThe HTTP **method** says what to do. `GET` reads and never changes anything. `POST` to a collection creates a new item. `PUT` replaces an item with the data you send, and `DELETE` removes it. Sending the same `PUT` or `DELETE` twice leaves things just as sending it once would, which is why they are called **idempotent**; sending `POST` twice creates two items.\n\nBodies are usually JSON in both directions: you `json.dumps` what you send and `json.loads` what comes back. Because `PUT` replaces the whole resource, send every field, not only the one you changed.\n\nThe **status code** tells you what happened. 2xx means success: `200 OK`, `201 Created` after a POST, and `204 No Content` when there is nothing to send back, as after a DELETE. 3xx means \"look somewhere else\" (a redirect). 4xx means the problem is in your request, such as `400 Bad Request` or `404 Not Found`. 5xx means the server failed. `status // 100` gives you the first digit. Check the status before you trust the body.\n\nCollections can be filtered with a query string, as in `/todos?done=false`. Long lists come in pages: each response holds some `items` and a `next_page` number, or `null` on the last page, and you keep asking until there is no next page. This is called **pagination**. Real APIs often put a version in the path, like `/v1/todos`, so they can change later without breaking programs that use the old version.\n\n**The pretend API.** This app can't reach real servers, so the sandbox and the challenges use a small pretend todo API that behaves like one. Call `api(method, path, body=None)`. It returns `(status, text)`, where `text` is the JSON body:\n\n```\nimport json\n\nstatus, text = api(\"GET\", \"/todos/1\")\nprint(status, json.loads(text))\n\nstatus, text = api(\"POST\", \"/todos\", json.dumps({\"title\": \"Read book\"}))\nprint(status, json.loads(text)[\"id\"])\n```\n\nWrap API calls in small functions that check the status and turn errors into exceptions; for example, raise `ValueError` with the API's `\"error\"` message when it answers 400. The rest of your program then works with plain Python data. The sandbox below starts with the pretend API's code (you can read how it works), and the part to try is at the bottom.",
+        "sandboxCode": "import json\nfrom urllib.parse import urlparse, parse_qs\n\n_todos = {\n    1: {\"id\": 1, \"title\": \"Buy milk\", \"done\": False},\n    2: {\"id\": 2, \"title\": \"Walk dog\", \"done\": True},\n    3: {\"id\": 3, \"title\": \"Write report\", \"done\": False},\n}\napi_calls = []\n\ndef _reply(status, data):\n    return status, json.dumps(data)\n\ndef api(method, path, body=None):\n    \"\"\"Pretend REST API for todos. Returns (status_code, response_text).\"\"\"\n    api_calls.append((method, path))\n    url = urlparse(path)\n    parts = [p for p in url.path.split(\"/\") if p]\n    query = {k: v[0] for k, v in parse_qs(url.query).items()}\n    if not parts or parts[0] != \"todos\" or len(parts) > 2:\n        return _reply(404, {\"error\": \"not found\"})\n    if len(parts) == 1:\n        if method == \"GET\":\n            items = sorted(_todos.values(), key=lambda t: t[\"id\"])\n            if \"done\" in query:\n                items = [t for t in items if t[\"done\"] == (query[\"done\"] == \"true\")]\n            if \"page\" in query:\n                page, per_page = int(query[\"page\"]), int(query.get(\"per_page\", 2))\n                start = (page - 1) * per_page\n                next_page = page + 1 if start + per_page < len(items) else None\n                return _reply(200, {\"items\": items[start:start + per_page], \"next_page\": next_page})\n            return _reply(200, items)\n        if method == \"POST\":\n            data = json.loads(body or \"{}\")\n            if not str(data.get(\"title\", \"\")).strip():\n                return _reply(400, {\"error\": \"title is required\"})\n            new_id = max(_todos, default=0) + 1\n            _todos[new_id] = {\"id\": new_id, \"title\": data[\"title\"], \"done\": bool(data.get(\"done\", False))}\n            return _reply(201, _todos[new_id])\n        return _reply(405, {\"error\": \"method not allowed\"})\n    if not parts[1].isdigit() or int(parts[1]) not in _todos:\n        return _reply(404, {\"error\": \"not found\"})\n    todo_id = int(parts[1])\n    if method == \"GET\":\n        return _reply(200, _todos[todo_id])\n    if method == \"PUT\":\n        data = json.loads(body or \"{}\")\n        if \"title\" not in data or \"done\" not in data:\n            return _reply(400, {\"error\": \"PUT needs title and done\"})\n        _todos[todo_id] = {\"id\": todo_id, \"title\": data[\"title\"], \"done\": bool(data[\"done\"])}\n        return _reply(200, _todos[todo_id])\n    if method == \"DELETE\":\n        del _todos[todo_id]\n        return 204, \"\"\n    return _reply(405, {\"error\": \"method not allowed\"})\n\n# ----- Try it -----\nstatus, text = api(\"GET\", \"/todos\")\nprint(status)\nprint(json.loads(text))",
+        "readMore": {
+          "label": "MDN: HTTP request methods",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods",
+          "source": "MDN Web Docs"
+        }
       },
       "challenges": [
         {
           "id": "rest_apis_ch1",
           "title": "Easy: GET a collection",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCall `GET /todos`. Store the status code in `status`, the parsed list in `todos`, and how many there are in `count`.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCall `GET /todos`. Store the status code in `status`, the parsed list in `todos`, and how many there are in `count`.",
           "starterCode": "import json\n\nstatus, text = api(\"GET\", \"/todos\")\ntodos = ___\ncount = ___",
           "hint": "Parse the response text with `json.loads(text)`, then use `len(todos)`.",
           "solution": "import json\n\nstatus, text = api(\"GET\", \"/todos\")\ntodos = json.loads(text)\ncount = len(todos)",
@@ -1578,7 +1613,7 @@
         {
           "id": "rest_apis_ch2",
           "title": "Easy: GET one resource",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nFetch the todo with id 2 and store its title in `title`.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nFetch the todo with id 2 and store its title in `title`.",
           "starterCode": "import json\n\nstatus, text = api(\"GET\", ___)\ntitle = ___",
           "hint": "One resource lives at `/todos/<id>`, so the path is `\"/todos/2\"`.",
           "solution": "import json\n\nstatus, text = api(\"GET\", \"/todos/2\")\ntitle = json.loads(text)[\"title\"]",
@@ -1602,7 +1637,7 @@
         {
           "id": "rest_apis_ch3",
           "title": "Medium: Check the status code",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `get_title(todo_id)`: return the todo's title, or `None` when the API answers 404.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `get_title(todo_id)`: return the todo's title, or `None` when the API answers 404.",
           "starterCode": "import json\n\ndef get_title(todo_id):\n    status, text = api(\"GET\", f\"/todos/{todo_id}\")\n    ___",
           "hint": "Check `if status == 404: return None` before parsing the body.",
           "solution": "import json\n\ndef get_title(todo_id):\n    status, text = api(\"GET\", f\"/todos/{todo_id}\")\n    if status == 404:\n        return None\n    return json.loads(text)[\"title\"]",
@@ -1631,7 +1666,7 @@
         {
           "id": "rest_apis_ch4",
           "title": "Medium: Create with POST",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCreate a todo titled `Read book` by POSTing JSON to `/todos`. Store the status in `status` and the new todo's id in `new_id`.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCreate a todo titled `Read book` by POSTing JSON to `/todos`. Store the status in `status` and the new todo's id in `new_id`.",
           "starterCode": "import json\n\nstatus, text = api(\"POST\", \"/todos\", ___)\nnew_id = ___",
           "hint": "The body is a JSON string: `json.dumps({\"title\": \"Read book\"})`. The response is the created todo.",
           "solution": "import json\n\nstatus, text = api(\"POST\", \"/todos\", json.dumps({\"title\": \"Read book\"}))\nnew_id = json.loads(text)[\"id\"]",
@@ -1660,7 +1695,7 @@
         {
           "id": "rest_apis_ch5",
           "title": "Hard: Update with PUT",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nMark todo 1 as done. PUT replaces the whole resource, so send both `title` and `done`. Store the status in `status`.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nMark todo 1 as done. PUT replaces the whole resource, so send both `title` and `done`. Store the status in `status`.",
           "starterCode": "import json\n\ncurrent = json.loads(api(\"GET\", \"/todos/1\")[1])\nstatus, text = api(\"PUT\", \"/todos/1\", ___)",
           "hint": "Send `json.dumps({\"title\": current[\"title\"], \"done\": True})`.",
           "solution": "import json\n\ncurrent = json.loads(api(\"GET\", \"/todos/1\")[1])\nstatus, text = api(\"PUT\", \"/todos/1\", json.dumps({\"title\": current[\"title\"], \"done\": True}))",
@@ -1689,7 +1724,7 @@
         {
           "id": "rest_apis_ch6",
           "title": "Hard: Delete a resource",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nDelete todo 3. Store the status in `status`, then confirm it is gone: set `gone` to `True` if fetching it now returns 404.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nDelete todo 3. Store the status in `status`, then confirm it is gone: set `gone` to `True` if fetching it now returns 404.",
           "starterCode": "status, text = api(___, ___)\ngone = ___",
           "hint": "Call `api(\"DELETE\", \"/todos/3\")`, then compare `api(\"GET\", \"/todos/3\")[0] == 404`.",
           "solution": "status, text = api(\"DELETE\", \"/todos/3\")\ngone = api(\"GET\", \"/todos/3\")[0] == 404",
@@ -1718,7 +1753,7 @@
         {
           "id": "rest_apis_ch7",
           "title": "Expert: Filter on the server",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nAsk the API for unfinished todos only, using the query string `?done=false`. Store their titles in `open_titles`.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nAsk the API for unfinished todos only, using the query string `?done=false`. Store their titles in `open_titles`.",
           "starterCode": "import json\n\nstatus, text = api(\"GET\", ___)\nopen_titles = ___",
           "hint": "The path is `\"/todos?done=false\"`; then collect `t[\"title\"]` for each todo.",
           "solution": "import json\n\nstatus, text = api(\"GET\", \"/todos?done=false\")\nopen_titles = [t[\"title\"] for t in json.loads(text)]",
@@ -1776,7 +1811,7 @@
         {
           "id": "rest_apis_ch9",
           "title": "Expert: Turn API errors into exceptions",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `create_todo(title)` that POSTs a new todo and returns its id. If the API answers 400, raise `ValueError` with the API's `error` message.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `create_todo(title)` that POSTs a new todo and returns its id. If the API answers 400, raise `ValueError` with the API's `error` message.",
           "starterCode": "import json\n\ndef create_todo(title):\n    ___",
           "hint": "Parse the response first. `if status == 400: raise ValueError(data[\"error\"])`.",
           "solution": "import json\n\ndef create_todo(title):\n    status, text = api(\"POST\", \"/todos\", json.dumps({\"title\": title}))\n    data = json.loads(text)\n    if status == 400:\n        raise ValueError(data[\"error\"])\n    return data[\"id\"]",
@@ -1800,7 +1835,7 @@
         {
           "id": "rest_apis_ch10",
           "title": "Expert: Follow pagination",
-          "promptMarkdown": "The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWith `?page=N&per_page=2` the API returns `{\"items\": [...], \"next_page\": N + 1 or null}`. Write `fetch_all()` that follows `next_page` from page 1 and returns every todo.",
+          "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWith `?page=N&per_page=2` the API returns `{\"items\": [...], \"next_page\": N + 1 or null}`. Write `fetch_all()` that follows `next_page` from page 1 and returns every todo.",
           "starterCode": "import json\n\ndef fetch_all():\n    ___",
           "hint": "Start with `page = 1`; loop while `page` is not `None`, extending a list with `data[\"items\"]` and setting `page = data[\"next_page\"]`.",
           "solution": "import json\n\ndef fetch_all():\n    todos = []\n    page = 1\n    while page is not None:\n        status, text = api(\"GET\", f\"/todos?page={page}&per_page=2\")\n        data = json.loads(text)\n        todos.extend(data[\"items\"])\n        page = data[\"next_page\"]\n    return todos",
@@ -2049,30 +2084,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "now",
-          "label": "now",
-          "code": "from datetime import datetime\nprint(datetime.now().strftime(\"%Y-%m-%d\"))"
+          "id": "dates_and_timedelta",
+          "label": "Dates and timedelta",
+          "code": "from datetime import date, timedelta\n\nd = date(2026, 1, 31)\nprint(d + timedelta(days=1))\nprint((date(2026, 3, 1) - d).days)"
         },
         {
-          "id": "timedelta",
-          "label": "timedelta",
-          "code": "from datetime import datetime, timedelta\nprint((datetime.now() + timedelta(days=7)).date())"
+          "id": "format",
+          "label": "Format",
+          "code": "from datetime import datetime\n\ndt = datetime(2026, 3, 5, 14, 30)\nprint(dt.strftime(\"%d/%m/%Y %H:%M\"))\nprint(dt.strftime(\"%A, %d %b %y\"))"
         },
         {
           "id": "parse",
           "label": "Parse",
-          "code": "from datetime import datetime\nd = datetime.strptime(\"2024-06-01\", \"%Y-%m-%d\")\nprint(d.month)"
+          "code": "from datetime import datetime\n\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\nprint(parsed, parsed.year)"
         },
         {
-          "id": "iso_date",
-          "label": "ISO date",
-          "code": "from datetime import date\nprint(date.today().isoformat())"
+          "id": "iso_8601",
+          "label": "ISO 8601",
+          "code": "from datetime import datetime, timedelta\n\nwhen = datetime.fromisoformat(\"2026-10-16T09:30:00\")\nprint((when + timedelta(minutes=90)).isoformat())"
+        },
+        {
+          "id": "time_zones",
+          "label": "Time zones",
+          "code": "from datetime import datetime, timedelta, timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nprint(utc_time.astimezone(timezone(timedelta(hours=-4))))\nprint(utc_time.astimezone(timezone(timedelta(hours=2))))"
         }
       ],
       "intro": {
         "title": "Dates and times",
-        "bodyMarkdown": "datetime module: date, time, datetime, timedelta. Parse and format with strftime/strptime.\n\nStore UTC in systems; convert for display. ISO 8601 is interoperable.\n\nBeware naive vs aware datetimes and DST.",
-        "sandboxCode": "from datetime import datetime, timedelta\n\nnow = datetime.now()\nprint(now.strftime(\"%Y-%m-%d\"))\nfuture = now + timedelta(days=7)\nprint(future.date())"
+        "bodyMarkdown": "The `datetime` module has a type for each job: `date` for a day (16 October 2026), `datetime` for a day and a time, and `timedelta` for a length of time, such as 30 days or 90 minutes.\n\n```\nfrom datetime import date, datetime, timedelta\n\nd = date(2026, 10, 16)\nmeeting = datetime(2026, 10, 16, 9, 30)\nprint(d + timedelta(days=30))   # 2026-11-15\n```\n\nDate arithmetic follows the calendar: adding `timedelta(days=1)` to 31 January gives 1 February. Subtracting two dates gives a `timedelta`, and its `.days` is the number of days between them (negative if the second date is later). Dates compare with `<` and `>`, and tuples help compare parts of them: `(today.month, today.day) < (birth.month, birth.day)` is true while this year's birthday is still to come.\n\n`strftime` (\"string format time\") turns a date into text using codes: `%Y` is the 4-digit year (`%y` gives only 2 digits), `%m` the month number, `%d` the day, `%H:%M` the 24-hour time, `%A` the weekday name and `%b` the short month name. `strptime` (\"string parse time\") goes the other way, reading text with the same codes:\n\n```\nprint(meeting.strftime(\"%d/%m/%Y %H:%M\"))   # 16/10/2026 09:30\nprint(meeting.strftime(\"%A\"))               # Friday\nparsed = datetime.strptime(\"16 Oct 2026\", \"%d %b %Y\")\n```\n\nAPIs usually send times in the **ISO 8601** format, `2026-10-16T09:30:00`, because it sorts correctly and means the same everywhere. `.isoformat()` writes it and `datetime.fromisoformat(text)` (or `date.fromisoformat`) reads it.\n\n`d.weekday()` returns 0 for Monday up to 6 for Sunday, which makes weekends easy to skip, and `d.isocalendar().week` gives the ISO week number, handy for weekly reports.\n\n**Time zones.** A plain `datetime` is **naive**: it has no time zone, so 09:30 could be anywhere. An **aware** datetime carries one in `tzinfo`. Servers store times in UTC, which is the same everywhere and has no daylight-saving jumps, and convert to local time only to show it. `astimezone` converts:\n\n```\nfrom datetime import timezone\n\nutc_time = datetime(2026, 10, 16, 13, 0, tzinfo=timezone.utc)\nnew_york = timezone(timedelta(hours=-4))\nprint(utc_time.astimezone(new_york))   # 2026-10-16 09:00:00-04:00\n```\n\nPython won't compare a naive datetime with an aware one: it raises `TypeError` instead of guessing. The fixed offset above is fine for a single date; for a real place, whose offset changes with daylight saving, use `zoneinfo.ZoneInfo(\"America/New_York\")`.",
+        "sandboxCode": "from datetime import date, datetime, timedelta\n\ntoday = date(2026, 10, 16)\nprint(today.strftime(\"%A %d %B %Y\"))\nprint(today + timedelta(days=30))\nprint((date(2026, 12, 25) - today).days, \"days until 25 December\")",
+        "readMore": {
+          "label": "Python docs: the datetime module",
+          "url": "https://docs.python.org/3/library/datetime.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {
@@ -2560,28 +2605,38 @@
         {
           "id": "counter",
           "label": "Counter",
-          "code": "from collections import Counter\nprint(Counter(\"aab\"))"
-        },
-        {
-          "id": "most_common",
-          "label": "most_common",
-          "code": "from collections import Counter\nprint(Counter(\"aab\").most_common(1))"
+          "code": "from collections import Counter\n\nstock = Counter({\"apple\": 10, \"pear\": 4, \"fig\": 2})\nsold = Counter({\"apple\": 3, \"fig\": 2})\nprint(stock - sold)\nprint(Counter(\"mississippi\").most_common(2))"
         },
         {
           "id": "defaultdict",
           "label": "defaultdict",
-          "code": "from collections import defaultdict\ndd = defaultdict(int)\nfor w in [\"a\", \"b\", \"a\"]:\n    dd[w] += 1\nprint(dict(dd))"
+          "code": "from collections import defaultdict\n\ndocs = {1: \"python loves data\", 2: \"data beats opinion\"}\nindex = defaultdict(set)\nfor doc_id, text in docs.items():\n    for word in text.split():\n        index[word].add(doc_id)\nprint(sorted(index[\"data\"]))"
+        },
+        {
+          "id": "namedtuple",
+          "label": "namedtuple",
+          "code": "from collections import namedtuple\n\nProduct = namedtuple(\"Product\", [\"name\", \"price\"])\nproducts = [Product(\"Pen\", 1.5), Product(\"Book\", 12.0)]\ncheapest = min(products, key=lambda p: p.price)\nprint(cheapest.name, cheapest)"
         },
         {
           "id": "deque",
           "label": "deque",
-          "code": "from collections import deque\nd = deque([1, 2])\nd.appendleft(0)\nprint(list(d))"
+          "code": "from collections import deque\n\nrecent = deque(maxlen=3)\nfor reading in [21.5, 22.0, 22.4, 23.1]:\n    recent.append(reading)\n    print(list(recent))"
+        },
+        {
+          "id": "chainmap_and_heapq",
+          "label": "ChainMap and heapq",
+          "code": "import heapq\nfrom collections import ChainMap\n\nsettings = ChainMap({\"debug\": True}, {\"port\": 9000}, {\"port\": 8000, \"debug\": False})\nprint(settings[\"port\"], settings[\"debug\"])\n\nscores = {\"Ana\": 91, \"Ben\": 78, \"Cy\": 85}\nprint(heapq.nlargest(2, scores.items(), key=lambda item: item[1]))"
         }
       ],
       "intro": {
         "title": "Collections for data",
-        "bodyMarkdown": "collections: Counter, defaultdict, deque, namedtuple for specialized containers.\n\nCounter counts hashables; defaultdict auto-creates missing keys.\n\nChoose right structure for clarity and performance.",
-        "sandboxCode": "from collections import Counter, defaultdict\n\nwords = [\"a\", \"b\", \"a\", \"c\", \"a\"]\nprint(Counter(words).most_common(1))\n\ndd = defaultdict(int)\nfor w in words:\n    dd[w] += 1\nprint(dict(dd))"
+        "bodyMarkdown": "The `collections` module has containers made for everyday data jobs. Each one behaves like a dict, list or tuple you already know, with one extra skill.\n\n`Counter` counts things. Give it any list (or string) and it maps each item to how often it appears. `most_common(n)` returns the top `n` as `(item, count)` pairs, and a missing key counts as 0 instead of raising `KeyError`.\n\n```\nfrom collections import Counter\n\ncounts = Counter([\"apple\", \"pear\", \"apple\"])\nprint(counts[\"apple\"], counts[\"fig\"])   # 2 0\nprint(Counter(\"banana\").most_common(1))   # [('a', 3)]\n```\n\nCounters can also do arithmetic: `stock - sold` subtracts the counts and drops every item that reaches zero or less, so `Counter(a=1) - Counter(a=3)` is an empty Counter.\n\n`defaultdict` creates a value the first time you use a missing key. With `defaultdict(list)`, a new key starts as an empty list, so you can group items without first checking `if key not in d`. `defaultdict(set)` collects unique values the same way.\n\n```\nfrom collections import defaultdict\n\nby_letter = defaultdict(list)\nfor name in [\"Ana\", \"Ben\", \"Amir\"]:\n    by_letter[name[0]].append(name)\nprint(dict(by_letter))   # {'A': ['Ana', 'Amir'], 'B': ['Ben']}\n```\n\n`namedtuple` makes a small record type with named fields: after `Product = namedtuple(\"Product\", [\"name\", \"price\"])` you can write `p.price` instead of `p[1]`, which makes code much easier to read. It is still a tuple, so it works anywhere a tuple does.\n\n`deque` (say \"deck\") is a list built for adding and removing at both ends. A list is slow at the front, because every other item has to move along, so a deque is the better choice for a queue. With `maxlen=3` a deque keeps only the last 3 items: appending a fourth drops the oldest. That's exactly what you want for \"the latest readings\" or a moving window.\n\n`ChainMap(cli, env, defaults)` looks a key up in each dict in turn and returns the first match, so earlier dicts override later ones without copying anything. It's a neat way to layer settings.\n\nOutside `collections`, the `heapq` module finds the largest or smallest items quickly: `heapq.nlargest(3, items, key=...)` returns the top 3, biggest first. And since Python 3.7, a plain `dict` keeps its keys in the order you added them.",
+        "sandboxCode": "from collections import Counter, defaultdict\n\nwords = \"the cat and the dog and the bird\".split()\nprint(Counter(words).most_common(2))\n\nby_length = defaultdict(list)\nfor word in words:\n    by_length[len(word)].append(word)\nprint(dict(by_length))",
+        "readMore": {
+          "label": "Python docs: the collections module",
+          "url": "https://docs.python.org/3/library/collections.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {
@@ -3067,30 +3122,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "join_path",
-          "label": "Join path",
-          "code": "from pathlib import Path\np = Path(\"data\") / \"scores.json\"\nprint(p)"
+          "id": "path_parts",
+          "label": "Path parts",
+          "code": "from pathlib import Path\n\nreport = Path(\"reports/summary.final.pdf\")\nprint(report.name, report.stem, report.suffix, report.parent)\nprint(report.with_suffix(\".txt\"))"
         },
         {
-          "id": "suffix_stem",
-          "label": "suffix stem",
-          "code": "from pathlib import Path\np = Path(\"scores.json\")\nprint(p.suffix, p.stem)"
+          "id": "write_and_read",
+          "label": "Write and read",
+          "code": "from pathlib import Path\n\np = Path(\"greeting.txt\")\np.write_text(\"Grüezi!\\n\", encoding=\"utf-8\")\nprint(p.read_text(encoding=\"utf-8\").strip())\nprint(p.stat().st_size, \"bytes (ü takes 2)\")"
         },
         {
-          "id": "exists",
-          "label": "exists",
-          "code": "from pathlib import Path\nprint(Path(\".\").exists())"
+          "id": "find_files",
+          "label": "Find files",
+          "code": "from pathlib import Path\n\nbase = Path(\"demo_logs\")\n(base / \"old\").mkdir(parents=True, exist_ok=True)\nfor name in [\"a.log\", \"b.txt\", \"old/c.log\"]:\n    (base / name).write_text(\"x\", encoding=\"utf-8\")\nprint(sorted(p.name for p in base.glob(\"*.log\")))\nprint(sorted(p.name for p in base.rglob(\"*.log\")))"
         },
         {
-          "id": "glob",
-          "label": "glob",
-          "code": "from pathlib import Path\nprint(list(Path(\".\").glob(\"*.py\"))[:3])"
+          "id": "rename",
+          "label": "Rename",
+          "code": "from pathlib import Path\n\nphotos = Path(\"photos\")\nphotos.mkdir(exist_ok=True)\nfor n in (1, 2):\n    (photos / f\"IMG_{n}.jpg\").write_text(\"\", encoding=\"utf-8\")\nfor p in list(photos.glob(\"IMG_*.jpg\")):\n    p.rename(p.with_name(p.name.replace(\"IMG_\", \"holiday_\")))\nprint(sorted(p.name for p in photos.iterdir()))"
+        },
+        {
+          "id": "relative_paths",
+          "label": "Relative paths",
+          "code": "from pathlib import PurePosixPath\n\nroot = PurePosixPath(\"/home/ana/projects\")\nscript = PurePosixPath(\"/home/ana/projects/app/src/main.py\")\nrel = script.relative_to(root)\nprint(rel, rel.parts)"
         }
       ],
       "intro": {
         "title": "Pathlib for data files",
-        "bodyMarkdown": "pathlib.Path is object-oriented paths. Read/write text, join, glob, exists.\n\nPrefer over os.path for readability. Great for data pipelines.\n\nUse / operator to join path segments.",
-        "sandboxCode": "from pathlib import Path\n\np = Path(\"data\") / \"scores.json\"\nprint(p.suffix)\nprint(p.stem)\n# p.write_text('{\"a\":1}', encoding=\"utf-8\")"
+        "bodyMarkdown": "Data lives in files, and `pathlib.Path` is the modern way to work with file paths. A `Path` is an object rather than a plain string, so it knows how to join, split and inspect itself, and it uses the right separator on Windows, macOS and Linux.\n\nJoin parts with `/`, as in `Path(\"data\") / \"2026\" / \"scores.csv\"`. Then ask about the parts: `.name` is the file name (`scores.csv`), `.suffix` the last extension (`.csv`), `.stem` the name without the last extension (`scores`; for `a.tar.gz` it is `a.tar`), and `.parent` the folder it's in.\n\n```\nfrom pathlib import Path\n\np = Path(\"data\") / \"2026\" / \"scores.csv\"\nprint(p.name, p.stem, p.suffix, p.parent)\nprint(p.with_suffix(\".json\"), p.with_name(\"backup.csv\"))\n```\n\n`with_suffix(\".json\")` and `with_name(\"backup.csv\")` return a new path with the extension or the name swapped. The original path doesn't change: like strings, paths can't be modified.\n\nReading and writing a small text file takes one call: `p.write_text(text, encoding=\"utf-8\")` and `p.read_text(encoding=\"utf-8\")`. Always give the encoding; otherwise Python uses the computer's default, which differs between systems and can garble letters like ü.\n\n`p.exists()` returns `True` or `False`, and `p.is_file()` and `p.is_dir()` tell you what kind of thing is there. `folder.mkdir(parents=True, exist_ok=True)` creates a folder together with any missing parent folders, and doesn't complain if it already exists.\n\nTo find files, `folder.glob(\"*.log\")` matches names directly inside the folder, while `folder.rglob(\"*.log\")` also searches every subfolder. `p.stat().st_size` is a file's size in bytes, and `p.rename(new_path)` renames or moves it. If you rename files while looping over a glob, turn the glob into a `list` first.\n\n```\nlogs = Path(\"logs\")\nlogs.mkdir(exist_ok=True)\n(logs / \"app.log\").write_text(\"started\\n\", encoding=\"utf-8\")\nprint([f.name for f in logs.glob(\"*.log\")])\n```\n\n`relative_to` gives one path relative to another: `Path(\"/home/ana/projects/app/main.py\").relative_to(\"/home/ana/projects\")` is `app/main.py`. `PurePosixPath` does the same path calculations with `/` on every system, without touching the disk.\n\nThe code runner here has its own temporary folder, which is wiped when the page reloads, so the file examples are safe to try.",
+        "sandboxCode": "from pathlib import Path\n\nnotes = Path(\"notes\") / \"today.txt\"\nnotes.parent.mkdir(parents=True, exist_ok=True)\nnotes.write_text(\"hello\\nworld\\n\", encoding=\"utf-8\")\nprint(notes.read_text(encoding=\"utf-8\").splitlines())\nprint(notes.name, notes.suffix, notes.exists())",
+        "readMore": {
+          "label": "Python docs: the pathlib module",
+          "url": "https://docs.python.org/3/library/pathlib.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {
@@ -3551,25 +3616,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "in_memory_db",
-          "label": "In-memory DB",
-          "code": "import sqlite3\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE users (id INTEGER, name TEXT)\")\nconn.execute(\"INSERT INTO users VALUES (1, ?)\", (\"Ana\",))\nprint(conn.execute(\"SELECT name FROM users\").fetchone()[0])"
+          "id": "create_and_insert",
+          "label": "Create and insert",
+          "code": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, done INTEGER)\")\nconn.execute(\"INSERT INTO tasks (title, done) VALUES (?, ?)\", (\"Write report\", 0))\nprint(conn.execute(\"SELECT * FROM tasks\").fetchone())"
         },
         {
-          "id": "parameterized",
-          "label": "Parameterized",
-          "code": "import sqlite3\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE t (v INTEGER)\")\nconn.execute(\"INSERT INTO t VALUES (?)\", (42,))\nprint(conn.execute(\"SELECT v FROM t WHERE v=?\", (42,)).fetchone()[0])"
+          "id": "placeholders",
+          "label": "Placeholders",
+          "code": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE users (name TEXT)\")\nconn.executemany(\"INSERT INTO users VALUES (?)\", [(\"Ana\",), (\"Ben\",)])\nname = \"Ana' OR '1'='1\"\n# The whole text is one value, so the quote can't change the SQL: nothing matches.\nprint(conn.execute(\"SELECT * FROM users WHERE name = ?\", (name,)).fetchall())\nprint(conn.execute(\"SELECT * FROM users WHERE name = ?\", (\"Ana\",)).fetchall())"
         },
         {
-          "id": "fetchall",
-          "label": "fetchall",
-          "code": "import sqlite3\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE t (v INTEGER)\")\nconn.executemany(\"INSERT INTO t VALUES (?)\", [(1,), (2,)])\nprint(conn.execute(\"SELECT v FROM t\").fetchall())"
+          "id": "update_and_delete",
+          "label": "Update and delete",
+          "code": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE stock (item TEXT, qty INTEGER)\")\nconn.executemany(\"INSERT INTO stock VALUES (?, ?)\", [(\"pen\", 5), (\"cup\", 0)])\nwith conn:\n    conn.execute(\"UPDATE stock SET qty = qty + 10 WHERE item = 'pen'\")\n    conn.execute(\"DELETE FROM stock WHERE qty = 0\")\nprint(conn.execute(\"SELECT * FROM stock\").fetchall())"
+        },
+        {
+          "id": "upsert",
+          "label": "Upsert",
+          "code": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE word_counts (word TEXT PRIMARY KEY, n INTEGER)\")\nfor word in \"to be or not to be\".split():\n    conn.execute(\n        \"INSERT INTO word_counts VALUES (?, 1) ON CONFLICT(word) DO UPDATE SET n = n + 1\",\n        (word,),\n    )\nprint(conn.execute(\"SELECT * FROM word_counts ORDER BY n DESC, word\").fetchall())"
+        },
+        {
+          "id": "rows_by_name",
+          "label": "Rows by name",
+          "code": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.row_factory = sqlite3.Row\nconn.execute(\"CREATE TABLE books (title TEXT, year INTEGER)\")\nconn.execute(\"INSERT INTO books VALUES (?, ?)\", (\"Dune\", 1965))\nrow = conn.execute(\"SELECT * FROM books\").fetchone()\nprint(row[\"title\"], dict(row))"
         }
       ],
       "intro": {
         "title": "SQLite basics",
-        "bodyMarkdown": "sqlite3 in stdlib — embedded SQL database. connect, execute, fetchall.\n\nParameterized queries prevent SQL injection. Use context manager for connection.\n\nGreat for local apps, prototypes, and tests.",
-        "sandboxCode": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE users (id INTEGER, name TEXT)\")\nconn.execute(\"INSERT INTO users VALUES (1, ?)\", (\"Ana\",))\nrows = conn.execute(\"SELECT name FROM users WHERE id=?\", (1,)).fetchall()\nprint(rows[0][0])\nconn.close()"
+        "bodyMarkdown": "A database stores data in **tables**: rows with named columns, like a spreadsheet with rules. SQLite is a complete database that lives in a single file, and Python has it built in as `sqlite3`. You talk to it in SQL, the language almost every database understands.\n\n`sqlite3.connect(\"shop.db\")` opens (or creates) a database file, and `sqlite3.connect(\":memory:\")` makes a temporary one in memory, perfect for practising. `conn.execute(sql)` runs one SQL statement.\n\n```\nimport sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, year INTEGER)\")\nconn.execute(\"INSERT INTO books (title, year) VALUES (?, ?)\", (\"Dune\", 1965))\nconn.execute(\"INSERT INTO books (title, year) VALUES (?, ?)\", (\"Kindred\", 1979))\nfor row in conn.execute(\"SELECT title, year FROM books WHERE year > 1970 ORDER BY year\"):\n    print(row)   # ('Kindred', 1979)\n```\n\nThe `?` marks are **placeholders**: you pass the values separately, as a tuple, and sqlite3 puts them in safely. Never build SQL with f-strings from user input. A name like `x'; DROP TABLE books; --` would become part of your SQL; this attack is called SQL injection. A tuple with one value needs a comma, `(author,)`, because `(\"Ana\")` is just a string in brackets.\n\nReading uses `SELECT columns FROM table WHERE condition ORDER BY column`. Each result row is a tuple. `fetchall()` returns a list of all rows, and `fetchone()` returns the next row, or `None` when there are no more. `executemany(sql, rows)` runs one statement, such as an INSERT, for every row in a list.\n\nSQL can summarise for you. `GROUP BY genre` puts rows into groups, and `COUNT(*)`, `AVG(pages)`, `SUM(...)` and `ROUND(...)` then work per group. `UPDATE books SET pages = pages + 10 WHERE ...` changes rows and `DELETE FROM books WHERE ...` removes them. Leave out the `WHERE` and every row is changed.\n\nChanges are saved for good only when you **commit** with `conn.commit()`. Better still, `with conn:` commits when the block ends and undoes everything (a rollback) if an exception happens inside it. So a group of changes, like taking money from one account and adding it to another, happens completely or not at all. Such a group is called a **transaction**.\n\nTwo more tools you'll meet with real data. `JOIN` combines tables, as in `SELECT authors.name, novels.title FROM novels JOIN authors ON novels.author_id = authors.id`. And `INSERT ... ON CONFLICT(word) DO UPDATE SET n = n + 1` is an \"upsert\": it inserts a new row, or updates the one that's already there.\n\nFinally, set `conn.row_factory = sqlite3.Row` to get rows you can read by column name, like `row[\"title\"]`, and turn into dicts with `dict(row)`.",
+        "sandboxCode": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, genre TEXT, pages INTEGER)\")\nconn.executemany(\n    \"INSERT INTO books (title, genre, pages) VALUES (?, ?, ?)\",\n    [(\"Dune\", \"sci-fi\", 412), (\"Kindred\", \"sci-fi\", 264), (\"Beloved\", \"classic\", 324)],\n)\nprint(conn.execute(\"SELECT title FROM books ORDER BY title\").fetchall())\nprint(conn.execute(\"SELECT genre, COUNT(*), AVG(pages) FROM books GROUP BY genre\").fetchall())",
+        "readMore": {
+          "label": "Python docs: the sqlite3 module",
+          "url": "https://docs.python.org/3/library/sqlite3.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {
@@ -4035,25 +4115,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "dataframe",
-          "label": "DataFrame",
-          "code": "try:\n    import pandas as pd\n    df = pd.DataFrame({\"name\": [\"Ana\", \"Bob\"], \"score\": [90, 85]})\n    print(df)\nexcept ImportError:\n    print(\"pandas not installed\")"
+          "id": "read_csv",
+          "label": "Read CSV",
+          "code": "import pandas as pd\nfrom io import StringIO\n\ndata = \"name,score\\nAna,91\\nBen,78\\nCy,85\\n\"\ndf = pd.read_csv(StringIO(data))\nprint(df.head(2))\nprint(df[\"score\"].mean())"
         },
         {
-          "id": "mean_column",
-          "label": "Mean column",
-          "code": "try:\n    import pandas as pd\n    df = pd.DataFrame({\"score\": [90, 85]})\n    print(df[\"score\"].mean())\nexcept ImportError:\n    print(\"pandas not installed\")"
+          "id": "filter_and_sort",
+          "label": "Filter and sort",
+          "code": "import pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Ben\", \"Cy\", \"Dee\"], \"score\": [91, 78, 95, 80]})\nprint(df[df[\"score\"] >= 80][\"name\"].tolist())\nprint(df.sort_values(\"score\", ascending=False).head(2))"
         },
         {
-          "id": "head",
-          "label": "head()",
-          "code": "try:\n    import pandas as pd\n    df = pd.DataFrame({\"a\": [1, 2, 3]})\n    print(df.head(2))\nexcept ImportError:\n    print(\"pandas not installed\")"
+          "id": "group_and_count",
+          "label": "Group and count",
+          "code": "import pandas as pd\n\nsales = pd.DataFrame({\"region\": [\"north\", \"south\", \"north\", \"east\"], \"amount\": [10, 25, 20, 5]})\nprint(sales.groupby(\"region\")[\"amount\"].sum().to_dict())\nprint(sales[\"region\"].value_counts().to_dict())"
+        },
+        {
+          "id": "missing_values",
+          "label": "Missing values",
+          "code": "import pandas as pd\n\ndf = pd.DataFrame({\"city\": [\"Oslo\", \"Lima\", \"Rome\"], \"temp\": [4.0, None, 18.0]})\nprint(df[\"temp\"].isna().sum(), \"missing\")\nprint(df[\"temp\"].fillna(df[\"temp\"].mean()).tolist())\nprint(len(df.dropna()), \"complete rows\")"
+        },
+        {
+          "id": "merge",
+          "label": "Merge",
+          "code": "import pandas as pd\n\ncustomers = pd.DataFrame({\"customer_id\": [1, 2], \"name\": [\"Ana\", \"Ben\"]})\norders = pd.DataFrame({\"order_id\": [10, 11], \"customer_id\": [2, 1], \"total\": [30, 12]})\nprint(pd.merge(orders, customers, on=\"customer_id\"))"
         }
       ],
       "intro": {
         "title": "Pandas introduction",
-        "bodyMarkdown": "pandas DataFrame is tabular data with labeled columns. read_csv, head, filter, groupby.\n\nEssential for data analysis. Built on NumPy.\n\nHandle missing values, types, and aggregates systematically.\n\npandas downloads the first time you run it here, so the first check can take a few seconds.",
-        "sandboxCode": "import pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Bob\"], \"score\": [90, 85]})\nprint(df)\nprint(df[\"score\"].mean())"
+        "bodyMarkdown": "pandas is the most popular Python library for working with tables of data. Its main type is the **DataFrame**: a table with named columns, like a spreadsheet you control with code. Each column on its own is a **Series**, a list of values with labels for the rows (the index).\n\nYou can build a DataFrame from a dict of lists, where each key becomes a column, or load one with `pd.read_csv(...)`, which also turns number columns into numbers for you. `df.head(3)` shows the first 3 rows. The first time you use pandas here, it has to download, which can take a moment.\n\n```\nimport pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Ben\", \"Cy\"], \"score\": [91, 78, 85]})\nprint(df.head())\nprint(df[\"score\"].mean())   # 84.66666666666667\n```\n\n`df[\"score\"]` picks one column as a Series, and a Series can summarise itself with `.mean()`, `.sum()`, `.max()` and `.min()`. Maths on columns works row by row: `df[\"price\"] * df[\"qty\"]` multiplies each row's price by its quantity, and assigning it to `df[\"revenue\"]` adds that as a new column.\n\nTo filter, put a condition inside the square brackets: `df[df[\"score\"] >= 80]` keeps only the rows where it is true. `sort_values(\"score\", ascending=False)` sorts, highest first. `.tolist()` turns a column into a plain Python list, and `.to_dict()` turns a Series into a dict.\n\n```\npassed = df[df[\"score\"] >= 80]\nprint(passed[\"name\"].tolist())   # ['Ana', 'Cy']\nprint(df.sort_values(\"score\", ascending=False).head(2))\n```\n\n`groupby` splits the rows into groups and summarises each one: `sales.groupby(\"region\")[\"amount\"].sum()` gives the total per region. `value_counts()` counts how often each value appears in a column, most common first.\n\nReal data has gaps, and pandas marks a missing value as `NaN`. `.isna()` finds the gaps (`.isna().sum()` counts them), `fillna(value)` fills them in, for example with 0 or the column's mean, and `dropna()` drops the rows that have any. `pd.merge(orders, customers, on=\"customer_id\")` joins two tables on a shared column, like a SQL `JOIN`.\n\nOne thing to watch: pandas gives back its own number types, such as `numpy.int64`. Use `int(...)` or `float(...)` when you need a plain Python number.",
+        "sandboxCode": "import pandas as pd\n\ndf = pd.DataFrame({\n    \"item\": [\"pen\", \"book\", \"cup\"],\n    \"qty\": [10, 2, 4],\n    \"price\": [1.5, 12.0, 4.25],\n})\ndf[\"revenue\"] = df[\"qty\"] * df[\"price\"]\nprint(df)\nprint(\"Total:\", df[\"revenue\"].sum())",
+        "readMore": {
+          "label": "pandas docs: 10 minutes to pandas",
+          "url": "https://pandas.pydata.org/docs/user_guide/10min.html",
+          "source": "pandas docs"
+        }
       },
       "challenges": [
         {
@@ -4504,30 +4599,40 @@
       "kind": "topic",
       "sandboxSnippets": [
         {
-          "id": "validate_user",
-          "label": "Validate user",
-          "code": "def validate_user(data):\n    if \"name\" not in data or not isinstance(data[\"name\"], str):\n        raise ValueError(\"name required string\")\n    if \"age\" in data and data[\"age\"] < 0:\n        raise ValueError(\"age must be non-negative\")\n    return data\nprint(validate_user({\"name\": \"Ana\", \"age\": 30}))"
-        },
-        {
           "id": "required_fields",
           "label": "Required fields",
-          "code": "required = [\"name\", \"email\"]\ndata = {\"name\": \"Ana\", \"email\": \"a@b.c\"}\nprint(all(k in data for k in required))"
+          "code": "record = {\"name\": \"Ana\", \"email\": \"ana@example.com\"}\nrequired = [\"name\", \"email\", \"age\"]\nprint([field for field in required if field not in record])"
         },
         {
-          "id": "type_check",
-          "label": "Type check",
-          "code": "def is_int(x):\n    return isinstance(x, int)\nprint(is_int(5), is_int(\"5\"))"
+          "id": "the_bool_trap",
+          "label": "The bool trap",
+          "code": "for value in [30, True, \"30\", -5]:\n    ok = isinstance(value, int) and not isinstance(value, bool) and 0 <= value <= 150\n    print(repr(value), ok)"
         },
         {
-          "id": "range_check",
-          "label": "Range check",
-          "code": "age = 30\nprint(0 <= age <= 120)"
+          "id": "email_check",
+          "label": "Email check",
+          "code": "import re\n\npattern = r\"[^@\\s]+@[^@\\s]+\\.[^@\\s]+\"\nfor text in [\"ana@example.com\", \"ana@example\", \"a b@c.d\"]:\n    print(text, re.fullmatch(pattern, text) is not None)"
+        },
+        {
+          "id": "clear_errors",
+          "label": "Clear errors",
+          "code": "def parse_age(text):\n    try:\n        age = int(text)\n    except ValueError:\n        raise ValueError(f\"invalid age: {text!r}\") from None\n    if not 0 <= age <= 150:\n        raise ValueError(f\"invalid age: {text!r}\")\n    return age\n\nfor text in [\"42\", \"abc\", \"200\"]:\n    try:\n        print(parse_age(text))\n    except ValueError as err:\n        print(err)"
+        },
+        {
+          "id": "dataclass_check",
+          "label": "Dataclass check",
+          "code": "from dataclasses import dataclass\n\n@dataclass\nclass User:\n    name: str\n    age: int\n\n    def __post_init__(self):\n        if not self.name.strip():\n            raise ValueError(\"name must not be blank\")\n        if self.age < 0:\n            raise ValueError(\"age must not be negative\")\n\nprint(User(\"Ana\", 30))\ntry:\n    User(\"\", 5)\nexcept ValueError as err:\n    print(\"Rejected:\", err)"
         }
       ],
       "intro": {
         "title": "Data validation",
-        "bodyMarkdown": "Validate shape, types, ranges before processing. Fail early with clear messages.\n\nUse schemas (pydantic, jsonschema) for complex payloads.\n\nSanitize strings, bound numbers, check required fields.",
-        "sandboxCode": "def validate_user(data):\n    if \"name\" not in data or not isinstance(data[\"name\"], str):\n        raise ValueError(\"name required string\")\n    if \"age\" in data and (not isinstance(data[\"age\"], int) or data[\"age\"] < 0):\n        raise ValueError(\"age must be non-negative int\")\n    return data\n\nprint(validate_user({\"name\": \"Ana\", \"age\": 30}))"
+        "bodyMarkdown": "Data from users, files and APIs can be missing, of the wrong type, or simply wrong. **Validation** means checking it where it enters your program, before you store it or calculate with it, so a bad value can't cause a confusing error somewhere far away.\n\nStart with the basics. Are the required fields there (`\"name\" in record`)? Is each value the right type (`isinstance(value, int)`)? Is it in range (`0 <= age <= 150`), or one of the allowed values (`size in {\"S\", \"M\", \"L\"}`)? One trap: `True` and `False` are ints in Python, so `isinstance(True, int)` is `True`. Rule them out with `not isinstance(value, bool)`.\n\nText from forms and CSV files is always a string, even `\"30\"`. Convert it yourself with `int(...)`, remove extra spaces with `.strip()`, and make the case consistent with `.lower()`, so `\" yes \"` and `\"YES\"` mean the same thing. Don't leave Python to guess.\n\nFor text that must have a certain shape, like an email address, use a regular expression from the `re` module. `re.fullmatch(pattern, text)` succeeds only if the **whole** text matches; `re.search` would accept a match anywhere inside it.\n\n```\nimport re\n\npattern = r\"[^@\\s]+@[^@\\s]+\\.[^@\\s]+\"\nprint(re.fullmatch(pattern, \"ana@example.com\") is not None)   # True\nprint(re.fullmatch(pattern, \"not an email\") is not None)      # False\n```\n\nWhen a value has the right type but a bad value, raise `ValueError` with a message that says what's wrong and shows the value; `{text!r}` shows it with quotes, like `'abc'`. Adding `from None` hides the original exception, so the reader sees only your clear message.\n\n```\ndef parse_age(text):\n    try:\n        age = int(text)\n    except ValueError:\n        raise ValueError(f\"invalid age: {text!r}\") from None\n    if not 0 <= age <= 150:\n        raise ValueError(f\"invalid age: {text!r}\")\n    return age\n```\n\nFor a form, collect **every** problem in a list instead of stopping at the first, so the user can fix them all at once. For a batch of rows, keep the valid rows and report the others with their position; `enumerate` gives you the index of each row.\n\nYou can also build validation into a class. A dataclass calls `__post_init__` right after the `__init__` it writes for you, so raising `ValueError` there means an invalid object can never be created. In bigger projects, the third-party library **Pydantic** checks data against type-annotated models for you.",
+        "sandboxCode": "def validate_user(data):\n    errors = []\n    if not str(data.get(\"name\", \"\")).strip():\n        errors.append(\"name is required\")\n    age = data.get(\"age\")\n    if not isinstance(age, int) or isinstance(age, bool) or age < 0:\n        errors.append(\"age must be a non-negative integer\")\n    return errors\n\nprint(validate_user({\"name\": \"Ana\", \"age\": 30}))\nprint(validate_user({\"name\": \" \", \"age\": \"30\"}))",
+        "readMore": {
+          "label": "Python tutorial: errors and exceptions",
+          "url": "https://docs.python.org/3/tutorial/errors.html",
+          "source": "Python docs"
+        }
       },
       "challenges": [
         {

@@ -1,4 +1,4 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 const BOOKS_DB = py`import sqlite3
 conn = sqlite3.connect(":memory:")
@@ -21,18 +21,25 @@ export default makeTopic({
   id: 'sqlite_basics',
   title: 'SQLite basics',
   paragraphs: [
-    'sqlite3 in stdlib — embedded SQL database. connect, execute, fetchall.',
-    'Parameterized queries prevent SQL injection. Use context manager for connection.',
-    'Great for local apps, prototypes, and tests.',
+    "A database stores data in **tables**: rows with named columns, like a spreadsheet with rules. SQLite is a complete database that lives in a single file, and Python has it built in as `sqlite3`. You talk to it in SQL, the language almost every database understands.",
+    "`sqlite3.connect(\"shop.db\")` opens (or creates) a database file, and `sqlite3.connect(\":memory:\")` makes a temporary one in memory, perfect for practising. `conn.execute(sql)` runs one SQL statement.",
+    "```\nimport sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, year INTEGER)\")\nconn.execute(\"INSERT INTO books (title, year) VALUES (?, ?)\", (\"Dune\", 1965))\nconn.execute(\"INSERT INTO books (title, year) VALUES (?, ?)\", (\"Kindred\", 1979))\nfor row in conn.execute(\"SELECT title, year FROM books WHERE year > 1970 ORDER BY year\"):\n    print(row)   # ('Kindred', 1979)\n```",
+    "The `?` marks are **placeholders**: you pass the values separately, as a tuple, and sqlite3 puts them in safely. Never build SQL with f-strings from user input. A name like `x'; DROP TABLE books; --` would become part of your SQL; this attack is called SQL injection. A tuple with one value needs a comma, `(author,)`, because `(\"Ana\")` is just a string in brackets.",
+    "Reading uses `SELECT columns FROM table WHERE condition ORDER BY column`. Each result row is a tuple. `fetchall()` returns a list of all rows, and `fetchone()` returns the next row, or `None` when there are no more. `executemany(sql, rows)` runs one statement, such as an INSERT, for every row in a list.",
+    "SQL can summarise for you. `GROUP BY genre` puts rows into groups, and `COUNT(*)`, `AVG(pages)`, `SUM(...)` and `ROUND(...)` then work per group. `UPDATE books SET pages = pages + 10 WHERE ...` changes rows and `DELETE FROM books WHERE ...` removes them. Leave out the `WHERE` and every row is changed.",
+    "Changes are saved for good only when you **commit** with `conn.commit()`. Better still, `with conn:` commits when the block ends and undoes everything (a rollback) if an exception happens inside it. So a group of changes, like taking money from one account and adding it to another, happens completely or not at all. Such a group is called a **transaction**.",
+    "Two more tools you'll meet with real data. `JOIN` combines tables, as in `SELECT authors.name, novels.title FROM novels JOIN authors ON novels.author_id = authors.id`. And `INSERT ... ON CONFLICT(word) DO UPDATE SET n = n + 1` is an \"upsert\": it inserts a new row, or updates the one that's already there.",
+    "Finally, set `conn.row_factory = sqlite3.Row` to get rows you can read by column name, like `row[\"title\"]`, and turn into dicts with `dict(row)`.",
   ],
-  sandboxCode: py`import sqlite3
-
-conn = sqlite3.connect(":memory:")
-conn.execute("CREATE TABLE users (id INTEGER, name TEXT)")
-conn.execute("INSERT INTO users VALUES (1, ?)", ("Ana",))
-rows = conn.execute("SELECT name FROM users WHERE id=?", (1,)).fetchall()
-print(rows[0][0])
-conn.close()`,
+  sandboxCode: "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, genre TEXT, pages INTEGER)\")\nconn.executemany(\n    \"INSERT INTO books (title, genre, pages) VALUES (?, ?, ?)\",\n    [(\"Dune\", \"sci-fi\", 412), (\"Kindred\", \"sci-fi\", 264), (\"Beloved\", \"classic\", 324)],\n)\nprint(conn.execute(\"SELECT title FROM books ORDER BY title\").fetchall())\nprint(conn.execute(\"SELECT genre, COUNT(*), AVG(pages) FROM books GROUP BY genre\").fetchall())",
+  sandboxSnippets: [
+    snippet("Create and insert", "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, done INTEGER)\")\nconn.execute(\"INSERT INTO tasks (title, done) VALUES (?, ?)\", (\"Write report\", 0))\nprint(conn.execute(\"SELECT * FROM tasks\").fetchone())"),
+    snippet("Placeholders", "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE users (name TEXT)\")\nconn.executemany(\"INSERT INTO users VALUES (?)\", [(\"Ana\",), (\"Ben\",)])\nname = \"Ana' OR '1'='1\"\n# The whole text is one value, so the quote can't change the SQL: nothing matches.\nprint(conn.execute(\"SELECT * FROM users WHERE name = ?\", (name,)).fetchall())\nprint(conn.execute(\"SELECT * FROM users WHERE name = ?\", (\"Ana\",)).fetchall())"),
+    snippet("Update and delete", "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE stock (item TEXT, qty INTEGER)\")\nconn.executemany(\"INSERT INTO stock VALUES (?, ?)\", [(\"pen\", 5), (\"cup\", 0)])\nwith conn:\n    conn.execute(\"UPDATE stock SET qty = qty + 10 WHERE item = 'pen'\")\n    conn.execute(\"DELETE FROM stock WHERE qty = 0\")\nprint(conn.execute(\"SELECT * FROM stock\").fetchall())"),
+    snippet("Upsert", "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(\"CREATE TABLE word_counts (word TEXT PRIMARY KEY, n INTEGER)\")\nfor word in \"to be or not to be\".split():\n    conn.execute(\n        \"INSERT INTO word_counts VALUES (?, 1) ON CONFLICT(word) DO UPDATE SET n = n + 1\",\n        (word,),\n    )\nprint(conn.execute(\"SELECT * FROM word_counts ORDER BY n DESC, word\").fetchall())"),
+    snippet("Rows by name", "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.row_factory = sqlite3.Row\nconn.execute(\"CREATE TABLE books (title TEXT, year INTEGER)\")\nconn.execute(\"INSERT INTO books VALUES (?, ?)\", (\"Dune\", 1965))\nrow = conn.execute(\"SELECT * FROM books\").fetchone()\nprint(row[\"title\"], dict(row))"),
+  ],
+  readMore: { label: "Python docs: the sqlite3 module", url: "https://docs.python.org/3/library/sqlite3.html", source: "Python docs" },
   challenges: [
     task('easy', 'Create a table', {
       prompt:

@@ -22,6 +22,22 @@ function curriculumUrl(baseUrl: string, source: string, cacheBust?: boolean): st
   return `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`
 }
 
+const OFFLINE_LOAD_ERROR =
+  "Couldn't load the lessons. You may be offline: lessons you've opened before work offline, but these haven't been downloaded yet. Connect to the internet and try again."
+
+/** True for a fetch that never got a response (offline, DNS, blocked), not an HTTP error. */
+function isNetworkError(error: unknown): boolean {
+  return error instanceof TypeError
+}
+
+/** The message to show a learner for a failed lesson load. */
+export function lessonLoadErrorMessage(error: unknown, fallback: string): string {
+  if (isNetworkError(error) || (typeof navigator !== 'undefined' && navigator.onLine === false)) {
+    return OFFLINE_LOAD_ERROR
+  }
+  return error instanceof Error ? error.message : fallback
+}
+
 export type LoadCurriculumOptions = {
   cacheBust?: boolean
   /** Always fetch again instead of sharing an earlier request for the same course. */
@@ -99,12 +115,16 @@ async function fetchLanguageBundle(
     index.sections.map(async (sectionRef) => {
       try {
         return { sectionRef, file: await loadSectionFile(baseUrl, languageDir, sectionRef.path, options) }
-      } catch {
+      } catch (error: unknown) {
         const draft = fallbackSections.find((s) => s.sectionRef.id === sectionRef.id)
-        return draft ? { sectionRef, file: draft.file, fromFallback: true } : { sectionRef, file: null }
+        return draft ? { sectionRef, file: draft.file, fromFallback: true } : { sectionRef, file: null, error }
       }
     }),
   )
+
+  // No connection is not a "missing file": report it as the network error it is.
+  const networkFailure = results.find((r) => r.file === null && 'error' in r && isNetworkError(r.error))
+  if (networkFailure && 'error' in networkFailure) throw networkFailure.error
 
   const missing = results.filter((r) => r.file === null).map((r) => r.sectionRef.path)
   if (missing.length > 0) {

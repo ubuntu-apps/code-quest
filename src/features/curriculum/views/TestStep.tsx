@@ -12,6 +12,8 @@ interface TestStepProps {
   testShort: Record<string, string>
   testMcq: Record<string, string>
   testResult: TestGradeResult | null
+  /** Questions changed since the last Submit: their marks are hidden until the next Submit. */
+  testEdited: Record<string, true>
   onTestShortChange: (questionId: string, value: string) => void
   onTestMcqChange: (questionId: string, choiceId: string) => void
   onUpdatePassingScore: (score: number) => void
@@ -29,6 +31,7 @@ export function TestStep({
   testShort,
   testMcq,
   testResult,
+  testEdited,
   onTestShortChange,
   onTestMcqChange,
   onUpdatePassingScore,
@@ -43,6 +46,7 @@ export function TestStep({
   // Right answers are shown only once the quiz is passed (now or before), so a
   // failed attempt can't be turned into a pass by reading the feedback.
   const revealAnswers = testResult !== null && (testResult.passed || prog.testPassed)
+  const resultCurrent = testResult !== null && Object.keys(testEdited).length === 0
 
   return (
     <section className="cq-panel cq-test">
@@ -65,7 +69,7 @@ export function TestStep({
       </p>
       <ul className="cq-test-list">
         {level.test.questions.map((q, qi) => {
-          const showFeedback = testResult !== null
+          const showFeedback = testResult !== null && !testEdited[q.id]
           const questionPassed = testResult?.byQuestion[q.id]
           const itemClass = showFeedback
             ? questionPassed
@@ -176,20 +180,30 @@ export function TestStep({
         <AddItemButton label="Add MCQ" onClick={() => onAddQuestion('mcq')} />
         <AddItemButton label="Add short-text" onClick={() => onAddQuestion('shortText')} />
       </div>
-      <button
-        type="button"
-        className="cq-btn cq-btn--primary"
-        onClick={testResult ? onRetake : onSubmit}
-      >
-        {testResult ? 'Retake' : 'Submit test'}
-      </button>
-      {testResult && (
+      <div className="cq-row">
+        <button
+          type="button"
+          className="cq-btn cq-btn--primary"
+          onClick={resultCurrent ? onRetake : onSubmit}
+        >
+          {resultCurrent ? 'Retake' : testResult ? 'Submit again' : 'Submit test'}
+        </button>
+        {testResult && !resultCurrent ? (
+          <button type="button" className="cq-btn" onClick={onRetake}>
+            Start over
+          </button>
+        ) : null}
+      </div>
+      {testResult && resultCurrent && (
         <p className={testResult.passed ? 'cq-score cq-score--pass' : 'cq-score cq-score--fail'}>
           Score {testResult.correct}/{testResult.total} (
           {Math.round((testResult.correct / Math.max(testResult.total, 1)) * 100)}%){' '}
           {testResult.passed ? 'Passed' : 'Not passed'}
-          {!revealAnswers && ' · Correct answers are shown once you pass.'}
+          {!revealAnswers && ' · Change the answers marked Incorrect and submit again. Correct answers are shown once you pass.'}
         </p>
+      )}
+      {testResult && !resultCurrent && (
+        <p className="cq-muted">Answers you changed are no longer marked. Submit again to see your new score.</p>
       )}
     </section>
   )

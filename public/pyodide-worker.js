@@ -10,7 +10,8 @@
  * Every run gets a brand-new namespace, so variables from an earlier run or
  * lesson never leak into the next one. Printed output is capped and streamed
  * to the page in chunks ('output' messages), so a run that times out still
- * shows what it printed.
+ * shows what it printed. A failed test reports the expected and actual values
+ * when it is an `a == b` comparison.
  *
  * scripts/check-curriculum.mjs runs lesson content through these same helpers.
  */
@@ -18,7 +19,7 @@
 var pyodideReady = null
 
 var PY_HELPERS = [
-  'import io, os, sys, json, time, tempfile, traceback, builtins',
+  'import ast, io, os, re, sys, json, time, tempfile, traceback, builtins',
   '',
   '# Printed text beyond this is dropped, so a print loop can\'t exhaust memory.',
   '_CQ_OUTPUT_LIMIT = 100_000',
@@ -87,6 +88,17 @@ var PY_HELPERS = [
   'def _cq_error_text():',
   '    return traceback.format_exc()',
   '',
+  '# Importing these takes seconds on a slow phone, so it happens before a run\'s time limit starts.',
+  '_CQ_PREIMPORT = ("numpy", "pandas")',
+  '',
+  'def _cq_preimport(src):',
+  '    for name in _CQ_PREIMPORT:',
+  '        if name in src and name not in sys.modules:',
+  '            try:',
+  '                __import__(name)',
+  '            except Exception:',
+  '                pass',
+  '',
   'def _cq_run(src, stdin_text, on_output=None):',
   '    buf = _CqOutput(on_output)',
   '    old_out, old_in = sys.stdout, sys.stdin',
@@ -107,10 +119,12 @@ var PY_HELPERS = [
   '    except BaseException:',
   '        error = _cq_error_text()',
   '    finally:',
+  '        buf.flush()',
   '        sys.stdout, sys.stdin = old_out, old_in',
   '    out = buf.getvalue()',
   '    if error is None and result is not None:',
-  '        out = out + str(result) + "\\n"',
+  '        # Like the Python prompt: a lone expression shows its repr (\'hi\', not hi).',
+  '        out = out + repr(result) + "\\n"',
   '    return json.dumps({"output": out, "error": error})',
   '',
   'def _cq_tests(user, setup, tests_json, stdin_text):',
@@ -121,6 +135,38 @@ var PY_HELPERS = [
   '        return _cq_tests_here(user, setup, tests_json, stdin_text)',
   '    finally:',
   '        os.chdir(home)',
+  '',
+  'def _cq_short_repr(value):',
+  '    try:',
+  '        text = repr(value)',
+  '    except Exception:',
+  '        text = "<" + type(value).__name__ + ">"',
+  '    return text if len(text) <= 300 else text[:297] + "..."',
+  '',
+  'def _cq_display_code(code):',
+  '    # Tests write __import__(\'json\') so they work whatever the learner imported; show plain json.',
+  '    return re.sub(r"__import__\\([\'\\"]([\\w.]+)[\'\\"]\\)", r"\\1", code)',
+  '',
+  'def _cq_describe_error(e):',
+  '    if isinstance(e, SystemExit):',
+  '        return "Your code called exit(), which stops the whole program. Return a value instead."',
+  '    text = str(e)',
+  '    return type(e).__name__ + (": " + text if text else "")',
+  '',
+  'def _cq_check(assertion, ns):',
+  '    """Runs one test. Returns (passed, detail); detail explains a failure."""',
+  '    tree = ast.parse(assertion, mode="eval")',
+  '    body = tree.body',
+  '    if isinstance(body, ast.Compare) and len(body.ops) == 1 and isinstance(body.ops[0], ast.Eq):',
+  '        # Evaluate each side once (as `a == b` would), so a failure can show both values.',
+  '        actual = eval(compile(ast.Expression(body.left), "<challenge_assert>", "eval"), ns, ns)',
+  '        expected = eval(compile(ast.Expression(body.comparators[0]), "<challenge_assert>", "eval"), ns, ns)',
+  '        if bool(actual == expected):',
+  '            return True, None',
+  '        return False, "Expected " + _cq_short_repr(expected) + ", got " + _cq_short_repr(actual)',
+  '    if bool(eval(compile(tree, "<challenge_assert>", "eval"), ns, ns)):',
+  '        return True, None',
+  '    return False, "This check is false: " + _cq_display_code(assertion)',
   '',
   'def _cq_tests_here(user, setup, tests_json, stdin_text):',
   '    tests = json.loads(tests_json)',
@@ -144,14 +190,13 @@ var PY_HELPERS = [
   '    results = []',
   '    for t in tests:',
   '        try:',
-  '            ok = bool(eval(compile(t["assertion"], "<challenge_assert>", "eval"), ns, ns))',
-  '            if ok:',
-  '                results.append({"id": t["id"], "label": t["label"], "passed": True})',
-  '            else:',
-  '                results.append({"id": t["id"], "label": t["label"], "passed": False,',
-  '                                "detail": "Assertion returned False: " + t["assertion"]})',
-  '        except Exception as e:',
-  '            results.append({"id": t["id"], "label": t["label"], "passed": False, "detail": str(e)})',
+  '            ok, detail = _cq_check(t["assertion"], ns)',
+  '        except BaseException as e:',
+  '            ok, detail = False, _cq_describe_error(e)',
+  '        result = {"id": t["id"], "label": t["label"], "passed": ok}',
+  '        if not ok:',
+  '            result["detail"] = detail',
+  '        results.append(result)',
   '    return json.dumps({"tests": results, "error": None})',
 ].join('\n')
 
@@ -207,8 +252,17 @@ self.onmessage = async function (event) {
     msg.type === 'run' || msg.type === 'preload'
       ? msg.code || ''
       : (msg.setupCode || '') + '\n' + (msg.userCode || '')
+  var announced = false
   try {
-    await pyodide.loadPackagesFromImports(source)
+    await pyodide.loadPackagesFromImports(source, {
+      messageCallback: function (text) {
+        // Pyodide reports "Loading pandas, numpy, ..." only when it really downloads something.
+        if (!announced && /^Loading /.test(String(text))) {
+          announced = true
+          self.postMessage({ id: msg.id, type: 'loading-packages' })
+        }
+      },
+    })
   } catch (err) {
     self.postMessage({ id: msg.id, type: 'package-error', message: errorText(err) })
     return
@@ -218,6 +272,12 @@ self.onmessage = async function (event) {
   if (msg.type === 'preload') {
     self.postMessage({ id: msg.id, type: 'result', payload: { ok: true } })
     return
+  }
+
+  try {
+    callPy(pyodide, '_cq_preimport', [source])
+  } catch (err) {
+    // Not fatal: the run imports the module itself (and reports any error).
   }
 
   self.postMessage({ id: msg.id, type: 'started' })

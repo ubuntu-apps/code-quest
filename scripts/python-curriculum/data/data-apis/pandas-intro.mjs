@@ -1,4 +1,4 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 const PANDAS_NOTE = 'pandas downloads the first time you run it here, so the first check can take a few seconds.'
 
@@ -6,16 +6,25 @@ export default makeTopic({
   id: 'pandas_intro',
   title: 'Pandas introduction',
   paragraphs: [
-    'pandas DataFrame is tabular data with labeled columns. read_csv, head, filter, groupby.',
-    'Essential for data analysis. Built on NumPy.',
-    'Handle missing values, types, and aggregates systematically.',
-    PANDAS_NOTE,
+    "pandas is the most popular Python library for working with tables of data. Its main type is the **DataFrame**: a table with named columns, like a spreadsheet you control with code. Each column on its own is a **Series**, a list of values with labels for the rows (the index).",
+    "You can build a DataFrame from a dict of lists, where each key becomes a column, or load one with `pd.read_csv(...)`, which also turns number columns into numbers for you. `df.head(3)` shows the first 3 rows. The first time you use pandas here, it has to download, which can take a moment.",
+    "```\nimport pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Ben\", \"Cy\"], \"score\": [91, 78, 85]})\nprint(df.head())\nprint(df[\"score\"].mean())   # 84.66666666666667\n```",
+    "`df[\"score\"]` picks one column as a Series, and a Series can summarise itself with `.mean()`, `.sum()`, `.max()` and `.min()`. Maths on columns works row by row: `df[\"price\"] * df[\"qty\"]` multiplies each row's price by its quantity, and assigning it to `df[\"revenue\"]` adds that as a new column.",
+    "To filter, put a condition inside the square brackets: `df[df[\"score\"] >= 80]` keeps only the rows where it is true. `sort_values(\"score\", ascending=False)` sorts, highest first. `.tolist()` turns a column into a plain Python list, and `.to_dict()` turns a Series into a dict.",
+    "```\npassed = df[df[\"score\"] >= 80]\nprint(passed[\"name\"].tolist())   # ['Ana', 'Cy']\nprint(df.sort_values(\"score\", ascending=False).head(2))\n```",
+    "`groupby` splits the rows into groups and summarises each one: `sales.groupby(\"region\")[\"amount\"].sum()` gives the total per region. `value_counts()` counts how often each value appears in a column, most common first.",
+    "Real data has gaps, and pandas marks a missing value as `NaN`. `.isna()` finds the gaps (`.isna().sum()` counts them), `fillna(value)` fills them in, for example with 0 or the column's mean, and `dropna()` drops the rows that have any. `pd.merge(orders, customers, on=\"customer_id\")` joins two tables on a shared column, like a SQL `JOIN`.",
+    "One thing to watch: pandas gives back its own number types, such as `numpy.int64`. Use `int(...)` or `float(...)` when you need a plain Python number.",
   ],
-  sandboxCode: py`import pandas as pd
-
-df = pd.DataFrame({"name": ["Ana", "Bob"], "score": [90, 85]})
-print(df)
-print(df["score"].mean())`,
+  sandboxCode: "import pandas as pd\n\ndf = pd.DataFrame({\n    \"item\": [\"pen\", \"book\", \"cup\"],\n    \"qty\": [10, 2, 4],\n    \"price\": [1.5, 12.0, 4.25],\n})\ndf[\"revenue\"] = df[\"qty\"] * df[\"price\"]\nprint(df)\nprint(\"Total:\", df[\"revenue\"].sum())",
+  sandboxSnippets: [
+    snippet("Read CSV", "import pandas as pd\nfrom io import StringIO\n\ndata = \"name,score\\nAna,91\\nBen,78\\nCy,85\\n\"\ndf = pd.read_csv(StringIO(data))\nprint(df.head(2))\nprint(df[\"score\"].mean())"),
+    snippet("Filter and sort", "import pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Ben\", \"Cy\", \"Dee\"], \"score\": [91, 78, 95, 80]})\nprint(df[df[\"score\"] >= 80][\"name\"].tolist())\nprint(df.sort_values(\"score\", ascending=False).head(2))"),
+    snippet("Group and count", "import pandas as pd\n\nsales = pd.DataFrame({\"region\": [\"north\", \"south\", \"north\", \"east\"], \"amount\": [10, 25, 20, 5]})\nprint(sales.groupby(\"region\")[\"amount\"].sum().to_dict())\nprint(sales[\"region\"].value_counts().to_dict())"),
+    snippet("Missing values", "import pandas as pd\n\ndf = pd.DataFrame({\"city\": [\"Oslo\", \"Lima\", \"Rome\"], \"temp\": [4.0, None, 18.0]})\nprint(df[\"temp\"].isna().sum(), \"missing\")\nprint(df[\"temp\"].fillna(df[\"temp\"].mean()).tolist())\nprint(len(df.dropna()), \"complete rows\")"),
+    snippet("Merge", "import pandas as pd\n\ncustomers = pd.DataFrame({\"customer_id\": [1, 2], \"name\": [\"Ana\", \"Ben\"]})\norders = pd.DataFrame({\"order_id\": [10, 11], \"customer_id\": [2, 1], \"total\": [30, 12]})\nprint(pd.merge(orders, customers, on=\"customer_id\"))"),
+  ],
+  readMore: { label: "pandas docs: 10 minutes to pandas", url: "https://pandas.pydata.org/docs/user_guide/10min.html", source: "pandas docs" },
   challenges: [
     task('easy', 'Make a DataFrame', {
       prompt: 'Build a DataFrame `df` from the `data` dict. Each key becomes a column.',

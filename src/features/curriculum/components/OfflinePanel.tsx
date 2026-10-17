@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import {
-  downloadForOffline,
+  cancelOfflineDownload,
+  getOfflineDownloadStatus,
   loadOfflineState,
-  storageUsedBytes,
-  type OfflineState,
+  startOfflineDownload,
+  subscribeOfflineDownloadStatus,
   type OfflineStep,
 } from '../offlineDownload'
 
@@ -15,12 +16,6 @@ const STEP_LABEL: Record<OfflineStep, string> = {
   python: 'Downloading Python and the packages lessons use…',
   r: 'Downloading R…',
 }
-
-type Status =
-  | { kind: 'idle' }
-  | { kind: 'working'; step: OfflineStep }
-  | { kind: 'done'; usedBytes: number | null }
-  | { kind: 'error'; message: string }
 
 interface OfflinePanelProps {
   baseUrl: string
@@ -55,29 +50,19 @@ export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelP
     const preferred = activeCourseId && RUNTIME_COURSES.has(activeCourseId) ? activeCourseId : 'python'
     return [preferred]
   })
-  const [status, setStatus] = useState<Status>({ kind: 'idle' })
-  const [lastState, setLastState] = useState<OfflineState | null>(() => loadOfflineState())
+  const status = useSyncExternalStore(
+    subscribeOfflineDownloadStatus,
+    getOfflineDownloadStatus,
+    getOfflineDownloadStatus,
+  )
+  // Re-read after each download, which saves a new "last downloaded" date.
+  const lastState = useMemo(() => (status.kind === 'working' ? null : loadOfflineState()), [status])
   const working = status.kind === 'working'
 
   const toggle = (id: string) =>
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
 
-  const handleDownload = async () => {
-    try {
-      const state = await downloadForOffline({
-        baseUrl,
-        runtimeCourses: selected,
-        onStep: (step) => setStatus({ kind: 'working', step }),
-      })
-      setLastState(state)
-      setStatus({ kind: 'done', usedBytes: await storageUsedBytes() })
-    } catch (error: unknown) {
-      setStatus({
-        kind: 'error',
-        message: error instanceof Error ? error.message : 'The download failed. Try again.',
-      })
-    }
-  }
+  const handleDownload = () => startOfflineDownload({ baseUrl, runtimeCourses: selected })
 
   return (
     <section className="cq-panel cq-offline-panel">
@@ -105,11 +90,16 @@ export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelP
         <button
           type="button"
           className="cq-btn cq-btn--primary"
-          onClick={() => void handleDownload()}
+          onClick={handleDownload}
           disabled={working || !online}
         >
           {working ? 'Downloading…' : 'Download for offline'}
         </button>
+        {working ? (
+          <button type="button" className="cq-btn" onClick={cancelOfflineDownload}>
+            Cancel
+          </button>
+        ) : null}
       </div>
       <p className={status.kind === 'error' ? 'cq-error' : 'cq-muted'} role="status" aria-live="polite">
         {!online && !working
@@ -120,6 +110,8 @@ export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelP
               ? `Ready to use offline.${status.usedBytes ? ` CodeQuest now uses about ${formatMegabytes(status.usedBytes)} on this device.` : ''}`
               : status.kind === 'error'
                 ? status.message
+                : status.kind === 'cancelled'
+                  ? 'Download cancelled. Anything already downloaded stays on this device.'
                 : lastState
                   ? `Last downloaded ${new Date(lastState.downloadedAt).toLocaleDateString()}.`
                   : ''}

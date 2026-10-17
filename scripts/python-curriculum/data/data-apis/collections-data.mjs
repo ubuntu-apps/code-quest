@@ -1,22 +1,29 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'collections_data',
   title: 'Collections for data',
   paragraphs: [
-    'collections: Counter, defaultdict, deque, namedtuple for specialized containers.',
-    'Counter counts hashables; defaultdict auto-creates missing keys.',
-    'Choose right structure for clarity and performance.',
+    "The `collections` module has containers made for everyday data jobs. Each one behaves like a dict, list or tuple you already know, with one extra skill.",
+    "`Counter` counts things. Give it any list (or string) and it maps each item to how often it appears. `most_common(n)` returns the top `n` as `(item, count)` pairs, and a missing key counts as 0 instead of raising `KeyError`.",
+    "```\nfrom collections import Counter\n\ncounts = Counter([\"apple\", \"pear\", \"apple\"])\nprint(counts[\"apple\"], counts[\"fig\"])   # 2 0\nprint(Counter(\"banana\").most_common(1))   # [('a', 3)]\n```",
+    "Counters can also do arithmetic: `stock - sold` subtracts the counts and drops every item that reaches zero or less, so `Counter(a=1) - Counter(a=3)` is an empty Counter.",
+    "`defaultdict` creates a value the first time you use a missing key. With `defaultdict(list)`, a new key starts as an empty list, so you can group items without first checking `if key not in d`. `defaultdict(set)` collects unique values the same way.",
+    "```\nfrom collections import defaultdict\n\nby_letter = defaultdict(list)\nfor name in [\"Ana\", \"Ben\", \"Amir\"]:\n    by_letter[name[0]].append(name)\nprint(dict(by_letter))   # {'A': ['Ana', 'Amir'], 'B': ['Ben']}\n```",
+    "`namedtuple` makes a small record type with named fields: after `Product = namedtuple(\"Product\", [\"name\", \"price\"])` you can write `p.price` instead of `p[1]`, which makes code much easier to read. It is still a tuple, so it works anywhere a tuple does.",
+    "`deque` (say \"deck\") is a list built for adding and removing at both ends. A list is slow at the front, because every other item has to move along, so a deque is the better choice for a queue. With `maxlen=3` a deque keeps only the last 3 items: appending a fourth drops the oldest. That's exactly what you want for \"the latest readings\" or a moving window.",
+    "`ChainMap(cli, env, defaults)` looks a key up in each dict in turn and returns the first match, so earlier dicts override later ones without copying anything. It's a neat way to layer settings.",
+    "Outside `collections`, the `heapq` module finds the largest or smallest items quickly: `heapq.nlargest(3, items, key=...)` returns the top 3, biggest first. And since Python 3.7, a plain `dict` keeps its keys in the order you added them.",
   ],
-  sandboxCode: py`from collections import Counter, defaultdict
-
-words = ["a", "b", "a", "c", "a"]
-print(Counter(words).most_common(1))
-
-dd = defaultdict(int)
-for w in words:
-    dd[w] += 1
-print(dict(dd))`,
+  sandboxCode: "from collections import Counter, defaultdict\n\nwords = \"the cat and the dog and the bird\".split()\nprint(Counter(words).most_common(2))\n\nby_length = defaultdict(list)\nfor word in words:\n    by_length[len(word)].append(word)\nprint(dict(by_length))",
+  sandboxSnippets: [
+    snippet("Counter", "from collections import Counter\n\nstock = Counter({\"apple\": 10, \"pear\": 4, \"fig\": 2})\nsold = Counter({\"apple\": 3, \"fig\": 2})\nprint(stock - sold)\nprint(Counter(\"mississippi\").most_common(2))"),
+    snippet("defaultdict", "from collections import defaultdict\n\ndocs = {1: \"python loves data\", 2: \"data beats opinion\"}\nindex = defaultdict(set)\nfor doc_id, text in docs.items():\n    for word in text.split():\n        index[word].add(doc_id)\nprint(sorted(index[\"data\"]))"),
+    snippet("namedtuple", "from collections import namedtuple\n\nProduct = namedtuple(\"Product\", [\"name\", \"price\"])\nproducts = [Product(\"Pen\", 1.5), Product(\"Book\", 12.0)]\ncheapest = min(products, key=lambda p: p.price)\nprint(cheapest.name, cheapest)"),
+    snippet("deque", "from collections import deque\n\nrecent = deque(maxlen=3)\nfor reading in [21.5, 22.0, 22.4, 23.1]:\n    recent.append(reading)\n    print(list(recent))"),
+    snippet("ChainMap and heapq", "import heapq\nfrom collections import ChainMap\n\nsettings = ChainMap({\"debug\": True}, {\"port\": 9000}, {\"port\": 8000, \"debug\": False})\nprint(settings[\"port\"], settings[\"debug\"])\n\nscores = {\"Ana\": 91, \"Ben\": 78, \"Cy\": 85}\nprint(heapq.nlargest(2, scores.items(), key=lambda item: item[1]))"),
+  ],
+  readMore: { label: "Python docs: the collections module", url: "https://docs.python.org/3/library/collections.html", source: "Python docs" },
   challenges: [
     task('easy', 'Count things', {
       prompt: 'Count how often each fruit appears in `basket` using `Counter`. Store it in `counts`.',

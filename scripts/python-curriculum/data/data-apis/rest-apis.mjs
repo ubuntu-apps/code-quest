@@ -1,4 +1,4 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 /** A tiny in-memory todo API the challenges call instead of a real server. */
 const FAKE_API = py`import json
@@ -58,23 +58,30 @@ def api(method, path, body=None):
     return _reply(405, {"error": "method not allowed"})`
 
 const API_NOTE =
-  'The sandbox has a pretend todo API: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.'
+  'Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.'
 
 export default makeTopic({
   id: 'rest_apis',
   title: 'REST APIs',
   paragraphs: [
-    'REST uses HTTP verbs GET POST PUT DELETE on resources identified by URLs.',
-    'JSON is common response format. Status codes: 200 OK, 404 not found, 500 server error.',
-    'Design clear endpoints; version APIs; document with OpenAPI.',
-    'In the challenges you talk to a pretend todo API with `api(method, path, body=None)`. It returns `(status, text)` like a real HTTP call: `GET /todos`, `GET /todos/1`, `POST /todos`, `PUT /todos/1` and `DELETE /todos/1`.',
+    "Most web APIs follow a style called **REST**. The server holds **resources**, such as todos, users or orders, and each one has its own URL: `/todos` is the whole collection, and `/todos/1` is the todo with id 1.",
+    "The HTTP **method** says what to do. `GET` reads and never changes anything. `POST` to a collection creates a new item. `PUT` replaces an item with the data you send, and `DELETE` removes it. Sending the same `PUT` or `DELETE` twice leaves things just as sending it once would, which is why they are called **idempotent**; sending `POST` twice creates two items.",
+    "Bodies are usually JSON in both directions: you `json.dumps` what you send and `json.loads` what comes back. Because `PUT` replaces the whole resource, send every field, not only the one you changed.",
+    "The **status code** tells you what happened. 2xx means success: `200 OK`, `201 Created` after a POST, and `204 No Content` when there is nothing to send back, as after a DELETE. 3xx means \"look somewhere else\" (a redirect). 4xx means the problem is in your request, such as `400 Bad Request` or `404 Not Found`. 5xx means the server failed. `status // 100` gives you the first digit. Check the status before you trust the body.",
+    "Collections can be filtered with a query string, as in `/todos?done=false`. Long lists come in pages: each response holds some `items` and a `next_page` number, or `null` on the last page, and you keep asking until there is no next page. This is called **pagination**. Real APIs often put a version in the path, like `/v1/todos`, so they can change later without breaking programs that use the old version.",
+    "**The pretend API.** This app can't reach real servers, so the sandbox and the challenges use a small pretend todo API that behaves like one. Call `api(method, path, body=None)`. It returns `(status, text)`, where `text` is the JSON body:",
+    "```\nimport json\n\nstatus, text = api(\"GET\", \"/todos/1\")\nprint(status, json.loads(text))\n\nstatus, text = api(\"POST\", \"/todos\", json.dumps({\"title\": \"Read book\"}))\nprint(status, json.loads(text)[\"id\"])\n```",
+    "Wrap API calls in small functions that check the status and turn errors into exceptions; for example, raise `ValueError` with the API's `\"error\"` message when it answers 400. The rest of your program then works with plain Python data. The sandbox below starts with the pretend API's code (you can read how it works), and the part to try is at the bottom.",
   ],
-  sandboxCode: py`import json
-
-# Conceptual API response
-response = {"status": 200, "data": {"id": 1, "title": "Todo"}}
-print(response["status"])
-print(json.dumps(response["data"]))`,
+  sandboxCode: FAKE_API + "\n\n# ----- Try it -----\nstatus, text = api(\"GET\", \"/todos\")\nprint(status)\nprint(json.loads(text))",
+  sandboxSnippets: [
+    snippet("GET a list", FAKE_API + "\n\n# ----- Try it -----\nstatus, text = api(\"GET\", \"/todos?done=false\")\nprint(status, [todo[\"title\"] for todo in json.loads(text)])"),
+    snippet("GET one", FAKE_API + "\n\n# ----- Try it -----\nprint(api(\"GET\", \"/todos/2\"))\nprint(api(\"GET\", \"/todos/99\"))"),
+    snippet("POST", FAKE_API + "\n\n# ----- Try it -----\nstatus, text = api(\"POST\", \"/todos\", json.dumps({\"title\": \"Read book\"}))\nprint(status, json.loads(text))\nprint(api(\"POST\", \"/todos\", json.dumps({\"title\": \"\"})))"),
+    snippet("PUT and DELETE", FAKE_API + "\n\n# ----- Try it -----\nprint(api(\"PUT\", \"/todos/1\", json.dumps({\"title\": \"Buy milk\", \"done\": True})))\nprint(api(\"DELETE\", \"/todos/3\"))\nprint(api(\"GET\", \"/todos/3\"))"),
+    snippet("Pages", FAKE_API + "\n\n# ----- Try it -----\npage = 1\nwhile page is not None:\n    data = json.loads(api(\"GET\", f\"/todos?page={page}&per_page=2\")[1])\n    print(\"page\", page, [todo[\"id\"] for todo in data[\"items\"]])\n    page = data[\"next_page\"]"),
+  ],
+  readMore: { label: "MDN: HTTP request methods", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods", source: "MDN Web Docs" },
   challenges: [
     task('easy', 'GET a collection', {
       prompt: `${API_NOTE}\n\nCall \`GET /todos\`. Store the status code in \`status\`, the parsed list in \`todos\`, and how many there are in \`count\`.`,
