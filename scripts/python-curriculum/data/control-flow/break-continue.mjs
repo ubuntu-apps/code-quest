@@ -127,6 +127,6 @@ export default makeTopic({
     mc("What is the difference between `pass` and `continue`?", ["None", "`pass` does nothing; `continue` skips the rest of the round", "`pass` ends the loop", "`continue` does nothing"], 1),
     mc("Why use `break` when searching?", ["It is required", "It prints the result", "To stop as soon as the item is found", "To restart the search"], 2),
     mc("What does this print?\n\n```\nfor n in range(3):\n    if n == 5:\n        break\nelse:\n    print(\"done\")\n```", ["Nothing", "`0 1 2`", "An error", "`done`"], 3),
-    mc("In nested loops, which loop does `break` end?", ["Only the innermost loop it is in", "All the loops", "The outer loop", "None"], 0),
+    mc("Why is `while True:` handy for a command loop?", ["It runs faster", "The exit check can sit right after the `input()`, in the middle of the loop", "It stops by itself after the last command", "It skips empty commands"], 1),
   ],
 })

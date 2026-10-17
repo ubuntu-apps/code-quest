@@ -6,6 +6,9 @@ import receiptCalculator from './fundamentals/project-receipt.mjs'
 import guessTheNumber from './control-flow/project-guess-the-number.mjs'
 import quizGame from './control-flow/project-quiz-game.mjs'
 import primeFinder from './control-flow/project-prime-finder.mjs'
+import gradeBook from './data-structures/project-grade-book.mjs'
+import wordCounter from './data-structures/project-word-counter.mjs'
+import inventoryTracker from './data-structures/project-inventory-tracker.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -25,32 +28,6 @@ function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions 
     questions: src.questionSpecs.slice(0, maxQuestions),
   })
 }
-
-const dataStructuresEasy = makeProject('easy', {
-  id: 'grade_book',
-  title: 'Grade book',
-  paragraphs: [
-    'Store student names and scores in a list of dictionaries. Calculate the class average and find the highest score.',
-    'Practice list iteration, dict fields, and simple aggregation.',
-  ],
-  sandboxCode: 'grades = [{"name": "Ana", "score": 88}, {"name": "Bo", "score": 92}]\nscores = [g["score"] for g in grades]\nprint(sum(scores) / len(scores))\nprint(max(scores))',
-  challenges: [
-    ch('easy', 'List of dicts', 'Create `grades` with one student dict.', pyVar('grades', 'len(grades) == 1'), { starterCode: 'grades = [{"name":"Ana","score":90}]' }),
-    ch('medium', 'Extract scores', 'Build `scores` list from grades.', pyVar('scores', 'scores == [88, 92]', 'grades=[{"score":88},{"score":92}]\nscores=[]'), { starterCode: 'for g in grades:\n    scores.append(g["score"])' }),
-    ch('medium', 'Average', 'Set `avg` to mean of [80, 90].', pyVar('avg', 'avg == 85'), { starterCode: 'avg = sum([80,90]) / 2' }),
-    ch('hard', 'Max score', 'Set `top` to highest score in list.', pyVar('top', 'top == 92'), { starterCode: 'top = max([88, 92])' }),
-    ch('hard', 'Count students', 'Set `n` to number of grade entries.', pyVar('n', 'n == 2'), { starterCode: 'n = len(grades)', }),
-    ch('expert', 'Print average', 'Print the average with a label.', pyOut('85.0'), { starterCode: 'print(85.0)' }),
-  ],
-  questions: [
-    qMcq('List of dicts stores:', [{ id: 'a', label: 'Many records' }, { id: 'b', label: 'Only one number' }, { id: 'c', label: 'Binary files' }], 'a'),
-    qShort('Mean uses sum divided by:', 'count'),
-    qMcq('max() returns:', [{ id: 'a', label: 'Largest value' }, { id: 'b', label: 'Smallest value' }, { id: 'c', label: 'Random value' }], 'a'),
-    qShort('Access dict field with:', 'key'),
-    qMcq('Comprehension can build:', [{ id: 'a', label: 'A new list' }, { id: 'b', label: 'A CPU' }, { id: 'c', label: 'An OS' }], 'a'),
-    qShort('Each student record needs:', 'fields'),
-  ],
-})
 
 const modulesEasy = makeProject('easy', {
   id: 'greet_module',
@@ -186,11 +163,7 @@ const oopHard = makeProject('hard', {
 export const SECTION_PROJECTS = {
   fundamentals: [aboutMeCard, unitConverter, receiptCalculator],
   control_flow: [guessTheNumber, quizGame, primeFinder],
-  data_structures: [
-    dataStructuresEasy,
-    fromExisting('quiz_app', 'medium', 'proj_data_structures_quiz_app'),
-    fromExisting('todo_list', 'hard', 'proj_data_structures_todo_list'),
-  ],
+  data_structures: [gradeBook, wordCounter, inventoryTracker],
   functions: [
     fromExisting('unit_converter', 'easy', 'proj_functions_unit_converter'),
     fromExisting('password_generator', 'medium', 'proj_functions_password_generator'),

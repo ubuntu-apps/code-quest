@@ -17,7 +17,7 @@ import { sectionProjectsFor } from './data/section-projects.mjs'
  * needs rewriting; add a section here once its projects are ready.
  * Note: easy and medium projects must be completed to unlock the next section.
  */
-const SECTIONS_WITH_PROJECTS = new Set(['fundamentals', 'control_flow'])
+const SECTIONS_WITH_PROJECTS = new Set(['fundamentals', 'control_flow', 'data_structures'])
 
 const args = process.argv.slice(2)
 const onlySection = args.includes('--only') ? args[args.indexOf('--only') + 1] : null
