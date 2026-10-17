@@ -721,14 +721,16 @@ export function CodeQuestScreen() {
 
   const breadcrumbs: Crumb[] = []
   if (tab === 'learn' && learnView !== 'languages' && languageId && bundleForView) {
+    // The pages above this one; the current page is the heading below the trail.
     breadcrumbs.push({ label: 'Home', to: learnHomePath() })
-    breadcrumbs.push({ label: bundleForView.index.title, to: learnLanguagePath(languageId) })
-    if (learnView !== 'sections' && selectedSection) {
+    if (learnView !== 'sections') {
+      breadcrumbs.push({ label: bundleForView.index.title, to: learnLanguagePath(languageId) })
+    }
+    if (learnView === 'level' && selectedSection) {
       breadcrumbs.push({
         label: selectedSection.sectionRef.title,
         to: learnSectionPath(languageId, selectedSection.sectionRef.id),
       })
-      if (learnView === 'level' && selectedLevel) breadcrumbs.push({ label: selectedLevel.title })
     }
   }
   const shellClassName =
