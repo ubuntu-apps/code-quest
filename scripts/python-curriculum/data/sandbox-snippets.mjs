@@ -2,59 +2,6 @@ import { snippet } from './_builders.mjs'
 
 /** @type {Record<string, { id: string, label: string, code: string }[]>} */
 export const SANDBOX_SNIPPETS_BY_LEVEL = {
-  // ── Modules ─────────────────────────────────────────────────────
-  import_statements: [
-    snippet('import math', 'import math\nprint(math.sqrt(16))'),
-    snippet('from import', 'from math import pi\nprint(round(pi, 2))'),
-    snippet('import as', 'import math as m\nprint(m.sqrt(25))'),
-    snippet('random', 'import random\nprint(random.randint(1, 6))'),
-    snippet('json', 'import json\nprint(json.loads(\'{"a": 1}\'))'),
-  ],
-  stdlib_overview: [
-    snippet('os.getcwd', 'import os\nprint(os.getcwd())'),
-    snippet('sys version', 'import sys\nprint(sys.version_info.major)'),
-    snippet('pathlib', 'from pathlib import Path\nprint(Path("data.txt").suffix)'),
-    snippet('collections', 'from collections import Counter\nprint(Counter("aab"))'),
-    snippet('datetime', 'import datetime\nprint(datetime.date.today())'),
-  ],
-  random_module: [
-    snippet('randint', 'import random\nprint(random.randint(1, 10))'),
-    snippet('choice', 'import random\nprint(random.choice(["red", "blue", "green"]))'),
-    snippet('shuffle', 'import random\nlst = [1, 2, 3]\nrandom.shuffle(lst)\nprint(lst)'),
-    snippet('seed', 'import random\nrandom.seed(0)\nprint(random.randint(1, 100))'),
-    snippet('random()', 'import random\nprint(round(random.random(), 2))'),
-  ],
-  creating_modules: [
-    snippet('Function module', 'def add(a, b):\n    return a + b\nprint(add(1, 2))'),
-    snippet('Constants', 'PI = 3.14159\nprint(PI)'),
-    snippet('Private name', '_helper = "internal"\nprint(_helper)'),
-    snippet('Module docstring', '"""My utility module."""\nprint(__doc__)'),
-  ],
-  packages: [
-    snippet('Package import', '# from mypkg import utils\n# utils.add(1, 2)\nprint("package layout")'),
-    snippet('__init__', '# mypkg/__init__.py exposes API\nprint("package init")'),
-    snippet('Relative import', '# from . import sibling\nprint("relative import")'),
-    snippet('Nested package', '# mypkg/subpkg/module.py\nprint("nested")'),
-  ],
-  pip_venv: [
-    snippet('requirements', '# pip freeze > requirements.txt\nprint("requirements.txt")'),
-    snippet('venv note', '# python -m venv .venv\nprint("virtual environment")'),
-    snippet('pip install', '# pip install requests\nprint("pip install")'),
-    snippet('import third party', '# import requests\nprint("third-party package")'),
-  ],
-  name_main: [
-    snippet('main guard', 'def main():\n    print("Running main")\n\nif __name__ == "__main__":\n    main()'),
-    snippet('__name__', 'print(__name__)'),
-    snippet('Importable fn', 'def helper():\n    return 42\n\nif __name__ == "__main__":\n    print(helper())'),
-    snippet('Demo block', 'def demo():\n    print("demo")\n\nif __name__ == "__main__":\n    demo()'),
-  ],
-  organizing_projects: [
-    snippet('Project layout', '# myapp/\n#   main.py\n#   utils.py\n# tests/\nprint("project structure")'),
-    snippet('README', '# README.md explains install & usage\nprint("README")'),
-    snippet('tests folder', '# tests/test_utils.py\nprint("tests/")'),
-    snippet('src layout', '# src/myapp/__init__.py\nprint("src layout")'),
-  ],
-
   // ── Classes and objects ───────────────────────────────────────────
   classes_basics: [
     snippet('Define class', 'class Cat:\n    pass\n\nc = Cat()\nprint(c)'),
@@ -228,12 +175,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
   ],
 
   // ── Section projects ────────────────────────────────────────────
-  greet_module: [
-    snippet('greet fn', 'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("World"))'),
-    snippet('main guard', 'def greet(name):\n    return f"Hello, {name}!"\n\nif __name__ == "__main__":\n    print(greet("Python"))'),
-    snippet('Call twice', 'def greet(name):\n    return f"Hi, {name}"\nprint(greet("A"))\nprint(greet("B"))'),
-    snippet('Return only', 'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("Ada"))'),
-  ],
   rectangle_class: [
     snippet('class def', 'class Rectangle:\n    pass\nprint(Rectangle)'),
     snippet('__init__', 'class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\nr = Rectangle(4, 5)\nprint(r.width)'),
@@ -255,18 +196,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
   ],
 
   // Reused project ids with section-specific prefixes
-  proj_modules_capstone_planning: [
-    snippet('main guard', 'def main():\n    print("Capstone")\n\nif __name__ == "__main__":\n    main()'),
-    snippet('Modules', 'modules = ["models", "cli", "utils"]\nprint(modules)'),
-    snippet('Score', 'print(4 * 10 + 2 * 15)'),
-    snippet('try/except', 'try:\n    int("42")\nexcept ValueError:\n    print("bad input")'),
-  ],
-  proj_modules_contact_book: [
-    snippet('Dict store', 'contacts = {}\ncontacts["ana"] = {"phone": "555"}\nprint(contacts)'),
-    snippet('get', 'contacts = {}\nprint(contacts.get("x"))'),
-    snippet('lower key', 'print("BoB".lower())'),
-    snippet('json', 'import json\nprint(json.dumps({"ana": {"phone": "555"}}))'),
-  ],
   proj_data_apis_weather_cli: [
     snippet('Mock API', 'data = {"city": "London", "temp_c": 18, "conditions": "Cloudy"}\nprint(data)'),
     snippet('Format', 'data = {"city": "London", "temp_c": 18, "conditions": "Cloudy", "humidity": 72}\nprint(f"{data[\'city\']}: {data[\'temp_c\']}C")'),

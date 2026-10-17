@@ -82,16 +82,7 @@ export const COURSE = [
     sectionId: 'modules_and_packages',
     filename: 'modules_and_packages.json',
     title: 'Modules and packages',
-    topics: topics(
-      'import_statements',
-      'stdlib_overview',
-      'random_module',
-      'creating_modules',
-      'name_main',
-      'packages',
-      'pip_venv',
-      'organizing_projects',
-    ),
+    topics: modulesTopics,
   },
   {
     sectionId: 'object_oriented',
