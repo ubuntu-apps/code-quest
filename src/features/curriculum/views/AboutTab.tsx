@@ -1,7 +1,7 @@
-import { APP_VERSION } from '../../../version'
 import { detectPlatform, INSTALL_GUIDES } from '../../../platform'
 import { EditableText, useEditorMode } from '../../editor'
 import { OfflinePanel } from '../components/OfflinePanel'
+import { VersionPanel } from '../components/VersionPanel'
 
 interface AboutTabProps {
   aboutLead: string
@@ -57,7 +57,7 @@ export function AboutTab({
         ) : null}
       </section>
       <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
-      <p className="cq-muted">Version {APP_VERSION}</p>
+      <VersionPanel />
     </div>
   )
 }
