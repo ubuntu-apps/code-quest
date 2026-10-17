@@ -55,115 +55,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('src layout', '# src/myapp/__init__.py\nprint("src layout")'),
   ],
 
-  // ── Files ─────────────────────────────────────────────
-  opening_files: [
-    snippet('with open', '# with open("notes.txt") as f:\n#     data = f.read()\nprint("with open pattern")'),
-    snippet('pathlib Path', 'from pathlib import Path\np = Path("data.txt")\nprint(p.name, p.suffix)'),
-    snippet('Read mode', 'mode = "r"\nprint(mode)'),
-    snippet('Write mode', 'mode = "w"\nprint(mode)'),
-    snippet('StringIO demo', 'from io import StringIO\nf = StringIO("hello")\nprint(f.read())'),
-  ],
-  reading_files: [
-    snippet('splitlines', 'text = "line1\\nline2"\nprint(text.splitlines())'),
-    snippet('strip line', 'print("hi\\n".strip())'),
-    snippet('for line', 'for line in "a\\nb\\nc".splitlines():\n    print(line)'),
-    snippet('readline', 'from io import StringIO\nline = StringIO("a\\nb").readline().strip()\nprint(line)'),
-    snippet('Count lines', 'print(len("a\\nb\\nc".splitlines()))'),
-  ],
-  writing_files: [
-    snippet('write text', 'from io import StringIO\nbuf = StringIO()\nbuf.write("hello\\n")\nprint(buf.getvalue())'),
-    snippet('writelines', 'lines = ["one\\n", "two\\n"]\nprint("".join(lines))'),
-    snippet('Append newline', 'line = "event"\nprint(line + "\\n")'),
-    snippet('StringIO write', 'from io import StringIO\nbuf = StringIO()\nbuf.write("data")\nprint(buf.getvalue())'),
-  ],
-  appending: [
-    snippet('Append mode', '# with open("log.txt", "a") as f:\n#     f.write("event\\n")\nprint("append mode")'),
-    snippet('Build log', 'log = []\nlog.append("start")\nlog.append("end")\nprint(log)'),
-    snippet('Join log lines', 'lines = ["2024-01-01 ok", "2024-01-02 ok"]\nprint("\\n".join(lines))'),
-  ],
-  with_statement: [
-    snippet('with demo', 'class Demo:\n    def __enter__(self):\n        print("enter")\n        return self\n    def __exit__(self, *args):\n        print("exit")\n\nwith Demo():\n    print("body")'),
-    snippet('StringIO with', 'from io import StringIO\nwith StringIO("hi") as f:\n    print(f.read())'),
-    snippet('Auto close', '# with open("f.txt") as f:\n#     pass  # closes automatically\nprint("auto close")'),
-  ],
-  file_paths: [
-    snippet('Path join', 'from pathlib import Path\nbase = Path("project")\nfile = base / "data" / "scores.csv"\nprint(file)'),
-    snippet('name parts', 'from pathlib import Path\np = Path("data/scores.csv")\nprint(p.parent, p.name, p.suffix)'),
-    snippet('exists check', 'from pathlib import Path\nprint(Path(".").exists())'),
-    snippet('stem', 'from pathlib import Path\nprint(Path("report.csv").stem)'),
-  ],
-  text_vs_binary: [
-    snippet('encode', 'text = "hi"\nb = text.encode("utf-8")\nprint(b)'),
-    snippet('decode', 'b = b"hello"\nprint(b.decode("utf-8"))'),
-    snippet('bytes type', 'print(type(b"hello").__name__)'),
-    snippet('str type', 'print(type("hello").__name__)'),
-  ],
-  file_errors: [
-    snippet('FileNotFound', 'try:\n    open("missing.txt")\nexcept FileNotFoundError:\n    print("File missing")'),
-    snippet('Permission', 'try:\n    raise PermissionError("denied")\nexcept PermissionError as e:\n    print(e)'),
-    snippet('Safe message', 'path = "data.txt"\ntry:\n    open(path)\nexcept FileNotFoundError:\n    print(f"Could not open {path}")'),
-  ],
-
-  // ── Errors and exceptions ────────────────────────────────────────────
-  try_except: [
-    snippet('ValueError', 'try:\n    int("abc")\nexcept ValueError as e:\n    print("Bad number:", e)'),
-    snippet('Recover', 'try:\n    n = int("bad")\nexcept ValueError:\n    n = 0\nprint(n)'),
-    snippet('ZeroDivision', 'try:\n    1 / 0\nexcept ZeroDivisionError:\n    print("Cannot divide by zero")'),
-    snippet('as e', 'try:\n    int("x")\nexcept ValueError as e:\n    print(str(e))'),
-    snippet('EAFP KeyError', 'd = {}\ntry:\n    val = d["missing"]\nexcept KeyError:\n    val = None\nprint(val)'),
-  ],
-  multiple_except: [
-    snippet('KeyError', 'try:\n    print({}["x"])\nexcept KeyError:\n    print("missing key")'),
-    snippet('Two handlers', 'try:\n    int("x")\nexcept ValueError:\n    print("value")\nexcept TypeError:\n    print("type")'),
-    snippet('Tuple except', 'try:\n    int("a")\nexcept (ValueError, TypeError):\n    print("caught")'),
-    snippet('Specific first', 'try:\n    int("x")\nexcept ValueError:\n    print("specific")\nexcept Exception:\n    print("broad")'),
-  ],
-  else_finally: [
-    snippet('try/else', 'try:\n    int("42")\nexcept ValueError:\n    print("fail")\nelse:\n    print("success")'),
-    snippet('finally', 'try:\n    print("try")\nfinally:\n    print("finally")'),
-    snippet('Cleanup', 'resource = "open"\ntry:\n    print(resource)\nfinally:\n    resource = "closed"\nprint(resource)'),
-  ],
-  raising_exceptions: [
-    snippet('raise ValueError', 'def pct(n):\n    if not 0 <= n <= 100:\n        raise ValueError("n must be 0-100")\n    return f"{n}%"\nprint(pct(50))'),
-    snippet('raise TypeError', 'def need_int(x):\n    if not isinstance(x, int):\n        raise TypeError("int required")\n    return x\nprint(need_int(3))'),
-    snippet('Fail fast', 'def divide(a, b):\n    if b == 0:\n        raise ValueError("b cannot be 0")\n    return a / b\nprint(divide(10, 2))'),
-  ],
-  custom_exceptions: [
-    snippet('Custom class', 'class ScoreError(Exception):\n    pass\n\ndef set_score(n):\n    if n < 0:\n        raise ScoreError("negative score")\n    return n\nprint(set_score(10))'),
-    snippet('With message', 'class AppError(Exception):\n    pass\n\ntry:\n    raise AppError("something went wrong")\nexcept AppError as e:\n    print(e)'),
-    snippet('Subclass', 'class ValidationError(Exception):\n    pass\n\nprint(issubclass(ValidationError, Exception))'),
-  ],
-  exception_hierarchy: [
-    snippet('MRO', 'print(ValueError.__mro__)'),
-    snippet('ZeroDivision', 'try:\n    1 / 0\nexcept ZeroDivisionError:\n    print("math error")'),
-    snippet('Catch parent', 'try:\n    int("x")\nexcept Exception:\n    print("caught Exception")'),
-    snippet('BaseException', 'print(issubclass(KeyboardInterrupt, BaseException))'),
-  ],
-  assertions: [
-    snippet('assert basic', 'def split_even(total, parts):\n    assert parts > 0, "parts must be positive"\n    return total / parts\nprint(split_even(10, 2))'),
-    snippet('assert type', 'value = 5\nassert isinstance(value, int)\nprint("ok")'),
-    snippet('assert range', 'age = 30\nassert age >= 0\nprint(age)'),
-  ],
-  debugging: [
-    snippet('breakpoint', '# breakpoint()  # debugger pause\nx = 2\nprint(x + 1)'),
-    snippet('Print debug', 'total = 0\nfor n in [1, 2, 3]:\n    total += n\n    print("debug total:", total)'),
-    snippet('repr inspect', 'data = {"a": 1}\nprint(repr(data))'),
-    snippet('Minimal repro', 'def buggy(a):\n    return a + 1\nprint(buggy(2))'),
-  ],
-  logging_basics: [
-    snippet('basicConfig', 'import logging\nlogging.basicConfig(level=logging.INFO)\nlog = logging.getLogger(__name__)\nlog.info("App started")'),
-    snippet('warning', 'import logging\nlogging.basicConfig(level=logging.WARNING)\nlogging.warning("Low disk")'),
-    snippet('error', 'import logging\nlogging.basicConfig(level=logging.ERROR)\nlogging.error("Failed to connect")'),
-    snippet('levels', 'import logging\nprint(logging.INFO, logging.WARNING, logging.ERROR)'),
-  ],
-  defensive_programming: [
-    snippet('Validate input', 'def average(nums):\n    if not nums:\n        raise ValueError("nums cannot be empty")\n    return sum(nums) / len(nums)\nprint(average([2, 4]))'),
-    snippet('Default fallback', 'def greet(name=None):\n    name = name or "guest"\n    return f"Hi {name}"\nprint(greet())'),
-    snippet('Bounds check', 'def clamp(n, lo, hi):\n    return max(lo, min(hi, n))\nprint(clamp(15, 0, 10))'),
-    snippet('Guard clause', 'def divide(a, b):\n    if b == 0:\n        raise ValueError("b cannot be 0")\n    return a / b\nprint(divide(10, 2))'),
-    snippet('Type check', 'def need_str(x):\n    if not isinstance(x, str):\n        raise TypeError("str required")\n    return x\nprint(need_str("ok"))'),
-  ],
-
   // ── Classes and objects ───────────────────────────────────────────
   classes_basics: [
     snippet('Define class', 'class Cat:\n    pass\n\nc = Cat()\nprint(c)'),
@@ -250,12 +141,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('timedelta', 'from datetime import datetime, timedelta\nprint((datetime.now() + timedelta(days=7)).date())'),
     snippet('Parse', 'from datetime import datetime\nd = datetime.strptime("2024-06-01", "%Y-%m-%d")\nprint(d.month)'),
     snippet('ISO date', 'from datetime import date\nprint(date.today().isoformat())'),
-  ],
-  pathlib_data: [
-    snippet('Join path', 'from pathlib import Path\np = Path("data") / "scores.json"\nprint(p)'),
-    snippet('suffix stem', 'from pathlib import Path\np = Path("scores.json")\nprint(p.suffix, p.stem)'),
-    snippet('exists', 'from pathlib import Path\nprint(Path(".").exists())'),
-    snippet('glob', 'from pathlib import Path\nprint(list(Path(".").glob("*.py"))[:3])'),
   ],
   sqlite_basics: [
     snippet('In-memory DB', 'import sqlite3\nconn = sqlite3.connect(":memory:")\nconn.execute("CREATE TABLE users (id INTEGER, name TEXT)")\nconn.execute("INSERT INTO users VALUES (1, ?)", ("Ana",))\nprint(conn.execute("SELECT name FROM users").fetchone()[0])'),
@@ -349,12 +234,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Call twice', 'def greet(name):\n    return f"Hi, {name}"\nprint(greet("A"))\nprint(greet("B"))'),
     snippet('Return only', 'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("Ada"))'),
   ],
-  line_counter: [
-    snippet('splitlines', 'text = "alpha\\nbeta\\n\\ngamma"\nprint(text.splitlines())'),
-    snippet('strip blank', 'print(len("   ".strip()) == 0)'),
-    snippet('Filter non-empty', 'lines = ["a", "", "b"]\nprint([line for line in lines if line.strip()])'),
-    snippet('Count', 'text = "a\\nb\\n\\nc"\nprint(len([l for l in text.splitlines() if l.strip()]))'),
-  ],
   rectangle_class: [
     snippet('class def', 'class Rectangle:\n    pass\nprint(Rectangle)'),
     snippet('__init__', 'class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\nr = Rectangle(4, 5)\nprint(r.width)'),
@@ -387,34 +266,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('get', 'contacts = {}\nprint(contacts.get("x"))'),
     snippet('lower key', 'print("BoB".lower())'),
     snippet('json', 'import json\nprint(json.dumps({"ana": {"phone": "555"}}))'),
-  ],
-  proj_file_handling_todo_list: [
-    snippet('splitlines', 'print("a\\nb".splitlines())'),
-    snippet('json load', 'import json\nprint(json.loads(\'[{"text": "a"}]\'))'),
-    snippet('Todo append', 'todos = []\ntodos.append({"text": "task"})\nprint(todos)'),
-    snippet('with pattern', '# with open("todos.json") as f:\n#     data = f.read()\nprint("file read")'),
-  ],
-  proj_file_handling_contact_book: [
-    snippet('json dumps', 'import json\ncontacts = {"ana": {"phone": "555"}}\nprint(json.dumps(contacts))'),
-    snippet('json loads', 'import json\nprint(json.loads(\'{"ana": {"phone": "555"}}\'))'),
-    snippet('Dict contacts', 'contacts = {}\ncontacts["ana"] = {"phone": "555"}\nprint(contacts)'),
-    snippet('pop delete', 'contacts = {"a": 1}\ncontacts.pop("a", None)\nprint(contacts)'),
-  ],
-  proj_error_handling_guess_game: [
-    snippet('try int', 'try:\n    n = int("5")\nexcept ValueError:\n    n = 0\nprint(n)'),
-    snippet('while loop', 'secret = 7\nguess = 7\nprint("win" if guess == secret else "lose")'),
-    snippet('randint', 'import random\nprint(random.randint(1, 10))'),
-    snippet('Recover input', 'try:\n    n = int("bad")\nexcept ValueError:\n    print("Invalid number")'),
-  ],
-  proj_error_handling_quiz_app: [
-    snippet('try json', 'import json\ntry:\n    json.loads("{bad}")\nexcept json.JSONDecodeError:\n    print("bad JSON")'),
-    snippet('Grade safe', 'questions = [{"a": 1}]\nanswers = [1]\nprint(sum(1 for i, a in enumerate(answers) if a == questions[i]["a"]))'),
-    snippet('ValueError', 'try:\n    int("x")\nexcept ValueError:\n    print("bad int")'),
-  ],
-  proj_error_handling_expense_tracker: [
-    snippet('try float', 'try:\n    amount = float("12.5")\nexcept ValueError:\n    amount = 0\nprint(amount)'),
-    snippet('try date', 'from datetime import datetime\ntry:\n    d = datetime.strptime("2024-06-01", "%Y-%m-%d")\nexcept ValueError:\n    d = None\nprint(d)'),
-    snippet('Sum expenses', 'print(sum(e["amount"] for e in [{"amount": 10}, {"amount": 5}]))'),
   ],
   proj_data_apis_weather_cli: [
     snippet('Mock API', 'data = {"city": "London", "temp_c": 18, "conditions": "Cloudy"}\nprint(data)'),

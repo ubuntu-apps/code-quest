@@ -1,0 +1,152 @@
+// Errors and exceptions topic: Raising errors. Lesson, Try-it snippets, challenges and quiz.
+import { makeTopic, mc, qShort, snippet, task } from '../_builders.mjs'
+
+export default makeTopic({
+  id: "raising_exceptions",
+  title: "Raising errors",
+  paragraphs: [
+    "So far Python has raised the exceptions. You can raise them too, with `raise`, whenever your code meets a situation it can't sensibly continue from. It works exactly like Python's own errors: the function stops at once, and the exception travels up to whoever called it, until a `try` catches it or the program stops.",
+    "```\ndef set_age(age):\n    if age < 0:\n        raise ValueError(\"Age can't be negative\")\n    return age\n\nprint(set_age(30))\nset_age(-5)   # ValueError: Age can't be negative\n```",
+    "Pick the exception that matches the problem: `ValueError` when a value is the right type but unacceptable (a negative age, a month of 13), `TypeError` when it's the wrong type altogether (a list where you needed a number), `KeyError` or `LookupError` when something isn't there. And write a message that tells the caller what was wrong and, ideally, what was expected.",
+    "Why raise instead of returning `None` or printing a warning? Because a returned `None` is easy to ignore, and the program then fails later, somewhere confusing. An exception can't be ignored by accident, and it points straight at the cause. The caller decides whether to catch it.",
+    "Inside an `except` block, a bare `raise` re-raises the exception you just caught, unchanged. That's useful when you want to react to an error (log it, add a message) and still let it continue to the caller:",
+    "```\ndef parse(text):\n    try:\n        return int(text)\n    except ValueError:\n        print(\"Could not parse\", repr(text))\n        raise\n```",
+    "Sometimes the low-level exception isn't the right one to show. `raise NewError(...) from e` raises a clearer exception and keeps the original attached as its **cause**, so the traceback shows both (\"The above exception was the direct cause of the following exception\"):",
+    "```\ndef get_setting(settings, key):\n    try:\n        return settings[key]\n    except KeyError as e:\n        raise ValueError(f\"Missing setting: {key}\") from e\n```",
+    "Raising early, at the top of a function, keeps the rest of it simple: once the checks are passed, the code below can trust its inputs. The next lessons build on this with your own exception types and defensive programming.",
+  ],
+  sandboxCode: "def set_age(age):\n    if not isinstance(age, int):\n        raise TypeError(\"age must be a whole number\")\n    if age < 0:\n        raise ValueError(\"Age can't be negative\")\n    return age\n\nfor value in [30, -5, \"old\"]:\n    try:\n        print(set_age(value))\n    except (ValueError, TypeError) as e:\n        print(type(e).__name__, \"-\", e)",
+  sandboxSnippets: [
+    snippet("Raise an error", "def check_month(month):\n    if not 1 <= month <= 12:\n        raise ValueError(f\"Month must be 1 to 12, not {month}\")\n    return month\n\nprint(check_month(10))\ncheck_month(13)"),
+    snippet("Catch your own raise", "def withdraw(balance, amount):\n    if amount > balance:\n        raise ValueError(\"Insufficient funds\")\n    return balance - amount\n\ntry:\n    withdraw(50, 80)\nexcept ValueError as e:\n    print(\"Refused:\", e)"),
+    snippet("Re-raise", "def parse(text):\n    try:\n        return int(text)\n    except ValueError:\n        print(\"Could not parse\", repr(text))\n        raise\n\nparse(\"x\")"),
+    snippet("raise ... from", "settings = {\"theme\": \"dark\"}\ntry:\n    settings[\"size\"]\nexcept KeyError as e:\n    raise ValueError(\"Missing setting: size\") from e"),
+  ],
+  readMore: { label: "Python tutorial: raising exceptions", url: "https://docs.python.org/3/tutorial/errors.html#raising-exceptions", source: "Python docs" },
+  challenges: [
+    task("easy", "No negative ages", {
+      prompt: "Define `check_age(age)` that raises `ValueError(\"Age can't be negative\")` when `age` is below 0, and otherwise returns `age`.",
+      hint: "`if age < 0: raise ValueError(\"Age can't be negative\")`, then `return age`.",
+      solution: "def check_age(age):\n    if age < 0:\n        raise ValueError(\"Age can't be negative\")\n    return age",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["check_age(30)", "check_age(30) == 30"],
+        ["check_age(-1) raises", "_error(check_age, -1) == \"ValueError: Age can't be negative\""],
+      ],
+    }),
+    task("easy", "A percentage", {
+      prompt: "Define `percent(p)` that returns `p` if it is from 0 to 100, and otherwise raises a `ValueError` with the message `Percentage must be 0 to 100`.",
+      hint: "Check `if not 0 <= p <= 100:` and raise.",
+      solution: "def percent(p):\n    if not 0 <= p <= 100:\n        raise ValueError(\"Percentage must be 0 to 100\")\n    return p",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["percent(50)", "percent(50) == 50"],
+        ["percent(0)", "percent(0) == 0"],
+        ["percent(120) raises", "_error(percent, 120) == \"ValueError: Percentage must be 0 to 100\""],
+        ["percent(-3) raises", "_raises(percent, -3) == \"ValueError\""],
+      ],
+    }),
+    task("easy", "The wrong type", {
+      prompt: "Define `shout(text)` that returns `text.upper() + \"!\"`, but raises `TypeError(\"text must be a string\")` when `text` isn't a `str`.",
+      hint: "`if not isinstance(text, str): raise TypeError(...)`.",
+      solution: "def shout(text):\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    return text.upper() + \"!\"",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["shout(\"hi\")", "shout(\"hi\") == \"HI!\""],
+        ["shout(5) raises", "_error(shout, 5) == \"TypeError: text must be a string\""],
+      ],
+    }),
+    task("medium", "Careful withdrawals", {
+      prompt: "Define `withdraw(balance, amount)` that returns the new balance. Raise `ValueError(\"Amount must be positive\")` for an amount of 0 or less, and `ValueError(\"Insufficient funds\")` when it's more than the balance.",
+      hint: "Two checks at the top, each with its own `raise`, then `return balance - amount`.",
+      solution: "def withdraw(balance, amount):\n    if amount <= 0:\n        raise ValueError(\"Amount must be positive\")\n    if amount > balance:\n        raise ValueError(\"Insufficient funds\")\n    return balance - amount",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["A normal withdrawal", "withdraw(100, 30) == 70"],
+        ["Too much", "_error(withdraw, 100, 300) == \"ValueError: Insufficient funds\""],
+        ["Not positive", "_error(withdraw, 100, 0) == \"ValueError: Amount must be positive\""],
+      ],
+    }),
+    task("medium", "React, then re-raise", {
+      prompt: "Define `parse(text)` that returns `int(text)`. If that fails, print `Could not parse <text>` and then re-raise the same `ValueError` with a bare `raise`.",
+      hint: "In `except ValueError:` print the message, then write `raise` on its own.",
+      solution: "def parse(text):\n    try:\n        return int(text)\n    except ValueError:\n        print(f\"Could not parse {text}\")\n        raise",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["parse(\"7\")", "parse(\"7\") == 7"],
+        ["Still raises ValueError", "_raises(parse, \"x\") == \"ValueError\""],
+        ["Prints first", "\"Could not parse x\" in _out(_raises, parse, \"x\")"],
+      ],
+    }),
+    task("medium", "A clearer error", {
+      prompt: "Define `get_setting(settings, key)` that returns `settings[key]`, but turns a `KeyError` into `ValueError(\"Missing setting: <key>\")`, raised `from` the original.",
+      hint: "`except KeyError as e: raise ValueError(f\"Missing setting: {key}\") from e`.",
+      solution: "def get_setting(settings, key):\n    try:\n        return settings[key]\n    except KeyError as e:\n        raise ValueError(f\"Missing setting: {key}\") from e",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\ndef _cause_is_keyerror():\n    try:\n        get_setting({}, \"size\")\n    except ValueError as e:\n        return isinstance(e.__cause__, KeyError)\n    return False\n",
+      tests: [
+        ["Found", "get_setting({\"theme\": \"dark\"}, \"theme\") == \"dark\""],
+        ["Missing", "_error(get_setting, {}, \"size\") == \"ValueError: Missing setting: size\""],
+        ["Keeps the KeyError as its cause", "_cause_is_keyerror()"],
+      ],
+    }),
+    task("hard", "Check an email", {
+      prompt: "Define `check_email(email)` that returns the email in lowercase, or raises a `ValueError` with the first problem it finds: `Missing @`, `Missing name before @`, or `Domain needs a dot`.",
+      hint: "Check `\"@\" in email` first; then split once with `name, domain = email.split(\"@\", 1)` and check `name` and `\".\" in domain`.",
+      solution: "def check_email(email):\n    if \"@\" not in email:\n        raise ValueError(\"Missing @\")\n    name, domain = email.split(\"@\", 1)\n    if not name:\n        raise ValueError(\"Missing name before @\")\n    if \".\" not in domain:\n        raise ValueError(\"Domain needs a dot\")\n    return email.lower()",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["A good email", "check_email(\"Ana@Example.com\") == \"ana@example.com\""],
+        ["No @", "_error(check_email, \"ana.example.com\") == \"ValueError: Missing @\""],
+        ["No name", "_error(check_email, \"@example.com\") == \"ValueError: Missing name before @\""],
+        ["No dot", "_error(check_email, \"ana@example\") == \"ValueError: Domain needs a dot\""],
+      ],
+    }),
+    task("hard", "Read a date", {
+      prompt: "Define `parse_date(text)` for `YYYY-MM-DD` text that returns `(year, month, day)` as ints, raising `ValueError(\"Bad date: <text>\")` if it doesn't have three parts, a part isn't a number, the month isn't 1 to 12, or the day isn't 1 to 31.",
+      hint: "Wrap the split and the `int` conversions in `try`, and turn any `ValueError` into your own message with `raise ... from`. Then check the ranges and raise the same message.",
+      solution: "def parse_date(text):\n    try:\n        year, month, day = [int(p) for p in text.split(\"-\")]\n    except ValueError as e:\n        raise ValueError(f\"Bad date: {text}\") from e\n    if not 1 <= month <= 12 or not 1 <= day <= 31:\n        raise ValueError(f\"Bad date: {text}\")\n    return year, month, day",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["A good date", "parse_date(\"2026-10-17\") == (2026, 10, 17)"],
+        ["Two parts", "_error(parse_date, \"2026-10\") == \"ValueError: Bad date: 2026-10\""],
+        ["Not numbers", "_error(parse_date, \"2026-ab-01\") == \"ValueError: Bad date: 2026-ab-01\""],
+        ["Month 13", "_error(parse_date, \"2026-13-01\") == \"ValueError: Bad date: 2026-13-01\""],
+      ],
+    }),
+    task("expert", "Usernames", {
+      prompt: "Define `make_username(name)`: strip spaces and lowercase it, then raise `ValueError` for `Too short` (under 3 characters), `Too long` (over 15), or `Only letters, digits and _ allowed`. Return the cleaned name.",
+      hint: "Clean it first. Check the length, then `all(ch.isalnum() or ch == \"_\" for ch in name)`.",
+      solution: "def make_username(name):\n    name = name.strip().lower()\n    if len(name) < 3:\n        raise ValueError(\"Too short\")\n    if len(name) > 15:\n        raise ValueError(\"Too long\")\n    if not all(ch.isalnum() or ch == \"_\" for ch in name):\n        raise ValueError(\"Only letters, digits and _ allowed\")\n    return name",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["A good name", "make_username(\"  Ana_99 \") == \"ana_99\""],
+        ["Too short", "_error(make_username, \"ab\") == \"ValueError: Too short\""],
+        ["Too long", "_error(make_username, \"a\" * 16) == \"ValueError: Too long\""],
+        ["Bad characters", "_error(make_username, \"ana lima\") == \"ValueError: Only letters, digits and _ allowed\""],
+      ],
+    }),
+    task("expert", "Default only for ValueError", {
+      prompt: "Define `call_or_default(fn, default, *args)` that returns `fn(*args)`, or `default` if it raises a `ValueError`. Any other exception must still reach the caller.",
+      hint: "`try: return fn(*args)` and `except ValueError: return default`. Don't catch anything else.",
+      solution: "def call_or_default(fn, default, *args):\n    try:\n        return fn(*args)\n    except ValueError:\n        return default",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["Works", "call_or_default(int, 0, \"5\") == 5"],
+        ["Falls back", "call_or_default(int, 0, \"x\") == 0"],
+        ["Other errors still raise", "_raises(call_or_default, int, 0, None) == \"TypeError\""],
+      ],
+    }),
+  ],
+  questions: [
+    mc("What does `raise ValueError(\"Too big\")` do?", ["Prints \"Too big\" and carries on", "Stops the function and sends a ValueError up to the caller", "Returns \"Too big\"", "Nothing until the program ends"], 1),
+    mc("Which exception suits a month of 13?", ["`TypeError`", "`KeyError`", "`ValueError`", "`NameError`"], 2),
+    mc("Which exception suits a list passed where a number was needed?", ["`TypeError`", "`ValueError`", "`IndexError`", "`ZeroDivisionError`"], 0),
+    mc("Why raise instead of returning `None`?", ["It is faster", "Python requires it", "It prints nicer", "An exception can't be ignored by accident, and it points at the cause"], 3),
+    qShort("Which keyword do you use to raise an exception yourself? (one word)", "raise"),
+    mc("What does a bare `raise` inside `except` do?", ["Raises a new `Exception`", "Re-raises the exception that was just caught", "Ignores the error", "Is a `SyntaxError`"], 1),
+    mc("What does `raise ValueError(...) from e` keep?", ["The original exception, as the cause", "Only the new message", "Nothing", "The line number only"], 0),
+    mc("Where do input checks usually go?", ["At the end of the function", "In a `finally` block", "At the top, before the real work", "In a separate file"], 2),
+    mc("What makes a good error message?", ["\"Error\"", "An error code only", "Nothing: the type is enough", "What was wrong, and ideally what was expected"], 3),
+    mc("After a `raise` with no `try` around it anywhere, what happens?", ["The function returns `None`", "The program stops with a traceback", "Python asks the user", "The next line runs"], 1),
+  ],
+})

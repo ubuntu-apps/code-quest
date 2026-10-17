@@ -1,0 +1,150 @@
+// Errors and exceptions topic: Your own exceptions. Lesson, Try-it snippets, challenges and quiz.
+import { makeTopic, mc, qShort, snippet, task } from '../_builders.mjs'
+
+export default makeTopic({
+  id: "custom_exceptions",
+  title: "Your own exceptions",
+  paragraphs: [
+    "Python's built-in exceptions cover general problems. For problems that belong to **your** program, such as \"not enough money in the account\" or \"this order has no items\", you can make your own exception types. Callers can then catch exactly that problem and nothing else.",
+    "A new exception type takes two lines:",
+    "```\nclass InsufficientFunds(Exception):\n    pass\n```",
+    "This is a **class**, which you'll learn about properly in Classes and objects. For now, read it as a recipe: \"make a new kind of exception called `InsufficientFunds`, which is a kind of `Exception` and adds nothing else\". Name it in `CapitalisedWords`, like Python's own, and make the name describe the problem; ending it in `Error` is common too.",
+    "You raise and catch it like any other exception, and its message works the same way:",
+    "```\ndef withdraw(balance, amount):\n    if amount > balance:\n        raise InsufficientFunds(f\"Balance {balance}, tried to take {amount}\")\n    return balance - amount\n\ntry:\n    withdraw(50, 80)\nexcept InsufficientFunds as e:\n    print(\"Refused:\", e)\n```",
+    "The name in the brackets is the **parent**, which puts your exception into the family tree from the earlier lesson. Choose it to match: `class InvalidAge(ValueError): pass` makes an exception that's also a `ValueError`, so code that already catches `ValueError` keeps working.",
+    "For a bigger program, give your exceptions a shared parent of their own. Callers can then catch one specific problem, or the whole family at once:",
+    "```\nclass BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\n# except InsufficientFunds:  just that problem\n# except BankError:          any problem from the bank code\n```",
+    "Custom exceptions make code read like the problem it solves: `except AccountLocked:` says far more than `except ValueError:` with a check on the message text.",
+  ],
+  sandboxCode: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\ndef withdraw(balance, amount):\n    if amount > balance:\n        raise InsufficientFunds(f\"Balance {balance}, tried to take {amount}\")\n    return balance - amount\n\nfor amount in [30, 80]:\n    try:\n        print(\"New balance:\", withdraw(50, amount))\n    except BankError as e:\n        print(type(e).__name__, \"-\", e)",
+  sandboxSnippets: [
+    snippet("Define and raise", "class TooCold(Exception):\n    pass\n\nraise TooCold(\"It's -5 degrees outside\")"),
+    snippet("Catch it", "class TooCold(Exception):\n    pass\n\ntry:\n    raise TooCold(\"brr\")\nexcept TooCold as e:\n    print(\"Caught:\", e)"),
+    snippet("Choose a parent", "class InvalidAge(ValueError):\n    pass\n\ntry:\n    raise InvalidAge(\"Age can't be 200\")\nexcept ValueError as e:\n    print(\"A ValueError too:\", type(e).__name__, e)"),
+    snippet("A family of errors", "class BankError(Exception):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\nprint(issubclass(AccountLocked, BankError), issubclass(AccountLocked, Exception))"),
+  ],
+  readMore: { label: "Python tutorial: user-defined exceptions", url: "https://docs.python.org/3/tutorial/errors.html#user-defined-exceptions", source: "Python docs" },
+  challenges: [
+    task("easy", "Your first exception", {
+      prompt: "Define an exception type `TooCold` that is a kind of `Exception`.",
+      hint: "`class TooCold(Exception):` with `pass` indented on the next line.",
+      solution: "class TooCold(Exception):\n    pass",
+      tests: [
+        ["TooCold is an Exception", "issubclass(TooCold, Exception)"],
+      ],
+    }),
+    task("easy", "Raise it", {
+      prompt: "Define `check_temp(t)` that raises `TooCold(\"Below freezing\")` when `t` is below 0, and otherwise returns `t`.",
+      starter: "class TooCold(Exception):\n    pass\n\n",
+      hint: "`if t < 0: raise TooCold(\"Below freezing\")`.",
+      solution: "class TooCold(Exception):\n    pass\n\ndef check_temp(t):\n    if t < 0:\n        raise TooCold(\"Below freezing\")\n    return t",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["check_temp(10)", "check_temp(10) == 10"],
+        ["check_temp(-3)", "_error(check_temp, -3) == \"TooCold: Below freezing\""],
+      ],
+    }),
+    task("easy", "Catch it", {
+      prompt: "Define `describe(t)` that returns the result of `check_temp(t)`, or `too cold` when it raises `TooCold`.",
+      starter: "class TooCold(Exception):\n    pass\n\ndef check_temp(t):\n    if t < 0:\n        raise TooCold(\"Below freezing\")\n    return t\n\n",
+      hint: "`try: return check_temp(t)` and `except TooCold: return \"too cold\"`.",
+      solution: "class TooCold(Exception):\n    pass\n\ndef check_temp(t):\n    if t < 0:\n        raise TooCold(\"Below freezing\")\n    return t\n\ndef describe(t):\n    try:\n        return check_temp(t)\n    except TooCold:\n        return \"too cold\"",
+      tests: [
+        ["describe(5)", "describe(5) == 5"],
+        ["describe(-1)", "describe(-1) == \"too cold\""],
+      ],
+    }),
+    task("medium", "A kind of ValueError", {
+      prompt: "Define `InvalidAge` as a kind of `ValueError`, and `check_age(age)` that raises `InvalidAge(\"Age must be 0 to 130\")` outside 0 to 130, or returns the age.",
+      hint: "`class InvalidAge(ValueError): pass`, then the function.",
+      solution: "class InvalidAge(ValueError):\n    pass\n\ndef check_age(age):\n    if not 0 <= age <= 130:\n        raise InvalidAge(\"Age must be 0 to 130\")\n    return age",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["InvalidAge is a ValueError", "issubclass(InvalidAge, ValueError)"],
+        ["check_age(30)", "check_age(30) == 30"],
+        ["check_age(200)", "_error(check_age, 200) == \"InvalidAge: Age must be 0 to 130\""],
+      ],
+    }),
+    task("medium", "A family", {
+      prompt: "Define `BankError` (a kind of `Exception`), and `InsufficientFunds` and `AccountLocked`, both kinds of `BankError`.",
+      hint: "Three classes. The parent goes in the brackets: `class InsufficientFunds(BankError):`.",
+      solution: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n",
+      tests: [
+        ["BankError is an Exception", "issubclass(BankError, Exception)"],
+        ["InsufficientFunds is a BankError", "issubclass(InsufficientFunds, BankError)"],
+        ["AccountLocked is a BankError", "issubclass(AccountLocked, BankError)"],
+      ],
+    }),
+    task("medium", "The message", {
+      prompt: "Using the bank exceptions, define `withdraw(balance, amount)` that raises `InsufficientFunds` with a message like `Balance 50, tried to take 80`, or returns the new balance.",
+      starter: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\n",
+      hint: "Build the message with an f-string inside the `raise`.",
+      solution: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\ndef withdraw(balance, amount):\n    if amount > balance:\n        raise InsufficientFunds(f\"Balance {balance}, tried to take {amount}\")\n    return balance - amount",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["withdraw(100, 30)", "withdraw(100, 30) == 70"],
+        ["withdraw(50, 80)", "_error(withdraw, 50, 80) == \"InsufficientFunds: Balance 50, tried to take 80\""],
+      ],
+    }),
+    task("hard", "Catch the family", {
+      prompt: "Define `safe_withdraw(account, amount)` for an account dict with `balance` and `locked`. Use a helper `withdraw(account, amount)` that raises `AccountLocked(\"Account is locked\")` or `InsufficientFunds(\"Not enough money\")`, or reduces the balance. `safe_withdraw` returns `OK`, or the message of any `BankError`.",
+      starter: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\n",
+      hint: "Write `withdraw` with two checks (locked first). In `safe_withdraw`, `try` it and `return \"OK\"`, with `except BankError as e: return str(e)`.",
+      solution: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\ndef withdraw(account, amount):\n    if account[\"locked\"]:\n        raise AccountLocked(\"Account is locked\")\n    if amount > account[\"balance\"]:\n        raise InsufficientFunds(\"Not enough money\")\n    account[\"balance\"] -= amount\n\ndef safe_withdraw(account, amount):\n    try:\n        withdraw(account, amount)\n        return \"OK\"\n    except BankError as e:\n        return str(e)",
+      tests: [
+        ["A normal withdrawal", "(lambda a: (safe_withdraw(a, 30), a[\"balance\"]))({\"balance\": 100, \"locked\": False}) == (\"OK\", 70)"],
+        ["Locked", "safe_withdraw({\"balance\": 100, \"locked\": True}, 5) == \"Account is locked\""],
+        ["Not enough", "safe_withdraw({\"balance\": 10, \"locked\": False}, 50) == \"Not enough money\""],
+      ],
+    }),
+    task("hard", "Check an order", {
+      prompt: "Define `OrderError`, and `MissingField` and `BadQuantity` as kinds of it. Then `validate(order)` that raises `MissingField(\"item\")` (naming the missing key) if `item` or `qty` is missing, `BadQuantity(\"qty must be at least 1\")` if `qty` is below 1, and otherwise returns `True`.",
+      hint: "Loop over `[\"item\", \"qty\"]` and raise `MissingField(key)` for the first one not `in order`; then check the quantity.",
+      solution: "class OrderError(Exception):\n    pass\n\nclass MissingField(OrderError):\n    pass\n\nclass BadQuantity(OrderError):\n    pass\n\ndef validate(order):\n    for key in [\"item\", \"qty\"]:\n        if key not in order:\n            raise MissingField(key)\n    if order[\"qty\"] < 1:\n        raise BadQuantity(\"qty must be at least 1\")\n    return True",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["A good order", "validate({\"item\": \"tea\", \"qty\": 2}) is True"],
+        ["No item", "_error(validate, {\"qty\": 2}) == \"MissingField: item\""],
+        ["No qty", "_error(validate, {\"item\": \"tea\"}) == \"MissingField: qty\""],
+        ["Zero qty", "_error(validate, {\"item\": \"tea\", \"qty\": 0}) == \"BadQuantity: qty must be at least 1\""],
+        ["They are OrderErrors", "issubclass(MissingField, OrderError) and issubclass(BadQuantity, OrderError)"],
+      ],
+    }),
+    task("expert", "Error codes", {
+      prompt: "Define `status_code(action)` that runs `action()` and returns 200 if it works, 402 for `InsufficientFunds`, 423 for `AccountLocked`, and 400 for any other `BankError`. Other exceptions must still reach the caller.",
+      starter: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\nclass DailyLimit(BankError):\n    pass\n\n",
+      hint: "Three `except` clauses, the specific ones before `BankError`, and `return 200` after the call.",
+      solution: "class BankError(Exception):\n    pass\n\nclass InsufficientFunds(BankError):\n    pass\n\nclass AccountLocked(BankError):\n    pass\n\nclass DailyLimit(BankError):\n    pass\n\ndef status_code(action):\n    try:\n        action()\n    except InsufficientFunds:\n        return 402\n    except AccountLocked:\n        return 423\n    except BankError:\n        return 400\n    return 200",
+      setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
+      tests: [
+        ["Works", "status_code(lambda: None) == 200"],
+        ["Not enough money", "status_code(lambda: _raise(InsufficientFunds())) == 402"],
+        ["Locked", "status_code(lambda: _raise(AccountLocked())) == 423"],
+        ["Another bank error", "status_code(lambda: _raise(DailyLimit())) == 400"],
+        ["Other errors still raise", "_raises(status_code, lambda: 1 / 0) == \"ZeroDivisionError\""],
+      ],
+    }),
+    task("expert", "Check them all", {
+      prompt: "Using `validate` from before, define `problems(orders)` that checks every order and returns a list of `\"<index>: <ExceptionName>: <message>\"` for each invalid one.",
+      starter: "class OrderError(Exception):\n    pass\n\nclass MissingField(OrderError):\n    pass\n\nclass BadQuantity(OrderError):\n    pass\n\ndef validate(order):\n    for key in [\"item\", \"qty\"]:\n        if key not in order:\n            raise MissingField(key)\n    if order[\"qty\"] < 1:\n        raise BadQuantity(\"qty must be at least 1\")\n    return True\n\n",
+      hint: "Loop with `enumerate`; in `except OrderError as e:` append `f\"{i}: {type(e).__name__}: {e}\"`.",
+      solution: "class OrderError(Exception):\n    pass\n\nclass MissingField(OrderError):\n    pass\n\nclass BadQuantity(OrderError):\n    pass\n\ndef validate(order):\n    for key in [\"item\", \"qty\"]:\n        if key not in order:\n            raise MissingField(key)\n    if order[\"qty\"] < 1:\n        raise BadQuantity(\"qty must be at least 1\")\n    return True\n\ndef problems(orders):\n    found = []\n    for i, order in enumerate(orders):\n        try:\n            validate(order)\n        except OrderError as e:\n            found.append(f\"{i}: {type(e).__name__}: {e}\")\n    return found",
+      tests: [
+        ["Mixed orders", "problems([{\"item\": \"tea\", \"qty\": 1}, {\"qty\": 2}, {\"item\": \"jam\", \"qty\": 0}]) == [\"1: MissingField: item\", \"2: BadQuantity: qty must be at least 1\"]"],
+        ["All good", "problems([{\"item\": \"tea\", \"qty\": 1}]) == []"],
+      ],
+    }),
+  ],
+  questions: [
+    mc("Which makes a new exception type?", ["`def MyError(Exception): pass`", "`class MyError(Exception): pass`", "`MyError = Exception`", "`raise MyError`"], 1),
+    mc("What does the name in the brackets of `class InvalidAge(ValueError):` set?", ["The message", "The line number", "The parent: InvalidAge is a kind of ValueError", "Nothing"], 2),
+    mc("Why give your exceptions a shared parent like `BankError`?", ["So callers can catch the whole family at once", "It is required", "So they print in colour", "To make them faster"], 0),
+    mc("`class AccountLocked(BankError)`. Does `except BankError:` catch `AccountLocked`?", ["No", "Only with `as e`", "Only if it has a message", "Yes"], 3),
+    qShort("`class Oops(Exception): pass`. What does `str(Oops(\"bad\"))` give?", "bad"),
+    mc("Why make `InvalidAge` a kind of `ValueError`?", ["It looks nicer", "Code that already catches `ValueError` keeps working", "Exceptions must inherit from `ValueError`", "To skip the message"], 1),
+    mc("Which name follows the convention for an exception type?", ["`InsufficientFunds`", "`insufficient_funds`", "`INSUFFICIENT`", "`insufficientfunds()`"], 0),
+    mc("What does `pass` do in `class TooCold(Exception): pass`?", ["Raises the exception", "Catches it", "Nothing: the class adds nothing beyond its parent", "Ends the program"], 2),
+    mc("What does `except AccountLocked:` tell a reader that `except ValueError:` doesn't?", ["Nothing", "The line number", "The value", "Exactly which problem is being handled"], 3),
+    mc("Where will you learn what `class` really means?", ["Nowhere: it is magic", "In the Classes and objects section", "In Fundamentals", "In Files"], 1),
+  ],
+})

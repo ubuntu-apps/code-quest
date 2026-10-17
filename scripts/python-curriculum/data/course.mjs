@@ -12,7 +12,6 @@ import { dataStructuresTopics } from './data-structures.mjs'
 import { functionsTopics } from './functions.mjs'
 import { errorHandlingTopics } from './error-handling.mjs'
 import { fileHandlingTopics } from './file-handling.mjs'
-import pathlibTopic from './file-handling/pathlib-data.mjs'
 import { modulesTopics } from './modules.mjs'
 import { oopTopics } from './oop.mjs'
 import { dataApisTopics } from './data-apis.mjs'
@@ -26,7 +25,6 @@ const allTopics = new Map(
     ...functionsTopics,
     ...errorHandlingTopics,
     ...fileHandlingTopics,
-    pathlibTopic,
     ...modulesTopics,
     ...oopTopics,
     ...dataApisTopics,
@@ -72,34 +70,13 @@ export const COURSE = [
     sectionId: 'error_handling',
     filename: 'error_handling.json',
     title: 'Errors and exceptions',
-    topics: topics(
-      'try_except',
-      'multiple_except',
-      'else_finally',
-      'exception_hierarchy',
-      'raising_exceptions',
-      'custom_exceptions',
-      'assertions',
-      'defensive_programming',
-      'debugging',
-      'logging_basics',
-    ),
+    topics: errorHandlingTopics,
   },
   {
     sectionId: 'file_handling',
     filename: 'file_handling.json',
     title: 'Files',
-    topics: topics(
-      'opening_files',
-      'with_statement',
-      'reading_files',
-      'writing_files',
-      'appending',
-      'file_paths',
-      'pathlib_data',
-      'text_vs_binary',
-      'file_errors',
-    ),
+    topics: fileHandlingTopics,
   },
   {
     sectionId: 'modules_and_packages',
