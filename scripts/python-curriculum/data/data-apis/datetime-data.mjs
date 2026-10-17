@@ -198,7 +198,7 @@ def business_days(start, end):
     mc('Subtracting two `date` objects gives…', ['An int', 'A timedelta', 'A date', 'A float'], 1),
     mc('What is a "naive" datetime?', ['One in UTC', 'One before 1970', 'One with only a date', 'One with no time zone attached'], 3),
     mc('Why store times in UTC on servers?', ['UTC has no daylight-saving jumps and is the same everywhere', 'It uses less memory', 'Python requires it', 'It is more precise'], 0),
-    qShort('In `strftime`, which code gives the 4-digit year? (like %X)', '%Y'),
+    mc('In `strftime`, which code gives the 4-digit year, like `2026`?', ['`%y`', '`%D`', '`%Y`', '`%j`'], 2),
     mc('What does `datetime(2026, 10, 16, 9, 30).isoformat()` return?', ['16/10/2026 09:30', '2026-10-16T09:30:00', 'Oct 16 2026', '1792145400'], 1),
     mc('`d.weekday()` returns 0 for…', ['Sunday', 'Saturday', 'Monday', 'January'], 2),
     mc('Comparing a naive datetime with an aware one…', ['Treats the naive one as UTC', 'Uses your computer\'s time zone', 'Ignores the time zone', 'Raises a TypeError'], 3),

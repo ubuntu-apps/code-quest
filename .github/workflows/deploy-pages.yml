@@ -44,7 +44,8 @@ jobs:
 
       - name: Check lesson content
         run: |
-          pip install pandas
+          # Pyodide 0.27.2 ships pandas 2.2; match it so the check sees what the app runs.
+          pip install "pandas==2.2.*"
           npm run check:content
 
       - name: Upload artifact

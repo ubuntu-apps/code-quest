@@ -4,7 +4,6 @@ import { PASS_DEFAULT } from '../constants'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditorMode } from '../../editor'
 import { YesNoQuestionInput } from '../components/YesNoQuestionInput'
-import { CodeTextarea } from '../codeEditor'
 import { isYesNoQuestion, yesNoCorrectAnswer } from '../testQuestionUtils'
 
 interface TestStepProps {
@@ -125,15 +124,19 @@ export function TestStep({
                     ) : (
                       <>
                         <SimpleMarkdown text={q.prompt} />
-                        <CodeTextarea
-                          className={`cq-code-input${
+                        <input
+                          type="text"
+                          className={`cq-code-input cq-short-answer${
                             showFeedback
                               ? questionPassed
                                 ? ' cq-code-input--pass'
                                 : ' cq-code-input--fail'
                               : ''
                           }`}
-                          rows={2}
+                          aria-label={`Answer to question ${qi + 1}`}
+                          autoComplete="off"
+                          autoCapitalize="off"
+                          autoCorrect="off"
                           spellCheck={false}
                           value={testShort[q.id] ?? ''}
                           onChange={(e) => onTestShortChange(q.id, e.target.value)}
