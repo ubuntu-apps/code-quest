@@ -134,6 +134,25 @@ export function task(difficulty, title, { prompt, starter = '', hint, solution, 
 }
 
 /**
+ * Setup code for challenges that read input: plays the user, so each `input()`
+ * call gets the next answer, and the prompt plus answer appear in the output
+ * just as they would when someone types them.
+ *
+ * @param {...string} answers
+ */
+export function typedInput(...answers) {
+  return (
+    `_cq_answers = [${answers.map((a) => `'${a.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`).join(', ')}]\n` +
+    'def input(prompt=""):\n' +
+    '    if not _cq_answers:\n' +
+    `        raise EOFError("This check only types ${answers.length} answer(s): call input() fewer times.")\n` +
+    '    value = _cq_answers.pop(0)\n' +
+    '    print(str(prompt) + value)\n' +
+    '    return value\n'
+  )
+}
+
+/**
  * Multiple-choice question. `options` are labels; `correct` is the index of the right one.
  * Vary `correct` across questions: the app shows choices in this order.
  *
