@@ -3,6 +3,7 @@ import {
   getProgressSnapshot,
   loadProgress,
   progressKey,
+  saveChallengeDraft,
   saveProgress,
   subscribeProgress,
 } from './progressStorage'
@@ -53,5 +54,24 @@ describe('progressStorage', () => {
     unsubscribe()
     saveProgress('python', 'x', { challengesCompleted: ['a'], testPassed: false })
     expect(listener).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('saveChallengeDraft', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('saves the draft without notifying progress listeners', () => {
+    const listener = vi.fn()
+    const unsubscribe = subscribeProgress(listener)
+    saveProgress('python', 'lvl', { challengesCompleted: ['a'], testPassed: true })
+    expect(listener).toHaveBeenCalledTimes(1)
+    saveChallengeDraft('python', 'lvl', 'b', 'print(1)')
+    expect(listener).toHaveBeenCalledTimes(1)
+    unsubscribe()
+    expect(loadProgress('python', 'lvl')).toEqual({
+      challengesCompleted: ['a'],
+      testPassed: true,
+      challengeAnswers: { b: 'print(1)' },
+    })
   })
 })

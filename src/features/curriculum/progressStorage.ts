@@ -41,6 +41,24 @@ export function saveProgress(languageId: string, levelId: string, p: LevelProgre
   notifyProgressChanged()
 }
 
+/**
+ * Saves a challenge's draft answer while the learner types. Drafts don't change
+ * progress, XP or unlocking, so this skips notifying listeners (which would make
+ * every progress-driven view recompute on each keystroke).
+ */
+export function saveChallengeDraft(languageId: string, levelId: string, challengeId: string, answer: string): void {
+  const prev = loadProgress(languageId, levelId)
+  const next: LevelProgress = {
+    ...prev,
+    challengeAnswers: { ...(prev.challengeAnswers ?? {}), [challengeId]: answer },
+  }
+  try {
+    localStorage.setItem(progressKey(languageId, levelId), JSON.stringify(next))
+  } catch {
+    // Storage full or unavailable: the draft stays in memory for this session.
+  }
+}
+
 let progressVersion = 0
 const progressListeners = new Set<() => void>()
 

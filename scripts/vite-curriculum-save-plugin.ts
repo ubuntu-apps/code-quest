@@ -13,10 +13,32 @@ function isSafeRelativePath(filePath: string): boolean {
   return !path.isAbsolute(normalized) && !normalized.split(path.sep).includes('..')
 }
 
+/**
+ * Only the app itself may save. Any web page you visit could otherwise POST to
+ * localhost while `npm run dev` runs. Requiring a JSON content type forces a CORS
+ * preflight (which this endpoint never approves), and a foreign Origin is refused.
+ */
+function isTrustedRequest(req: import('http').IncomingMessage): boolean {
+  const contentType = String(req.headers['content-type'] ?? '')
+  if (!contentType.toLowerCase().startsWith('application/json')) return false
+  const origin = req.headers.origin
+  if (!origin) return true
+  try {
+    return new URL(origin).host === req.headers.host
+  } catch {
+    return false
+  }
+}
+
 async function handleSave(req: import('http').IncomingMessage, res: import('http').ServerResponse, rootDir: string) {
   if (req.method !== 'POST') {
     res.statusCode = 405
     res.end('Method not allowed')
+    return
+  }
+  if (!isTrustedRequest(req)) {
+    res.statusCode = 403
+    res.end('Forbidden')
     return
   }
 
@@ -49,7 +71,7 @@ async function handleSave(req: import('http').IncomingMessage, res: import('http
       if (!file?.path || typeof file.path !== 'string') {
         throw new Error('Each file must have a path string')
       }
-      if (!isSafeRelativePath(file.path)) {
+      if (!isSafeRelativePath(file.path) || !file.path.endsWith('.json')) {
         throw new Error(`Unsafe path: ${file.path}`)
       }
       const dest = path.join(contentRoot, file.path)

@@ -5,16 +5,68 @@
  * worker (and starts a fresh one) when code runs too long or the learner
  * presses Stop.
  *
- * Learner code is handed to Python as data (a Python dict built with
- * pyodide.toPy), never pasted into Python source, so no quoting or escaping
- * can break it. Every run gets a brand-new namespace, so variables from an
- * earlier run or lesson never leak into the next one.
+ * Learner code is passed to the Python helpers below as function arguments,
+ * never pasted into Python source, so no quoting or escaping can break it.
+ * Every run gets a brand-new namespace, so variables from an earlier run or
+ * lesson never leak into the next one. Printed output is capped and streamed
+ * to the page in chunks ('output' messages), so a run that times out still
+ * shows what it printed.
+ *
+ * scripts/check-curriculum.mjs runs lesson content through these same helpers.
  */
 
 var pyodideReady = null
 
 var PY_HELPERS = [
-  'import io, sys, json, traceback, builtins',
+  'import io, os, sys, json, time, tempfile, traceback, builtins',
+  '',
+  '# Printed text beyond this is dropped, so a print loop can\'t exhaust memory.',
+  '_CQ_OUTPUT_LIMIT = 100_000',
+  '',
+  'class _CqOutput(io.TextIOBase):',
+  '    """Captures printed text, caps its size, and streams it to the page in chunks."""',
+  '',
+  '    def __init__(self, on_output=None):',
+  '        self._parts = []',
+  '        self._size = 0',
+  '        self._pending = []',
+  '        self._pending_size = 0',
+  '        self._last_flush = time.monotonic()',
+  '        self._on_output = on_output',
+  '        self.truncated = False',
+  '',
+  '    def writable(self):',
+  '        return True',
+  '',
+  '    def write(self, s):',
+  '        s = str(s)',
+  '        if self.truncated:',
+  '            return len(s)',
+  '        text = s',
+  '        room = _CQ_OUTPUT_LIMIT - self._size',
+  '        if len(s) > room:',
+  '            text = s[:room] + "\\n[Output stopped: your code printed more than 100,000 characters.]\\n"',
+  '            self.truncated = True',
+  '        self._parts.append(text)',
+  '        self._size += len(text)',
+  '        self._pending.append(text)',
+  '        self._pending_size += len(text)',
+  '        if self.truncated or self._pending_size > 8192 or time.monotonic() - self._last_flush > 0.25:',
+  '            self.flush()',
+  '        return len(s)',
+  '',
+  '    def flush(self):',
+  '        if self._pending and self._on_output is not None:',
+  '            try:',
+  '                self._on_output("".join(self._pending))',
+  '            except Exception:',
+  '                pass',
+  '        self._pending = []',
+  '        self._pending_size = 0',
+  '        self._last_flush = time.monotonic()',
+  '',
+  '    def getvalue(self):',
+  '        return "".join(self._parts)',
   '',
   'def _cq_make_input(lines, out):',
   '    queue = list(lines)',
@@ -35,8 +87,8 @@ var PY_HELPERS = [
   'def _cq_error_text():',
   '    return traceback.format_exc()',
   '',
-  'def _cq_run(src, stdin_text):',
-  '    buf = io.StringIO()',
+  'def _cq_run(src, stdin_text, on_output=None):',
+  '    buf = _CqOutput(on_output)',
   '    old_out, old_in = sys.stdout, sys.stdin',
   '    sys.stdout = buf',
   '    sys.stdin = io.StringIO(stdin_text)',
@@ -62,8 +114,17 @@ var PY_HELPERS = [
   '    return json.dumps({"output": out, "error": error})',
   '',
   'def _cq_tests(user, setup, tests_json, stdin_text):',
+  '    # Each check runs in its own empty folder, so files from earlier runs can\'t change the result.',
+  '    home = os.getcwd()',
+  '    os.chdir(tempfile.mkdtemp(prefix="cq-check-"))',
+  '    try:',
+  '        return _cq_tests_here(user, setup, tests_json, stdin_text)',
+  '    finally:',
+  '        os.chdir(home)',
+  '',
+  'def _cq_tests_here(user, setup, tests_json, stdin_text):',
   '    tests = json.loads(tests_json)',
-  '    buf = io.StringIO()',
+  '    buf = _CqOutput()',
   '    ns = _cq_fresh_ns(stdin_text, buf)',
   '    old_out, old_in = sys.stdout, sys.stdin',
   '    sys.stdin = io.StringIO(stdin_text)',
@@ -115,6 +176,10 @@ function callPy(pyodide, name, args) {
   }
 }
 
+function errorText(err) {
+  return String((err && err.message) || err)
+}
+
 self.onmessage = async function (event) {
   var msg = event.data || {}
   if (msg.type === 'init') {
@@ -122,7 +187,7 @@ self.onmessage = async function (event) {
       await loadRuntime(msg.cdnBase)
       self.postMessage({ type: 'ready' })
     } catch (err) {
-      self.postMessage({ type: 'load-error', message: String((err && err.message) || err) })
+      self.postMessage({ type: 'load-error', message: errorText(err) })
     }
     return
   }
@@ -131,44 +196,39 @@ self.onmessage = async function (event) {
   try {
     pyodide = await loadRuntime(msg.cdnBase)
   } catch (err) {
-    self.postMessage({ id: msg.id, type: 'crash', message: String((err && err.message) || err) })
-    return
-  }
-
-  // "Download for offline": fetch every package the lessons import, without running anything.
-  if (msg.type === 'preload') {
-    try {
-      await pyodide.loadPackagesFromImports(msg.code || '')
-      self.postMessage({ id: msg.id, type: 'result', payload: { ok: true } })
-    } catch (err) {
-      self.postMessage({ id: msg.id, type: 'crash', message: String((err && err.message) || err) })
-    }
+    self.postMessage({ id: msg.id, type: 'crash', message: errorText(err) })
     return
   }
 
   // Some modules ship as separate Pyodide packages (sqlite3, pandas, numpy, ...).
   // Download the ones this code imports before running it. The page's run time
   // limit starts only after this, when we post 'started'.
-  var source = msg.type === 'run' ? msg.code : (msg.setupCode || '') + '\n' + (msg.userCode || '')
+  var source =
+    msg.type === 'run' || msg.type === 'preload'
+      ? msg.code || ''
+      : (msg.setupCode || '') + '\n' + (msg.userCode || '')
   try {
     await pyodide.loadPackagesFromImports(source)
   } catch (err) {
-    self.postMessage({
-      id: msg.id,
-      type: 'crash',
-      message:
-        'Could not download a Python package this code needs. Check your internet connection and try again. (' +
-        String((err && err.message) || err) +
-        ')',
-    })
+    self.postMessage({ id: msg.id, type: 'package-error', message: errorText(err) })
     return
   }
+
+  // "Download for offline": the packages are now cached; nothing to run.
+  if (msg.type === 'preload') {
+    self.postMessage({ id: msg.id, type: 'result', payload: { ok: true } })
+    return
+  }
+
   self.postMessage({ id: msg.id, type: 'started' })
 
   try {
     var raw
     if (msg.type === 'run') {
-      raw = callPy(pyodide, '_cq_run', [msg.code, msg.stdin || ''])
+      var onOutput = function (text) {
+        self.postMessage({ id: msg.id, type: 'output', text: String(text) })
+      }
+      raw = callPy(pyodide, '_cq_run', [msg.code, msg.stdin || '', onOutput])
     } else if (msg.type === 'tests') {
       raw = callPy(pyodide, '_cq_tests', [
         msg.userCode,
@@ -181,6 +241,8 @@ self.onmessage = async function (event) {
     }
     self.postMessage({ id: msg.id, type: 'result', payload: JSON.parse(raw) })
   } catch (err) {
-    self.postMessage({ id: msg.id, type: 'crash', message: String((err && err.message) || err) })
+    // A JavaScript-level failure (Python errors are returned as data above).
+    // The page replaces this worker, since Pyodide may be unusable now.
+    self.postMessage({ id: msg.id, type: 'crash', message: errorText(err) })
   }
 }

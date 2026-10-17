@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
-import { loadProgress, saveProgress } from '../progressStorage'
+import { loadProgress, saveChallengeDraft, saveProgress } from '../progressStorage'
 import { runPythonChallengeTests, type PythonChallengeTestResult } from '../pythonSandbox'
 import { runRChallengeTests, type RChallengeTestResult } from '../rSandbox'
 import type { Challenge, Level } from '../types'
@@ -86,7 +86,7 @@ export function useChallenges(languageId: string | null, level: Level | null, on
 
   const changeDraft = (challengeId: string, value: string) => {
     setDrafts((prev) => ({ ...prev, [challengeId]: value }))
-    if (languageId && level) saveAnswer(languageId, level.id, challengeId, value)
+    if (languageId && level) saveChallengeDraft(languageId, level.id, challengeId, value)
   }
 
   /** Records that the answer was revealed before the challenge was solved (it then earns less XP). */

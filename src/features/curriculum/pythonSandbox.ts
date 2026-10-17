@@ -57,19 +57,24 @@ type WorkerReply =
   | { type: 'ready' }
   | { type: 'load-error'; message: string }
   | { id: number; type: 'started' }
+  | { id: number; type: 'output'; text: string }
   | { id: number; type: 'result'; payload: unknown }
   | { id: number; type: 'crash'; message: string }
+  | { id: number; type: 'package-error'; message: string }
 
 type JobOutcome =
   | { kind: 'result'; payload: unknown }
   | { kind: 'crash'; message: string }
   | { kind: 'timeout' }
   | { kind: 'package-timeout' }
+  | { kind: 'package-error' }
   | { kind: 'stopped' }
 
 interface ActiveJob {
   id: number
   timer: ReturnType<typeof setTimeout> | null
+  /** Output streamed so far, shown if the run doesn't finish (timeout, Stop, crash). */
+  partialOutput: string
   settle: (outcome: JobOutcome) => void
   /** Called when the worker has its packages and starts running the code. */
   start: () => void
@@ -109,11 +114,21 @@ function handleWorkerMessage(reply: WorkerReply): void {
     job.start()
     return
   }
-  job.settle(
-    reply.type === 'result'
-      ? { kind: 'result', payload: reply.payload }
-      : { kind: 'crash', message: reply.message },
-  )
+  if (reply.type === 'output') {
+    job.partialOutput += reply.text
+    return
+  }
+  if (reply.type === 'result') {
+    job.settle({ kind: 'result', payload: reply.payload })
+    return
+  }
+  if (reply.type === 'package-error') {
+    job.settle({ kind: 'package-error' })
+    return
+  }
+  // A JavaScript-level failure can leave Pyodide unusable, so start fresh next time.
+  discardWorker()
+  job.settle({ kind: 'crash', message: reply.message })
 }
 
 /** Starts (or reuses) the worker and resolves once Pyodide has loaded inside it. */
@@ -153,12 +168,14 @@ function ensureWorker(): Promise<void> {
   return workerReady
 }
 
-async function runJob(request: WorkerRequest): Promise<JobOutcome> {
+type JobResult = { outcome: JobOutcome; partialOutput: string }
+
+async function runJob(request: WorkerRequest): Promise<JobResult> {
   await ensureWorker()
   const w = worker
-  if (!w) return { kind: 'stopped' }
+  if (!w) return { outcome: { kind: 'stopped' }, partialOutput: '' }
   const id = nextJobId++
-  return new Promise<JobOutcome>((resolve) => {
+  return new Promise<JobResult>((resolve) => {
     // The only way to interrupt a busy Pyodide is to kill its worker.
     const limit = (ms: number, outcome: JobOutcome) => {
       if (job.timer) clearTimeout(job.timer)
@@ -170,10 +187,11 @@ async function runJob(request: WorkerRequest): Promise<JobOutcome> {
     const job: ActiveJob = {
       id,
       timer: null,
+      partialOutput: '',
       settle: (outcome) => {
         if (job.timer) clearTimeout(job.timer)
         if (activeJob === job) activeJob = null
-        resolve(outcome)
+        resolve({ outcome, partialOutput: job.partialOutput })
       },
       start: () => limit(PYTHON_RUN_TIME_LIMIT_MS, { kind: 'timeout' }),
     }
@@ -185,7 +203,7 @@ async function runJob(request: WorkerRequest): Promise<JobOutcome> {
 }
 
 /** Runs jobs one at a time so a slow job's time limit never covers another's. */
-function enqueue(request: WorkerRequest): Promise<JobOutcome> {
+function enqueue(request: WorkerRequest): Promise<JobResult> {
   const next = queue.then(() => runJob(request))
   queue = next.catch(() => undefined)
   return next
@@ -198,7 +216,7 @@ function enqueue(request: WorkerRequest): Promise<JobOutcome> {
 export async function preparePythonOffline(lessonCode: string): Promise<void> {
   let outcome: JobOutcome
   try {
-    outcome = await enqueue({ type: 'preload', code: lessonCode })
+    outcome = (await enqueue({ type: 'preload', code: lessonCode })).outcome
   } catch (error: unknown) {
     throw new Error(error instanceof RunStoppedError ? 'The download was stopped.' : RUNTIME_LOAD_ERROR, {
       cause: error,
@@ -206,7 +224,7 @@ export async function preparePythonOffline(lessonCode: string): Promise<void> {
   }
   if (outcome.kind === 'result') return
   if (outcome.kind === 'stopped') throw new Error('The download was stopped.')
-  if (outcome.kind === 'crash') {
+  if (outcome.kind === 'crash' || outcome.kind === 'package-error') {
     throw new Error('Could not download the Python packages. Check your internet connection and try again.')
   }
   throw new Error('Downloading Python took too long. Check your internet connection and try again.')
@@ -256,19 +274,29 @@ async function outcomeError(outcome: Exclude<JobOutcome, { kind: 'result' }>): P
       errorType: 'PackageTimeout',
     }
   }
+  if (outcome.kind === 'package-error') {
+    return {
+      title: 'Could not download a Python package',
+      detail: 'This code imports a package (such as pandas or sqlite3) that has to be downloaded first, and the download failed.',
+      tip: 'Check your internet connection and run the code again.',
+      errorType: 'PackageError',
+    }
+  }
   if (outcome.kind === 'stopped') return stoppedError()
   return explainPythonError(outcome.message)
 }
 
 export async function runPythonCode(source: string, stdin = ''): Promise<SandboxRunResult> {
   let outcome: JobOutcome
+  let partialOutput: string
   try {
-    outcome = await enqueue({ type: 'run', code: source, stdin })
+    ;({ outcome, partialOutput } = await enqueue({ type: 'run', code: source, stdin }))
   } catch (error: unknown) {
     return { output: '', error: error instanceof RunStoppedError ? stoppedError() : loadError() }
   }
   if (outcome.kind !== 'result') {
-    return { output: '', error: await outcomeError(outcome) }
+    // Show what was printed before the run was cut off; it helps find a runaway loop.
+    return { output: partialOutput, error: await outcomeError(outcome) }
   }
   const payload = outcome.payload as RunPayload
   return {
@@ -284,7 +312,7 @@ export async function runPythonChallengeTests(
 ): Promise<PythonChallengeRunResult> {
   let outcome: JobOutcome
   try {
-    outcome = await enqueue({ type: 'tests', userCode, setupCode: setupCode ?? '', tests, stdin: '' })
+    outcome = (await enqueue({ type: 'tests', userCode, setupCode: setupCode ?? '', tests, stdin: '' })).outcome
   } catch (error: unknown) {
     return {
       passed: false,

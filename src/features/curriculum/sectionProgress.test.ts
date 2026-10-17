@@ -92,15 +92,21 @@ describe('section project gates', () => {
     expect(isSectionUnlocked('python', sections, 1)).toBe(true)
   })
 
-  it('without projects, the next section unlocks once every quiz is passed', () => {
+  it('without projects, the next section is open by default', () => {
+    const sections = [{ file: { levels: [{ ...topic, id: 'quizA' }] } }, { file: { levels: [topic] } }]
+    expect(isSectionUnlocked('python', sections, 1)).toBe(true)
+  })
+
+  it('with lockByQuizzes, the next section unlocks once every quiz is passed', () => {
     const quizA = { ...topic, id: 'quizA' }
     const quizB = { ...topic, id: 'quizB' }
     const sections = [{ file: { levels: [quizA, quizB] } }, { file: { levels: [topic] } }]
+    const opts = { lockByQuizzes: true }
 
-    expect(isSectionUnlocked('python', sections, 1)).toBe(false)
+    expect(isSectionUnlocked('python', sections, 1, opts)).toBe(false)
     saveProgress('python', 'quizA', { challengesCompleted: [], testPassed: true })
-    expect(isSectionUnlocked('python', sections, 1)).toBe(false)
+    expect(isSectionUnlocked('python', sections, 1, opts)).toBe(false)
     saveProgress('python', 'quizB', { challengesCompleted: [], testPassed: true })
-    expect(isSectionUnlocked('python', sections, 1)).toBe(true)
+    expect(isSectionUnlocked('python', sections, 1, opts)).toBe(true)
   })
 })

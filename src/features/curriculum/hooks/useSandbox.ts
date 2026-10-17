@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
 import { runPythonCode, stopPythonRun } from '../pythonSandbox'
 import { runRCode } from '../rSandbox'
@@ -16,8 +16,12 @@ export function useSandbox(languageId: string | null) {
   const [running, setRunning] = useState(false)
   const [error, setError] = useState<FriendlySandboxError | null>(null)
   const [errorUiEpoch, setErrorUiEpoch] = useState(0)
+  // Bumped when a new level opens, so a run that finishes later can't write into it.
+  const levelEpochRef = useRef(0)
 
   const run = async (stdin = '') => {
+    const epoch = levelEpochRef.current
+    const stillCurrent = () => levelEpochRef.current === epoch
     setRunning(true)
     setError(null)
     setOutput(
@@ -27,9 +31,11 @@ export function useSandbox(languageId: string | null) {
     )
     try {
       const result = languageId === 'r' ? await runRCode(code) : await runPythonCode(code, stdin)
+      if (!stillCurrent()) return
       setOutput(result.output.trim() ? result.output : '[no output]')
       setError(result.error)
     } catch (err: unknown) {
+      if (!stillCurrent()) return
       setOutput('')
       const runtimeName = languageId === 'r' ? 'R' : 'Python'
       setError({
@@ -53,6 +59,7 @@ export function useSandbox(languageId: string | null) {
 
   /** Fresh sandbox when a level is opened. */
   const resetForLevel = useCallback((level: Level, langId: string | null) => {
+    levelEpochRef.current += 1
     setCode(startingCode(level, langId))
     setOutput('')
     setRunning(false)

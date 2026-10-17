@@ -363,6 +363,16 @@ export function CodeQuestScreen() {
     }
   }, [isEditMode, languageId, sectionId, bundleForView, isSectionUnlockedFor, goToLanguage])
 
+  // Same for a locked level opened directly by URL.
+  useEffect(() => {
+    if (isEditMode || learnView !== 'level' || !languageId || !selectedSection || !levelId) return
+    const levels = selectedSection.file.levels
+    const index = levels.findIndex((l) => l.id === levelId)
+    if (index > 0 && !isLevelUnlocked(languageId, levels, index)) {
+      goToSection(languageId, selectedSection.sectionRef.id)
+    }
+  }, [isEditMode, learnView, languageId, selectedSection, levelId, isLevelUnlocked, goToSection])
+
   const resetLevelWorkState = useCallback(
     (level: Level, langId: string | null) => {
       resetChallengesForLevel(level, langId)
