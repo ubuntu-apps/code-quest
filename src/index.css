@@ -10,6 +10,7 @@
   --cq-success: #4ade80;
   --cq-font: system-ui, 'Segoe UI', Roboto, sans-serif;
   --cq-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  --cq-code-size: 0.88rem;
 
   color-scheme: dark;
   font-family: var(--cq-font);
@@ -34,4 +35,25 @@ body {
 
 #root {
   min-height: 100svh;
+}
+
+/* Phones: larger base text (everything is sized in rem, so it all scales). Code
+   fields stay at 16px or more: iOS zooms into a field with smaller text when it
+   is tapped, and the page then stays zoomed in. */
+@media (max-width: 640px) {
+  :root {
+    font-size: 17px;
+    --cq-code-size: 16px;
+  }
+}
+
+/* Browsers give buttons their own small font (13.33px) unless told to inherit. */
+button {
+  font: inherit;
+}
+
+input,
+textarea,
+select {
+  font-size: max(16px, 1em);
 }
