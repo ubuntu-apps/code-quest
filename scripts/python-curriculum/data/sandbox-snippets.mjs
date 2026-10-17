@@ -2,61 +2,6 @@ import { snippet } from './_builders.mjs'
 
 /** @type {Record<string, { id: string, label: string, code: string }[]>} */
 export const SANDBOX_SNIPPETS_BY_LEVEL = {
-  // ── Classes and objects ───────────────────────────────────────────
-  classes_basics: [
-    snippet('Define class', 'class Cat:\n    pass\n\nc = Cat()\nprint(c)'),
-    snippet('__init__', 'class Dog:\n    def __init__(self, name):\n        self.name = name\n\nd = Dog("Rex")\nprint(d.name)'),
-    snippet('Method', 'class Dog:\n    def bark(self):\n        return "woof"\nprint(Dog().bark())'),
-    snippet('Two instances', 'class Point:\n    def __init__(self, x):\n        self.x = x\nprint(Point(1).x, Point(2).x)'),
-    snippet('isinstance', 'class Dog:\n    pass\nprint(isinstance(Dog(), Dog))'),
-  ],
-  methods: [
-    snippet('inc counter', 'class Counter:\n    def __init__(self):\n        self.n = 0\n    def inc(self):\n        self.n += 1\n    def value(self):\n        return self.n\nc = Counter()\nc.inc()\nprint(c.value())'),
-    snippet('Return self', 'class Builder:\n    def add(self, x):\n        self.x = x\n        return self\nb = Builder().add(1)\nprint(b.x)'),
-    snippet('staticmethod', 'class Math:\n    @staticmethod\n    def add(a, b):\n        return a + b\nprint(Math.add(2, 3))'),
-    snippet('classmethod', 'class User:\n    def __init__(self, name):\n        self.name = name\n    @classmethod\n    def guest(cls):\n        return cls("guest")\nprint(User.guest().name)'),
-  ],
-  inheritance: [
-    snippet('Override', 'class Animal:\n    def speak(self):\n        return "..."\n\nclass Dog(Animal):\n    def speak(self):\n        return "woof"\nprint(Dog().speak())'),
-    snippet('super()', 'class Animal:\n    def __init__(self, name):\n        self.name = name\n\nclass Dog(Animal):\n    def __init__(self, name):\n        super().__init__(name)\n\nd = Dog("Rex")\nprint(d.name)'),
-    snippet('Subclass check', 'class Animal:\n    pass\nclass Dog(Animal):\n    pass\nprint(issubclass(Dog, Animal))'),
-  ],
-  encapsulation: [
-    snippet('Private attr', 'class BankAccount:\n    def __init__(self, balance=0):\n        self._balance = balance\n    def deposit(self, amount):\n        self._balance += amount\n    def get_balance(self):\n        return self._balance\na = BankAccount(100)\na.deposit(50)\nprint(a.get_balance())'),
-    snippet('property getter', 'class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\nc = Circle(5)\nprint(c.radius)'),
-    snippet('Validate setter', 'class Circle:\n    def __init__(self, r):\n        self.radius = r\n    @property\n    def radius(self):\n        return self._r\n    @radius.setter\n    def radius(self, value):\n        if value < 0:\n            raise ValueError("negative radius")\n        self._r = value\nc = Circle(3)\nprint(c.radius)'),
-  ],
-  polymorphism: [
-    snippet('Duck typing', 'def announce(animal):\n    print(animal.speak())\n\nclass Cat:\n    def speak(self):\n        return "meow"\n\nclass Dog:\n    def speak(self):\n        return "woof"\n\nfor a in [Cat(), Dog()]:\n    print(a.speak())'),
-    snippet('Shared interface', 'class Square:\n    def area(self):\n        return 4\n\nclass Circle:\n    def area(self):\n        return 3\n\nfor shape in [Square(), Circle()]:\n    print(shape.area())'),
-  ],
-  dunder_methods: [
-    snippet('__repr__', 'class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __repr__(self):\n        return f"Point({self.x}, {self.y})"\nprint(repr(Point(1, 2)))'),
-    snippet('__str__', 'class Greeter:\n    def __str__(self):\n        return "hello"\nprint(str(Greeter()))'),
-    snippet('__eq__', 'class Point:\n    def __init__(self, x):\n        self.x = x\n    def __eq__(self, other):\n        return self.x == other.x\nprint(Point(1) == Point(1))'),
-    snippet('__len__', 'class Bag:\n    def __init__(self, items):\n        self.items = items\n    def __len__(self):\n        return len(self.items)\nprint(len(Bag([1, 2, 3])))'),
-  ],
-  properties: [
-    snippet('Read-only', 'class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\nc = Circle(5)\nprint(c.radius)'),
-    snippet('Setter', 'class Circle:\n    def __init__(self, r):\n        self._r = r\n    @property\n    def radius(self):\n        return self._r\n    @radius.setter\n    def radius(self, value):\n        self._r = value\nc = Circle(5)\nc.radius = 10\nprint(c.radius)'),
-    snippet('Computed', 'class Rectangle:\n    def __init__(self, w, h):\n        self.w, self.h = w, h\n    @property\n    def area(self):\n        return self.w * self.h\nprint(Rectangle(4, 5).area)'),
-  ],
-  dataclasses: [
-    snippet('@dataclass', 'from dataclasses import dataclass\n\n@dataclass\nclass User:\n    name: str\n    score: int = 0\n\nprint(User("Ana", 42))'),
-    snippet('Default field', 'from dataclasses import dataclass, field\n\n@dataclass\nclass Team:\n    name: str\n    members: list = field(default_factory=list)\n\nt = Team("A")\nprint(t)'),
-    snippet('Compare', 'from dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: int\n    y: int\n\nprint(Point(1, 2) == Point(1, 2))'),
-  ],
-  special_methods_adv: [
-    snippet('Composition', 'class Engine:\n    def start(self):\n        return "vroom"\n\nclass Car:\n    def __init__(self, engine):\n        self.engine = engine\n    def drive(self):\n        return self.engine.start()\nprint(Car(Engine()).drive())'),
-    snippet('Inject dependency', 'class Logger:\n    def log(self, msg):\n        return msg\n\nclass App:\n    def __init__(self, logger):\n        self.logger = logger\n    def run(self):\n        return self.logger.log("ok")\nprint(App(Logger()).run())'),
-    snippet('Factory', 'def make_user(name):\n    return {"name": name, "active": True}\nprint(make_user("Ana"))'),
-  ],
-  oop_design: [
-    snippet('Abstract style', 'class Notifier:\n    def send(self, message: str) -> None:\n        raise NotImplementedError\n\nclass EmailNotifier(Notifier):\n    def send(self, message: str) -> None:\n        print(f"Email: {message}")\nEmailNotifier().send("Hello")'),
-    snippet('Single responsibility', 'class Report:\n    def build(self, data):\n        return str(data)\n\nclass Printer:\n    def print(self, text):\n        print(text)'),
-    snippet('Interface', 'class Shape:\n    def area(self):\n        raise NotImplementedError\n\nclass Square(Shape):\n    def area(self):\n        return 1\nprint(Square().area())'),
-  ],
-
   // ── Data and APIs ─────────────────────────────────────────────
   json_basics: [
     snippet('dumps', 'import json\ndata = {"name": "Ana", "score": 95}\nprint(json.dumps(data))'),
@@ -175,25 +120,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
   ],
 
   // ── Section projects ────────────────────────────────────────────
-  rectangle_class: [
-    snippet('class def', 'class Rectangle:\n    pass\nprint(Rectangle)'),
-    snippet('__init__', 'class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\nr = Rectangle(4, 5)\nprint(r.width)'),
-    snippet('area()', 'class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\n    def area(self):\n        return self.width * self.height\nprint(Rectangle(4, 5).area())'),
-    snippet('Instance', 'class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\n    def area(self):\n        return self.width * self.height\nprint(Rectangle(3, 3).area())'),
-  ],
-  contact_card: [
-    snippet('Contact class', 'class Contact:\n    def __init__(self, name, email):\n        self.name, self.email = name, email\n\nc = Contact("Ana", "ana@mail.com")\nprint(c.name)'),
-    snippet('label()', 'class Contact:\n    def __init__(self, n, e):\n        self.name, self.email = n, e\n    def label(self):\n        return f"{self.name} <{self.email}>"\nprint(Contact("Ana", "a@b").label())'),
-    snippet('Contact list', 'book = []\nbook.append(1)\nbook.append(2)\nprint(len(book))'),
-    snippet('Email check', 'print("@" in "ana@mail.com")'),
-  ],
-  bank_account: [
-    snippet('Balance 0', 'balance = 0\nprint(balance)'),
-    snippet('deposit', 'balance = 0\nbalance += 50\nprint(balance)'),
-    snippet('safe withdraw', 'balance = 50\namount = 30\nif amount <= balance:\n    balance -= amount\nprint(balance)'),
-    snippet('Transactions', 'transactions = 0\ntransactions += 1\ntransactions += 1\nprint(transactions)'),
-    snippet('Full class', 'class BankAccount:\n    def __init__(self):\n        self.balance = 0\n    def deposit(self, amount):\n        self.balance += amount\na = BankAccount()\na.deposit(100)\nprint(a.balance)'),
-  ],
 
   // Reused project ids with section-specific prefixes
   proj_data_apis_weather_cli: [

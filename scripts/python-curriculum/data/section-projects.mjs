@@ -1,4 +1,4 @@
-import { makeProject, ch, qMcq, qShort, pyVar, pyOut, includes } from './_builders.mjs'
+import { makeProject } from './_builders.mjs'
 import { projectsTopics } from './projects.mjs'
 import aboutMeCard from './fundamentals/project-about-me.mjs'
 import unitConverter from './fundamentals/project-unit-converter.mjs'
@@ -21,6 +21,9 @@ import savedTodo from './file-handling/project-saved-todo.mjs'
 import diceRoller from './modules/project-dice-roller.mjs'
 import habitTracker from './modules/project-habit-tracker.mjs'
 import shopPackage from './modules/project-shop-package.mjs'
+import playlist from './oop/project-playlist.mjs'
+import parkingGarage from './oop/project-parking-garage.mjs'
+import monsterBattle from './oop/project-monster-battle.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -41,84 +44,6 @@ function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions 
   })
 }
 
-const oopEasy = makeProject('easy', {
-  id: 'rectangle_class',
-  title: 'Rectangle class',
-  paragraphs: [
-    'Model a rectangle with `width` and `height` attributes and an `area()` method.',
-    'Create an instance and print its area.',
-  ],
-  sandboxCode: 'class Rectangle:\n    def __init__(self, width, height):\n        self.width = width\n        self.height = height\n    def area(self):\n        return self.width * self.height\n\nr = Rectangle(4, 5)\nprint(r.area())',
-  challenges: [
-    ch('easy', 'class keyword', 'Define `class Rectangle:`.', includes('class Rectangle'), { starterCode: 'class Rectangle:\n    pass' }),
-    ch('medium', '__init__', 'Store width and height on self.', includes('def __init__'), { starterCode: 'class Rectangle:\n    def __init__(self, width, height):\n        ' }),
-    ch('medium', 'area method', 'Return width * height.', pyVar('a', 'a == 20', 'class Rectangle:\n def __init__(self,w,h): self.width=w; self.height=h\n def area(self): return self.width*self.height\na=Rectangle(4,5).area()')),
-    ch('hard', 'Create instance', 'Instantiate Rectangle(3, 3).', pyVar('r', 'r.area() == 9', 'class Rectangle:\n def __init__(self,w,h): self.width=w; self.height=h\n def area(self): return self.width*self.height\nr=Rectangle(3,3)')),
-    ch('hard', 'Print area', 'Print the area of a rectangle.', pyOut('20'), { starterCode: 'print(20)' }),
-    ch('expert', 'self parameter', 'Methods include self.', includes('self'), { starterCode: 'class Rectangle:\n    def area(self):\n        return 0' }),
-  ],
-  questions: [
-    qMcq('class defines:', [{ id: 'a', label: 'A blueprint' }, { id: 'b', label: 'A file path' }, { id: 'c', label: 'A loop' }], 'a'),
-    qShort('Constructor method:', '__init__'),
-    qMcq('self refers to:', [{ id: 'a', label: 'The instance' }, { id: 'b', label: 'The module' }, { id: 'c', label: 'The CPU' }], 'a'),
-    qShort('Area multiplies:', 'width and height'),
-    qMcq('Methods are:', [{ id: 'a', label: 'Functions on objects' }, { id: 'b', label: 'Comments only' }, { id: 'c', label: 'Imports' }], 'a'),
-    qShort('Create object with:', 'ClassName()'),
-  ],
-})
-
-const oopMedium = makeProject('medium', {
-  id: 'contact_card',
-  title: 'Contact card',
-  paragraphs: [
-    'Build a `Contact` class with name, email, and a `label()` method returning a display string.',
-    'Store multiple contacts in a list and print each label.',
-  ],
-  sandboxCode: 'class Contact:\n    def __init__(self, name, email):\n        self.name = name\n        self.email = email\n    def label(self):\n        return f"{self.name} <{self.email}>"\n\nbook = [Contact("Ana", "ana@mail.com")]\nfor c in book:\n    print(c.label())',
-  challenges: [
-    ch('easy', 'Contact class', 'Define class with name and email.', includes('class Contact'), { starterCode: 'class Contact:\n    def __init__(self, name, email):\n        pass' }),
-    ch('medium', 'label method', 'Return formatted string.', pyVar('text', '"Ana" in text and "@" in text', 'class Contact:\n def __init__(self,n,e): self.name=n; self.email=e\n def label(self): return f"{self.name} <{self.email}>"\ntext=Contact("Ana","a@b").label()')),
-    ch('medium', 'Contact list', 'Store two contacts.', pyVar('n', 'n == 2', 'book=[]\nbook.append(1)\nbook.append(2)\nn=len(book)')),
-    ch('hard', 'Loop labels', 'Print each label.', includes('for'), { starterCode: 'book = []\n' }),
-    ch('hard', 'Validate email', 'Check email contains @.', pyVar('ok', 'ok == True', 'ok = "@" in "a@b.c"')),
-    ch('expert', 'repr style', 'label includes email in brackets.', includes('<'), { starterCode: 'text = "Ana <ana@mail.com>"\n' }),
-  ],
-  questions: [
-    qMcq('Objects bundle:', [{ id: 'a', label: 'Data and behavior' }, { id: 'b', label: 'Only CSS' }, { id: 'c', label: 'Only RAM' }], 'a'),
-    qShort('List stores many:', 'contacts'),
-    qMcq('label() should return:', [{ id: 'a', label: 'Display string' }, { id: 'b', label: 'Nothing always' }, { id: 'c', label: 'Binary' }], 'a'),
-    qShort('Email must contain:', '@'),
-    qMcq('for loop visits:', [{ id: 'a', label: 'Each item' }, { id: 'b', label: 'Only first' }, { id: 'c', label: 'CPU' }], 'a'),
-    qShort('Attributes live on:', 'self'),
-  ],
-})
-
-const oopHard = makeProject('hard', {
-  id: 'bank_account',
-  title: 'Bank account',
-  paragraphs: [
-    'Create a `BankAccount` class with deposit, withdraw, and balance methods.',
-    'Prevent negative balance on withdraw and track transaction count.',
-  ],
-  sandboxCode: 'class BankAccount:\n    def __init__(self):\n        self.balance = 0\n        self.transactions = 0\n    def deposit(self, amount):\n        self.balance += amount\n        self.transactions += 1\n    def withdraw(self, amount):\n        if amount <= self.balance:\n            self.balance -= amount\n            self.transactions += 1\n\nacct = BankAccount()\nacct.deposit(100)\nacct.withdraw(30)\nprint(acct.balance, acct.transactions)',
-  challenges: [
-    ch('easy', 'Start balance', 'Initialize balance to 0.', pyVar('b', 'b == 0', 'b=0')),
-    ch('medium', 'deposit', 'Add amount to balance.', pyVar('b', 'b == 50', 'b=0\namount=50\nb+=amount')),
-    ch('medium', 'withdraw safe', 'Subtract only if enough funds.', pyVar('b', 'b == 20', 'b=50\namount=30\nif amount<=b: b-=amount')),
-    ch('hard', 'transaction counter', 'Increment on each action.', pyVar('t', 't == 2', 't=0\nt+=1\nt+=1')),
-    ch('hard', 'final balance', 'End with balance 70 after ops.', pyVar('b', 'b == 70', 'b=100\nb-=30')),
-    ch('expert', 'Print summary', 'Print balance and transactions.', pyOut('70 2'), { starterCode: 'print(70, 2)' }),
-  ],
-  questions: [
-    qMcq('Encapsulation hides:', [{ id: 'a', label: 'Internal state' }, { id: 'b', label: 'Python version' }, { id: 'c', label: 'Keyboard' }], 'a'),
-    qShort('Prevent overdraft with:', 'if'),
-    qMcq('Methods mutate:', [{ id: 'a', label: 'Object state' }, { id: 'b', label: 'Only globals' }, { id: 'c', label: 'HTML' }], 'a'),
-    qShort('deposit should:', 'increase balance'),
-    qMcq('withdraw checks:', [{ id: 'a', label: 'Enough balance' }, { id: 'b', label: 'Color theme' }, { id: 'c', label: 'File extension' }], 'a'),
-    qShort('Track operations with a:', 'counter'),
-  ],
-})
-
 /** @type {Record<string, import('./_builders.mjs').[]>} */
 export const SECTION_PROJECTS = {
   fundamentals: [aboutMeCard, unitConverter, receiptCalculator],
@@ -128,7 +53,7 @@ export const SECTION_PROJECTS = {
   modules_and_packages: [diceRoller, habitTracker, shopPackage],
   file_handling: [notesKeeper, logAnalyser, savedTodo],
   error_handling: [safeCalculator, signupForm, dataImporter],
-  object_oriented: [oopEasy, oopMedium, oopHard],
+  object_oriented: [playlist, parkingGarage, monsterBattle],
   data_and_apis: [
     fromExisting('weather_cli', 'easy', 'proj_data_apis_weather_cli'),
     fromExisting('expense_tracker', 'medium', 'proj_data_apis_expense_tracker'),
