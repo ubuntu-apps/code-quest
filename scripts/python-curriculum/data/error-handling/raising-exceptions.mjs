@@ -142,7 +142,7 @@ export default makeTopic({
     mc("Which exception suits a month of 13?", ["`TypeError`", "`KeyError`", "`ValueError`", "`NameError`"], 2),
     mc("Which exception suits a list passed where a number was needed?", ["`TypeError`", "`ValueError`", "`IndexError`", "`ZeroDivisionError`"], 0),
     mc("Why raise instead of returning `None`?", ["It is faster", "Python requires it", "It prints nicer", "An exception can't be ignored by accident, and it points at the cause"], 3),
-    qShort("Which keyword starts an exception yourself? (one word)", "raise"),
+    qShort("Which keyword do you use to raise an exception yourself? (one word)", "raise"),
     mc("What does a bare `raise` inside `except` do?", ["Raises a new `Exception`", "Re-raises the exception that was just caught", "Ignores the error", "Is a `SyntaxError`"], 1),
     mc("What does `raise ValueError(...) from e` keep?", ["The original exception, as the cause", "Only the new message", "Nothing", "The line number only"], 0),
     mc("Where do input checks usually go?", ["At the end of the function", "In a `finally` block", "At the top, before the real work", "In a separate file"], 2),

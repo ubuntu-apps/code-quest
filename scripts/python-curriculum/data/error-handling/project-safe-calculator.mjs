@@ -91,6 +91,6 @@ export default makeProject("easy", {
     mc("`a, op, b = \"hello\".split()` raises which exception?", ["`ValueError`", "`TypeError`", "`IndexError`", "`KeyError`"], 0),
     mc("Why `raise ValueError(...) from e` in `read_number`?", ["To hide the original", "To make it faster", "Python requires it", "To give a clearer message and keep the original as the cause"], 3),
     qShort("What does `safe_calculate(\"6 * 7\")` return?", "= 42"),
-    mc("Which functions catch exceptions in this program?", ["All of them", "Only `safe_calculate`", "Only `calculate`", "None"], 1),
+    mc("Which function turns exceptions into messages for the user?", ["All of them", "Only `safe_calculate`", "Only `calculate`", "None of them"], 1),
   ],
 })

@@ -55,55 +55,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('src layout', '# src/myapp/__init__.py\nprint("src layout")'),
   ],
 
-  // ── Files ─────────────────────────────────────────────
-  opening_files: [
-    snippet('with open', '# with open("notes.txt") as f:\n#     data = f.read()\nprint("with open pattern")'),
-    snippet('pathlib Path', 'from pathlib import Path\np = Path("data.txt")\nprint(p.name, p.suffix)'),
-    snippet('Read mode', 'mode = "r"\nprint(mode)'),
-    snippet('Write mode', 'mode = "w"\nprint(mode)'),
-    snippet('StringIO demo', 'from io import StringIO\nf = StringIO("hello")\nprint(f.read())'),
-  ],
-  reading_files: [
-    snippet('splitlines', 'text = "line1\\nline2"\nprint(text.splitlines())'),
-    snippet('strip line', 'print("hi\\n".strip())'),
-    snippet('for line', 'for line in "a\\nb\\nc".splitlines():\n    print(line)'),
-    snippet('readline', 'from io import StringIO\nline = StringIO("a\\nb").readline().strip()\nprint(line)'),
-    snippet('Count lines', 'print(len("a\\nb\\nc".splitlines()))'),
-  ],
-  writing_files: [
-    snippet('write text', 'from io import StringIO\nbuf = StringIO()\nbuf.write("hello\\n")\nprint(buf.getvalue())'),
-    snippet('writelines', 'lines = ["one\\n", "two\\n"]\nprint("".join(lines))'),
-    snippet('Append newline', 'line = "event"\nprint(line + "\\n")'),
-    snippet('StringIO write', 'from io import StringIO\nbuf = StringIO()\nbuf.write("data")\nprint(buf.getvalue())'),
-  ],
-  appending: [
-    snippet('Append mode', '# with open("log.txt", "a") as f:\n#     f.write("event\\n")\nprint("append mode")'),
-    snippet('Build log', 'log = []\nlog.append("start")\nlog.append("end")\nprint(log)'),
-    snippet('Join log lines', 'lines = ["2024-01-01 ok", "2024-01-02 ok"]\nprint("\\n".join(lines))'),
-  ],
-  with_statement: [
-    snippet('with demo', 'class Demo:\n    def __enter__(self):\n        print("enter")\n        return self\n    def __exit__(self, *args):\n        print("exit")\n\nwith Demo():\n    print("body")'),
-    snippet('StringIO with', 'from io import StringIO\nwith StringIO("hi") as f:\n    print(f.read())'),
-    snippet('Auto close', '# with open("f.txt") as f:\n#     pass  # closes automatically\nprint("auto close")'),
-  ],
-  file_paths: [
-    snippet('Path join', 'from pathlib import Path\nbase = Path("project")\nfile = base / "data" / "scores.csv"\nprint(file)'),
-    snippet('name parts', 'from pathlib import Path\np = Path("data/scores.csv")\nprint(p.parent, p.name, p.suffix)'),
-    snippet('exists check', 'from pathlib import Path\nprint(Path(".").exists())'),
-    snippet('stem', 'from pathlib import Path\nprint(Path("report.csv").stem)'),
-  ],
-  text_vs_binary: [
-    snippet('encode', 'text = "hi"\nb = text.encode("utf-8")\nprint(b)'),
-    snippet('decode', 'b = b"hello"\nprint(b.decode("utf-8"))'),
-    snippet('bytes type', 'print(type(b"hello").__name__)'),
-    snippet('str type', 'print(type("hello").__name__)'),
-  ],
-  file_errors: [
-    snippet('FileNotFound', 'try:\n    open("missing.txt")\nexcept FileNotFoundError:\n    print("File missing")'),
-    snippet('Permission', 'try:\n    raise PermissionError("denied")\nexcept PermissionError as e:\n    print(e)'),
-    snippet('Safe message', 'path = "data.txt"\ntry:\n    open(path)\nexcept FileNotFoundError:\n    print(f"Could not open {path}")'),
-  ],
-
   // ── Classes and objects ───────────────────────────────────────────
   classes_basics: [
     snippet('Define class', 'class Cat:\n    pass\n\nc = Cat()\nprint(c)'),
@@ -190,12 +141,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('timedelta', 'from datetime import datetime, timedelta\nprint((datetime.now() + timedelta(days=7)).date())'),
     snippet('Parse', 'from datetime import datetime\nd = datetime.strptime("2024-06-01", "%Y-%m-%d")\nprint(d.month)'),
     snippet('ISO date', 'from datetime import date\nprint(date.today().isoformat())'),
-  ],
-  pathlib_data: [
-    snippet('Join path', 'from pathlib import Path\np = Path("data") / "scores.json"\nprint(p)'),
-    snippet('suffix stem', 'from pathlib import Path\np = Path("scores.json")\nprint(p.suffix, p.stem)'),
-    snippet('exists', 'from pathlib import Path\nprint(Path(".").exists())'),
-    snippet('glob', 'from pathlib import Path\nprint(list(Path(".").glob("*.py"))[:3])'),
   ],
   sqlite_basics: [
     snippet('In-memory DB', 'import sqlite3\nconn = sqlite3.connect(":memory:")\nconn.execute("CREATE TABLE users (id INTEGER, name TEXT)")\nconn.execute("INSERT INTO users VALUES (1, ?)", ("Ana",))\nprint(conn.execute("SELECT name FROM users").fetchone()[0])'),
@@ -289,12 +234,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Call twice', 'def greet(name):\n    return f"Hi, {name}"\nprint(greet("A"))\nprint(greet("B"))'),
     snippet('Return only', 'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("Ada"))'),
   ],
-  line_counter: [
-    snippet('splitlines', 'text = "alpha\\nbeta\\n\\ngamma"\nprint(text.splitlines())'),
-    snippet('strip blank', 'print(len("   ".strip()) == 0)'),
-    snippet('Filter non-empty', 'lines = ["a", "", "b"]\nprint([line for line in lines if line.strip()])'),
-    snippet('Count', 'text = "a\\nb\\n\\nc"\nprint(len([l for l in text.splitlines() if l.strip()]))'),
-  ],
   rectangle_class: [
     snippet('class def', 'class Rectangle:\n    pass\nprint(Rectangle)'),
     snippet('__init__', 'class Rectangle:\n    def __init__(self, w, h):\n        self.width, self.height = w, h\nr = Rectangle(4, 5)\nprint(r.width)'),
@@ -327,18 +266,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('get', 'contacts = {}\nprint(contacts.get("x"))'),
     snippet('lower key', 'print("BoB".lower())'),
     snippet('json', 'import json\nprint(json.dumps({"ana": {"phone": "555"}}))'),
-  ],
-  proj_file_handling_todo_list: [
-    snippet('splitlines', 'print("a\\nb".splitlines())'),
-    snippet('json load', 'import json\nprint(json.loads(\'[{"text": "a"}]\'))'),
-    snippet('Todo append', 'todos = []\ntodos.append({"text": "task"})\nprint(todos)'),
-    snippet('with pattern', '# with open("todos.json") as f:\n#     data = f.read()\nprint("file read")'),
-  ],
-  proj_file_handling_contact_book: [
-    snippet('json dumps', 'import json\ncontacts = {"ana": {"phone": "555"}}\nprint(json.dumps(contacts))'),
-    snippet('json loads', 'import json\nprint(json.loads(\'{"ana": {"phone": "555"}}\'))'),
-    snippet('Dict contacts', 'contacts = {}\ncontacts["ana"] = {"phone": "555"}\nprint(contacts)'),
-    snippet('pop delete', 'contacts = {"a": 1}\ncontacts.pop("a", None)\nprint(contacts)'),
   ],
   proj_data_apis_weather_cli: [
     snippet('Mock API', 'data = {"city": "London", "temp_c": 18, "conditions": "Cloudy"}\nprint(data)'),

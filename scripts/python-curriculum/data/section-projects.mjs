@@ -15,6 +15,9 @@ import bankAccounts from './functions/project-bank-accounts.mjs'
 import safeCalculator from './error-handling/project-safe-calculator.mjs'
 import signupForm from './error-handling/project-signup-form.mjs'
 import dataImporter from './error-handling/project-data-importer.mjs'
+import notesKeeper from './file-handling/project-notes-keeper.mjs'
+import logAnalyser from './file-handling/project-log-analyser.mjs'
+import savedTodo from './file-handling/project-saved-todo.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -58,32 +61,6 @@ const modulesEasy = makeProject('easy', {
     qShort('Module files end with:', '.py'),
     qMcq('Splitting code helps:', [{ id: 'a', label: 'Organization' }, { id: 'b', label: 'Deleting data' }, { id: 'c', label: 'Compilation only' }], 'a'),
     qShort('Call a function with:', 'parentheses'),
-  ],
-})
-
-const fileHandlingEasy = makeProject('easy', {
-  id: 'line_counter',
-  title: 'Line counter',
-  paragraphs: [
-    'Read a multi-line string, split it into lines, and count how many lines are non-empty.',
-    'Practice string splitting and basic file-content processing.',
-  ],
-  sandboxCode: 'text = "alpha\\nbeta\\n\\ngamma"\nlines = text.splitlines()\nnon_empty = [line for line in lines if line.strip()]\nprint(len(non_empty))',
-  challenges: [
-    ch('easy', 'splitlines', 'Split `text` into lines.', pyVar('lines', 'len(lines) == 4', 'text="a\\nb\\n\\nc"\nlines=text.splitlines()')),
-    ch('medium', 'strip blank', 'Detect empty line after strip.', pyVar('blank', 'blank == True', 'blank = len("   ".strip()) == 0')),
-    ch('medium', 'Count non-empty', 'Count lines with text.', pyVar('n', 'n == 3', 'text="a\\nb\\n\\nc"\nn=0')),
-    ch('hard', 'List comprehension', 'Build filtered list.', pyVar('kept', 'len(kept) == 2', 'kept=[line for line in ["a","","b"] if line.strip()]')),
-    ch('hard', 'Print count', 'Print the final count.', pyOut('3'), { starterCode: 'print(3)' }),
-    ch('expert', 'Handle whitespace', 'Strip before checking emptiness.', includes('strip'), { starterCode: 'line = "  hi  "\n' }),
-  ],
-  questions: [
-    qMcq('splitlines breaks on:', [{ id: 'a', label: 'Line breaks' }, { id: 'b', label: 'Commas only' }, { id: 'c', label: 'Spaces only' }], 'a'),
-    qShort('strip removes:', 'edges'),
-    qMcq('Empty line after strip has length:', [{ id: 'a', label: '0' }, { id: 'b', label: '1 always' }, { id: 'c', label: '10' }], 'a'),
-    qShort('Read file text into a:', 'string'),
-    qMcq('Counting lines is useful for:', [{ id: 'a', label: 'Logs and diaries' }, { id: 'b', label: 'GPU drivers' }, { id: 'c', label: 'CSS' }], 'a'),
-    qShort('Filter with:', 'comprehension'),
   ],
 })
 
@@ -176,11 +153,7 @@ export const SECTION_PROJECTS = {
     fromExisting('capstone_planning', 'medium', 'proj_modules_capstone_planning'),
     fromExisting('contact_book', 'hard', 'proj_modules_contact_book'),
   ],
-  file_handling: [
-    fileHandlingEasy,
-    fromExisting('todo_list', 'medium', 'proj_file_handling_todo_list'),
-    fromExisting('contact_book', 'hard', 'proj_file_handling_contact_book'),
-  ],
+  file_handling: [notesKeeper, logAnalyser, savedTodo],
   error_handling: [safeCalculator, signupForm, dataImporter],
   object_oriented: [oopEasy, oopMedium, oopHard],
   data_and_apis: [
