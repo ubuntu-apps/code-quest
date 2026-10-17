@@ -288,11 +288,11 @@ def fetch_all():
     }),
   ],
   questions: [
-    mc('Which HTTP method should read data without changing it?', ['POST', 'GET', 'PUT', 'DELETE'], 1),
+    mc("Which HTTP method should read data without changing it?", ["`POST`","`GET`","`PUT`","`DELETE`"], 1),
     qShort('Which status code means "Created"? (number)', '201'),
     mc('In REST, what identifies a resource?', ['Its URL', 'The request body', 'The HTTP method', 'A cookie'], 0),
     mc('What does status 204 tell you?', ['Not found', 'Server error', 'Success with no response body', 'Redirect'], 2),
-    mc('Which method replaces a whole resource?', ['GET', 'POST', 'PATCH', 'PUT'], 3),
+    mc("Which method replaces a whole resource?", ["`GET`","`POST`","`PATCH`","`PUT`"], 3),
     mc('A 4xx status means the problem is…', ['In the request the client sent', 'On the server', 'In the network', 'A redirect'], 0),
     qShort('Which status code means "Not Found"? (number)', '404'),
     mc('Why are PUT and DELETE called idempotent?', ['They are faster', 'Repeating them has the same effect as doing them once', 'They need no body', 'They cannot fail'], 1),

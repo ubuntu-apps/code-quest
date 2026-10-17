@@ -1,780 +1,10 @@
 {
   "sectionId": "control_flow",
-  "title": "Control Flow",
+  "title": "Decisions and loops",
   "levels": [
     {
-      "id": "if_elif_else",
-      "title": "if elif else",
-      "kind": "topic",
-      "sandboxSnippets": [
-        {
-          "id": "grade_a",
-          "label": "Grade A",
-          "code": "score = 95\nif score >= 90:\n    print(\"A\")"
-        },
-        {
-          "id": "elif_chain",
-          "label": "elif chain",
-          "code": "score = 85\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelse:\n    print(\"C\")"
-        },
-        {
-          "id": "else_branch",
-          "label": "else branch",
-          "code": "n = 0\nif n:\n    print(\"yes\")\nelse:\n    print(\"no\")"
-        },
-        {
-          "id": "nested_if",
-          "label": "Nested if",
-          "code": "a, b = 1, 2\nif a < b:\n    print(\"ok\")"
-        },
-        {
-          "id": "pass_fail",
-          "label": "Pass / Fail",
-          "code": "score = 74\nif score >= 70:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")"
-        }
-      ],
-      "intro": {
-        "title": "if elif else",
-        "bodyMarkdown": "Conditional statements let your program choose different paths. `if condition:` runs a block when the condition is true; `elif` checks another condition; `else` runs when none matched.\n\nIndentation defines which lines belong to each branch. Conditions are expressions that evaluate to True or False.\n\nUse if/elif/else to handle user choices, validate data, and implement game rules.",
-        "sandboxCode": "score = 85\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelse:\n    print(\"C\")"
-      },
-      "challenges": [
-        {
-          "id": "ch_87qpaxj",
-          "title": "Easy: Simple if",
-          "promptMarkdown": "If `x > 0`, print `positive` (set x=5).",
-          "starterCode": "x = 5\nif x > 0:\n    print(",
-          "hint": "Use if with x > 0 and print the string inside the block.",
-          "solution": "x = 5\nif x > 0:\n    print(\"positive\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"positive\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_5z76t48",
-          "title": "Easy: else branch",
-          "promptMarkdown": "Print `no` when `n=0`.",
-          "starterCode": "n = 0\nif n:\n    print(\"yes\")\nelse:\n    print(",
-          "hint": "Zero is falsy in Python, so the else branch runs.",
-          "solution": "n = 0\nif n:\n    print(\"yes\")\nelse:\n    print(\"no\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"no\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_fp6p1q1",
-          "title": "Medium: elif chain",
-          "promptMarkdown": "For `v=2`, print `two` using elif.",
-          "starterCode": "v = 2\nif v == 1:\n    print(\"one\")\nelif v == 2:\n    print(",
-          "hint": "Add an elif branch that checks v == 2.",
-          "solution": "v = 2\nif v == 1:\n    print(\"one\")\nelif v == 2:\n    print(\"two\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"two\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_g7zqoj5",
-          "title": "Medium: Compare strings",
-          "promptMarkdown": "If name==\"Ada\", print `Hi Ada`.",
-          "starterCode": "name = \"Ada\"\nif name == \"Ada\":\n    print(",
-          "hint": "Compare name to the string \"Ada\" with ==.",
-          "solution": "name = \"Ada\"\nif name == \"Ada\":\n    print(\"Hi Ada\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"Hi Ada\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_n96vovl",
-          "title": "Hard: Nested if",
-          "promptMarkdown": "Set a=1,b=2; if a<b print `ok`.",
-          "starterCode": "a,b=1,2\nif a<b:\n    print(",
-          "hint": "Nest the comparison inside if a < b.",
-          "solution": "a, b = 1, 2\nif a < b:\n    print(\"ok\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"ok\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_aw5k57j",
-          "title": "Hard: Grade logic",
-          "promptMarkdown": "score=74 → print `Pass` if >=70 else `Fail`.",
-          "starterCode": "score = 74\n",
-          "hint": "Use if score >= 70 for Pass, else for Fail.",
-          "solution": "score = 74\nif score >= 70:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"Pass\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_1jyvdzf",
-          "title": "Expert: Multiple elif",
-          "promptMarkdown": "Map 1→one, 2→two, else other for x=3.",
-          "starterCode": "x = 3\n",
-          "hint": "Chain if/elif for 1 and 2, else for everything else.",
-          "solution": "x = 3\nif x == 1:\n    print(\"one\")\nelif x == 2:\n    print(\"two\")\nelse:\n    print(\"other\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"other\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_bw5yh5g",
-          "title": "Expert: Truthy check",
-          "promptMarkdown": "If lst: print `has items` for lst=[1].",
-          "starterCode": "lst = [1]\n",
-          "hint": "A non-empty list is truthy; use if lst: to check.",
-          "solution": "lst = [1]\nif lst:\n    print(\"has items\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"has items\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_l7zlwgy",
-          "title": "Expert: if not",
-          "promptMarkdown": "Print `empty` when s=\"\" using if not.",
-          "starterCode": "s = \"\"\n",
-          "hint": "An empty string is falsy; if not s: detects it.",
-          "solution": "s = \"\"\nif not s:\n    print(\"empty\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"empty\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_h2zrp6t",
-          "title": "Expert: Combined condition",
-          "promptMarkdown": "Print `teen` if 13<=age<=19, age=15.",
-          "starterCode": "age = 15\n",
-          "hint": "Python allows chained comparisons like 13 <= age <= 19.",
-          "solution": "age = 15\nif 13 <= age <= 19:\n    print(\"teen\")",
-          "validation": {
-            "mode": "python_tests",
-            "tests": [
-              {
-                "id": "out",
-                "label": "Correct output",
-                "assertion": "_cq_stdout.strip() == \"teen\""
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "q_tmrvs5z",
-            "type": "mcq",
-            "prompt": "else runs when:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "No if/elif was true"
-              },
-              {
-                "id": "b",
-                "label": "Always first"
-              },
-              {
-                "id": "c",
-                "label": "Never"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_ge76hhk",
-            "type": "shortText",
-            "prompt": "Keyword for additional condition after if?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "elif"
-            }
-          },
-          {
-            "id": "q_etj8uen",
-            "type": "mcq",
-            "prompt": "if 0: print(1) prints:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Nothing"
-              },
-              {
-                "id": "b",
-                "label": "1"
-              },
-              {
-                "id": "c",
-                "label": "0"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_uvlleu1",
-            "type": "shortText",
-            "prompt": "Colon after if condition is:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "required"
-            }
-          },
-          {
-            "id": "q_u4vn9zb",
-            "type": "mcq",
-            "prompt": "Indentation in if blocks is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Required"
-              },
-              {
-                "id": "b",
-                "label": "Optional"
-              },
-              {
-                "id": "c",
-                "label": "Forbidden"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_p2tfmgf",
-            "type": "mcq",
-            "prompt": "elif is short for:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "else if"
-              },
-              {
-                "id": "b",
-                "label": "end if"
-              },
-              {
-                "id": "c",
-                "label": "every if"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_nm82jso",
-            "type": "shortText",
-            "prompt": "Boolean result of 5 > 3?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "True"
-            }
-          },
-          {
-            "id": "q_x0y0437",
-            "type": "mcq",
-            "prompt": "Expert: if [] is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Falsy"
-              },
-              {
-                "id": "b",
-                "label": "Truthy"
-              },
-              {
-                "id": "c",
-                "label": "Error"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_yzh0qz0",
-            "type": "mcq",
-            "prompt": "Expert: only one if/elif branch:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Runs per chain"
-              },
-              {
-                "id": "b",
-                "label": "All run"
-              },
-              {
-                "id": "c",
-                "label": "Random"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_zjg2l86",
-            "type": "shortText",
-            "prompt": "Expert: not True equals?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "False"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "id": "boolean_logic",
-      "title": "Boolean Logic",
-      "kind": "topic",
-      "sandboxSnippets": [
-        {
-          "id": "and_or",
-          "label": "and / or",
-          "code": "print(True and False, True or False)"
-        },
-        {
-          "id": "not",
-          "label": "not",
-          "code": "print(not True, not False)"
-        },
-        {
-          "id": "in_operator",
-          "label": "in operator",
-          "code": "print(3 in [1, 2, 3])"
-        },
-        {
-          "id": "any_all",
-          "label": "any / all",
-          "code": "print(any([False, True]), all([True, True]))"
-        },
-        {
-          "id": "is_none",
-          "label": "is None",
-          "code": "x = None\nprint(x is None)"
-        }
-      ],
-      "intro": {
-        "title": "Boolean Logic",
-        "bodyMarkdown": "Booleans represent truth: `True` and `False`. Combine conditions with `and`, `or`, and `not`. Short-circuit evaluation skips right side when result is already determined.\n\nComparison operators produce booleans. Membership `in` and identity `is` also return True/False.\n\nClear boolean expressions make conditions readable; avoid overly nested logic when elif chains are clearer.",
-        "sandboxCode": "a, b = True, False\nprint(a and b, a or b, not a)\nprint(3 in [1,2,3])\nprint(None is None)"
-      },
-      "challenges": [
-        {
-          "id": "ch_4wteaos",
-          "title": "Easy: and",
-          "promptMarkdown": "Set r = True and False.",
-          "starterCode": "r = ",
-          "hint": "and returns True only when both sides are True.",
-          "solution": "r = True and False",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks r",
-                "assertion": "r == False"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_8f3jkjc",
-          "title": "Easy: or",
-          "promptMarkdown": "Set r = False or True.",
-          "starterCode": "r = ",
-          "hint": "or returns True when at least one side is True.",
-          "solution": "r = False or True",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks r",
-                "assertion": "r == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_k4fug9w",
-          "title": "Medium: not",
-          "promptMarkdown": "Set r = not False.",
-          "starterCode": "r = ",
-          "hint": "not flips the boolean value.",
-          "solution": "r = not False",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks r",
-                "assertion": "r == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_l6shf4x",
-          "title": "Medium: in operator",
-          "promptMarkdown": "Set ok = \"a\" in \"cat\".",
-          "starterCode": "ok = ",
-          "hint": "Use in to test substring membership; pick a letter not in \"cat\".",
-          "solution": "ok = \"b\" in \"cat\"",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks ok",
-                "assertion": "ok == False"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_blqshjj",
-          "title": "Hard: Chained and",
-          "promptMarkdown": "5>1 and 10>5 into flag.",
-          "starterCode": "flag = ",
-          "hint": "Both comparisons must be True for and to return True.",
-          "solution": "flag = 5 > 1 and 10 > 5",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks flag",
-                "assertion": "flag == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_9b8diuv",
-          "title": "Hard: Mixed or/and",
-          "promptMarkdown": "(True or False) and True",
-          "starterCode": "x = ",
-          "hint": "Parentheses control order: or runs before and here.",
-          "solution": "x = (True or False) and True",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks x",
-                "assertion": "x == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_8fmeg3f",
-          "title": "Expert: De Morgan",
-          "promptMarkdown": "not (a and b) with a=True,b=False.",
-          "starterCode": "a,b=True,False\nr=",
-          "hint": "De Morgan: not (a and b) is True when at least one operand is False.",
-          "solution": "a, b = True, False\nr = not (a and b)",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks r",
-                "assertion": "r == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_q19js07",
-          "title": "Expert: is vs ==",
-          "promptMarkdown": "[] is [] is False; set x = ([] == [])",
-          "starterCode": "x = [] == []",
-          "hint": "== compares values; two empty lists are equal but not the same object.",
-          "solution": "x = [] == []",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks x",
-                "assertion": "x == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_26orxiu",
-          "title": "Expert: any()",
-          "promptMarkdown": "any([0,0,3]) into r.",
-          "starterCode": "r = any([0,0,3])",
-          "hint": "any() returns True if at least one item is truthy.",
-          "solution": "r = any([0, 0, 3])",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks r",
-                "assertion": "r == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_i3caxdb",
-          "title": "Expert: all()",
-          "promptMarkdown": "all([1,2,3]) into r.",
-          "starterCode": "r = all([1,2,3])",
-          "hint": "all() returns True only when every item is truthy.",
-          "solution": "r = all([1, 2, 3])",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks r",
-                "assertion": "r == True"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "q_u4wl3u4",
-            "type": "mcq",
-            "prompt": "True and False is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "False"
-              },
-              {
-                "id": "b",
-                "label": "True"
-              },
-              {
-                "id": "c",
-                "label": "None"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_aa6vjkm",
-            "type": "shortText",
-            "prompt": "Operator for logical NOT?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "not"
-            }
-          },
-          {
-            "id": "q_ogmqa7d",
-            "type": "mcq",
-            "prompt": "True or False is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "True"
-              },
-              {
-                "id": "b",
-                "label": "False"
-              },
-              {
-                "id": "c",
-                "label": "0"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_ijgepws",
-            "type": "shortText",
-            "prompt": "\"x\" in \"box\" is?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "True"
-            }
-          },
-          {
-            "id": "q_ho5pyg1",
-            "type": "mcq",
-            "prompt": "is checks:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Identity (same object)"
-              },
-              {
-                "id": "b",
-                "label": "Value equality only always"
-              },
-              {
-                "id": "c",
-                "label": "Type only"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_0f53xi4",
-            "type": "mcq",
-            "prompt": "any([]) is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "False"
-              },
-              {
-                "id": "b",
-                "label": "True"
-              },
-              {
-                "id": "c",
-                "label": "[]"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_9ezay1s",
-            "type": "shortText",
-            "prompt": "all([1,0]) is?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "False"
-            }
-          },
-          {
-            "id": "q_xf8zykk",
-            "type": "mcq",
-            "prompt": "Expert: short-circuit means:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Skip rest if result known"
-              },
-              {
-                "id": "b",
-                "label": "Always evaluate all"
-              },
-              {
-                "id": "c",
-                "label": "Compile error"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_1t9mbwt",
-            "type": "mcq",
-            "prompt": "Expert: bool(\"\") is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "False"
-              },
-              {
-                "id": "b",
-                "label": "True"
-              },
-              {
-                "id": "c",
-                "label": "\"\""
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_jnefiev",
-            "type": "shortText",
-            "prompt": "Expert: not (True or False) is?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "False"
-            }
-          }
-        ]
-      }
-    },
-    {
       "id": "comparison_operators",
-      "title": "Comparison Operators",
+      "title": "Comparisons",
       "kind": "topic",
       "sandboxSnippets": [
         {
@@ -804,13 +34,13 @@
         }
       ],
       "intro": {
-        "title": "Comparison Operators",
+        "title": "Comparisons",
         "bodyMarkdown": "Compare values with `==`, `!=`, `<`, `>`, `<=`, `>=`. They return True or False without modifying operands.\n\nChained comparisons like `1 < x < 10` are idiomatic Python. Strings compare lexicographically; types must usually be compatible.\n\nUse comparisons in if statements, while loops, and sorting keys.",
         "sandboxCode": "print(3 == 3, 3 != 4)\nprint(2 < 5, 5 <= 5)\nprint(\"a\" < \"b\")\nprint(1 < 2 < 3)"
       },
       "challenges": [
         {
-          "id": "ch_unwa2ip",
+          "id": "comparison_operators_ch1",
           "title": "Easy: Equality",
           "promptMarkdown": "Set eq = (5 == 5).",
           "starterCode": "eq = ",
@@ -829,7 +59,7 @@
           }
         },
         {
-          "id": "ch_w0mvdn2",
+          "id": "comparison_operators_ch2",
           "title": "Easy: Not equal",
           "promptMarkdown": "Set ne = (1 != 2).",
           "starterCode": "ne = ",
@@ -848,7 +78,7 @@
           }
         },
         {
-          "id": "ch_eap984m",
+          "id": "comparison_operators_ch3",
           "title": "Medium: Less than",
           "promptMarkdown": "3 < 10 into r.",
           "starterCode": "r = 3 < 10",
@@ -867,7 +97,7 @@
           }
         },
         {
-          "id": "ch_52fdl2v",
+          "id": "comparison_operators_ch4",
           "title": "Medium: String compare",
           "promptMarkdown": "\"apple\" < \"banana\" into r.",
           "starterCode": "r = ",
@@ -886,7 +116,7 @@
           }
         },
         {
-          "id": "ch_3x7khc3",
+          "id": "comparison_operators_ch5",
           "title": "Hard: Chained",
           "promptMarkdown": "1 < 2 < 3 into r.",
           "starterCode": "r = 1 < 2 < 3",
@@ -905,7 +135,7 @@
           }
         },
         {
-          "id": "ch_ghhmkuk",
+          "id": "comparison_operators_ch6",
           "title": "Hard: >= check",
           "promptMarkdown": "5 >= 5 into r.",
           "starterCode": "r = 5 >= 5",
@@ -924,7 +154,7 @@
           }
         },
         {
-          "id": "ch_begtn3h",
+          "id": "comparison_operators_ch7",
           "title": "Expert: Sort check",
           "promptMarkdown": "Given nums=[3,1,2], sorted(nums)==sorted(nums) into r.",
           "starterCode": "nums=[3,1,2]\nr=",
@@ -943,7 +173,7 @@
           }
         },
         {
-          "id": "ch_88pwjpe",
+          "id": "comparison_operators_ch8",
           "title": "Expert: None comparison",
           "promptMarkdown": "None == None into r.",
           "starterCode": "r = None == None",
@@ -962,7 +192,7 @@
           }
         },
         {
-          "id": "ch_lnculii",
+          "id": "comparison_operators_ch9",
           "title": "Expert: Float compare",
           "promptMarkdown": "0.1 + 0.2 == 0.3 into r (likely False).",
           "starterCode": "r = 0.1 + 0.2 == 0.3",
@@ -981,7 +211,7 @@
           }
         },
         {
-          "id": "ch_v49g0n5",
+          "id": "comparison_operators_ch10",
           "title": "Expert: min comparison",
           "promptMarkdown": "min(4,9)==4 into r.",
           "starterCode": "r = min(4,9) == 4",
@@ -1004,7 +234,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_tqpblgk",
+            "id": "comparison_operators_q1",
             "type": "mcq",
             "prompt": "== tests:",
             "choices": [
@@ -1024,7 +254,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2rrlus8",
+            "id": "comparison_operators_q2",
             "type": "shortText",
             "prompt": "Operator for not equal?",
             "validation": {
@@ -1033,7 +263,7 @@
             }
           },
           {
-            "id": "q_m4gnhgn",
+            "id": "comparison_operators_q3",
             "type": "mcq",
             "prompt": "1 < 2 < 3 is:",
             "choices": [
@@ -1053,7 +283,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_e5u5mky",
+            "id": "comparison_operators_q4",
             "type": "shortText",
             "prompt": ">= means greater or:",
             "validation": {
@@ -1062,7 +292,7 @@
             }
           },
           {
-            "id": "q_tbcza6q",
+            "id": "comparison_operators_q5",
             "type": "mcq",
             "prompt": "Comparing str uses:",
             "choices": [
@@ -1082,7 +312,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0vp9a11",
+            "id": "comparison_operators_q6",
             "type": "mcq",
             "prompt": "3 > 3 is:",
             "choices": [
@@ -1102,7 +332,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_kkbllpp",
+            "id": "comparison_operators_q7",
             "type": "shortText",
             "prompt": "Comparison result type?",
             "validation": {
@@ -1111,7 +341,7 @@
             }
           },
           {
-            "id": "q_00351kd",
+            "id": "comparison_operators_q8",
             "type": "mcq",
             "prompt": "Expert: is not == for lists:",
             "choices": [
@@ -1131,7 +361,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_yhhvess",
+            "id": "comparison_operators_q9",
             "type": "mcq",
             "prompt": "Expert: None == None:",
             "choices": [
@@ -1151,7 +381,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_egif5uc",
+            "id": "comparison_operators_q10",
             "type": "shortText",
             "prompt": "Expert: != is opposite of?",
             "validation": {
@@ -1163,8 +393,1163 @@
       }
     },
     {
+      "id": "boolean_logic",
+      "title": "Combining conditions",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "and_or",
+          "label": "and / or",
+          "code": "print(True and False, True or False)"
+        },
+        {
+          "id": "not",
+          "label": "not",
+          "code": "print(not True, not False)"
+        },
+        {
+          "id": "in_operator",
+          "label": "in operator",
+          "code": "print(3 in [1, 2, 3])"
+        },
+        {
+          "id": "any_all",
+          "label": "any / all",
+          "code": "print(any([False, True]), all([True, True]))"
+        },
+        {
+          "id": "is_none",
+          "label": "is None",
+          "code": "x = None\nprint(x is None)"
+        }
+      ],
+      "intro": {
+        "title": "Combining conditions",
+        "bodyMarkdown": "Booleans represent truth: `True` and `False`. Combine conditions with `and`, `or`, and `not`. Short-circuit evaluation skips right side when result is already determined.\n\nComparison operators produce booleans. Membership `in` and identity `is` also return True/False.\n\nClear boolean expressions make conditions readable; avoid overly nested logic when elif chains are clearer.",
+        "sandboxCode": "a, b = True, False\nprint(a and b, a or b, not a)\nprint(3 in [1,2,3])\nprint(None is None)"
+      },
+      "challenges": [
+        {
+          "id": "boolean_logic_ch1",
+          "title": "Easy: and",
+          "promptMarkdown": "Set r = True and False.",
+          "starterCode": "r = ",
+          "hint": "and returns True only when both sides are True.",
+          "solution": "r = True and False",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r == False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch2",
+          "title": "Easy: or",
+          "promptMarkdown": "Set r = False or True.",
+          "starterCode": "r = ",
+          "hint": "or returns True when at least one side is True.",
+          "solution": "r = False or True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch3",
+          "title": "Medium: not",
+          "promptMarkdown": "Set r = not False.",
+          "starterCode": "r = ",
+          "hint": "not flips the boolean value.",
+          "solution": "r = not False",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch4",
+          "title": "Medium: in operator",
+          "promptMarkdown": "Set ok = \"a\" in \"cat\".",
+          "starterCode": "ok = ",
+          "hint": "Use in to test substring membership; pick a letter not in \"cat\".",
+          "solution": "ok = \"b\" in \"cat\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch5",
+          "title": "Hard: Chained and",
+          "promptMarkdown": "5>1 and 10>5 into flag.",
+          "starterCode": "flag = ",
+          "hint": "Both comparisons must be True for and to return True.",
+          "solution": "flag = 5 > 1 and 10 > 5",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks flag",
+                "assertion": "flag == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch6",
+          "title": "Hard: Mixed or/and",
+          "promptMarkdown": "(True or False) and True",
+          "starterCode": "x = ",
+          "hint": "Parentheses control order: or runs before and here.",
+          "solution": "x = (True or False) and True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch7",
+          "title": "Expert: De Morgan",
+          "promptMarkdown": "not (a and b) with a=True,b=False.",
+          "starterCode": "a,b=True,False\nr=",
+          "hint": "De Morgan: not (a and b) is True when at least one operand is False.",
+          "solution": "a, b = True, False\nr = not (a and b)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch8",
+          "title": "Expert: is vs ==",
+          "promptMarkdown": "[] is [] is False; set x = ([] == [])",
+          "starterCode": "x = [] == []",
+          "hint": "== compares values; two empty lists are equal but not the same object.",
+          "solution": "x = [] == []",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch9",
+          "title": "Expert: any()",
+          "promptMarkdown": "any([0,0,3]) into r.",
+          "starterCode": "r = any([0,0,3])",
+          "hint": "any() returns True if at least one item is truthy.",
+          "solution": "r = any([0, 0, 3])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "boolean_logic_ch10",
+          "title": "Expert: all()",
+          "promptMarkdown": "all([1,2,3]) into r.",
+          "starterCode": "r = all([1,2,3])",
+          "hint": "all() returns True only when every item is truthy.",
+          "solution": "r = all([1, 2, 3])",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks r",
+                "assertion": "r == True"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "boolean_logic_q1",
+            "type": "mcq",
+            "prompt": "True and False is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "False"
+              },
+              {
+                "id": "b",
+                "label": "True"
+              },
+              {
+                "id": "c",
+                "label": "None"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "boolean_logic_q2",
+            "type": "shortText",
+            "prompt": "Operator for logical NOT?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "not"
+            }
+          },
+          {
+            "id": "boolean_logic_q3",
+            "type": "mcq",
+            "prompt": "True or False is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "True"
+              },
+              {
+                "id": "b",
+                "label": "False"
+              },
+              {
+                "id": "c",
+                "label": "0"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "boolean_logic_q4",
+            "type": "shortText",
+            "prompt": "\"x\" in \"box\" is?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "True"
+            }
+          },
+          {
+            "id": "boolean_logic_q5",
+            "type": "mcq",
+            "prompt": "is checks:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Identity (same object)"
+              },
+              {
+                "id": "b",
+                "label": "Value equality only always"
+              },
+              {
+                "id": "c",
+                "label": "Type only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "boolean_logic_q6",
+            "type": "mcq",
+            "prompt": "any([]) is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "False"
+              },
+              {
+                "id": "b",
+                "label": "True"
+              },
+              {
+                "id": "c",
+                "label": "[]"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "boolean_logic_q7",
+            "type": "shortText",
+            "prompt": "all([1,0]) is?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "False"
+            }
+          },
+          {
+            "id": "boolean_logic_q8",
+            "type": "mcq",
+            "prompt": "Expert: short-circuit means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Skip rest if result known"
+              },
+              {
+                "id": "b",
+                "label": "Always evaluate all"
+              },
+              {
+                "id": "c",
+                "label": "Compile error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "boolean_logic_q9",
+            "type": "mcq",
+            "prompt": "Expert: bool(\"\") is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "False"
+              },
+              {
+                "id": "b",
+                "label": "True"
+              },
+              {
+                "id": "c",
+                "label": "\"\""
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "boolean_logic_q10",
+            "type": "shortText",
+            "prompt": "Expert: not (True or False) is?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "False"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "if_elif_else",
+      "title": "if, elif and else",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "grade_a",
+          "label": "Grade A",
+          "code": "score = 95\nif score >= 90:\n    print(\"A\")"
+        },
+        {
+          "id": "elif_chain",
+          "label": "elif chain",
+          "code": "score = 85\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelse:\n    print(\"C\")"
+        },
+        {
+          "id": "else_branch",
+          "label": "else branch",
+          "code": "n = 0\nif n:\n    print(\"yes\")\nelse:\n    print(\"no\")"
+        },
+        {
+          "id": "nested_if",
+          "label": "Nested if",
+          "code": "a, b = 1, 2\nif a < b:\n    print(\"ok\")"
+        },
+        {
+          "id": "pass_fail",
+          "label": "Pass / Fail",
+          "code": "score = 74\nif score >= 70:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")"
+        }
+      ],
+      "intro": {
+        "title": "if, elif and else",
+        "bodyMarkdown": "Conditional statements let your program choose different paths. `if condition:` runs a block when the condition is true; `elif` checks another condition; `else` runs when none matched.\n\nIndentation defines which lines belong to each branch. Conditions are expressions that evaluate to True or False.\n\nUse if/elif/else to handle user choices, validate data, and implement game rules.",
+        "sandboxCode": "score = 85\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelse:\n    print(\"C\")"
+      },
+      "challenges": [
+        {
+          "id": "if_elif_else_ch1",
+          "title": "Easy: Simple if",
+          "promptMarkdown": "If `x > 0`, print `positive` (set x=5).",
+          "starterCode": "x = 5\nif x > 0:\n    print(",
+          "hint": "Use if with x > 0 and print the string inside the block.",
+          "solution": "x = 5\nif x > 0:\n    print(\"positive\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"positive\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch2",
+          "title": "Easy: else branch",
+          "promptMarkdown": "Print `no` when `n=0`.",
+          "starterCode": "n = 0\nif n:\n    print(\"yes\")\nelse:\n    print(",
+          "hint": "Zero is falsy in Python, so the else branch runs.",
+          "solution": "n = 0\nif n:\n    print(\"yes\")\nelse:\n    print(\"no\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"no\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch3",
+          "title": "Medium: elif chain",
+          "promptMarkdown": "For `v=2`, print `two` using elif.",
+          "starterCode": "v = 2\nif v == 1:\n    print(\"one\")\nelif v == 2:\n    print(",
+          "hint": "Add an elif branch that checks v == 2.",
+          "solution": "v = 2\nif v == 1:\n    print(\"one\")\nelif v == 2:\n    print(\"two\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"two\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch4",
+          "title": "Medium: Compare strings",
+          "promptMarkdown": "If name==\"Ada\", print `Hi Ada`.",
+          "starterCode": "name = \"Ada\"\nif name == \"Ada\":\n    print(",
+          "hint": "Compare name to the string \"Ada\" with ==.",
+          "solution": "name = \"Ada\"\nif name == \"Ada\":\n    print(\"Hi Ada\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"Hi Ada\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch5",
+          "title": "Hard: Nested if",
+          "promptMarkdown": "Set a=1,b=2; if a<b print `ok`.",
+          "starterCode": "a,b=1,2\nif a<b:\n    print(",
+          "hint": "Nest the comparison inside if a < b.",
+          "solution": "a, b = 1, 2\nif a < b:\n    print(\"ok\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"ok\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch6",
+          "title": "Hard: Grade logic",
+          "promptMarkdown": "score=74 → print `Pass` if >=70 else `Fail`.",
+          "starterCode": "score = 74\n",
+          "hint": "Use if score >= 70 for Pass, else for Fail.",
+          "solution": "score = 74\nif score >= 70:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"Pass\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch7",
+          "title": "Expert: Multiple elif",
+          "promptMarkdown": "Map 1→one, 2→two, else other for x=3.",
+          "starterCode": "x = 3\n",
+          "hint": "Chain if/elif for 1 and 2, else for everything else.",
+          "solution": "x = 3\nif x == 1:\n    print(\"one\")\nelif x == 2:\n    print(\"two\")\nelse:\n    print(\"other\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"other\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch8",
+          "title": "Expert: Truthy check",
+          "promptMarkdown": "If lst: print `has items` for lst=[1].",
+          "starterCode": "lst = [1]\n",
+          "hint": "A non-empty list is truthy; use if lst: to check.",
+          "solution": "lst = [1]\nif lst:\n    print(\"has items\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"has items\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch9",
+          "title": "Expert: if not",
+          "promptMarkdown": "Print `empty` when s=\"\" using if not.",
+          "starterCode": "s = \"\"\n",
+          "hint": "An empty string is falsy; if not s: detects it.",
+          "solution": "s = \"\"\nif not s:\n    print(\"empty\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"empty\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_elif_else_ch10",
+          "title": "Expert: Combined condition",
+          "promptMarkdown": "Print `teen` if 13<=age<=19, age=15.",
+          "starterCode": "age = 15\n",
+          "hint": "Python allows chained comparisons like 13 <= age <= 19.",
+          "solution": "age = 15\nif 13 <= age <= 19:\n    print(\"teen\")",
+          "validation": {
+            "mode": "python_tests",
+            "tests": [
+              {
+                "id": "out",
+                "label": "Correct output",
+                "assertion": "_cq_stdout.strip() == \"teen\""
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "if_elif_else_q1",
+            "type": "mcq",
+            "prompt": "else runs when:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No if/elif was true"
+              },
+              {
+                "id": "b",
+                "label": "Always first"
+              },
+              {
+                "id": "c",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "if_elif_else_q2",
+            "type": "shortText",
+            "prompt": "Keyword for additional condition after if?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "elif"
+            }
+          },
+          {
+            "id": "if_elif_else_q3",
+            "type": "mcq",
+            "prompt": "if 0: print(1) prints:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Nothing"
+              },
+              {
+                "id": "b",
+                "label": "1"
+              },
+              {
+                "id": "c",
+                "label": "0"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "if_elif_else_q4",
+            "type": "shortText",
+            "prompt": "Colon after if condition is:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "required"
+            }
+          },
+          {
+            "id": "if_elif_else_q5",
+            "type": "mcq",
+            "prompt": "Indentation in if blocks is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Required"
+              },
+              {
+                "id": "b",
+                "label": "Optional"
+              },
+              {
+                "id": "c",
+                "label": "Forbidden"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "if_elif_else_q6",
+            "type": "mcq",
+            "prompt": "elif is short for:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "else if"
+              },
+              {
+                "id": "b",
+                "label": "end if"
+              },
+              {
+                "id": "c",
+                "label": "every if"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "if_elif_else_q7",
+            "type": "shortText",
+            "prompt": "Boolean result of 5 > 3?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "True"
+            }
+          },
+          {
+            "id": "if_elif_else_q8",
+            "type": "mcq",
+            "prompt": "Expert: if [] is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Falsy"
+              },
+              {
+                "id": "b",
+                "label": "Truthy"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "if_elif_else_q9",
+            "type": "mcq",
+            "prompt": "Expert: only one if/elif branch:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Runs per chain"
+              },
+              {
+                "id": "b",
+                "label": "All run"
+              },
+              {
+                "id": "c",
+                "label": "Random"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "if_elif_else_q10",
+            "type": "shortText",
+            "prompt": "Expert: not True equals?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "False"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "match_case",
+      "title": "match and case",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "http_status",
+          "label": "HTTP status",
+          "code": "def status(n):\n    match n:\n        case 200: return \"OK\"\n        case 404: return \"Not Found\"\n        case _: return \"Unknown\"\nprint(status(404))"
+        },
+        {
+          "id": "case_value",
+          "label": "case value",
+          "code": "def label(x):\n    match x:\n        case 1: return \"one\"\n        case 2: return \"two\"\n        case _: return \"other\"\nprint(label(2))"
+        },
+        {
+          "id": "default",
+          "label": "Default _",
+          "code": "def kind(x):\n    match x:\n        case \"a\": return \"letter\"\n        case _: return \"other\"\nprint(kind(\"z\"))"
+        },
+        {
+          "id": "guard",
+          "label": "Guard",
+          "code": "def grade(n):\n    match n:\n        case x if x >= 90: return \"A\"\n        case _: return \"B\"\nprint(grade(95))"
+        }
+      ],
+      "intro": {
+        "title": "match and case",
+        "bodyMarkdown": "Python 3.10+ adds `match value:` with `case pattern:` branches — structural pattern matching similar to switch in other languages but more powerful.\n\nMatch literals, capture variables, use `|` for alternatives, and `case _:` as wildcard default.\n\nUse match when you have many discrete cases on one value; if/elif remains fine for simple conditions.",
+        "sandboxCode": "def http_status(n):\n    match n:\n        case 200: return \"OK\"\n        case 404: return \"Not Found\"\n        case _: return \"Unknown\"\nprint(http_status(404))"
+      },
+      "challenges": [
+        {
+          "id": "match_case_ch1",
+          "title": "Easy: Literal case",
+          "promptMarkdown": "match 1: case 1: x=\"one\"",
+          "starterCode": "match 1:\n case 1:\n  x=\"one\"",
+          "hint": "match compares the value; case 1 runs when it equals 1.",
+          "solution": "match 1:\n    case 1:\n        x = \"one\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks x",
+                "assertion": "x == 'one'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch2",
+          "title": "Easy: Wildcard",
+          "promptMarkdown": "match 0: case _: y=\"def\"",
+          "starterCode": "match 0:\n case _:\n  y=\"def\"",
+          "hint": "case _ is the wildcard that matches anything.",
+          "solution": "match 0:\n    case _:\n        y = \"def\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks y",
+                "assertion": "y == 'def'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch3",
+          "title": "Medium: String case",
+          "promptMarkdown": "match \"a\": case \"a\"|\"b\": ok=True",
+          "starterCode": "match \"a\":\n case \"a\" | \"b\":\n  ok=True",
+          "hint": "Use | to match multiple alternatives in one case.",
+          "solution": "match \"a\":\n    case \"a\" | \"b\":\n        ok = True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks ok",
+                "assertion": "ok == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch4",
+          "title": "Medium: Capture",
+          "promptMarkdown": "match [1,2]: case [x,y]: s=x+y",
+          "starterCode": "match [1,2]:\n case [x,y]:\n  s=x+y",
+          "hint": "List patterns capture elements into variables x and y.",
+          "solution": "match [1, 2]:\n    case [x, y]:\n        s = x + y",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks s",
+                "assertion": "s == 3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch5",
+          "title": "Hard: Guard",
+          "promptMarkdown": "case n if n>0: pos=True for n=5",
+          "starterCode": "n=5\nmatch n:\n case x if x>0:\n  pos=True",
+          "hint": "Add if x > 0 as a guard on the case pattern.",
+          "solution": "n = 5\nmatch n:\n    case x if x > 0:\n        pos = True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks pos",
+                "assertion": "pos == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch6",
+          "title": "Hard: Multiple cases",
+          "promptMarkdown": "match 3: case 1|2|3: hit=True",
+          "starterCode": "match 3:\n case 1|2|3:\n  hit=True",
+          "hint": "case 1 | 2 | 3 matches any of those literals.",
+          "solution": "match 3:\n    case 1 | 2 | 3:\n        hit = True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks hit",
+                "assertion": "hit == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch7",
+          "title": "Expert: Tuple pattern",
+          "promptMarkdown": "match (1,\"x\"): case (1,s): v=s",
+          "starterCode": "match (1,\"x\"):\n case (1,s):\n  v=s",
+          "hint": "Tuple patterns bind captured values to variables.",
+          "solution": "match (1, \"x\"):\n    case (1, s):\n        v = s",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks v",
+                "assertion": "v == 'x'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch8",
+          "title": "Expert: Class pattern",
+          "promptMarkdown": "Simple match on str type concept: isinstance via case _",
+          "starterCode": "done=False\nmatch \"hi\":\n case _:\n  done=True",
+          "hint": "case _ matches any value, including strings.",
+          "solution": "done = False\nmatch \"hi\":\n    case _:\n        done = True",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks done",
+                "assertion": "done == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch9",
+          "title": "Expert: Default only",
+          "promptMarkdown": "match None: case _: t=\"nil\"",
+          "starterCode": "match None:\n case _:\n  t=\"nil\"",
+          "hint": "None matches case _ since no specific case exists.",
+          "solution": "match None:\n    case _:\n        t = \"nil\"",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks t",
+                "assertion": "t == 'nil'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "match_case_ch10",
+          "title": "Expert: List head",
+          "promptMarkdown": "match [1,2,3]: case [h,*rest]: head=h",
+          "starterCode": "match [1,2,3]:\n case [h, *rest]:\n  head=h",
+          "hint": "*rest captures remaining list elements; h is the first item.",
+          "solution": "match [1, 2, 3]:\n    case [h, *rest]:\n        head = h",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "var",
+                "label": "Checks head",
+                "assertion": "head == 1"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "match_case_q1",
+            "type": "mcq",
+            "prompt": "match introduced in Python:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3.10+"
+              },
+              {
+                "id": "b",
+                "label": "2.7"
+              },
+              {
+                "id": "c",
+                "label": "3.0 only"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "match_case_q2",
+            "type": "shortText",
+            "prompt": "Wildcard case pattern?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "_"
+            }
+          },
+          {
+            "id": "match_case_q3",
+            "type": "mcq",
+            "prompt": "case _ means:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Default catch-all"
+              },
+              {
+                "id": "b",
+                "label": "Private variable"
+              },
+              {
+                "id": "c",
+                "label": "Error"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "match_case_q4",
+            "type": "shortText",
+            "prompt": "Alternative cases use:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "|"
+            }
+          },
+          {
+            "id": "match_case_q5",
+            "type": "mcq",
+            "prompt": "case [x,y] is:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Sequence pattern"
+              },
+              {
+                "id": "b",
+                "label": "Function call"
+              },
+              {
+                "id": "c",
+                "label": "Import"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "match_case_q6",
+            "type": "mcq",
+            "prompt": "Guard uses:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "if condition on case"
+              },
+              {
+                "id": "b",
+                "label": "only else"
+              },
+              {
+                "id": "c",
+                "label": "try"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "match_case_q7",
+            "type": "shortText",
+            "prompt": "match replaces some:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "if/elif chains"
+            }
+          },
+          {
+            "id": "match_case_q8",
+            "type": "mcq",
+            "prompt": "Expert: case 1 | 2 matches:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "1 or 2"
+              },
+              {
+                "id": "b",
+                "label": "12"
+              },
+              {
+                "id": "c",
+                "label": "nothing"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "match_case_q9",
+            "type": "mcq",
+            "prompt": "Expert: match without case match:",
+            "choices": [
+              {
+                "id": "a",
+                "label": "SyntaxError"
+              },
+              {
+                "id": "b",
+                "label": "Runs all"
+              },
+              {
+                "id": "c",
+                "label": "Returns None always"
+              }
+            ],
+            "correctChoiceId": "a"
+          },
+          {
+            "id": "match_case_q10",
+            "type": "shortText",
+            "prompt": "Expert: *rest in pattern captures:",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "remaining"
+            }
+          }
+        ]
+      }
+    },
+    {
       "id": "while_loops",
-      "title": "while Loops",
+      "title": "while loops",
       "kind": "topic",
       "sandboxSnippets": [
         {
@@ -1189,13 +1574,13 @@
         }
       ],
       "intro": {
-        "title": "while Loops",
+        "title": "while loops",
         "bodyMarkdown": "A `while condition:` loop repeats its body while the condition is true. Update variables inside the loop to avoid infinite loops.\n\nwhile suits unknown iteration counts — reading until sentinel, retrying input, or game loops.\n\nAlways ensure the condition eventually becomes false, or use break to exit early.",
         "sandboxCode": "n = 3\nwhile n > 0:\n    print(n)\n    n -= 1\nprint(\"done\")"
       },
       "challenges": [
         {
-          "id": "ch_syr9auf",
+          "id": "while_loops_ch1",
           "title": "Easy: Count down",
           "promptMarkdown": "While n>0 print n; start n=2 (print 2\\n1).",
           "starterCode": "n = 2\nwhile n > 0:\n    print(n)\n    n -= 1",
@@ -1213,7 +1598,7 @@
           }
         },
         {
-          "id": "ch_tvn3e86",
+          "id": "while_loops_ch2",
           "title": "Easy: Sum loop",
           "promptMarkdown": "Sum 1..3 using while into total.",
           "starterCode": "total=0\ni=1\nwhile i<=3:\n total+=i\n i+=1",
@@ -1232,7 +1617,7 @@
           }
         },
         {
-          "id": "ch_ay7fw07",
+          "id": "while_loops_ch3",
           "title": "Medium: Double until",
           "promptMarkdown": "Start x=1; while x<10: x*=2; final x=8.",
           "starterCode": "x=1\nwhile x<10:\n x*=2",
@@ -1251,7 +1636,7 @@
           }
         },
         {
-          "id": "ch_73z63ou",
+          "id": "while_loops_ch4",
           "title": "Medium: Counter",
           "promptMarkdown": "Count to 5 with while, store count in c.",
           "starterCode": "c=0\nwhile c<5:\n c+=1",
@@ -1270,7 +1655,7 @@
           }
         },
         {
-          "id": "ch_dtkp546",
+          "id": "while_loops_ch5",
           "title": "Hard: Accumulate list",
           "promptMarkdown": "Build [0,1,2] with while append pattern.",
           "starterCode": "lst=[]\ni=0\nwhile i<3:\n lst.append(i)\n i+=1",
@@ -1289,7 +1674,7 @@
           }
         },
         {
-          "id": "ch_4t0ueif",
+          "id": "while_loops_ch6",
           "title": "Hard: break when found",
           "promptMarkdown": "Loop until i==3 then break; set found=True.",
           "starterCode": "i=0\nfound=False\nwhile True:\n i+=1\n if i==3:\n  found=True\n  break",
@@ -1308,7 +1693,7 @@
           }
         },
         {
-          "id": "ch_q3gk8b0",
+          "id": "while_loops_ch7",
           "title": "Expert: Collatz step",
           "promptMarkdown": "While n!=1: if even n//=2 else n=3*n+1; start n=5 end 16?",
           "starterCode": "n=5\nwhile n!=1:\n n=n//2 if n%2==0 else 3*n+1",
@@ -1327,7 +1712,7 @@
           }
         },
         {
-          "id": "ch_7e6if5m",
+          "id": "while_loops_ch8",
           "title": "Expert: GCD while",
           "promptMarkdown": "Euclid: while b: a,b=b,a%b; start 12,8 → a=4.",
           "starterCode": "a,b=12,8\nwhile b:\n a,b=b,a%b",
@@ -1346,7 +1731,7 @@
           }
         },
         {
-          "id": "ch_vsuzd1a",
+          "id": "while_loops_ch9",
           "title": "Expert: Infinite guard",
           "promptMarkdown": "Use while False: never run — set ran=0.",
           "starterCode": "ran=0\nwhile False:\n ran=1",
@@ -1365,7 +1750,7 @@
           }
         },
         {
-          "id": "ch_69o42a4",
+          "id": "while_loops_ch10",
           "title": "Expert: Menu simulation",
           "promptMarkdown": "While choice!=\"q\": one iteration; choice=\"q\" after.",
           "starterCode": "choice=\"\"\nwhile choice!=\"q\":\n choice=\"q\"",
@@ -1388,7 +1773,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_2smth02",
+            "id": "while_loops_q1",
             "type": "mcq",
             "prompt": "while loop runs while:",
             "choices": [
@@ -1408,7 +1793,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_n0fs9vv",
+            "id": "while_loops_q2",
             "type": "shortText",
             "prompt": "Keyword to exit loop immediately?",
             "validation": {
@@ -1417,7 +1802,7 @@
             }
           },
           {
-            "id": "q_2hh6bfq",
+            "id": "while_loops_q3",
             "type": "mcq",
             "prompt": "Infinite loop risk when:",
             "choices": [
@@ -1437,7 +1822,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fvxuz2d",
+            "id": "while_loops_q4",
             "type": "shortText",
             "prompt": "while True: means condition always:",
             "validation": {
@@ -1446,7 +1831,7 @@
             }
           },
           {
-            "id": "q_k2ymrem",
+            "id": "while_loops_q5",
             "type": "mcq",
             "prompt": "while suits:",
             "choices": [
@@ -1466,7 +1851,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0wjr667",
+            "id": "while_loops_q6",
             "type": "mcq",
             "prompt": "i += 1 in while often:",
             "choices": [
@@ -1486,7 +1871,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ebx8q3x",
+            "id": "while_loops_q7",
             "type": "shortText",
             "prompt": "else clause on while runs if loop ended without?",
             "validation": {
@@ -1495,7 +1880,7 @@
             }
           },
           {
-            "id": "q_q292fup",
+            "id": "while_loops_q8",
             "type": "mcq",
             "prompt": "Expert: while n: with n=0 runs:",
             "choices": [
@@ -1515,7 +1900,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_35ugdbv",
+            "id": "while_loops_q9",
             "type": "mcq",
             "prompt": "Expert: continue in while:",
             "choices": [
@@ -1535,7 +1920,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ie5pxk9",
+            "id": "while_loops_q10",
             "type": "shortText",
             "prompt": "Expert: Sentinel value often ends:",
             "validation": {
@@ -1548,7 +1933,7 @@
     },
     {
       "id": "for_loops",
-      "title": "for Loops",
+      "title": "for loops",
       "kind": "topic",
       "sandboxSnippets": [
         {
@@ -1578,13 +1963,13 @@
         }
       ],
       "intro": {
-        "title": "for Loops",
+        "title": "for loops",
         "bodyMarkdown": "`for item in iterable:` visits each element in a sequence or collection. It is the preferred loop when you know what you are iterating over.\n\nLoop over strings, lists, ranges, dict keys, and file lines. The loop variable takes each value in turn.\n\nfor loops are clearer than while for most collection processing and avoid manual index management.",
         "sandboxCode": "for ch in \"hi\":\n    print(ch)\nfor n in [10, 20, 30]:\n    print(n * 2)"
       },
       "challenges": [
         {
-          "id": "ch_2exdrnx",
+          "id": "for_loops_ch1",
           "title": "Easy: Loop list",
           "promptMarkdown": "Print each item of [1,2,3] on its own line.",
           "starterCode": "for x in [1,2,3]:\n    print(x)",
@@ -1602,7 +1987,7 @@
           }
         },
         {
-          "id": "ch_aw5ie86",
+          "id": "for_loops_ch2",
           "title": "Easy: Loop string",
           "promptMarkdown": "Sum ord values? Set total=0; for c in \"ab\": total+=1 → 2.",
           "starterCode": "total=0\nfor c in \"ab\":\n total+=1",
@@ -1621,7 +2006,7 @@
           }
         },
         {
-          "id": "ch_0ltzkz7",
+          "id": "for_loops_ch3",
           "title": "Medium: Accumulate",
           "promptMarkdown": "Sum [1,2,3,4] into s.",
           "starterCode": "s=0\nfor n in [1,2,3,4]:\n s+=n",
@@ -1640,7 +2025,7 @@
           }
         },
         {
-          "id": "ch_8zf08nj",
+          "id": "for_loops_ch4",
           "title": "Medium: Enumerate",
           "promptMarkdown": "for i,x in enumerate([\"a\",\"b\"]): set last i=1.",
           "starterCode": "for i,x in enumerate([\"a\",\"b\"]):\n pass",
@@ -1659,7 +2044,7 @@
           }
         },
         {
-          "id": "ch_pf2jc7a",
+          "id": "for_loops_ch5",
           "title": "Hard: Filter build",
           "promptMarkdown": "Build evens from range(5) → [0,2,4].",
           "starterCode": "ev=[]\nfor n in range(5):\n if n%2==0: ev.append(n)",
@@ -1678,7 +2063,7 @@
           }
         },
         {
-          "id": "ch_zy4gnh0",
+          "id": "for_loops_ch6",
           "title": "Hard: Nested for",
           "promptMarkdown": "Pairs (0,0),(0,1) count = 4 for range(2) nested.",
           "starterCode": "c=0\nfor i in range(2):\n for j in range(2):\n  c+=1",
@@ -1697,7 +2082,7 @@
           }
         },
         {
-          "id": "ch_yp4a0qz",
+          "id": "for_loops_ch7",
           "title": "Expert: zip loop",
           "promptMarkdown": "for a,b in zip([1,2],[3,4]): set s=a+b first → 4.",
           "starterCode": "for a,b in zip([1,2],[3,4]):\n s=a+b\n break",
@@ -1716,7 +2101,7 @@
           }
         },
         {
-          "id": "ch_jgra0q5",
+          "id": "for_loops_ch8",
           "title": "Expert: else on for",
           "promptMarkdown": "for x in []: pass\nelse: done=True",
           "starterCode": "done=False\nfor x in []:\n pass\nelse:\n done=True",
@@ -1735,7 +2120,7 @@
           }
         },
         {
-          "id": "ch_qifuhdg",
+          "id": "for_loops_ch9",
           "title": "Expert: Dict keys",
           "promptMarkdown": "for k in {\"a\":1}: collect k.",
           "starterCode": "for k in {\"a\":1}:\n pass",
@@ -1754,7 +2139,7 @@
           }
         },
         {
-          "id": "ch_3242dry",
+          "id": "for_loops_ch10",
           "title": "Expert: Reverse iterate",
           "promptMarkdown": "for x in reversed([1,2,3]): first x=3.",
           "starterCode": "for x in reversed([1,2,3]):\n break",
@@ -1777,7 +2162,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_47fmp2z",
+            "id": "for_loops_q1",
             "type": "mcq",
             "prompt": "for x in [1,2]: runs:",
             "choices": [
@@ -1797,7 +2182,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mbpzc9m",
+            "id": "for_loops_q2",
             "type": "shortText",
             "prompt": "Loop variable takes each:",
             "validation": {
@@ -1806,7 +2191,7 @@
             }
           },
           {
-            "id": "q_ypgv9xf",
+            "id": "for_loops_q3",
             "type": "mcq",
             "prompt": "for c in \"ab\": c visits:",
             "choices": [
@@ -1826,7 +2211,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ougyfy1",
+            "id": "for_loops_q4",
             "type": "shortText",
             "prompt": "enumerate provides index and:",
             "validation": {
@@ -1835,7 +2220,7 @@
             }
           },
           {
-            "id": "q_a5k3cvv",
+            "id": "for_loops_q5",
             "type": "mcq",
             "prompt": "zip pairs:",
             "choices": [
@@ -1855,7 +2240,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fvf1kb6",
+            "id": "for_loops_q6",
             "type": "mcq",
             "prompt": "for/else else runs when:",
             "choices": [
@@ -1875,7 +2260,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1fm2a7p",
+            "id": "for_loops_q7",
             "type": "shortText",
             "prompt": "reversed() returns:",
             "validation": {
@@ -1884,7 +2269,7 @@
             }
           },
           {
-            "id": "q_tg56kr7",
+            "id": "for_loops_q8",
             "type": "mcq",
             "prompt": "Expert: iterating dict default keys:",
             "choices": [
@@ -1904,7 +2289,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_vnbntsq",
+            "id": "for_loops_q9",
             "type": "mcq",
             "prompt": "Expert: for is preferred over while when:",
             "choices": [
@@ -1924,7 +2309,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_v75pc6g",
+            "id": "for_loops_q10",
             "type": "shortText",
             "prompt": "Expert: break exits:",
             "validation": {
@@ -1973,7 +2358,7 @@
       },
       "challenges": [
         {
-          "id": "ch_kxnhyt3",
+          "id": "range_function_ch1",
           "title": "Easy: range(5)",
           "promptMarkdown": "list(range(5)) into r.",
           "starterCode": "r = list(range(5))",
@@ -1992,7 +2377,7 @@
           }
         },
         {
-          "id": "ch_v5f7xjb",
+          "id": "range_function_ch2",
           "title": "Easy: range start",
           "promptMarkdown": "list(range(2,5)) into r.",
           "starterCode": "r = list(range(2,5))",
@@ -2011,7 +2396,7 @@
           }
         },
         {
-          "id": "ch_0307unr",
+          "id": "range_function_ch3",
           "title": "Medium: step",
           "promptMarkdown": "list(range(0,10,3)) into r.",
           "starterCode": "r = list(range(0,10,3))",
@@ -2030,7 +2415,7 @@
           }
         },
         {
-          "id": "ch_84kbmmp",
+          "id": "range_function_ch4",
           "title": "Medium: Sum range",
           "promptMarkdown": "sum(range(1,6)) into s.",
           "starterCode": "s = sum(range(1,6))",
@@ -2049,7 +2434,7 @@
           }
         },
         {
-          "id": "ch_tncbqyb",
+          "id": "range_function_ch5",
           "title": "Hard: Reverse range",
           "promptMarkdown": "list(range(5,0,-1)) into r.",
           "starterCode": "r = list(range(5,0,-1))",
@@ -2068,7 +2453,7 @@
           }
         },
         {
-          "id": "ch_uuord0t",
+          "id": "range_function_ch6",
           "title": "Hard: len range",
           "promptMarkdown": "len(range(10)) into n.",
           "starterCode": "n = len(range(10))",
@@ -2087,7 +2472,7 @@
           }
         },
         {
-          "id": "ch_37hb0xs",
+          "id": "range_function_ch7",
           "title": "Expert: Empty range",
           "promptMarkdown": "list(range(3,3)) into r.",
           "starterCode": "r = list(range(3,3))",
@@ -2106,7 +2491,7 @@
           }
         },
         {
-          "id": "ch_vuwvig4",
+          "id": "range_function_ch8",
           "title": "Expert: Negative step",
           "promptMarkdown": "list(range(10,0,-2)) into r.",
           "starterCode": "r = list(range(10,0,-2))",
@@ -2125,7 +2510,7 @@
           }
         },
         {
-          "id": "ch_rrb5yi4",
+          "id": "range_function_ch9",
           "title": "Expert: Index loop",
           "promptMarkdown": "Build squares 0,1,4 using range(3).",
           "starterCode": "sq=[]\nfor i in range(3):\n sq.append(i*i)",
@@ -2144,7 +2529,7 @@
           }
         },
         {
-          "id": "ch_sty2z9s",
+          "id": "range_function_ch10",
           "title": "Expert: range vs list",
           "promptMarkdown": "type(range(3)) is range.",
           "starterCode": "t = type(range(3))",
@@ -2167,7 +2552,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_y43aqd9",
+            "id": "range_function_q1",
             "type": "mcq",
             "prompt": "range(3) yields:",
             "choices": [
@@ -2187,7 +2572,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9iqe2v8",
+            "id": "range_function_q2",
             "type": "shortText",
             "prompt": "range(2,5) stops before?",
             "validation": {
@@ -2196,7 +2581,7 @@
             }
           },
           {
-            "id": "q_l5bhh05",
+            "id": "range_function_q3",
             "type": "mcq",
             "prompt": "Third argument to range is:",
             "choices": [
@@ -2216,7 +2601,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0z6as4g",
+            "id": "range_function_q4",
             "type": "shortText",
             "prompt": "Convert range to list function?",
             "validation": {
@@ -2225,7 +2610,7 @@
             }
           },
           {
-            "id": "q_xxyfufc",
+            "id": "range_function_q5",
             "type": "mcq",
             "prompt": "range(5,5) is:",
             "choices": [
@@ -2245,7 +2630,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_iennx00",
+            "id": "range_function_q6",
             "type": "mcq",
             "prompt": "range(-1, -5, -1) goes:",
             "choices": [
@@ -2265,7 +2650,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jz1gn1t",
+            "id": "range_function_q7",
             "type": "shortText",
             "prompt": "range is memory efficient because it is:",
             "validation": {
@@ -2274,7 +2659,7 @@
             }
           },
           {
-            "id": "q_x8d34tt",
+            "id": "range_function_q8",
             "type": "mcq",
             "prompt": "Expert: range(10) has len:",
             "choices": [
@@ -2294,7 +2679,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_dy9a5yp",
+            "id": "range_function_q9",
             "type": "mcq",
             "prompt": "Expert: for i in range(n) runs n times when start is:",
             "choices": [
@@ -2314,7 +2699,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_hgsxqao",
+            "id": "range_function_q10",
             "type": "shortText",
             "prompt": "Expert: step 0 in range is:",
             "validation": {
@@ -2358,7 +2743,7 @@
       },
       "challenges": [
         {
-          "id": "ch_pbkj028",
+          "id": "break_continue_ch1",
           "title": "Easy: break early",
           "promptMarkdown": "Loop 0..9 break at 3; last printed 2 or count iterations 3.",
           "starterCode": "c=0\nfor i in range(10):\n c+=1\n if i==3: break",
@@ -2377,7 +2762,7 @@
           }
         },
         {
-          "id": "ch_5zowuyx",
+          "id": "break_continue_ch2",
           "title": "Easy: continue skip",
           "promptMarkdown": "Sum 1..5 skip 3 → 11.",
           "starterCode": "s=0\nfor i in range(1,6):\n if i==3: continue\n s+=i",
@@ -2396,7 +2781,7 @@
           }
         },
         {
-          "id": "ch_pokdw9f",
+          "id": "break_continue_ch3",
           "title": "Medium: Find first",
           "promptMarkdown": "Find first >5 in [2,7,4] → 7.",
           "starterCode": "found=None\nfor x in [2,7,4]:\n if x>5:\n  found=x\n  break",
@@ -2415,7 +2800,7 @@
           }
         },
         {
-          "id": "ch_lucwg4t",
+          "id": "break_continue_ch4",
           "title": "Medium: Skip evens",
           "promptMarkdown": "Build odds 1..5 → [1,3,5].",
           "starterCode": "o=[]\nfor i in range(1,6):\n if i%2==0: continue\n o.append(i)",
@@ -2434,7 +2819,7 @@
           }
         },
         {
-          "id": "ch_roq0bi8",
+          "id": "break_continue_ch5",
           "title": "Hard: while break",
           "promptMarkdown": "while True: break; set ok=True.",
           "starterCode": "ok=False\nwhile True:\n ok=True\n break",
@@ -2453,7 +2838,7 @@
           }
         },
         {
-          "id": "ch_haomtog",
+          "id": "break_continue_ch6",
           "title": "Hard: Nested break",
           "promptMarkdown": "Break inner only; outer completes 2 times.",
           "starterCode": "outer=0\nfor i in range(2):\n outer+=1\n for j in range(5):\n  break",
@@ -2472,7 +2857,7 @@
           }
         },
         {
-          "id": "ch_2my8bsc",
+          "id": "break_continue_ch7",
           "title": "Expert: Prime check break",
           "promptMarkdown": "Is 17 prime? Set prime=True using trial division break.",
           "starterCode": "n=17\nprime=True\nfor d in range(2,int(n**0.5)+1):\n if n%d==0:\n  prime=False\n  break",
@@ -2491,7 +2876,7 @@
           }
         },
         {
-          "id": "ch_bzvo4zz",
+          "id": "break_continue_ch8",
           "title": "Expert: continue string",
           "promptMarkdown": "Count non-space in \"a b\" → 2.",
           "starterCode": "c=0\nfor ch in \"a b\":\n if ch==\" \": continue\n c+=1",
@@ -2510,7 +2895,7 @@
           }
         },
         {
-          "id": "ch_abxooi5",
+          "id": "break_continue_ch9",
           "title": "Expert: else after break",
           "promptMarkdown": "for with break skips else; without break runs else.",
           "starterCode": "ran=False\nfor x in [1]:\n pass\nelse:\n ran=True",
@@ -2529,7 +2914,7 @@
           }
         },
         {
-          "id": "ch_3sw3pcn",
+          "id": "break_continue_ch10",
           "title": "Expert: Search sentinel",
           "promptMarkdown": "Find index of 9 in list or -1.",
           "starterCode": "idx=-1\nfor i,x in enumerate([1,2,3]):\n if x==9:\n  idx=i\n  break",
@@ -2552,7 +2937,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_b8qiu6d",
+            "id": "break_continue_q1",
             "type": "mcq",
             "prompt": "break:",
             "choices": [
@@ -2572,7 +2957,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_m6wbxg9",
+            "id": "break_continue_q2",
             "type": "shortText",
             "prompt": "continue skips to:",
             "validation": {
@@ -2581,7 +2966,7 @@
             }
           },
           {
-            "id": "q_f2kx1tq",
+            "id": "break_continue_q3",
             "type": "mcq",
             "prompt": "break in nested loop exits:",
             "choices": [
@@ -2601,7 +2986,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_qm8aj4y",
+            "id": "break_continue_q4",
             "type": "shortText",
             "prompt": "for/else else skipped when:",
             "validation": {
@@ -2610,7 +2995,7 @@
             }
           },
           {
-            "id": "q_3bzujwb",
+            "id": "break_continue_q5",
             "type": "mcq",
             "prompt": "continue in while:",
             "choices": [
@@ -2630,7 +3015,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7if3ejx",
+            "id": "break_continue_q6",
             "type": "mcq",
             "prompt": "Use break when:",
             "choices": [
@@ -2650,7 +3035,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wdkrwsl",
+            "id": "break_continue_q7",
             "type": "shortText",
             "prompt": "Keyword cannot exit function (use return):",
             "validation": {
@@ -2659,7 +3044,7 @@
             }
           },
           {
-            "id": "q_ttasofk",
+            "id": "break_continue_q8",
             "type": "mcq",
             "prompt": "Expert: while True: break runs:",
             "choices": [
@@ -2679,7 +3064,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2ljp5yv",
+            "id": "break_continue_q9",
             "type": "mcq",
             "prompt": "Expert: continue avoids:",
             "choices": [
@@ -2699,7 +3084,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ioz0cs4",
+            "id": "break_continue_q10",
             "type": "shortText",
             "prompt": "Expert: break in for else prevents:",
             "validation": {
@@ -2712,7 +3097,7 @@
     },
     {
       "id": "nested_loops",
-      "title": "Nested Loops",
+      "title": "Nested loops",
       "kind": "topic",
       "sandboxSnippets": [
         {
@@ -2737,13 +3122,13 @@
         }
       ],
       "intro": {
-        "title": "Nested Loops",
+        "title": "Nested loops",
         "bodyMarkdown": "Place one loop inside another to process grids, pairs, or combinations. Inner loop runs completely for each outer iteration.\n\nCommon for multiplication tables, 2D lists, and comparing all pairs. Watch complexity — double loops over large data can be slow.\n\nBreak inner loop only exits inner; use flags or functions to break outer from inner when needed.",
         "sandboxCode": "for row in range(3):\n    line = []\n    for col in range(3):\n        line.append(row * col)\n    print(line)"
       },
       "challenges": [
         {
-          "id": "ch_z9n65pu",
+          "id": "nested_loops_ch1",
           "title": "Easy: Simple nest",
           "promptMarkdown": "Count inner runs: outer 2, inner 3 → 6.",
           "starterCode": "c=0\nfor i in range(2):\n for j in range(3):\n  c+=1",
@@ -2762,7 +3147,7 @@
           }
         },
         {
-          "id": "ch_thzho7a",
+          "id": "nested_loops_ch2",
           "title": "Easy: Print pairs",
           "promptMarkdown": "Print \"0,0\" and \"0,1\" using nested range(2).",
           "starterCode": "for i in range(2):\n for j in range(2):\n  if i==0: print(f\"{i},{j}\")",
@@ -2780,7 +3165,7 @@
           }
         },
         {
-          "id": "ch_hm5f81j",
+          "id": "nested_loops_ch3",
           "title": "Medium: Multiplication",
           "promptMarkdown": "Build row of 2*x for x in 0..3.",
           "starterCode": "row=[]\nfor x in range(4):\n row.append(2*x)",
@@ -2799,7 +3184,7 @@
           }
         },
         {
-          "id": "ch_bl2h1g8",
+          "id": "nested_loops_ch4",
           "title": "Medium: 2D sum",
           "promptMarkdown": "Sum [[1,2],[3,4]] nested.",
           "starterCode": "m=[[1,2],[3,4]]\ns=0\nfor row in m:\n for v in row:\n  s+=v",
@@ -2818,7 +3203,7 @@
           }
         },
         {
-          "id": "ch_3knuwug",
+          "id": "nested_loops_ch5",
           "title": "Hard: Triangle pattern",
           "promptMarkdown": "Print 3 lines \"*\" growing 1,2,3.",
           "starterCode": "for i in range(1,4):\n print(\"*\"*(i))",
@@ -2836,7 +3221,7 @@
           }
         },
         {
-          "id": "ch_2xh7968",
+          "id": "nested_loops_ch6",
           "title": "Hard: Find pair sum",
           "promptMarkdown": "Find pair in [1,2,3] summing to 5.",
           "starterCode": "pair=None\nnums=[1,2,3]\nfor i,a in enumerate(nums):\n for j,b in enumerate(nums):\n  if i<j and a+b==5: pair=(a,b)",
@@ -2855,7 +3240,7 @@
           }
         },
         {
-          "id": "ch_kw7h8r1",
+          "id": "nested_loops_ch7",
           "title": "Expert: Matrix transpose",
           "promptMarkdown": "Transpose [[1,2],[3,4]] → [[1,3],[2,4]].",
           "starterCode": "m=[[1,2],[3,4]]\nt=[[m[r][c] for r in range(2)] for c in range(2)]",
@@ -2874,7 +3259,7 @@
           }
         },
         {
-          "id": "ch_imr0ghr",
+          "id": "nested_loops_ch8",
           "title": "Expert: Bubble pass",
           "promptMarkdown": "One bubble pass on [3,1,2] → [1,3,2].",
           "starterCode": "a=[3,1,2]\nfor i in range(len(a)-1):\n if a[i]>a[i+1]: a[i],a[i+1]=a[i+1],a[i]",
@@ -2893,7 +3278,7 @@
           }
         },
         {
-          "id": "ch_jw5sqi6",
+          "id": "nested_loops_ch9",
           "title": "Expert: Cartesian count",
           "promptMarkdown": "3x4 grid = 12 cells.",
           "starterCode": "n=0\nfor r in range(3):\n for c in range(4):\n  n+=1",
@@ -2912,7 +3297,7 @@
           }
         },
         {
-          "id": "ch_ntonp2m",
+          "id": "nested_loops_ch10",
           "title": "Expert: Break flag",
           "promptMarkdown": "Break outer from inner using flag.",
           "starterCode": "stopped=False\nfor i in range(5):\n for j in range(5):\n  stopped=True\n  break\n if stopped: break",
@@ -2935,7 +3320,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_rfdk21r",
+            "id": "nested_loops_q1",
             "type": "mcq",
             "prompt": "Nested loops outer 2 inner 3 = iterations:",
             "choices": [
@@ -2955,7 +3340,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rmctm4k",
+            "id": "nested_loops_q2",
             "type": "shortText",
             "prompt": "Inner loop runs per outer:",
             "validation": {
@@ -2964,7 +3349,7 @@
             }
           },
           {
-            "id": "q_gubgcz7",
+            "id": "nested_loops_q3",
             "type": "mcq",
             "prompt": "2D list processing often uses:",
             "choices": [
@@ -2984,7 +3369,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_giuu9ur",
+            "id": "nested_loops_q4",
             "type": "shortText",
             "prompt": "Break in inner exits:",
             "validation": {
@@ -2993,7 +3378,7 @@
             }
           },
           {
-            "id": "q_2aqkydw",
+            "id": "nested_loops_q5",
             "type": "mcq",
             "prompt": "O(n²) often means:",
             "choices": [
@@ -3013,7 +3398,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gyhes87",
+            "id": "nested_loops_q6",
             "type": "mcq",
             "prompt": "Grid rows and columns use:",
             "choices": [
@@ -3033,7 +3418,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_v2zweu0",
+            "id": "nested_loops_q7",
             "type": "shortText",
             "prompt": "Flag variable helps break:",
             "validation": {
@@ -3042,7 +3427,7 @@
             }
           },
           {
-            "id": "q_19c47e0",
+            "id": "nested_loops_q8",
             "type": "mcq",
             "prompt": "Expert: transpose swaps:",
             "choices": [
@@ -3062,7 +3447,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_t68k6lc",
+            "id": "nested_loops_q9",
             "type": "mcq",
             "prompt": "Expert: pair search uses:",
             "choices": [
@@ -3082,7 +3467,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5dimn9n",
+            "id": "nested_loops_q10",
             "type": "shortText",
             "prompt": "Expert: complexity grows when loops are:",
             "validation": {
@@ -3094,393 +3479,8 @@
       }
     },
     {
-      "id": "match_case",
-      "title": "match case",
-      "kind": "topic",
-      "sandboxSnippets": [
-        {
-          "id": "http_status",
-          "label": "HTTP status",
-          "code": "def status(n):\n    match n:\n        case 200: return \"OK\"\n        case 404: return \"Not Found\"\n        case _: return \"Unknown\"\nprint(status(404))"
-        },
-        {
-          "id": "case_value",
-          "label": "case value",
-          "code": "def label(x):\n    match x:\n        case 1: return \"one\"\n        case 2: return \"two\"\n        case _: return \"other\"\nprint(label(2))"
-        },
-        {
-          "id": "default",
-          "label": "Default _",
-          "code": "def kind(x):\n    match x:\n        case \"a\": return \"letter\"\n        case _: return \"other\"\nprint(kind(\"z\"))"
-        },
-        {
-          "id": "guard",
-          "label": "Guard",
-          "code": "def grade(n):\n    match n:\n        case x if x >= 90: return \"A\"\n        case _: return \"B\"\nprint(grade(95))"
-        }
-      ],
-      "intro": {
-        "title": "match case",
-        "bodyMarkdown": "Python 3.10+ adds `match value:` with `case pattern:` branches — structural pattern matching similar to switch in other languages but more powerful.\n\nMatch literals, capture variables, use `|` for alternatives, and `case _:` as wildcard default.\n\nUse match when you have many discrete cases on one value; if/elif remains fine for simple conditions.",
-        "sandboxCode": "def http_status(n):\n    match n:\n        case 200: return \"OK\"\n        case 404: return \"Not Found\"\n        case _: return \"Unknown\"\nprint(http_status(404))"
-      },
-      "challenges": [
-        {
-          "id": "ch_ww7fl70",
-          "title": "Easy: Literal case",
-          "promptMarkdown": "match 1: case 1: x=\"one\"",
-          "starterCode": "match 1:\n case 1:\n  x=\"one\"",
-          "hint": "match compares the value; case 1 runs when it equals 1.",
-          "solution": "match 1:\n    case 1:\n        x = \"one\"",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks x",
-                "assertion": "x == 'one'"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_lszl3tr",
-          "title": "Easy: Wildcard",
-          "promptMarkdown": "match 0: case _: y=\"def\"",
-          "starterCode": "match 0:\n case _:\n  y=\"def\"",
-          "hint": "case _ is the wildcard that matches anything.",
-          "solution": "match 0:\n    case _:\n        y = \"def\"",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks y",
-                "assertion": "y == 'def'"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_ffoeh2t",
-          "title": "Medium: String case",
-          "promptMarkdown": "match \"a\": case \"a\"|\"b\": ok=True",
-          "starterCode": "match \"a\":\n case \"a\" | \"b\":\n  ok=True",
-          "hint": "Use | to match multiple alternatives in one case.",
-          "solution": "match \"a\":\n    case \"a\" | \"b\":\n        ok = True",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks ok",
-                "assertion": "ok == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_k3ocpn9",
-          "title": "Medium: Capture",
-          "promptMarkdown": "match [1,2]: case [x,y]: s=x+y",
-          "starterCode": "match [1,2]:\n case [x,y]:\n  s=x+y",
-          "hint": "List patterns capture elements into variables x and y.",
-          "solution": "match [1, 2]:\n    case [x, y]:\n        s = x + y",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks s",
-                "assertion": "s == 3"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_cb870pf",
-          "title": "Hard: Guard",
-          "promptMarkdown": "case n if n>0: pos=True for n=5",
-          "starterCode": "n=5\nmatch n:\n case x if x>0:\n  pos=True",
-          "hint": "Add if x > 0 as a guard on the case pattern.",
-          "solution": "n = 5\nmatch n:\n    case x if x > 0:\n        pos = True",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks pos",
-                "assertion": "pos == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_tm8skh6",
-          "title": "Hard: Multiple cases",
-          "promptMarkdown": "match 3: case 1|2|3: hit=True",
-          "starterCode": "match 3:\n case 1|2|3:\n  hit=True",
-          "hint": "case 1 | 2 | 3 matches any of those literals.",
-          "solution": "match 3:\n    case 1 | 2 | 3:\n        hit = True",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks hit",
-                "assertion": "hit == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_gfwzt62",
-          "title": "Expert: Tuple pattern",
-          "promptMarkdown": "match (1,\"x\"): case (1,s): v=s",
-          "starterCode": "match (1,\"x\"):\n case (1,s):\n  v=s",
-          "hint": "Tuple patterns bind captured values to variables.",
-          "solution": "match (1, \"x\"):\n    case (1, s):\n        v = s",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks v",
-                "assertion": "v == 'x'"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_kqyywt8",
-          "title": "Expert: Class pattern",
-          "promptMarkdown": "Simple match on str type concept: isinstance via case _",
-          "starterCode": "done=False\nmatch \"hi\":\n case _:\n  done=True",
-          "hint": "case _ matches any value, including strings.",
-          "solution": "done = False\nmatch \"hi\":\n    case _:\n        done = True",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks done",
-                "assertion": "done == True"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_5zp99ag",
-          "title": "Expert: Default only",
-          "promptMarkdown": "match None: case _: t=\"nil\"",
-          "starterCode": "match None:\n case _:\n  t=\"nil\"",
-          "hint": "None matches case _ since no specific case exists.",
-          "solution": "match None:\n    case _:\n        t = \"nil\"",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks t",
-                "assertion": "t == 'nil'"
-              }
-            ]
-          }
-        },
-        {
-          "id": "ch_igu4nmv",
-          "title": "Expert: List head",
-          "promptMarkdown": "match [1,2,3]: case [h,*rest]: head=h",
-          "starterCode": "match [1,2,3]:\n case [h, *rest]:\n  head=h",
-          "hint": "*rest captures remaining list elements; h is the first item.",
-          "solution": "match [1, 2, 3]:\n    case [h, *rest]:\n        head = h",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "var",
-                "label": "Checks head",
-                "assertion": "head == 1"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "q_isv6tv3",
-            "type": "mcq",
-            "prompt": "match introduced in Python:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "3.10+"
-              },
-              {
-                "id": "b",
-                "label": "2.7"
-              },
-              {
-                "id": "c",
-                "label": "3.0 only"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_a9z22aj",
-            "type": "shortText",
-            "prompt": "Wildcard case pattern?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "_"
-            }
-          },
-          {
-            "id": "q_tuz8job",
-            "type": "mcq",
-            "prompt": "case _ means:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Default catch-all"
-              },
-              {
-                "id": "b",
-                "label": "Private variable"
-              },
-              {
-                "id": "c",
-                "label": "Error"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_pewndm6",
-            "type": "shortText",
-            "prompt": "Alternative cases use:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "|"
-            }
-          },
-          {
-            "id": "q_si0zwna",
-            "type": "mcq",
-            "prompt": "case [x,y] is:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Sequence pattern"
-              },
-              {
-                "id": "b",
-                "label": "Function call"
-              },
-              {
-                "id": "c",
-                "label": "Import"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_06shmk1",
-            "type": "mcq",
-            "prompt": "Guard uses:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "if condition on case"
-              },
-              {
-                "id": "b",
-                "label": "only else"
-              },
-              {
-                "id": "c",
-                "label": "try"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_0cc0dw4",
-            "type": "shortText",
-            "prompt": "match replaces some:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "if/elif chains"
-            }
-          },
-          {
-            "id": "q_60s8b8t",
-            "type": "mcq",
-            "prompt": "Expert: case 1 | 2 matches:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "1 or 2"
-              },
-              {
-                "id": "b",
-                "label": "12"
-              },
-              {
-                "id": "c",
-                "label": "nothing"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_vz6194r",
-            "type": "mcq",
-            "prompt": "Expert: match without case match:",
-            "choices": [
-              {
-                "id": "a",
-                "label": "SyntaxError"
-              },
-              {
-                "id": "b",
-                "label": "Runs all"
-              },
-              {
-                "id": "c",
-                "label": "Returns None always"
-              }
-            ],
-            "correctChoiceId": "a"
-          },
-          {
-            "id": "q_w8zy3l2",
-            "type": "shortText",
-            "prompt": "Expert: *rest in pattern captures:",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "remaining"
-            }
-          }
-        ]
-      }
-    },
-    {
       "id": "loop_patterns",
-      "title": "Loop Patterns and Algorithms",
+      "title": "Loop patterns",
       "kind": "topic",
       "sandboxSnippets": [
         {
@@ -3510,13 +3510,13 @@
         }
       ],
       "intro": {
-        "title": "Loop Patterns and Algorithms",
+        "title": "Loop patterns",
         "bodyMarkdown": "Common patterns: accumulate (sum/product), search (find first match), filter (build new list), and map (transform each item).\n\nRecognizing patterns helps you pick for vs while and avoid bugs. Many algorithms are loops with careful state updates.\n\nPractice counting, finding max/min, and early exit — foundations for later data structures and projects.",
         "sandboxCode": "nums = [4, 1, 9, 2]\nbest = nums[0]\nfor n in nums:\n    if n > best:\n        best = n\nprint(\"max\", best)"
       },
       "challenges": [
         {
-          "id": "ch_3hrwh15",
+          "id": "loop_patterns_ch1",
           "title": "Easy: Count items",
           "promptMarkdown": "Count elements in [1,2,3].",
           "starterCode": "c=0\nfor _ in [1,2,3]: c+=1",
@@ -3535,7 +3535,7 @@
           }
         },
         {
-          "id": "ch_265rmzx",
+          "id": "loop_patterns_ch2",
           "title": "Easy: Find max",
           "promptMarkdown": "Max of [3,9,2] into m.",
           "starterCode": "m=float(\"-inf\")\nfor x in [3,9,2]:\n if x>m: m=x",
@@ -3554,7 +3554,7 @@
           }
         },
         {
-          "id": "ch_hlbqfmb",
+          "id": "loop_patterns_ch3",
           "title": "Medium: Filter positives",
           "promptMarkdown": "Filter [ -1, 2, -3, 4 ] → [2,4].",
           "starterCode": "p=[]\nfor x in [-1,2,-3,4]:\n if x>0: p.append(x)",
@@ -3573,7 +3573,7 @@
           }
         },
         {
-          "id": "ch_qqcgncg",
+          "id": "loop_patterns_ch4",
           "title": "Medium: Map double",
           "promptMarkdown": "Double each in [1,2,3].",
           "starterCode": "d=[]\nfor x in [1,2,3]: d.append(x*2)",
@@ -3592,7 +3592,7 @@
           }
         },
         {
-          "id": "ch_iiy1cdf",
+          "id": "loop_patterns_ch5",
           "title": "Hard: First index",
           "promptMarkdown": "Index of 5 in [2,5,7] → 1.",
           "starterCode": "i=-1\nfor j,v in enumerate([2,5,7]):\n if v==5: i=j; break",
@@ -3611,7 +3611,7 @@
           }
         },
         {
-          "id": "ch_0cqbnpz",
+          "id": "loop_patterns_ch6",
           "title": "Hard: Count matches",
           "promptMarkdown": "Count 2 in [1,2,2,3].",
           "starterCode": "c=0\nfor x in [1,2,2,3]:\n if x==2: c+=1",
@@ -3630,7 +3630,7 @@
           }
         },
         {
-          "id": "ch_rzu2u49",
+          "id": "loop_patterns_ch7",
           "title": "Expert: Running average",
           "promptMarkdown": "Avg of [2,4,6] → 4.",
           "starterCode": "nums=[2,4,6]\ns=0\nfor n in nums: s+=n\navg=s/len(nums)",
@@ -3649,7 +3649,7 @@
           }
         },
         {
-          "id": "ch_gqc3zq6",
+          "id": "loop_patterns_ch8",
           "title": "Expert: Fizz single",
           "promptMarkdown": "Fizz for 15: \"FizzBuzz\" check div 3 and 5.",
           "starterCode": "n=15\nout=\"\"\nif n%3==0: out+=\"Fizz\"\nif n%5==0: out+=\"Buzz\"",
@@ -3668,7 +3668,7 @@
           }
         },
         {
-          "id": "ch_s9oqod5",
+          "id": "loop_patterns_ch9",
           "title": "Expert: Reverse list",
           "promptMarkdown": "Reverse [1,2,3] without reversed().",
           "starterCode": "r=[]\nfor x in [1,2,3]:\n r=[x]+r",
@@ -3687,7 +3687,7 @@
           }
         },
         {
-          "id": "ch_bwyjem5",
+          "id": "loop_patterns_ch10",
           "title": "Expert: Pair max",
           "promptMarkdown": "Max pair sum from [1,4,2] is 6.",
           "starterCode": "best=0\na=[1,4,2]\nfor i in range(len(a)):\n for j in range(i+1,len(a)):\n  best=max(best,a[i]+a[j])",
@@ -3710,7 +3710,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_zxq9cvo",
+            "id": "loop_patterns_q1",
             "type": "mcq",
             "prompt": "Accumulate pattern:",
             "choices": [
@@ -3730,7 +3730,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_i9q2nbg",
+            "id": "loop_patterns_q2",
             "type": "shortText",
             "prompt": "Search pattern exits early with:",
             "validation": {
@@ -3739,7 +3739,7 @@
             }
           },
           {
-            "id": "q_r63uvjw",
+            "id": "loop_patterns_q3",
             "type": "mcq",
             "prompt": "Filter builds:",
             "choices": [
@@ -3759,7 +3759,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_cybdult",
+            "id": "loop_patterns_q4",
             "type": "shortText",
             "prompt": "Map transforms each:",
             "validation": {
@@ -3768,7 +3768,7 @@
             }
           },
           {
-            "id": "q_0ggc6aj",
+            "id": "loop_patterns_q5",
             "type": "mcq",
             "prompt": "Finding max initializes with:",
             "choices": [
@@ -3788,7 +3788,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8ar165q",
+            "id": "loop_patterns_q6",
             "type": "mcq",
             "prompt": "enumerate helps:",
             "choices": [
@@ -3808,7 +3808,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_p8lxnct",
+            "id": "loop_patterns_q7",
             "type": "shortText",
             "prompt": "FizzBuzz checks divisibility by:",
             "validation": {
@@ -3817,7 +3817,7 @@
             }
           },
           {
-            "id": "q_luhm1qz",
+            "id": "loop_patterns_q8",
             "type": "mcq",
             "prompt": "Expert: O(n) single pass is:",
             "choices": [
@@ -3837,7 +3837,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_6sulx93",
+            "id": "loop_patterns_q9",
             "type": "mcq",
             "prompt": "Expert: nested pair loop is:",
             "choices": [
@@ -3857,7 +3857,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_76q4peo",
+            "id": "loop_patterns_q10",
             "type": "shortText",
             "prompt": "Expert: algorithm is steps to solve:",
             "validation": {
@@ -3870,7 +3870,7 @@
     },
     {
       "id": "proj_control_flow_guess_game",
-      "title": "Easy project: CLI guess the number",
+      "title": "Easy project: Guess the number",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -3896,13 +3896,13 @@
         }
       ],
       "intro": {
-        "title": "Easy project: CLI guess the number",
+        "title": "Easy project: Guess the number",
         "bodyMarkdown": "Build a number-guessing game in the terminal. Pick a secret, loop until the player guesses correctly, give higher/lower hints.\n\nUse `random.randint`, a while loop, and int conversion with try/except for bad input.\n\nStructure with a `main()` function and `if __name__ == \"__main__\"` guard.",
-        "sandboxCode": "import random\n\nsecret = random.randint(1, 10)\nguess = 0\nwhile guess != secret:\n    guess = 5  # pretend user guessed\n    if guess < secret:\n        print(\"Higher\")\n    elif guess > secret:\n        print(\"Lower\")\nprint(\"You win!\")"
+        "sandboxCode": "import random\n\nsecret = random.randint(1, 10)\nlow, high = 1, 10\nguess = None\nwhile guess != secret:\n    guess = (low + high) // 2  # the computer plays: always guess the middle\n    print(\"Guess:\", guess)\n    if guess < secret:\n        print(\"Higher\")\n        low = guess + 1\n    elif guess > secret:\n        print(\"Lower\")\n        high = guess - 1\nprint(\"You win! The number was\", secret)"
       },
       "challenges": [
         {
-          "id": "ch_vtpr3m9",
+          "id": "proj_control_flow_guess_game_ch1",
           "title": "Easy: import random",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3919,7 +3919,7 @@
           }
         },
         {
-          "id": "ch_cu6d31s",
+          "id": "proj_control_flow_guess_game_ch2",
           "title": "Easy: randint range",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3936,7 +3936,7 @@
           }
         },
         {
-          "id": "ch_sxgx8ju",
+          "id": "proj_control_flow_guess_game_ch3",
           "title": "Medium: while loop",
           "promptMarkdown": "",
           "starterCode": "while guess!=secret:\n    guess=7",
@@ -3953,7 +3953,7 @@
           }
         },
         {
-          "id": "ch_l4c0egt",
+          "id": "proj_control_flow_guess_game_ch4",
           "title": "Medium: higher lower",
           "promptMarkdown": "",
           "starterCode": "if g<s:\n    hint=\"Higher\"\nelif g>s:\n    hint=\"Lower\"",
@@ -3970,7 +3970,7 @@
           }
         },
         {
-          "id": "ch_c0ykvqp",
+          "id": "proj_control_flow_guess_game_ch5",
           "title": "Hard: attempt counter",
           "promptMarkdown": "",
           "starterCode": "for _ in range(3): a+=1",
@@ -3987,7 +3987,7 @@
           }
         },
         {
-          "id": "ch_882xzi8",
+          "id": "proj_control_flow_guess_game_ch6",
           "title": "Hard: main function",
           "promptMarkdown": "",
           "starterCode": "def main():\n    return 42\nresult=main()",
@@ -4008,7 +4008,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_z0gmdcc",
+            "id": "proj_control_flow_guess_game_q1",
             "type": "mcq",
             "prompt": "randint(1,10) includes:",
             "choices": [
@@ -4028,7 +4028,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_yth1a1f",
+            "id": "proj_control_flow_guess_game_q2",
             "type": "shortText",
             "prompt": "Loop until correct:",
             "validation": {
@@ -4037,7 +4037,7 @@
             }
           },
           {
-            "id": "q_8iixaq2",
+            "id": "proj_control_flow_guess_game_q3",
             "type": "mcq",
             "prompt": "Higher hint when guess:",
             "choices": [
@@ -4057,7 +4057,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gvi8ckq",
+            "id": "proj_control_flow_guess_game_q4",
             "type": "mcq",
             "prompt": "__main__ guard runs when:",
             "choices": [
@@ -4077,7 +4077,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rdwxuev",
+            "id": "proj_control_flow_guess_game_q5",
             "type": "shortText",
             "prompt": "Bad int input catch:",
             "validation": {
@@ -4086,7 +4086,7 @@
             }
           },
           {
-            "id": "q_paagszj",
+            "id": "proj_control_flow_guess_game_q6",
             "type": "mcq",
             "prompt": "Expert: seed for:",
             "choices": [
@@ -4142,7 +4142,7 @@
       },
       "challenges": [
         {
-          "id": "ch_z773agm",
+          "id": "proj_control_flow_quiz_app_ch1",
           "title": "Easy: question dict",
           "promptMarkdown": "",
           "starterCode": "",
@@ -4159,7 +4159,7 @@
           }
         },
         {
-          "id": "ch_nufjv2e",
+          "id": "proj_control_flow_quiz_app_ch2",
           "title": "Easy: score counter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -4176,7 +4176,7 @@
           }
         },
         {
-          "id": "ch_3jrwfif",
+          "id": "proj_control_flow_quiz_app_ch3",
           "title": "Medium: enumerate answers",
           "promptMarkdown": "",
           "starterCode": "",
@@ -4193,7 +4193,7 @@
           }
         },
         {
-          "id": "ch_hiv8ilo",
+          "id": "proj_control_flow_quiz_app_ch4",
           "title": "Medium: percent score",
           "promptMarkdown": "",
           "starterCode": "",
@@ -4210,7 +4210,7 @@
           }
         },
         {
-          "id": "ch_bf6la1o",
+          "id": "proj_control_flow_quiz_app_ch5",
           "title": "Hard: shuffle",
           "promptMarkdown": "",
           "starterCode": "import random\nlst=[1,2,3]\nrandom.shuffle(lst)\nsame_set=sorted(lst)==[1,2,3]",
@@ -4227,7 +4227,7 @@
           }
         },
         {
-          "id": "ch_t0p2fuq",
+          "id": "proj_control_flow_quiz_app_ch6",
           "title": "Hard: input choice index",
           "promptMarkdown": "",
           "starterCode": "",
@@ -4248,7 +4248,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_cynzw4i",
+            "id": "proj_control_flow_quiz_app_q1",
             "type": "mcq",
             "prompt": "Answer stored as:",
             "choices": [
@@ -4268,7 +4268,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zh9tb82",
+            "id": "proj_control_flow_quiz_app_q2",
             "type": "shortText",
             "prompt": "shuffle randomizes:",
             "validation": {
@@ -4277,7 +4277,7 @@
             }
           },
           {
-            "id": "q_h98k1v1",
+            "id": "proj_control_flow_quiz_app_q3",
             "type": "mcq",
             "prompt": "Percent = correct / total *",
             "choices": [
@@ -4297,7 +4297,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_mgle5xq",
+            "id": "proj_control_flow_quiz_app_q4",
             "type": "mcq",
             "prompt": "enumerate gives:",
             "choices": [
@@ -4317,7 +4317,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_9b99l3b",
+            "id": "proj_control_flow_quiz_app_q5",
             "type": "shortText",
             "prompt": "Grade compares:",
             "validation": {
@@ -4326,7 +4326,7 @@
             }
           },
           {
-            "id": "q_j15crsy",
+            "id": "proj_control_flow_quiz_app_q6",
             "type": "mcq",
             "prompt": "Expert: separate data from:",
             "choices": [
@@ -4387,7 +4387,7 @@
       },
       "challenges": [
         {
-          "id": "ch_yz3zq5i",
+          "id": "fizzbuzz_mini_ch1",
           "title": "Easy: Loop range",
           "promptMarkdown": "Build `nums = list(range(1, 16))`.",
           "starterCode": "nums = ",
@@ -4404,7 +4404,7 @@
           }
         },
         {
-          "id": "ch_hbx90du",
+          "id": "fizzbuzz_mini_ch2",
           "title": "Medium: Divisible by 3",
           "promptMarkdown": "Set `fizz = True` when `9 % 3 == 0`.",
           "starterCode": "fizz = ",
@@ -4421,7 +4421,7 @@
           }
         },
         {
-          "id": "ch_e8ftmle",
+          "id": "fizzbuzz_mini_ch3",
           "title": "Medium: Append Fizz",
           "promptMarkdown": "Append `\"Fizz\"` when n is 3.",
           "starterCode": "if n % 3 == 0:\n    out.append(\"Fizz\")",
@@ -4438,7 +4438,7 @@
           }
         },
         {
-          "id": "ch_t2sow96",
+          "id": "fizzbuzz_mini_ch4",
           "title": "Hard: FizzBuzz branch",
           "promptMarkdown": "For n=15 append `\"FizzBuzz\"`.",
           "starterCode": "n=15\nif n%15==0:\n    label=\"FizzBuzz\"",
@@ -4455,7 +4455,7 @@
           }
         },
         {
-          "id": "ch_s9rszfc",
+          "id": "fizzbuzz_mini_ch5",
           "title": "Hard: Build list",
           "promptMarkdown": "Produce 15 labels for 1..15.",
           "starterCode": "",
@@ -4472,7 +4472,7 @@
           }
         },
         {
-          "id": "ch_l9ywcoc",
+          "id": "fizzbuzz_mini_ch6",
           "title": "Expert: Print result",
           "promptMarkdown": "Print the full list.",
           "starterCode": "out = [\"1\",\"2\",\"Fizz\"]\n",
@@ -4488,7 +4488,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_hgn94ww",
+            "id": "fizzbuzz_mini_q1",
             "type": "mcq",
             "prompt": "FizzBuzz replaces multiples of:",
             "choices": [
@@ -4508,7 +4508,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ojxf48o",
+            "id": "fizzbuzz_mini_q2",
             "type": "shortText",
             "prompt": "Loop 1 through 15 with:",
             "validation": {
@@ -4517,7 +4517,7 @@
             }
           },
           {
-            "id": "q_y6372wx",
+            "id": "fizzbuzz_mini_q3",
             "type": "mcq",
             "prompt": "elif runs when:",
             "choices": [
@@ -4537,7 +4537,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5ymjm89",
+            "id": "fizzbuzz_mini_q4",
             "type": "shortText",
             "prompt": "Append adds to:",
             "validation": {
@@ -4546,7 +4546,7 @@
             }
           },
           {
-            "id": "q_aq3xi3y",
+            "id": "fizzbuzz_mini_q5",
             "type": "mcq",
             "prompt": "15 is multiple of:",
             "choices": [
@@ -4566,7 +4566,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jqjfssb",
+            "id": "fizzbuzz_mini_q6",
             "type": "shortText",
             "prompt": "Store labels in a:",
             "validation": {

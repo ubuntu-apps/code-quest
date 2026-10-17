@@ -242,14 +242,14 @@ with open("people.csv", newline="", encoding="utf-8") as f:
   ],
   questions: [
     mc('What does CSV stand for?', ['Coded Spreadsheet View', 'Comma-separated values', 'Compressed string values', 'Column sorted values'], 1),
-    mc('What type is every value that `csv.reader` gives you?', ['str', 'Whatever type the value looks like', 'bytes', 'int or str'], 0),
+    mc("What type is every value that `csv.reader` gives you?", ["`str`","Whatever type the value looks like","`bytes`","`int` or `str`"], 0),
     qShort('Which csv class gives you each row as a dict? (class name)', 'DictReader'),
-    mc('Which method writes a single row with `csv.writer`?', ['write', 'row', 'append', 'writerow'], 3),
+    mc("Which method writes a single row with `csv.writer`?", ["`write`","`row`","`append`","`writerow`"], 3),
     mc('Why open CSV files with `newline=""`?', ['It makes files smaller', 'It removes the header', 'So csv controls line endings and avoids blank lines', 'It is required for reading only'], 2),
     mc('How does csv store the value `Lee, Jr.`?', ['As two fields', 'Wrapped in double quotes', 'With the comma removed', 'It raises an error'], 1),
     qShort('Which argument tells csv to split on `;` instead of `,`? (argument name)', 'delimiter'),
-    mc('Which `DictWriter` method writes the column names?', ['writeheader', 'header', 'writekeys', 'writerow(None)'], 0),
-    mc('`sum(row["n"] for row in rows)` fails with a csv file. Why?', ['csv rows are tuples', 'The values are strings', 'sum needs a list', 'Rows are read-only'], 1),
+    mc("Which `DictWriter` method writes the column names?", ["`writeheader`","`header`","`writekeys`","`writerow(None)`"], 0),
+    mc("`sum(row[\"n\"] for row in rows)` fails with a csv file. Why?", ["csv rows are tuples","The values are strings","`sum` needs a list","Rows are read-only"], 1),
     mc('When is pandas a better choice than the csv module?', ['Never', 'Writing a single row', 'Reading a 3-line file', 'Analyzing large tables with filtering and grouping'], 3),
   ],
 })
