@@ -1,4 +1,5 @@
 import { useId, useState } from 'react'
+import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import type { Challenge } from '../types'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
@@ -147,7 +148,7 @@ export function ChallengeCard({
       ) : null}
       {showHint ? (
         <div className="cq-challenge-reveal cq-challenge-reveal--hint">
-          {hintText ?? 'No hint available for this challenge yet.'}
+          <SimpleMarkdown text={hintText ?? 'No hint available for this challenge yet.'} />
         </div>
       ) : null}
       {showAnswer ? (
@@ -200,7 +201,9 @@ export function ChallengeCard({
               key={t.id}
               className={`cq-testcase-item${t.passed ? ' cq-testcase-item--pass' : ' cq-testcase-item--fail'}`}
             >
-              <span>{t.label}</span>
+              <span>
+                <InlineMarkdown text={t.label} />
+              </span>
               <span>{t.passed ? 'Pass' : 'Fail'}</span>
               {!t.passed && t.detail ? <div className="cq-testcase-detail">{t.detail}</div> : null}
             </li>

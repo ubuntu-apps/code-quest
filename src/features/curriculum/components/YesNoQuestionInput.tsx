@@ -1,3 +1,4 @@
+import { SimpleMarkdown } from '../SimpleMarkdown'
 import { yesNoDisplayPrompt } from '../testQuestionUtils'
 
 interface YesNoQuestionInputProps {
@@ -38,7 +39,7 @@ export function YesNoQuestionInput({
 
   return (
     <div className="cq-yesno">
-      <p className="cq-yesno-prompt">{yesNoDisplayPrompt(prompt)}</p>
+      <SimpleMarkdown className="cq-yesno-prompt" text={yesNoDisplayPrompt(prompt)} />
       <div className="cq-yesno-options" role="group" aria-label="Yes or no">
         {(['yes', 'no'] as const).map((choice) => (
           <label key={choice} className={optionClass(choice)}>

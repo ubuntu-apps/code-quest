@@ -24,6 +24,8 @@ function curriculumUrl(baseUrl: string, source: string, cacheBust?: boolean): st
 
 export type LoadCurriculumOptions = {
   cacheBust?: boolean
+  /** Always fetch again instead of sharing an earlier request for the same course. */
+  fresh?: boolean
 }
 
 async function parseJsonResponse(res: Response, source: string): Promise<unknown> {
@@ -83,34 +85,28 @@ export type LoadLanguageBundleOptions = LoadCurriculumOptions & {
   fallbackBundle?: LanguageBundle | null
 }
 
-export async function loadLanguageBundle(
+async function fetchLanguageBundle(
   baseUrl: string,
   languagePath: string,
   options?: LoadLanguageBundleOptions,
-): Promise<LanguageBundle> {
+): Promise<{ bundle: LanguageBundle; usedFallback: boolean }> {
   const index = await loadLanguageIndex(baseUrl, languagePath, options)
   const languageDir = languageDirFromPath(languagePath)
   const fallbackSections = options?.fallbackBundle?.sections ?? []
-  const sections: LoadedSection[] = []
-  const missing: string[] = []
 
-  for (const sectionRef of index.sections) {
-    try {
-      const file = await loadSectionFile(baseUrl, languageDir, sectionRef.path, options)
-      sections.push({ sectionRef, file })
-    } catch {
-      const draft = fallbackSections.find((s) => s.sectionRef.id === sectionRef.id)
-      if (draft) {
-        sections.push({
-          sectionRef,
-          file: draft.file,
-        })
-        continue
+  // Fetch every section at once rather than one after another.
+  const results = await Promise.all(
+    index.sections.map(async (sectionRef) => {
+      try {
+        return { sectionRef, file: await loadSectionFile(baseUrl, languageDir, sectionRef.path, options) }
+      } catch {
+        const draft = fallbackSections.find((s) => s.sectionRef.id === sectionRef.id)
+        return draft ? { sectionRef, file: draft.file, fromFallback: true } : { sectionRef, file: null }
       }
-      missing.push(sectionRef.path)
-    }
-  }
+    }),
+  )
 
+  const missing = results.filter((r) => r.file === null).map((r) => r.sectionRef.path)
   if (missing.length > 0) {
     throw new Error(
       `Missing section file(s) for ${languageDir}: ${missing.join(', ')}. ` +
@@ -118,5 +114,33 @@ export async function loadLanguageBundle(
     )
   }
 
-  return { index, sections }
+  const sections: LoadedSection[] = results.map((r) => ({ sectionRef: r.sectionRef, file: r.file! }))
+  return { bundle: { index, sections }, usedFallback: results.some((r) => 'fromFallback' in r) }
+}
+
+/** Requests shared between callers, so a course is downloaded once per session. */
+const bundleRequests = new Map<string, Promise<LanguageBundle>>()
+
+export async function loadLanguageBundle(
+  baseUrl: string,
+  languagePath: string,
+  options?: LoadLanguageBundleOptions,
+): Promise<LanguageBundle> {
+  const shareable = !options?.cacheBust && !options?.fresh
+  const key = `${baseUrl}|${languagePath}`
+  const pending = shareable ? bundleRequests.get(key) : undefined
+  if (pending) return pending
+
+  const request = fetchLanguageBundle(baseUrl, languagePath, options).then(({ bundle, usedFallback }) => {
+    // A bundle patched with editor drafts is specific to this caller; don't share it.
+    if (usedFallback && bundleRequests.get(key) === request) bundleRequests.delete(key)
+    return bundle
+  })
+  if (shareable) {
+    bundleRequests.set(key, request)
+    request.catch(() => {
+      if (bundleRequests.get(key) === request) bundleRequests.delete(key)
+    })
+  }
+  return request
 }

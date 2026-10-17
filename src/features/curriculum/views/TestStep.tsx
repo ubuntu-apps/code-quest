@@ -1,7 +1,7 @@
 import type { Level, TestGradeResult, TestQuestion } from '../types'
 import type { LevelProgress } from '../progressStorage'
 import { PASS_DEFAULT } from '../constants'
-import { SimpleMarkdown } from '../SimpleMarkdown'
+import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditorMode } from '../../editor'
 import { YesNoQuestionInput } from '../components/YesNoQuestionInput'
 import { CodeTextarea } from '../codeEditor'
@@ -87,7 +87,7 @@ export function TestStep({
                     )}
                     {q.type === 'mcq' ? (
                       <>
-                        <p>{q.prompt}</p>
+                        <SimpleMarkdown text={q.prompt} />
                         <div className="cq-mcq">
                           {q.choices.map((c) => {
                             const selected = testMcq[q.id] === c.id
@@ -105,7 +105,9 @@ export function TestStep({
                                 checked={selected}
                                 onChange={() => onTestMcqChange(q.id, c.id)}
                               />
-                              <span>{c.label}</span>
+                              <span>
+                                <InlineMarkdown text={c.label} />
+                              </span>
                             </label>
                             )
                           })}

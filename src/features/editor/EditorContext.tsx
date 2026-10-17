@@ -46,8 +46,6 @@ import {
 import { captureEditorSnapshot, type EditorDraftSnapshot } from './editorSnapshot'
 import { canEditContent, subscribeGitHubAuth } from './editorAuth'
 import { downloadJson } from './exportCurriculum'
-import { saveCurriculumToGitHub } from './githubCurriculumApi'
-import { canSaveCurriculumToDisk, saveCurriculumToDisk } from './localCurriculumApi'
 import { DEFAULT_HOME_LEAD } from './editorConstants'
 import { EditorContext } from './editorReactContext'
 import {
@@ -723,7 +721,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       const fetchedRoot = await loadRootIndex(baseUrl)
       persistRoot(cloneRootIndex(fetchedRoot))
       for (const lang of fetchedRoot.languages) {
-        const bundle = await loadLanguageBundle(baseUrl, lang.path)
+        const bundle = await loadLanguageBundle(baseUrl, lang.path, { fresh: true })
         persistBundle(lang.id, cloneBundle(bundle))
       }
       setContentSourceState('local')
@@ -735,6 +733,8 @@ export function EditorProvider({ children }: { children: ReactNode }) {
   const saveToGitHub = useCallback(
     async (onProgress?: (label: string, index: number, total: number) => void) => {
       if (!rootIndex) throw new Error('No local curriculum to save.')
+      // Loaded on demand: only editors ever save.
+      const { saveCurriculumToGitHub } = await import('./githubCurriculumApi')
       await saveCurriculumToGitHub(rootIndex, bundles, onProgress)
     },
     [rootIndex, bundles],
@@ -802,6 +802,7 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       return
     }
     persistAllDrafts()
+    const { canSaveCurriculumToDisk, saveCurriculumToDisk } = await import('./localCurriculumApi')
     if (canSaveCurriculumToDisk()) {
       await saveCurriculumToDisk(rootIndex, bundles)
     }

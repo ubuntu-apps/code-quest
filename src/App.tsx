@@ -1,16 +1,30 @@
+import { Suspense, lazy } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { CodeQuestScreen } from './features/curriculum/CodeQuestScreen'
 import { InstallAppBanner } from './components/InstallAppBanner'
+import { UpdateBanner } from './components/UpdateBanner'
 import { EditorProvider } from './features/editor'
-import { GitHubAuthCallback } from './features/editor/GitHubAuthCallback'
 import { learnHomePath } from './features/curriculum/learnPaths'
+
+/** GitHub sign-in landing page for editors; learners never load it. */
+const GitHubAuthCallback = lazy(() =>
+  import('./features/editor/GitHubAuthCallback').then((m) => ({ default: m.GitHubAuthCallback })),
+)
 
 function AppRoutes() {
   return (
     <EditorProvider>
       <InstallAppBanner />
+      <UpdateBanner />
       <Routes>
-        <Route path="/auth/callback" element={<GitHubAuthCallback />} />
+        <Route
+          path="/auth/callback"
+          element={
+            <Suspense fallback={null}>
+              <GitHubAuthCallback />
+            </Suspense>
+          }
+        />
         <Route path="/" element={<Navigate to={learnHomePath()} replace />} />
         <Route path="/*" element={<CodeQuestScreen />} />
       </Routes>
