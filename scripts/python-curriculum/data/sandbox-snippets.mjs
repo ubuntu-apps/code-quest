@@ -2,77 +2,6 @@ import { snippet } from './_builders.mjs'
 
 /** @type {Record<string, { id: string, label: string, code: string }[]>} */
 export const SANDBOX_SNIPPETS_BY_LEVEL = {
-  // ── Data Structures ───────────────────────────────────────────
-  lists: [
-    snippet('Create list', 'nums = [1, 2, 3]\nprint(nums)'),
-    snippet('append', 'lst = [1, 2]\nlst.append(3)\nprint(lst)'),
-    snippet('Index', 'lst = [10, 20, 30]\nprint(lst[0], lst[-1])'),
-    snippet('Slice', 'lst = [0, 1, 2, 3]\nprint(lst[1:3])'),
-    snippet('List comp', 'squares = [n * n for n in range(4)]\nprint(squares)'),
-  ],
-  tuples: [
-    snippet('Tuple literal', 'point = (3, 4)\nprint(point)'),
-    snippet('Unpack', 'x, y = point\nprint(x + y)'),
-    snippet('Single item', 't = (1,)\nprint(t)'),
-    snippet('Swap', 'a, b = 1, 2\na, b = b, a\nprint(a, b)'),
-    snippet('As dict key', 'd = {(1, 2): "origin"}\nprint(d[(1, 2)])'),
-  ],
-  dictionaries: [
-    snippet('Dict literal', 'user = {"name": "Ada", "score": 99}\nprint(user)'),
-    snippet('get default', 'print(user.get("role", "guest"))'),
-    snippet('Update key', 'user["score"] = 100\nprint(user)'),
-    snippet('items loop', 'for k, v in user.items():\n    print(k, v)'),
-    snippet('Dict comp', 'lengths = {w: len(w) for w in ["hi", "hey"]}\nprint(lengths)'),
-  ],
-  sets: [
-    snippet('Set literal', 's = {1, 2, 2, 3}\nprint(s)'),
-    snippet('Union', 'print({1, 2} | {2, 3})'),
-    snippet('Intersection', 'print({1, 2, 3} & {2, 3, 4})'),
-    snippet('Membership', 'print(2 in {1, 2, 3})'),
-    snippet('Dedupe', 'unique = set([1, 1, 2, 2])\nprint(unique)'),
-  ],
-  list_comprehensions: [
-    snippet('Basic', 'print([x for x in range(3)])'),
-    snippet('Map', 'print([x * 2 for x in [1, 2, 3]])'),
-    snippet('Filter evens', 'print([x for x in range(6) if x % 2 == 0])'),
-    snippet('Squares', 'print([n * n for n in range(5)])'),
-    snippet('Nested', 'pairs = [(i, j) for i in range(2) for j in range(2)]\nprint(pairs)'),
-  ],
-  dict_set_comprehensions: [
-    snippet('Dict comp', 'print({x: x * x for x in range(3)})'),
-    snippet('Set comp', 'print({c.lower() for c in "AaBb"})'),
-    snippet('Len map', 'print({name: len(name) for name in ["Ada", "Bob"]})'),
-    snippet('Filter set', 'print({x for x in range(5) if x % 2})'),
-    snippet('Invert dict', 'd = {"a": 1, "b": 2}\nprint({v: k for k, v in d.items()})'),
-  ],
-  slicing_indexing: [
-    snippet('First & last', 's = "Python"\nprint(s[0], s[-1])'),
-    snippet('Slice', 'print(s[1:4])'),
-    snippet('Step', 'print(s[::2])'),
-    snippet('Reverse', 'print(s[::-1])'),
-    snippet('List slice', 'print([1, 2, 3, 4][:2])'),
-  ],
-  iterating_collections: [
-    snippet('for items', 'for x in [1, 2, 3]:\n    print(x)'),
-    snippet('dict keys', 'for k in {"a": 1, "b": 2}:\n    print(k)'),
-    snippet('items()', 'for k, v in {"a": 1}.items():\n    print(k, v)'),
-    snippet('enumerate', 'for i, x in enumerate(["a", "b"]):\n    print(i, x)'),
-    snippet('zip', 'for a, b in zip([1, 2], ["x", "y"]):\n    print(a, b)'),
-  ],
-  nested_structures: [
-    snippet('2D index', 'matrix = [[1, 2], [3, 4]]\nprint(matrix[1][0])'),
-    snippet('List of dicts', 'users = [{"name": "Ada", "score": 10}]\nprint(users[0]["name"])'),
-    snippet('Nested dict', 'd = {"user": {"name": "Ana"}}\nprint(d["user"]["name"])'),
-    snippet('Sum matrix', 'total = sum(v for row in [[1, 2], [3, 4]] for v in row)\nprint(total)'),
-  ],
-  choosing_structures: [
-    snippet('List', 'queue = [1, 2]\nprint(type(queue).__name__)'),
-    snippet('Dict lookup', 'phone = {"Ana": "555"}\nprint("Ana" in phone)'),
-    snippet('Set unique', 'tags = set(["a", "a", "b"])\nprint(tags)'),
-    snippet('Tuple point', 'point = (1, 2)\nprint(point)'),
-    snippet('Count freq', 'counts = {}\nfor ch in "aba":\n    counts[ch] = counts.get(ch, 0) + 1\nprint(counts)'),
-  ],
-
   // ── Functions ─────────────────────────────────────────────────
   defining_functions: [
     snippet('Simple def', 'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("Ada"))'),
@@ -384,12 +313,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Parse', 'from datetime import datetime\nd = datetime.strptime("2024-06-01", "%Y-%m-%d")\nprint(d.month)'),
     snippet('ISO date', 'from datetime import date\nprint(date.today().isoformat())'),
   ],
-  collections_data: [
-    snippet('Counter', 'from collections import Counter\nprint(Counter("aab"))'),
-    snippet('most_common', 'from collections import Counter\nprint(Counter("aab").most_common(1))'),
-    snippet('defaultdict', 'from collections import defaultdict\ndd = defaultdict(int)\nfor w in ["a", "b", "a"]:\n    dd[w] += 1\nprint(dict(dd))'),
-    snippet('deque', 'from collections import deque\nd = deque([1, 2])\nd.appendleft(0)\nprint(list(d))'),
-  ],
   pathlib_data: [
     snippet('Join path', 'from pathlib import Path\np = Path("data") / "scores.json"\nprint(p)'),
     snippet('suffix stem', 'from pathlib import Path\np = Path("scores.json")\nprint(p.suffix, p.stem)'),
@@ -482,20 +405,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
   ],
 
   // ── Section projects ────────────────────────────────────────────
-  fizzbuzz_mini: [
-    snippet('range 1-15', 'print(list(range(1, 16)))'),
-    snippet('Modulo 3', 'print(9 % 3 == 0)'),
-    snippet('Append Fizz', 'out = []\nn = 3\nif n % 3 == 0:\n    out.append("Fizz")\nprint(out)'),
-    snippet('FizzBuzz branch', 'n = 15\nif n % 15 == 0:\n    print("FizzBuzz")'),
-    snippet('Full loop', 'out = []\nfor n in range(1, 16):\n    if n % 15 == 0:\n        out.append("FizzBuzz")\n    elif n % 3 == 0:\n        out.append("Fizz")\n    elif n % 5 == 0:\n        out.append("Buzz")\n    else:\n        out.append(str(n))\nprint(out)'),
-  ],
-  grade_book: [
-    snippet('List of dicts', 'grades = [{"name": "Ana", "score": 88}]\nprint(grades)'),
-    snippet('Extract scores', 'grades = [{"score": 88}, {"score": 92}]\nscores = [g["score"] for g in grades]\nprint(scores)'),
-    snippet('Average', 'print(sum([80, 90]) / 2)'),
-    snippet('Max score', 'print(max([88, 92]))'),
-    snippet('Mean with comp', 'grades = [{"score": 80}, {"score": 90}]\nprint(sum(g["score"] for g in grades) / len(grades))'),
-  ],
   greet_module: [
     snippet('greet fn', 'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("World"))'),
     snippet('main guard', 'def greet(name):\n    return f"Hello, {name}!"\n\nif __name__ == "__main__":\n    print(greet("Python"))'),

@@ -122,7 +122,7 @@ export default makeTopic({
     mc("What does `f\"{1500000:,}\"` give?", ["`1500000`","`1,500,000`","`1.500.000`","`1_500_000`"], 1),
     qShort("Which letter goes before the opening quote to make an f-string? (one letter)", "f"),
     mc("What does `f\"{0.5:.0%}\"` give?", ["`0.5%`","`50%`","`5%`","`0%`"], 1),
-    mc("Which right-aligns `x` in a column 10 characters wide?", ["`{x:<10}`", "`{x:^10}`", "`{x:>10}`", "`{x:10}` always"], 2),
+    mc("Which right-aligns `x` in a column 10 characters wide?", ["`{x:<10}`", "`{x:^10}`", "`{x:>10}`", "`{x:.10}`"], 2),
     mc("With `age = 30`, what does `f\"{age=}\"` show?", ["`30`","`age=30`","`{age=}`","`age: 30`"], 1),
     mc("How do you show a real `{` in an f-string?", ["`\\{`", "`{ }`", "You can't", "`{{`"], 3),
     mc("Why use `:.2f` for prices?", ["It rounds down", "It always shows exactly 2 decimals, like 4.50", "It adds a $ sign", "It turns the number into an int"], 1),

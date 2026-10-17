@@ -9,7 +9,6 @@
 import { fundamentalsTopics } from './fundamentals.mjs'
 import { controlFlowTopics } from './control-flow.mjs'
 import { dataStructuresTopics } from './data-structures.mjs'
-import collectionsModule from './data-structures/collections-data.mjs'
 import { functionsTopics } from './functions.mjs'
 import { errorHandlingTopics } from './error-handling.mjs'
 import { fileHandlingTopics } from './file-handling.mjs'
@@ -24,7 +23,6 @@ const allTopics = new Map(
     ...fundamentalsTopics,
     ...controlFlowTopics,
     ...dataStructuresTopics,
-    collectionsModule,
     ...functionsTopics,
     ...errorHandlingTopics,
     ...fileHandlingTopics,
@@ -62,19 +60,7 @@ export const COURSE = [
     sectionId: 'data_structures',
     filename: 'data_structures.json',
     title: 'Data structures',
-    topics: topics(
-      'lists',
-      'slicing_indexing',
-      'tuples',
-      'dictionaries',
-      'sets',
-      'iterating_collections',
-      'list_comprehensions',
-      'dict_set_comprehensions',
-      'nested_structures',
-      'collections_data',
-      'choosing_structures',
-    ),
+    topics: dataStructuresTopics,
   },
   {
     sectionId: 'functions',
