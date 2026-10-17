@@ -32,6 +32,9 @@ export default defineConfig({
       // Offline support. The app shell, including public/pyodide-worker.js, is precached
       // by the default glob. Everything else is cached as it is used:
       workbox: {
+        // Take control on the first visit, so lessons opened then are cached too.
+        // (Updates still wait for the learner: registerType is 'prompt'.)
+        clientsClaim: true,
         runtimeCaching: [
           {
             // Lessons: always try the network so content updates show up, and fall

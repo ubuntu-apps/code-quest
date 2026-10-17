@@ -43,6 +43,9 @@ export const CodeTextarea = forwardRef<HTMLTextAreaElement, CodeTextareaProps>(f
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       onKeyDown?.(e)
       if (e.defaultPrevented) return
+      // Leave keys alone while an input method (e.g. for Chinese or Japanese) is composing:
+      // Enter there confirms the characters rather than starting a new line.
+      if (e.nativeEvent.isComposing || e.keyCode === 229) return
 
       if (e.key === 'Escape') {
         escapePressedRef.current = true

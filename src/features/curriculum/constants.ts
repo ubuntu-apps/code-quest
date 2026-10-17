@@ -10,6 +10,13 @@ export const DEFAULT_SANDBOX_CODE: Record<string, string> = {
 export const STREAK_STORAGE_KEY = 'codequest:streak'
 export const LAST_LEVEL_STORAGE_KEY = 'codequest:lastLevel'
 export const SELECTED_LANGUAGE_STORAGE_KEY = 'codequest:selectedLanguage'
+/**
+ * Lock a section until every topic quiz in the previous section is passed. (A section
+ * with easy/medium projects always gates the next one on those projects instead.)
+ * Off until every section has been rewritten, so learners and reviewers can reach
+ * any section; turn it on afterwards.
+ */
+export const LOCK_SECTIONS_BY_QUIZZES = false
 export const CHALLENGE_XP = 10
 /** XP for a challenge solved after revealing its answer. */
 export const CHALLENGE_XP_AFTER_ANSWER = 5

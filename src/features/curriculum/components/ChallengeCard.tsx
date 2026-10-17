@@ -1,5 +1,6 @@
 import { useId, useState } from 'react'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
+import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported } from '../sandboxSupport'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import type { Challenge } from '../types'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
@@ -63,12 +64,17 @@ export function ChallengeCard({
   const [showHint, setShowHint] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const hintText = ch.hint ?? ch.hints?.[0]
+  const isRuntimeTests =
+    ch.validation.mode === 'python_tests' || ch.validation.mode === 'r_tests'
+  // Very old browsers can't run the code runtimes, so these challenges can't be checked there.
+  const cannotRun = isRuntimeTests && !isCodeRuntimeSupported()
   const answerNoteId = useId()
   // The answer unlocks after one Check attempt, so learners try first.
-  const answerUnlocked = isEditingLocal || done || answerViewed || status !== undefined
+  // (Where code can't run, Check is unavailable, so the answer is open from the start.)
+  const answerUnlocked = isEditingLocal || done || answerViewed || status !== undefined || cannotRun
   const answerNote = !answerUnlocked
     ? 'Press Check once to unlock the answer.'
-    : !done && !answerViewed && !isEditingLocal
+    : !done && !answerViewed && !isEditingLocal && !cannotRun
       ? `Solving after viewing the answer earns ${CHALLENGE_XP_AFTER_ANSWER} XP instead of ${CHALLENGE_XP}.`
       : null
 
@@ -76,8 +82,6 @@ export function ChallengeCard({
     if (!showAnswer && !done && !answerViewed && !isEditingLocal) onRevealAnswer()
     setShowAnswer((v) => !v)
   }
-  const isRuntimeTests =
-    ch.validation.mode === 'python_tests' || ch.validation.mode === 'r_tests'
 
   return (
     <div className="cq-panel cq-challenge-card">
@@ -178,8 +182,13 @@ export function ChallengeCard({
         errorColumn={isRuntimeTests ? (pyRuntimeErr?.column ?? null) : null}
         errorUiEpoch={errorUiEpoch}
       />
+      {cannotRun ? (
+        <p className="cq-muted cq-sandbox-unsupported" role="note">
+          {CODE_RUNTIME_UNSUPPORTED_MESSAGE}
+        </p>
+      ) : null}
       <div className="cq-row">
-        <button type="button" className="cq-btn cq-btn--primary" onClick={onCheck}>
+        <button type="button" className="cq-btn cq-btn--primary" onClick={onCheck} disabled={cannotRun}>
           {status === 'failed' ? 'Try again' : done ? 'Check again' : 'Check'}
         </button>
         {done && status !== 'failed' && draft.trim() !== '' ? (

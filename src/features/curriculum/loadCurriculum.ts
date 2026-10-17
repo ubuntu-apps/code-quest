@@ -131,16 +131,24 @@ export async function loadLanguageBundle(
   const pending = shareable ? bundleRequests.get(key) : undefined
   if (pending) return pending
 
-  const request = fetchLanguageBundle(baseUrl, languagePath, options).then(({ bundle, usedFallback }) => {
-    // A bundle patched with editor drafts is specific to this caller; don't share it.
-    if (usedFallback && bundleRequests.get(key) === request) bundleRequests.delete(key)
-    return bundle
-  })
-  if (shareable) {
-    bundleRequests.set(key, request)
-    request.catch(() => {
-      if (bundleRequests.get(key) === request) bundleRequests.delete(key)
-    })
-  }
+  const download = fetchLanguageBundle(baseUrl, languagePath, options)
+  const request = download.then(({ bundle }) => bundle)
+  const isCurrent = () => bundleRequests.get(key) === request
+  if (shareable) bundleRequests.set(key, request)
+  download.then(
+    ({ usedFallback }) => {
+      // A bundle patched with editor drafts is specific to this caller; never share it.
+      if (usedFallback) {
+        if (isCurrent()) bundleRequests.delete(key)
+      } else if (!shareable) {
+        // A fresh download (e.g. after saving in the editor) replaces the shared copy,
+        // so later normal loads don't fall back to the older content.
+        bundleRequests.set(key, request)
+      }
+    },
+    () => {
+      if (isCurrent()) bundleRequests.delete(key)
+    },
+  )
   return request
 }

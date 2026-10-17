@@ -75,7 +75,9 @@ export async function downloadForOffline(options: {
   try {
     const root = await loadRootIndex(baseUrl)
     for (const lang of root.languages) {
-      bundles[lang.id] = await loadLanguageBundle(baseUrl, lang.path)
+      // fresh: really fetch through the service worker so it caches the files,
+      // even if this session already loaded them (possibly before it was in control).
+      bundles[lang.id] = await loadLanguageBundle(baseUrl, lang.path, { fresh: true })
     }
   } catch {
     throw new Error('Could not download the lessons. Check your internet connection and try again.')

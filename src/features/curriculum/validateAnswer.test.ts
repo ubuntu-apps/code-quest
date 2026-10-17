@@ -15,6 +15,23 @@ describe('validateAgainst', () => {
     ).toBe(true)
   })
 
+  it('equalsNormalized accepts a name written as code', () => {
+    const v = { mode: 'equalsNormalized' as const, expected: 'loads' }
+    for (const answer of ['loads', 'json.loads', 'loads()', 'json.loads()', '.loads', '`loads`', ' LOADS ']) {
+      expect(validateAgainst(answer, v)).toBe(true)
+    }
+    expect(validateAgainst('dumps', v)).toBe(false)
+    expect(validateAgainst('loads(x)', v)).toBe(false)
+    expect(validateAgainst('json.loadsx', v)).toBe(false)
+  })
+
+  it('identifier leniency does not apply to non-identifier answers', () => {
+    expect(validateAgainst('201', { mode: 'equalsNormalized', expected: '201' })).toBe(true)
+    expect(validateAgainst('x.201', { mode: 'equalsNormalized', expected: '201' })).toBe(false)
+    expect(validateAgainst('group  by', { mode: 'equalsNormalized', expected: 'group by' })).toBe(true)
+    expect(validateAgainst('%Y', { mode: 'equalsNormalized', expected: '%Y' })).toBe(true)
+  })
+
   it('includesAll requires every needle', () => {
     expect(
       validateAgainst('abc def', { mode: 'includesAll', needles: ['abc', 'def'] }),

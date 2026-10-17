@@ -4,11 +4,26 @@ export function normalizeAnswer(s: string): string {
   return s.trim().replace(/\s+/g, ' ').toLowerCase()
 }
 
+/**
+ * Names typed the way people write them in code still count: `json.loads`,
+ * `loads()`, `.loads` and \`loads\` all match an expected answer of `loads`.
+ * Only applies when the expected answer is a single identifier.
+ */
+function matchesIdentifier(answer: string, expected: string): boolean {
+  if (!/^[a-z_][a-z0-9_]*$/.test(expected)) return false
+  const cleaned = answer.replace(/^[`'"]+|[`'"]+$/g, '').replace(/\(\)$/, '').replace(/^\./, '')
+  if (!/^[a-z_][a-z0-9_]*(\.[a-z_][a-z0-9_]*)*$/.test(cleaned)) return false
+  return cleaned.split('.').pop() === expected
+}
+
 export function validateAgainst(answer: string, v: Validation): boolean {
   const raw = answer
   switch (v.mode) {
-    case 'equalsNormalized':
-      return normalizeAnswer(raw) === normalizeAnswer(v.expected ?? '')
+    case 'equalsNormalized': {
+      const given = normalizeAnswer(raw)
+      const expected = normalizeAnswer(v.expected ?? '')
+      return given === expected || matchesIdentifier(given, expected)
+    }
     case 'includesAll':
       return (v.needles ?? []).every((n) => raw.includes(n))
     case 'regex': {

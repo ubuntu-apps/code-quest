@@ -57,3 +57,26 @@ describe('loadLanguageBundle', () => {
     expect(bundle.sections).toHaveLength(2)
   })
 })
+
+describe('loadLanguageBundle refresh', () => {
+  afterEach(() => vi.unstubAllGlobals())
+
+  it('a fresh download replaces the shared copy', async () => {
+    mockContent({ 'py5/index.json': LANG, 'py5/a.json': section('a'), 'py5/b.json': section('b') })
+    await loadLanguageBundle('/base/', 'py5/index.json')
+    mockContent({ 'py5/index.json': LANG, 'py5/a.json': { ...section('a'), title: 'Edited' }, 'py5/b.json': section('b') })
+    await loadLanguageBundle('/base/', 'py5/index.json', { fresh: true })
+    const later = await loadLanguageBundle('/base/', 'py5/index.json')
+    expect(later.sections[0].file.title).toBe('Edited')
+  })
+
+  it('never shares a bundle patched with editor drafts', async () => {
+    const draft = { index: LANG, sections: [{ sectionRef: LANG.sections[1], file: { ...section('b'), title: 'Draft' } }] }
+    mockContent({ 'py6/index.json': LANG, 'py6/a.json': section('a') })
+    const patched = await loadLanguageBundle('/base/', 'py6/index.json', { fallbackBundle: draft })
+    expect(patched.sections[1].file.title).toBe('Draft')
+    mockContent({ 'py6/index.json': LANG, 'py6/a.json': section('a'), 'py6/b.json': section('b') })
+    const plain = await loadLanguageBundle('/base/', 'py6/index.json')
+    expect(plain.sections[1].file.title).toBe('b')
+  })
+})
