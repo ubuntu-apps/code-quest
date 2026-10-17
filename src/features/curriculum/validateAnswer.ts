@@ -16,13 +16,32 @@ function matchesIdentifier(answer: string, expected: string): boolean {
   return cleaned.split('.').pop() === expected
 }
 
+/** An answer typed inside quotes or backticks, like "kiwi, pear" or `9.90`, still counts. */
+function matchesUnquoted(answer: string, expected: string): boolean {
+  if (/^[`'"]/.test(expected)) return false
+  const m = /^([`'"])(.*)\1$/.exec(answer)
+  return m !== null && m[2].trim() === expected
+}
+
+/** Numbers that are equal count, so 2.50 matches 2.5 (but 9 doesn't match an expected 09). */
+function matchesNumber(answer: string, expected: string): boolean {
+  if (!/^-?(0|[1-9]\d*)(\.\d+)?$/.test(expected)) return false
+  if (!/^-?\d+(\.\d+)?$/.test(answer)) return false
+  return Number(answer) === Number(expected)
+}
+
 export function validateAgainst(answer: string, v: Validation): boolean {
   const raw = answer
   switch (v.mode) {
     case 'equalsNormalized': {
       const given = normalizeAnswer(raw)
       const expected = normalizeAnswer(v.expected ?? '')
-      return given === expected || matchesIdentifier(given, expected)
+      return (
+        given === expected ||
+        matchesIdentifier(given, expected) ||
+        matchesUnquoted(given, expected) ||
+        matchesNumber(given, expected)
+      )
     }
     case 'includesAll':
       return (v.needles ?? []).every((n) => raw.includes(n))
