@@ -11,6 +11,14 @@ const MESSAGES: Record<Exclude<Status, 'idle' | 'checking'>, string> = {
   error: "Couldn't reach the server. Try again in a moment.",
 }
 
+/** How this device lays the page out, to help with "the text is too small" reports. */
+function screenInfo(): string {
+  if (typeof window === 'undefined') return ''
+  const root = parseFloat(getComputedStyle(document.documentElement).fontSize)
+  const ratio = Math.round(window.devicePixelRatio * 100) / 100
+  return `Screen ${window.innerWidth} × ${window.innerHeight} · pixel ratio ${ratio} · text ${Math.round(root * 10) / 10}px`
+}
+
 /** About tab: the current version, with a button to look for a newer one. */
 export function VersionPanel() {
   const ready = useSyncExternalStore(subscribeUpdateReady, isUpdateReady, isUpdateReady)
@@ -43,6 +51,7 @@ export function VersionPanel() {
             ? ''
             : MESSAGES[status]}
       </p>
+      <p className="cq-muted cq-screen-info">{screenInfo()}</p>
     </section>
   )
 }
