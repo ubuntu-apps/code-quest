@@ -10,7 +10,8 @@ export {
   useEditorMode,
   type EditorGitHubValue,
 } from './editorHooks'
-export { EditorHeaderButton, EditorToolbar } from './EditorToolbar'
+export { EditorHeaderButton } from './EditorToolbar'
+// EditModeToolbar is loaded lazily (import './EditModeToolbar').
 export { EditableText, EditableTextarea, EditableMarkdown, EditableBlock } from './EditableField'
 export { EditableValidationEditor } from './EditableValidationEditor'
 export { EditableTestQuestionEditor } from './EditableTestEditor'

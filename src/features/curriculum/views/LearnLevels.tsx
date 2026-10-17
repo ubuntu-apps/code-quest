@@ -1,5 +1,6 @@
 import type { LoadedSection, Level } from '../types'
 import { loadProgress } from '../progressStorage'
+import { completedChallengeIds } from '../helpers'
 import { AddItemButton, EditableText } from '../../editor'
 import { CatalogListItem } from '../components/CatalogListItem'
 
@@ -45,7 +46,7 @@ export function LearnLevels({
             lvl.challenges.length === 0 ||
             lvl.challenges.every((c) => p.challengesCompleted.includes(c.id))
           const done = challengesDone && p.testPassed
-          const partial = !done && (p.challengesCompleted.length > 0 || p.testPassed)
+          const partial = !done && (completedChallengeIds(lvl, p.challengesCompleted).length > 0 || p.testPassed)
 
           const isProject = lvl.kind === 'project'
           const projectLabel =

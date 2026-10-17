@@ -23,7 +23,8 @@ export default defineConfig({
     react(),
     curriculumSavePlugin(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // Ask before reloading into a new version (see src/pwaUpdate.ts).
+      registerType: 'prompt',
       devOptions: {
         enabled: true,
         suppressWarnings: true,

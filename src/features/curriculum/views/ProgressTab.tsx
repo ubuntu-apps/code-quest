@@ -2,6 +2,7 @@ import type { LanguageBundle, Level, RootIndex } from '../types'
 import { loadProgress } from '../progressStorage'
 import { useProgressVersion } from '../hooks/useProgressVersion'
 import {
+  completedChallengeIds,
   computeSectionXp,
   getSectionProgressStatus,
   type SectionProgressStatus,
@@ -187,7 +188,7 @@ export function ProgressTab({
 
           const prog = loadProgress(item.langId, item.level.id)
           const totalCh = item.level.challenges.length
-          const chDone = prog.challengesCompleted.length
+          const chDone = completedChallengeIds(item.level, prog.challengesCompleted).length
           const challengesOk = totalCh === 0 || chDone >= totalCh
 
           return (
@@ -203,7 +204,7 @@ export function ProgressTab({
               </div>
               <div className="cq-progress-tags">
                 <span className={challengesOk ? 'cq-tag cq-tag--ok' : 'cq-tag'}>
-                  Challenges {Math.min(chDone, totalCh)}/{totalCh}
+                  Challenges {chDone}/{totalCh}
                 </span>
                 <span className={prog.testPassed ? 'cq-tag cq-tag--ok' : 'cq-tag'}>
                   Test {prog.testPassed ? 'passed' : 'open'}

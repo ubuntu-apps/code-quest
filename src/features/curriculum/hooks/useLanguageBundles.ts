@@ -7,6 +7,8 @@ export function useLanguageBundles(
   baseUrl: string,
   syncBundle: (langId: string, bundle: LanguageBundle) => void,
   getBundle?: (langId: string) => LanguageBundle | null,
+  /** Load only this course (the one being learned). Null loads every course. */
+  onlyLanguageId?: string | null,
 ) {
   const [bundles, setBundles] = useState<Record<string, LanguageBundle>>({})
   const [loading, setLoading] = useState(false)
@@ -20,8 +22,11 @@ export function useLanguageBundles(
       setLoading(true)
       setError(null)
       try {
+        const languages = onlyLanguageId
+          ? rootIndex.languages.filter((lang) => lang.id === onlyLanguageId)
+          : rootIndex.languages
         const entries = await Promise.all(
-          rootIndex.languages.map(async (lang) => {
+          languages.map(async (lang) => {
             const b = await loadLanguageBundle(baseUrl, lang.path, {
               fallbackBundle: getBundle?.(lang.id) ?? null,
             })
@@ -29,8 +34,8 @@ export function useLanguageBundles(
           }),
         )
         if (!cancelled) {
-          const map = Object.fromEntries(entries)
-          setBundles(map)
+          // Keep courses loaded earlier in the session (e.g. before switching course).
+          setBundles((prev) => ({ ...prev, ...Object.fromEntries(entries) }))
           for (const [langId, b] of entries) syncBundle(langId, b)
         }
       } catch (e: unknown) {
@@ -46,7 +51,7 @@ export function useLanguageBundles(
     return () => {
       cancelled = true
     }
-  }, [rootIndex, baseUrl, syncBundle, getBundle])
+  }, [rootIndex, baseUrl, syncBundle, getBundle, onlyLanguageId])
 
   return {
     bundles: rootIndex ? bundles : {},

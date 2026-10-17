@@ -40,7 +40,17 @@ export function ReadMoreModal({ levelTitle, url, source, onClose }: ReadMoreModa
             Open original <ExternalLink size={14} />
           </a>
         </div>
-        <iframe className="cq-modal-frame" title={`${levelTitle} reference`} src={url} />
+        <iframe
+          className="cq-modal-frame"
+          title={`${levelTitle} reference`}
+          src={url}
+          // The embedded page can run its scripts and open links, but can't take over the app.
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          referrerPolicy="no-referrer"
+        />
+        <p className="cq-muted cq-modal-note">
+          Some sites don't allow being shown inside other apps. If the page stays blank, use Open original.
+        </p>
         <div className="cq-modal-actions">
           <button type="button" className="cq-btn" onClick={onClose}>
             Close and return

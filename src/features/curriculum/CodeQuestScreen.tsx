@@ -1,6 +1,6 @@
 import '../../App.css'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, ChevronLeft, Info, ListTodo, Share2 } from 'lucide-react'
 import type { LanguageBundle, Level, RootIndex } from './types'
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
@@ -14,7 +14,6 @@ import { detectPlatform, installInstructions } from '../../platform'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
   EditorHeaderButton,
-  EditorToolbar,
   useEditorAbout,
   useEditorCatalog,
   useEditorDraft,
@@ -30,6 +29,7 @@ import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageS
 import {
   computeLevelXp,
   isSectionUnlocked as checkSectionUnlocked,
+  currentStreak,
   loadStreakState,
   recordDailyActivity,
 } from './helpers'
@@ -44,6 +44,11 @@ import { LearnLevels } from './views/LearnLevels'
 import { LearnLevel } from './views/LearnLevel'
 import { ProgressTab } from './views/ProgressTab'
 import { AboutTab } from './views/AboutTab'
+
+/** Editing toolbar, downloaded only when someone switches to edit mode. */
+const EditorToolbar = lazy(() =>
+  import('../editor/EditModeToolbar').then((m) => ({ default: m.EditorToolbar })),
+)
 
 export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
@@ -151,6 +156,7 @@ export function CodeQuestScreen() {
     baseUrl,
     syncBundle,
     getBundle,
+    activeLanguageId,
   )
 
   useEffect(() => {
@@ -308,7 +314,7 @@ export function CodeQuestScreen() {
   // Read from storage on every progress change, so a restored backup shows its streak too.
   const streakCount = useMemo(() => {
     void progressVersion
-    return loadStreakState().count
+    return currentStreak(loadStreakState())
   }, [progressVersion])
   const recordActivity = useCallback(() => {
     recordDailyActivity()
@@ -713,7 +719,11 @@ export function CodeQuestScreen() {
         <EditorHeaderButton />
       </header>
 
-      <EditorToolbar languageId={languageId} sectionId={sectionId} />
+      {isEditMode ? (
+        <Suspense fallback={null}>
+          <EditorToolbar languageId={languageId} sectionId={sectionId} />
+        </Suspense>
+      ) : null}
 
       <main className="cq-main">
         {tab === 'learn' && renderLearn()}

@@ -38,3 +38,12 @@ describe('computeLevelXp', () => {
     expect(computeLevelXp('python', level)).toBe(10)
   })
 })
+
+describe('stale challenge IDs', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('ignores completed IDs that are no longer in the level', () => {
+    saveProgress('python', 'lvl', { challengesCompleted: ['a', 'old1', 'old2'], testPassed: false })
+    expect(computeLevelXp('python', level)).toBe(10)
+  })
+})

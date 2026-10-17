@@ -5,14 +5,42 @@
     {
       "id": "cli_guess_game",
       "title": "CLI guess the number",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "randint",
+          "label": "randint",
+          "code": "import random\nprint(random.randint(1, 10))"
+        },
+        {
+          "id": "while_guess",
+          "label": "while guess",
+          "code": "secret = 7\nguess = 0\nwhile guess != secret:\n    guess = 7\nprint(\"win\")"
+        },
+        {
+          "id": "higher_lower",
+          "label": "Higher/Lower",
+          "code": "g, s = 3, 5\nif g < s:\n    print(\"Higher\")\nelif g > s:\n    print(\"Lower\")"
+        },
+        {
+          "id": "main_guard",
+          "label": "main guard",
+          "code": "def main():\n    print(\"play\")\n\nif __name__ == \"__main__\":\n    main()"
+        },
+        {
+          "id": "try_int_input",
+          "label": "try int input",
+          "code": "try:\n    n = int(\"5\")\nexcept ValueError:\n    n = 0\nprint(n)"
+        }
+      ],
       "intro": {
         "title": "CLI guess the number",
         "bodyMarkdown": "Build a number-guessing game in the terminal. Pick a secret, loop until the player guesses correctly, give higher/lower hints.\n\nUse `random.randint`, a while loop, and int conversion with try/except for bad input.\n\nStructure with a `main()` function and `if __name__ == \"__main__\"` guard.",
-        "sandboxCode": "import random\n\nsecret = random.randint(1, 10)\nguess = 0\nwhile guess != secret:\n    guess = 5  # pretend user guessed\n    if guess < secret:\n        print(\"Higher\")\n    elif guess > secret:\n        print(\"Lower\")\nprint(\"You win!\")"
+        "sandboxCode": "import random\n\nsecret = random.randint(1, 10)\nlow, high = 1, 10\nguess = None\nwhile guess != secret:\n    guess = (low + high) // 2  # the computer plays: always guess the middle\n    print(\"Guess:\", guess)\n    if guess < secret:\n        print(\"Higher\")\n        low = guess + 1\n    elif guess > secret:\n        print(\"Lower\")\n        high = guess - 1\nprint(\"You win! The number was\", secret)"
       },
       "challenges": [
         {
-          "id": "ch_gdggm4i",
+          "id": "cli_guess_game_ch1",
           "title": "Easy: import random",
           "promptMarkdown": "",
           "starterCode": "",
@@ -29,7 +57,7 @@
           }
         },
         {
-          "id": "ch_j1auykx",
+          "id": "cli_guess_game_ch2",
           "title": "Easy: randint range",
           "promptMarkdown": "",
           "starterCode": "",
@@ -46,7 +74,7 @@
           }
         },
         {
-          "id": "ch_jot7l7i",
+          "id": "cli_guess_game_ch3",
           "title": "Medium: while loop",
           "promptMarkdown": "",
           "starterCode": "while guess!=secret:\n    guess=7",
@@ -63,7 +91,7 @@
           }
         },
         {
-          "id": "ch_72anyg5",
+          "id": "cli_guess_game_ch4",
           "title": "Medium: higher lower",
           "promptMarkdown": "",
           "starterCode": "if g<s:\n    hint=\"Higher\"\nelif g>s:\n    hint=\"Lower\"",
@@ -80,7 +108,7 @@
           }
         },
         {
-          "id": "ch_j3ycg3j",
+          "id": "cli_guess_game_ch5",
           "title": "Hard: attempt counter",
           "promptMarkdown": "",
           "starterCode": "for _ in range(3): a+=1",
@@ -97,7 +125,7 @@
           }
         },
         {
-          "id": "ch_6j4b03e",
+          "id": "cli_guess_game_ch6",
           "title": "Hard: main function",
           "promptMarkdown": "",
           "starterCode": "def main():\n    return 42\nresult=main()",
@@ -114,7 +142,7 @@
           }
         },
         {
-          "id": "ch_s4e2xdl",
+          "id": "cli_guess_game_ch7",
           "title": "Expert: validate int input",
           "promptMarkdown": "",
           "starterCode": "try:\n    n=int(\"5\")\nexcept ValueError:\n    n=0",
@@ -126,7 +154,7 @@
           }
         },
         {
-          "id": "ch_67xx3hw",
+          "id": "cli_guess_game_ch8",
           "title": "Expert: max attempts",
           "promptMarkdown": "",
           "starterCode": "",
@@ -143,7 +171,7 @@
           }
         },
         {
-          "id": "ch_83r5tvy",
+          "id": "cli_guess_game_ch9",
           "title": "Expert: play again",
           "promptMarkdown": "",
           "starterCode": "",
@@ -160,7 +188,7 @@
           }
         },
         {
-          "id": "ch_tty5km9",
+          "id": "cli_guess_game_ch10",
           "title": "Expert: seed random",
           "promptMarkdown": "",
           "starterCode": "",
@@ -181,7 +209,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_ktw518t",
+            "id": "cli_guess_game_q1",
             "type": "mcq",
             "prompt": "randint(1,10) includes:",
             "choices": [
@@ -201,7 +229,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_up9lpxl",
+            "id": "cli_guess_game_q2",
             "type": "shortText",
             "prompt": "Loop until correct:",
             "validation": {
@@ -210,7 +238,7 @@
             }
           },
           {
-            "id": "q_au13x6o",
+            "id": "cli_guess_game_q3",
             "type": "mcq",
             "prompt": "Higher hint when guess:",
             "choices": [
@@ -230,7 +258,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_i3kl1ff",
+            "id": "cli_guess_game_q4",
             "type": "mcq",
             "prompt": "__main__ guard runs when:",
             "choices": [
@@ -250,7 +278,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ogo4rxt",
+            "id": "cli_guess_game_q5",
             "type": "shortText",
             "prompt": "Bad int input catch:",
             "validation": {
@@ -259,7 +287,7 @@
             }
           },
           {
-            "id": "q_qod93zd",
+            "id": "cli_guess_game_q6",
             "type": "mcq",
             "prompt": "Expert: seed for:",
             "choices": [
@@ -279,7 +307,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7zqetiw",
+            "id": "cli_guess_game_q7",
             "type": "mcq",
             "prompt": "Expert: attempt limit adds:",
             "choices": [
@@ -299,7 +327,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zm85cz9",
+            "id": "cli_guess_game_q8",
             "type": "shortText",
             "prompt": "Expert: main() organizes:",
             "validation": {
@@ -308,7 +336,7 @@
             }
           },
           {
-            "id": "q_lchse6o",
+            "id": "cli_guess_game_q9",
             "type": "mcq",
             "prompt": "Expert: elif guess > secret:",
             "choices": [
@@ -328,7 +356,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_q91vrt0",
+            "id": "cli_guess_game_q10",
             "type": "shortText",
             "prompt": "Expert: break when:",
             "validation": {
@@ -342,6 +370,34 @@
     {
       "id": "todo_list",
       "title": "Todo list app",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "list_of_dicts",
+          "label": "List of dicts",
+          "code": "todos = [{\"id\": 1, \"text\": \"Learn Python\", \"done\": False}]\nprint(todos)"
+        },
+        {
+          "id": "add_task",
+          "label": "add task",
+          "code": "todos = []\ntodos.append({\"id\": 1, \"text\": \"Build\", \"done\": False})\nprint(todos)"
+        },
+        {
+          "id": "list_tasks",
+          "label": "List tasks",
+          "code": "todos = [{\"text\": \"a\", \"done\": False}, {\"text\": \"b\", \"done\": True}]\nfor t in todos:\n    mark = \"x\" if t[\"done\"] else \" \"\n    print(f\"[{mark}] {t['text']}\")"
+        },
+        {
+          "id": "json_save",
+          "label": "json save",
+          "code": "import json\ntodos = [{\"text\": \"a\"}]\nprint(json.dumps(todos))"
+        },
+        {
+          "id": "filter_done",
+          "label": "Filter done",
+          "code": "todos = [{\"done\": True}, {\"done\": False}]\nopen_tasks = [t for t in todos if not t[\"done\"]]\nprint(len(open_tasks))"
+        }
+      ],
       "intro": {
         "title": "Todo list app",
         "bodyMarkdown": "Store tasks in a list of dicts: `{id, text, done}`. Support add, list, complete, and delete.\n\nPersist to JSON file on quit; load on start. Use functions for each command.\n\nCLI menu loop: print options, read choice, dispatch action.",
@@ -349,7 +405,7 @@
       },
       "challenges": [
         {
-          "id": "ch_e9qfzvr",
+          "id": "todo_list_ch1",
           "title": "Easy: list of dicts",
           "promptMarkdown": "",
           "starterCode": "",
@@ -366,7 +422,7 @@
           }
         },
         {
-          "id": "ch_jd66jjy",
+          "id": "todo_list_ch2",
           "title": "Easy: add function",
           "promptMarkdown": "",
           "starterCode": "def add_task(text):\n    todos.append({\"text\":text})",
@@ -378,7 +434,7 @@
           }
         },
         {
-          "id": "ch_bs2pmrb",
+          "id": "todo_list_ch3",
           "title": "Medium: done flag",
           "promptMarkdown": "",
           "starterCode": "",
@@ -395,7 +451,7 @@
           }
         },
         {
-          "id": "ch_e9b19i6",
+          "id": "todo_list_ch4",
           "title": "Medium: list display",
           "promptMarkdown": "",
           "starterCode": "for t in todos:\n    shown.append(t[\"text\"])",
@@ -412,7 +468,7 @@
           }
         },
         {
-          "id": "ch_oqhyscm",
+          "id": "todo_list_ch5",
           "title": "Hard: complete by id",
           "promptMarkdown": "",
           "starterCode": "",
@@ -429,7 +485,7 @@
           }
         },
         {
-          "id": "ch_v4xhppu",
+          "id": "todo_list_ch6",
           "title": "Hard: json dumps save",
           "promptMarkdown": "",
           "starterCode": "import json\ntodos=[{\"text\":\"a\"}]\nsaved=json.dumps(todos)",
@@ -446,7 +502,7 @@
           }
         },
         {
-          "id": "ch_wig3e4x",
+          "id": "todo_list_ch7",
           "title": "Expert: json load",
           "promptMarkdown": "",
           "starterCode": "import json\nl=json.loads('[{\"text\":\"a\"}]')",
@@ -463,7 +519,7 @@
           }
         },
         {
-          "id": "ch_x5cxbwo",
+          "id": "todo_list_ch8",
           "title": "Expert: delete filter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -480,7 +536,7 @@
           }
         },
         {
-          "id": "ch_gtb6w9k",
+          "id": "todo_list_ch9",
           "title": "Expert: menu loop",
           "promptMarkdown": "",
           "starterCode": "while True:\n    break",
@@ -492,7 +548,7 @@
           }
         },
         {
-          "id": "ch_o6zm6qy",
+          "id": "todo_list_ch10",
           "title": "Expert: atomic save",
           "promptMarkdown": "",
           "starterCode": "",
@@ -508,7 +564,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_5h7wogp",
+            "id": "todo_list_q1",
             "type": "mcq",
             "prompt": "Each todo needs:",
             "choices": [
@@ -528,7 +584,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gpaf4a4",
+            "id": "todo_list_q2",
             "type": "shortText",
             "prompt": "Persist format:",
             "validation": {
@@ -537,7 +593,7 @@
             }
           },
           {
-            "id": "q_g2iw2mk",
+            "id": "todo_list_q3",
             "type": "mcq",
             "prompt": "Filter list comprehension removes:",
             "choices": [
@@ -557,7 +613,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wrx63ys",
+            "id": "todo_list_q4",
             "type": "mcq",
             "prompt": "done True means:",
             "choices": [
@@ -577,7 +633,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0ybxpfp",
+            "id": "todo_list_q5",
             "type": "shortText",
             "prompt": "Load on:",
             "validation": {
@@ -586,7 +642,7 @@
             }
           },
           {
-            "id": "q_apxhgb6",
+            "id": "todo_list_q6",
             "type": "mcq",
             "prompt": "Expert: id helps:",
             "choices": [
@@ -606,7 +662,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_feaqnx8",
+            "id": "todo_list_q7",
             "type": "mcq",
             "prompt": "Expert: menu dispatches:",
             "choices": [
@@ -626,7 +682,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_53lms11",
+            "id": "todo_list_q8",
             "type": "shortText",
             "prompt": "Expert: append adds:",
             "validation": {
@@ -635,7 +691,7 @@
             }
           },
           {
-            "id": "q_au3279c",
+            "id": "todo_list_q9",
             "type": "mcq",
             "prompt": "Expert: corrupt JSON:",
             "choices": [
@@ -655,7 +711,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_qkusff6",
+            "id": "todo_list_q10",
             "type": "shortText",
             "prompt": "Expert: empty list on first run:",
             "validation": {
@@ -669,6 +725,29 @@
     {
       "id": "password_generator",
       "title": "Password generator",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "random_choice",
+          "label": "random.choice",
+          "code": "import random\nimport string\nprint(random.choice(string.ascii_letters))"
+        },
+        {
+          "id": "join_password",
+          "label": "Join password",
+          "code": "import random\nimport string\nchars = string.ascii_letters + string.digits\nprint(\"\".join(random.choice(chars) for _ in range(8)))"
+        },
+        {
+          "id": "generate_fn",
+          "label": "generate fn",
+          "code": "import random\nimport string\n\ndef generate_password(n=12):\n    chars = string.ascii_letters + string.digits\n    return \"\".join(random.choice(chars) for _ in range(n))\nprint(generate_password(8))"
+        },
+        {
+          "id": "secrets",
+          "label": "secrets",
+          "code": "import secrets\nprint(secrets.choice(\"abc\"))"
+        }
+      ],
       "intro": {
         "title": "Password generator",
         "bodyMarkdown": "Use `random.choice` or `secrets` module on a charset. Length and character sets are user options.\n\nAvoid weak patterns; ensure mix of upper, lower, digits, symbols for strength.\n\nPackage as function `generate_password(length=12)` returning string.",
@@ -676,7 +755,7 @@
       },
       "challenges": [
         {
-          "id": "ch_9at0xnt",
+          "id": "password_generator_ch1",
           "title": "Easy: import string",
           "promptMarkdown": "",
           "starterCode": "",
@@ -693,7 +772,7 @@
           }
         },
         {
-          "id": "ch_43sdlpe",
+          "id": "password_generator_ch2",
           "title": "Easy: choice from charset",
           "promptMarkdown": "",
           "starterCode": "",
@@ -710,7 +789,7 @@
           }
         },
         {
-          "id": "ch_ba4w9t0",
+          "id": "password_generator_ch3",
           "title": "Medium: join list",
           "promptMarkdown": "",
           "starterCode": "",
@@ -727,7 +806,7 @@
           }
         },
         {
-          "id": "ch_cqvkrst",
+          "id": "password_generator_ch4",
           "title": "Medium: range length",
           "promptMarkdown": "",
           "starterCode": "import random,string\np=\"\".join(random.choice(\"ab\") for _ in range(10))",
@@ -744,7 +823,7 @@
           }
         },
         {
-          "id": "ch_y3y74fj",
+          "id": "password_generator_ch5",
           "title": "Hard: include digits",
           "promptMarkdown": "",
           "starterCode": "",
@@ -761,7 +840,7 @@
           }
         },
         {
-          "id": "ch_wehzrm3",
+          "id": "password_generator_ch6",
           "title": "Hard: secrets module",
           "promptMarkdown": "",
           "starterCode": "import secrets\nc=secrets.choice(\"abc\")",
@@ -778,7 +857,7 @@
           }
         },
         {
-          "id": "ch_nzm8q1o",
+          "id": "password_generator_ch7",
           "title": "Expert: guarantee symbol",
           "promptMarkdown": "",
           "starterCode": "",
@@ -795,7 +874,7 @@
           }
         },
         {
-          "id": "ch_vq3os1n",
+          "id": "password_generator_ch8",
           "title": "Expert: exclude ambiguous",
           "promptMarkdown": "",
           "starterCode": "",
@@ -812,7 +891,7 @@
           }
         },
         {
-          "id": "ch_fc6nrvg",
+          "id": "password_generator_ch9",
           "title": "Expert: strength check",
           "promptMarkdown": "",
           "starterCode": "",
@@ -829,7 +908,7 @@
           }
         },
         {
-          "id": "ch_u21gpw6",
+          "id": "password_generator_ch10",
           "title": "Expert: cli length arg",
           "promptMarkdown": "",
           "starterCode": "import sys\nn=16",
@@ -850,7 +929,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_1yr963e",
+            "id": "password_generator_q1",
             "type": "mcq",
             "prompt": "secrets stronger than random for:",
             "choices": [
@@ -870,7 +949,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_og8vdfk",
+            "id": "password_generator_q2",
             "type": "shortText",
             "prompt": "join builds:",
             "validation": {
@@ -879,7 +958,7 @@
             }
           },
           {
-            "id": "q_lrdgbpq",
+            "id": "password_generator_q3",
             "type": "mcq",
             "prompt": "string.digits contains:",
             "choices": [
@@ -899,7 +978,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_337psir",
+            "id": "password_generator_q4",
             "type": "mcq",
             "prompt": "length parameter controls:",
             "choices": [
@@ -919,7 +998,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_1qxcher",
+            "id": "password_generator_q5",
             "type": "shortText",
             "prompt": "choice picks:",
             "validation": {
@@ -928,7 +1007,7 @@
             }
           },
           {
-            "id": "q_gb87nfw",
+            "id": "password_generator_q6",
             "type": "mcq",
             "prompt": "Expert: guarantee class means:",
             "choices": [
@@ -948,7 +1027,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_of6ge9p",
+            "id": "password_generator_q7",
             "type": "mcq",
             "prompt": "Expert: avoid 0O1l in:",
             "choices": [
@@ -968,7 +1047,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8d34255",
+            "id": "password_generator_q8",
             "type": "shortText",
             "prompt": "Expert: store passwords:",
             "validation": {
@@ -977,7 +1056,7 @@
             }
           },
           {
-            "id": "q_xy8k9e1",
+            "id": "password_generator_q9",
             "type": "mcq",
             "prompt": "Expert: gen comprehension uses:",
             "choices": [
@@ -997,7 +1076,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_38d6o2b",
+            "id": "password_generator_q10",
             "type": "shortText",
             "prompt": "Expert: ascii_letters is:",
             "validation": {
@@ -1011,6 +1090,29 @@
     {
       "id": "unit_converter",
       "title": "Unit converter",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "km_to_miles",
+          "label": "km to miles",
+          "code": "KM_TO_MI = 0.621371\nprint(10 * KM_TO_MI)"
+        },
+        {
+          "id": "c_to_f",
+          "label": "C to F",
+          "code": "def c_to_f(c):\n    return c * 9/5 + 32\nprint(c_to_f(0))"
+        },
+        {
+          "id": "conversion_dict",
+          "label": "Conversion dict",
+          "code": "factors = {\"km\": 1000, \"m\": 1}\nprint(factors[\"km\"])"
+        },
+        {
+          "id": "convert_fn",
+          "label": "Convert fn",
+          "code": "def km_to_miles(km):\n    return km * 0.621371\nprint(km_to_miles(10))"
+        }
+      ],
       "intro": {
         "title": "Unit converter",
         "bodyMarkdown": "Map units with conversion factors in a dict. Functions convert temperature, length, or weight.\n\nValidate unit names; raise ValueError on unknown units.\n\nCLI: read value and from/to units, print result.",
@@ -1018,7 +1120,7 @@
       },
       "challenges": [
         {
-          "id": "ch_7p66poj",
+          "id": "unit_converter_ch1",
           "title": "Easy: constant factor",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1035,7 +1137,7 @@
           }
         },
         {
-          "id": "ch_bkgn1kn",
+          "id": "unit_converter_ch2",
           "title": "Easy: conversion function",
           "promptMarkdown": "",
           "starterCode": "def km_to_miles(km):\n    return km*0.621371",
@@ -1047,7 +1149,7 @@
           }
         },
         {
-          "id": "ch_e8v0nys",
+          "id": "unit_converter_ch3",
           "title": "Medium: celsius fahrenheit",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1064,7 +1166,7 @@
           }
         },
         {
-          "id": "ch_2257f9x",
+          "id": "unit_converter_ch4",
           "title": "Medium: dict of factors",
           "promptMarkdown": "",
           "starterCode": "factors={\"km\":1000,\"m\":1}",
@@ -1081,7 +1183,7 @@
           }
         },
         {
-          "id": "ch_431fmi8",
+          "id": "unit_converter_ch5",
           "title": "Hard: unknown unit error",
           "promptMarkdown": "",
           "starterCode": "def conv(u):\n if u not in {\"km\"}: raise ValueError\n return 1",
@@ -1098,7 +1200,7 @@
           }
         },
         {
-          "id": "ch_p2mhbgi",
+          "id": "unit_converter_ch6",
           "title": "Hard: round output",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1115,7 +1217,7 @@
           }
         },
         {
-          "id": "ch_ecam1ha",
+          "id": "unit_converter_ch7",
           "title": "Expert: chain conversion",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1132,7 +1234,7 @@
           }
         },
         {
-          "id": "ch_e5lcfck",
+          "id": "unit_converter_ch8",
           "title": "Expert: menu units",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1149,7 +1251,7 @@
           }
         },
         {
-          "id": "ch_3czbgj4",
+          "id": "unit_converter_ch9",
           "title": "Expert: negative temp",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1166,7 +1268,7 @@
           }
         },
         {
-          "id": "ch_6z74193",
+          "id": "unit_converter_ch10",
           "title": "Expert: invert factor",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1187,7 +1289,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_9fseyir",
+            "id": "unit_converter_q1",
             "type": "mcq",
             "prompt": "Conversion uses:",
             "choices": [
@@ -1207,7 +1309,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gms49bo",
+            "id": "unit_converter_q2",
             "type": "shortText",
             "prompt": "0C in F is:",
             "validation": {
@@ -1216,7 +1318,7 @@
             }
           },
           {
-            "id": "q_rbqz60w",
+            "id": "unit_converter_q3",
             "type": "mcq",
             "prompt": "Unknown unit should:",
             "choices": [
@@ -1236,7 +1338,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_l72c7y8",
+            "id": "unit_converter_q4",
             "type": "mcq",
             "prompt": "Dict maps unit to:",
             "choices": [
@@ -1256,7 +1358,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_h712ou8",
+            "id": "unit_converter_q5",
             "type": "shortText",
             "prompt": "round(3.14159,2):",
             "validation": {
@@ -1265,7 +1367,7 @@
             }
           },
           {
-            "id": "q_eh9v2h6",
+            "id": "unit_converter_q6",
             "type": "mcq",
             "prompt": "Expert: -40C equals:",
             "choices": [
@@ -1285,7 +1387,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ckcpveh",
+            "id": "unit_converter_q7",
             "type": "mcq",
             "prompt": "Expert: invert factor for:",
             "choices": [
@@ -1305,7 +1407,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fofzq6l",
+            "id": "unit_converter_q8",
             "type": "shortText",
             "prompt": "Expert: validate before:",
             "validation": {
@@ -1314,7 +1416,7 @@
             }
           },
           {
-            "id": "q_9jofuuy",
+            "id": "unit_converter_q9",
             "type": "mcq",
             "prompt": "Expert: constants uppercase:",
             "choices": [
@@ -1334,7 +1436,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_u380rt0",
+            "id": "unit_converter_q10",
             "type": "shortText",
             "prompt": "Expert: CLI reads:",
             "validation": {
@@ -1348,6 +1450,29 @@
     {
       "id": "contact_book",
       "title": "Contact book",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "dict_storage",
+          "label": "Dict storage",
+          "code": "contacts = {}\ncontacts[\"ana\"] = {\"phone\": \"555\"}\nprint(contacts)"
+        },
+        {
+          "id": "add_contact",
+          "label": "add contact",
+          "code": "contacts = {}\ndef add(name, phone):\n    contacts[name.lower()] = {\"phone\": phone}\nadd(\"Ana\", \"555\")\nprint(contacts)"
+        },
+        {
+          "id": "get_lookup",
+          "label": "get lookup",
+          "code": "contacts = {\"ana\": {\"phone\": \"555\"}}\nprint(contacts.get(\"bob\"))"
+        },
+        {
+          "id": "search_partial",
+          "label": "Search partial",
+          "code": "contacts = {\"ana\": 1, \"andrew\": 2}\nprint([k for k in contacts if \"an\" in k])"
+        }
+      ],
       "intro": {
         "title": "Contact book",
         "bodyMarkdown": "Dict keyed by name or list with search. Fields: name, phone, email.\n\nCommands: add, find, update, delete. Save JSON to disk.\n\nNormalize phone digits for comparison; validate email contains @.",
@@ -1355,7 +1480,7 @@
       },
       "challenges": [
         {
-          "id": "ch_gxhsi1p",
+          "id": "contact_book_ch1",
           "title": "Easy: dict storage",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1372,7 +1497,7 @@
           }
         },
         {
-          "id": "ch_f5xdco0",
+          "id": "contact_book_ch2",
           "title": "Easy: add function",
           "promptMarkdown": "",
           "starterCode": "def add_contact(name, phone):\n    contacts[name]=phone",
@@ -1384,7 +1509,7 @@
           }
         },
         {
-          "id": "ch_zm4kb2w",
+          "id": "contact_book_ch3",
           "title": "Medium: get lookup",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1401,7 +1526,7 @@
           }
         },
         {
-          "id": "ch_9vt4248",
+          "id": "contact_book_ch4",
           "title": "Medium: lower key",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1418,7 +1543,7 @@
           }
         },
         {
-          "id": "ch_ss7scyy",
+          "id": "contact_book_ch5",
           "title": "Hard: update merge",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1435,7 +1560,7 @@
           }
         },
         {
-          "id": "ch_200wdun",
+          "id": "contact_book_ch6",
           "title": "Hard: delete pop",
           "promptMarkdown": "",
           "starterCode": "contacts.pop(\"a\",None)\nn=len(contacts)",
@@ -1452,7 +1577,7 @@
           }
         },
         {
-          "id": "ch_3s4ejjp",
+          "id": "contact_book_ch7",
           "title": "Expert: search partial",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1469,7 +1594,7 @@
           }
         },
         {
-          "id": "ch_n0lv54c",
+          "id": "contact_book_ch8",
           "title": "Expert: email validate",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1486,7 +1611,7 @@
           }
         },
         {
-          "id": "ch_35gv73a",
+          "id": "contact_book_ch9",
           "title": "Expert: json persist",
           "promptMarkdown": "",
           "starterCode": "import json\njson.dumps(contacts)",
@@ -1498,7 +1623,7 @@
           }
         },
         {
-          "id": "ch_n0u4jva",
+          "id": "contact_book_ch10",
           "title": "Expert: export csv",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1519,7 +1644,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_fomzpvs",
+            "id": "contact_book_q1",
             "type": "mcq",
             "prompt": "dict get avoids:",
             "choices": [
@@ -1539,7 +1664,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_gpqmq52",
+            "id": "contact_book_q2",
             "type": "shortText",
             "prompt": "Normalize name with:",
             "validation": {
@@ -1548,7 +1673,7 @@
             }
           },
           {
-            "id": "q_yvpfoen",
+            "id": "contact_book_q3",
             "type": "mcq",
             "prompt": "pop removes:",
             "choices": [
@@ -1568,7 +1693,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_jf6d0d7",
+            "id": "contact_book_q4",
             "type": "mcq",
             "prompt": "Email validation minimal:",
             "choices": [
@@ -1588,7 +1713,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_dxzzeey",
+            "id": "contact_book_q5",
             "type": "shortText",
             "prompt": "Persist contacts:",
             "validation": {
@@ -1597,7 +1722,7 @@
             }
           },
           {
-            "id": "q_eeifu3i",
+            "id": "contact_book_q6",
             "type": "mcq",
             "prompt": "Expert: partial search uses:",
             "choices": [
@@ -1617,7 +1742,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_pn6odwq",
+            "id": "contact_book_q7",
             "type": "mcq",
             "prompt": "Expert: duplicate name:",
             "choices": [
@@ -1637,7 +1762,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_c3i5hrw",
+            "id": "contact_book_q8",
             "type": "shortText",
             "prompt": "Expert: phone strip:",
             "validation": {
@@ -1646,7 +1771,7 @@
             }
           },
           {
-            "id": "q_n7qx393",
+            "id": "contact_book_q9",
             "type": "mcq",
             "prompt": "Expert: list all:",
             "choices": [
@@ -1666,7 +1791,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zpmdual",
+            "id": "contact_book_q10",
             "type": "shortText",
             "prompt": "Expert: backup file:",
             "validation": {
@@ -1680,6 +1805,29 @@
     {
       "id": "quiz_app",
       "title": "Quiz app",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "question_dict",
+          "label": "Question dict",
+          "code": "questions = [{\"q\": \"2+2?\", \"choices\": [\"3\", \"4\"], \"a\": 1}]\nprint(questions[0][\"choices\"])"
+        },
+        {
+          "id": "grade_answers",
+          "label": "Grade answers",
+          "code": "questions = [{\"a\": 1}, {\"a\": 0}]\nanswers = [1, 0]\nscore = sum(1 for i, a in enumerate(answers) if a == questions[i][\"a\"])\nprint(score)"
+        },
+        {
+          "id": "percent",
+          "label": "Percent",
+          "code": "print(int(3 / 4 * 100))"
+        },
+        {
+          "id": "shuffle",
+          "label": "shuffle",
+          "code": "import random\nlst = [1, 2, 3]\nrandom.shuffle(lst)\nprint(lst)"
+        }
+      ],
       "intro": {
         "title": "Quiz app",
         "bodyMarkdown": "Questions as list of dicts with prompt, choices, answer index. Score correct answers.\n\nShuffle questions or choices with random.shuffle. Show final percentage.\n\nTime optional; store high score in file.",
@@ -1687,7 +1835,7 @@
       },
       "challenges": [
         {
-          "id": "ch_6vquf1z",
+          "id": "quiz_app_ch1",
           "title": "Easy: question dict",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1704,7 +1852,7 @@
           }
         },
         {
-          "id": "ch_no0kalu",
+          "id": "quiz_app_ch2",
           "title": "Easy: score counter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1721,7 +1869,7 @@
           }
         },
         {
-          "id": "ch_ixwpseg",
+          "id": "quiz_app_ch3",
           "title": "Medium: enumerate answers",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1738,7 +1886,7 @@
           }
         },
         {
-          "id": "ch_ouxqh88",
+          "id": "quiz_app_ch4",
           "title": "Medium: percent score",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1755,7 +1903,7 @@
           }
         },
         {
-          "id": "ch_zobxaw8",
+          "id": "quiz_app_ch5",
           "title": "Hard: shuffle",
           "promptMarkdown": "",
           "starterCode": "import random\nlst=[1,2,3]\nrandom.shuffle(lst)\nsame_set=sorted(lst)==[1,2,3]",
@@ -1772,7 +1920,7 @@
           }
         },
         {
-          "id": "ch_u5tqaxh",
+          "id": "quiz_app_ch6",
           "title": "Hard: input choice index",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1789,7 +1937,7 @@
           }
         },
         {
-          "id": "ch_1rnj2p8",
+          "id": "quiz_app_ch7",
           "title": "Expert: feedback per q",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1806,7 +1954,7 @@
           }
         },
         {
-          "id": "ch_fhu0xyc",
+          "id": "quiz_app_ch8",
           "title": "Expert: retry wrong",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1823,7 +1971,7 @@
           }
         },
         {
-          "id": "ch_7lu5qqf",
+          "id": "quiz_app_ch9",
           "title": "Expert: load bank json",
           "promptMarkdown": "",
           "starterCode": "import json\njson.loads('[]')",
@@ -1835,7 +1983,7 @@
           }
         },
         {
-          "id": "ch_ttv206l",
+          "id": "quiz_app_ch10",
           "title": "Expert: high score file",
           "promptMarkdown": "",
           "starterCode": "",
@@ -1856,7 +2004,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_27voy64",
+            "id": "quiz_app_q1",
             "type": "mcq",
             "prompt": "Answer stored as:",
             "choices": [
@@ -1876,7 +2024,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_0c932vb",
+            "id": "quiz_app_q2",
             "type": "shortText",
             "prompt": "shuffle randomizes:",
             "validation": {
@@ -1885,7 +2033,7 @@
             }
           },
           {
-            "id": "q_a8bku97",
+            "id": "quiz_app_q3",
             "type": "mcq",
             "prompt": "Percent = correct / total *",
             "choices": [
@@ -1905,7 +2053,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ymr7d62",
+            "id": "quiz_app_q4",
             "type": "mcq",
             "prompt": "enumerate gives:",
             "choices": [
@@ -1925,7 +2073,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wrdbl3r",
+            "id": "quiz_app_q5",
             "type": "shortText",
             "prompt": "Grade compares:",
             "validation": {
@@ -1934,7 +2082,7 @@
             }
           },
           {
-            "id": "q_9u56qez",
+            "id": "quiz_app_q6",
             "type": "mcq",
             "prompt": "Expert: separate data from:",
             "choices": [
@@ -1954,7 +2102,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_l1j8cq6",
+            "id": "quiz_app_q7",
             "type": "mcq",
             "prompt": "Expert: JSON bank allows:",
             "choices": [
@@ -1974,7 +2122,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_cdhwi2n",
+            "id": "quiz_app_q8",
             "type": "shortText",
             "prompt": "Expert: passing score:",
             "validation": {
@@ -1983,7 +2131,7 @@
             }
           },
           {
-            "id": "q_0un6qvq",
+            "id": "quiz_app_q9",
             "type": "mcq",
             "prompt": "Expert: shuffle choices:",
             "choices": [
@@ -2003,7 +2151,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_8dsvu3q",
+            "id": "quiz_app_q10",
             "type": "shortText",
             "prompt": "Expert: show review:",
             "validation": {
@@ -2017,6 +2165,34 @@
     {
       "id": "expense_tracker",
       "title": "Expense tracker",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "add_expense",
+          "label": "Add expense",
+          "code": "expenses = []\nexpenses.append({\"amount\": 12.5, \"category\": \"food\"})\nprint(expenses)"
+        },
+        {
+          "id": "sum_amounts",
+          "label": "Sum amounts",
+          "code": "expenses = [{\"amount\": 10}, {\"amount\": 5}]\nprint(sum(e[\"amount\"] for e in expenses))"
+        },
+        {
+          "id": "filter_category",
+          "label": "Filter category",
+          "code": "expenses = [{\"category\": \"food\", \"amount\": 1}, {\"category\": \"bus\", \"amount\": 2}]\nprint([e for e in expenses if e[\"category\"] == \"food\"])"
+        },
+        {
+          "id": "strftime_date",
+          "label": "strftime date",
+          "code": "from datetime import datetime\nprint(datetime.now().strftime(\"%Y-%m-%d\"))"
+        },
+        {
+          "id": "group_totals",
+          "label": "Group totals",
+          "code": "totals = {}\nfor e in [{\"category\": \"food\", \"amount\": 10}, {\"category\": \"food\", \"amount\": 5}]:\n    totals[e[\"category\"]] = totals.get(e[\"category\"], 0) + e[\"amount\"]\nprint(totals)"
+        }
+      ],
       "intro": {
         "title": "Expense tracker",
         "bodyMarkdown": "Record expenses: amount, category, date, note. List by month; sum by category.\n\nUse datetime for dates; store list, persist JSON.\n\nReport: total, average, top category.",
@@ -2024,7 +2200,7 @@
       },
       "challenges": [
         {
-          "id": "ch_3awh19d",
+          "id": "expense_tracker_ch1",
           "title": "Easy: append expense",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2041,7 +2217,7 @@
           }
         },
         {
-          "id": "ch_4by5o7k",
+          "id": "expense_tracker_ch2",
           "title": "Easy: sum amounts",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2058,7 +2234,7 @@
           }
         },
         {
-          "id": "ch_s5qejy7",
+          "id": "expense_tracker_ch3",
           "title": "Medium: strftime date",
           "promptMarkdown": "",
           "starterCode": "from datetime import datetime\nd=datetime(2024,6,1).strftime(\"%Y-%m-%d\")",
@@ -2075,7 +2251,7 @@
           }
         },
         {
-          "id": "ch_gf9ulw7",
+          "id": "expense_tracker_ch4",
           "title": "Medium: filter category",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2092,7 +2268,7 @@
           }
         },
         {
-          "id": "ch_ruaodoe",
+          "id": "expense_tracker_ch5",
           "title": "Hard: group sum",
           "promptMarkdown": "",
           "starterCode": "for e in expenses:\n    totals[e[\"category\"]]=totals.get(e[\"category\"],0)+e[\"amount\"]",
@@ -2109,7 +2285,7 @@
           }
         },
         {
-          "id": "ch_cecp10v",
+          "id": "expense_tracker_ch6",
           "title": "Hard: month filter",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2126,7 +2302,7 @@
           }
         },
         {
-          "id": "ch_bhb7pip",
+          "id": "expense_tracker_ch7",
           "title": "Expert: average",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2143,7 +2319,7 @@
           }
         },
         {
-          "id": "ch_lquff70",
+          "id": "expense_tracker_ch8",
           "title": "Expert: top category",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2160,7 +2336,7 @@
           }
         },
         {
-          "id": "ch_n6qk8wn",
+          "id": "expense_tracker_ch9",
           "title": "Expert: budget alert",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2177,7 +2353,7 @@
           }
         },
         {
-          "id": "ch_dmq16ek",
+          "id": "expense_tracker_ch10",
           "title": "Expert: export report",
           "promptMarkdown": "",
           "starterCode": "print(\"Report:\", 12.5)",
@@ -2197,7 +2373,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_rns6kbr",
+            "id": "expense_tracker_q1",
             "type": "mcq",
             "prompt": "sum with generator sums:",
             "choices": [
@@ -2217,7 +2393,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xj6o195",
+            "id": "expense_tracker_q2",
             "type": "shortText",
             "prompt": "strftime formats:",
             "validation": {
@@ -2226,7 +2402,7 @@
             }
           },
           {
-            "id": "q_frpci09",
+            "id": "expense_tracker_q3",
             "type": "mcq",
             "prompt": "Filter keeps matching:",
             "choices": [
@@ -2246,7 +2422,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_uw5obrw",
+            "id": "expense_tracker_q4",
             "type": "mcq",
             "prompt": "JSON persist for:",
             "choices": [
@@ -2266,7 +2442,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_a3zg14k",
+            "id": "expense_tracker_q5",
             "type": "shortText",
             "prompt": "Average is total /:",
             "validation": {
@@ -2275,7 +2451,7 @@
             }
           },
           {
-            "id": "q_vne8s99",
+            "id": "expense_tracker_q6",
             "type": "mcq",
             "prompt": "Expert: groupby category needs:",
             "choices": [
@@ -2295,7 +2471,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_t2bdb75",
+            "id": "expense_tracker_q7",
             "type": "mcq",
             "prompt": "Expert: budget alert when:",
             "choices": [
@@ -2315,7 +2491,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_bg53xsh",
+            "id": "expense_tracker_q8",
             "type": "shortText",
             "prompt": "Expert: ISO date helps:",
             "validation": {
@@ -2324,7 +2500,7 @@
             }
           },
           {
-            "id": "q_q4prwfp",
+            "id": "expense_tracker_q9",
             "type": "mcq",
             "prompt": "Expert: note field:",
             "choices": [
@@ -2344,7 +2520,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_29ec6cp",
+            "id": "expense_tracker_q10",
             "type": "shortText",
             "prompt": "Expert: monthly report filters:",
             "validation": {
@@ -2358,6 +2534,34 @@
     {
       "id": "web_scraper_basics",
       "title": "Web scraper basics",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "split_parse",
+          "label": "Split parse",
+          "code": "html = '<a href=\"/page\">Link</a>'\nparts = html.split(\"<a href=\")\nprint(len(parts))"
+        },
+        {
+          "id": "extract_href",
+          "label": "Extract href",
+          "code": "part = '\"/page\">Link'\nurl = part.split(\">\")[0].strip('\"')\nprint(url)"
+        },
+        {
+          "id": "build_links",
+          "label": "Build links",
+          "code": "links = []\nlinks.append(\"/page\")\nprint(links)"
+        },
+        {
+          "id": "urlopen",
+          "label": "urlopen",
+          "code": "from urllib.request import urlopen\nprint(\"fetch ready\")"
+        },
+        {
+          "id": "sleep_rate_limit",
+          "label": "sleep rate limit",
+          "code": "import time\ntime.sleep(0)\nprint(\"rate limit\")"
+        }
+      ],
       "intro": {
         "title": "Web scraper basics",
         "bodyMarkdown": "Fetch HTML with urllib or requests; parse with string methods or html.parser/beautifulsoup conceptually.\n\nRespect robots.txt and rate limits; never scrape private data without permission.\n\nExtract titles, links, or tables into structured list.",
@@ -2365,7 +2569,7 @@
       },
       "challenges": [
         {
-          "id": "ch_4lznqn9",
+          "id": "web_scraper_basics_ch1",
           "title": "Easy: html string",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2382,7 +2586,7 @@
           }
         },
         {
-          "id": "ch_t8hy9lh",
+          "id": "web_scraper_basics_ch2",
           "title": "Easy: split parse",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2399,7 +2603,7 @@
           }
         },
         {
-          "id": "ch_k1m3h9n",
+          "id": "web_scraper_basics_ch3",
           "title": "Medium: extract href",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2416,7 +2620,7 @@
           }
         },
         {
-          "id": "ch_43bj0in",
+          "id": "web_scraper_basics_ch4",
           "title": "Medium: strip quotes",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2433,7 +2637,7 @@
           }
         },
         {
-          "id": "ch_eyguotc",
+          "id": "web_scraper_basics_ch5",
           "title": "Hard: loop parts",
           "promptMarkdown": "",
           "starterCode": "for part in parts:\n    n+=1",
@@ -2450,7 +2654,7 @@
           }
         },
         {
-          "id": "ch_x9yv85g",
+          "id": "web_scraper_basics_ch6",
           "title": "Hard: build list",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2467,7 +2671,7 @@
           }
         },
         {
-          "id": "ch_i2qm0bo",
+          "id": "web_scraper_basics_ch7",
           "title": "Expert: urllib fetch",
           "promptMarkdown": "",
           "starterCode": "from urllib.request import urlopen",
@@ -2479,7 +2683,7 @@
           }
         },
         {
-          "id": "ch_eqnmvnz",
+          "id": "web_scraper_basics_ch8",
           "title": "Expert: rate limit sleep",
           "promptMarkdown": "",
           "starterCode": "import time\ntime.sleep(0)",
@@ -2491,7 +2695,7 @@
           }
         },
         {
-          "id": "ch_v4yu6wr",
+          "id": "web_scraper_basics_ch9",
           "title": "Expert: handle relative urls",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2508,7 +2712,7 @@
           }
         },
         {
-          "id": "ch_wq7d35o",
+          "id": "web_scraper_basics_ch10",
           "title": "Expert: csv export links",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2529,7 +2733,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_gxlxcdb",
+            "id": "web_scraper_basics_q1",
             "type": "mcq",
             "prompt": "Scrape means:",
             "choices": [
@@ -2549,7 +2753,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_g03sa9j",
+            "id": "web_scraper_basics_q2",
             "type": "shortText",
             "prompt": "Respect:",
             "validation": {
@@ -2558,7 +2762,7 @@
             }
           },
           {
-            "id": "q_brrj3kp",
+            "id": "web_scraper_basics_q3",
             "type": "mcq",
             "prompt": "Rate limit prevents:",
             "choices": [
@@ -2578,7 +2782,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_sg0gt64",
+            "id": "web_scraper_basics_q4",
             "type": "mcq",
             "prompt": "split useful for:",
             "choices": [
@@ -2598,7 +2802,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_2tcpgm0",
+            "id": "web_scraper_basics_q5",
             "type": "shortText",
             "prompt": "strip removes:",
             "validation": {
@@ -2607,7 +2811,7 @@
             }
           },
           {
-            "id": "q_0090xug",
+            "id": "web_scraper_basics_q6",
             "type": "mcq",
             "prompt": "Expert: BeautifulSoup for:",
             "choices": [
@@ -2627,7 +2831,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_lqtnzjy",
+            "id": "web_scraper_basics_q7",
             "type": "mcq",
             "prompt": "Expert: legal ethical:",
             "choices": [
@@ -2647,7 +2851,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_x4rx02u",
+            "id": "web_scraper_basics_q8",
             "type": "shortText",
             "prompt": "Expert: sleep between:",
             "validation": {
@@ -2656,7 +2860,7 @@
             }
           },
           {
-            "id": "q_kpb20h1",
+            "id": "web_scraper_basics_q9",
             "type": "mcq",
             "prompt": "Expert: store extracted:",
             "choices": [
@@ -2676,7 +2880,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_rwd2964",
+            "id": "web_scraper_basics_q10",
             "type": "shortText",
             "prompt": "Expert: handle errors:",
             "validation": {
@@ -2690,6 +2894,34 @@
     {
       "id": "weather_cli",
       "title": "Weather CLI (mock API)",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "mock_api",
+          "label": "Mock API",
+          "code": "API_SAMPLE = {\"city\": \"London\", \"temp_c\": 18, \"conditions\": \"Cloudy\"}\nprint(API_SAMPLE)"
+        },
+        {
+          "id": "format_report",
+          "label": "Format report",
+          "code": "data = {\"city\": \"London\", \"temp_c\": 18, \"conditions\": \"Cloudy\", \"humidity\": 72}\nprint(f\"{data['city']}: {data['temp_c']}C, {data['conditions']}\")"
+        },
+        {
+          "id": "get_nested",
+          "label": "get nested",
+          "code": "data = {}\nprint(data.get(\"wind\", \"Unknown\"))"
+        },
+        {
+          "id": "json_cache",
+          "label": "json cache",
+          "code": "import json\ndata = {\"city\": \"London\", \"temp_c\": 18}\nprint(json.dumps(data))"
+        },
+        {
+          "id": "argparse",
+          "label": "argparse",
+          "code": "import argparse\np = argparse.ArgumentParser()\np.add_argument(\"--city\", default=\"Paris\")\nprint(p.parse_args([]).city)"
+        }
+      ],
       "intro": {
         "title": "Weather CLI (mock API)",
         "bodyMarkdown": "Model API response as JSON dict; function displays temp, conditions, humidity.\n\nUse requests or mock data for offline demo. Parse nested keys safely with .get.\n\nCache last result to file; argparse for city flag.",
@@ -2697,7 +2929,7 @@
       },
       "challenges": [
         {
-          "id": "ch_jel1423",
+          "id": "weather_cli_ch1",
           "title": "Easy: mock dict",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2714,7 +2946,7 @@
           }
         },
         {
-          "id": "ch_qcij28h",
+          "id": "weather_cli_ch2",
           "title": "Easy: f-string report",
           "promptMarkdown": "",
           "starterCode": "city=\"A\"\nprint(f\"{city}: 20C\")",
@@ -2726,7 +2958,7 @@
           }
         },
         {
-          "id": "ch_k83p8ik",
+          "id": "weather_cli_ch3",
           "title": "Medium: get nested",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2743,7 +2975,7 @@
           }
         },
         {
-          "id": "ch_xgp7wxp",
+          "id": "weather_cli_ch4",
           "title": "Medium: json load cache",
           "promptMarkdown": "",
           "starterCode": "import json\njson.loads('{}')",
@@ -2760,7 +2992,7 @@
           }
         },
         {
-          "id": "ch_ytj2u56",
+          "id": "weather_cli_ch5",
           "title": "Hard: argparse city",
           "promptMarkdown": "",
           "starterCode": "import argparse\np=argparse.ArgumentParser()\np.add_argument(\"--city\", default=\"Paris\")\nargs=p.parse_args([])\ncity=args.city",
@@ -2777,7 +3009,7 @@
           }
         },
         {
-          "id": "ch_8vv1s4f",
+          "id": "weather_cli_ch6",
           "title": "Hard: missing key safe",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2794,7 +3026,7 @@
           }
         },
         {
-          "id": "ch_bz13dep",
+          "id": "weather_cli_ch7",
           "title": "Expert: validate response",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2811,7 +3043,7 @@
           }
         },
         {
-          "id": "ch_byb6g2e",
+          "id": "weather_cli_ch8",
           "title": "Expert: unit convert F",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2828,7 +3060,7 @@
           }
         },
         {
-          "id": "ch_geqfduc",
+          "id": "weather_cli_ch9",
           "title": "Expert: retry fetch",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2845,7 +3077,7 @@
           }
         },
         {
-          "id": "ch_ijy331u",
+          "id": "weather_cli_ch10",
           "title": "Expert: compare cities",
           "promptMarkdown": "",
           "starterCode": "",
@@ -2866,7 +3098,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_optpcnx",
+            "id": "weather_cli_q1",
             "type": "mcq",
             "prompt": "Mock API useful for:",
             "choices": [
@@ -2886,7 +3118,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_xgb34ev",
+            "id": "weather_cli_q2",
             "type": "shortText",
             "prompt": "get default avoids:",
             "validation": {
@@ -2895,7 +3127,7 @@
             }
           },
           {
-            "id": "q_day3b9h",
+            "id": "weather_cli_q3",
             "type": "mcq",
             "prompt": "argparse handles:",
             "choices": [
@@ -2915,7 +3147,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_4n0t21f",
+            "id": "weather_cli_q4",
             "type": "mcq",
             "prompt": "Cache file stores:",
             "choices": [
@@ -2935,7 +3167,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_tv2o76k",
+            "id": "weather_cli_q5",
             "type": "shortText",
             "prompt": "format_report returns:",
             "validation": {
@@ -2944,7 +3176,7 @@
             }
           },
           {
-            "id": "q_zz00jpy",
+            "id": "weather_cli_q6",
             "type": "mcq",
             "prompt": "Expert: validate schema:",
             "choices": [
@@ -2964,7 +3196,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_7oa49qn",
+            "id": "weather_cli_q7",
             "type": "mcq",
             "prompt": "Expert: real API needs:",
             "choices": [
@@ -2984,7 +3216,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_cux6kvr",
+            "id": "weather_cli_q8",
             "type": "shortText",
             "prompt": "Expert: humidity is:",
             "validation": {
@@ -2993,7 +3225,7 @@
             }
           },
           {
-            "id": "q_ie7td9g",
+            "id": "weather_cli_q9",
             "type": "mcq",
             "prompt": "Expert: nested .get chain:",
             "choices": [
@@ -3013,7 +3245,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_fx1m61a",
+            "id": "weather_cli_q10",
             "type": "shortText",
             "prompt": "Expert: display both C and:",
             "validation": {
@@ -3027,6 +3259,34 @@
     {
       "id": "capstone_planning",
       "title": "Capstone planning",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "score_fn",
+          "label": "Score fn",
+          "code": "def project_score(features_done, tests_done):\n    return features_done * 10 + tests_done * 15\nprint(project_score(4, 2))"
+        },
+        {
+          "id": "main_guard",
+          "label": "main guard",
+          "code": "def main():\n    print(\"Capstone ready\")\n\nif __name__ == \"__main__\":\n    main()"
+        },
+        {
+          "id": "module_list",
+          "label": "Module list",
+          "code": "modules = [\"models\", \"cli\", \"utils\"]\nprint(\"cli\" in modules)"
+        },
+        {
+          "id": "try_except_plan",
+          "label": "try/except plan",
+          "code": "try:\n    int(\"42\")\nexcept ValueError:\n    print(\"handle bad input\")"
+        },
+        {
+          "id": "readme_sections",
+          "label": "README sections",
+          "code": "sections = [\"Install\", \"Usage\", \"License\"]\nprint(len(sections))"
+        }
+      ],
       "intro": {
         "title": "Capstone planning",
         "bodyMarkdown": "Combine skills: structure folders, entry script, modules, tests, README.\n\nPlan features, data model, CLI/API boundary, error handling, and persistence first.\n\nIterate: MVP → polish → extras. Version control and small commits help.",
@@ -3034,7 +3294,7 @@
       },
       "challenges": [
         {
-          "id": "ch_qewstvx",
+          "id": "capstone_planning_ch1",
           "title": "Easy: module docstring",
           "promptMarkdown": "",
           "starterCode": "\"\"\"My capstone project.\"\"\"",
@@ -3046,7 +3306,7 @@
           }
         },
         {
-          "id": "ch_62t47ra",
+          "id": "capstone_planning_ch2",
           "title": "Easy: score function",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3063,7 +3323,7 @@
           }
         },
         {
-          "id": "ch_lhkyrup",
+          "id": "capstone_planning_ch3",
           "title": "Medium: if __name__",
           "promptMarkdown": "",
           "starterCode": "if __name__==\"__main__\":\n    pass",
@@ -3080,7 +3340,7 @@
           }
         },
         {
-          "id": "ch_c08269m",
+          "id": "capstone_planning_ch4",
           "title": "Medium: split modules",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3097,7 +3357,7 @@
           }
         },
         {
-          "id": "ch_up5tn1f",
+          "id": "capstone_planning_ch5",
           "title": "Hard: README outline",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3114,7 +3374,7 @@
           }
         },
         {
-          "id": "ch_fa928w9",
+          "id": "capstone_planning_ch6",
           "title": "Hard: test key function",
           "promptMarkdown": "",
           "starterCode": "def add(a,b):\n    return a+b\nresult=add(1,2)",
@@ -3131,7 +3391,7 @@
           }
         },
         {
-          "id": "ch_1qmtp6v",
+          "id": "capstone_planning_ch7",
           "title": "Expert: mvp scope",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3148,7 +3408,7 @@
           }
         },
         {
-          "id": "ch_4x67896",
+          "id": "capstone_planning_ch8",
           "title": "Expert: error handling plan",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3161,7 +3421,7 @@
           }
         },
         {
-          "id": "ch_tm3aj71",
+          "id": "capstone_planning_ch9",
           "title": "Expert: refactor pass",
           "promptMarkdown": "",
           "starterCode": "",
@@ -3178,7 +3438,7 @@
           }
         },
         {
-          "id": "ch_35bx1eg",
+          "id": "capstone_planning_ch10",
           "title": "Expert: demo script",
           "promptMarkdown": "",
           "starterCode": "print(\"Capstone ready\")",
@@ -3198,7 +3458,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "q_z4k2or6",
+            "id": "capstone_planning_q1",
             "type": "mcq",
             "prompt": "MVP means:",
             "choices": [
@@ -3218,7 +3478,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_f9658ov",
+            "id": "capstone_planning_q2",
             "type": "shortText",
             "prompt": "Split code into:",
             "validation": {
@@ -3227,7 +3487,7 @@
             }
           },
           {
-            "id": "q_ph05fpq",
+            "id": "capstone_planning_q3",
             "type": "mcq",
             "prompt": "README documents:",
             "choices": [
@@ -3247,7 +3507,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_87v4g8l",
+            "id": "capstone_planning_q4",
             "type": "mcq",
             "prompt": "Tests protect against:",
             "choices": [
@@ -3267,7 +3527,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_ljy1n0b",
+            "id": "capstone_planning_q5",
             "type": "shortText",
             "prompt": "Persistence choice:",
             "validation": {
@@ -3276,7 +3536,7 @@
             }
           },
           {
-            "id": "q_diywki8",
+            "id": "capstone_planning_q6",
             "type": "mcq",
             "prompt": "Expert: iterate MVP then:",
             "choices": [
@@ -3296,7 +3556,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_wh9p6fw",
+            "id": "capstone_planning_q7",
             "type": "mcq",
             "prompt": "Expert: small commits:",
             "choices": [
@@ -3316,7 +3576,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_zkz7je5",
+            "id": "capstone_planning_q8",
             "type": "shortText",
             "prompt": "Expert: data model first:",
             "validation": {
@@ -3325,7 +3585,7 @@
             }
           },
           {
-            "id": "q_whzcskj",
+            "id": "capstone_planning_q9",
             "type": "mcq",
             "prompt": "Expert: assert in tests not:",
             "choices": [
@@ -3345,7 +3605,7 @@
             "correctChoiceId": "a"
           },
           {
-            "id": "q_5kolsjo",
+            "id": "capstone_planning_q10",
             "type": "shortText",
             "prompt": "Expert: capstone combines:",
             "validation": {

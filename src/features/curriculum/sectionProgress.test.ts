@@ -91,4 +91,16 @@ describe('section project gates', () => {
     expect(areRequiredSectionProjectsComplete('python', sectionA.file.levels)).toBe(true)
     expect(isSectionUnlocked('python', sections, 1)).toBe(true)
   })
+
+  it('without projects, the next section unlocks once every quiz is passed', () => {
+    const quizA = { ...topic, id: 'quizA' }
+    const quizB = { ...topic, id: 'quizB' }
+    const sections = [{ file: { levels: [quizA, quizB] } }, { file: { levels: [topic] } }]
+
+    expect(isSectionUnlocked('python', sections, 1)).toBe(false)
+    saveProgress('python', 'quizA', { challengesCompleted: [], testPassed: true })
+    expect(isSectionUnlocked('python', sections, 1)).toBe(false)
+    saveProgress('python', 'quizB', { challengesCompleted: [], testPassed: true })
+    expect(isSectionUnlocked('python', sections, 1)).toBe(true)
+  })
 })

@@ -1,5 +1,5 @@
 import type { LanguageBundle } from '../types'
-import { computeLevelXp } from '../helpers'
+import { computeLevelXp, sectionUnlockHint } from '../helpers'
 import { loadProgress } from '../progressStorage'
 import { AddItemButton, EditableText } from '../../editor'
 import { CatalogListItem } from '../components/CatalogListItem'
@@ -52,8 +52,11 @@ export function LearnSections({
               ? levels.reduce((sum, lvl) => sum + computeLevelXp(languageId, lvl), 0)
               : 0
           const locked = !isEditMode && !isSectionUnlocked(secIndex)
+          const previousRef = bundle.index.sections[secIndex - 1]
+          const previousLevels =
+            bundle.sections.find((s) => s.sectionRef.id === previousRef?.id)?.file.levels ?? []
           const statusMeta = locked
-            ? 'Locked · complete easy and medium projects in the previous section'
+            ? sectionUnlockHint(previousLevels)
             : `${completedCount}/${levels.length} levels complete · ${sectionXp} XP`
 
           return (

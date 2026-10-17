@@ -20,6 +20,9 @@ export const SimpleMarkdown: FC<{ text: string; className?: string }> = ({ text,
   )
 }
 
+/** One line of inline markdown (`code`, **bold**) without paragraph wrappers, e.g. for labels. */
+export const InlineMarkdown: FC<{ text: string }> = ({ text }) => <>{renderInline(text)}</>
+
 function splitFences(text: string): { type: 'text' | 'code'; content: string }[] {
   const parts: { type: 'text' | 'code'; content: string }[] = []
   const re = /```(?:\w*\n)?([\s\S]*?)```/g

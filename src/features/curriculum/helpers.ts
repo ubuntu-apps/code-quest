@@ -3,7 +3,7 @@ import type { Level } from './types'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER, STREAK_STORAGE_KEY, TEST_XP } from './constants'
 import { loadProgress } from './progressStorage'
 
-type StreakState = { lastDate: string; count: number }
+export type StreakState = { lastDate: string; count: number }
 
 /** Calendar day in the learner's own time zone (toISOString() would use UTC). */
 export function localDateKey(d: Date): string {
@@ -44,14 +44,30 @@ export function recordDailyActivity(now: Date = new Date()): number {
   return next.count
 }
 
+/**
+ * The streak to show today: the stored count while it is still alive (activity
+ * today or yesterday), otherwise 0. The stored count only resets on the next activity.
+ */
+export function currentStreak(state: StreakState, now: Date = new Date()): number {
+  const today = localDateKey(now)
+  const yesterday = localDateKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1))
+  return state.lastDate === today || state.lastDate === yesterday ? state.count : 0
+}
+
+/**
+ * IDs of this level's challenges that are marked complete. Saved progress can hold
+ * IDs of challenges that no longer exist (after content changes); those don't count.
+ */
+export function completedChallengeIds(level: Level, completed: string[]): string[] {
+  return level.challenges.map((c) => c.id).filter((id) => completed.includes(id))
+}
+
 export function computeLevelXp(languageId: string, level: Level): number {
   const p = loadProgress(languageId, level.id)
-  const solvedAfterAnswer = (p.answersViewed ?? []).filter((id) => p.challengesCompleted.includes(id)).length
-  const challengeXp = Math.max(
-    0,
-    Math.min(p.challengesCompleted.length, level.challenges.length) * CHALLENGE_XP -
-      solvedAfterAnswer * (CHALLENGE_XP - CHALLENGE_XP_AFTER_ANSWER),
-  )
+  const done = completedChallengeIds(level, p.challengesCompleted)
+  const solvedAfterAnswer = done.filter((id) => (p.answersViewed ?? []).includes(id)).length
+  const challengeXp =
+    done.length * CHALLENGE_XP - solvedAfterAnswer * (CHALLENGE_XP - CHALLENGE_XP_AFTER_ANSWER)
   const testXp = p.testPassed ? TEST_XP : 0
   return challengeXp + testXp
 }
@@ -68,7 +84,7 @@ export function isLevelComplete(languageId: string, level: Level): boolean {
 
 export function isLevelStarted(languageId: string, level: Level): boolean {
   const p = loadProgress(languageId, level.id)
-  return p.challengesCompleted.length > 0 || p.testPassed
+  return completedChallengeIds(level, p.challengesCompleted).length > 0 || p.testPassed
 }
 
 export function getSectionProgressStatus(
@@ -101,6 +117,17 @@ export function areRequiredSectionProjectsComplete(languageId: string, levels: L
   return required.every((level) => isLevelComplete(languageId, level))
 }
 
+/** True if the section has easy or medium project levels (they gate the next section). */
+export function hasRequiredProjects(levels: Level[]): boolean {
+  return getProjectLevels(levels).some(
+    (level) => level.projectDifficulty === 'easy' || level.projectDifficulty === 'medium',
+  )
+}
+
+/**
+ * A section unlocks when the previous one is finished: its easy and medium projects
+ * if it has any, otherwise the quiz of every topic in it.
+ */
 export function isSectionUnlocked(
   languageId: string,
   sections: { file: { levels: Level[] } }[],
@@ -109,7 +136,16 @@ export function isSectionUnlocked(
   if (sectionIndex <= 0) return true
   const previous = sections[sectionIndex - 1]
   if (!previous) return true
-  return areRequiredSectionProjectsComplete(languageId, previous.file.levels)
+  const levels = previous.file.levels
+  if (hasRequiredProjects(levels)) return areRequiredSectionProjectsComplete(languageId, levels)
+  return levels.every((level) => loadProgress(languageId, level.id).testPassed)
+}
+
+/** Explains what unlocks the section after `previousLevels`. */
+export function sectionUnlockHint(previousLevels: Level[]): string {
+  return hasRequiredProjects(previousLevels)
+    ? 'Locked · complete the easy and medium projects in the previous section'
+    : 'Locked · pass every topic quiz in the previous section'
 }
 
 export function pythonErrorLinePointer(

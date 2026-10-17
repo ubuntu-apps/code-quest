@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { STREAK_STORAGE_KEY } from './constants'
-import { loadStreakState, localDateKey, recordDailyActivity } from './helpers'
+import { currentStreak, loadStreakState, localDateKey, recordDailyActivity } from './helpers'
 
 describe('localDateKey', () => {
   it('uses the local calendar day, not the UTC one', () => {
@@ -36,5 +36,20 @@ describe('recordDailyActivity', () => {
     // In the US, clocks fall back on 2026-11-01 (a 25-hour day).
     expect(recordDailyActivity(new Date(2026, 10, 1, 0, 30))).toBe(1)
     expect(recordDailyActivity(new Date(2026, 10, 2, 23, 30))).toBe(2)
+  })
+})
+
+describe('currentStreak', () => {
+  it('shows the streak while it is alive', () => {
+    expect(currentStreak({ lastDate: '2026-10-16', count: 5 }, new Date(2026, 9, 16, 20))).toBe(5)
+    expect(currentStreak({ lastDate: '2026-10-15', count: 5 }, new Date(2026, 9, 16, 8))).toBe(5)
+  })
+
+  it('shows 0 once a day has been missed', () => {
+    expect(currentStreak({ lastDate: '2026-10-13', count: 5 }, new Date(2026, 9, 16))).toBe(0)
+  })
+
+  it('shows 0 with no activity yet', () => {
+    expect(currentStreak({ lastDate: '', count: 0 }, new Date(2026, 9, 16))).toBe(0)
   })
 })
