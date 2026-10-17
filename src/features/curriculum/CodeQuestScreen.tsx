@@ -12,6 +12,7 @@ import { BottomNav, type BottomNavItem } from '../../components/BottomNav/Bottom
 import { shareApp, type ShareVariant } from '../../lib/shareApp'
 import { ShareSheet } from '../../components/ShareSheet'
 import { detectPlatform, installInstructions } from '../../platform'
+import { APP_VERSION } from '../../version'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
   EditorHeaderButton,
@@ -728,7 +729,9 @@ export function CodeQuestScreen() {
         ) : (
           <span className="cq-header-spacer" aria-hidden />
         )}
-        <div className="cq-brand">CodeQuest</div>
+        <div className="cq-brand">
+          CodeQuest <span className="cq-brand-version">(v. {APP_VERSION})</span>
+        </div>
         <EditorHeaderButton />
       </header>
 
