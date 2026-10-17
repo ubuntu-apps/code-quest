@@ -5,17 +5,11 @@ import {
   learnLevelPath,
   learnSectionPath,
   parseAppPath,
-  progressPath,
   tabPath,
 } from './learnPaths'
 
 describe('learnPaths', () => {
   it('parses tab routes', () => {
-    expect(parseAppPath('/progress').tab).toBe('progress')
-    expect(parseAppPath('/progress/python')).toMatchObject({
-      tab: 'progress',
-      langId: 'python',
-    })
     expect(parseAppPath('/about').tab).toBe('about')
     expect(parseAppPath('/learn').tab).toBe('learn')
     expect(parseAppPath('/').tab).toBe('learn')
@@ -37,6 +31,15 @@ describe('learnPaths', () => {
     })
   })
 
+  it('sends old Progress links to Learn', () => {
+    expect(parseAppPath('/progress')).toMatchObject({ tab: 'learn', langId: null })
+    expect(parseAppPath('/progress/python')).toMatchObject({
+      tab: 'learn',
+      langId: 'python',
+      sectionId: null,
+    })
+  })
+
   it('builds stable paths', () => {
     expect(learnHomePath()).toBe('/learn')
     expect(learnLanguagePath('python')).toBe('/learn/python')
@@ -44,10 +47,7 @@ describe('learnPaths', () => {
     expect(learnLevelPath('python', 'fundamentals', 'l1', 'test')).toBe(
       '/learn/python/fundamentals/l1/test',
     )
-    expect(progressPath()).toBe('/progress')
-    expect(progressPath('python')).toBe('/progress/python')
-    expect(tabPath('progress')).toBe('/progress')
-    expect(tabPath('progress', 'python')).toBe('/progress/python')
+    expect(tabPath('about')).toBe('/about')
     expect(tabPath('learn', 'python')).toBe('/learn/python')
   })
 })

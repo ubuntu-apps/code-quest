@@ -1,4 +1,4 @@
-export type TabId = 'learn' | 'progress' | 'about'
+export type TabId = 'learn' | 'about'
 export type LearnView = 'languages' | 'sections' | 'levels' | 'level'
 export type LevelStep = 'intro' | 'challenges' | 'test'
 

@@ -11,10 +11,15 @@
   --cq-font: system-ui, 'Segoe UI', Roboto, sans-serif;
   --cq-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
   --cq-code-size: 0.88rem;
+  /* Small print (labels, hints, test results) and slightly-small text. */
+  --cq-text-xs: 0.8rem;
+  --cq-text-sm: 0.85rem;
 
   color-scheme: dark;
   font-family: var(--cq-font);
-  font-size: 16px;
+  /* A percentage, not px, so the phone's own text-size setting can scale it
+     (see the text-scale meta tag in index.html). */
+  font-size: 100%;
   line-height: 1.45;
   color: var(--cq-text);
   background: var(--cq-bg);
@@ -37,13 +42,16 @@ body {
   min-height: 100svh;
 }
 
-/* Phones: larger base text (everything is sized in rem, so it all scales). Code
-   fields stay at 16px or more: iOS zooms into a field with smaller text when it
-   is tapped, and the page then stays zoomed in. */
+/* Phones: larger base text (18px by default; everything is sized in rem, so it
+   all scales), and small print no smaller than about 16px. Code fields stay at
+   16px or more: iOS zooms into a field with smaller text when it is tapped, and
+   the page then stays zoomed in. */
 @media (max-width: 640px) {
   :root {
-    font-size: 17px;
-    --cq-code-size: 16px;
+    font-size: 112.5%;
+    --cq-code-size: max(16px, 0.9rem);
+    --cq-text-xs: 0.875rem;
+    --cq-text-sm: 0.92rem;
   }
 }
 

@@ -1,7 +1,7 @@
 import '../../App.css'
 
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BookOpen, ChevronLeft, Info, ListTodo, Share2 } from 'lucide-react'
+import { BookOpen, ChevronLeft, Info, Share2 } from 'lucide-react'
 import type { LanguageBundle, Level, LoadedSection, RootIndex } from './types'
 import { useAdminMode } from './adminMode'
 import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from './loadCurriculum'
@@ -9,6 +9,7 @@ import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { preloadWebR } from './rSandbox'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
+import { Breadcrumbs, type Crumb } from './components/Breadcrumbs'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { shareApp, type ShareVariant } from '../../lib/shareApp'
 import { ShareSheet } from '../../components/ShareSheet'
@@ -27,7 +28,7 @@ import {
 import { mergeAboutContent } from '../editor/aboutContent'
 import { LAST_LEVEL_STORAGE_KEY, type TabId } from './constants'
 import { useLearnRoute } from './hooks/useLearnRoute'
-import { progressPath } from './learnPaths'
+import { learnHomePath, learnLanguagePath, learnSectionPath } from './learnPaths'
 import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageStorage'
 import {
   computeLevelXp,
@@ -46,7 +47,6 @@ import { LearnHome, type ContinueTarget } from './views/LearnHome'
 import { LearnSections } from './views/LearnSections'
 import { LearnLevels } from './views/LearnLevels'
 import { LearnLevel } from './views/LearnLevel'
-import { ProgressTab } from './views/ProgressTab'
 import { AboutTab } from './views/AboutTab'
 
 /** Editing toolbar, downloaded only when someone switches to edit mode. */
@@ -116,7 +116,6 @@ export function CodeQuestScreen() {
     sectionId,
     levelId,
     levelStep,
-    navigate,
     goToTab,
     goToLanguage,
     goToSection,
@@ -155,7 +154,7 @@ export function CodeQuestScreen() {
     return () => window.clearTimeout(timer)
   }, [shareNotice])
 
-  const { bundles: languageBundles, loading: bundlesLoading, error: bundlesError } = useLanguageBundles(
+  const { bundles: languageBundles } = useLanguageBundles(
     rootIndex,
     baseUrl,
     syncBundle,
@@ -175,12 +174,6 @@ export function CodeQuestScreen() {
   useEffect(() => {
     if (languageId) saveSelectedLanguage(languageId)
   }, [languageId])
-
-  useEffect(() => {
-    if (tab === 'progress' && activeLanguageId && !languageId) {
-      navigate(progressPath(activeLanguageId), { replace: true })
-    }
-  }, [tab, activeLanguageId, languageId, navigate])
 
   useEffect(() => {
     if (!languageId || !rootIndex) return
@@ -725,6 +718,19 @@ export function CodeQuestScreen() {
   }
 
   const showBack = tab === 'learn' && learnView !== 'languages'
+
+  const breadcrumbs: Crumb[] = []
+  if (tab === 'learn' && learnView !== 'languages' && languageId && bundleForView) {
+    breadcrumbs.push({ label: 'Home', to: learnHomePath() })
+    breadcrumbs.push({ label: bundleForView.index.title, to: learnLanguagePath(languageId) })
+    if (learnView !== 'sections' && selectedSection) {
+      breadcrumbs.push({
+        label: selectedSection.sectionRef.title,
+        to: learnSectionPath(languageId, selectedSection.sectionRef.id),
+      })
+      if (learnView === 'level' && selectedLevel) breadcrumbs.push({ label: selectedLevel.title })
+    }
+  }
   const shellClassName =
     (platform === 'android'
       ? 'cq-shell cq-shell--android'
@@ -734,7 +740,6 @@ export function CodeQuestScreen() {
 
   const navItems: BottomNavItem[] = [
     { id: 'learn', label: 'Learn', icon: BookOpen },
-    { id: 'progress', label: 'Progress', icon: ListTodo },
     { id: 'about', label: 'About', icon: Info },
     { id: 'share', label: 'Share', icon: Share2, onAction: () => setShareSheetOpen(true) },
   ]
@@ -763,24 +768,12 @@ export function CodeQuestScreen() {
       ) : null}
 
       <main className="cq-main">
-        {tab === 'learn' && renderLearn()}
-        {tab === 'progress' &&
-          (bundlesLoading ? (
-            <div className="cq-panel cq-muted">Loading progress…</div>
-          ) : bundlesError ? (
-            <LoadErrorPanel message={bundlesError} />
-          ) : !displayRootIndex ? (
-            <div className="cq-panel cq-muted">Open the Learn tab once to load catalog.</div>
-          ) : (
-            <ProgressTab
-              displayRootIndex={displayRootIndex}
-              bundles={languageBundles}
-              resolveBundle={resolveBundle}
-              languageId={activeLanguageId}
-              onUpdateSectionTitle={updateSectionTitle}
-              onUpdateLevelTitle={updateLevelTitle}
-            />
-          ))}
+        {tab === 'learn' ? (
+          <>
+            <Breadcrumbs items={breadcrumbs} onNavigate={levelTest.dismissResult} />
+            {renderLearn()}
+          </>
+        ) : null}
         {tab === 'about' && (
           <AboutTab
             aboutLead={displayAboutContent.lead}
