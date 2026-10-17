@@ -3,6 +3,7 @@ import { EditableText, useEditorMode } from '../../editor'
 import { OfflinePanel } from '../components/OfflinePanel'
 import { VersionPanel } from '../components/VersionPanel'
 import { AdminPanel } from '../components/AdminPanel'
+import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
 
 interface AboutTabProps {
   aboutLead: string
@@ -58,6 +59,7 @@ export function AboutTab({
         ) : null}
       </section>
       <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
+      <ProgressBackupPanel />
       <AdminPanel />
       <VersionPanel />
     </div>

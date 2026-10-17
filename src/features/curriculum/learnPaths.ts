@@ -18,14 +18,15 @@ function normalizePath(pathname: string): string {
 export function parseAppPath(pathname: string): ParsedLearnPath {
   const path = normalizePath(pathname)
 
+  // The Progress tab was removed: its old links open the matching Learn page.
   if (path === '/progress') {
-    return { tab: 'progress', langId: null, sectionId: null, levelId: null, step: 'intro' }
+    return { tab: 'learn', langId: null, sectionId: null, levelId: null, step: 'intro' }
   }
 
   const progressMatch = path.match(/^\/progress\/([^/]+)$/)
   if (progressMatch) {
     return {
-      tab: 'progress',
+      tab: 'learn',
       langId: decodeURIComponent(progressMatch[1]),
       sectionId: null,
       levelId: null,
@@ -81,13 +82,8 @@ export function learnLevelPath(
   return step === 'intro' ? base : `${base}/${step}`
 }
 
-export function progressPath(langId?: string | null): string {
-  return langId ? `/progress/${encodeURIComponent(langId)}` : '/progress'
-}
-
 export function tabPath(tab: TabId, langId?: string | null): string {
   if (tab === 'learn') return langId ? learnLanguagePath(langId) : learnHomePath()
-  if (tab === 'progress') return progressPath(langId)
   return `/${tab}`
 }
 
