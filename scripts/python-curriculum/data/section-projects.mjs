@@ -9,6 +9,9 @@ import primeFinder from './control-flow/project-prime-finder.mjs'
 import gradeBook from './data-structures/project-grade-book.mjs'
 import wordCounter from './data-structures/project-word-counter.mjs'
 import inventoryTracker from './data-structures/project-inventory-tracker.mjs'
+import textTools from './functions/project-text-tools.mjs'
+import passwordChecker from './functions/project-password-checker.mjs'
+import bankAccounts from './functions/project-bank-accounts.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -164,11 +167,7 @@ export const SECTION_PROJECTS = {
   fundamentals: [aboutMeCard, unitConverter, receiptCalculator],
   control_flow: [guessTheNumber, quizGame, primeFinder],
   data_structures: [gradeBook, wordCounter, inventoryTracker],
-  functions: [
-    fromExisting('unit_converter', 'easy', 'proj_functions_unit_converter'),
-    fromExisting('password_generator', 'medium', 'proj_functions_password_generator'),
-    fromExisting('expense_tracker', 'hard', 'proj_functions_expense_tracker'),
-  ],
+  functions: [textTools, passwordChecker, bankAccounts],
   modules_and_packages: [
     modulesEasy,
     fromExisting('capstone_planning', 'medium', 'proj_modules_capstone_planning'),
