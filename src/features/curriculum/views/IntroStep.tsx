@@ -46,7 +46,8 @@ export function IntroStep({
 
   return (
     <section className="cq-panel">
-      {(level.intro.title || isEditingLocal) && (
+      {/* The level's name is already the page heading, so an intro title that repeats it is skipped. */}
+      {(isEditingLocal || (level.intro.title && level.intro.title !== level.title)) && (
         <EditableText
           as="h2"
           className="cq-subtitle"
