@@ -2,6 +2,7 @@ import { detectPlatform, INSTALL_GUIDES } from '../../../platform'
 import { EditableText, useEditorMode } from '../../editor'
 import { OfflinePanel } from '../components/OfflinePanel'
 import { VersionPanel } from '../components/VersionPanel'
+import { AdminPanel } from '../components/AdminPanel'
 
 interface AboutTabProps {
   aboutLead: string
@@ -57,6 +58,7 @@ export function AboutTab({
         ) : null}
       </section>
       <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
+      <AdminPanel />
       <VersionPanel />
     </div>
   )

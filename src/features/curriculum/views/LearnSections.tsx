@@ -51,12 +51,14 @@ export function LearnSections({
             languageId && levels.length > 0
               ? levels.reduce((sum, lvl) => sum + computeLevelXp(languageId, lvl), 0)
               : 0
-          const locked = !isEditMode && !isSectionUnlocked(secIndex)
+          // A section whose prerequisite isn't met can still be opened to look inside;
+          // its levels stay locked.
+          const previewOnly = !isEditMode && !isSectionUnlocked(secIndex)
           const previousRef = bundle.index.sections[secIndex - 1]
           const previousLevels =
             bundle.sections.find((s) => s.sectionRef.id === previousRef?.id)?.file.levels ?? []
-          const statusMeta = locked
-            ? sectionUnlockHint(previousLevels)
+          const statusMeta = previewOnly
+            ? sectionUnlockHint(previousLevels, previousRef?.title ?? 'the previous section')
             : `${completedCount}/${levels.length} levels complete · ${sectionXp} XP`
 
           return (
@@ -66,13 +68,8 @@ export function LearnSections({
               titlePlaceholder="Section title"
               onTitleChange={(title) => onUpdateSectionTitle(sec.id, title)}
               onTitleCommit={(title) => onUpdateSectionTitle(sec.id, title, { commit: true })}
-              onClick={() => {
-                if (locked) return
-                onSelectSection(sec.id)
-              }}
+              onClick={() => onSelectSection(sec.id)}
               meta={<span className="cq-card-meta">{statusMeta}</span>}
-              locked={locked}
-              disabled={locked}
               progressPercent={pct}
               progressAriaLabel={`${sec.title} progress`}
               listIndex={secIndex}
