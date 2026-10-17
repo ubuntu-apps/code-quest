@@ -2,68 +2,6 @@ import { snippet } from './_builders.mjs'
 
 /** @type {Record<string, { id: string, label: string, code: string }[]>} */
 export const SANDBOX_SNIPPETS_BY_LEVEL = {
-  // ── Functions ─────────────────────────────────────────────────
-  defining_functions: [
-    snippet('Simple def', 'def greet(name):\n    return f"Hello, {name}!"\nprint(greet("Ada"))'),
-    snippet('No args', 'def hi():\n    return "hi"\nprint(hi())'),
-    snippet('Two params', 'def add(a, b):\n    return a + b\nprint(add(2, 3))'),
-    snippet('Early return', 'def abs_val(x):\n    if x < 0:\n        return -x\n    return x\nprint(abs_val(-5))'),
-    snippet('No return', 'def f():\n    pass\nprint(f())'),
-  ],
-  parameters_arguments: [
-    snippet('Positional', 'def power(base, exp):\n    return base ** exp\nprint(power(2, 10))'),
-    snippet('Order matters', 'def sub(a, b):\n    return a - b\nprint(sub(5, 2))'),
-    snippet('Three args', 'def sum3(a, b, c):\n    return a + b + c\nprint(sum3(1, 2, 3))'),
-    snippet('Keyword call', 'def connect(host, port):\n    return f"{host}:{port}"\nprint(connect(port=443, host="localhost"))'),
-    snippet('Nested call', 'def double(x):\n    return x * 2\nprint(double(double(2)))'),
-  ],
-  return_values: [
-    snippet('Return int', 'def square(n):\n    return n * n\nprint(square(4))'),
-    snippet('Multiple values', 'def min_max(nums):\n    return min(nums), max(nums)\nlo, hi = min_max([3, 1, 4])\nprint(lo, hi)'),
-    snippet('Return list', 'def evens(n):\n    return [x for x in range(n) if x % 2 == 0]\nprint(evens(6))'),
-    snippet('Guard return', 'def safe_div(a, b):\n    if b == 0:\n        return None\n    return a / b\nprint(safe_div(10, 2))'),
-  ],
-  default_parameters: [
-    snippet('Default arg', 'def greet(name, punct="!"):\n    return f"Hi {name}{punct}"\nprint(greet("Ada"), greet("Bob", "?"))'),
-    snippet('Optional flag', 'def connect(ssl=True):\n    return f"ssl={ssl}"\nprint(connect(), connect(ssl=False))'),
-    snippet('None sentinel', 'def append_item(lst=None):\n    if lst is None:\n        lst = []\n    lst.append(1)\n    return lst\nprint(append_item())'),
-  ],
-  keyword_arguments: [
-    snippet('Named args', 'def connect(host, port, ssl=True):\n    return f"{host}:{port} ssl={ssl}"\nprint(connect("localhost", port=443))'),
-    snippet('Skip default', 'def f(a, b=10):\n    return a + b\nprint(f(5))'),
-    snippet('Clear call', 'def create_user(name, role="guest", active=True):\n    return {"name": name, "role": role, "active": active}\nprint(create_user("Ana", role="admin"))'),
-  ],
-  args_kwargs: [
-    snippet('*args', 'def total(*nums):\n    return sum(nums)\nprint(total(1, 2, 3))'),
-    snippet('**kwargs', 'def show(**info):\n    return info\nprint(show(name="Ada", score=90))'),
-    snippet('Unpack call', 'def add(a, b):\n    return a + b\nprint(add(*(2, 3)))'),
-    snippet('Combined', 'def flex(a, *args, kwonly=0, **kwargs):\n    return (a, args, kwonly, kwargs)\nprint(flex(1, 2, kwonly=0, extra=True))'),
-  ],
-  scope_globals: [
-    snippet('global', 'count = 0\n\ndef inc():\n    global count\n    count += 1\n\ninc()\nprint(count)'),
-    snippet('Local shadow', 'x = 1\ndef f():\n    x = 2\n    return x\nprint(f(), x)'),
-    snippet('Read global', 'name = "Ada"\ndef greet():\n    return f"Hi {name}"\nprint(greet())'),
-    snippet('LEGB', 'def outer():\n    msg = "hi"\n    def inner():\n        return msg\n    return inner()\nprint(outer())'),
-  ],
-  lambda_functions: [
-    snippet('lambda sort', 'nums = [3, 1, 4]\nprint(sorted(nums, key=lambda x: -x))'),
-    snippet('lambda map', 'print(list(map(lambda x: x * 2, [1, 2, 3])))'),
-    snippet('lambda filter', 'print(list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4])))'),
-    snippet('lambda max key', 'words = ["hi", "hello", "hey"]\nprint(max(words, key=lambda w: len(w)))'),
-  ],
-  recursion: [
-    snippet('Factorial', 'def fact(n):\n    return 1 if n <= 1 else n * fact(n - 1)\nprint(fact(5))'),
-    snippet('Countdown', 'def down(n):\n    if n == 0:\n        return\n    print(n)\n    down(n - 1)\ndown(3)'),
-    snippet('Sum list', 'def sum_list(nums):\n    if not nums:\n        return 0\n    return nums[0] + sum_list(nums[1:])\nprint(sum_list([1, 2, 3]))'),
-    snippet('Fibonacci', 'def fib(n):\n    if n <= 1:\n        return n\n    return fib(n - 1) + fib(n - 2)\nprint(fib(6))'),
-  ],
-  docstrings_hints: [
-    snippet('Docstring', 'def area(radius: float) -> float:\n    """Return circle area."""\n    return 3.14159 * radius * radius\nprint(area.__doc__)'),
-    snippet('Type hints', 'def greet(name: str) -> str:\n    return f"Hello, {name}"\nprint(greet("Ada"))'),
-    snippet('Annotated def', 'def add(a: int, b: int) -> int:\n    return a + b\nprint(add(2, 3))'),
-    snippet('help()', 'def double(x):\n    """Double a number."""\n    return x * 2\nprint(double.__doc__)'),
-  ],
-
   // ── Modules ─────────────────────────────────────────────────────
   import_statements: [
     snippet('import math', 'import math\nprint(math.sqrt(16))'),
@@ -438,48 +376,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
   ],
 
   // Reused project ids with section-specific prefixes
-  proj_control_flow_guess_game: [
-    snippet('randint', 'import random\nprint(random.randint(1, 10))'),
-    snippet('while loop', 'secret = 7\nguess = 0\nwhile guess != secret:\n    guess = 7\nprint("win")'),
-    snippet('Hints', 'g, s = 3, 5\nprint("Higher" if g < s else "Lower")'),
-    snippet('Attempts', 'attempts = 0\nfor _ in range(3):\n    attempts += 1\nprint(attempts)'),
-  ],
-  proj_control_flow_quiz_app: [
-    snippet('Questions', 'questions = [{"q": "2+2?", "choices": ["3", "4"], "a": 1}]\nprint(questions)'),
-    snippet('Score', 'questions = [{"a": 1}]\nanswers = [1]\nprint(sum(1 for i, a in enumerate(answers) if a == questions[i]["a"]))'),
-    snippet('Percent', 'print(int(1 / 2 * 100))'),
-    snippet('shuffle', 'import random\nlst = [1, 2, 3]\nrandom.shuffle(lst)\nprint(lst)'),
-  ],
-  proj_data_structures_quiz_app: [
-    snippet('Question dict', 'q = {"choices": ["a", "b", "c"]}\nprint(len(q["choices"]))'),
-    snippet('Grade', 'questions = [{"a": 1}, {"a": 0}]\nanswers = [1, 0]\nprint(sum(1 for i, a in enumerate(answers) if a == questions[i]["a"]))'),
-    snippet('Shuffle', 'import random\nlst = ["a", "b", "c"]\nrandom.shuffle(lst)\nprint(lst)'),
-    snippet('Percent', 'correct, total = 3, 4\nprint(int(correct / total * 100))'),
-  ],
-  proj_data_structures_todo_list: [
-    snippet('Todo dict', 'todos = [{"id": 1, "text": "Learn", "done": False}]\nprint(todos)'),
-    snippet('Append', 'todos = []\ntodos.append({"text": "Build"})\nprint(todos)'),
-    snippet('Mark done', 'todos = [{"done": False}]\ntodos[0]["done"] = True\nprint(todos)'),
-    snippet('json dumps', 'import json\nprint(json.dumps([{"text": "a"}]))'),
-  ],
-  proj_functions_unit_converter: [
-    snippet('km to miles', 'def km_to_miles(km):\n    return km * 0.621371\nprint(km_to_miles(10))'),
-    snippet('C to F', 'def c_to_f(c):\n    return c * 9/5 + 32\nprint(c_to_f(0))'),
-    snippet('Factors dict', 'factors = {"km": 1000, "m": 1}\nprint(factors["km"])'),
-    snippet('Round result', 'print(round(3.14159, 2))'),
-  ],
-  proj_functions_password_generator: [
-    snippet('choice', 'import random\nimport string\nprint(random.choice(string.ascii_letters))'),
-    snippet('Join', 'import random\nimport string\nchars = string.ascii_letters + string.digits\nprint("".join(random.choice(chars) for _ in range(8)))'),
-    snippet('Function', 'import random\nimport string\n\ndef generate_password(n=12):\n    chars = string.ascii_letters + string.digits\n    return "".join(random.choice(chars) for _ in range(n))\nprint(generate_password(8))'),
-    snippet('digits check', 'print(any(ch.isdigit() for ch in "a1"))'),
-  ],
-  proj_functions_expense_tracker: [
-    snippet('Add expense', 'expenses = []\nexpenses.append({"amount": 12.5, "category": "food"})\nprint(expenses)'),
-    snippet('Sum', 'print(sum(e["amount"] for e in [{"amount": 10}, {"amount": 5}]))'),
-    snippet('Group by', 'totals = {}\nfor e in [{"category": "food", "amount": 10}, {"category": "food", "amount": 5}]:\n    totals[e["category"]] = totals.get(e["category"], 0) + e["amount"]\nprint(totals)'),
-    snippet('Date', 'from datetime import datetime\nprint(datetime.now().strftime("%Y-%m-%d"))'),
-  ],
   proj_modules_capstone_planning: [
     snippet('main guard', 'def main():\n    print("Capstone")\n\nif __name__ == "__main__":\n    main()'),
     snippet('Modules', 'modules = ["models", "cli", "utils"]\nprint(modules)'),
