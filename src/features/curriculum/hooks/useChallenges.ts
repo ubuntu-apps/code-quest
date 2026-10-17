@@ -1,7 +1,11 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
 import { loadProgress, saveChallengeDraft, saveProgress } from '../progressStorage'
-import { runPythonChallengeTests, type PythonChallengeTestResult } from '../pythonSandbox'
+import {
+  pythonStatusMessage,
+  runPythonChallengeTests,
+  type PythonChallengeTestResult,
+} from '../pythonSandbox'
 import { runRChallengeTests, type RChallengeTestResult } from '../rSandbox'
 import type { Challenge, Level } from '../types'
 import { validateAgainst } from '../validateAnswer'
@@ -27,6 +31,9 @@ export function useChallenges(languageId: string | null, level: Level | null, on
   const [runtimeError, setRuntimeError] = useState<Record<string, FriendlySandboxError | null>>({})
   const [errorExpanded, setErrorExpanded] = useState<Record<string, boolean>>({})
   const [errorUiEpoch, setErrorUiEpoch] = useState<Record<string, number>>({})
+  /** Challenges being checked now, with what the check is doing ("Downloading Python…"). */
+  const [checking, setChecking] = useState<Record<string, string>>({})
+  const checkControllers = useRef<Record<string, AbortController>>({})
 
   const showRunFeedback = (
     challengeId: string,
@@ -43,37 +50,60 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     setErrorExpanded((prev) => ({ ...prev, [challengeId]: false }))
   }
 
+  const setCheckingMessage = (challengeId: string, message: string | null) =>
+    setChecking((prev) => {
+      const next = { ...prev }
+      if (message === null) delete next[challengeId]
+      else next[challengeId] = message
+      return next
+    })
+
   const check = async (ch: Challenge) => {
     if (!languageId || !level) return
+    if (checkControllers.current[ch.id]) return // already being checked
     setErrorUiEpoch((prev) => ({ ...prev, [ch.id]: (prev[ch.id] ?? 0) + 1 }))
     const answer = drafts[ch.id] ?? ''
     saveAnswer(languageId, level.id, ch.id, answer)
 
+    const controller = new AbortController()
+    checkControllers.current[ch.id] = controller
+    setCheckingMessage(ch.id, 'Checking…')
     let ok: boolean
-    if (ch.validation.mode === 'python_tests') {
-      const run = await runPythonChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
-      showRunFeedback(ch.id, run)
-      ok = run.passed
-    } else if (ch.validation.mode === 'r_tests') {
-      const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
-      showRunFeedback(ch.id, run)
-      ok = run.passed
-    } else {
-      ok = validateAgainst(answer, ch.validation)
-      clearRunFeedback(ch.id)
+    try {
+      if (ch.validation.mode === 'python_tests') {
+        const run = await runPythonChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [], {
+          signal: controller.signal,
+          onStatus: (status) =>
+            setCheckingMessage(ch.id, status === 'running' ? 'Checking…' : pythonStatusMessage(status)),
+        })
+        // Stopped by the learner (or by leaving the level): not an attempt, so no feedback.
+        if (controller.signal.aborted) return
+        showRunFeedback(ch.id, run)
+        ok = run.passed
+      } else if (ch.validation.mode === 'r_tests') {
+        const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
+        if (controller.signal.aborted) return
+        showRunFeedback(ch.id, run)
+        ok = run.passed
+      } else {
+        ok = validateAgainst(answer, ch.validation)
+        clearRunFeedback(ch.id)
+      }
+    } finally {
+      if (checkControllers.current[ch.id] === controller) {
+        delete checkControllers.current[ch.id]
+        setCheckingMessage(ch.id, null)
+      }
+    }
+
+    if (!ok) {
+      // A challenge solved earlier stays solved: trying something else afterwards
+      // shouldn't take away its XP or lock the next section again.
+      setStatus((s) => ({ ...s, [ch.id]: 'failed' }))
+      return
     }
 
     const prev = loadProgress(languageId, level.id)
-    if (!ok) {
-      setStatus((s) => ({ ...s, [ch.id]: 'failed' }))
-      if (prev.challengesCompleted.includes(ch.id)) {
-        saveProgress(languageId, level.id, {
-          ...prev,
-          challengesCompleted: prev.challengesCompleted.filter((id) => id !== ch.id),
-        })
-      }
-      return
-    }
 
     setStatus((s) => ({ ...s, [ch.id]: 'passed' }))
     saveProgress(languageId, level.id, {
@@ -98,6 +128,9 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     saveProgress(languageId, level.id, { ...prev, answersViewed: [...viewed, challengeId] })
   }
 
+  /** Stops a running check (only Python checks can be stopped). */
+  const stopCheck = (challengeId: string) => checkControllers.current[challengeId]?.abort()
+
   const toggleErrorExpanded = (challengeId: string) =>
     setErrorExpanded((prev) => ({ ...prev, [challengeId]: !(prev[challengeId] ?? false) }))
 
@@ -108,6 +141,10 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     for (const ch of lvl.challenges) {
       next[ch.id] = saved[ch.id] ?? ch.starterCode ?? ''
     }
+    // Checks still running for the previous level are no longer shown; stop them.
+    for (const controller of Object.values(checkControllers.current)) controller.abort()
+    checkControllers.current = {}
+    setChecking({})
     setDrafts(next)
     setStatus({})
     setTestResults({})
@@ -123,7 +160,9 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     runtimeError,
     errorExpanded,
     errorUiEpoch,
+    checking,
     check,
+    stopCheck,
     changeDraft,
     revealAnswer,
     toggleErrorExpanded,

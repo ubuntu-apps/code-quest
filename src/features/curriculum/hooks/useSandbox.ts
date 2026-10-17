@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
-import { runPythonCode, stopPythonRun } from '../pythonSandbox'
+import { pythonStatusMessage, runPythonCode } from '../pythonSandbox'
 import { runRCode } from '../rSandbox'
 import { defaultSandboxForLanguage } from '../sandboxDefaults'
 import type { Level } from '../types'
@@ -18,6 +18,8 @@ export function useSandbox(languageId: string | null) {
   const [errorUiEpoch, setErrorUiEpoch] = useState(0)
   // Bumped when a new level opens, so a run that finishes later can't write into it.
   const levelEpochRef = useRef(0)
+  /** Stops the current Python run (and only that run). */
+  const runControllerRef = useRef<AbortController | null>(null)
 
   const run = async (stdin = '') => {
     const epoch = levelEpochRef.current
@@ -27,10 +29,24 @@ export function useSandbox(languageId: string | null) {
     setOutput(
       languageId === 'r'
         ? 'Loading R runtime (first run downloads ~30MB, may take a minute)...'
-        : 'Running...',
+        : pythonStatusMessage('running'),
     )
+    const controller = new AbortController()
+    runControllerRef.current = controller
     try {
-      const result = languageId === 'r' ? await runRCode(code) : await runPythonCode(code, stdin)
+      const result =
+        languageId === 'r'
+          ? await runRCode(code)
+          : await runPythonCode(code, stdin, {
+              signal: controller.signal,
+              onStatus: (status) => {
+                if (stillCurrent()) setOutput(pythonStatusMessage(status))
+              },
+              // Show printed lines as they arrive, not only when the run ends.
+              onOutput: (text) => {
+                if (stillCurrent()) setOutput(text)
+              },
+            })
       if (!stillCurrent()) return
       setOutput(result.output.trim() ? result.output : '[no output]')
       setError(result.error)
@@ -44,9 +60,12 @@ export function useSandbox(languageId: string | null) {
         tip: 'Check your network connection and try again.',
       })
     }
+    if (runControllerRef.current === controller) runControllerRef.current = null
     setErrorUiEpoch((n) => n + 1)
     setRunning(false)
   }
+
+  const stop = () => runControllerRef.current?.abort()
 
   /** "Reset code" button: back to the level's starting code, keeping the error epoch. */
   const reset = (level: Level) => {
@@ -60,6 +79,9 @@ export function useSandbox(languageId: string | null) {
   /** Fresh sandbox when a level is opened. */
   const resetForLevel = useCallback((level: Level, langId: string | null) => {
     levelEpochRef.current += 1
+    // A run from the previous level is no longer shown, so don't let it hold up the next one.
+    runControllerRef.current?.abort()
+    runControllerRef.current = null
     setCode(startingCode(level, langId))
     setOutput('')
     setRunning(false)
@@ -75,7 +97,7 @@ export function useSandbox(languageId: string | null) {
     error,
     errorUiEpoch,
     run,
-    stop: stopPythonRun,
+    stop,
     reset,
     clearError,
     resetForLevel,

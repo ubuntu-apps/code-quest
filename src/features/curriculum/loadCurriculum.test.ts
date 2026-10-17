@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { loadLanguageBundle } from './loadCurriculum'
+import { lessonLoadErrorMessage, loadLanguageBundle } from './loadCurriculum'
 
 const section = (id: string) => ({ sectionId: id, title: id, levels: [] })
 
@@ -55,6 +55,29 @@ describe('loadLanguageBundle', () => {
     mockContent({ 'py4/index.json': LANG, 'py4/a.json': section('a'), 'py4/b.json': section('b') })
     const bundle = await loadLanguageBundle('/base/', 'py4/index.json')
     expect(bundle.sections).toHaveLength(2)
+  })
+
+  it('reports a lost connection as a network error, not a missing file', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.endsWith('py5/index.json')) return new Response(JSON.stringify(LANG), { status: 200 })
+        throw new TypeError('Failed to fetch')
+      }),
+    )
+    await expect(loadLanguageBundle('/base/', 'py5/index.json')).rejects.toThrow(TypeError)
+  })
+})
+
+describe('lessonLoadErrorMessage', () => {
+  it('explains a network failure in plain words', () => {
+    expect(lessonLoadErrorMessage(new TypeError('Failed to fetch'), 'x')).toMatch(/offline/)
+  })
+
+  it('keeps the message of other errors', () => {
+    expect(lessonLoadErrorMessage(new Error('Failed to load content/a.json (500)'), 'x')).toBe(
+      'Failed to load content/a.json (500)',
+    )
   })
 })
 

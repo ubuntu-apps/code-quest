@@ -1,4 +1,4 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 const RAISES = py`def error_of(fn):
     try:
@@ -11,18 +11,25 @@ export default makeTopic({
   id: 'data_validation',
   title: 'Data validation',
   paragraphs: [
-    'Validate shape, types, ranges before processing. Fail early with clear messages.',
-    'Use schemas (pydantic, jsonschema) for complex payloads.',
-    'Sanitize strings, bound numbers, check required fields.',
+    "Data from users, files and APIs can be missing, of the wrong type, or simply wrong. **Validation** means checking it where it enters your program, before you store it or calculate with it, so a bad value can't cause a confusing error somewhere far away.",
+    "Start with the basics. Are the required fields there (`\"name\" in record`)? Is each value the right type (`isinstance(value, int)`)? Is it in range (`0 <= age <= 150`), or one of the allowed values (`size in {\"S\", \"M\", \"L\"}`)? One trap: `True` and `False` are ints in Python, so `isinstance(True, int)` is `True`. Rule them out with `not isinstance(value, bool)`.",
+    "Text from forms and CSV files is always a string, even `\"30\"`. Convert it yourself with `int(...)`, remove extra spaces with `.strip()`, and make the case consistent with `.lower()`, so `\" yes \"` and `\"YES\"` mean the same thing. Don't leave Python to guess.",
+    "For text that must have a certain shape, like an email address, use a regular expression from the `re` module. `re.fullmatch(pattern, text)` succeeds only if the **whole** text matches; `re.search` would accept a match anywhere inside it.",
+    "```\nimport re\n\npattern = r\"[^@\\s]+@[^@\\s]+\\.[^@\\s]+\"\nprint(re.fullmatch(pattern, \"ana@example.com\") is not None)   # True\nprint(re.fullmatch(pattern, \"not an email\") is not None)      # False\n```",
+    "When a value has the right type but a bad value, raise `ValueError` with a message that says what's wrong and shows the value; `{text!r}` shows it with quotes, like `'abc'`. Adding `from None` hides the original exception, so the reader sees only your clear message.",
+    "```\ndef parse_age(text):\n    try:\n        age = int(text)\n    except ValueError:\n        raise ValueError(f\"invalid age: {text!r}\") from None\n    if not 0 <= age <= 150:\n        raise ValueError(f\"invalid age: {text!r}\")\n    return age\n```",
+    "For a form, collect **every** problem in a list instead of stopping at the first, so the user can fix them all at once. For a batch of rows, keep the valid rows and report the others with their position; `enumerate` gives you the index of each row.",
+    "You can also build validation into a class. A dataclass calls `__post_init__` right after the `__init__` it writes for you, so raising `ValueError` there means an invalid object can never be created. In bigger projects, the third-party library **Pydantic** checks data against type-annotated models for you.",
   ],
-  sandboxCode: py`def validate_user(data):
-    if "name" not in data or not isinstance(data["name"], str):
-        raise ValueError("name required string")
-    if "age" in data and (not isinstance(data["age"], int) or data["age"] < 0):
-        raise ValueError("age must be non-negative int")
-    return data
-
-print(validate_user({"name": "Ana", "age": 30}))`,
+  sandboxCode: "def validate_user(data):\n    errors = []\n    if not str(data.get(\"name\", \"\")).strip():\n        errors.append(\"name is required\")\n    age = data.get(\"age\")\n    if not isinstance(age, int) or isinstance(age, bool) or age < 0:\n        errors.append(\"age must be a non-negative integer\")\n    return errors\n\nprint(validate_user({\"name\": \"Ana\", \"age\": 30}))\nprint(validate_user({\"name\": \" \", \"age\": \"30\"}))",
+  sandboxSnippets: [
+    snippet("Required fields", "record = {\"name\": \"Ana\", \"email\": \"ana@example.com\"}\nrequired = [\"name\", \"email\", \"age\"]\nprint([field for field in required if field not in record])"),
+    snippet("The bool trap", "for value in [30, True, \"30\", -5]:\n    ok = isinstance(value, int) and not isinstance(value, bool) and 0 <= value <= 150\n    print(repr(value), ok)"),
+    snippet("Email check", "import re\n\npattern = r\"[^@\\s]+@[^@\\s]+\\.[^@\\s]+\"\nfor text in [\"ana@example.com\", \"ana@example\", \"a b@c.d\"]:\n    print(text, re.fullmatch(pattern, text) is not None)"),
+    snippet("Clear errors", "def parse_age(text):\n    try:\n        age = int(text)\n    except ValueError:\n        raise ValueError(f\"invalid age: {text!r}\") from None\n    if not 0 <= age <= 150:\n        raise ValueError(f\"invalid age: {text!r}\")\n    return age\n\nfor text in [\"42\", \"abc\", \"200\"]:\n    try:\n        print(parse_age(text))\n    except ValueError as err:\n        print(err)"),
+    snippet("Dataclass check", "from dataclasses import dataclass\n\n@dataclass\nclass User:\n    name: str\n    age: int\n\n    def __post_init__(self):\n        if not self.name.strip():\n            raise ValueError(\"name must not be blank\")\n        if self.age < 0:\n            raise ValueError(\"age must not be negative\")\n\nprint(User(\"Ana\", 30))\ntry:\n    User(\"\", 5)\nexcept ValueError as err:\n    print(\"Rejected:\", err)"),
+  ],
+  readMore: { label: "Python tutorial: errors and exceptions", url: "https://docs.python.org/3/tutorial/errors.html", source: "Python docs" },
   challenges: [
     task('easy', 'Required fields', {
       prompt: 'Write `missing_fields(record, required)` that returns the names in `required` that are not keys of `record`, in the same order.',

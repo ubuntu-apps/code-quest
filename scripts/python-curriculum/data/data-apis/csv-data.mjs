@@ -1,19 +1,30 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'csv_data',
   title: 'CSV data',
   paragraphs: [
-    'csv module reads/writes comma-separated files. `reader`, `writer`, `DictReader`.',
-    'Good for spreadsheets and tabular exports. Mind encoding and headers.',
-    'For huge data consider pandas; csv is stdlib and lightweight.',
+    "CSV (\"comma-separated values\") is the simplest table format: one row per line, values separated by commas, and usually a first line (the header) with the column names. Spreadsheets and databases can all export it.",
+    "```\nname,score\nAna,90\nBob,85\n```",
+    "Python's `csv` module reads and writes CSV correctly, including tricky cases, so you don't have to split lines yourself. It works with files and with `io.StringIO`, which wraps a string so it behaves like an open file. The examples here use `StringIO`, so you can try everything without creating files.",
+    "`csv.reader` gives you each row as a list of strings. `csv.DictReader` reads the header first and gives each row as a dict, so you can write `row[\"score\"]` instead of remembering that the score is `row[1]`.",
+    "```\nimport csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\n\"\nfor row in csv.DictReader(StringIO(data)):\n    print(row[\"name\"], row[\"score\"])\n```",
+    "Every value csv reads is a **string**, even `90`, so `sum(row[\"score\"] for row in rows)` fails. Convert first with `int(...)` or `float(...)`. If some rows may be empty or broken, put the conversion in `try`/`except ValueError` and skip those rows.",
+    "To write, create a `csv.writer` and call `writerow` for one row or `writerows` for many. `csv.DictWriter` writes dicts: give it the `fieldnames`, call `writeheader()` to write the header row, then `writerows`. When a value contains a comma, csv puts it in quotes, like `\"Lee, Jr.\"`, so it stays one value.",
+    "```\nbuf = StringIO()\nwriter = csv.writer(buf)\nwriter.writerow([\"name\", \"score\"])\nwriter.writerows([[\"Ana\", 90], [\"Lee, Jr.\", 85]])\nprint(buf.getvalue())\n```",
+    "Not every CSV uses commas. Many European exports separate values with `;`, because there the comma is the decimal point (`1,5`). Pass `delimiter=\";\"` to the reader, and swap the decimal comma before converting: `float(\"1,5\".replace(\",\", \".\"))`.",
+    "With real files, open them with `newline=\"\"`, because the csv module handles line endings itself (otherwise you can get blank rows on Windows), and with `encoding=\"utf-8\"`, so names like Zoë survive: `open(\"people.csv\", \"w\", newline=\"\", encoding=\"utf-8\")`.",
+    "To total a column per group, loop over the rows and add to a dict: `totals[region] = totals.get(region, 0) + amount`. For bigger analyses, pandas (later in this chapter) reads a CSV into a table you can filter and group in one line.",
   ],
-  sandboxCode: py`import csv
-from io import StringIO
-
-buf = StringIO("name,score\nAna,90\nBob,85\n")
-rows = list(csv.DictReader(buf))
-print(rows[0]["name"], rows[0]["score"])`,
+  sandboxCode: "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\nCleo,80\\n\"\nrows = list(csv.DictReader(StringIO(data)))\nprint(rows[0])\nprint(sum(int(row[\"score\"]) for row in rows))",
+  sandboxSnippets: [
+    snippet("Rows as lists", "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\n\"\nfor row in csv.reader(StringIO(data)):\n    print(row)"),
+    snippet("Rows as dicts", "import csv\nfrom io import StringIO\n\ndata = \"name,city\\nAna,Oslo\\nBob,Lima\\n\"\nfor person in csv.DictReader(StringIO(data)):\n    print(person[\"name\"], \"lives in\", person[\"city\"])"),
+    snippet("Write CSV", "import csv\nfrom io import StringIO\n\nbuf = StringIO()\nwriter = csv.DictWriter(buf, fieldnames=[\"name\", \"city\"])\nwriter.writeheader()\nwriter.writerows([{\"name\": \"Lee, Jr.\", \"city\": \"NYC\"}, {\"name\": \"Ana\", \"city\": \"Oslo\"}])\nprint(buf.getvalue())"),
+    snippet("Semicolons", "import csv\nfrom io import StringIO\n\ndata = \"item;price\\napple;1,5\\npear;2,25\\n\"\nfor row in csv.DictReader(StringIO(data), delimiter=\";\"):\n    print(row[\"item\"], float(row[\"price\"].replace(\",\", \".\")))"),
+    snippet("Totals per group", "import csv\nfrom io import StringIO\n\ndata = \"region,amount\\nnorth,10\\nsouth,25\\nnorth,20\\n\"\ntotals = {}\nfor row in csv.DictReader(StringIO(data)):\n    totals[row[\"region\"]] = totals.get(row[\"region\"], 0) + int(row[\"amount\"])\nprint(totals)"),
+  ],
+  readMore: { label: "Python docs: the csv module", url: "https://docs.python.org/3/library/csv.html", source: "Python docs" },
   challenges: [
     task('easy', 'Read rows', {
       prompt:

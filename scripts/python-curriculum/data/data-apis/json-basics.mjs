@@ -1,19 +1,30 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'json_basics',
   title: 'JSON basics',
   paragraphs: [
-    'JSON is text format for data exchange. Python `json` module: `loads`, `dumps`.',
-    'Convert dict/list to JSON string and back. Keys must be strings in JSON.',
-    'Always handle decode errors when parsing untrusted input.',
+    "JSON (JavaScript Object Notation) is the text format most web APIs and settings files use to exchange data. It looks almost like Python: an object `{...}` is like a dict, an array `[...]` is like a list, and the values are strings, numbers, `true`, `false` and `null`.",
+    "Python's built-in `json` module converts between the two. `json.dumps(data)` turns Python data into a JSON **string** (\"dump to string\"), and `json.loads(text)` turns a JSON string back into Python data (\"load from string\").",
+    "```\nimport json\n\nbook = {\"title\": \"Dune\", \"year\": 1965, \"read\": True, \"rating\": None}\ntext = json.dumps(book)\nprint(text)   # {\"title\": \"Dune\", \"year\": 1965, \"read\": true, \"rating\": null}\n\ndata = json.loads('{\"name\": \"Ana\", \"scores\": [9, 7]}')\nprint(data[\"scores\"][0])   # 9\n```",
+    "Some values change on the way. `True` becomes `true` and `None` becomes `null`. JSON has no tuples, so `(1, 2)` becomes an array and comes back as the list `[1, 2]`. JSON object keys are always strings: `json.dumps({1: \"a\"})` gives `{\"1\": \"a\"}`.",
+    "`json.dumps` has options for output people will read. `indent=2` puts each item on its own line, indented by 2 spaces, and `sort_keys=True` sorts the keys alphabetically. By default, letters outside plain English are escaped (`\"Zürich\"` becomes `\"Zürich\"`); `ensure_ascii=False` keeps them as they are.",
+    "```\nsettings = {\"theme\": \"dark\", \"city\": \"Zürich\"}\nprint(json.dumps(settings, indent=2, sort_keys=True, ensure_ascii=False))\n```",
+    "Data from APIs is often nested: a dict that holds lists of dicts. Read it one step at a time with keys and indexes, like `order[\"items\"][0][\"qty\"]`, or loop over the list. To combine two dicts, `{**defaults, **user}` makes a new dict in which the keys from `user` win.",
+    "Text from outside your program can be broken. `json.loads` raises `json.JSONDecodeError` for invalid JSON, so catch it whenever the text isn't yours:",
+    "```\ntry:\n    data = json.loads(\"{not json}\")\nexcept json.JSONDecodeError:\n    data = None\nprint(data)   # None\n```",
+    "Some Python types have no JSON version, such as `date` and `datetime`, so `json.dumps` raises `TypeError` for them. Pass a function as `default=`: `json.dumps` calls it for every value it can't handle and uses what it returns, for example `value.isoformat()` for a date.",
+    "For files, use `json.dump(data, f)` and `json.load(f)` (no **s**). They write to and read from an open file instead of a string.",
   ],
-  sandboxCode: py`import json
-
-data = {"name": "Ana", "score": 95}
-text = json.dumps(data)
-print(text)
-print(json.loads(text)["name"])`,
+  sandboxCode: "import json\n\nbook = {\"title\": \"Dune\", \"year\": 1965, \"read\": True, \"rating\": None}\ntext = json.dumps(book)\nprint(text)\n\nback = json.loads(text)\nprint(back[\"title\"], back[\"read\"])",
+  sandboxSnippets: [
+    snippet("Round trip", "import json\n\nscores = [88, 92, 79]\ntext = json.dumps(scores)\nprint(type(text), text)\nprint(json.loads(text) == scores)"),
+    snippet("Pretty print", "import json\n\nconfig = {\"theme\": \"dark\", \"font_size\": 14, \"city\": \"Zürich\"}\nprint(json.dumps(config, indent=2, sort_keys=True, ensure_ascii=False))"),
+    snippet("Nested data", "import json\n\nraw = '{\"customer\": {\"name\": \"Lee\"}, \"items\": [{\"sku\": \"A1\", \"qty\": 2}, {\"sku\": \"B4\", \"qty\": 3}]}'\norder = json.loads(raw)\nprint(order[\"customer\"][\"name\"])\nprint(sum(item[\"qty\"] for item in order[\"items\"]))"),
+    snippet("Bad JSON", "import json\n\nfor text in ['{\"ok\": true}', '{oops}']:\n    try:\n        print(json.loads(text))\n    except json.JSONDecodeError as err:\n        print(\"Not valid JSON:\", err)"),
+    snippet("Dates", "import json\nfrom datetime import date\n\ndef encode(value):\n    if isinstance(value, date):\n        return value.isoformat()\n    raise TypeError(f\"Can't turn {type(value).__name__} into JSON\")\n\nprint(json.dumps({\"launch\": date(2026, 10, 16)}, default=encode))"),
+  ],
+  readMore: { label: "Python docs: the json module", url: "https://docs.python.org/3/library/json.html", source: "Python docs" },
   challenges: [
     task('easy', 'Dict to JSON', {
       prompt: 'Use `json.dumps` to turn the `book` dictionary into a JSON string. Store the result in `text`.',

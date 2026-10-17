@@ -50,12 +50,30 @@ type TestsRequest = {
 type PreloadRequest = { type: 'preload'; code: string }
 type WorkerRequest = RunRequest | TestsRequest | PreloadRequest
 
+/**
+ * What a run is doing, for the UI:
+ * - `waiting`: another run is still going (`waiting-download`: "Download for offline" is)
+ * - `loading`: downloading and starting Python (first run only)
+ * - `packages`: downloading packages the code imports, such as pandas
+ * - `running`: the code itself is running
+ */
+export type PythonRunStatus = 'waiting' | 'waiting-download' | 'loading' | 'packages' | 'running'
+
+export interface PythonRunOptions {
+  onStatus?: (status: PythonRunStatus) => void
+  /** Called with everything printed so far, while the code runs. */
+  onOutput?: (outputSoFar: string) => void
+  /** Aborting stops this run only: a queued run is dropped, a running one is stopped. */
+  signal?: AbortSignal
+}
+
 type RunPayload = { output: string; error: string | null }
 type TestsPayload = { tests: PythonChallengeTestResult[]; error: string | null }
 
 type WorkerReply =
   | { type: 'ready' }
   | { type: 'load-error'; message: string }
+  | { id: number; type: 'loading-packages' }
   | { id: number; type: 'started' }
   | { id: number; type: 'output'; text: string }
   | { id: number; type: 'result'; payload: unknown }
@@ -78,6 +96,7 @@ interface ActiveJob {
   settle: (outcome: JobOutcome) => void
   /** Called when the worker has its packages and starts running the code. */
   start: () => void
+  options: PythonRunOptions
 }
 
 /** Thrown when the learner presses Stop while the runtime is still loading. */
@@ -85,10 +104,16 @@ class RunStoppedError extends Error {}
 
 let worker: Worker | null = null
 let workerReady: Promise<void> | null = null
+/** True once Python has loaded in the current worker. */
+let runtimeLoaded = false
 let rejectWorkerLoad: ((error: Error) => void) | null = null
 let activeJob: ActiveJob | null = null
 let queue: Promise<unknown> = Promise.resolve()
 let nextJobId = 1
+/** Jobs queued or running, so a new job knows it has to wait. */
+let pendingJobs = 0
+/** The kind of job that has the worker now (loading it or running). */
+let currentJobType: WorkerRequest['type'] | null = null
 
 function workerUrl(): string {
   const base = import.meta.env.BASE_URL
@@ -99,6 +124,7 @@ function discardWorker(): void {
   worker?.terminate()
   worker = null
   workerReady = null
+  runtimeLoaded = false
   // A terminated worker never reports back, so settle a pending load here
   // instead of leaving every later run waiting on it.
   const rejectLoad = rejectWorkerLoad
@@ -110,12 +136,18 @@ function handleWorkerMessage(reply: WorkerReply): void {
   if (!('id' in reply)) return
   const job = activeJob
   if (!job || job.id !== reply.id) return
+  if (reply.type === 'loading-packages') {
+    job.options.onStatus?.('packages')
+    return
+  }
   if (reply.type === 'started') {
     job.start()
+    job.options.onStatus?.('running')
     return
   }
   if (reply.type === 'output') {
     job.partialOutput += reply.text
+    job.options.onOutput?.(job.partialOutput)
     return
   }
   if (reply.type === 'result') {
@@ -150,6 +182,7 @@ function ensureWorker(): Promise<void> {
     const onInit = (event: MessageEvent<WorkerReply>) => {
       if (event.data.type === 'ready') {
         finish()
+        if (worker === w) runtimeLoaded = true
         resolve()
       } else if (event.data.type === 'load-error') {
         fail(new Error(RUNTIME_LOAD_ERROR))
@@ -170,10 +203,22 @@ function ensureWorker(): Promise<void> {
 
 type JobResult = { outcome: JobOutcome; partialOutput: string }
 
-async function runJob(request: WorkerRequest): Promise<JobResult> {
-  await ensureWorker()
+const STOPPED: JobResult = { outcome: { kind: 'stopped' }, partialOutput: '' }
+
+async function runJob(request: WorkerRequest, options: PythonRunOptions): Promise<JobResult> {
+  const { signal, onStatus } = options
+  if (signal?.aborted) return STOPPED
+  if (!runtimeLoaded) onStatus?.('loading')
+  // Stopping while Python loads: discardWorker() rejects the load with RunStoppedError.
+  const stopLoad = () => discardWorker()
+  signal?.addEventListener('abort', stopLoad, { once: true })
+  try {
+    await ensureWorker()
+  } finally {
+    signal?.removeEventListener('abort', stopLoad)
+  }
   const w = worker
-  if (!w) return { outcome: { kind: 'stopped' }, partialOutput: '' }
+  if (!w || signal?.aborted) return STOPPED
   const id = nextJobId++
   return new Promise<JobResult>((resolve) => {
     // The only way to interrupt a busy Pyodide is to kill its worker.
@@ -184,12 +229,19 @@ async function runJob(request: WorkerRequest): Promise<JobResult> {
         job.settle(outcome)
       }, ms)
     }
+    const stop = () => {
+      if (activeJob !== job) return
+      discardWorker()
+      job.settle({ kind: 'stopped' })
+    }
     const job: ActiveJob = {
       id,
       timer: null,
       partialOutput: '',
+      options,
       settle: (outcome) => {
         if (job.timer) clearTimeout(job.timer)
+        signal?.removeEventListener('abort', stop)
         if (activeJob === job) activeJob = null
         resolve({ outcome, partialOutput: job.partialOutput })
       },
@@ -198,25 +250,62 @@ async function runJob(request: WorkerRequest): Promise<JobResult> {
     // First the worker downloads any packages the code imports, then the run limit applies.
     limit(request.type === 'preload' ? PRELOAD_TIME_LIMIT_MS : PACKAGE_LOAD_TIME_LIMIT_MS, { kind: 'package-timeout' })
     activeJob = job
+    signal?.addEventListener('abort', stop, { once: true })
+    if (request.type !== 'preload') onStatus?.('running')
     w.postMessage({ ...request, id, cdnBase: PYODIDE_CDN_BASE })
   })
 }
 
-/** Runs jobs one at a time so a slow job's time limit never covers another's. */
-function enqueue(request: WorkerRequest): Promise<JobResult> {
-  const next = queue.then(() => runJob(request))
-  queue = next.catch(() => undefined)
-  return next
+/**
+ * Runs jobs one at a time so a slow job's time limit never covers another's.
+ * A job stopped while it waits its turn settles at once and never runs.
+ */
+function enqueue(request: WorkerRequest, options: PythonRunOptions = {}): Promise<JobResult> {
+  const { signal, onStatus } = options
+  if (signal?.aborted) return Promise.resolve(STOPPED)
+  if (pendingJobs > 0) onStatus?.(currentJobType === 'preload' ? 'waiting-download' : 'waiting')
+  pendingJobs += 1
+
+  let started = false
+  let dropped = false
+  let resolveDropped: (result: JobResult) => void = () => {}
+  const droppedResult = new Promise<JobResult>((resolve) => {
+    resolveDropped = resolve
+  })
+  const dropWhileWaiting = () => {
+    if (started) return
+    dropped = true
+    resolveDropped(STOPPED)
+  }
+  signal?.addEventListener('abort', dropWhileWaiting, { once: true })
+
+  const run = queue
+    .then(async () => {
+      started = true
+      signal?.removeEventListener('abort', dropWhileWaiting)
+      if (dropped) return STOPPED
+      currentJobType = request.type
+      try {
+        return await runJob(request, options)
+      } finally {
+        currentJobType = null
+      }
+    })
+    .finally(() => {
+      pendingJobs -= 1
+    })
+  queue = run.catch(() => undefined)
+  return Promise.race([run, droppedResult])
 }
 
 /**
  * Downloads the Python runtime plus every package that `lessonCode` imports, so
  * they are cached for offline use. Throws an Error with a learner-friendly message.
  */
-export async function preparePythonOffline(lessonCode: string): Promise<void> {
+export async function preparePythonOffline(lessonCode: string, signal?: AbortSignal): Promise<void> {
   let outcome: JobOutcome
   try {
-    outcome = (await enqueue({ type: 'preload', code: lessonCode })).outcome
+    outcome = (await enqueue({ type: 'preload', code: lessonCode }, { signal })).outcome
   } catch (error: unknown) {
     throw new Error(error instanceof RunStoppedError ? 'The download was stopped.' : RUNTIME_LOAD_ERROR, {
       cause: error,
@@ -230,11 +319,20 @@ export async function preparePythonOffline(lessonCode: string): Promise<void> {
   throw new Error('Downloading Python took too long. Check your internet connection and try again.')
 }
 
-/** Stops whatever Python code is running now. The next run starts a fresh runtime. */
-export function stopPythonRun(): void {
-  const job = activeJob
-  discardWorker()
-  job?.settle({ kind: 'stopped' })
+/** What to show while a run is in a given state. */
+export function pythonStatusMessage(status: PythonRunStatus): string {
+  switch (status) {
+    case 'waiting':
+      return 'Waiting for the previous run to finish…'
+    case 'waiting-download':
+      return 'Waiting for "Download for offline" to finish…'
+    case 'loading':
+      return 'Downloading Python (first run only, about 10 MB)…'
+    case 'packages':
+      return 'Downloading the packages this code uses, such as pandas (first time only)…'
+    case 'running':
+      return 'Running…'
+  }
 }
 
 function loadError(): FriendlyPythonError {
@@ -286,11 +384,15 @@ async function outcomeError(outcome: Exclude<JobOutcome, { kind: 'result' }>): P
   return explainPythonError(outcome.message)
 }
 
-export async function runPythonCode(source: string, stdin = ''): Promise<SandboxRunResult> {
+export async function runPythonCode(
+  source: string,
+  stdin = '',
+  options: PythonRunOptions = {},
+): Promise<SandboxRunResult> {
   let outcome: JobOutcome
   let partialOutput: string
   try {
-    ;({ outcome, partialOutput } = await enqueue({ type: 'run', code: source, stdin }))
+    ;({ outcome, partialOutput } = await enqueue({ type: 'run', code: source, stdin }, options))
   } catch (error: unknown) {
     return { output: '', error: error instanceof RunStoppedError ? stoppedError() : loadError() }
   }
@@ -309,10 +411,13 @@ export async function runPythonChallengeTests(
   userCode: string,
   setupCode: string | undefined,
   tests: RuntimeAssertionTest[],
+  options: PythonRunOptions = {},
 ): Promise<PythonChallengeRunResult> {
   let outcome: JobOutcome
   try {
-    outcome = (await enqueue({ type: 'tests', userCode, setupCode: setupCode ?? '', tests, stdin: '' })).outcome
+    outcome = (
+      await enqueue({ type: 'tests', userCode, setupCode: setupCode ?? '', tests, stdin: '' }, options)
+    ).outcome
   } catch (error: unknown) {
     return {
       passed: false,
@@ -329,7 +434,8 @@ export async function runPythonChallengeTests(
   }
   const results = Array.isArray(payload.tests) ? payload.tests : []
   return {
-    passed: results.every((t) => t.passed),
+    // A challenge with no tests can't be passed (it would accept any code).
+    passed: results.length > 0 && results.every((t) => t.passed),
     tests: results,
     error: null,
   }

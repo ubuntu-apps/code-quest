@@ -1,19 +1,29 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'pathlib_data',
   title: 'Pathlib for data files',
   paragraphs: [
-    'pathlib.Path is object-oriented paths. Read/write text, join, glob, exists.',
-    'Prefer over os.path for readability. Great for data pipelines.',
-    'Use / operator to join path segments.',
+    "Data lives in files, and `pathlib.Path` is the modern way to work with file paths. A `Path` is an object rather than a plain string, so it knows how to join, split and inspect itself, and it uses the right separator on Windows, macOS and Linux.",
+    "Join parts with `/`, as in `Path(\"data\") / \"2026\" / \"scores.csv\"`. Then ask about the parts: `.name` is the file name (`scores.csv`), `.suffix` the last extension (`.csv`), `.stem` the name without the last extension (`scores`; for `a.tar.gz` it is `a.tar`), and `.parent` the folder it's in.",
+    "```\nfrom pathlib import Path\n\np = Path(\"data\") / \"2026\" / \"scores.csv\"\nprint(p.name, p.stem, p.suffix, p.parent)\nprint(p.with_suffix(\".json\"), p.with_name(\"backup.csv\"))\n```",
+    "`with_suffix(\".json\")` and `with_name(\"backup.csv\")` return a new path with the extension or the name swapped. The original path doesn't change: like strings, paths can't be modified.",
+    "Reading and writing a small text file takes one call: `p.write_text(text, encoding=\"utf-8\")` and `p.read_text(encoding=\"utf-8\")`. Always give the encoding; otherwise Python uses the computer's default, which differs between systems and can garble letters like ü.",
+    "`p.exists()` returns `True` or `False`, and `p.is_file()` and `p.is_dir()` tell you what kind of thing is there. `folder.mkdir(parents=True, exist_ok=True)` creates a folder together with any missing parent folders, and doesn't complain if it already exists.",
+    "To find files, `folder.glob(\"*.log\")` matches names directly inside the folder, while `folder.rglob(\"*.log\")` also searches every subfolder. `p.stat().st_size` is a file's size in bytes, and `p.rename(new_path)` renames or moves it. If you rename files while looping over a glob, turn the glob into a `list` first.",
+    "```\nlogs = Path(\"logs\")\nlogs.mkdir(exist_ok=True)\n(logs / \"app.log\").write_text(\"started\\n\", encoding=\"utf-8\")\nprint([f.name for f in logs.glob(\"*.log\")])\n```",
+    "`relative_to` gives one path relative to another: `Path(\"/home/ana/projects/app/main.py\").relative_to(\"/home/ana/projects\")` is `app/main.py`. `PurePosixPath` does the same path calculations with `/` on every system, without touching the disk.",
+    "The code runner here has its own temporary folder, which is wiped when the page reloads, so the file examples are safe to try.",
   ],
-  sandboxCode: py`from pathlib import Path
-
-p = Path("data") / "scores.json"
-print(p.suffix)
-print(p.stem)
-# p.write_text('{"a":1}', encoding="utf-8")`,
+  sandboxCode: "from pathlib import Path\n\nnotes = Path(\"notes\") / \"today.txt\"\nnotes.parent.mkdir(parents=True, exist_ok=True)\nnotes.write_text(\"hello\\nworld\\n\", encoding=\"utf-8\")\nprint(notes.read_text(encoding=\"utf-8\").splitlines())\nprint(notes.name, notes.suffix, notes.exists())",
+  sandboxSnippets: [
+    snippet("Path parts", "from pathlib import Path\n\nreport = Path(\"reports/summary.final.pdf\")\nprint(report.name, report.stem, report.suffix, report.parent)\nprint(report.with_suffix(\".txt\"))"),
+    snippet("Write and read", "from pathlib import Path\n\np = Path(\"greeting.txt\")\np.write_text(\"Grüezi!\\n\", encoding=\"utf-8\")\nprint(p.read_text(encoding=\"utf-8\").strip())\nprint(p.stat().st_size, \"bytes (ü takes 2)\")"),
+    snippet("Find files", "from pathlib import Path\n\nbase = Path(\"demo_logs\")\n(base / \"old\").mkdir(parents=True, exist_ok=True)\nfor name in [\"a.log\", \"b.txt\", \"old/c.log\"]:\n    (base / name).write_text(\"x\", encoding=\"utf-8\")\nprint(sorted(p.name for p in base.glob(\"*.log\")))\nprint(sorted(p.name for p in base.rglob(\"*.log\")))"),
+    snippet("Rename", "from pathlib import Path\n\nphotos = Path(\"photos\")\nphotos.mkdir(exist_ok=True)\nfor n in (1, 2):\n    (photos / f\"IMG_{n}.jpg\").write_text(\"\", encoding=\"utf-8\")\nfor p in list(photos.glob(\"IMG_*.jpg\")):\n    p.rename(p.with_name(p.name.replace(\"IMG_\", \"holiday_\")))\nprint(sorted(p.name for p in photos.iterdir()))"),
+    snippet("Relative paths", "from pathlib import PurePosixPath\n\nroot = PurePosixPath(\"/home/ana/projects\")\nscript = PurePosixPath(\"/home/ana/projects/app/src/main.py\")\nrel = script.relative_to(root)\nprint(rel, rel.parts)"),
+  ],
+  readMore: { label: "Python docs: the pathlib module", url: "https://docs.python.org/3/library/pathlib.html", source: "Python docs" },
   challenges: [
     task('easy', 'Join paths', {
       prompt: 'Build the path `data/2026/scores.csv` from its three parts using the `/` operator. Store it in `p`.',

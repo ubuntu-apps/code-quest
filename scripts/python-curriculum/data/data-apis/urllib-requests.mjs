@@ -1,20 +1,31 @@
-import { makeTopic, mc, py, qShort, task } from '../_builders.mjs'
+import { makeTopic, mc, py, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'urllib_requests',
   title: 'HTTP with urllib',
   paragraphs: [
-    '`urllib.request` fetches URLs from stdlib. `urlopen`, read, decode.',
-    'Set headers, handle HTTP errors, respect timeouts.',
-    'For complex HTTP prefer `requests` library when available.',
-    'The sandbox here has no internet access, so the challenges practise everything around a request: building URLs and requests, decoding responses, and handling errors and retries.',
+    "When a program talks to a web API, it sends an HTTP **request** to a URL and gets a **response** back: a status code (200 means OK), headers, and a body, which is often JSON. Python's standard library does this with the `urllib` package.",
+    "**No internet here.** The code runner in this app can't reach other websites, so this lesson practises everything around a request: building URLs, preparing requests, decoding responses and handling errors. On your own computer, a complete request looks like this:",
+    "```\nimport json\nfrom urllib.request import urlopen\n\nwith urlopen(\"https://api.example.com/users\", timeout=5) as response:\n    body = response.read().decode(\"utf-8\")\n    users = json.loads(body)\n```",
+    "`timeout=5` gives up after 5 seconds instead of waiting forever for a server that doesn't answer. `response.read()` returns **bytes**, not text; `.decode(\"utf-8\")` turns them into a string you can give to `json.loads`.",
+    "A URL has parts. For `https://api.example.com/v1/users?limit=10`, `urllib.parse.urlparse` gives you `.scheme` (`https`), `.netloc`, the domain (`api.example.com`), `.path` (`/v1/users`) and `.query` (`limit=10`). `parse_qs(query)` turns the query into a dict of lists, like `{\"limit\": [\"10\"]}`. They are lists because a name can appear more than once, as in `tag=a&tag=b`.",
+    "Going the other way, `urlencode({\"q\": \"python csv\", \"page\": 2})` builds `q=python+csv&page=2` and escapes spaces and symbols for you. Inside a path, use `quote(name, safe=\"\")`: a space becomes `%20` and a `/` becomes `%2F`, so user input can't break the path.",
+    "```\nfrom urllib.parse import urlparse, parse_qs, urlencode, quote\n\nparts = urlparse(\"https://api.example.com/v1/users?limit=10&tag=a&tag=b\")\nprint(parts.netloc, parts.path, parse_qs(parts.query))\nprint(urlencode({\"q\": \"python csv\", \"page\": 2}))\nprint(quote(\"Ana / Bob\", safe=\"\"))\n```",
+    "To send headers or a body, build a `Request`. Headers are a dict, such as `{\"Accept\": \"application/json\"}`. A body (`data=`) must be **bytes**, for example `urlencode(form).encode()`, and `method=\"POST\"` says the request sends data instead of only reading it.",
+    "```\nfrom urllib.request import Request\n\nreq = Request(\n    \"https://api.example.com/signup\",\n    data=urlencode({\"name\": \"Ana\"}).encode(),\n    headers={\"User-Agent\": \"CodeQuest/1.0\"},\n    method=\"POST\",\n)\nprint(req.get_method(), req.full_url, req.data)\n```",
+    "Requests fail. For a 4xx or 5xx status, `urlopen` raises `urllib.error.HTTPError`, which has the status in `.code`. A 404 (not found) is often an answer to handle rather than a crash: catch it, and re-raise anything else with a bare `raise`. When the server can't be reached at all, you get `URLError`. `HTTPError` is a kind of `URLError`, so if you catch both, put `HTTPError` first.",
+    "Network failures and 5xx errors are often temporary, so trying again a few times can help. A 4xx error means the request itself is wrong, and repeating it won't fix it.",
+    "Big result sets come in **pages**: you ask for `?page=1&per_page=20`, then page 2, and so on, and `math.ceil(total / per_page)` tells you how many pages there are. Many projects use the third-party `requests` library instead of urllib because it's shorter to write, but the ideas are the same.",
   ],
-  sandboxCode: py`from urllib.request import urlopen
-
-# Example structure (may not run offline):
-# with urlopen("https://example.com", timeout=5) as r:
-#     html = r.read().decode()
-print("urllib ready")`,
+  sandboxCode: "from urllib.parse import urlparse, parse_qs, urlencode\n\nparts = urlparse(\"https://api.example.com/v1/users?limit=10\")\nprint(parts.netloc)\nprint(parts.path)\nprint(parse_qs(parts.query))\nprint(urlencode({\"q\": \"python csv\", \"page\": 2}))",
+  sandboxSnippets: [
+    snippet("Split a URL", "from urllib.parse import urlparse\n\nparts = urlparse(\"https://api.example.com/v1/users?limit=10\")\nprint(parts.scheme, parts.netloc, parts.path, parts.query)"),
+    snippet("Query strings", "from urllib.parse import parse_qs, urlencode\n\nprint(parse_qs(\"limit=10&tag=python&tag=csv\"))\nprint(urlencode({\"q\": \"python csv\", \"page\": 2}))"),
+    snippet("Safe paths", "from urllib.parse import quote\n\nname = \"Ana / Bob\"\nprint(\"https://api.example.com/users/\" + quote(name, safe=\"\"))"),
+    snippet("Build a request", "from urllib.parse import urlencode\nfrom urllib.request import Request\n\nreq = Request(\n    \"https://api.example.com/signup\",\n    data=urlencode({\"name\": \"Ana\", \"age\": 30}).encode(),\n    headers={\"Accept\": \"application/json\"},\n    method=\"POST\",\n)\nprint(req.get_method(), req.full_url)\nprint(req.data)\nprint(req.header_items())"),
+    snippet("Decode a response", "import json\n\nraw = b'{\"ok\": true, \"items\": [\"caf\\xc3\\xa9\", \"tea\"]}'\nbody = raw.decode(\"utf-8\")\nprint(json.loads(body)[\"items\"])"),
+  ],
+  readMore: { label: "Python docs: fetching URLs with urllib", url: "https://docs.python.org/3/howto/urllib2.html", source: "Python docs" },
   challenges: [
     task('easy', 'Build a query string', {
       prompt: 'Turn `params` into a URL query string with `urlencode` and store it in `query`.',

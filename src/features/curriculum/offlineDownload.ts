@@ -6,6 +6,13 @@ import type { LanguageBundle } from './types'
 
 const OFFLINE_STATE_KEY = 'codequest:offline'
 
+/** Thrown by downloadForOffline when its signal is aborted. */
+export class OfflineDownloadCancelled extends Error {
+  constructor() {
+    super('Download cancelled.')
+  }
+}
+
 export interface OfflineState {
   /** When the last full download finished (ISO time). */
   downloadedAt: string
@@ -63,8 +70,12 @@ export async function downloadForOffline(options: {
   baseUrl: string
   runtimeCourses: string[]
   onStep?: (step: OfflineStep) => void
+  signal?: AbortSignal
 }): Promise<OfflineState> {
-  const { baseUrl, runtimeCourses, onStep } = options
+  const { baseUrl, runtimeCourses, onStep, signal } = options
+  const throwIfCancelled = () => {
+    if (signal?.aborted) throw new OfflineDownloadCancelled()
+  }
   if (!offlineCachingAvailable()) {
     throw new Error('Offline mode is not set up in this browser yet. Reload the page and try again.')
   }
@@ -85,11 +96,18 @@ export async function downloadForOffline(options: {
 
   const runtimes: string[] = []
   if (runtimeCourses.includes('python') && bundles.python) {
+    throwIfCancelled()
     onStep?.('python')
-    await preparePythonOffline(collectLessonCode(bundles.python))
+    try {
+      await preparePythonOffline(collectLessonCode(bundles.python), signal)
+    } catch (error) {
+      throwIfCancelled()
+      throw error
+    }
     runtimes.push('python')
   }
   if (runtimeCourses.includes('r') && bundles.r) {
+    throwIfCancelled()
     onStep?.('r')
     try {
       await prepareROffline()
@@ -98,6 +116,7 @@ export async function downloadForOffline(options: {
     }
     runtimes.push('r')
   }
+  throwIfCancelled()
 
   const state = { downloadedAt: new Date().toISOString(), runtimes }
   saveOfflineState(state)
@@ -112,4 +131,62 @@ export async function storageUsedBytes(): Promise<number | null> {
   } catch {
     return null
   }
+}
+
+export type OfflineDownloadStatus =
+  | { kind: 'idle' }
+  | { kind: 'working'; step: OfflineStep }
+  | { kind: 'done'; usedBytes: number | null }
+  | { kind: 'cancelled' }
+  | { kind: 'error'; message: string }
+
+// The download lives here rather than in the About tab, so it keeps going (and
+// keeps its progress) when the learner switches tabs, and can't be started twice.
+let downloadStatus: OfflineDownloadStatus = { kind: 'idle' }
+let downloadController: AbortController | null = null
+const statusListeners = new Set<() => void>()
+
+function setDownloadStatus(next: OfflineDownloadStatus): void {
+  downloadStatus = next
+  for (const listener of statusListeners) listener()
+}
+
+export function getOfflineDownloadStatus(): OfflineDownloadStatus {
+  return downloadStatus
+}
+
+export function subscribeOfflineDownloadStatus(listener: () => void): () => void {
+  statusListeners.add(listener)
+  return () => statusListeners.delete(listener)
+}
+
+/** Starts "Download for offline" unless it is already running. Progress goes to the status above. */
+export function startOfflineDownload(options: { baseUrl: string; runtimeCourses: string[] }): void {
+  if (downloadController) return
+  const controller = new AbortController()
+  downloadController = controller
+  setDownloadStatus({ kind: 'working', step: 'lessons' })
+  void (async () => {
+    try {
+      await downloadForOffline({
+        ...options,
+        signal: controller.signal,
+        onStep: (step) => setDownloadStatus({ kind: 'working', step }),
+      })
+      setDownloadStatus({ kind: 'done', usedBytes: await storageUsedBytes() })
+    } catch (error: unknown) {
+      setDownloadStatus(
+        controller.signal.aborted
+          ? { kind: 'cancelled' }
+          : { kind: 'error', message: error instanceof Error ? error.message : 'The download failed. Try again.' },
+      )
+    } finally {
+      downloadController = null
+    }
+  })()
+}
+
+/** Stops a running "Download for offline". Files already fetched stay cached. */
+export function cancelOfflineDownload(): void {
+  downloadController?.abort()
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { loadLanguageBundle } from '../loadCurriculum'
+import { lessonLoadErrorMessage, loadLanguageBundle } from '../loadCurriculum'
 import type { LanguageBundle, RootIndex } from '../types'
 
 export function useLanguageBundles(
@@ -41,7 +41,7 @@ export function useLanguageBundles(
       } catch (e: unknown) {
         if (!cancelled) {
           setBundles({})
-          setError(e instanceof Error ? e.message : 'Failed to load curriculum')
+          setError(lessonLoadErrorMessage(e, 'Failed to load curriculum'))
         }
       } finally {
         if (!cancelled) setLoading(false)

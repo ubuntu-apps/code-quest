@@ -14,52 +14,72 @@ export function useLevelTest(languageId: string | null, level: Level | null, onA
   const [result, setResult] = useState<TestGradeResult | null>(null)
   /** True after the learner retakes or edits answers, so a past pass doesn't show "Next" yet. */
   const [sessionReset, setSessionReset] = useState(false)
+  /**
+   * Questions changed since the last Submit. Their Correct/Incorrect marks are hidden, the
+   * others stay, so a learner can fix the wrong ones and submit again.
+   */
+  const [edited, setEdited] = useState<Record<string, true>>({})
 
   const submit = () => {
     if (!languageId || !level) return
     const passing = level.test.passingScorePercent ?? PASS_DEFAULT
     const graded = gradeTest(level.test.questions, short, mcq, passing)
     setResult(graded)
+    setEdited({})
     if (graded.passed) setSessionReset(false)
     const prev = loadProgress(languageId, level.id)
     saveProgress(languageId, level.id, { ...prev, testPassed: prev.testPassed || graded.passed })
-    onActivity()
-  }
-
-  const clearResult = () => {
-    setResult(null)
-    setSessionReset(true)
+    // A blank submit isn't practice, so it doesn't keep the daily streak going.
+    const answered =
+      Object.values(short).some((value) => value.trim() !== '') || Object.keys(mcq).length > 0
+    if (answered) onActivity()
   }
 
   const retake = () => {
     setShort({})
     setMcq({})
-    clearResult()
+    setResult(null)
+    setEdited({})
+    setSessionReset(true)
+  }
+
+  const markEdited = (questionId: string) => {
+    setSessionReset(true)
+    setEdited((prev) => (prev[questionId] ? prev : { ...prev, [questionId]: true }))
   }
 
   const changeShort = (questionId: string, value: string) => {
-    clearResult()
+    markEdited(questionId)
     setShort((prev) => ({ ...prev, [questionId]: value }))
   }
 
   const changeMcq = (questionId: string, choiceId: string) => {
-    clearResult()
+    markEdited(questionId)
     setMcq((prev) => ({ ...prev, [questionId]: choiceId }))
   }
 
   /** Hides the last result without marking the session as reset (used when leaving a level). */
-  const dismissResult = () => setResult(null)
+  const dismissResult = () => {
+    setResult(null)
+    setEdited({})
+  }
 
   const resetForLevel = useCallback(() => {
     setShort({})
     setMcq({})
     setResult(null)
+    setEdited({})
   }, [])
+
+  /** The last result still describes every answer (nothing changed since Submit). */
+  const resultCurrent = result !== null && Object.keys(edited).length === 0
 
   return {
     short,
     mcq,
     result,
+    resultCurrent,
+    edited,
     sessionReset,
     submit,
     retake,

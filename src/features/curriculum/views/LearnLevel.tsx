@@ -40,8 +40,11 @@ interface LearnLevelProps {
   challengeRuntimeError: Record<string, FriendlySandboxError | null>
   challengeErrorExpanded: Record<string, boolean>
   challengeErrorUiEpoch: Record<string, number>
+  /** Challenges being checked now, with a progress message. */
+  challengeChecking: Record<string, string>
   onChallengeDraftChange: (challengeId: string, value: string) => void
   onCheckChallenge: (challenge: Challenge) => void
+  onStopChallengeCheck: (challengeId: string) => void
   onRevealAnswer: (challengeId: string) => void
   onUpdateChallenge: (challengeId: string, patch: Partial<Challenge>) => void
   onMoveChallenge: (challengeId: string, direction: -1 | 1) => void
@@ -51,6 +54,8 @@ interface LearnLevelProps {
   testShort: Record<string, string>
   testMcq: Record<string, string>
   testResult: TestGradeResult | null
+  /** Questions changed since the last Submit (their marks are hidden). */
+  testEdited: Record<string, true>
   onTestShortChange: (questionId: string, value: string) => void
   onTestMcqChange: (questionId: string, choiceId: string) => void
   onUpdatePassingScore: (score: number) => void
@@ -90,8 +95,10 @@ export function LearnLevel({
   challengeRuntimeError,
   challengeErrorExpanded,
   challengeErrorUiEpoch,
+  challengeChecking,
   onChallengeDraftChange,
   onCheckChallenge,
+  onStopChallengeCheck,
   onRevealAnswer,
   onUpdateChallenge,
   onMoveChallenge,
@@ -101,6 +108,7 @@ export function LearnLevel({
   testShort,
   testMcq,
   testResult,
+  testEdited,
   onTestShortChange,
   onTestMcqChange,
   onUpdatePassingScore,
@@ -177,8 +185,10 @@ export function LearnLevel({
               runtimeError={challengeRuntimeError[ch.id] ?? null}
               errorExpanded={challengeErrorExpanded[ch.id] ?? false}
               errorUiEpoch={challengeErrorUiEpoch[ch.id] ?? 0}
+              checkingMessage={challengeChecking[ch.id] ?? null}
               onDraftChange={(value) => onChallengeDraftChange(ch.id, value)}
               onCheck={() => onCheckChallenge(ch)}
+              onStopCheck={() => onStopChallengeCheck(ch.id)}
               onRevealAnswer={() => onRevealAnswer(ch.id)}
               onUpdateChallenge={(patch) => onUpdateChallenge(ch.id, patch)}
               onMove={(dir) => onMoveChallenge(ch.id, dir)}
@@ -197,6 +207,7 @@ export function LearnLevel({
           testShort={testShort}
           testMcq={testMcq}
           testResult={testResult}
+          testEdited={testEdited}
           onTestShortChange={onTestShortChange}
           onTestMcqChange={onTestMcqChange}
           onUpdatePassingScore={onUpdatePassingScore}
