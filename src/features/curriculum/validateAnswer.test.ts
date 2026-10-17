@@ -32,6 +32,23 @@ describe('validateAgainst', () => {
     expect(validateAgainst('%Y', { mode: 'equalsNormalized', expected: '%Y' })).toBe(true)
   })
 
+  it('equalsNormalized accepts an answer typed in quotes or backticks', () => {
+    const v = { mode: 'equalsNormalized' as const, expected: 'kiwi, pear' }
+    for (const answer of ['kiwi, pear', '"kiwi, pear"', "'kiwi, pear'", '`kiwi, pear`']) {
+      expect(validateAgainst(answer, v)).toBe(true)
+    }
+    expect(validateAgainst('"kiwi, pear\'', v)).toBe(false)
+    expect(validateAgainst('"kiwi"', v)).toBe(false)
+  })
+
+  it('equalsNormalized compares numbers by value', () => {
+    expect(validateAgainst('2.50', { mode: 'equalsNormalized', expected: '2.5' })).toBe(true)
+    expect(validateAgainst('-40.0', { mode: 'equalsNormalized', expected: '-40' })).toBe(true)
+    expect(validateAgainst('9', { mode: 'equalsNormalized', expected: '09' })).toBe(false)
+    expect(validateAgainst('2.6', { mode: 'equalsNormalized', expected: '2.5' })).toBe(false)
+    expect(validateAgainst('1e1', { mode: 'equalsNormalized', expected: '10' })).toBe(false)
+  })
+
   it('includesAll requires every needle', () => {
     expect(
       validateAgainst('abc def', { mode: 'includesAll', needles: ['abc', 'def'] }),

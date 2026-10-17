@@ -1,21 +1,24 @@
 // Data and APIs topics, in lesson order. Each topic lives in its own file under data-apis/.
-// (The collections and pathlib lessons moved to Data structures and Files; see course.mjs.)
 import jsonBasics from './data-apis/json-basics.mjs'
 import csvData from './data-apis/csv-data.mjs'
-import datetimeData from './data-apis/datetime-data.mjs'
-import urllibRequests from './data-apis/urllib-requests.mjs'
-import restApis from './data-apis/rest-apis.mjs'
+import timestampsAndTimeZones from './data-apis/timestamps-and-time-zones.mjs'
+import regularExpressions from './data-apis/regular-expressions.mjs'
+import dataValidation from './data-apis/data-validation.mjs'
 import sqliteBasics from './data-apis/sqlite-basics.mjs'
 import pandasIntro from './data-apis/pandas-intro.mjs'
-import dataValidation from './data-apis/data-validation.mjs'
+import urllibRequests from './data-apis/urllib-requests.mjs'
+import restApis from './data-apis/rest-apis.mjs'
+import settingsAndSecrets from './data-apis/settings-and-secrets.mjs'
 
 export const dataApisTopics = [
   jsonBasics,
   csvData,
-  datetimeData,
-  urllibRequests,
-  restApis,
+  timestampsAndTimeZones,
+  regularExpressions,
+  dataValidation,
   sqliteBasics,
   pandasIntro,
-  dataValidation,
+  urllibRequests,
+  restApis,
+  settingsAndSecrets,
 ]

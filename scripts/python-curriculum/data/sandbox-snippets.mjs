@@ -2,55 +2,6 @@ import { snippet } from './_builders.mjs'
 
 /** @type {Record<string, { id: string, label: string, code: string }[]>} */
 export const SANDBOX_SNIPPETS_BY_LEVEL = {
-  // ── Data and APIs ─────────────────────────────────────────────
-  json_basics: [
-    snippet('dumps', 'import json\ndata = {"name": "Ana", "score": 95}\nprint(json.dumps(data))'),
-    snippet('loads', 'import json\nprint(json.loads(\'{"name": "Ana"}\')["name"])'),
-    snippet('Pretty print', 'import json\nprint(json.dumps({"a": 1}, indent=2))'),
-    snippet('List JSON', 'import json\nprint(json.loads("[1, 2]"))'),
-    snippet('Decode error', 'import json\ntry:\n    json.loads("{bad}")\nexcept json.JSONDecodeError:\n    print("invalid JSON")'),
-  ],
-  csv_data: [
-    snippet('DictReader', 'import csv\nfrom io import StringIO\nbuf = StringIO("name,score\\nAna,90\\n")\nrows = list(csv.DictReader(buf))\nprint(rows[0]["name"])'),
-    snippet('csv writer', 'import csv\nfrom io import StringIO\nbuf = StringIO()\ncsv.writer(buf).writerow(["a", "b"])\nprint(buf.getvalue())'),
-    snippet('Sum column', 'import csv\nfrom io import StringIO\nbuf = StringIO("score\\n90\\n85\\n")\nprint(sum(int(r["score"]) for r in csv.DictReader(buf)))'),
-    snippet('Delimiter', 'import csv\nfrom io import StringIO\nbuf = StringIO()\ncsv.writer(buf, delimiter=";").writerow(["a", "b"])\nprint(buf.getvalue())'),
-  ],
-  urllib_requests: [
-    snippet('urlopen', 'from urllib.request import urlopen\nprint("urllib ready")'),
-    snippet('Parse url', 'from urllib.parse import urlparse\nprint(urlparse("https://example.com/path"))'),
-    snippet('quote', 'from urllib.parse import quote\nprint(quote("hello world"))'),
-    snippet('Request headers', '# req = Request(url, headers={"User-Agent": "CodeQuest"})\nprint("custom headers")'),
-  ],
-  rest_apis: [
-    snippet('Response dict', 'response = {"status": 200, "data": {"id": 1, "title": "Todo"}}\nprint(response["status"])'),
-    snippet('Status codes', 'print(200, 404, 500)'),
-    snippet('JSON body', 'import json\ndata = {"id": 1, "title": "Todo"}\nprint(json.dumps(data))'),
-    snippet('GET POST', 'methods = ["GET", "POST", "PUT", "DELETE"]\nprint(methods)'),
-  ],
-  datetime_data: [
-    snippet('now', 'from datetime import datetime\nprint(datetime.now().strftime("%Y-%m-%d"))'),
-    snippet('timedelta', 'from datetime import datetime, timedelta\nprint((datetime.now() + timedelta(days=7)).date())'),
-    snippet('Parse', 'from datetime import datetime\nd = datetime.strptime("2024-06-01", "%Y-%m-%d")\nprint(d.month)'),
-    snippet('ISO date', 'from datetime import date\nprint(date.today().isoformat())'),
-  ],
-  sqlite_basics: [
-    snippet('In-memory DB', 'import sqlite3\nconn = sqlite3.connect(":memory:")\nconn.execute("CREATE TABLE users (id INTEGER, name TEXT)")\nconn.execute("INSERT INTO users VALUES (1, ?)", ("Ana",))\nprint(conn.execute("SELECT name FROM users").fetchone()[0])'),
-    snippet('Parameterized', 'import sqlite3\nconn = sqlite3.connect(":memory:")\nconn.execute("CREATE TABLE t (v INTEGER)")\nconn.execute("INSERT INTO t VALUES (?)", (42,))\nprint(conn.execute("SELECT v FROM t WHERE v=?", (42,)).fetchone()[0])'),
-    snippet('fetchall', 'import sqlite3\nconn = sqlite3.connect(":memory:")\nconn.execute("CREATE TABLE t (v INTEGER)")\nconn.executemany("INSERT INTO t VALUES (?)", [(1,), (2,)])\nprint(conn.execute("SELECT v FROM t").fetchall())'),
-  ],
-  pandas_intro: [
-    snippet('DataFrame', 'try:\n    import pandas as pd\n    df = pd.DataFrame({"name": ["Ana", "Bob"], "score": [90, 85]})\n    print(df)\nexcept ImportError:\n    print("pandas not installed")'),
-    snippet('Mean column', 'try:\n    import pandas as pd\n    df = pd.DataFrame({"score": [90, 85]})\n    print(df["score"].mean())\nexcept ImportError:\n    print("pandas not installed")'),
-    snippet('head()', 'try:\n    import pandas as pd\n    df = pd.DataFrame({"a": [1, 2, 3]})\n    print(df.head(2))\nexcept ImportError:\n    print("pandas not installed")'),
-  ],
-  data_validation: [
-    snippet('Validate user', 'def validate_user(data):\n    if "name" not in data or not isinstance(data["name"], str):\n        raise ValueError("name required string")\n    if "age" in data and data["age"] < 0:\n        raise ValueError("age must be non-negative")\n    return data\nprint(validate_user({"name": "Ana", "age": 30}))'),
-    snippet('Required fields', 'required = ["name", "email"]\ndata = {"name": "Ana", "email": "a@b.c"}\nprint(all(k in data for k in required))'),
-    snippet('Type check', 'def is_int(x):\n    return isinstance(x, int)\nprint(is_int(5), is_int("5"))'),
-    snippet('Range check', 'age = 30\nprint(0 <= age <= 120)'),
-  ],
-
   // ── Capstone projects ───────────────────────────────────
   cli_guess_game: [
     snippet('randint', 'import random\nprint(random.randint(1, 10))'),
@@ -117,28 +68,6 @@ export const SANDBOX_SNIPPETS_BY_LEVEL = {
     snippet('Module list', 'modules = ["models", "cli", "utils"]\nprint("cli" in modules)'),
     snippet('try/except plan', 'try:\n    int("42")\nexcept ValueError:\n    print("handle bad input")'),
     snippet('README sections', 'sections = ["Install", "Usage", "License"]\nprint(len(sections))'),
-  ],
-
-  // ── Section projects ────────────────────────────────────────────
-
-  // Reused project ids with section-specific prefixes
-  proj_data_apis_weather_cli: [
-    snippet('Mock API', 'data = {"city": "London", "temp_c": 18, "conditions": "Cloudy"}\nprint(data)'),
-    snippet('Format', 'data = {"city": "London", "temp_c": 18, "conditions": "Cloudy", "humidity": 72}\nprint(f"{data[\'city\']}: {data[\'temp_c\']}C")'),
-    snippet('get safe', 'data = {}\nprint(data.get("wind", "Unknown"))'),
-    snippet('json', 'import json\nprint(json.dumps({"city": "London"}))'),
-  ],
-  proj_data_apis_expense_tracker: [
-    snippet('Add expense', 'expenses = []\nexpenses.append({"amount": 12.5, "category": "food"})\nprint(expenses)'),
-    snippet('Sum', 'print(sum(e["amount"] for e in [{"amount": 10}, {"amount": 5}]))'),
-    snippet('json save', 'import json\nprint(json.dumps(expenses := [{"amount": 1}]))'),
-    snippet('Filter month', 'expenses = [{"date": "2024-06-01", "amount": 1}]\nprint([e for e in expenses if e["date"].startswith("2024-06")])'),
-  ],
-  proj_data_apis_web_scraper: [
-    snippet('Parse href', 'html = \'<a href="/page">Link</a>\'\nparts = html.split("<a href=")\nprint(parts[1].split(">")[0].strip(\'"\'))'),
-    snippet('Link list', 'links = ["/page", "/about"]\nprint(links)'),
-    snippet('urlopen', 'from urllib.request import urlopen\nprint("ready")'),
-    snippet('sleep', 'import time\ntime.sleep(0)\nprint("rate limit")'),
   ],
 }
 

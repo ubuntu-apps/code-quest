@@ -89,7 +89,7 @@ export default makeProject("hard", {
     mc("Why do the modules use absolute imports like `from shop.prices import price_of`?", ["They are shorter", "Relative imports are not allowed", "They work both when imported and when a file is run directly", "They are faster"], 2),
     mc("Which module should import nothing from the rest of the shop?", ["`prices`", "`cart`", "`receipt`", "`main`"], 0),
     mc("Why does `add` call `price_of(item)` before changing the cart?", ["To print the price", "To round the total", "To make the cart a dict", "So an unknown item raises an error and the cart stays unchanged"], 3),
-    qShort("Which file brings the package's most useful names together? (the file name)", "__init__.py"),
+    mc("Which file brings the package's most useful names together?", ["`main.py`", "`prices.py`", "`shop.py`", "`__init__.py`"], 3),
     mc("Why is `main()` behind a main guard?", ["To make it faster", "So importing `main.py` doesn't start a shopping session", "Because `shop` needs it", "To hide the receipt"], 1),
   ],
 })

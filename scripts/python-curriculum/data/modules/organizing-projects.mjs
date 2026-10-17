@@ -1,9 +1,9 @@
-// Modules and packages topic: Organizing a project. Lesson, Try-it snippets, challenges and quiz.
+// Modules and packages topic: Organising a project. Lesson, Try-it snippets, challenges and quiz.
 import { makeTopic, mc, qShort, snippet, task } from '../_builders.mjs'
 
 export default makeTopic({
   id: "organizing_projects",
-  title: "Organizing a project",
+  title: "Organising a project",
   paragraphs: [
     "A program in one file is fine while it's short. Once it grows to a few hundred lines, finding anything gets slow, and changing one part risks breaking another. The answer is to split it into modules, each with one job, and to lay the project out the way other Python programmers expect. A typical small project looks like this:",
     "```\nweather_app/\n    README.md            what it is and how to run it\n    requirements.txt     the packages it needs\n    main.py              starts the program\n    weather/             the package with the real code\n        __init__.py\n        fetch.py         getting the data\n        convert.py       calculations\n        display.py       turning results into text\n    tests/\n        test_convert.py  checks for convert.py\n```",
@@ -135,7 +135,7 @@ export default makeTopic({
     mc("Why should imports flow one way, from `main` down?", ["It is faster", "It makes files shorter", "Python requires it", "It prevents circular imports"], 3),
     mc("Where does a module's docstring go?", ["At the end", "As the first line of the file", "In README.md", "In `__init__.py` only"], 1),
     mc("`settings.TAX_RATE` is changed while the program runs. Which import sees the new value?", ["`import settings`, then `settings.TAX_RATE`", "`from settings import TAX_RATE`", "Both", "Neither"], 0),
-    qShort("Test files are usually named starting with what? (like `xxx_convert.py`)", "test_"),
+    mc("How are test files usually named?", ["`convert_check.py`", "`test_convert.py`", "`convert.test`", "`tests.py` only"], 1),
     mc("What usually goes in `requirements.txt`?", ["The tests", "The program's output", "Notes for users", "The packages the project needs"], 3),
     mc("Which folder usually holds the checks for a project's code?", ["`src/`", "`docs/`", "`tests/`", "`.venv/`"], 2),
     mc("Where do settings like a tax rate belong?", ["In one place, such as `settings.py`", "Copied into every function", "In the README", "In the test files"], 0),

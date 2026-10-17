@@ -1,5 +1,3 @@
-import { makeProject } from './_builders.mjs'
-import { projectsTopics } from './projects.mjs'
 import aboutMeCard from './fundamentals/project-about-me.mjs'
 import unitConverter from './fundamentals/project-unit-converter.mjs'
 import receiptCalculator from './fundamentals/project-receipt.mjs'
@@ -24,25 +22,9 @@ import shopPackage from './modules/project-shop-package.mjs'
 import playlist from './oop/project-playlist.mjs'
 import parkingGarage from './oop/project-parking-garage.mjs'
 import monsterBattle from './oop/project-monster-battle.mjs'
-
-function projectSource(id) {
-  const topic = projectsTopics.find((t) => t.id === id)
-  if (!topic) throw new Error(`Unknown project source: ${id}`)
-  return topic
-}
-
-function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions = 6, sandboxSnippets) {
-  const src = projectSource(sourceId)
-  return makeProject(difficulty, {
-    id,
-    title: src.title,
-    paragraphs: src.paragraphs,
-    sandboxCode: src.sandboxCode,
-    sandboxSnippets,
-    challenges: src.challengeSpecs.slice(0, maxChallenges),
-    questions: src.questionSpecs.slice(0, maxQuestions),
-  })
-}
+import movieRatings from './data-apis/project-movie-ratings.mjs'
+import bookshopClient from './data-apis/project-bookshop-client.mjs'
+import salesPipeline from './data-apis/project-sales-pipeline.mjs'
 
 /** @type {Record<string, import('./_builders.mjs').[]>} */
 export const SECTION_PROJECTS = {
@@ -54,11 +36,7 @@ export const SECTION_PROJECTS = {
   file_handling: [notesKeeper, logAnalyser, savedTodo],
   error_handling: [safeCalculator, signupForm, dataImporter],
   object_oriented: [playlist, parkingGarage, monsterBattle],
-  data_and_apis: [
-    fromExisting('weather_cli', 'easy', 'proj_data_apis_weather_cli'),
-    fromExisting('expense_tracker', 'medium', 'proj_data_apis_expense_tracker'),
-    fromExisting('web_scraper_basics', 'hard', 'proj_data_apis_web_scraper'),
-  ],
+  data_and_apis: [movieRatings, bookshopClient, salesPipeline],
 }
 
 export function sectionProjectsFor(sectionId) {

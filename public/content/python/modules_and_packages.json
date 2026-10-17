@@ -4700,7 +4700,7 @@
     },
     {
       "id": "organizing_projects",
-      "title": "Organizing a project",
+      "title": "Organising a project",
       "kind": "topic",
       "sandboxSnippets": [
         {
@@ -4725,7 +4725,7 @@
         }
       ],
       "intro": {
-        "title": "Organizing a project",
+        "title": "Organising a project",
         "bodyMarkdown": "A program in one file is fine while it's short. Once it grows to a few hundred lines, finding anything gets slow, and changing one part risks breaking another. The answer is to split it into modules, each with one job, and to lay the project out the way other Python programmers expect. A typical small project looks like this:\n\n```\nweather_app/\n    README.md            what it is and how to run it\n    requirements.txt     the packages it needs\n    main.py              starts the program\n    weather/             the package with the real code\n        __init__.py\n        fetch.py         getting the data\n        convert.py       calculations\n        display.py       turning results into text\n    tests/\n        test_convert.py  checks for convert.py\n```\n\nA few habits make this work. Give each module one job, and name it after that job. Keep calculations apart from input and printing: a function that **returns** a result can be reused, tested and printed anywhere, while one that prints can only print. Keep `main.py` small, just imports, a `main()` that connects the pieces, and the main guard. Put settings that might change, like a tax rate or a file name, in one place, such as `settings.py`, rather than scattered through the code.\n\nImports should flow one way: `main.py` imports `display`, `display` imports `convert`, and `convert` imports nothing of yours. When a low-level module never imports a higher one, circular imports can't happen, and each module can be understood (and tested) on its own.\n\nHere's a script split along those lines. The calculation lives in its own module and knows nothing about `input` or `print`; the main program handles the talking:\n\n```\n# convert.py\n\"\"\"Temperature conversions.\"\"\"\n\ndef c_to_f(c):\n    return c * 9 / 5 + 32\n```\n\n```\n# main.py\nfrom convert import c_to_f\n\ndef main():\n    c = float(input(\"Degrees C: \"))\n    print(f\"{c_to_f(c):.1f} F\")\n\nif __name__ == \"__main__\":\n    main()\n```\n\nThe string on the first line of `convert.py` is the module's **docstring**. It becomes `convert.__doc__`, and `help(convert)` shows it, so a reader learns what the module is for without opening it. Tests usually live in a `tests` folder, in files named `test_something.py`, and import the code they check: tools like `pytest` find and run every `test_` function in them.\n\nOne subtlety with settings: `import settings` and then `settings.TAX_RATE` reads the current value every time, while `from settings import TAX_RATE` copies the value once, when the import runs. If a setting can be changed while the program runs, use the first form.\n\nIn the challenges you'll build layouts with `pathlib`, write modules that slot into a given project, and write small tools that look at a project's files.",
         "sandboxCode": "from pathlib import Path\n\nfor name in [\"app/main.py\", \"app/tools/__init__.py\", \"app/tools/maths.py\", \"app/tests/test_maths.py\"]:\n    path = Path(name)\n    path.parent.mkdir(parents=True, exist_ok=True)\n    path.write_text(\"\")\n\nprint(\"app/\")\nfor path in sorted(Path(\"app\").rglob(\"*\")):\n    depth = len(path.parts) - 1\n    print(\"    \" * depth + path.name + (\"/\" if path.is_dir() else \"\"))",
         "readMore": {
@@ -5125,12 +5125,27 @@
           },
           {
             "id": "organizing_projects_q7",
-            "type": "shortText",
-            "prompt": "Test files are usually named starting with what? (like `xxx_convert.py`)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "test_"
-            }
+            "type": "mcq",
+            "prompt": "How are test files usually named?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`convert_check.py`"
+              },
+              {
+                "id": "b",
+                "label": "`test_convert.py`"
+              },
+              {
+                "id": "c",
+                "label": "`convert.test`"
+              },
+              {
+                "id": "d",
+                "label": "`tests.py` only"
+              }
+            ],
+            "correctChoiceId": "b"
           },
           {
             "id": "organizing_projects_q8",
@@ -6172,12 +6187,27 @@
           },
           {
             "id": "proj_shop_package_q5",
-            "type": "shortText",
-            "prompt": "Which file brings the package's most useful names together? (the file name)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "__init__.py"
-            }
+            "type": "mcq",
+            "prompt": "Which file brings the package's most useful names together?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`main.py`"
+              },
+              {
+                "id": "b",
+                "label": "`prices.py`"
+              },
+              {
+                "id": "c",
+                "label": "`shop.py`"
+              },
+              {
+                "id": "d",
+                "label": "`__init__.py`"
+              }
+            ],
+            "correctChoiceId": "d"
           },
           {
             "id": "proj_shop_package_q6",
