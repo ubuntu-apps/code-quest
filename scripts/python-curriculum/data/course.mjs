@@ -56,18 +56,7 @@ export const COURSE = [
     sectionId: 'control_flow',
     filename: 'control_flow.json',
     title: 'Decisions and loops',
-    topics: topics(
-      'comparison_operators',
-      'boolean_logic',
-      'if_elif_else',
-      'match_case',
-      'while_loops',
-      'for_loops',
-      'range_function',
-      'break_continue',
-      'nested_loops',
-      'loop_patterns',
-    ),
+    topics: controlFlowTopics,
   },
   {
     sectionId: 'data_structures',
@@ -179,11 +168,10 @@ export const COURSE = [
     sectionId: 'projects',
     filename: 'projects.json',
     title: 'Capstone projects',
-    // Easiest first. The unit converter is left out: Fundamentals has its own.
+    // Easiest first. The unit converter, guess game and quiz app are left out:
+    // Fundamentals and Decisions and loops have their own.
     topics: topics(
       'password_generator',
-      'cli_guess_game',
-      'quiz_app',
       'todo_list',
       'contact_book',
       'expense_tracker',

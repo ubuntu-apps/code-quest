@@ -3,6 +3,9 @@ import { projectsTopics } from './projects.mjs'
 import aboutMeCard from './fundamentals/project-about-me.mjs'
 import unitConverter from './fundamentals/project-unit-converter.mjs'
 import receiptCalculator from './fundamentals/project-receipt.mjs'
+import guessTheNumber from './control-flow/project-guess-the-number.mjs'
+import quizGame from './control-flow/project-quiz-game.mjs'
+import primeFinder from './control-flow/project-prime-finder.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -22,32 +25,6 @@ function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions 
     questions: src.questionSpecs.slice(0, maxQuestions),
   })
 }
-
-const controlFlowHard = makeProject('hard', {
-  id: 'fizzbuzz_mini',
-  title: 'FizzBuzz mini',
-  paragraphs: [
-    'Print numbers 1–15, but replace multiples of 3 with `Fizz`, multiples of 5 with `Buzz`, and multiples of both with `FizzBuzz`.',
-    'Use a for loop and if/elif branches. Collect results in a list, then print the list.',
-  ],
-  sandboxCode: 'out = []\nfor n in range(1, 16):\n    if n % 15 == 0:\n        out.append("FizzBuzz")\n    elif n % 3 == 0:\n        out.append("Fizz")\n    elif n % 5 == 0:\n        out.append("Buzz")\n    else:\n        out.append(str(n))\nprint(out)',
-  challenges: [
-    ch('easy', 'Loop range', 'Build `nums = list(range(1, 16))`.', pyVar('nums', 'len(nums) == 15'), { starterCode: 'nums = ' }),
-    ch('medium', 'Divisible by 3', 'Set `fizz = True` when `9 % 3 == 0`.', pyVar('fizz', 'fizz == True'), { starterCode: 'fizz = ' }),
-    ch('medium', 'Append Fizz', 'Append `"Fizz"` when n is 3.', pyVar('out', 'out == ["Fizz"]', 'out=[]\nn=3'), { starterCode: 'if n % 3 == 0:\n    out.append("Fizz")' }),
-    ch('hard', 'FizzBuzz branch', 'For n=15 append `"FizzBuzz"`.', pyVar('label', 'label == "FizzBuzz"', 'label=""'), { starterCode: 'n=15\nif n%15==0:\n    label="FizzBuzz"' }),
-    ch('hard', 'Build list', 'Produce 15 labels for 1..15.', pyVar('out', 'len(out) == 15', 'out=[]')),
-    ch('expert', 'Print result', 'Print the full list.', includes('print'), { starterCode: 'out = ["1","2","Fizz"]\n' }),
-  ],
-  questions: [
-    qMcq('FizzBuzz replaces multiples of:', [{ id: 'a', label: '3 and 5' }, { id: 'b', label: '2 only' }, { id: 'c', label: '7 only' }], 'a'),
-    qShort('Loop 1 through 15 with:', 'range'),
-    qMcq('elif runs when:', [{ id: 'a', label: 'Previous conditions were false' }, { id: 'b', label: 'Always' }, { id: 'c', label: 'Never' }], 'a'),
-    qShort('Append adds to:', 'end of list'),
-    qMcq('15 is multiple of:', [{ id: 'a', label: 'Both 3 and 5' }, { id: 'b', label: 'Neither' }, { id: 'c', label: 'Only 3' }], 'a'),
-    qShort('Store labels in a:', 'list'),
-  ],
-})
 
 const dataStructuresEasy = makeProject('easy', {
   id: 'grade_book',
@@ -208,11 +185,7 @@ const oopHard = makeProject('hard', {
 /** @type {Record<string, import('./_builders.mjs').[]>} */
 export const SECTION_PROJECTS = {
   fundamentals: [aboutMeCard, unitConverter, receiptCalculator],
-  control_flow: [
-    fromExisting('cli_guess_game', 'easy', 'proj_control_flow_guess_game'),
-    fromExisting('quiz_app', 'medium', 'proj_control_flow_quiz_app'),
-    controlFlowHard,
-  ],
+  control_flow: [guessTheNumber, quizGame, primeFinder],
   data_structures: [
     dataStructuresEasy,
     fromExisting('quiz_app', 'medium', 'proj_data_structures_quiz_app'),

@@ -52,6 +52,8 @@ export function PythonSandboxSection({
   const [stdin, setStdin] = useState('')
   // Input and Stop are Python-only: the R runtime has no stdin hook or stop control here.
   const isPython = languageId === 'python'
+  // Only show the Input box when the code asks for input.
+  const usesInput = isPython && /\binput\s*\(/.test(code)
   const languageLabel = languageId === 'r' ? 'R' : 'Python'
   const runtimeSupported = isCodeRuntimeSupported()
   const snippets =
@@ -65,7 +67,7 @@ export function PythonSandboxSection({
 
   const handleRun = () => {
     setExpanded(false)
-    onRun(isPython ? stdin : '')
+    onRun(usesInput ? stdin : '')
   }
 
   return (
@@ -100,7 +102,7 @@ export function PythonSandboxSection({
         errorColumn={error?.column ?? null}
         errorUiEpoch={errorUiEpoch}
       />
-      {isPython && (
+      {usesInput && (
         <>
           <label className="cq-label" htmlFor={`${languageId}-sandbox-stdin`}>
             Input (optional, one line per <code className="cq-md-code">input()</code> call)
