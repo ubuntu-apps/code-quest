@@ -71,7 +71,7 @@ node scripts/r-curriculum/generate.mjs
 
 Edit the `data/*.mjs` files, then regenerate. Add `--only <sectionId>` to regenerate one section, e.g. `--only data_and_apis`. Challenge IDs come from the topic and position (`json_basics_ch3`), so regenerating keeps learners' progress unless you reorder challenges.
 
-Write new challenges with the `task()` and `mc()` builders in `scripts/python-curriculum/data/_builders.mjs`; see `data/data-apis/` for examples. Then run the content check:
+Write new challenges with the `task()` and `mc()` builders in `scripts/python-curriculum/data/_builders.mjs` (and `typedInput()` for challenges that read `input()`); see `data/fundamentals/` and `data/data-apis/` for examples. Sections listed in `scripts/curriculum-check.json` (Fundamentals and Data and APIs so far) must pass every check, or CI fails. Then run the content check:
 
 ```bash
 npm run check:content                                 # summary of every section

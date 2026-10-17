@@ -1,5 +1,8 @@
-import { makeProject, snippet, ch, qMcq, qShort, pyVar, pyOut, includes } from './_builders.mjs'
+import { makeProject, ch, qMcq, qShort, pyVar, pyOut, includes } from './_builders.mjs'
 import { projectsTopics } from './projects.mjs'
+import aboutMeCard from './fundamentals/project-about-me.mjs'
+import unitConverter from './fundamentals/project-unit-converter.mjs'
+import receiptCalculator from './fundamentals/project-receipt.mjs'
 
 function projectSource(id) {
   const topic = projectsTopics.find((t) => t.id === id)
@@ -19,38 +22,6 @@ function fromExisting(sourceId, difficulty, id, maxChallenges = 6, maxQuestions 
     questions: src.questionSpecs.slice(0, maxQuestions),
   })
 }
-
-const fundamentalsEasy = makeProject('easy', {
-  id: 'about_me',
-  title: 'About me script',
-  paragraphs: [
-    'Build a short program that stores your name and age in variables, then prints a friendly sentence with an f-string.',
-    'Keep the output on one line so it is easy to test. Use clear variable names like `name` and `age`.',
-  ],
-  sandboxCode: 'name = "Alex"\nage = 12\nprint(f"Hi, I am {name} and I am {age} years old.")',
-  sandboxSnippets: [
-    snippet('Name variable', 'name = "Alex"'),
-    snippet('Age variable', 'age = 12'),
-    snippet('f-string greeting', 'name = "Sam"\nage = 9\nprint(f"Hi, I am {name} and I am {age} years old.")'),
-    snippet('Add hobby', 'name = "Sam"\nage = 9\nhobby = "coding"\nprint(f"Hi, I am {name}, {age}, and I like {hobby}.")'),
-  ],
-  challenges: [
-    ch('easy', 'Name variable', 'Set `name` to your first name as a string.', pyVar('name', 'isinstance(name, str) && len(name) > 0'), { starterCode: 'name = ' }),
-    ch('easy', 'Age variable', 'Set `age` to a whole number.', pyVar('age', 'isinstance(age, int)'), { starterCode: 'age = ' }),
-    ch('medium', 'Greeting sentence', 'Print a sentence that includes both name and age.', includes('print', 'name'), { starterCode: 'name = "Sam"\nage = 9\n' }),
-    ch('medium', 'f-string', 'Use an f-string in your print call.', includes('f"'), { starterCode: 'name = "Sam"\nage = 9\nprint(' }),
-    ch('hard', 'Extra detail', 'Add a third variable `hobby` and mention it in the output.', pyVar('hobby', 'isinstance(hobby, str)'), { starterCode: 'hobby = ' }),
-    ch('hard', 'Full program', 'Print one line with name, age, and hobby.', includes('print'), { starterCode: '' }),
-  ],
-  questions: [
-    qMcq('Variables store:', [{ id: 'a', label: 'Values' }, { id: 'b', label: 'Only comments' }, { id: 'c', label: 'CPU speed' }], 'a'),
-    qShort('Display output with:', 'print'),
-    qMcq('f-strings start with:', [{ id: 'a', label: 'f"' }, { id: 'b', label: 's"' }, { id: 'c', label: 'q"' }], 'a'),
-    qShort('Age should be stored as a:', 'int'),
-    qMcq('Clear variable names help:', [{ id: 'a', label: 'Readability' }, { id: 'b', label: 'Compilation only' }, { id: 'c', label: 'Deleting files' }], 'a'),
-    qShort('Combine text and variables with:', 'f-string'),
-  ],
-})
 
 const controlFlowHard = makeProject('hard', {
   id: 'fizzbuzz_mini',
@@ -236,21 +207,7 @@ const oopHard = makeProject('hard', {
 
 /** @type {Record<string, import('./_builders.mjs').[]>} */
 export const SECTION_PROJECTS = {
-  fundamentals: [
-    fundamentalsEasy,
-    fromExisting('unit_converter', 'medium', 'proj_fundamentals_unit_converter', 6, 6, [
-      snippet('km to miles', 'KM_TO_MI = 0.621371\n\ndef km_to_miles(km):\n    return km * KM_TO_MI\n\nprint(km_to_miles(10))'),
-      snippet('C to F', 'def c_to_f(c):\n    return c * 9/5 + 32\n\nprint(c_to_f(0))'),
-      snippet('Convert value', 'km = 5\nmiles = km * 0.621371\nprint(f"{km} km = {miles:.2f} mi")'),
-      snippet('Unit dict', 'factors = {"km": 1000, "m": 1}\nprint(factors["km"])'),
-    ]),
-    fromExisting('password_generator', 'hard', 'proj_fundamentals_password_generator', 6, 6, [
-      snippet('Random char', 'import random\nimport string\nprint(random.choice(string.ascii_letters))'),
-      snippet('Join chars', 'import random\nimport string\nchars = string.ascii_letters + string.digits\nprint("".join(random.choice(chars) for _ in range(8)))'),
-      snippet('Password fn', 'import random\nimport string\n\ndef generate_password(n=12):\n    chars = string.ascii_letters + string.digits\n    return "".join(random.choice(chars) for _ in range(n))\n\nprint(generate_password(8))'),
-      snippet('Length option', 'length = 12\nprint(f"Password length: {length}")'),
-    ]),
-  ],
+  fundamentals: [aboutMeCard, unitConverter, receiptCalculator],
   control_flow: [
     fromExisting('cli_guess_game', 'easy', 'proj_control_flow_guess_game'),
     fromExisting('quiz_app', 'medium', 'proj_control_flow_quiz_app'),
