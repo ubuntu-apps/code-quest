@@ -77,6 +77,8 @@ export function reconcileLevelProgress(languageId: string, level: Level, trustUn
     challengeVersions: versions,
   }
   if (prev.answersViewed) next.answersViewed = prev.answersViewed.filter((id) => !stale.has(id))
+  // The lesson tells the learner once why their earlier answers are gone.
+  if (stale.size > 0) next.challengesReset = (prev.challengesReset ?? 0) + stale.size
   try {
     localStorage.setItem(key, JSON.stringify(next))
   } catch {

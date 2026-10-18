@@ -1,14 +1,20 @@
 import { useCallback, useState } from 'react'
-import { PASS_DEFAULT } from '../constants'
+import { PASS_DEFAULT, TEST_XP } from '../constants'
 import { loadProgress, saveProgress } from '../progressStorage'
 import type { Level, TestGradeResult } from '../types'
 import { gradeTest } from '../validateAnswer'
 
 /**
  * Answers and grading for a level's end-of-level test.
- * `onActivity` is called on every submit (used for the daily streak).
+ * `onActivity` is called on every submit (used for the daily streak), and `onXp` with
+ * the XP earned when the quiz is passed for the first time.
  */
-export function useLevelTest(languageId: string | null, level: Level | null, onActivity: () => void) {
+export function useLevelTest(
+  languageId: string | null,
+  level: Level | null,
+  onActivity: () => void,
+  onXp?: (xp: number) => void,
+) {
   const [short, setShort] = useState<Record<string, string>>({})
   const [mcq, setMcq] = useState<Record<string, string>>({})
   const [result, setResult] = useState<TestGradeResult | null>(null)
@@ -29,6 +35,7 @@ export function useLevelTest(languageId: string | null, level: Level | null, onA
     if (graded.passed) setSessionReset(false)
     const prev = loadProgress(languageId, level.id)
     saveProgress(languageId, level.id, { ...prev, testPassed: prev.testPassed || graded.passed })
+    if (graded.passed && !prev.testPassed) onXp?.(TEST_XP)
     // A blank submit isn't practice, so it doesn't keep the daily streak going.
     const answered =
       Object.values(short).some((value) => value.trim() !== '') || Object.keys(mcq).length > 0

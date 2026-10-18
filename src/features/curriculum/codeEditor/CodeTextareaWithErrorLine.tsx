@@ -58,10 +58,25 @@ export function CodeTextareaWithErrorLine({
   const syncScroll = useCodeEditorScrollSync(taRef, backdropRef, tooltipLayerRef)
 
   // Phones and tablets get a row of symbol keys under the editor while it has focus.
+  // Hiding waits a moment after blur, so a tap on a key that briefly takes focus
+  // (some mobile browsers do) still lands; the key puts focus back in the editor.
   const [touch] = useState(hasCoarsePointer)
   const [focused, setFocused] = useState(false)
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => () => {
+    if (hideTimer.current) clearTimeout(hideTimer.current)
+  }, [])
   const focusProps = touch
-    ? { onFocus: () => setFocused(true), onBlur: () => setFocused(false) }
+    ? {
+        onFocus: () => {
+          if (hideTimer.current) clearTimeout(hideTimer.current)
+          setFocused(true)
+        },
+        onBlur: () => {
+          if (hideTimer.current) clearTimeout(hideTimer.current)
+          hideTimer.current = setTimeout(() => setFocused(false), 250)
+        },
+      }
     : {}
   const keyBar = touch && focused ? <CodeKeyBar textareaRef={taRef} /> : null
 

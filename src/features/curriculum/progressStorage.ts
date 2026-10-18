@@ -14,6 +14,8 @@ export interface LevelProgress {
    * then loses its old completion, draft and answer-viewed marks.
    */
   challengeVersions?: Record<string, string>
+  /** How many challenges lost their progress because the lesson changed (shown once, then cleared). */
+  challengesReset?: number
 }
 
 export function progressKey(languageId: string, levelId: string): string {
@@ -37,6 +39,9 @@ export function loadProgress(languageId: string, levelId: string): LevelProgress
       ...(Array.isArray(parsed.answersViewed) ? { answersViewed: parsed.answersViewed } : {}),
       ...(parsed.challengeVersions && typeof parsed.challengeVersions === 'object'
         ? { challengeVersions: parsed.challengeVersions }
+        : {}),
+      ...(typeof parsed.challengesReset === 'number' && parsed.challengesReset > 0
+        ? { challengesReset: parsed.challengesReset }
         : {}),
     }
   } catch {

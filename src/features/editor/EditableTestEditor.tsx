@@ -48,6 +48,12 @@ export function EditableTestQuestionEditor({ question, onChange }: EditableTestQ
             ))}
           </select>
         </label>
+        <EditableTextarea
+          label="Explanation (shown after a correct answer)"
+          rows={2}
+          value={question.explanation ?? ''}
+          onChange={(explanation) => onChange({ ...question, explanation: explanation || undefined })}
+        />
       </EditableBlock>
     )
   }
@@ -62,6 +68,12 @@ export function EditableTestQuestionEditor({ question, onChange }: EditableTestQ
       <EditableValidationEditor
         validation={question.validation}
         onChange={(validation) => onChange({ ...question, validation })}
+      />
+      <EditableTextarea
+        label="Explanation (shown after a correct answer)"
+        rows={2}
+        value={question.explanation ?? ''}
+        onChange={(explanation) => onChange({ ...question, explanation: explanation || undefined })}
       />
     </EditableBlock>
   )

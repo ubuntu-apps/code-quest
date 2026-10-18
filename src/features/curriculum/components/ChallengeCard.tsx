@@ -10,6 +10,9 @@ import { CodeTextareaWithErrorLine } from '../codeEditor'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
 import { rErrorSummaryLine } from '../rErrorHelper'
 import { PythonErrorPanel } from './PythonErrorPanel'
+import { ValueDiff } from './ValueDiff'
+import { HighlightedCode } from './HighlightedCode'
+import { reportProblemUrl } from '../reportProblem'
 import {
   EditableMarkdown,
   EditableText,
@@ -47,6 +50,8 @@ interface ChallengeCardProps {
   onMove: (direction: -1 | 1) => void
   onDelete: () => void
   onToggleErrorExpanded: () => void
+  /** Where to go after solving this one: the next unsolved challenge, or the quiz. */
+  next?: { label: string; go: () => void }
 }
 
 export function ChallengeCard({
@@ -73,10 +78,13 @@ export function ChallengeCard({
   onMove,
   onDelete,
   onToggleErrorExpanded,
+  next,
 }: ChallengeCardProps) {
   const { isEditingLocal } = useEditorMode()
   // Admin mode (for testing) opens answers straight away, without the XP penalty.
   const isAdmin = useAdminMode()
+  // Challenges solved before the lesson was opened start folded, so the open ones stand out.
+  const [collapsed, setCollapsed] = useState(() => done && !isEditingLocal)
   const [showHint, setShowHint] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const hintText = ch.hint ?? ch.hints?.[0]
@@ -106,8 +114,22 @@ export function ChallengeCard({
     setShowAnswer((v) => !v)
   }
 
+  if (collapsed) {
+    return (
+      <div id={`challenge-${ch.id}`} className="cq-panel cq-challenge-card cq-challenge-card--folded">
+        <div className="cq-card-row cq-card-row--panel">
+          <h2 className="cq-subtitle">{ch.title}</h2>
+          <span className="cq-badge cq-badge--ok">Solved</span>
+        </div>
+        <button type="button" className="cq-btn cq-btn--sm" onClick={() => setCollapsed(false)}>
+          Show challenge
+        </button>
+      </div>
+    )
+  }
+
   return (
-    <div className="cq-panel cq-challenge-card">
+    <div id={`challenge-${ch.id}`} className="cq-panel cq-challenge-card">
       <div className="cq-card-row cq-card-row--panel">
         <EditableText
           as="h2"
@@ -180,7 +202,7 @@ export function ChallengeCard({
       ) : null}
       {showAnswer ? (
         <pre className="cq-challenge-reveal cq-challenge-reveal--answer">
-          {ch.solution ?? 'No answer available for this challenge yet.'}
+          {ch.solution ? <HighlightedCode code={ch.solution} /> : 'No answer available for this challenge yet.'}
         </pre>
       ) : null}
       <label className="cq-label" htmlFor={`code-${ch.id}`}>
@@ -232,6 +254,11 @@ export function ChallengeCard({
         {done && status !== 'failed' && !busy && draft.trim() !== '' ? (
           <span className="cq-badge cq-badge--ok">Challenge complete</span>
         ) : null}
+        {status === 'passed' && !busy && next ? (
+          <button type="button" className="cq-btn cq-btn--sm" onClick={next.go}>
+            {next.label}
+          </button>
+        ) : null}
       </div>
       <p className="cq-muted cq-check-status" role="status" aria-live="polite">
         {checking && checkingMessage !== 'Checking…'
@@ -267,11 +294,27 @@ export function ChallengeCard({
                 <InlineMarkdown text={t.label} />
               </span>
               <span>{t.passed ? 'Pass' : 'Fail'}</span>
-              {!t.passed && t.detail ? <div className="cq-testcase-detail">{t.detail}</div> : null}
+              {!t.passed && 'diff' in t && t.diff ? (
+                <div className="cq-testcase-detail">
+                  <ValueDiff diff={t.diff} />
+                </div>
+              ) : !t.passed && t.detail ? (
+                <div className="cq-testcase-detail">{t.detail}</div>
+              ) : null}
             </li>
           ))}
         </ul>
       )}
+      {!isEditingLocal ? (
+        <a
+          className="cq-report-link"
+          href={reportProblemUrl(`the challenge "${ch.title}"`, `challenge ${ch.id}`)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Report a problem with this challenge
+        </a>
+      ) : null}
     </div>
   )
 }

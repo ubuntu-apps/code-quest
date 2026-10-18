@@ -1,15 +1,39 @@
-import type { FC, ReactNode } from 'react'
+import { useContext, type FC, type ReactNode } from 'react'
+import { looksLikePython } from './codeHighlight'
+import { CodeLanguageContext } from './codeLanguageContext'
+import { HighlightedCode } from './components/HighlightedCode'
 
-/** Minimal markdown: paragraphs, fenced ``` code blocks, inline `code`, **bold**. */
-export const SimpleMarkdown: FC<{ text: string; className?: string }> = ({ text, className }) => {
+/**
+ * Minimal markdown: paragraphs, fenced ``` code blocks, inline `code`, **bold**.
+ * With `onTryCode`, Python code blocks get a "Try it" button that hands their code over
+ * (sample output, folder layouts and shell commands don't get one).
+ */
+export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: (code: string) => void }> = ({
+  text,
+  className,
+  onTryCode,
+}) => {
+  const language = useContext(CodeLanguageContext)
   const blocks = splitFences(text.trim())
   return (
     <div className={className}>
       {blocks.map((block, i) =>
         block.type === 'code' ? (
-          <pre key={i} className="cq-md-pre">
-            <code>{block.content}</code>
-          </pre>
+          <div key={i} className="cq-md-code-block">
+            <pre className="cq-md-pre">
+              <HighlightedCode code={block.content} />
+            </pre>
+            {onTryCode && language === 'python' && looksLikePython(block.content) ? (
+              <button
+                type="button"
+                className="cq-btn cq-btn--sm cq-md-try"
+                onClick={() => onTryCode(block.content)}
+                aria-label="Try this code in the sandbox"
+              >
+                Try it
+              </button>
+            ) : null}
+          </div>
         ) : (
           <div key={i} className="cq-md-text">
             {renderParagraphs(block.content)}

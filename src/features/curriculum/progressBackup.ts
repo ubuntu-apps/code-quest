@@ -1,5 +1,6 @@
 import { LAST_LEVEL_STORAGE_KEY, SELECTED_LANGUAGE_STORAGE_KEY, STREAK_STORAGE_KEY } from './constants'
 import { notifyProgressChanged } from './progressStorage'
+import { TEST_OUT_PREFIX } from './testOut'
 
 const PROGRESS_PREFIX = 'codequest:progress:'
 /**
@@ -11,7 +12,12 @@ const SINGLE_KEYS = [STREAK_STORAGE_KEY, LAST_LEVEL_STORAGE_KEY, SELECTED_LANGUA
 
 /** Learner data only: never editor drafts, GitHub sign-in or install-banner settings. */
 export function isBackupKey(key: string): boolean {
-  return key.startsWith(PROGRESS_PREFIX) || key.startsWith(PROGRESS_FORMAT_PREFIX) || SINGLE_KEYS.includes(key)
+  return (
+    key.startsWith(PROGRESS_PREFIX) ||
+    key.startsWith(PROGRESS_FORMAT_PREFIX) ||
+    key.startsWith(TEST_OUT_PREFIX) ||
+    SINGLE_KEYS.includes(key)
+  )
 }
 
 export interface ProgressBackup {

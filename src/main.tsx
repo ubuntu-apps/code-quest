@@ -5,7 +5,9 @@ import './index.css'
 import App from './App.tsx'
 import { APP_VERSION } from './version'
 import { initPwa } from './pwaUpdate'
+import { initTheme } from './theme'
 
+initTheme()
 initPwa()
 
 if ('serviceWorker' in navigator) {

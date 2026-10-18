@@ -7,7 +7,9 @@ import { useAdminMode } from './adminMode'
 import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { reconcileLanguageProgress } from './progressFingerprint'
+import { hasTestedOut } from './testOut'
 import { preloadWebR } from './rSandbox'
+import { warmUpPython } from './pythonSandbox'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { Breadcrumbs, type Crumb } from './components/Breadcrumbs'
@@ -155,12 +157,23 @@ export function CodeQuestScreen() {
     return () => window.clearTimeout(timer)
   }, [shareNotice])
 
+  const isAdmin = useAdminMode()
+  /** The editor and admin mode can open everything. */
+  const unlockAll = isEditMode || isAdmin
+
+  /** The course picked last, unless it can't be opened now (e.g. it became "coming soon"). */
+  const activeOpenableId =
+    activeLanguageId &&
+    (unlockAll || !rootIndex?.languages.some((lang) => lang.id === activeLanguageId && lang.comingSoon))
+      ? activeLanguageId
+      : null
+
   const { bundles: languageBundles } = useLanguageBundles(
     rootIndex,
     baseUrl,
     syncBundle,
     getBundle,
-    activeLanguageId,
+    activeOpenableId,
   )
 
   useEffect(() => {
@@ -333,9 +346,24 @@ export function CodeQuestScreen() {
     recordDailyActivity()
     notifyProgressChanged()
   }, [])
+  // "+10 XP" pop-up when a challenge or quiz earns XP for the first time.
+  const [xpToast, setXpToast] = useState<{ text: string; key: number } | null>(null)
+  const totalXpRef = useRef(0)
+  const showXp = useCallback((xp: number) => {
+    const before = Math.floor(totalXpRef.current / 100)
+    const after = Math.floor((totalXpRef.current + xp) / 100)
+    const levelUp = after > before ? ` · Level ${after + 1} reached!` : ''
+    setXpToast({ text: `+${xp} XP${levelUp}`, key: Date.now() })
+  }, [])
+  useEffect(() => {
+    if (!xpToast) return
+    const timer = window.setTimeout(() => setXpToast(null), 2500)
+    return () => window.clearTimeout(timer)
+  }, [xpToast])
+
   const sandbox = useSandbox(languageId)
-  const challenges = useChallenges(languageId, selectedLevel, recordActivity)
-  const levelTest = useLevelTest(languageId, selectedLevel, recordActivity)
+  const challenges = useChallenges(languageId, selectedLevel, recordActivity, showXp)
+  const levelTest = useLevelTest(languageId, selectedLevel, recordActivity, showXp)
   const { resetForLevel: resetSandboxForLevel } = sandbox
   const { resetForLevel: resetChallengesForLevel } = challenges
   const { resetForLevel: resetTestForLevel } = levelTest
@@ -348,10 +376,6 @@ export function CodeQuestScreen() {
     [getBundle, useLocalContent],
   )
 
-  const isAdmin = useAdminMode()
-  /** The editor and admin mode can open everything. */
-  const unlockAll = isEditMode || isAdmin
-
   /**
    * Every section can be opened to preview its lessons, but a section's levels
    * stay locked until its prerequisite is met (see isSectionUnlocked). Inside a
@@ -361,6 +385,9 @@ export function CodeQuestScreen() {
     (langId: string, sections: LoadedSection[], sectionIndex: number, index: number): boolean => {
       void progressVersion
       if (unlockAll) return true
+      // Testing out of a section opens all of its lessons, even before the section itself unlocks.
+      const sectionRef = sections[sectionIndex]?.sectionRef
+      if (sectionRef && hasTestedOut(langId, sectionRef.id)) return true
       if (!checkSectionUnlocked(langId, sections, sectionIndex)) return false
       if (index === 0) return true
       const prev = sections[sectionIndex]?.file.levels[index - 1]
@@ -502,10 +529,6 @@ export function CodeQuestScreen() {
     [displayRootIndex, unlockAll],
   )
 
-  /** The course picked last, unless it can't be opened now (e.g. it became "coming soon"). */
-  const activeOpenableId =
-    activeLanguageId && openableLanguages.some((lang) => lang.id === activeLanguageId) ? activeLanguageId : null
-
   const catalogLanguages = useMemo(() => {
     if (!activeOpenableId) return openableLanguages
     return openableLanguages.filter((lang) => lang.id === activeOpenableId)
@@ -523,6 +546,10 @@ export function CodeQuestScreen() {
     }
     return xp
   }, [catalogLanguages, languageBundles, resolveBundle, progressVersion])
+
+  useEffect(() => {
+    totalXpRef.current = totalXp
+  }, [totalXp])
 
   const continueTarget = useMemo((): ContinueTarget | null => {
     void progressVersion
@@ -642,13 +669,17 @@ export function CodeQuestScreen() {
             bundleForView ? isLevelUnlocked(languageId, bundleForView.sections, selectedSectionIndex, index) : true
           }
           sectionLockedHint={
-            bundleForView && selectedSectionIndex > 0 && !isSectionUnlockedFor(languageId, selectedSectionIndex)
+            bundleForView &&
+            selectedSectionIndex > 0 &&
+            !isSectionUnlockedFor(languageId, selectedSectionIndex) &&
+            !hasTestedOut(languageId, secId)
               ? sectionStartHint(
                   bundleForView.sections[selectedSectionIndex - 1].file.levels,
                   bundleForView.sections[selectedSectionIndex - 1].sectionRef.title,
                 )
               : null
           }
+          nextSectionTitle={bundleForView?.sections[selectedSectionIndex + 1]?.sectionRef.title ?? null}
           onOpenLevel={(lvl) => {
             if (!languageId || !secId) return
             goToLevel(languageId, secId, lvl.id, 'intro')
@@ -748,6 +779,14 @@ export function CodeQuestScreen() {
     return null
   }
 
+  // Once a Python lesson is open, load Python in the background (after the page has
+  // settled), so the first Run or Check starts straight away.
+  useEffect(() => {
+    if (learnView !== 'level' || languageId !== 'python') return
+    const timer = window.setTimeout(warmUpPython, 1500)
+    return () => window.clearTimeout(timer)
+  }, [learnView, languageId])
+
   const showBack = tab === 'learn' && learnView !== 'languages'
 
   const breadcrumbs: Crumb[] = []
@@ -822,6 +861,12 @@ export function CodeQuestScreen() {
           />
         )}
       </main>
+
+      {xpToast ? (
+        <p key={xpToast.key} className="cq-share-notice cq-xp-toast" role="status" aria-live="polite">
+          {xpToast.text}
+        </p>
+      ) : null}
 
       {shareNotice ? (
         <p className="cq-share-notice" role="status" aria-live="polite">

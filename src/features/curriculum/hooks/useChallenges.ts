@@ -10,6 +10,7 @@ import {
 import { runRChallengeTests, type RChallengeTestResult } from '../rSandbox'
 import type { Challenge, Level } from '../types'
 import { validateAgainst } from '../validateAnswer'
+import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 
 type ChallengeTestResult = PythonChallengeTestResult | RChallengeTestResult
 
@@ -23,9 +24,15 @@ function saveAnswer(languageId: string, levelId: string, challengeId: string, an
 
 /**
  * Drafts, check results and runtime errors for a level's challenges.
- * `onActivity` is called when a challenge is passed (used for the daily streak).
+ * `onActivity` is called when a challenge is passed (used for the daily streak), and
+ * `onXp` with the XP earned when a challenge is solved for the first time.
  */
-export function useChallenges(languageId: string | null, level: Level | null, onActivity: () => void) {
+export function useChallenges(
+  languageId: string | null,
+  level: Level | null,
+  onActivity: () => void,
+  onXp?: (xp: number) => void,
+) {
   const [drafts, setDrafts] = useState<Record<string, string>>({})
   const [status, setStatus] = useState<Record<string, 'passed' | 'failed'>>({})
   const [testResults, setTestResults] = useState<Record<string, ChallengeTestResult[]>>({})
@@ -112,6 +119,8 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     }
 
     const prev = loadProgress(languageId, level.id)
+    const firstSolve = !prev.challengesCompleted.includes(ch.id)
+    const answerSeen = (prev.answersViewed ?? []).includes(ch.id)
 
     setStatus((s) => ({ ...s, [ch.id]: 'passed' }))
     saveProgress(languageId, level.id, {
@@ -120,6 +129,7 @@ export function useChallenges(languageId: string | null, level: Level | null, on
       challengeAnswers: { ...(prev.challengeAnswers ?? {}), [ch.id]: answer },
     })
     onActivity()
+    if (firstSolve) onXp?.(answerSeen ? CHALLENGE_XP_AFTER_ANSWER : CHALLENGE_XP)
   }
 
   /**
