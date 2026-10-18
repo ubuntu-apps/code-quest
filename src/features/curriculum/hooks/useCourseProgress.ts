@@ -2,12 +2,8 @@ import { useCallback, useMemo } from 'react'
 import type { LanguageBundle, LoadedSection, RootIndex } from '../types'
 import { loadProgress } from '../progressStorage'
 import { hasTestedOut } from '../testOut'
-import {
-  computeLevelXp,
-  isSectionUnlocked as checkSectionUnlocked,
-  currentStreak,
-  loadStreakState,
-} from '../helpers'
+import { computeLevelXp, isSectionUnlocked as checkSectionUnlocked } from '../helpers'
+import { loadStreakState, streakStatus } from '../streak'
 import { loadLastLevel } from '../lastLevel'
 import type { ContinueTarget } from '../views/LearnHome'
 
@@ -38,9 +34,9 @@ export function useCourseProgress({
   activeOpenableId,
 }: UseCourseProgressOptions) {
   // Read from storage on every progress change, so a restored backup shows its streak too.
-  const streakCount = useMemo(() => {
+  const streak = useMemo(() => {
     void progressVersion
-    return currentStreak(loadStreakState())
+    return streakStatus(loadStreakState())
   }, [progressVersion])
 
   /**
@@ -136,7 +132,7 @@ export function useCourseProgress({
   ])
 
   return {
-    streakCount,
+    streak,
     isLevelUnlocked,
     isSectionUnlockedFor,
     openableLanguages,

@@ -249,3 +249,125 @@ textarea.cq-code-editor-overlay {
   border-color: var(--cq-accent);
   background: var(--cq-accent-dim);
 }
+
+/* The code editor (CodeMirror). Colours come from the theme; the selectors include
+   .cm-editor so they win over CodeMirror's own built-in styles. */
+.cq-cm .cm-editor {
+  border: 1px solid var(--cq-border);
+  border-radius: 10px;
+  background: var(--cq-inset);
+  color: var(--cq-text);
+  font-size: var(--cq-code-size);
+}
+
+.cq-cm .cm-editor.cm-focused {
+  outline: 2px solid var(--cq-accent);
+  outline-offset: 0;
+}
+
+.cq-cm .cm-editor .cm-scroller {
+  font-family: var(--cq-mono);
+  line-height: 1.45;
+  max-height: 65vh;
+  border-radius: 10px;
+}
+
+.cq-cm .cm-editor .cm-content {
+  padding: 0.55rem 0;
+  min-height: calc(var(--cq-cm-min-lines, 4) * 1.45em);
+  caret-color: var(--cq-accent);
+}
+
+.cq-cm .cm-editor .cm-line {
+  padding: 0 0.65rem 0 0.4rem;
+}
+
+.cq-cm .cm-editor .cm-gutters {
+  background: transparent;
+  color: var(--cq-muted);
+  border-right: 1px solid var(--cq-border);
+  border-radius: 10px 0 0 10px;
+}
+
+.cq-cm .cm-editor .cm-lineNumbers .cm-gutterElement {
+  padding: 0 0.4rem 0 0.55rem;
+  min-width: 1.6em;
+}
+
+.cq-cm .cm-editor .cm-activeLine,
+.cq-cm .cm-editor .cm-activeLineGutter {
+  background: color-mix(in srgb, var(--cq-accent) 7%, transparent);
+}
+
+.cq-cm .cm-editor:not(.cm-focused) .cm-activeLine,
+.cq-cm .cm-editor:not(.cm-focused) .cm-activeLineGutter {
+  background: transparent;
+}
+
+.cq-cm .cm-editor .cm-cursor {
+  border-left: 2px solid var(--cq-accent);
+}
+
+.cq-cm .cm-editor .cm-selectionBackground,
+.cq-cm .cm-editor.cm-focused .cm-selectionBackground {
+  background: color-mix(in srgb, var(--cq-accent) 30%, transparent);
+}
+
+.cq-cm .cm-editor .cm-matchingBracket {
+  background: color-mix(in srgb, var(--cq-success) 22%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--cq-success) 55%, transparent);
+  color: inherit;
+}
+
+.cq-cm .cm-editor .cm-nonmatchingBracket {
+  background: color-mix(in srgb, var(--cq-danger) 22%, transparent);
+  color: inherit;
+}
+
+/* The last run's error: the line, the column, and the message under it. */
+.cq-cm .cm-editor .cq-cm-error-line {
+  background: color-mix(in srgb, var(--cq-danger) 18%, transparent);
+  box-shadow: inset 3px 0 0 var(--cq-danger);
+}
+
+.cq-cm .cm-editor .cq-cm-error-column {
+  text-decoration: underline wavy var(--cq-danger);
+  text-underline-offset: 3px;
+}
+
+.cq-cm-error-message {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.2rem 0.6rem 0.35rem 0.4rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--cq-danger) 55%, transparent);
+  background: var(--cq-popover-bg);
+  color: var(--cq-popover-text);
+  font-family: var(--cq-font);
+  font-size: var(--cq-text-sm);
+  line-height: 1.4;
+  white-space: normal;
+}
+
+.cq-cm-error-message strong {
+  display: block;
+}
+
+.cq-cm-error-message span {
+  font-family: var(--cq-mono);
+  overflow-wrap: anywhere;
+}
+
+.cq-cm-error-close {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0.1rem 0.3rem;
+  cursor: pointer;
+}

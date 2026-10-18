@@ -26,6 +26,28 @@ export function useXpToast(totalXp: number) {
   return { xpToast, showXp }
 }
 
+/** "Badge earned" pop-up, a little longer than the XP one so it can be read. */
+export function useBadgeToast() {
+  const [badgeToast, setBadgeToast] = useState<{ text: string; key: number } | null>(null)
+
+  const showBadges = useCallback((titles: string[]) => {
+    if (titles.length === 0) return
+    const text =
+      titles.length === 1
+        ? `Badge earned: ${titles[0]}`
+        : `${titles.length} badges earned: ${titles.slice(0, -1).join(', ')} and ${titles[titles.length - 1]}`
+    setBadgeToast({ text, key: Date.now() })
+  }, [])
+
+  useEffect(() => {
+    if (!badgeToast) return
+    const timer = window.setTimeout(() => setBadgeToast(null), 4000)
+    return () => window.clearTimeout(timer)
+  }, [badgeToast])
+
+  return { badgeToast, showBadges }
+}
+
 /** The Share sheet, and the short notice after sharing (e.g. "link copied"). */
 export function useShareSheet() {
   const [shareNotice, setShareNotice] = useState<string | null>(null)

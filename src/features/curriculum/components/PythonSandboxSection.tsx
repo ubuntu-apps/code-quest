@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CodeTextareaWithErrorLine } from '../codeEditor'
+import { CodeEditor } from '../codeEditor'
 import { SANDBOX_SNIPPETS } from '../constants'
 import {
   CODE_RUNTIME_UNSUPPORTED_MESSAGE,
@@ -74,7 +74,7 @@ export function PythonSandboxSection({
     <section id="cq-sandbox" className="cq-sandbox">
       <h2 className="cq-sandbox-title">Sandbox</h2>
       <p className="cq-muted">You can try some {languageLabel} code here.</p>
-      <label className="cq-label" htmlFor={`${languageId}-sandbox-input`}>
+      <label className="cq-label" id={`${languageId}-sandbox-label`} htmlFor={`${languageId}-sandbox-input`}>
         {languageLabel} code
       </label>
       <div className="cq-sandbox-snippets">
@@ -89,13 +89,14 @@ export function PythonSandboxSection({
           </button>
         ))}
       </div>
-      <CodeTextareaWithErrorLine
+      <CodeEditor
         id={`${languageId}-sandbox-input`}
-        className="cq-code-input cq-sandbox-input"
+        labelId={`${languageId}-sandbox-label`}
+        language={languageId === 'python' ? 'python' : 'plain'}
+        className="cq-sandbox-input"
         rows={6}
-        spellCheck={false}
         value={code}
-        onChange={(e) => onCodeChange(e.target.value)}
+        onChange={onCodeChange}
         errorLine={error?.line ?? null}
         errorSummary={errorSummary(error, languageId)}
         errorTitle={error?.title ?? null}

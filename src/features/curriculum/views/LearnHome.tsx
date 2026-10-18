@@ -1,10 +1,13 @@
-import { Flame, Play, Zap } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { BellRing, Flame, Play, Snowflake, Zap } from 'lucide-react'
 import type { RootIndex } from '../types'
 import type { ContentSource } from '../../editor/curriculumDraftStorage'
 import { AddItemButton } from '../../editor'
 import { EditableText } from '../../editor'
 import { CatalogListItem } from '../components/CatalogListItem'
 import { ContentSourceToggle } from '../components/ContentSourceToggle'
+import { FREEZE_EVERY_DAYS, type StreakStatus } from '../streak'
+import { ReminderSheet } from '../../reminders/ReminderSheet'
 
 export interface ContinueTarget {
   languageId: string
@@ -21,7 +24,11 @@ interface LearnHomeProps {
   xpLevel: number
   xpCurrentLevel: number
   totalXp: number
-  streakCount: number
+  streak: StreakStatus
+  /** The badges panel, shown under the XP and streak. */
+  badges?: ReactNode
+  /** The app's address, for the reminder's link. */
+  appUrl: string
   homeLead: string
   isEditMode: boolean
   /** Edit and admin mode can open courses marked "coming soon". */
@@ -45,7 +52,9 @@ export function LearnHome({
   xpLevel,
   xpCurrentLevel,
   totalXp,
-  streakCount,
+  streak,
+  badges,
+  appUrl,
   homeLead,
   isEditMode,
   canOpenComingSoon,
@@ -60,6 +69,18 @@ export function LearnHome({
   onRemoveLanguage,
   onAddLanguage,
 }: LearnHomeProps) {
+  const [reminderOpen, setReminderOpen] = useState(false)
+  const streakCount = streak.count
+  const nextFreezeAt = (Math.floor(streakCount / FREEZE_EVERY_DAYS) + 1) * FREEZE_EVERY_DAYS
+  const streakHint =
+    streakCount === 0
+      ? 'Solve a challenge or take a quiz each day to keep your streak.'
+      : streak.atRisk && streak.coveredByFreeze > 0
+        ? `A streak freeze covers the day you missed. Do a challenge or quiz today to keep your streak.`
+        : streak.atRisk
+          ? 'Do a challenge or quiz today to keep it going.'
+          : 'Done for today. See you tomorrow!'
+
   return (
     <div className="cq-stack">
       <h1 className="cq-title">Home</h1>
@@ -110,10 +131,23 @@ export function LearnHome({
             <div className="cq-kpi-value">
               {streakCount} day{streakCount === 1 ? '' : 's'}
             </div>
-            <div className="cq-kpi-muted">Solve a challenge or take a quiz each day to keep your streak.</div>
+            <div className={`cq-kpi-muted${streak.atRisk ? ' cq-streak-at-risk' : ''}`}>{streakHint}</div>
+            {streakCount > 0 ? (
+              <div className="cq-kpi-muted cq-streak-freezes">
+                <Snowflake size={13} aria-hidden />
+                {streak.freezes > 0
+                  ? `${streak.freezes} streak freeze${streak.freezes === 1 ? '' : 's'}: covers a missed day`
+                  : `Earn a streak freeze at ${nextFreezeAt} days`}
+              </div>
+            ) : null}
+            <button type="button" className="cq-link-btn cq-reminder-btn" onClick={() => setReminderOpen(true)}>
+              <BellRing size={14} aria-hidden />
+              Set a daily reminder
+            </button>
           </div>
         </div>
       </div>
+      {badges}
       <EditableText as="p" className="cq-lead" value={homeLead} onChange={onUpdateHomeLead} />
       <ul className="cq-card-list">
         {displayRootIndex.languages.map((lang, langIndex) => (
@@ -135,6 +169,7 @@ export function LearnHome({
         ))}
       </ul>
       <AddItemButton label="Add language" onClick={onAddLanguage} />
+      {reminderOpen ? <ReminderSheet appUrl={appUrl} onClose={() => setReminderOpen(false)} /> : null}
     </div>
   )
 }

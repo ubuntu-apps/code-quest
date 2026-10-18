@@ -11,6 +11,7 @@ import '../../styles/quiz.css'
 import '../../styles/about.css'
 import '../../styles/editor-mode.css'
 import '../../styles/support.css'
+import '../../styles/badges.css'
 
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, Info, Share2 } from 'lucide-react'
@@ -20,6 +21,7 @@ import { loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { hasTestedOut } from './testOut'
 import { warmUpPython } from './pythonSandbox'
+import { preloadCodeEditor } from './codeEditor'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { Breadcrumbs } from './components/Breadcrumbs'
@@ -50,7 +52,10 @@ import { useCurriculum } from './hooks/useCurriculum'
 import { useLevelTest } from './hooks/useLevelTest'
 import { useSandbox } from './hooks/useSandbox'
 import { useProgressVersion } from './hooks/useProgressVersion'
-import { useShareSheet, useXpToast } from './hooks/useNotices'
+import { useBadgeToast, useShareSheet, useXpToast } from './hooks/useNotices'
+import { useBadges } from '../badges/useBadges'
+import { BadgesPanel } from '../badges/BadgesPanel'
+import type { EarnedBadge } from '../badges/badges'
 import { LearnHome, type ContinueTarget } from './views/LearnHome'
 import { LearnSections } from './views/LearnSections'
 import { LearnLevels } from './views/LearnLevels'
@@ -153,7 +158,7 @@ export function CodeQuestScreen() {
     if (languageId) saveSelectedLanguage(languageId)
   }, [languageId])
 
-  const { streakCount, isLevelUnlocked, isSectionUnlockedFor, openableLanguages, totalXp, continueTarget } =
+  const { streak, isLevelUnlocked, isSectionUnlockedFor, openableLanguages, totalXp, continueTarget } =
     useCourseProgress({
       progressVersion,
       unlockAll,
@@ -195,6 +200,16 @@ export function CodeQuestScreen() {
     notifyProgressChanged()
   }, [])
   const { xpToast, showXp } = useXpToast(totalXp)
+  const { badgeToast, showBadges } = useBadgeToast()
+  const onBadgesEarned = useCallback((badges: EarnedBadge[]) => showBadges(badges.map((b) => b.title)), [showBadges])
+  // Badges follow the published course being learned (not edit-mode drafts).
+  const badges = useBadges({
+    progressVersion,
+    languageId: activeOpenableId,
+    bundle: !isEditMode && activeOpenableId ? (languageBundles[activeOpenableId] ?? null) : null,
+    totalXp,
+    onEarned: onBadgesEarned,
+  })
 
   const sandbox = useSandbox(languageId)
   const challenges = useChallenges(languageId, selectedLevel, recordActivity, showXp)
@@ -319,7 +334,9 @@ export function CodeQuestScreen() {
           xpLevel={Math.floor(totalXp / 100)}
           xpCurrentLevel={totalXp % 100}
           totalXp={totalXp}
-          streakCount={streakCount}
+          streak={streak}
+          badges={<BadgesPanel earned={badges.earned} toEarn={badges.toEarn} />}
+          appUrl={`${window.location.origin}${baseUrl}`}
           homeLead={displayHomeLead}
           isEditMode={isEditMode}
           canOpenComingSoon={unlockAll}
@@ -481,10 +498,13 @@ export function CodeQuestScreen() {
     return null
   }
 
-  // Once a Python lesson is open, load Python in the background (after the page has
-  // settled), so the first Run or Check starts straight away.
+  // Once a lesson is open, load the code editor, and for Python lessons Python itself in
+  // the background (after the page has settled), so the first Run or Check starts straight away.
   useEffect(() => {
-    if (learnView !== 'level' || languageId !== 'python') return
+    if (learnView !== 'level') return
+    // The code editor is small next to Python; fetch it straight away.
+    preloadCodeEditor()
+    if (languageId !== 'python') return
     const timer = window.setTimeout(warmUpPython, 1500)
     return () => window.clearTimeout(timer)
   }, [learnView, languageId])
@@ -548,7 +568,7 @@ export function CodeQuestScreen() {
         )}
       </main>
 
-      <Notices xpToast={xpToast} shareNotice={shareNotice} />
+      <Notices xpToast={xpToast} badgeToast={badgeToast} shareNotice={shareNotice} />
 
       <BottomNav items={navItems} activeId={tab} onSelect={(id) => goToTab(id as TabId)} />
 

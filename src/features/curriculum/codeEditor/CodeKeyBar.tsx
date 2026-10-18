@@ -2,6 +2,29 @@ import type { RefObject } from 'react'
 import { applyEdit } from './applyEdit'
 import { computeKeyEdit, insertTextEdit, pairTextEdit, type TextEdit } from './editing'
 
+/**
+ * What the key bar types into: a plain text box, or the code editor (CodeMirror), which
+ * isn't a textarea but can say where the cursor is and apply the same edits.
+ */
+export interface KeyBarTarget {
+  focus: () => void
+  value: () => string
+  selection: () => { start: number; end: number }
+  apply: (edit: TextEdit) => void
+}
+
+function textBoxTarget(el: HTMLTextAreaElement | HTMLInputElement): KeyBarTarget {
+  return {
+    focus: () => el.focus(),
+    value: () => el.value,
+    selection: () => {
+      const start = el.selectionStart ?? el.value.length
+      return { start, end: el.selectionEnd ?? start }
+    },
+    apply: (edit) => applyEdit(el, edit),
+  }
+}
+
 type CodeKey =
   | { label: string; aria: string; kind: 'tab' | 'untab' }
   | { label: string; aria?: string; kind: 'pair'; open: string; close: string }
@@ -34,10 +57,9 @@ const KEYS: CodeKey[] = [
 /** A one-line answer box gets no indent keys. */
 const ANSWER_KEYS = KEYS.filter((key) => key.kind !== 'tab' && key.kind !== 'untab')
 
-function editFor(key: CodeKey, el: HTMLTextAreaElement | HTMLInputElement): TextEdit | null {
-  const value = el.value
-  const start = el.selectionStart ?? value.length
-  const end = el.selectionEnd ?? start
+function editFor(key: CodeKey, target: KeyBarTarget): TextEdit | null {
+  const value = target.value()
+  const { start, end } = target.selection()
   switch (key.kind) {
     case 'tab':
       return computeKeyEdit(value, start, end, { key: 'Tab' })
@@ -57,18 +79,23 @@ function editFor(key: CodeKey, el: HTMLTextAreaElement | HTMLInputElement): Text
  */
 export function CodeKeyBar({
   textareaRef,
+  target,
   variant = 'code',
 }: {
-  textareaRef: RefObject<HTMLTextAreaElement | HTMLInputElement | null>
+  /** A plain text box to type into… */
+  textareaRef?: RefObject<HTMLTextAreaElement | HTMLInputElement | null>
+  /** …or any other editor (see KeyBarTarget). */
+  target?: () => KeyBarTarget | null
   /** "answer": for a one-line quiz answer, without the indent keys. */
   variant?: 'code' | 'answer'
 }) {
   const press = (key: CodeKey) => {
-    const el = textareaRef.current
-    if (!el) return
-    el.focus()
-    const edit = editFor(key, el)
-    if (edit) applyEdit(el, edit)
+    const el = textareaRef?.current
+    const t = target?.() ?? (el ? textBoxTarget(el) : null)
+    if (!t) return
+    t.focus()
+    const edit = editFor(key, t)
+    if (edit) t.apply(edit)
   }
 
   return (
