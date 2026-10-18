@@ -229,7 +229,7 @@
         {
           "id": "classes_basics_ch9",
           "title": "Expert: Contacts from text",
-          "promptMarkdown": "Define `Contact` (`name`, `email`, and `phone` defaulting to `None`) and `parse_contact(text)`, which turns `\"Ana; ana@mail.com; 555-1234\"` (phone optional) into a `Contact`, trimming spaces. Any other number of parts raises `ValueError(\"Bad contact: <text>\")`.",
+          "promptMarkdown": "Define `Contact` (`name`, `email`, and `phone` defaulting to `None`) and `parse_contact(text)`, which turns `\"Ana; ana@example.com; 555-1234\"` (phone optional) into a `Contact`, trimming spaces. Any other number of parts raises `ValueError(\"Bad contact: <text>\")`.",
           "starterCode": "",
           "hint": "Split on `\";\"` and strip each part. With 2 or 3 parts, `Contact(*parts)` works.",
           "solution": "class Contact:\n    def __init__(self, name, email, phone=None):\n        self.name = name\n        self.email = email\n        self.phone = phone\n\ndef parse_contact(text):\n    parts = [p.strip() for p in text.split(\";\")]\n    if len(parts) not in (2, 3):\n        raise ValueError(f\"Bad contact: {text}\")\n    return Contact(*parts)",
@@ -240,12 +240,12 @@
               {
                 "id": "t1",
                 "label": "With a phone",
-                "assertion": "(lambda c: (c.name, c.email, c.phone))(parse_contact(\"Ana; ana@mail.com; 555-1234\")) == (\"Ana\", \"ana@mail.com\", \"555-1234\")"
+                "assertion": "(lambda c: (c.name, c.email, c.phone))(parse_contact(\"Ana; ana@example.com; 555-1234\")) == (\"Ana\", \"ana@example.com\", \"555-1234\")"
               },
               {
                 "id": "t2",
                 "label": "Without a phone",
-                "assertion": "(lambda c: (c.name, c.phone))(parse_contact(\"Ben;ben@mail.com\")) == (\"Ben\", None)"
+                "assertion": "(lambda c: (c.name, c.phone))(parse_contact(\"Ben;ben@example.com\")) == (\"Ben\", None)"
               },
               {
                 "id": "t3",
@@ -2812,12 +2812,12 @@
               {
                 "id": "t1",
                 "label": "Tidied",
-                "assertion": "User(\"  Ana@Mail.COM \").email == \"ana@mail.com\""
+                "assertion": "User(\"  Ana@Example.COM \").email == \"ana@example.com\""
               },
               {
                 "id": "t2",
                 "label": "Changed later",
-                "assertion": "(lambda u: (setattr(u, \"email\", \"BEN@x.org\"), u.email)[1])(User(\"a@b.c\")) == \"ben@x.org\""
+                "assertion": "(lambda u: (setattr(u, \"email\", \"BEN@example.org\"), u.email)[1])(User(\"a@b.c\")) == \"ben@example.org\""
               },
               {
                 "id": "t3",
@@ -3934,7 +3934,7 @@
               {
                 "id": "t1",
                 "label": "Both",
-                "assertion": "notify_all([EmailNotifier(\"ana@mail.com\"), SmsNotifier(\"555-0101\")], \"Your order has shipped today\") == [\"Email to ana@mail.com: Your order has shipped today\", \"SMS to 555-0101: Your order has shipp\"]"
+                "assertion": "notify_all([EmailNotifier(\"ana@example.com\"), SmsNotifier(\"555-0101\")], \"Your order has shipped today\") == [\"Email to ana@example.com: Your order has shipped today\", \"SMS to 555-0101: Your order has shipp\"]"
               },
               {
                 "id": "t2",
@@ -4257,8 +4257,8 @@
       ],
       "intro": {
         "title": "Objects that act like built-ins",
-        "bodyMarkdown": "`len()`, `in`, `for`, square brackets and `+` all work on Python's own types because those types define special methods. Your classes can define the same ones, and then your objects work with the same familiar syntax. A playlist can answer `len(playlist)`, `\"Song\" in playlist` and `for song in playlist` just like a list does.\n\n```\nclass Playlist:\n    def __init__(self, songs):\n        self.songs = list(songs)\n\n    def __len__(self):               # len(p)\n        return len(self.songs)\n\n    def __getitem__(self, index):    # p[0], p[-1], p[1:3]\n        return self.songs[index]\n\n    def __contains__(self, song):    # \"Hey Jude\" in p\n        return song in self.songs\n\n    def __iter__(self):              # for song in p\n        return iter(self.songs)\n\np = Playlist([\"Yesterday\", \"Hey Jude\", \"Help!\"])\nprint(len(p), p[0], p[-1])     # 3 Yesterday Help!\nprint(\"Hey Jude\" in p)         # True\nfor song in p:\n    print(song)\n```\n\nEach method hands the work to the list inside, which is the usual pattern: the object decides what the operation means, often by passing it on to the data it holds. `__getitem__` gets whatever was in the brackets, so slices like `p[1:3]` reach the list too. `__iter__` must return an iterator, and `iter(self.songs)` is the easy way to get one.\n\nObjects are true in an `if` unless they say otherwise. Python asks `__bool__` first and, if there isn't one, `__len__`, so a playlist with a length of 0 is already false: `if playlist:` reads naturally.\n\nOperators are special methods too: `+` calls `__add__`, `-` calls `__sub__`, `*` calls `__mul__`. They should return a **new** object rather than changing either side, the way `2 + 3` doesn't change the 2. For a type you don't handle, return `NotImplemented`, and Python raises a clear `TypeError`.\n\n```\nclass Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __add__(self, other):\n        if not isinstance(other, Vector):\n            return NotImplemented\n        return Vector(self.x + other.x, self.y + other.y)\n\n    def __mul__(self, number):\n        return Vector(self.x * number, self.y * number)\n\n    def __repr__(self):\n        return f\"Vector({self.x}, {self.y})\"\n\nprint(Vector(1, 2) + Vector(3, 4))   # Vector(4, 6)\nprint(Vector(1, 2) * 3)              # Vector(3, 6)\n```\n\n`sum()` starts from `0`, so `sum(vectors)` first does `0 + vector`. The int doesn't know about vectors, so Python tries the vector's `__radd__` (\"right add\") with the 0. A `__radd__` that returns `self` when `other` is 0, and otherwise calls `__add__`, makes `sum` work.\n\nFor ordering, writing `__eq__` and `__lt__` and putting `@functools.total_ordering` above the class fills in `<=`, `>` and `>=` for you. There are special methods for nearly everything: `__setitem__` for assigning with brackets, `__call__` to call an object like a function, and `__enter__` and `__exit__` for `with` blocks, which is how files close themselves.",
-        "sandboxCode": "class Playlist:\n    def __init__(self, songs):\n        self.songs = list(songs)\n\n    def __len__(self):\n        return len(self.songs)\n\n    def __getitem__(self, index):\n        return self.songs[index]\n\n    def __contains__(self, song):\n        return song in self.songs\n\n    def __iter__(self):\n        return iter(self.songs)\n\np = Playlist([\"Yesterday\", \"Hey Jude\", \"Help!\", \"Let It Be\"])\nprint(len(p), p[1:3])\nprint(\"Help!\" in p, \"Imagine\" in p)\nfor number, song in enumerate(p, start=1):\n    print(number, song)\nprint(bool(Playlist([])))",
+        "bodyMarkdown": "`len()`, `in`, `for`, square brackets and `+` all work on Python's own types because those types define special methods. Your classes can define the same ones, and then your objects work with the same familiar syntax. A playlist can answer `len(playlist)`, `\"Song\" in playlist` and `for song in playlist` just like a list does.\n\n```\nclass Playlist:\n    def __init__(self, songs):\n        self.songs = list(songs)\n\n    def __len__(self):               # len(p)\n        return len(self.songs)\n\n    def __getitem__(self, index):    # p[0], p[-1], p[1:3]\n        return self.songs[index]\n\n    def __contains__(self, song):    # \"Saltwater Radio\" in p\n        return song in self.songs\n\n    def __iter__(self):              # for song in p\n        return iter(self.songs)\n\np = Playlist([\"Morning Tide\", \"Saltwater Radio\", \"Lights On!\"])\nprint(len(p), p[0], p[-1])     # 3 Morning Tide Lights On!\nprint(\"Saltwater Radio\" in p)         # True\nfor song in p:\n    print(song)\n```\n\nEach method hands the work to the list inside, which is the usual pattern: the object decides what the operation means, often by passing it on to the data it holds. `__getitem__` gets whatever was in the brackets, so slices like `p[1:3]` reach the list too. `__iter__` must return an iterator, and `iter(self.songs)` is the easy way to get one.\n\nObjects are true in an `if` unless they say otherwise. Python asks `__bool__` first and, if there isn't one, `__len__`, so a playlist with a length of 0 is already false: `if playlist:` reads naturally.\n\nOperators are special methods too: `+` calls `__add__`, `-` calls `__sub__`, `*` calls `__mul__`. They should return a **new** object rather than changing either side, the way `2 + 3` doesn't change the 2. For a type you don't handle, return `NotImplemented`, and Python raises a clear `TypeError`.\n\n```\nclass Vector:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\n    def __add__(self, other):\n        if not isinstance(other, Vector):\n            return NotImplemented\n        return Vector(self.x + other.x, self.y + other.y)\n\n    def __mul__(self, number):\n        return Vector(self.x * number, self.y * number)\n\n    def __repr__(self):\n        return f\"Vector({self.x}, {self.y})\"\n\nprint(Vector(1, 2) + Vector(3, 4))   # Vector(4, 6)\nprint(Vector(1, 2) * 3)              # Vector(3, 6)\n```\n\n`sum()` starts from `0`, so `sum(vectors)` first does `0 + vector`. The int doesn't know about vectors, so Python tries the vector's `__radd__` (\"right add\") with the 0. A `__radd__` that returns `self` when `other` is 0, and otherwise calls `__add__`, makes `sum` work.\n\nFor ordering, writing `__eq__` and `__lt__` and putting `@functools.total_ordering` above the class fills in `<=`, `>` and `>=` for you. There are special methods for nearly everything: `__setitem__` for assigning with brackets, `__call__` to call an object like a function, and `__enter__` and `__exit__` for `with` blocks, which is how files close themselves.",
+        "sandboxCode": "class Playlist:\n    def __init__(self, songs):\n        self.songs = list(songs)\n\n    def __len__(self):\n        return len(self.songs)\n\n    def __getitem__(self, index):\n        return self.songs[index]\n\n    def __contains__(self, song):\n        return song in self.songs\n\n    def __iter__(self):\n        return iter(self.songs)\n\np = Playlist([\"Morning Tide\", \"Saltwater Radio\", \"Lights On!\", \"Slow River\"])\nprint(len(p), p[1:3])\nprint(\"Lights On!\" in p, \"Blue Hour\" in p)\nfor number, song in enumerate(p, start=1):\n    print(number, song)\nprint(bool(Playlist([])))",
         "readMore": {
           "label": "Python docs: Emulating container types",
           "url": "https://docs.python.org/3/reference/datamodel.html#emulating-container-types",
@@ -4797,7 +4797,7 @@
       "intro": {
         "title": "Data classes",
         "bodyMarkdown": "Many classes mostly hold data: a point, a contact, a transaction. For each one you write the same things: an `__init__` that copies every parameter onto `self`, a `__repr__`, an `__eq__`. The `dataclasses` module writes them for you. You list the fields with their types, and `@dataclass` does the rest:\n\n```\nfrom dataclasses import dataclass\n\n@dataclass\nclass Point:\n    x: int\n    y: int\n\np = Point(1, 2)\nprint(p)                  # Point(x=1, y=2)\nprint(p == Point(1, 2))   # True\nprint(p.x + p.y)          # 3\n```\n\nEach line like `x: int` declares a field: its name and, after the colon, its type. The type is a note for readers and tools; Python doesn't check it, so `Point(\"a\", \"b\")` still works. A field can have a default, `score: int = 0`, and fields with defaults must come after those without, just like function parameters.\n\nA default that's a list or dict would be shared by every object, the bug from the class attributes lesson, so dataclasses refuse it. Use `field(default_factory=list)` instead, which makes a fresh list for each object:\n\n```\nfrom dataclasses import dataclass, field\n\n@dataclass\nclass Basket:\n    owner: str\n    items: list = field(default_factory=list)\n\n    def total(self):\n        return sum(price for name, price in self.items)\n\nb = Basket(\"Ana\")\nb.items.append((\"tea\", 2.5))\nprint(b.total(), Basket(\"Ben\").items)   # 2.5 []\n```\n\nA dataclass is still an ordinary class, so it can have methods and properties like `total` above. To check values or work out extra fields after the generated `__init__` has run, add a `__post_init__` method; Python calls it straight afterwards.\n\nOptions in the brackets change what's generated. `@dataclass(frozen=True)` makes objects read-only (assigning a field raises `FrozenInstanceError`) and lets them go in sets and be dict keys. `@dataclass(order=True)` adds `<`, `>` and the rest, comparing the fields in the order they're written, so `sorted` just works.\n\n```\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True, order=True)\nclass Version:\n    major: int\n    minor: int\n\nversions = [Version(1, 10), Version(1, 2), Version(0, 9)]\nprint(sorted(versions)[0])           # Version(major=0, minor=9)\nprint(len({Version(1, 0), Version(1, 0)}))   # 1\n```\n\n`dataclasses.asdict(obj)` turns a data class into a dict, ready for `json.dumps`, and `Point(**d)` turns a dict back into an object. Reach for a data class when a class is mainly a record of values; when the behaviour is the point, like an account that guards its balance, a regular class is often clearer.",
-        "sandboxCode": "from dataclasses import dataclass, field, asdict\n\n@dataclass\nclass Contact:\n    name: str\n    email: str\n    tags: list = field(default_factory=list)\n\nc = Contact(\"Ana\", \"ana@mail.com\")\nc.tags.append(\"friend\")\nprint(c)\nprint(asdict(c))\nprint(c == Contact(\"Ana\", \"ana@mail.com\", [\"friend\"]))",
+        "sandboxCode": "from dataclasses import dataclass, field, asdict\n\n@dataclass\nclass Contact:\n    name: str\n    email: str\n    tags: list = field(default_factory=list)\n\nc = Contact(\"Ana\", \"ana@example.com\")\nc.tags.append(\"friend\")\nprint(c)\nprint(asdict(c))\nprint(c == Contact(\"Ana\", \"ana@example.com\", [\"friend\"]))",
         "readMore": {
           "label": "Python docs: dataclasses",
           "url": "https://docs.python.org/3/library/dataclasses.html",
@@ -5021,12 +5021,12 @@
               {
                 "id": "t1",
                 "label": "to_json",
-                "assertion": "to_json([Contact(\"Ana\", \"a@x.com\")]) == '[{\"name\": \"Ana\", \"email\": \"a@x.com\", \"phone\": null}]'"
+                "assertion": "to_json([Contact(\"Ana\", \"a@example.com\")]) == '[{\"name\": \"Ana\", \"email\": \"a@example.com\", \"phone\": null}]'"
               },
               {
                 "id": "t2",
                 "label": "A round trip",
-                "assertion": "(lambda cs: from_json(to_json(cs)) == cs)([Contact(\"Ana\", \"a@x.com\", \"555\"), Contact(\"Ben\", \"b@x.com\")])"
+                "assertion": "(lambda cs: from_json(to_json(cs)) == cs)([Contact(\"Ana\", \"a@example.com\", \"555\"), Contact(\"Ben\", \"b@example.com\")])"
               },
               {
                 "id": "t3",
@@ -5845,14 +5845,14 @@
       ],
       "intro": {
         "title": "Easy project: Playlist",
-        "bodyMarkdown": "Build a music playlist out of two classes: a `Song`, which knows its title, artist and length, and a `Playlist`, which holds songs and works out things about them. When it's done, `playlist.show()` gives:\n\n```\nRoad trip (3 songs, 8:44)\n1. Yesterday - The Beatles (2:05)\n2. Halo - Beyonce (4:21)\n3. Help! - The Beatles (2:18)\n```\n\nLengths are stored as whole seconds, which are easy to add up, and only turned into `minutes:seconds` text when they're shown, through properties. The playlist uses special methods, so `len(playlist)` and `for song in playlist` work like they do for a list.\n\nEach step adds to the classes from the step before, which are already written for you.",
-        "sandboxCode": "class Song:\n    def __init__(self, title, seconds):\n        self.title = title\n        self.seconds = seconds\n\nsongs = [Song(\"Yesterday\", 125), Song(\"Halo\", 261)]\ntotal = sum(s.seconds for s in songs)\nprint(f\"{total // 60}:{total % 60:02d}\")"
+        "bodyMarkdown": "Build a music playlist out of two classes: a `Song`, which knows its title, artist and length, and a `Playlist`, which holds songs and works out things about them. When it's done, `playlist.show()` gives:\n\n```\nRoad trip (3 songs, 8:44)\n1. Morning Tide - The Paper Owls (2:05)\n2. Copper Kites - Mira Vale (4:21)\n3. Lights On! - The Paper Owls (2:18)\n```\n\nLengths are stored as whole seconds, which are easy to add up, and only turned into `minutes:seconds` text when they're shown, through properties. The playlist uses special methods, so `len(playlist)` and `for song in playlist` work like they do for a list.\n\nEach step adds to the classes from the step before, which are already written for you.",
+        "sandboxCode": "class Song:\n    def __init__(self, title, seconds):\n        self.title = title\n        self.seconds = seconds\n\nsongs = [Song(\"Morning Tide\", 125), Song(\"Copper Kites\", 261)]\ntotal = sum(s.seconds for s in songs)\nprint(f\"{total // 60}:{total % 60:02d}\")"
       },
       "challenges": [
         {
           "id": "proj_playlist_ch1",
           "title": "Easy: A song",
-          "promptMarkdown": "Define `Song(title, artist, seconds)` with a `length` property like `4:21` and a `__str__` like `Halo - Beyonce (4:21)`.",
+          "promptMarkdown": "Define `Song(title, artist, seconds)` with a `length` property like `4:21` and a `__str__` like `Copper Kites - Mira Vale (4:21)`.",
           "starterCode": "",
           "hint": "`f\"{self.seconds // 60}:{self.seconds % 60:02d}\"` pads the seconds with a zero.",
           "solution": "class Song:\n    def __init__(self, title, artist, seconds):\n        self.title = title\n        self.artist = artist\n        self.seconds = seconds\n\n    @property\n    def length(self):\n        return f\"{self.seconds // 60}:{self.seconds % 60:02d}\"\n\n    def __str__(self):\n        return f\"{self.title} - {self.artist} ({self.length})\"\n",
@@ -5863,12 +5863,12 @@
               {
                 "id": "t1",
                 "label": "length",
-                "assertion": "Song(\"Halo\", \"Beyonce\", 261).length == \"4:21\" and Song(\"Short\", \"X\", 65).length == \"1:05\""
+                "assertion": "Song(\"Copper Kites\", \"Mira Vale\", 261).length == \"4:21\" and Song(\"Short\", \"X\", 65).length == \"1:05\""
               },
               {
                 "id": "t2",
                 "label": "str",
-                "assertion": "str(Song(\"Halo\", \"Beyonce\", 261)) == \"Halo - Beyonce (4:21)\""
+                "assertion": "str(Song(\"Copper Kites\", \"Mira Vale\", 261)) == \"Copper Kites - Mira Vale (4:21)\""
               }
             ]
           }
@@ -5887,12 +5887,12 @@
               {
                 "id": "t1",
                 "label": "len and total",
-                "assertion": "(lambda p: (len(p), p.total_seconds()))((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (3, 524)"
+                "assertion": "(lambda p: (len(p), p.total_seconds()))((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (3, 524)"
               },
               {
                 "id": "t2",
                 "label": "A for loop",
-                "assertion": "[s.title for s in (lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))] == [\"Yesterday\", \"Halo\", \"Help!\"]"
+                "assertion": "[s.title for s in (lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))] == [\"Morning Tide\", \"Copper Kites\", \"Lights On!\"]"
               },
               {
                 "id": "t3",
@@ -5916,12 +5916,12 @@
               {
                 "id": "t1",
                 "label": "Removed",
-                "assertion": "(lambda p: (p.remove(\"Halo\"), [s.title for s in p])[0:2])((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (True, [\"Yesterday\", \"Help!\"])"
+                "assertion": "(lambda p: (p.remove(\"Copper Kites\"), [s.title for s in p])[0:2])((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (True, [\"Morning Tide\", \"Lights On!\"])"
               },
               {
                 "id": "t2",
                 "label": "Not there",
-                "assertion": "(lambda p: (p.remove(\"Imagine\"), len(p)))((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (False, 3)"
+                "assertion": "(lambda p: (p.remove(\"Blue Hour\"), len(p)))((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (False, 3)"
               }
             ]
           }
@@ -5940,7 +5940,7 @@
               {
                 "id": "t1",
                 "label": "Under an hour",
-                "assertion": "(lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).duration == \"8:44\""
+                "assertion": "(lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).duration == \"8:44\""
               },
               {
                 "id": "t2",
@@ -5969,12 +5969,12 @@
               {
                 "id": "t1",
                 "label": "by_artist",
-                "assertion": "(lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).by_artist(\"the beatles\") == [\"Yesterday\", \"Help!\"]"
+                "assertion": "(lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).by_artist(\"the paper owls\") == [\"Morning Tide\", \"Lights On!\"]"
               },
               {
                 "id": "t2",
                 "label": "longest",
-                "assertion": "str((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).longest()) == \"Halo - Beyonce (4:21)\" and Playlist(\"x\").longest() is None"
+                "assertion": "str((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).longest()) == \"Copper Kites - Mira Vale (4:21)\" and Playlist(\"x\").longest() is None"
               }
             ]
           }
@@ -5993,12 +5993,12 @@
               {
                 "id": "t1",
                 "label": "Three songs",
-                "assertion": "(lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).show() == [\"Road trip (3 songs, 8:44)\", \"1. Yesterday - The Beatles (2:05)\", \"2. Halo - Beyonce (4:21)\", \"3. Help! - The Beatles (2:18)\"]"
+                "assertion": "(lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).show() == [\"Road trip (3 songs, 8:44)\", \"1. Morning Tide - The Paper Owls (2:05)\", \"2. Copper Kites - Mira Vale (4:21)\", \"3. Lights On! - The Paper Owls (2:18)\"]"
               },
               {
                 "id": "t2",
                 "label": "One song",
-                "assertion": "(lambda p: (p.add(Song(\"Halo\", \"Beyonce\", 261)), p.show())[1])(Playlist(\"Mine\")) == [\"Mine (1 song, 4:21)\", \"1. Halo - Beyonce (4:21)\"]"
+                "assertion": "(lambda p: (p.add(Song(\"Copper Kites\", \"Mira Vale\", 261)), p.show())[1])(Playlist(\"Mine\")) == [\"Mine (1 song, 4:21)\", \"1. Copper Kites - Mira Vale (4:21)\"]"
               },
               {
                 "id": "t3",

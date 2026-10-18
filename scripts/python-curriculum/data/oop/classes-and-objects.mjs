@@ -100,13 +100,13 @@ export default makeTopic({
       ],
     }),
     task("expert", "Contacts from text", {
-      prompt: "Define `Contact` (`name`, `email`, and `phone` defaulting to `None`) and `parse_contact(text)`, which turns `\"Ana; ana@mail.com; 555-1234\"` (phone optional) into a `Contact`, trimming spaces. Any other number of parts raises `ValueError(\"Bad contact: <text>\")`.",
+      prompt: "Define `Contact` (`name`, `email`, and `phone` defaulting to `None`) and `parse_contact(text)`, which turns `\"Ana; ana@example.com; 555-1234\"` (phone optional) into a `Contact`, trimming spaces. Any other number of parts raises `ValueError(\"Bad contact: <text>\")`.",
       hint: "Split on `\";\"` and strip each part. With 2 or 3 parts, `Contact(*parts)` works.",
       solution: "class Contact:\n    def __init__(self, name, email, phone=None):\n        self.name = name\n        self.email = email\n        self.phone = phone\n\ndef parse_contact(text):\n    parts = [p.strip() for p in text.split(\";\")]\n    if len(parts) not in (2, 3):\n        raise ValueError(f\"Bad contact: {text}\")\n    return Contact(*parts)",
       setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
       tests: [
-        ["With a phone", "(lambda c: (c.name, c.email, c.phone))(parse_contact(\"Ana; ana@mail.com; 555-1234\")) == (\"Ana\", \"ana@mail.com\", \"555-1234\")"],
-        ["Without a phone", "(lambda c: (c.name, c.phone))(parse_contact(\"Ben;ben@mail.com\")) == (\"Ben\", None)"],
+        ["With a phone", "(lambda c: (c.name, c.email, c.phone))(parse_contact(\"Ana; ana@example.com; 555-1234\")) == (\"Ana\", \"ana@example.com\", \"555-1234\")"],
+        ["Without a phone", "(lambda c: (c.name, c.phone))(parse_contact(\"Ben;ben@example.com\")) == (\"Ben\", None)"],
         ["Bad text", "_error(parse_contact, \"just a name\") == \"ValueError: Bad contact: just a name\""],
       ],
     }),
