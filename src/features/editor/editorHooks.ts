@@ -1,4 +1,4 @@
-import type { EditorContextValue } from './EditorContext'
+import type { EditorContextValue } from './editorContextValue'
 import { useContext } from 'react'
 import { EditorContext } from './editorReactContext'
 

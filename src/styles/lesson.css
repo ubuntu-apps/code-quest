@@ -1,0 +1,189 @@
+/* A lesson page: the Intro / Challenges / Test tabs and lesson text with its code. */
+
+.cq-step-tabs-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.cq-step-tabs-row--bottom {
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cq-border);
+}
+
+.cq-step-tabs {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.cq-step-tab {
+  flex: 1;
+  min-width: 5rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 999px;
+  padding: 0.45rem 0.65rem;
+  background: transparent;
+  color: var(--cq-muted);
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+
+.cq-step-tab--active {
+  border-color: var(--cq-accent);
+  color: var(--cq-text);
+  background: var(--cq-accent-dim);
+}
+
+.cq-step-tab--next {
+  flex: 0 0 auto;
+  min-width: 5rem;
+  border-color: var(--cq-success);
+  color: var(--cq-success);
+  background: color-mix(in srgb, var(--cq-success) 8%, transparent);
+  font-weight: 600;
+}
+
+.cq-md-pre {
+  margin: 0.75rem 0;
+  padding: 0.85rem;
+  border-radius: 10px;
+  background: var(--cq-inset);
+  border: 1px solid var(--cq-border);
+  overflow-x: auto;
+  font-family: var(--cq-mono);
+  font-size: 0.85rem;
+}
+
+.cq-md-p {
+  margin: 0 0 0.65rem;
+}
+
+.cq-md-p:last-child {
+  margin-bottom: 0;
+}
+
+.cq-md-code {
+  font-family: var(--cq-mono);
+  font-size: 0.88em;
+  padding: 0.15rem 0.35rem;
+  border-radius: 6px;
+  background: var(--cq-inset);
+  border: 1px solid var(--cq-border);
+}
+
+/* Solved counts on the level's step tabs (LevelStepNav). Tabs then size to their
+   content, so a count never spills into the next tab. */
+.cq-step-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.cq-step-tabs .cq-step-tab {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 480px) {
+  /* Intro, Challenges and Test share one line; Next gets a full-width line below. */
+  .cq-step-tabs {
+    flex: 1 1 100%;
+    flex-wrap: nowrap;
+  }
+
+  .cq-step-tabs .cq-step-tab {
+    min-width: 0;
+    padding: 0.45rem 0.5rem;
+  }
+
+  .cq-step-tab--next {
+    flex: 1 1 100%;
+  }
+}
+
+.cq-step-tab-badge {
+  margin-left: 0.35rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: var(--cq-border);
+  color: var(--cq-text);
+  font-size: var(--cq-text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.cq-step-tab-badge--done {
+  background: color-mix(in srgb, var(--cq-success) 12%, transparent);
+  color: var(--cq-success);
+}
+
+/* Lesson code blocks: syntax colours (HighlightedCode) and the "Try it" button. */
+.cq-md-code-block {
+  position: relative;
+}
+
+.cq-md-try {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  opacity: 0.85;
+}
+
+.cq-md-try:hover,
+.cq-md-try:focus-visible {
+  opacity: 1;
+}
+
+.cq-md-code-block:has(.cq-md-try) .cq-md-pre {
+  padding-right: 4.5rem;
+}
+
+.cq-hl-keyword {
+  color: var(--cq-hl-keyword);
+}
+
+.cq-hl-builtin {
+  color: var(--cq-hl-builtin);
+}
+
+.cq-hl-constant,
+.cq-hl-number {
+  color: var(--cq-hl-number);
+}
+
+.cq-hl-string {
+  color: var(--cq-hl-string);
+}
+
+.cq-hl-comment {
+  color: var(--cq-hl-comment);
+  font-style: italic;
+}
+
+.cq-hl-name {
+  color: var(--cq-hl-name);
+}
+
+.cq-hl-decorator {
+  color: var(--cq-hl-decorator);
+}
+
+/* Note on a lesson whose challenges changed since the learner's last visit (LearnLevel). */
+.cq-reset-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid var(--cq-border);
+  background: var(--cq-surface);
+  font-size: var(--cq-text-sm);
+}
+
+.cq-reset-note p {
+  flex: 1;
+  margin: 0;
+}

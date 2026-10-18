@@ -1,6 +1,6 @@
 /**
  * Shared layout for gutter, phantom rows, and error popover.
- * Keep in sync with `.cq-code-editor-backdrop-inner` and `textarea.cq-code-editor-overlay` in App.css
+ * Keep in sync with `.cq-code-editor-backdrop-inner` and `textarea.cq-code-editor-overlay` in styles/code-editor.css
  * (padding, line-height, popover gap).
  */
 export const CODE_EDITOR_LAYOUT = {

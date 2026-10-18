@@ -109,6 +109,20 @@ export function ChallengeCard({
       ? `Solving after viewing the answer earns ${CHALLENGE_XP_AFTER_ANSWER} XP instead of ${CHALLENGE_XP}.`
       : null
 
+  const failedChecks = testResults.filter((t) => !t.passed).length
+  // Empty while checking, so the same result twice in a row is still announced.
+  const checkResultAnnouncement = busy || status === undefined
+    ? ''
+    : status === 'passed'
+      ? 'Passed. Every check passed.'
+      : isRuntimeTests && pyRuntimeErr
+        ? `Not yet. Your code stopped with an error: ${pyRuntimeErr.title}.`
+        : testResults.length === 1
+          ? 'Not yet. The check failed.'
+          : testResults.length > 1
+            ? `Not yet. ${failedChecks} of ${testResults.length} checks failed.`
+            : 'Not yet. This answer did not pass.'
+
   const toggleAnswer = () => {
     if (!showAnswer && !done && !answerViewed && !isEditingLocal && !isAdmin) onRevealAnswer()
     setShowAnswer((v) => !v)
@@ -121,7 +135,12 @@ export function ChallengeCard({
           <h2 className="cq-subtitle">{ch.title}</h2>
           <span className="cq-badge cq-badge--ok">Solved</span>
         </div>
-        <button type="button" className="cq-btn cq-btn--sm" onClick={() => setCollapsed(false)}>
+        <button
+          type="button"
+          className="cq-btn cq-btn--sm"
+          onClick={() => setCollapsed(false)}
+          aria-label={`Show challenge: ${ch.title}`}
+        >
           Show challenge
         </button>
       </div>
@@ -268,6 +287,10 @@ export function ChallengeCard({
             : done && status === 'failed' && !busy
               ? 'You solved this challenge before, so it stays complete. This answer did not pass.'
               : ''}
+      </p>
+      {/* The result of a Check, for screen readers: on screen it is the badges and the list below. */}
+      <p className="cq-sr-only" role="status">
+        {checkResultAnnouncement}
       </p>
       {showOutput ? (
         <>

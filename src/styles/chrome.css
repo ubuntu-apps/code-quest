@@ -1,0 +1,370 @@
+/* The header, bottom bar, breadcrumbs, banners, pop-ups and dialogs around the content. */
+
+.cq-install-banner {
+  position: fixed;
+  left: 50%;
+  bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 30;
+  width: min(92vw, 680px);
+  border: 1px solid var(--cq-border);
+  border-radius: 12px;
+  background: var(--cq-chrome);
+  box-shadow: 0 10px 28px var(--cq-shadow);
+  padding: 0.7rem 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.cq-install-banner__content {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.cq-install-banner__title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.cq-install-banner__hint {
+  margin: 0;
+  color: var(--cq-muted);
+  font-size: var(--cq-text-xs);
+}
+
+.cq-install-banner__close {
+  border: 1px solid var(--cq-border);
+  background: transparent;
+  color: var(--cq-muted);
+  border-radius: 8px;
+  width: 1.8rem;
+  height: 1.8rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cq-install-banner__close:hover {
+  color: var(--cq-text);
+  border-color: var(--cq-accent);
+}
+
+.cq-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  padding-top: calc(0.65rem + env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--cq-border);
+  background: var(--cq-chrome);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.cq-back {
+  border: none;
+  background: transparent;
+  color: var(--cq-text);
+  padding: 0.35rem;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.cq-back:hover {
+  background: var(--cq-surface);
+}
+
+.cq-header-spacer {
+  width: 2rem;
+}
+
+.cq-brand {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Shown while testing, so it's clear which version is running. */
+.cq-brand-version {
+  font-weight: 400;
+  font-size: 0.85em;
+  letter-spacing: 0;
+  color: var(--cq-muted);
+}
+
+.cq-admin-badge {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.75em;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #0f172a;
+  background: #fbbf24;
+  vertical-align: middle;
+}
+
+/* Breadcrumbs: the pages above this one (Home › Python › Fundamentals), all links. */
+.cq-breadcrumbs {
+  margin: -0.25rem 0 0.5rem;
+}
+
+.cq-breadcrumbs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.3rem;
+  font-size: var(--cq-text-sm);
+  color: var(--cq-muted);
+}
+
+.cq-breadcrumbs-link {
+  display: inline-block;
+  padding: 0.4rem 0.1rem;
+  color: var(--cq-accent);
+  text-decoration: none;
+}
+
+.cq-breadcrumbs-link:hover,
+.cq-breadcrumbs-link:focus-visible {
+  text-decoration: underline;
+}
+
+.cq-breadcrumbs-sep {
+  display: flex;
+  opacity: 0.7;
+}
+
+/* Bottom navigation */
+.cq-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  gap: 0.25rem;
+  padding: 0.45rem 0.75rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--cq-border);
+  background: var(--cq-chrome);
+  backdrop-filter: blur(10px);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.cq-nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.35rem;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--cq-muted);
+  cursor: pointer;
+  font-size: var(--cq-text-xs);
+}
+
+.cq-nav-btn--active {
+  color: var(--cq-accent);
+  background: var(--cq-accent-dim);
+}
+
+.cq-nav-label {
+  letter-spacing: 0.02em;
+}
+
+.cq-share-notice {
+  position: fixed;
+  left: 50%;
+  bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--cq-border);
+  background: var(--cq-chrome);
+  color: var(--cq-text);
+  font-size: var(--cq-text-sm);
+  box-shadow: 0 8px 24px var(--cq-shadow);
+  max-width: min(90vw, 420px);
+  text-align: center;
+}
+
+.cq-share-sheet {
+  width: min(92vw, 420px);
+  margin: auto;
+  padding: 1rem 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid var(--cq-border);
+  background: var(--cq-modal);
+  box-shadow: 0 16px 48px var(--cq-shadow);
+}
+
+.cq-share-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.cq-share-sheet-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.cq-share-sheet-lead {
+  margin: 0 0 0.85rem;
+  font-size: 0.88rem;
+}
+
+.cq-share-sheet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.cq-share-sheet-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.8rem 0.85rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 12px;
+  background: var(--cq-field);
+  color: var(--cq-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.cq-share-sheet-btn:hover {
+  border-color: var(--cq-accent);
+  background: var(--cq-accent-dim);
+}
+
+.cq-share-sheet-btn strong {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 0.15rem;
+}
+
+.cq-share-sheet-btn span span {
+  display: block;
+  font-size: var(--cq-text-xs);
+  line-height: 1.35;
+}
+
+.cq-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--cq-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 50;
+}
+
+.cq-modal {
+  width: min(980px, 100%);
+  height: min(84svh, 860px);
+  border: 1px solid var(--cq-border);
+  border-radius: 14px;
+  background: var(--cq-modal);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cq-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.8rem;
+  border-bottom: 1px solid var(--cq-border);
+}
+
+.cq-modal-title {
+  font-weight: 600;
+}
+
+.cq-modal-credit {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid var(--cq-border);
+  color: var(--cq-muted);
+  font-size: var(--cq-text-xs);
+}
+
+.cq-modal-credit a {
+  color: var(--cq-accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.cq-modal-frame {
+  width: 100%;
+  flex: 1;
+  border: none;
+  background: white;
+}
+
+.cq-modal-actions {
+  border-top: 1px solid var(--cq-border);
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Same look as the install banner, but near the top (below the sticky header, so
+   the Back button stays usable) so both banners can show at once. */
+.cq-update-banner {
+  top: calc(3.8rem + env(safe-area-inset-top, 0px));
+  bottom: auto;
+}
+
+.cq-modal-note {
+  margin: 0.4rem 0 0;
+}
+
+/* The XP pop-up sits above the share notice's spot and stands out a little more. */
+.cq-xp-toast {
+  border-color: var(--cq-success);
+  color: var(--cq-success);
+  font-weight: 600;
+  animation: cq-xp-pop 0.25s ease-out;
+}
+
+@keyframes cq-xp-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cq-xp-toast {
+    animation: none;
+  }
+}

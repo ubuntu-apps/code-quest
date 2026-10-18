@@ -1,4 +1,5 @@
-import type { LevelStep } from '../constants'
+import { useRef, type KeyboardEvent } from 'react'
+import { STEP_PANEL_ID, stepTabId, type LevelStep } from '../constants'
 
 const STEP_TABS: { id: LevelStep; label: string }[] = [
   { id: 'intro', label: 'Intro' },
@@ -36,35 +37,72 @@ export function LevelStepNav({
     if (id === 'test' && testPassed) return '✓'
     return null
   }
+  /** What the badge says to a screen reader. */
+  const badgeSpoken = (id: LevelStep): string =>
+    id === 'test' ? ', passed' : `, ${challengeCount?.done ?? 0} of ${challengeCount?.total ?? 0} solved`
+
+  // The top row is a tab list (arrow keys move between tabs, Tab moves on to the
+  // content). The bottom row repeats it as plain buttons for after a long page.
+  const isTabs = placement === 'top'
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
+
+  const onTabKeyDown = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const last = STEP_TABS.length - 1
+    const target =
+      e.key === 'ArrowRight' ? (index === last ? 0 : index + 1)
+      : e.key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : null
+    if (target === null) return
+    e.preventDefault()
+    tabRefs.current[target]?.focus()
+    onLevelStepChange(STEP_TABS[target].id)
+  }
 
   return (
     <div
       className={`cq-step-tabs-row${placement === 'bottom' ? ' cq-step-tabs-row--bottom' : ''}`}
     >
-      <div className="cq-step-tabs" role="tablist" aria-label="Level sections">
-        {STEP_TABS.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            role="tab"
-            aria-selected={levelStep === t.id}
-            className={`cq-step-tab${levelStep === t.id ? ' cq-step-tab--active' : ''}`}
-            onClick={() => onLevelStepChange(t.id)}
-          >
-            {t.label}
-            {badge(t.id) ? (
-              <span
-                className={`cq-step-tab-badge${
-                  (t.id === 'challenges' && challengeCount?.done === challengeCount?.total) || t.id === 'test'
-                    ? ' cq-step-tab-badge--done'
-                    : ''
-                }`}
-              >
-                {badge(t.id)}
-              </span>
-            ) : null}
-          </button>
-        ))}
+      <div
+        className="cq-step-tabs"
+        role={isTabs ? 'tablist' : 'group'}
+        aria-label={isTabs ? 'Lesson steps' : 'Go to lesson step'}
+      >
+        {STEP_TABS.map((t, index) => {
+          const active = levelStep === t.id
+          const badgeText = badge(t.id)
+          return (
+            <button
+              key={t.id}
+              ref={isTabs ? (el) => { tabRefs.current[index] = el } : undefined}
+              type="button"
+              role={isTabs ? 'tab' : undefined}
+              id={isTabs ? stepTabId(t.id) : undefined}
+              aria-selected={isTabs ? active : undefined}
+              aria-controls={isTabs ? STEP_PANEL_ID : undefined}
+              aria-current={!isTabs && active ? 'page' : undefined}
+              tabIndex={isTabs && !active ? -1 : undefined}
+              onKeyDown={isTabs ? (e) => onTabKeyDown(e, index) : undefined}
+              className={`cq-step-tab${active ? ' cq-step-tab--active' : ''}`}
+              onClick={() => onLevelStepChange(t.id)}
+            >
+              {t.label}
+              {badgeText ? (
+                <span
+                  className={`cq-step-tab-badge${
+                    (t.id === 'challenges' && challengeCount?.done === challengeCount?.total) || t.id === 'test'
+                      ? ' cq-step-tab-badge--done'
+                      : ''
+                  }`}
+                >
+                  <span aria-hidden="true">{badgeText}</span>
+                  <span className="cq-sr-only">{badgeSpoken(t.id)}</span>
+                </span>
+              ) : null}
+            </button>
+          )
+        })}
       </div>
       {showNext && (
         <button
@@ -72,6 +110,7 @@ export function LevelStepNav({
           className="cq-step-tab cq-step-tab--next"
           onClick={onGoToNextLevel}
           title={nextLevelTitle ? `Continue to ${nextLevelTitle}` : undefined}
+          aria-label={nextLevelTitle ? `Next lesson: ${nextLevelTitle}` : 'Next lesson'}
         >
           Next
         </button>

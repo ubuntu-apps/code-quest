@@ -88,7 +88,14 @@ export function LearnHome({
             </div>
             {/* Levels count from 1, so a new learner starts at Level 1. */}
             <div className="cq-kpi-value">Level {xpLevel + 1}</div>
-            <div className="cq-progress-bar" aria-label="XP progress">
+            <div
+              className="cq-progress-bar"
+              role="progressbar"
+              aria-label={`XP towards level ${xpLevel + 2}`}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={xpCurrentLevel}
+            >
               <div className="cq-progress-bar-fill" style={{ width: `${xpCurrentLevel}%` }} />
             </div>
             <div className="cq-kpi-muted">

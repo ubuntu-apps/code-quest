@@ -1,4 +1,5 @@
-import type { LevelStep, TabId } from './constants'
+import type { LearnView, LevelStep, TabId } from './constants'
+import type { Crumb } from './components/Breadcrumbs'
 
 export interface ParsedLearnPath {
   tab: TabId
@@ -89,4 +90,29 @@ export function tabPath(tab: TabId, langId?: string | null): string {
 
 export function authCallbackPath(): string {
   return '/auth/callback'
+}
+
+/**
+ * The pages above the current Learn page, for the breadcrumb trail: "Home › Python ›
+ * Fundamentals". The current page isn't included; it is the heading below the trail.
+ */
+export function learnBreadcrumbs({
+  learnView,
+  languageId,
+  courseTitle,
+  section,
+}: {
+  learnView: LearnView
+  languageId: string | null
+  /** The open course's title, once it has loaded. */
+  courseTitle: string | null
+  section: { id: string; title: string } | null
+}): Crumb[] {
+  if (learnView === 'languages' || !languageId || courseTitle === null) return []
+  const crumbs: Crumb[] = [{ label: 'Home', to: learnHomePath() }]
+  if (learnView !== 'sections') crumbs.push({ label: courseTitle, to: learnLanguagePath(languageId) })
+  if (learnView === 'level' && section) {
+    crumbs.push({ label: section.title, to: learnSectionPath(languageId, section.id) })
+  }
+  return crumbs
 }
