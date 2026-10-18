@@ -5,6 +5,7 @@ import { InstallAppBanner } from './components/InstallAppBanner'
 import { UpdateBanner } from './components/UpdateBanner'
 import { EditorProvider } from './features/editor'
 import { learnHomePath, learnLanguagePath } from './features/curriculum/learnPaths'
+import { SupporterLanding } from './features/support/SupporterLanding'
 
 /** GitHub sign-in landing page for editors; learners never load it. */
 const GitHubAuthCallback = lazy(() =>
@@ -31,6 +32,8 @@ function AppRoutes() {
             </Suspense>
           }
         />
+        {/* The thank-you link supporters get after paying (see supportConfig.ts). */}
+        <Route path="/supporter" element={<SupporterLanding />} />
         <Route path="/" element={<Navigate to={learnHomePath()} replace />} />
         <Route path="/progress" element={<OldProgressRedirect />} />
         <Route path="/progress/:langId" element={<OldProgressRedirect />} />

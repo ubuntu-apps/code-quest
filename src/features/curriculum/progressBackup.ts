@@ -1,6 +1,8 @@
 import { LAST_LEVEL_STORAGE_KEY, SELECTED_LANGUAGE_STORAGE_KEY, STREAK_STORAGE_KEY } from './constants'
 import { notifyProgressChanged } from './progressStorage'
 import { TEST_OUT_PREFIX } from './testOut'
+import { notifySupporterChanged, SUPPORTER_STORAGE_KEY } from '../support/supporterStorage'
+import { CERTIFICATE_EARNED_PREFIX, CERTIFICATE_NAME_KEY } from '../certificate/certificateStorage'
 
 const PROGRESS_PREFIX = 'codequest:progress:'
 /**
@@ -8,7 +10,14 @@ const PROGRESS_PREFIX = 'codequest:progress:'
  * travels with the backup, so an older backup without it is checked like old progress.
  */
 const PROGRESS_FORMAT_PREFIX = 'codequest:progress-format:'
-const SINGLE_KEYS = [STREAK_STORAGE_KEY, LAST_LEVEL_STORAGE_KEY, SELECTED_LANGUAGE_STORAGE_KEY]
+const SINGLE_KEYS = [
+  STREAK_STORAGE_KEY,
+  LAST_LEVEL_STORAGE_KEY,
+  SELECTED_LANGUAGE_STORAGE_KEY,
+  // Supporter status and the certificate move to a new device with the progress.
+  SUPPORTER_STORAGE_KEY,
+  CERTIFICATE_NAME_KEY,
+]
 
 /** Learner data only: never editor drafts, GitHub sign-in or install-banner settings. */
 export function isBackupKey(key: string): boolean {
@@ -16,7 +25,17 @@ export function isBackupKey(key: string): boolean {
     key.startsWith(PROGRESS_PREFIX) ||
     key.startsWith(PROGRESS_FORMAT_PREFIX) ||
     key.startsWith(TEST_OUT_PREFIX) ||
+    key.startsWith(CERTIFICATE_EARNED_PREFIX) ||
     SINGLE_KEYS.includes(key)
+  )
+}
+
+/** Entries saved as plain text rather than JSON. */
+function isPlainTextKey(key: string): boolean {
+  return (
+    key === SELECTED_LANGUAGE_STORAGE_KEY ||
+    key === CERTIFICATE_NAME_KEY ||
+    key.startsWith(CERTIFICATE_EARNED_PREFIX)
   )
 }
 
@@ -78,8 +97,8 @@ export function parseProgressBackup(text: string): ProgressBackup {
   const entries: Record<string, string> = {}
   for (const [key, value] of Object.entries(backup.entries)) {
     if (!isBackupKey(key) || typeof value !== 'string') continue
-    // Progress, streak and last-level entries are JSON; the selected language is plain text.
-    if (key !== SELECTED_LANGUAGE_STORAGE_KEY) {
+    // Progress, streak and last-level entries are JSON; a few others are plain text.
+    if (!isPlainTextKey(key)) {
       try {
         JSON.parse(value)
       } catch {
@@ -99,8 +118,13 @@ export function parseProgressBackup(text: string): ProgressBackup {
 
 /** Replaces this device's learner progress with the backup's. Returns the number of levels restored. */
 export function restoreProgressBackup(backup: ProgressBackup, storage: BackupStorage = localStorage): number {
-  for (const key of backupKeysIn(storage)) storage.removeItem(key)
+  for (const key of backupKeysIn(storage)) {
+    // An older backup made before becoming a supporter shouldn't take that away.
+    if (key === SUPPORTER_STORAGE_KEY) continue
+    storage.removeItem(key)
+  }
   for (const [key, value] of Object.entries(backup.entries)) storage.setItem(key, value)
   notifyProgressChanged()
+  notifySupporterChanged()
   return countLevels(backup.entries)
 }

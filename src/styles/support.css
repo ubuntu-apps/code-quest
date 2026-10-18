@@ -1,0 +1,173 @@
+/* Supporting CodeQuest (About panel, the note after a section) and the course certificate. */
+
+.cq-text-input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--cq-border);
+  background: var(--cq-inset);
+  color: var(--cq-text);
+  font: inherit;
+}
+
+.cq-support-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Buttons and button-style links with an icon. */
+a.cq-btn,
+.cq-support-links .cq-btn,
+.cq-certificate-actions .cq-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+
+.cq-support-panel p,
+.cq-support-nudge p,
+.cq-certificate-panel p {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.cq-support-panel {
+  /* Below the sticky header when the thank-you link scrolls to it. */
+  scroll-margin-top: 4.5rem;
+}
+
+.cq-support-thanks {
+  color: var(--cq-success);
+  font-weight: 500;
+}
+
+.cq-supporter-names {
+  margin-top: 0.85rem !important;
+  font-size: var(--cq-text-sm);
+}
+
+.cq-support-nudge {
+  border-color: color-mix(in srgb, var(--cq-accent) 45%, var(--cq-border));
+}
+
+.cq-supporter-code .cq-row {
+  flex-wrap: nowrap;
+}
+
+.cq-supporter-code-input {
+  flex: 1;
+  min-width: 0;
+  text-transform: uppercase;
+  font-family: var(--cq-mono);
+}
+
+.cq-supporter-code-status {
+  min-height: 1.2em;
+  margin: 0.35rem 0 0;
+  font-size: var(--cq-text-sm);
+}
+
+.cq-certificate-code {
+  margin-top: 0.75rem;
+}
+
+.cq-certificate-code summary {
+  cursor: pointer;
+  color: var(--cq-accent-text);
+  font-size: var(--cq-text-sm);
+}
+
+/* Certificate on the course page */
+.cq-certificate-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: var(--cq-text-sm);
+}
+
+.cq-certificate-panel {
+  border-color: color-mix(in srgb, var(--cq-success) 50%, var(--cq-border));
+}
+
+.cq-certificate-panel .cq-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Certificate dialog */
+.cq-certificate-dialog {
+  width: min(94vw, 760px);
+  max-height: 92svh;
+  overflow-y: auto;
+  margin: auto;
+  padding: 1rem 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid var(--cq-border);
+  background: var(--cq-modal);
+  box-shadow: 0 16px 48px var(--cq-shadow);
+}
+
+.cq-certificate-dialog .cq-label:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.cq-certificate-edition {
+  margin-top: 0.75rem;
+}
+
+.cq-certificate-preview {
+  margin: 0.85rem 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px var(--cq-shadow);
+}
+
+.cq-certificate-preview .cq-certificate-art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cq-certificate-actions {
+  align-items: center;
+}
+
+.cq-certificate-upsell {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--cq-border);
+}
+
+.cq-certificate-upsell p {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+  color: var(--cq-muted);
+}
+
+.cq-certificate-upsell strong {
+  color: var(--cq-text);
+}
+
+/* Printing the certificate: only the certificate, filling the page width. */
+@media print {
+  body.cq-printing-certificate * {
+    visibility: hidden;
+  }
+
+  body.cq-printing-certificate .cq-certificate-art,
+  body.cq-printing-certificate .cq-certificate-art * {
+    visibility: visible;
+  }
+
+  body.cq-printing-certificate .cq-certificate-art {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
+}

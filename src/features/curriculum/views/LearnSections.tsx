@@ -4,6 +4,9 @@ import { loadProgress } from '../progressStorage'
 import { AddItemButton, EditableText } from '../../editor'
 import { CatalogListItem } from '../components/CatalogListItem'
 import { hasTestedOut } from '../testOut'
+import { courseCompletion } from '../../certificate/courseCompletion'
+import { CertificatePanel } from '../../certificate/CertificatePanel'
+import { SupportNudge } from '../../support/SupportNudge'
 
 interface LearnSectionsProps {
   bundle: LanguageBundle
@@ -16,6 +19,7 @@ interface LearnSectionsProps {
   onMoveSection: (sectionId: string, direction: -1 | 1) => void
   onRemoveSection: (sectionId: string) => void
   onAddSection: () => void
+  baseUrl: string
 }
 
 export function LearnSections({
@@ -29,7 +33,9 @@ export function LearnSections({
   onMoveSection,
   onRemoveSection,
   onAddSection,
+  baseUrl,
 }: LearnSectionsProps) {
+  const completion = languageId && !isEditMode ? courseCompletion(languageId, bundle) : null
   return (
     <div className="cq-stack">
       <EditableText
@@ -39,6 +45,13 @@ export function LearnSections({
         onChange={onUpdateLanguageTitle}
       />
       <p className="cq-lead">Sections</p>
+      {completion && languageId ? (
+        <SupportNudge
+          languageId={languageId}
+          sectionsFinished={completion.sectionsFinished}
+          finishedTitle={completion.lastFinishedTitle}
+        />
+      ) : null}
       <ul className="cq-card-list">
         {bundle.index.sections.map((sec, secIndex) => {
           const loaded = bundle.sections.find((s) => s.sectionRef.id === sec.id)
@@ -84,6 +97,14 @@ export function LearnSections({
         })}
       </ul>
       {languageId && <AddItemButton label="Add section" onClick={onAddSection} />}
+      {completion && languageId ? (
+        <CertificatePanel
+          languageId={languageId}
+          courseTitle={bundle.index.title}
+          completion={completion}
+          baseUrl={baseUrl}
+        />
+      ) : null}
     </div>
   )
 }
