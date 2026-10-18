@@ -328,6 +328,7 @@ export function CodeQuestScreen() {
             void (async () => {
               const ok = await requestConfirm(
                 'Replace local drafts with content from public/content/? Unsaved local changes will be lost.',
+                { title: 'Replace drafts', confirmLabel: 'Yes, replace' },
               )
               if (!ok) return
               await importFromGitHub(baseUrl)

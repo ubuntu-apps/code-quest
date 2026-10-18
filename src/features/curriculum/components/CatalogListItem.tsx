@@ -13,7 +13,6 @@ interface CatalogListItemProps {
     onChange: (value: string) => void
   }
   progressPercent?: number
-  progressAriaLabel?: string
   locked?: boolean
   disabled?: boolean
   listIndex: number
@@ -33,7 +32,6 @@ export function CatalogListItem({
   meta,
   metaEditable,
   progressPercent,
-  progressAriaLabel,
   locked = false,
   disabled = false,
   listIndex,
@@ -69,14 +67,9 @@ export function CatalogListItem({
             meta
           ) : null}
           {progressPercent !== undefined && (
-            <div
-              className="cq-progress-bar"
-              role="progressbar"
-              aria-label={progressAriaLabel}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={Math.round(progressPercent)}
-            >
+            // Decorative: the card's text already says how many levels are complete, and a
+            // progress bar inside a button isn't read out anyway.
+            <div className="cq-progress-bar" aria-hidden="true">
               <div className="cq-progress-bar-fill" style={{ width: `${progressPercent}%` }} />
             </div>
           )}

@@ -144,7 +144,10 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       setEditMode(false)
       return
     }
-    const ok = await requestConfirm('Discard all edits made since you opened edit mode?')
+    const ok = await requestConfirm('Discard all edits made since you opened edit mode?', {
+      title: 'Discard edits',
+      confirmLabel: 'Yes, discard',
+    })
     if (!ok) return
     restoreEditSnapshot(snapshot)
     editSnapshotRef.current = null
@@ -282,6 +285,8 @@ export function EditorProvider({ children }: { children: ReactNode }) {
       <ConfirmDialog
         open={confirmState !== null}
         message={confirmState?.message ?? ''}
+        title={confirmState?.options?.title}
+        confirmLabel={confirmState?.options?.confirmLabel}
         onCancel={() => closeConfirm(false)}
         onConfirm={() => closeConfirm(true)}
       />

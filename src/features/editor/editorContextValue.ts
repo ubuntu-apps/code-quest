@@ -1,5 +1,6 @@
 import type { Challenge, LanguageBundle, Level, RootIndex, TestQuestion } from '../curriculum/types'
 import type { AboutContent } from './aboutContent'
+import type { ConfirmOptions } from './ConfirmDialog'
 import type { ContentSource } from './curriculumDraftStorage'
 
 /** Everything the editor offers the app, through the hooks in editorHooks.ts. */
@@ -57,7 +58,8 @@ export interface EditorContextValue {
     question: TestQuestion,
   ) => void
 
-  requestConfirm: (message: string) => Promise<boolean>
+  /** Asks a yes/no question in the app's dialog; by default it reads as a delete. */
+  requestConfirm: (message: string, options?: ConfirmOptions) => Promise<boolean>
 
   addLanguage: () => string | null
   removeLanguage: (langId: string) => void

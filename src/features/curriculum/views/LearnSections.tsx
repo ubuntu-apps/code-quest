@@ -73,7 +73,6 @@ export function LearnSections({
               onClick={() => onSelectSection(sec.id)}
               meta={<span className="cq-card-meta">{statusMeta}</span>}
               progressPercent={pct}
-              progressAriaLabel={`${sec.title} progress`}
               listIndex={secIndex}
               listLength={bundle.index.sections.length}
               onMoveUp={() => onMoveSection(sec.id, -1)}

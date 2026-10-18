@@ -62,6 +62,7 @@ export function ProgressBackupPanel() {
       const levels = countLevels(backup.entries)
       const ok = await requestConfirm(
         `Replace the progress on this device with the backup (${levels} ${levels === 1 ? 'topic' : 'topics'})? Your current progress here will be overwritten.`,
+        { title: 'Restore progress', confirmLabel: 'Yes, restore' },
       )
       if (!ok) return
       restoreProgressBackup(backup)
