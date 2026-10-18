@@ -69,7 +69,14 @@ export function CatalogListItem({
             meta
           ) : null}
           {progressPercent !== undefined && (
-            <div className="cq-progress-bar" aria-label={progressAriaLabel}>
+            <div
+              className="cq-progress-bar"
+              role="progressbar"
+              aria-label={progressAriaLabel}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.round(progressPercent)}
+            >
               <div className="cq-progress-bar-fill" style={{ width: `${progressPercent}%` }} />
             </div>
           )}

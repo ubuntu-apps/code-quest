@@ -31,7 +31,10 @@ const KEYS: CodeKey[] = [
   { label: '!', kind: 'text', text: '!' },
 ]
 
-function editFor(key: CodeKey, el: HTMLTextAreaElement): TextEdit | null {
+/** A one-line answer box gets no indent keys. */
+const ANSWER_KEYS = KEYS.filter((key) => key.kind !== 'tab' && key.kind !== 'untab')
+
+function editFor(key: CodeKey, el: HTMLTextAreaElement | HTMLInputElement): TextEdit | null {
   const value = el.value
   const start = el.selectionStart ?? value.length
   const end = el.selectionEnd ?? start
@@ -52,7 +55,14 @@ function editFor(key: CodeKey, el: HTMLTextAreaElement): TextEdit | null {
  * brackets and quotes are buried on the on-screen keyboard. Pressing a key types into
  * the editor without taking focus from it, so the keyboard stays open.
  */
-export function CodeKeyBar({ textareaRef }: { textareaRef: RefObject<HTMLTextAreaElement | null> }) {
+export function CodeKeyBar({
+  textareaRef,
+  variant = 'code',
+}: {
+  textareaRef: RefObject<HTMLTextAreaElement | HTMLInputElement | null>
+  /** "answer": for a one-line quiz answer, without the indent keys. */
+  variant?: 'code' | 'answer'
+}) {
   const press = (key: CodeKey) => {
     const el = textareaRef.current
     if (!el) return
@@ -63,7 +73,7 @@ export function CodeKeyBar({ textareaRef }: { textareaRef: RefObject<HTMLTextAre
 
   return (
     <div className="cq-code-keys" role="toolbar" aria-label="Code symbols">
-      {KEYS.map((key) => (
+      {(variant === 'answer' ? ANSWER_KEYS : KEYS).map((key) => (
         <button
           key={key.label}
           type="button"

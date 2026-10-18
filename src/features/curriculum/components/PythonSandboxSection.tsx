@@ -72,7 +72,7 @@ export function PythonSandboxSection({
 
   return (
     <section id="cq-sandbox" className="cq-sandbox">
-      <h3 className="cq-sandbox-title">Sandbox</h3>
+      <h2 className="cq-sandbox-title">Sandbox</h2>
       <p className="cq-muted">You can try some {languageLabel} code here.</p>
       <label className="cq-label" htmlFor={`${languageId}-sandbox-input`}>
         {languageLabel} code

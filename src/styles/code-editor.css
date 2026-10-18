@@ -1,0 +1,251 @@
+/* Code boxes: the editor, the error line and pop-up, and the symbol keys on phones. */
+
+.cq-code-input {
+  width: 100%;
+  font-family: var(--cq-mono);
+  font-size: var(--cq-code-size);
+  padding: 0.65rem;
+  border-radius: 10px;
+  border: 1px solid var(--cq-border);
+  background: var(--cq-inset);
+  color: var(--cq-text);
+  resize: vertical;
+}
+
+.cq-code-input:disabled {
+  opacity: 0.65;
+}
+
+.cq-code-input--pass {
+  border-color: rgba(74, 222, 128, 0.55);
+}
+
+.cq-code-input--fail {
+  border-color: rgba(248, 113, 113, 0.55);
+}
+
+/* Line highlight behind textarea (synced scroll; white-space: pre on overlay) */
+.cq-code-editor-wrap {
+  position: relative;
+  border-radius: 10px;
+  border: 1px solid var(--cq-border);
+  background: var(--cq-inset);
+}
+
+.cq-code-editor-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cq-code-editor-backdrop::-webkit-scrollbar {
+  display: none;
+}
+
+.cq-code-editor-backdrop-inner {
+  padding: 0.65rem;
+  font-family: var(--cq-mono);
+  font-size: var(--cq-code-size);
+  line-height: 1.45;
+  box-sizing: border-box;
+  min-height: 100%;
+  /* Optical align with textarea text (highlight was sitting slightly low) */
+  transform: translateY(-2px);
+}
+
+.cq-code-editor-line {
+  display: flex;
+  align-items: center;
+  height: 1.45em;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.cq-code-editor-line--error {
+  position: relative;
+  background: rgba(248, 113, 113, 0.22);
+  border-left: 3px solid var(--cq-danger);
+  margin-left: -0.65rem;
+  padding-left: calc(0.65rem - 3px);
+  border-radius: 0 4px 4px 0;
+}
+
+.cq-code-editor-line--phantom {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Scroll-synced layer above textarea so tooltip is not covered by code glyphs */
+.cq-code-editor-tooltip-layer {
+  position: absolute;
+  inset: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cq-code-editor-tooltip-layer::-webkit-scrollbar {
+  display: none;
+}
+
+.cq-code-editor-tooltip-layer-inner {
+  position: relative;
+}
+
+.cq-code-error-popover {
+  border-radius: 10px;
+  font-size: var(--cq-text-xs);
+  line-height: 1.35;
+  font-family: var(--cq-mono);
+  color: var(--cq-popover-text);
+  background: var(--cq-popover-bg);
+  border: 1px solid var(--cq-danger);
+  box-shadow: 0 6px 18px var(--cq-shadow);
+  pointer-events: auto;
+}
+
+.cq-code-error-tooltip--floating {
+  position: absolute;
+  left: 0.65rem;
+  max-width: min(calc(100% - 1.3rem), 22rem);
+}
+
+.cq-code-error-popover-handle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.35rem;
+  border-bottom: 1px solid rgba(248, 113, 113, 0.45);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cq-code-error-popover-handle:active {
+  cursor: grabbing;
+}
+
+.cq-code-error-popover-grip {
+  display: flex;
+  color: var(--cq-danger-strong);
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.cq-code-error-popover-title {
+  flex: 1;
+  font-family: inherit;
+  font-size: var(--cq-text-xs);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: var(--cq-danger-text);
+}
+
+.cq-code-error-popover-close {
+  flex-shrink: 0;
+  padding: 0.25rem !important;
+  border-radius: 6px !important;
+  color: var(--cq-danger-text) !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.cq-code-error-popover-close:hover {
+  background: rgba(248, 113, 113, 0.2) !important;
+}
+
+.cq-code-error-popover-body {
+  padding: 0.45rem 0.55rem 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.cq-code-error-popover-meta {
+  padding: 0 0.55rem 0.5rem;
+  font-size: var(--cq-text-xs);
+  color: var(--cq-danger-text);
+  opacity: 0.95;
+}
+
+.cq-code-error-popover::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  bottom: 100%;
+  top: auto;
+  border: 6px solid transparent;
+  border-bottom-color: var(--cq-popover-bg);
+  pointer-events: none;
+}
+
+.cq-code-error-popover--dragged::after {
+  display: none;
+}
+
+textarea.cq-code-editor-overlay {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: none !important;
+  border-radius: 10px;
+  background: transparent !important;
+  caret-color: var(--cq-text);
+  white-space: pre;
+  line-height: 1.45;
+  overflow-x: auto;
+  resize: vertical;
+}
+
+/* Symbol keys under a code editor on touch screens (CodeKeyBar). */
+.cq-code-keys {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  padding-bottom: 0.2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cq-code-keys::-webkit-scrollbar {
+  display: none;
+}
+
+.cq-code-key {
+  flex: 0 0 auto;
+  min-width: 2.6rem;
+  min-height: 2.6rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 8px;
+  background: var(--cq-surface);
+  color: var(--cq-text);
+  font-family: var(--cq-mono);
+  font-size: var(--cq-text-sm);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cq-code-key:active {
+  border-color: var(--cq-accent);
+  background: var(--cq-accent-dim);
+}

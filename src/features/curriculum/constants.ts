@@ -44,3 +44,11 @@ export const SANDBOX_SNIPPETS: Record<string, { id: string; label: string; code:
     { id: 'function', label: 'Function', code: 'add <- function(a, b) a + b\nprint(add(2, 3))' },
   ],
 }
+
+/** The element that shows the current lesson step, labelled by the top row's step tabs. */
+export const STEP_PANEL_ID = 'cq-step-panel'
+
+/** The id of a lesson step's tab, so the step panel can name it. */
+export function stepTabId(step: LevelStep): string {
+  return `cq-step-tab-${step}`
+}

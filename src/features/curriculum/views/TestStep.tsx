@@ -6,6 +6,7 @@ import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditor
 import { YesNoQuestionInput } from '../components/YesNoQuestionInput'
 import { isYesNoQuestion, yesNoCorrectAnswer } from '../testQuestionUtils'
 import { reportProblemUrl } from '../reportProblem'
+import { AnswerInput } from '../codeEditor/AnswerInput'
 
 interface TestStepProps {
   level: Level
@@ -124,7 +125,7 @@ export function TestStep({
                     {q.type === 'mcq' ? (
                       <>
                         <SimpleMarkdown text={q.prompt} />
-                        <div className="cq-mcq">
+                        <div className="cq-mcq" role="radiogroup" aria-label={`Question ${qi + 1}`}>
                           {q.choices.map((c) => {
                             const selected = testMcq[q.id] === c.id
                             const isCorrect = q.correctChoiceId === c.id
@@ -162,7 +163,7 @@ export function TestStep({
                     ) : (
                       <>
                         <SimpleMarkdown text={q.prompt} />
-                        <input
+                        <AnswerInput
                           type="text"
                           className={`cq-code-input cq-short-answer${
                             showFeedback
@@ -231,6 +232,12 @@ export function TestStep({
           </button>
         ) : null}
       </div>
+      {/* Read out after Submit; the score line below appears too late to be announced itself. */}
+      <p className="cq-sr-only" role="status">
+        {testResult && resultCurrent
+          ? `Score ${testResult.correct} out of ${testResult.total}. ${testResult.passed ? 'Passed.' : 'Not passed.'}`
+          : ''}
+      </p>
       {testResult && resultCurrent && (
         <p className={testResult.passed ? 'cq-score cq-score--pass' : 'cq-score cq-score--fail'}>
           Score {testResult.correct}/{testResult.total} (

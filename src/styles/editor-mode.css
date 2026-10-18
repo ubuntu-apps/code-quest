@@ -1,0 +1,286 @@
+/* Edit mode (for course authors): toolbars, editable fields and list controls. */
+
+/* Editor mode */
+.cq-edit-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.cq-edit-toggle {
+  border: none;
+  background: transparent;
+  color: var(--cq-muted);
+  padding: 0.35rem;
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.cq-edit-toggle:hover,
+.cq-edit-toggle--active {
+  color: var(--cq-accent);
+  background: var(--cq-surface);
+}
+
+.cq-edit-toggle--save:hover {
+  color: var(--cq-success);
+}
+
+.cq-edit-toggle--discard:hover {
+  color: var(--cq-danger);
+}
+
+.cq-edit-commit-status {
+  position: absolute;
+  right: 0.5rem;
+  top: 100%;
+  font-size: var(--cq-text-xs);
+  color: var(--cq-muted);
+  max-width: 12rem;
+  text-align: right;
+}
+
+.cq-edit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.45rem 0.85rem;
+  background: rgba(56, 189, 248, 0.12);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.35);
+  font-size: var(--cq-text-xs);
+}
+
+.cq-edit-banner-label {
+  font-weight: 600;
+  color: var(--cq-accent-text);
+}
+
+.cq-edit-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.cq-edit-banner-status {
+  width: 100%;
+  font-size: var(--cq-text-xs);
+  color: var(--cq-muted);
+}
+
+.cq-content-source {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 8px;
+}
+
+.cq-content-source-label {
+  font-size: var(--cq-text-xs);
+  font-weight: 600;
+  color: var(--cq-accent-text);
+}
+
+.cq-content-source-toggle {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  background: var(--cq-field);
+  border-radius: 8px;
+  width: fit-content;
+}
+
+.cq-content-source-btn {
+  border: none;
+  background: transparent;
+  color: var(--cq-muted);
+  font-size: var(--cq-text-xs);
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cq-content-source-btn:hover {
+  color: var(--cq-text);
+}
+
+.cq-content-source-btn--active {
+  background: rgba(56, 189, 248, 0.25);
+  color: var(--cq-accent-text);
+}
+
+.cq-content-source-hint {
+  margin: 0;
+  font-size: var(--cq-text-xs);
+  color: var(--cq-muted);
+}
+
+.cq-content-source-hint code {
+  font-size: var(--cq-text-xs);
+  color: var(--cq-text);
+}
+
+.cq-shell--edit-mode .cq-main {
+  outline: 1px dashed rgba(56, 189, 248, 0.25);
+  outline-offset: -1px;
+}
+
+.cq-editable-input {
+  width: 100%;
+  border: 1px dashed rgba(56, 189, 248, 0.5);
+  border-radius: 6px;
+  background: var(--cq-field);
+  color: inherit;
+  font: inherit;
+  padding: 0.2rem 0.4rem;
+}
+
+.cq-editable-input.cq-title,
+.cq-editable-input.cq-card-title {
+  font-weight: inherit;
+}
+
+.cq-editable-textarea {
+  width: 100%;
+  border: 1px dashed rgba(56, 189, 248, 0.5);
+  border-radius: 8px;
+  background: var(--cq-field);
+  color: inherit;
+  font-family: var(--cq-mono);
+  font-size: var(--cq-text-sm);
+  padding: 0.5rem;
+  resize: vertical;
+}
+
+.cq-editable-textarea--markdown {
+  min-height: 8rem;
+}
+
+.cq-editable-field {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.cq-editable-select {
+  width: 100%;
+  border: 1px dashed rgba(56, 189, 248, 0.5);
+  border-radius: 6px;
+  background: var(--cq-field);
+  color: inherit;
+  padding: 0.35rem 0.5rem;
+  font-size: var(--cq-text-sm);
+}
+
+.cq-editable-block {
+  margin-top: 0.75rem;
+  padding: 0.65rem;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 8px;
+  background: rgba(56, 189, 248, 0.05);
+}
+
+.cq-editable-block-label {
+  font-size: var(--cq-text-xs);
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cq-accent-text);
+  margin-bottom: 0.35rem;
+}
+
+.cq-editable-nested {
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 2px solid rgba(56, 189, 248, 0.25);
+}
+
+.cq-editable-preview {
+  margin-top: 0.5rem;
+  font-size: var(--cq-text-sm);
+}
+
+.cq-editable-preview summary {
+  cursor: pointer;
+  color: var(--cq-muted);
+  margin-bottom: 0.35rem;
+}
+
+.cq-lead.cq-editable-input {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.cq-list-editor-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.cq-list-editor-btn {
+  border: 1px solid var(--cq-border);
+  background: var(--cq-field);
+  color: var(--cq-muted);
+  border-radius: 6px;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.cq-list-editor-btn:hover:not(:disabled) {
+  color: var(--cq-text);
+  border-color: var(--cq-accent);
+}
+
+.cq-list-editor-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.cq-list-editor-btn--danger:hover:not(:disabled) {
+  color: var(--cq-danger-strong);
+  border-color: rgba(248, 113, 113, 0.6);
+}
+
+.cq-add-item-btn {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cq-test-add-buttons {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.cq-install-step-row .cq-card-row {
+  align-items: center;
+}
+
+.cq-confirm-dialog {
+  max-width: 22rem;
+}
+
+.cq-confirm-message {
+  margin: 0 0 0.75rem;
+  color: var(--cq-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.cq-confirm-actions {
+  justify-content: flex-end;
+}

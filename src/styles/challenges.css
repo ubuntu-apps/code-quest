@@ -1,0 +1,182 @@
+/* Challenge cards: hints, answers, check results and the expected/got diff. */
+
+.cq-check-status {
+  margin: 0.4rem 0 0;
+  font-size: var(--cq-text-sm);
+}
+
+.cq-check-status:empty {
+  margin: 0;
+}
+
+.cq-hints {
+  margin-top: 0.5rem;
+  font-size: var(--cq-text-sm);
+  color: var(--cq-muted);
+}
+
+.cq-challenge-help-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.65rem;
+}
+
+.cq-challenge-reveal {
+  margin-top: 0.5rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 10px;
+  padding: 0.55rem 0.65rem;
+  font-size: var(--cq-text-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cq-challenge-reveal--hint {
+  color: var(--cq-muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cq-challenge-reveal--answer {
+  margin: 0.5rem 0 0;
+  font-family: var(--cq-mono);
+  font-size: var(--cq-text-xs);
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: var(--cq-text);
+  overflow-x: auto;
+}
+
+.cq-runtime-error {
+  margin-top: 0.55rem;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--cq-danger-text);
+  border-radius: 10px;
+  padding: 0.55rem 0.65rem;
+  font-size: var(--cq-text-xs);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.cq-testcase-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cq-testcase-item {
+  border: 1px solid var(--cq-border);
+  border-radius: 8px;
+  padding: 0.45rem 0.55rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.35rem;
+  font-size: var(--cq-text-xs);
+}
+
+.cq-testcase-item--pass {
+  border-color: rgba(74, 222, 128, 0.6);
+}
+
+.cq-testcase-item--fail {
+  border-color: rgba(248, 113, 113, 0.6);
+}
+
+.cq-testcase-detail {
+  grid-column: 1 / -1;
+  color: var(--cq-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--cq-mono);
+  font-size: var(--cq-text-xs);
+}
+
+/* A failed "expected == actual" check with the differences marked (ValueDiff). */
+.cq-diff {
+  display: grid;
+  gap: 0.2rem;
+  margin-top: 0.35rem;
+}
+
+.cq-diff-label {
+  font-family: var(--cq-font);
+  font-size: var(--cq-text-xs);
+  color: var(--cq-muted);
+}
+
+.cq-diff-value {
+  margin: 0;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  background: var(--cq-bg);
+  color: var(--cq-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--cq-mono);
+  font-size: var(--cq-text-sm);
+}
+
+.cq-diff-mark {
+  border-radius: 3px;
+  color: inherit;
+  /* Keeps a marked space or line break visible. */
+  padding: 0 1px;
+  white-space: pre-wrap;
+}
+
+.cq-diff-mark--missing {
+  background: color-mix(in srgb, var(--cq-success) 32%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--cq-success) 70%, transparent);
+}
+
+.cq-diff-mark--extra {
+  background: color-mix(in srgb, var(--cq-danger) 32%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--cq-danger) 70%, transparent);
+}
+
+.cq-diff-empty {
+  color: var(--cq-muted);
+  font-style: italic;
+}
+
+.cq-diff-note {
+  margin: 0.2rem 0 0;
+  font-family: var(--cq-font);
+  font-size: var(--cq-text-xs);
+  color: var(--cq-muted);
+}
+
+/* A challenge solved before the lesson was opened, folded to one line. */
+.cq-challenge-card--folded {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cq-challenge-card--folded .cq-card-row {
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0;
+}
+
+/* "Report a problem" under a challenge or quiz: a quiet link to a pre-filled GitHub issue. */
+.cq-report-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: var(--cq-muted);
+  font-size: var(--cq-text-xs);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cq-report-link:hover {
+  color: var(--cq-accent);
+}

@@ -4,7 +4,7 @@ import { applyTextEdit, type TextEdit } from './editing'
  * Replaces text the way typing would, so the browser's undo history and React's
  * onChange both see the edit. Falls back to setRangeText where execCommand is missing.
  */
-export function applyEdit(el: HTMLTextAreaElement, edit: TextEdit): void {
+export function applyEdit(el: HTMLTextAreaElement | HTMLInputElement, edit: TextEdit): void {
   const expected = applyTextEdit(el.value, edit)
   el.setSelectionRange(edit.start, edit.end)
   let applied: boolean

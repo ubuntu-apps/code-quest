@@ -1,26 +1,34 @@
-import '../../App.css'
+// The app's styles, split by feature. The order matters: later files can override earlier
+// ones. Colours come from the theme variables in index.css.
+import '../../styles/base.css'
+import '../../styles/chrome.css'
+import '../../styles/catalog.css'
+import '../../styles/lesson.css'
+import '../../styles/code-editor.css'
+import '../../styles/challenges.css'
+import '../../styles/sandbox.css'
+import '../../styles/quiz.css'
+import '../../styles/about.css'
+import '../../styles/editor-mode.css'
 
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BookOpen, ChevronLeft, Info, Share2 } from 'lucide-react'
-import type { LanguageBundle, Level, LoadedSection, RootIndex } from './types'
+import { BookOpen, Info, Share2 } from 'lucide-react'
+import type { Level } from './types'
 import { useAdminMode } from './adminMode'
-import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from './loadCurriculum'
+import { loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
-import { reconcileLanguageProgress } from './progressFingerprint'
 import { hasTestedOut } from './testOut'
-import { preloadWebR } from './rSandbox'
 import { warmUpPython } from './pythonSandbox'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
-import { Breadcrumbs, type Crumb } from './components/Breadcrumbs'
+import { Breadcrumbs } from './components/Breadcrumbs'
+import { AppHeader } from './components/AppHeader'
+import { Notices } from './components/Notices'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
-import { shareApp, type ShareVariant } from '../../lib/shareApp'
 import { ShareSheet } from '../../components/ShareSheet'
 import { detectPlatform, installInstructions } from '../../platform'
-import { APP_VERSION } from '../../version'
 import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
-  EditorHeaderButton,
   useEditorAbout,
   useEditorCatalog,
   useEditorDraft,
@@ -29,23 +37,19 @@ import {
   useEditorConfirm,
 } from '../editor'
 import { mergeAboutContent } from '../editor/aboutContent'
-import { LAST_LEVEL_STORAGE_KEY, type TabId } from './constants'
+import type { TabId } from './constants'
 import { useLearnRoute } from './hooks/useLearnRoute'
-import { learnHomePath, learnLanguagePath, learnSectionPath } from './learnPaths'
+import { learnBreadcrumbs } from './learnPaths'
+import { rememberLastLevel } from './lastLevel'
 import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageStorage'
-import {
-  computeLevelXp,
-  isSectionUnlocked as checkSectionUnlocked,
-  currentStreak,
-  loadStreakState,
-  recordDailyActivity,
-  sectionStartHint,
-} from './helpers'
+import { recordDailyActivity, sectionStartHint } from './helpers'
 import { useChallenges } from './hooks/useChallenges'
-import { useLanguageBundles } from './hooks/useLanguageBundles'
+import { useCourseProgress } from './hooks/useCourseProgress'
+import { useCurriculum } from './hooks/useCurriculum'
 import { useLevelTest } from './hooks/useLevelTest'
 import { useSandbox } from './hooks/useSandbox'
 import { useProgressVersion } from './hooks/useProgressVersion'
+import { useShareSheet, useXpToast } from './hooks/useNotices'
 import { LearnHome, type ContinueTarget } from './views/LearnHome'
 import { LearnSections } from './views/LearnSections'
 import { LearnLevels } from './views/LearnLevels'
@@ -57,24 +61,17 @@ const EditorToolbar = lazy(() =>
   import('../editor/EditModeToolbar').then((m) => ({ default: m.EditorToolbar })),
 )
 
+/**
+ * The whole app: header, the Learn and About pages, and the bottom bar. Loading content
+ * and working out progress live in hooks (useCurriculum, useCourseProgress); each page
+ * is a view in ./views.
+ */
 export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
   const [platform] = useState(() => detectPlatform())
   const progressVersion = useProgressVersion()
+  const { isEditMode, contentSource, setContentSource, githubHomeLead } = useEditorMode()
   const {
-    isEditMode,
-    contentSource,
-    setContentSource,
-    githubHomeLead,
-    editSessionEpoch,
-    registerCatalogReload,
-    applyCatalogFromDisk,
-  } = useEditorMode()
-  const {
-    rootIndex: editableRootIndex,
-    syncRootIndex,
-    syncBundle,
-    getBundle,
     homeLead,
     updateHomeLead,
     updateLanguage,
@@ -127,189 +124,44 @@ export function CodeQuestScreen() {
     backFromLearn,
   } = useLearnRoute()
 
-  const [rootIndex, setRootIndex] = useState<RootIndex | null>(null)
-  const [rootError, setRootError] = useState<string | null>(null)
-
-  const [bundle, setBundle] = useState<LanguageBundle | null>(null)
-  const [bundleError, setBundleError] = useState<string | null>(null)
-  const [loadedLanguageId, setLoadedLanguageId] = useState<string | null>(null)
-
   const prevLevelIdRef = useRef<string | null>(null)
 
   const [readMoreOpen, setReadMoreOpen] = useState(false)
   const [installResetNotice, setInstallResetNotice] = useState<string | null>(null)
-  const [shareNotice, setShareNotice] = useState<string | null>(null)
-  const [shareSheetOpen, setShareSheetOpen] = useState(false)
-
-  const handleShareSelect = useCallback(async (variant: ShareVariant) => {
-    setShareSheetOpen(false)
-    const result = await shareApp(variant)
-    if (result === 'copied') {
-      setShareNotice('Install link copied to clipboard.')
-    } else if (result === 'unsupported') {
-      setShareNotice('Sharing is not available in this browser.')
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!shareNotice) return
-    const timer = window.setTimeout(() => setShareNotice(null), 3000)
-    return () => window.clearTimeout(timer)
-  }, [shareNotice])
+  const { shareNotice, shareSheetOpen, openShareSheet, closeShareSheet, handleShareSelect } = useShareSheet()
 
   const isAdmin = useAdminMode()
   /** The editor and admin mode can open everything. */
   const unlockAll = isEditMode || isAdmin
 
-  /** The course picked last, unless it can't be opened now (e.g. it became "coming soon"). */
-  const activeOpenableId =
-    activeLanguageId &&
-    (unlockAll || !rootIndex?.languages.some((lang) => lang.id === activeLanguageId && lang.comingSoon))
-      ? activeLanguageId
-      : null
-
-  const { bundles: languageBundles } = useLanguageBundles(
-    rootIndex,
-    baseUrl,
-    syncBundle,
-    getBundle,
+  const {
+    rootError,
+    bundleError,
+    displayRootIndex,
+    bundleForView,
+    languageBundles,
     activeOpenableId,
-  )
-
-  useEffect(() => {
-    loadRootIndex(baseUrl)
-      .then((data) => {
-        setRootIndex(data)
-        syncRootIndex(data)
-      })
-      .catch((e: unknown) => setRootError(lessonLoadErrorMessage(e, 'Failed to load catalog')))
-  }, [baseUrl, syncRootIndex])
+    useLocalContent,
+    resolveBundle,
+    openLanguage,
+    forgetBundle,
+    replaceRootIndex,
+  } = useCurriculum({ baseUrl, languageId, activeLanguageId, unlockAll, progressVersion, goToLanguage })
 
   useEffect(() => {
     if (languageId) saveSelectedLanguage(languageId)
   }, [languageId])
 
-  useEffect(() => {
-    if (!languageId || !rootIndex) return
-
-    const lang = rootIndex.languages.find((l) => l.id === languageId)
-    if (!lang) return
-    if (loadedLanguageId === languageId) return
-
-    let cancelled = false
-    const useLocalContent = isEditMode && contentSource === 'local'
-    const draftBundle = useLocalContent ? getBundle(languageId) : null
-    if (useLocalContent && draftBundle) {
-      void Promise.resolve().then(() => {
-        if (cancelled) return
-        setBundle(draftBundle)
-        setLoadedLanguageId(languageId)
-        setBundleError(null)
-      })
-      return () => {
-        cancelled = true
-      }
-    }
-
-    void loadLanguageBundle(baseUrl, lang.path, { fallbackBundle: draftBundle ?? getBundle(languageId) })
-      .then((b) => {
-        if (cancelled) return
-        setLoadedLanguageId(languageId)
-        setBundle(b)
-        setBundleError(null)
-        syncBundle(languageId, b)
-      })
-      .catch((e: unknown) => {
-        if (cancelled) return
-        setLoadedLanguageId(null)
-        setBundle(null)
-        setBundleError(lessonLoadErrorMessage(e, 'Failed to load language'))
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [
-    languageId,
-    rootIndex,
-    baseUrl,
-    syncBundle,
-    loadedLanguageId,
-    isEditMode,
-    contentSource,
-    getBundle,
-    editSessionEpoch,
-  ])
-
-  useEffect(() => {
-    return registerCatalogReload(async () => {
-      setLoadedLanguageId(null)
-      setBundleError(null)
-
-      if (import.meta.env.DEV) {
-        const root = await loadRootIndex(baseUrl, { cacheBust: true })
-        const loaded: Record<string, LanguageBundle> = {}
-        for (const lang of root.languages) {
-          loaded[lang.id] = await loadLanguageBundle(baseUrl, lang.path, {
-            cacheBust: true,
-            fallbackBundle: getBundle(lang.id),
-          })
-        }
-        applyCatalogFromDisk(root, loaded)
-        setRootIndex(root)
-        if (languageId && loaded[languageId]) {
-          setBundle(loaded[languageId])
-          setLoadedLanguageId(languageId)
-          syncBundle(languageId, loaded[languageId])
-        }
-        return
-      }
-
-      if (editableRootIndex) setRootIndex(editableRootIndex)
-      if (languageId) {
-        const draft = getBundle(languageId)
-        if (draft) {
-          setBundle(draft)
-          setLoadedLanguageId(languageId)
-        }
-      }
+  const { streakCount, isLevelUnlocked, isSectionUnlockedFor, openableLanguages, totalXp, continueTarget } =
+    useCourseProgress({
+      progressVersion,
+      unlockAll,
+      displayRootIndex,
+      bundleForView,
+      languageBundles,
+      resolveBundle,
+      activeOpenableId,
     })
-  }, [
-    registerCatalogReload,
-    applyCatalogFromDisk,
-    baseUrl,
-    languageId,
-    getBundle,
-    syncBundle,
-    editableRootIndex,
-  ])
-
-  const useLocalContent = isEditMode && contentSource === 'local'
-
-  const displayRootIndex = useLocalContent ? (editableRootIndex ?? rootIndex) : rootIndex
-
-  const displayBundle = useMemo(() => {
-    if (!languageId) return bundle
-    if (!useLocalContent) return languageBundles[languageId] ?? bundle
-    return getBundle(languageId) ?? bundle
-  }, [languageId, getBundle, bundle, useLocalContent, languageBundles])
-
-  const bundleForView = displayBundle ?? bundle
-
-  // Drop saved challenge progress that belongs to an older version of a lesson (see
-  // progressFingerprint.ts). Runs again after progress changes, e.g. a restored backup.
-  // Local edit-mode drafts are skipped: editing a challenge shouldn't wipe its progress.
-  useEffect(() => {
-    void progressVersion
-    if (useLocalContent) return
-    const loaded: Record<string, LanguageBundle> = { ...languageBundles }
-    if (bundle && loadedLanguageId) loaded[loadedLanguageId] = bundle
-    let dropped = false
-    for (const [langId, b] of Object.entries(loaded)) {
-      if (reconcileLanguageProgress(langId, b)) dropped = true
-    }
-    if (dropped) notifyProgressChanged()
-  }, [languageBundles, bundle, loadedLanguageId, useLocalContent, progressVersion])
 
   const displayHomeLead = useLocalContent ? homeLead : githubHomeLead
 
@@ -337,29 +189,11 @@ export function CodeQuestScreen() {
     return levels[index + 1]
   }, [selectedSection, selectedLevel])
 
-  // Read from storage on every progress change, so a restored backup shows its streak too.
-  const streakCount = useMemo(() => {
-    void progressVersion
-    return currentStreak(loadStreakState())
-  }, [progressVersion])
   const recordActivity = useCallback(() => {
     recordDailyActivity()
     notifyProgressChanged()
   }, [])
-  // "+10 XP" pop-up when a challenge or quiz earns XP for the first time.
-  const [xpToast, setXpToast] = useState<{ text: string; key: number } | null>(null)
-  const totalXpRef = useRef(0)
-  const showXp = useCallback((xp: number) => {
-    const before = Math.floor(totalXpRef.current / 100)
-    const after = Math.floor((totalXpRef.current + xp) / 100)
-    const levelUp = after > before ? ` · Level ${after + 1} reached!` : ''
-    setXpToast({ text: `+${xp} XP${levelUp}`, key: Date.now() })
-  }, [])
-  useEffect(() => {
-    if (!xpToast) return
-    const timer = window.setTimeout(() => setXpToast(null), 2500)
-    return () => window.clearTimeout(timer)
-  }, [xpToast])
+  const { xpToast, showXp } = useXpToast(totalXp)
 
   const sandbox = useSandbox(languageId)
   const challenges = useChallenges(languageId, selectedLevel, recordActivity, showXp)
@@ -367,43 +201,6 @@ export function CodeQuestScreen() {
   const { resetForLevel: resetSandboxForLevel } = sandbox
   const { resetForLevel: resetChallengesForLevel } = challenges
   const { resetForLevel: resetTestForLevel } = levelTest
-
-  const resolveBundle = useCallback(
-    (langId: string, fallback: LanguageBundle | undefined) => {
-      if (!useLocalContent) return fallback ?? null
-      return getBundle(langId) ?? fallback ?? null
-    },
-    [getBundle, useLocalContent],
-  )
-
-  /**
-   * Every section can be opened to preview its lessons, but a section's levels
-   * stay locked until its prerequisite is met (see isSectionUnlocked). Inside a
-   * section, each level unlocks when the previous level's quiz is passed.
-   */
-  const isLevelUnlocked = useCallback(
-    (langId: string, sections: LoadedSection[], sectionIndex: number, index: number): boolean => {
-      void progressVersion
-      if (unlockAll) return true
-      // Testing out of a section opens all of its lessons, even before the section itself unlocks.
-      const sectionRef = sections[sectionIndex]?.sectionRef
-      if (sectionRef && hasTestedOut(langId, sectionRef.id)) return true
-      if (!checkSectionUnlocked(langId, sections, sectionIndex)) return false
-      if (index === 0) return true
-      const prev = sections[sectionIndex]?.file.levels[index - 1]
-      return prev ? loadProgress(langId, prev.id).testPassed : true
-    },
-    [unlockAll, progressVersion],
-  )
-
-  const isSectionUnlockedFor = useCallback(
-    (langId: string, sectionIndex: number): boolean => {
-      void progressVersion
-      if (unlockAll || !bundleForView) return true
-      return checkSectionUnlocked(langId, bundleForView.sections, sectionIndex)
-    },
-    [unlockAll, bundleForView, progressVersion],
-  )
 
   /** Index of the open section within the bundle, or -1. */
   const selectedSectionIndex =
@@ -436,30 +233,6 @@ export function CodeQuestScreen() {
     void Promise.resolve().then(() => resetLevelWorkState(selectedLevel, languageId))
   }, [levelId, selectedLevel, languageId, resetLevelWorkState])
 
-  const openLanguage = useCallback(
-    async (path: string, id: string): Promise<LanguageBundle | null> => {
-      goToLanguage(id)
-      if (id === 'r') preloadWebR()
-      if (loadedLanguageId === id && bundle) return bundle
-      try {
-        const b = await loadLanguageBundle(baseUrl, path, {
-          fallbackBundle: getBundle(id),
-        })
-        setLoadedLanguageId(id)
-        setBundle(b)
-        setBundleError(null)
-        syncBundle(id, b)
-        return b
-      } catch (e: unknown) {
-        setLoadedLanguageId(null)
-        setBundle(null)
-        setBundleError(lessonLoadErrorMessage(e, 'Failed to load language'))
-        return null
-      }
-    },
-    [baseUrl, syncBundle, goToLanguage, loadedLanguageId, bundle, getBundle],
-  )
-
   const openLevelByPath = useCallback(
     async (opts: ContinueTarget) => {
       const b = await openLanguage(opts.languagePath, opts.languageId)
@@ -473,7 +246,7 @@ export function CodeQuestScreen() {
       const level = section.file.levels[levelIndex]
       goToLevel(opts.languageId, opts.sectionId, level.id, 'intro')
       resetLevelWorkState(level, opts.languageId)
-      localStorage.setItem(LAST_LEVEL_STORAGE_KEY, JSON.stringify(opts))
+      rememberLastLevel(opts)
     },
     [isLevelUnlocked, openLanguage, resetLevelWorkState, goToLevel],
   )
@@ -483,26 +256,31 @@ export function CodeQuestScreen() {
     backFromLearn()
   }
 
-  const goToNextLevel = useCallback(() => {
-    if (!languageId || !sectionId || !nextLevel) return
-    goToLevel(languageId, sectionId, nextLevel.id, 'intro')
-    localStorage.setItem(
-      LAST_LEVEL_STORAGE_KEY,
-      JSON.stringify({
+  /** Opens a lesson of the open course and remembers it for Continue. */
+  const openLevel = useCallback(
+    (secId: string, lvlId: string) => {
+      if (!languageId) return
+      goToLevel(languageId, secId, lvlId, 'intro')
+      rememberLastLevel({
         languageId,
         languagePath: displayRootIndex?.languages.find((l) => l.id === languageId)?.path ?? '',
-        sectionId,
-        levelId: nextLevel.id,
-      }),
-    )
-  }, [languageId, sectionId, nextLevel, goToLevel, displayRootIndex])
+        sectionId: secId,
+        levelId: lvlId,
+      })
+    },
+    [languageId, goToLevel, displayRootIndex],
+  )
+
+  const goToNextLevel = useCallback(() => {
+    if (!languageId || !sectionId || !nextLevel) return
+    openLevel(sectionId, nextLevel.id)
+  }, [languageId, sectionId, nextLevel, openLevel])
 
   const handleRemoveLanguage = (langId: string) => {
     removeLanguage(langId)
     if (activeLanguageId === langId) clearSelectedLanguage()
     if (languageId === langId) {
-      setBundle(null)
-      setLoadedLanguageId(null)
+      forgetBundle()
       backFromLearn()
     }
   }
@@ -522,72 +300,6 @@ export function CodeQuestScreen() {
       goToSection(languageId, secId)
     }
   }
-
-  /** Courses learners can open now: "coming soon" ones only in edit or admin mode. */
-  const openableLanguages = useMemo(
-    () => (displayRootIndex?.languages ?? []).filter((lang) => unlockAll || !lang.comingSoon),
-    [displayRootIndex, unlockAll],
-  )
-
-  const catalogLanguages = useMemo(() => {
-    if (!activeOpenableId) return openableLanguages
-    return openableLanguages.filter((lang) => lang.id === activeOpenableId)
-  }, [openableLanguages, activeOpenableId])
-
-  const totalXp = useMemo(() => {
-    void progressVersion
-    let xp = 0
-    for (const lang of catalogLanguages) {
-      const b = resolveBundle(lang.id, languageBundles[lang.id]) ?? languageBundles[lang.id]
-      if (!b) continue
-      for (const { file } of b.sections) {
-        for (const lvl of file.levels) xp += computeLevelXp(lang.id, lvl)
-      }
-    }
-    return xp
-  }, [catalogLanguages, languageBundles, resolveBundle, progressVersion])
-
-  useEffect(() => {
-    totalXpRef.current = totalXp
-  }, [totalXp])
-
-  const continueTarget = useMemo((): ContinueTarget | null => {
-    void progressVersion
-    if (!displayRootIndex) return null
-    try {
-      const raw = localStorage.getItem(LAST_LEVEL_STORAGE_KEY)
-      if (raw) {
-        const parsed = JSON.parse(raw) as Partial<ContinueTarget>
-        if (parsed.languageId && parsed.languagePath && parsed.sectionId && parsed.levelId) {
-          const openable = openableLanguages.some((lang) => lang.id === parsed.languageId)
-          if (openable && (!activeOpenableId || parsed.languageId === activeOpenableId)) {
-            return parsed as ContinueTarget
-          }
-        }
-      }
-    } catch {
-      // ignore malformed local storage
-    }
-    for (const lang of catalogLanguages) {
-      const b = resolveBundle(lang.id, languageBundles[lang.id]) ?? languageBundles[lang.id]
-      if (!b) continue
-      for (const [sectionIndex, section] of b.sections.entries()) {
-        for (let i = 0; i < section.file.levels.length; i += 1) {
-          const lvl = section.file.levels[i]
-          if (!isLevelUnlocked(lang.id, b.sections, sectionIndex, i)) continue
-          if (!loadProgress(lang.id, lvl.id).testPassed) {
-            return {
-              languageId: lang.id,
-              languagePath: lang.path,
-              sectionId: section.sectionRef.id,
-              levelId: lvl.id,
-            }
-          }
-        }
-      }
-    }
-    return null
-  }, [displayRootIndex, openableLanguages, catalogLanguages, languageBundles, resolveBundle, isLevelUnlocked, progressVersion, activeOpenableId])
 
   useEffect(() => {
     initAboutContent(installInstructions(platform).split('\n').slice(1))
@@ -619,10 +331,7 @@ export function CodeQuestScreen() {
               )
               if (!ok) return
               await importFromGitHub(baseUrl)
-              const data = await loadRootIndex(baseUrl)
-              setRootIndex(data)
-              setBundle(null)
-              setLoadedLanguageId(null)
+              replaceRootIndex(await loadRootIndex(baseUrl))
             })()
           }}
           onContinue={() => continueTarget && void openLevelByPath(continueTarget)}
@@ -681,17 +390,7 @@ export function CodeQuestScreen() {
           }
           nextSectionTitle={bundleForView?.sections[selectedSectionIndex + 1]?.sectionRef.title ?? null}
           onOpenLevel={(lvl) => {
-            if (!languageId || !secId) return
-            goToLevel(languageId, secId, lvl.id, 'intro')
-            localStorage.setItem(
-              LAST_LEVEL_STORAGE_KEY,
-              JSON.stringify({
-                languageId,
-                languagePath: displayRootIndex?.languages.find((l) => l.id === languageId)?.path ?? '',
-                sectionId: secId,
-                levelId: lvl.id,
-              }),
-            )
+            if (secId) openLevel(secId, lvl.id)
           }}
           onUpdateSectionTitle={(title) => updateSectionTitle(languageId, secId, title)}
           onUpdateLevelTitle={(lvlId, title) => updateLevelTitle(languageId, secId, lvlId, title)}
@@ -789,20 +488,17 @@ export function CodeQuestScreen() {
 
   const showBack = tab === 'learn' && learnView !== 'languages'
 
-  const breadcrumbs: Crumb[] = []
-  if (tab === 'learn' && learnView !== 'languages' && languageId && bundleForView) {
-    // The pages above this one; the current page is the heading below the trail.
-    breadcrumbs.push({ label: 'Home', to: learnHomePath() })
-    if (learnView !== 'sections') {
-      breadcrumbs.push({ label: bundleForView.index.title, to: learnLanguagePath(languageId) })
-    }
-    if (learnView === 'level' && selectedSection) {
-      breadcrumbs.push({
-        label: selectedSection.sectionRef.title,
-        to: learnSectionPath(languageId, selectedSection.sectionRef.id),
-      })
-    }
-  }
+  const breadcrumbs =
+    tab === 'learn'
+      ? learnBreadcrumbs({
+          learnView,
+          languageId,
+          courseTitle: bundleForView ? bundleForView.index.title : null,
+          section: selectedSection
+            ? { id: selectedSection.sectionRef.id, title: selectedSection.sectionRef.title }
+            : null,
+        })
+      : []
   const shellClassName =
     (platform === 'android'
       ? 'cq-shell cq-shell--android'
@@ -813,25 +509,12 @@ export function CodeQuestScreen() {
   const navItems: BottomNavItem[] = [
     { id: 'learn', label: 'Learn', icon: BookOpen },
     { id: 'about', label: 'About', icon: Info },
-    { id: 'share', label: 'Share', icon: Share2, onAction: () => setShareSheetOpen(true) },
+    { id: 'share', label: 'Share', icon: Share2, onAction: openShareSheet },
   ]
 
   return (
     <div className={shellClassName}>
-      <header className="cq-header">
-        {showBack ? (
-          <button type="button" className="cq-back" onClick={back} aria-label="Back">
-            <ChevronLeft size={22} />
-          </button>
-        ) : (
-          <span className="cq-header-spacer" aria-hidden />
-        )}
-        <div className="cq-brand">
-          CodeQuest <span className="cq-brand-version">(v. {APP_VERSION})</span>
-          {isAdmin ? <span className="cq-admin-badge">Admin</span> : null}
-        </div>
-        <EditorHeaderButton />
-      </header>
+      <AppHeader showBack={showBack} onBack={back} isAdmin={isAdmin} />
 
       {isEditMode ? (
         <Suspense fallback={null}>
@@ -839,7 +522,7 @@ export function CodeQuestScreen() {
         </Suspense>
       ) : null}
 
-      <main className="cq-main">
+      <main id="cq-main" className="cq-main" tabIndex={-1}>
         {tab === 'learn' ? (
           <>
             <Breadcrumbs items={breadcrumbs} onNavigate={levelTest.dismissResult} />
@@ -862,22 +545,12 @@ export function CodeQuestScreen() {
         )}
       </main>
 
-      {xpToast ? (
-        <p key={xpToast.key} className="cq-share-notice cq-xp-toast" role="status" aria-live="polite">
-          {xpToast.text}
-        </p>
-      ) : null}
-
-      {shareNotice ? (
-        <p className="cq-share-notice" role="status" aria-live="polite">
-          {shareNotice}
-        </p>
-      ) : null}
+      <Notices xpToast={xpToast} shareNotice={shareNotice} />
 
       <BottomNav items={navItems} activeId={tab} onSelect={(id) => goToTab(id as TabId)} />
 
       {shareSheetOpen ? (
-        <ShareSheet onSelect={(variant) => void handleShareSelect(variant)} onClose={() => setShareSheetOpen(false)} />
+        <ShareSheet onSelect={(variant) => void handleShareSelect(variant)} onClose={closeShareSheet} />
       ) : null}
 
       {readMoreOpen && selectedLevel?.intro.readMore && (
