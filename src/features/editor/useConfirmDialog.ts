@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import type { ConfirmOptions } from './ConfirmDialog'
 
 /**
  * A yes/no question in the app's own dialog: `requestConfirm` resolves to the answer.
@@ -7,12 +8,13 @@ import { useCallback, useState } from 'react'
 export function useConfirmDialog() {
   const [confirmState, setConfirmState] = useState<{
     message: string
+    options?: ConfirmOptions
     resolve: (value: boolean) => void
   } | null>(null)
 
-  const requestConfirm = useCallback((message: string) => {
+  const requestConfirm = useCallback((message: string, options?: ConfirmOptions) => {
     return new Promise<boolean>((resolve) => {
-      setConfirmState({ message, resolve })
+      setConfirmState({ message, options, resolve })
     })
   }, [])
 
