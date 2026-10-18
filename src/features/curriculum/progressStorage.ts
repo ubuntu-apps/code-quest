@@ -8,6 +8,12 @@ export interface LevelProgress {
   challengeAnswers?: Record<string, string>
   /** Challenges whose answer was revealed before they were solved (they earn less XP). */
   answersViewed?: string[]
+  /**
+   * Each challenge's content fingerprint when this progress was last checked against
+   * the lesson (see progressFingerprint.ts). A challenge whose content has changed since
+   * then loses its old completion, draft and answer-viewed marks.
+   */
+  challengeVersions?: Record<string, string>
 }
 
 export function progressKey(languageId: string, levelId: string): string {
@@ -29,6 +35,9 @@ export function loadProgress(languageId: string, levelId: string): LevelProgress
           ? parsed.challengeAnswers
           : {},
       ...(Array.isArray(parsed.answersViewed) ? { answersViewed: parsed.answersViewed } : {}),
+      ...(parsed.challengeVersions && typeof parsed.challengeVersions === 'object'
+        ? { challengeVersions: parsed.challengeVersions }
+        : {}),
     }
   } catch {
     return { challengesCompleted: [], testPassed: false, challengeAnswers: {} }

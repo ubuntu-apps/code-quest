@@ -6,6 +6,7 @@ import type { LanguageBundle, Level, LoadedSection, RootIndex } from './types'
 import { useAdminMode } from './adminMode'
 import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
+import { reconcileLanguageProgress } from './progressFingerprint'
 import { preloadWebR } from './rSandbox'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
@@ -282,6 +283,21 @@ export function CodeQuestScreen() {
 
   const bundleForView = displayBundle ?? bundle
 
+  // Drop saved challenge progress that belongs to an older version of a lesson (see
+  // progressFingerprint.ts). Runs again after progress changes, e.g. a restored backup.
+  // Local edit-mode drafts are skipped: editing a challenge shouldn't wipe its progress.
+  useEffect(() => {
+    void progressVersion
+    if (useLocalContent) return
+    const loaded: Record<string, LanguageBundle> = { ...languageBundles }
+    if (bundle && loadedLanguageId) loaded[loadedLanguageId] = bundle
+    let dropped = false
+    for (const [langId, b] of Object.entries(loaded)) {
+      if (reconcileLanguageProgress(langId, b)) dropped = true
+    }
+    if (dropped) notifyProgressChanged()
+  }, [languageBundles, bundle, loadedLanguageId, useLocalContent, progressVersion])
+
   const displayHomeLead = useLocalContent ? homeLead : githubHomeLead
 
   const githubAboutContent = useMemo(
@@ -480,11 +496,20 @@ export function CodeQuestScreen() {
     }
   }
 
+  /** Courses learners can open now: "coming soon" ones only in edit or admin mode. */
+  const openableLanguages = useMemo(
+    () => (displayRootIndex?.languages ?? []).filter((lang) => unlockAll || !lang.comingSoon),
+    [displayRootIndex, unlockAll],
+  )
+
+  /** The course picked last, unless it can't be opened now (e.g. it became "coming soon"). */
+  const activeOpenableId =
+    activeLanguageId && openableLanguages.some((lang) => lang.id === activeLanguageId) ? activeLanguageId : null
+
   const catalogLanguages = useMemo(() => {
-    if (!displayRootIndex) return []
-    if (!activeLanguageId) return displayRootIndex.languages
-    return displayRootIndex.languages.filter((lang) => lang.id === activeLanguageId)
-  }, [displayRootIndex, activeLanguageId])
+    if (!activeOpenableId) return openableLanguages
+    return openableLanguages.filter((lang) => lang.id === activeOpenableId)
+  }, [openableLanguages, activeOpenableId])
 
   const totalXp = useMemo(() => {
     void progressVersion
@@ -507,7 +532,8 @@ export function CodeQuestScreen() {
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<ContinueTarget>
         if (parsed.languageId && parsed.languagePath && parsed.sectionId && parsed.levelId) {
-          if (!activeLanguageId || parsed.languageId === activeLanguageId) {
+          const openable = openableLanguages.some((lang) => lang.id === parsed.languageId)
+          if (openable && (!activeOpenableId || parsed.languageId === activeOpenableId)) {
             return parsed as ContinueTarget
           }
         }
@@ -534,7 +560,7 @@ export function CodeQuestScreen() {
       }
     }
     return null
-  }, [displayRootIndex, catalogLanguages, languageBundles, resolveBundle, isLevelUnlocked, progressVersion, activeLanguageId])
+  }, [displayRootIndex, openableLanguages, catalogLanguages, languageBundles, resolveBundle, isLevelUnlocked, progressVersion, activeOpenableId])
 
   useEffect(() => {
     initAboutContent(installInstructions(platform).split('\n').slice(1))
@@ -549,12 +575,14 @@ export function CodeQuestScreen() {
         <LearnHome
           displayRootIndex={displayRootIndex}
           continueTarget={continueTarget}
+          hasStarted={totalXp > 0}
           xpLevel={Math.floor(totalXp / 100)}
           xpCurrentLevel={totalXp % 100}
           totalXp={totalXp}
           streakCount={streakCount}
           homeLead={displayHomeLead}
           isEditMode={isEditMode}
+          canOpenComingSoon={unlockAll}
           contentSource={contentSource}
           onContentSourceChange={setContentSource}
           onImportFromGitHub={() => {
@@ -679,6 +707,9 @@ export function CodeQuestScreen() {
           challengeErrorExpanded={challenges.errorExpanded}
           challengeErrorUiEpoch={challenges.errorUiEpoch}
           challengeChecking={challenges.checking}
+          challengeRunning={challenges.running}
+          challengeOutput={challenges.output}
+          onRunChallenge={(ch) => void challenges.run(ch)}
           onChallengeDraftChange={challenges.changeDraft}
           onCheckChallenge={(ch) => void challenges.check(ch)}
           onStopChallengeCheck={challenges.stopCheck}
@@ -786,7 +817,7 @@ export function CodeQuestScreen() {
               setInstallResetNotice('Install prompt banner reset for this device.')
             }}
             baseUrl={baseUrl}
-            courses={displayRootIndex?.languages ?? []}
+            courses={openableLanguages}
             activeCourseId={activeLanguageId ?? null}
           />
         )}

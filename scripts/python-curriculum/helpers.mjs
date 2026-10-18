@@ -18,27 +18,31 @@ export function introBody(paragraphs) {
  * @param {string} prompt
  * @param {{ id: string, label: string }[]} choices
  * @param {string} correctChoiceId
+ * @param {string} [explanation] Why the right answer is right (shown after answering).
  */
-export function mcq(prompt, choices, correctChoiceId) {
+export function mcq(prompt, choices, correctChoiceId, explanation) {
   return {
     id: uid('q'),
     type: 'mcq',
     prompt,
     choices,
     correctChoiceId,
+    ...(explanation ? { explanation } : {}),
   }
 }
 
 /**
  * @param {string} prompt
  * @param {string} expected
+ * @param {string} [explanation] Why the right answer is right (shown after answering).
  */
-export function shortText(prompt, expected) {
+export function shortText(prompt, expected, explanation) {
   return {
     id: uid('q'),
     type: 'shortText',
     prompt,
     validation: { mode: 'equalsNormalized', expected },
+    ...(explanation ? { explanation } : {}),
   }
 }
 

@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { detectPlatform, INSTALL_GUIDES } from '../../../platform'
 import { EditableText, useEditorMode } from '../../editor'
 import { OfflinePanel } from '../components/OfflinePanel'
 import { VersionPanel } from '../components/VersionPanel'
 import { AdminPanel } from '../components/AdminPanel'
+import { useAdminMode } from '../adminMode'
 import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
 
 interface AboutTabProps {
@@ -26,6 +28,10 @@ export function AboutTab({
 }: AboutTabProps) {
   const { isEditingLocal } = useEditorMode()
   const currentPlatform = detectPlatform()
+  const isAdmin = useAdminMode()
+  // Admin mode is for testing the course, so its panel stays hidden from learners
+  // until the version heading is tapped several times (see VersionPanel).
+  const [adminRevealed, setAdminRevealed] = useState(false)
 
   return (
     <div className="cq-stack cq-about">
@@ -60,8 +66,8 @@ export function AboutTab({
       </section>
       <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
       <ProgressBackupPanel />
-      <AdminPanel />
-      <VersionPanel />
+      {isAdmin || adminRevealed ? <AdminPanel /> : null}
+      <VersionPanel onRevealAdmin={() => setAdminRevealed(true)} />
     </div>
   )
 }

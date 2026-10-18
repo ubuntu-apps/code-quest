@@ -42,6 +42,11 @@ interface LearnLevelProps {
   challengeErrorUiEpoch: Record<string, number>
   /** Challenges being checked now, with a progress message. */
   challengeChecking: Record<string, string>
+  /** Challenges whose code is running (Run button), with a progress message. */
+  challengeRunning: Record<string, string>
+  /** What each challenge's code printed on its last Run or Check. */
+  challengeOutput: Record<string, string | null>
+  onRunChallenge: (challenge: Challenge) => void
   onChallengeDraftChange: (challengeId: string, value: string) => void
   onCheckChallenge: (challenge: Challenge) => void
   onStopChallengeCheck: (challengeId: string) => void
@@ -96,6 +101,9 @@ export function LearnLevel({
   challengeErrorExpanded,
   challengeErrorUiEpoch,
   challengeChecking,
+  challengeRunning,
+  challengeOutput,
+  onRunChallenge,
   onChallengeDraftChange,
   onCheckChallenge,
   onStopChallengeCheck,
@@ -186,6 +194,9 @@ export function LearnLevel({
               errorExpanded={challengeErrorExpanded[ch.id] ?? false}
               errorUiEpoch={challengeErrorUiEpoch[ch.id] ?? 0}
               checkingMessage={challengeChecking[ch.id] ?? null}
+              runningMessage={challengeRunning[ch.id] ?? null}
+              output={challengeOutput[ch.id] ?? null}
+              onRun={() => onRunChallenge(ch)}
               onDraftChange={(value) => onChallengeDraftChange(ch.id, value)}
               onCheck={() => onCheckChallenge(ch)}
               onStopCheck={() => onStopChallengeCheck(ch.id)}

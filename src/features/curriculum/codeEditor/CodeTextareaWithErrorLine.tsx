@@ -1,5 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { CodeEditorLineGutter } from './CodeEditorLineGutter'
+import { CodeKeyBar } from './CodeKeyBar'
+import { hasCoarsePointer } from './pointer'
 import { CodeTextarea } from './CodeTextarea'
 import { DraggableErrorPopover } from './DraggableErrorPopover'
 import { useCodeEditorScrollSync } from './useCodeEditorScrollSync'
@@ -55,61 +57,77 @@ export function CodeTextareaWithErrorLine({
 
   const syncScroll = useCodeEditorScrollSync(taRef, backdropRef, tooltipLayerRef)
 
+  // Phones and tablets get a row of symbol keys under the editor while it has focus.
+  const [touch] = useState(hasCoarsePointer)
+  const [focused, setFocused] = useState(false)
+  const focusProps = touch
+    ? { onFocus: () => setFocused(true), onBlur: () => setFocused(false) }
+    : {}
+  const keyBar = touch && focused ? <CodeKeyBar textareaRef={taRef} /> : null
+
   useEffect(() => {
     syncScroll()
   }, [value, errorLine, syncScroll])
 
   if (!showHighlight) {
     return (
-      <CodeTextarea
-        id={id}
-        ref={taRef}
-        className={className}
-        rows={rows}
-        spellCheck={spellCheck}
-        value={value}
-        onChange={onChange}
-      />
+      <>
+        <CodeTextarea
+          id={id}
+          ref={taRef}
+          className={className}
+          rows={rows}
+          spellCheck={spellCheck}
+          value={value}
+          onChange={onChange}
+          {...focusProps}
+        />
+        {keyBar}
+      </>
     )
   }
 
   return (
-    <div className="cq-code-editor-wrap">
-      <div ref={backdropRef} className="cq-code-editor-backdrop" aria-hidden>
-        <div className="cq-code-editor-backdrop-inner">
-          <CodeEditorLineGutter lineCount={lineCount} errorLine={errorLine!} mode="highlight" />
-        </div>
-      </div>
-      <CodeTextarea
-        id={id}
-        ref={taRef}
-        className={`${className ?? ''} cq-code-editor-overlay`.trim()}
-        rows={rows}
-        spellCheck={spellCheck}
-        value={value}
-        onChange={onChange}
-        onScroll={syncScroll}
-        aria-describedby={showErrorPopover ? summaryId : undefined}
-      />
-      {summaryText ? (
-        <div ref={tooltipLayerRef} className="cq-code-editor-tooltip-layer">
-          <div className="cq-code-editor-backdrop-inner cq-code-editor-tooltip-layer-inner">
-            <CodeEditorLineGutter lineCount={lineCount} mode="phantom" />
-            {showErrorPopover ? (
-              <DraggableErrorPopover
-                key={popoverKey}
-                heading={(errorTitle ?? 'Error').trim() || 'Error'}
-                summaryText={summaryText}
-                errorLine={errorLine!}
-                errorColumn={errorColumn}
-                summaryId={summaryId}
-                titleId={titleId}
-                onClose={() => setClosedForKey(popoverKey)}
-              />
-            ) : null}
+    <>
+      <div className="cq-code-editor-wrap">
+        <div ref={backdropRef} className="cq-code-editor-backdrop" aria-hidden>
+          <div className="cq-code-editor-backdrop-inner">
+            <CodeEditorLineGutter lineCount={lineCount} errorLine={errorLine!} mode="highlight" />
           </div>
         </div>
-      ) : null}
-    </div>
+        <CodeTextarea
+          id={id}
+          ref={taRef}
+          className={`${className ?? ''} cq-code-editor-overlay`.trim()}
+          rows={rows}
+          spellCheck={spellCheck}
+          value={value}
+          onChange={onChange}
+          onScroll={syncScroll}
+          aria-describedby={showErrorPopover ? summaryId : undefined}
+          {...focusProps}
+        />
+        {summaryText ? (
+          <div ref={tooltipLayerRef} className="cq-code-editor-tooltip-layer">
+            <div className="cq-code-editor-backdrop-inner cq-code-editor-tooltip-layer-inner">
+              <CodeEditorLineGutter lineCount={lineCount} mode="phantom" />
+              {showErrorPopover ? (
+                <DraggableErrorPopover
+                  key={popoverKey}
+                  heading={(errorTitle ?? 'Error').trim() || 'Error'}
+                  summaryText={summaryText}
+                  errorLine={errorLine!}
+                  errorColumn={errorColumn}
+                  summaryId={summaryId}
+                  titleId={titleId}
+                  onClose={() => setClosedForKey(popoverKey)}
+                />
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+      </div>
+      {keyBar}
+    </>
   )
 }

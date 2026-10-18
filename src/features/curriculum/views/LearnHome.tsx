@@ -16,12 +16,16 @@ export interface ContinueTarget {
 interface LearnHomeProps {
   displayRootIndex: RootIndex
   continueTarget: ContinueTarget | null
+  /** The learner has earned XP before, so the button continues rather than starts. */
+  hasStarted: boolean
   xpLevel: number
   xpCurrentLevel: number
   totalXp: number
   streakCount: number
   homeLead: string
   isEditMode: boolean
+  /** Edit and admin mode can open courses marked "coming soon". */
+  canOpenComingSoon: boolean
   contentSource: ContentSource
   onContentSourceChange: (source: ContentSource) => void
   onImportFromGitHub?: () => void
@@ -37,12 +41,14 @@ interface LearnHomeProps {
 export function LearnHome({
   displayRootIndex,
   continueTarget,
+  hasStarted,
   xpLevel,
   xpCurrentLevel,
   totalXp,
   streakCount,
   homeLead,
   isEditMode,
+  canOpenComingSoon,
   contentSource,
   onContentSourceChange,
   onImportFromGitHub,
@@ -72,7 +78,7 @@ export function LearnHome({
           disabled={!continueTarget}
         >
           <Play size={16} />
-          Continue your Quest
+          {hasStarted ? 'Continue your Quest' : 'Start your Quest'}
         </button>
         <div className="cq-home-kpis">
           <div className="cq-kpi">
@@ -80,7 +86,8 @@ export function LearnHome({
               <Zap size={14} />
               XP
             </div>
-            <div className="cq-kpi-value">Level {xpLevel}</div>
+            {/* Levels count from 1, so a new learner starts at Level 1. */}
+            <div className="cq-kpi-value">Level {xpLevel + 1}</div>
             <div className="cq-progress-bar" aria-label="XP progress">
               <div className="cq-progress-bar-fill" style={{ width: `${xpCurrentLevel}%` }} />
             </div>
@@ -96,7 +103,7 @@ export function LearnHome({
             <div className="cq-kpi-value">
               {streakCount} day{streakCount === 1 ? '' : 's'}
             </div>
-            <div className="cq-kpi-muted">Complete any challenge or test to keep streak alive.</div>
+            <div className="cq-kpi-muted">Solve a challenge or take a quiz each day to keep your streak.</div>
           </div>
         </div>
       </div>
@@ -108,6 +115,9 @@ export function LearnHome({
             title={lang.title}
             onTitleChange={(title) => onUpdateLanguage(lang.id, { title })}
             onClick={() => onOpenLanguage(lang.path, lang.id)}
+            meta={lang.comingSoon ? <span className="cq-card-meta">Coming soon</span> : undefined}
+            locked={lang.comingSoon === true && !canOpenComingSoon}
+            disabled={lang.comingSoon === true && !canOpenComingSoon}
             listIndex={langIndex}
             listLength={displayRootIndex.languages.length}
             onMoveUp={() => onMoveLanguage(lang.id, -1)}

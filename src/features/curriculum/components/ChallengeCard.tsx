@@ -34,7 +34,12 @@ interface ChallengeCardProps {
   errorUiEpoch: number
   /** Set while the answer is being checked ("Checking…", "Downloading Python…"). */
   checkingMessage: string | null
+  /** Set while the answer runs without its tests (the Run button). */
+  runningMessage: string | null
+  /** What the code printed on its last Run or Check (null: no output box). */
+  output: string | null
   onDraftChange: (value: string) => void
+  onRun: () => void
   onCheck: () => void
   onStopCheck: () => void
   onRevealAnswer: () => void
@@ -57,7 +62,10 @@ export function ChallengeCard({
   errorExpanded: pyErrExpanded,
   errorUiEpoch,
   checkingMessage,
+  runningMessage,
+  output,
   onDraftChange,
+  onRun,
   onCheck,
   onStopCheck,
   onRevealAnswer,
@@ -78,6 +86,12 @@ export function ChallengeCard({
   const cannotRun = isRuntimeTests && !isCodeRuntimeSupported()
   const answerNoteId = useId()
   const checking = checkingMessage !== null
+  const running = runningMessage !== null
+  const busy = checking || running
+  // Run shows what the code prints before it is graded (Python challenges only).
+  const canRun = ch.validation.mode === 'python_tests' && !cannotRun
+  // An empty box next to an error says nothing, so it shows only when there is output or no error.
+  const showOutput = output !== null && (output !== '' || running || !pyRuntimeErr)
   // The answer unlocks after one Check attempt, so learners try first.
   // (Where code can't run, Check is unavailable, so the answer is open from the start.)
   const answerUnlocked = isEditingLocal || isAdmin || done || answerViewed || status !== undefined || cannotRun
@@ -197,30 +211,43 @@ export function ChallengeCard({
         </p>
       ) : null}
       <div className="cq-row">
+        {canRun ? (
+          <button type="button" className="cq-btn" onClick={onRun} disabled={busy}>
+            {running ? 'Running…' : 'Run'}
+          </button>
+        ) : null}
         <button
           type="button"
           className="cq-btn cq-btn--primary"
           onClick={onCheck}
-          disabled={cannotRun || checking}
+          disabled={cannotRun || busy}
         >
           {checking ? 'Checking…' : status === 'failed' ? 'Try again' : done ? 'Check again' : 'Check'}
         </button>
-        {checking && ch.validation.mode === 'python_tests' ? (
+        {busy && ch.validation.mode === 'python_tests' ? (
           <button type="button" className="cq-btn" onClick={onStopCheck}>
             Stop
           </button>
         ) : null}
-        {done && status !== 'failed' && !checking && draft.trim() !== '' ? (
+        {done && status !== 'failed' && !busy && draft.trim() !== '' ? (
           <span className="cq-badge cq-badge--ok">Challenge complete</span>
         ) : null}
       </div>
       <p className="cq-muted cq-check-status" role="status" aria-live="polite">
         {checking && checkingMessage !== 'Checking…'
           ? checkingMessage
-          : done && status === 'failed' && !checking
-            ? 'You solved this challenge before, so it stays complete. This answer did not pass.'
-            : ''}
+          : running && runningMessage !== 'Running…'
+            ? runningMessage
+            : done && status === 'failed' && !busy
+              ? 'You solved this challenge before, so it stays complete. This answer did not pass.'
+              : ''}
       </p>
+      {showOutput ? (
+        <>
+          <div className="cq-label">Output</div>
+          <pre className="cq-sandbox-output">{output || (running ? '' : 'Your code ran but printed nothing.')}</pre>
+        </>
+      ) : null}
       {isRuntimeTests && pyRuntimeErr && (
         <PythonErrorPanel
           error={pyRuntimeErr as FriendlyPythonError}

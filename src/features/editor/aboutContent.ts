@@ -5,7 +5,7 @@ export interface AboutContent {
 }
 
 export const DEFAULT_ABOUT_CONTENT: AboutContent = {
-  lead: 'CodeQuest is a configurable PWA for learning syntax and concepts. Challenges check your answers with patterns you define in JSON — no cloud compiler.',
+  lead: 'CodeQuest teaches programming through short lessons, hands-on coding challenges and quizzes. Your code runs right here in your browser, and your progress is saved on this device.',
   installIntro: '',
   installSteps: [],
 }

@@ -3,6 +3,7 @@ import type { FriendlySandboxError } from '../components/CodeSandboxSection'
 import { loadProgress, saveChallengeDraft, saveProgress } from '../progressStorage'
 import {
   pythonStatusMessage,
+  runPythonChallengeCode,
   runPythonChallengeTests,
   type PythonChallengeTestResult,
 } from '../pythonSandbox'
@@ -34,6 +35,11 @@ export function useChallenges(languageId: string | null, level: Level | null, on
   /** Challenges being checked now, with what the check is doing ("Downloading Python…"). */
   const [checking, setChecking] = useState<Record<string, string>>({})
   const checkControllers = useRef<Record<string, AbortController>>({})
+  /** What each challenge's code printed on its last Run or Check (null: nothing to show). */
+  const [output, setOutput] = useState<Record<string, string | null>>({})
+  /** Challenges whose code is running now (Run, not Check), with what the run is doing. */
+  const [running, setRunning] = useState<Record<string, string>>({})
+  const runControllers = useRef<Record<string, AbortController>>({})
 
   const showRunFeedback = (
     challengeId: string,
@@ -79,6 +85,8 @@ export function useChallenges(languageId: string | null, level: Level | null, on
         // Stopped by the learner (or by leaving the level): not an attempt, so no feedback.
         if (controller.signal.aborted) return
         showRunFeedback(ch.id, run)
+        // A check that printed nothing (e.g. only defines a function) shows no output box.
+        setOutput((prev) => ({ ...prev, [ch.id]: run.output ? run.output : null }))
         ok = run.passed
       } else if (ch.validation.mode === 'r_tests') {
         const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
@@ -114,6 +122,49 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     onActivity()
   }
 
+  /**
+   * "Run": runs the answer with the challenge's setup but without its tests, to show
+   * what it prints. Not an attempt, so it doesn't change progress or unlock the answer.
+   */
+  const run = async (ch: Challenge) => {
+    if (!languageId || !level || ch.validation.mode !== 'python_tests') return
+    if (runControllers.current[ch.id] || checkControllers.current[ch.id]) return
+    const answer = drafts[ch.id] ?? ''
+    const controller = new AbortController()
+    runControllers.current[ch.id] = controller
+    const setRunningMessage = (message: string | null) =>
+      setRunning((prev) => {
+        const next = { ...prev }
+        if (message === null) delete next[ch.id]
+        else next[ch.id] = message
+        return next
+      })
+    setRunningMessage(pythonStatusMessage('running'))
+    setOutput((prev) => ({ ...prev, [ch.id]: '' }))
+    setErrorUiEpoch((prev) => ({ ...prev, [ch.id]: (prev[ch.id] ?? 0) + 1 }))
+    try {
+      const result = await runPythonChallengeCode(answer, ch.validation.setupCode, {
+        signal: controller.signal,
+        onStatus: (status) => setRunningMessage(pythonStatusMessage(status)),
+        onOutput: (text) => {
+          if (runControllers.current[ch.id] === controller) setOutput((prev) => ({ ...prev, [ch.id]: text }))
+        },
+      })
+      // Leaving the level stops the run; the new level's state is already fresh.
+      if (runControllers.current[ch.id] !== controller) return
+      setOutput((prev) => ({ ...prev, [ch.id]: result.output }))
+      // A Run says nothing about the tests, so the last check's results no longer apply.
+      setTestResults((prev) => ({ ...prev, [ch.id]: [] }))
+      setRuntimeError((prev) => ({ ...prev, [ch.id]: result.error }))
+      setErrorExpanded((prev) => ({ ...prev, [ch.id]: false }))
+    } finally {
+      if (runControllers.current[ch.id] === controller) {
+        delete runControllers.current[ch.id]
+        setRunningMessage(null)
+      }
+    }
+  }
+
   const changeDraft = (challengeId: string, value: string) => {
     setDrafts((prev) => ({ ...prev, [challengeId]: value }))
     if (languageId && level) saveChallengeDraft(languageId, level.id, challengeId, value)
@@ -128,8 +179,11 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     saveProgress(languageId, level.id, { ...prev, answersViewed: [...viewed, challengeId] })
   }
 
-  /** Stops a running check (only Python checks can be stopped). */
-  const stopCheck = (challengeId: string) => checkControllers.current[challengeId]?.abort()
+  /** Stops a running check or Run (only Python code can be stopped). */
+  const stopCheck = (challengeId: string) => {
+    checkControllers.current[challengeId]?.abort()
+    runControllers.current[challengeId]?.abort()
+  }
 
   const toggleErrorExpanded = (challengeId: string) =>
     setErrorExpanded((prev) => ({ ...prev, [challengeId]: !(prev[challengeId] ?? false) }))
@@ -145,6 +199,10 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     for (const controller of Object.values(checkControllers.current)) controller.abort()
     checkControllers.current = {}
     setChecking({})
+    for (const controller of Object.values(runControllers.current)) controller.abort()
+    runControllers.current = {}
+    setRunning({})
+    setOutput({})
     setDrafts(next)
     setStatus({})
     setTestResults({})
@@ -161,7 +219,10 @@ export function useChallenges(languageId: string | null, level: Level | null, on
     errorExpanded,
     errorUiEpoch,
     checking,
+    running,
+    output,
     check,
+    run,
     stopCheck,
     changeDraft,
     revealAnswer,

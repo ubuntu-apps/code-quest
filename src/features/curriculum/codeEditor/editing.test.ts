@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyTextEdit, computeKeyEdit, INDENT, type TextEdit } from './editing'
+import { applyTextEdit, computeKeyEdit, INDENT, insertTextEdit, pairTextEdit, type TextEdit } from './editing'
 
 function press(value: string, start: number, end: number, key: string, shiftKey = false) {
   const edit = computeKeyEdit(value, start, end, { key, shiftKey })
@@ -71,5 +71,25 @@ describe('computeKeyEdit', () => {
   it('ignores keys with modifiers', () => {
     expect(computeKeyEdit('x', 0, 0, { key: 'Tab', ctrlKey: true })).toBeNull()
     expect(computeKeyEdit('    x', 5, 5, { key: 'Enter', metaKey: true })).toBeNull()
+  })
+})
+
+describe('symbol key edits', () => {
+  it('types a symbol over the selection', () => {
+    const edit = insertTextEdit(3, 4, ':')
+    expect(applyTextEdit('if x y', edit)).toBe('if : y')
+    expect(sel(edit)).toEqual([4, 4])
+  })
+
+  it('types a pair with the cursor between', () => {
+    const edit = pairTextEdit('print', 5, 5, '(', ')')
+    expect(applyTextEdit('print', edit)).toBe('print()')
+    expect(sel(edit)).toEqual([6, 6])
+  })
+
+  it('wraps the selection in a pair and keeps it selected', () => {
+    const edit = pairTextEdit('say hi', 4, 6, '"', '"')
+    expect(applyTextEdit('say hi', edit)).toBe('say "hi"')
+    expect(sel(edit)).toEqual([5, 7])
   })
 })

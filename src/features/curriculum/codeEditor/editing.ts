@@ -126,3 +126,34 @@ export function computeKeyEdit(
 export function applyTextEdit(value: string, edit: TextEdit): string {
   return value.slice(0, edit.start) + edit.text + value.slice(edit.end)
 }
+
+/** Types `text` over the selection, leaving the cursor after it. */
+export function insertTextEdit(selectionStart: number, selectionEnd: number, text: string): TextEdit {
+  const start = Math.min(selectionStart, selectionEnd)
+  const end = Math.max(selectionStart, selectionEnd)
+  return { start, end, text, selectionStart: start + text.length, selectionEnd: start + text.length }
+}
+
+/**
+ * Types a pair such as `()` or `""`: around the selection if there is one (keeping it
+ * selected), otherwise with the cursor between the two characters.
+ */
+export function pairTextEdit(
+  value: string,
+  selectionStart: number,
+  selectionEnd: number,
+  open: string,
+  close: string,
+): TextEdit {
+  const start = Math.min(selectionStart, selectionEnd)
+  const end = Math.max(selectionStart, selectionEnd)
+  const inner = value.slice(start, end)
+  const caret = start + open.length
+  return {
+    start,
+    end,
+    text: open + inner + close,
+    selectionStart: caret,
+    selectionEnd: caret + inner.length,
+  }
+}

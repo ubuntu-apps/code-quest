@@ -1,4 +1,5 @@
-import { useState, useSyncExternalStore } from 'react'
+import { useRef, useState, useSyncExternalStore } from 'react'
+import { useAdminMode } from '../adminMode'
 import { checkForUpdate, isUpdateReady, reloadToUpdate, subscribeUpdateReady } from '../../../pwaUpdate'
 import { APP_VERSION } from '../../../version'
 
@@ -19,10 +20,31 @@ function screenInfo(): string {
   return `Screen ${window.innerWidth} × ${window.innerHeight} · pixel ratio ${ratio} · text ${Math.round(root * 10) / 10}px`
 }
 
+/** Taps on the version heading that reveal the admin panel. */
+const ADMIN_REVEAL_TAPS = 7
+
+interface VersionPanelProps {
+  /** Called after the version heading is tapped ADMIN_REVEAL_TAPS times in a row. */
+  onRevealAdmin?: () => void
+}
+
 /** About tab: the current version, with a button to look for a newer one. */
-export function VersionPanel() {
+export function VersionPanel({ onRevealAdmin }: VersionPanelProps) {
   const ready = useSyncExternalStore(subscribeUpdateReady, isUpdateReady, isUpdateReady)
   const [status, setStatus] = useState<Status>('idle')
+  const isAdmin = useAdminMode()
+  const taps = useRef({ count: 0, last: 0 })
+
+  const tapHeading = () => {
+    const now = Date.now()
+    // Taps more than 1.5 seconds apart start the count again.
+    taps.current.count = now - taps.current.last > 1500 ? 1 : taps.current.count + 1
+    taps.current.last = now
+    if (taps.current.count >= ADMIN_REVEAL_TAPS) {
+      taps.current.count = 0
+      onRevealAdmin?.()
+    }
+  }
 
   const check = async () => {
     setStatus('checking')
@@ -32,7 +54,9 @@ export function VersionPanel() {
 
   return (
     <section className="cq-panel cq-version-panel">
-      <h2 className="cq-subtitle">Version {APP_VERSION}</h2>
+      <h2 className="cq-subtitle" onClick={tapHeading}>
+        Version {APP_VERSION}
+      </h2>
       <div className="cq-row">
         {ready ? (
           <button type="button" className="cq-btn cq-btn--primary" onClick={reloadToUpdate}>
@@ -51,7 +75,7 @@ export function VersionPanel() {
             ? ''
             : MESSAGES[status]}
       </p>
-      <p className="cq-muted cq-screen-info">{screenInfo()}</p>
+      {isAdmin ? <p className="cq-muted cq-screen-info">{screenInfo()}</p> : null}
     </section>
   )
 }

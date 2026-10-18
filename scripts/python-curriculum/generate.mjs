@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url'
 import { buildLevel, buildSection, challenge, mcq, shortText } from './helpers.mjs'
 import { COURSE } from './data/course.mjs'
 import { sectionProjectsFor } from './data/section-projects.mjs'
+import { EXPLANATIONS } from './data/explanations/index.mjs'
 
 /**
  * Sections that get their "Easy/Medium/Hard project" levels (data/section-projects.mjs).
@@ -29,11 +30,21 @@ const outDir = resolve(here, '../../public/content/python')
 const SECTIONS = COURSE
 
 function finalizeTopic(topic) {
+  // One explanation per quiz question, in order (data/explanations/). A count that doesn't
+  // match means the quiz changed, so the explanations must be updated too.
+  const explanations = EXPLANATIONS[topic.id]
+  if (explanations && explanations.length !== topic.questionSpecs.length) {
+    throw new Error(
+      `${topic.id}: ${explanations.length} quiz explanations for ${topic.questionSpecs.length} questions (data/explanations/)`,
+    )
+  }
   return {
     ...topic,
     challenges: topic.challengeSpecs.map(challenge),
-    questions: topic.questionSpecs.map((q) =>
-      q.type === 'mcq' ? mcq(q.prompt, q.choices, q.correct) : shortText(q.prompt, q.expected),
+    questions: topic.questionSpecs.map((q, i) =>
+      q.type === 'mcq'
+        ? mcq(q.prompt, q.choices, q.correct, explanations?.[i])
+        : shortText(q.prompt, q.expected, explanations?.[i]),
     ),
   }
 }
