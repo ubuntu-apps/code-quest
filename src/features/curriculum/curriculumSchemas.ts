@@ -32,6 +32,7 @@ const mcqQuestionSchema = z.object({
   prompt: z.string(),
   choices: z.array(mcqChoiceSchema),
   correctChoiceId: z.string(),
+  explanation: z.string().optional(),
 })
 
 const shortTextQuestionSchema = z.object({
@@ -39,6 +40,7 @@ const shortTextQuestionSchema = z.object({
   type: z.literal('shortText'),
   prompt: z.string(),
   validation: validationSchema,
+  explanation: z.string().optional(),
 })
 
 const testQuestionSchema = z.discriminatedUnion('type', [
@@ -114,6 +116,7 @@ export const rootIndexSchema = z.object({
       id: z.string(),
       title: z.string(),
       path: z.string(),
+      comingSoon: z.boolean().optional(),
     }),
   ),
 })

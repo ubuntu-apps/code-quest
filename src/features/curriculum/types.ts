@@ -37,12 +37,15 @@ export type TestQuestion =
       prompt: string
       choices: { id: string; label: string }[]
       correctChoiceId: string
+      /** Why the right answer is right, shown once the question is answered correctly. */
+      explanation?: string
     }
   | {
       id: string
       type: 'shortText'
       prompt: string
       validation: Validation
+      explanation?: string
     }
 
 export interface LevelTest {
@@ -106,7 +109,8 @@ export interface LanguageIndex {
 }
 
 export interface RootIndex {
-  languages: { id: string; title: string; path: string }[]
+  /** `comingSoon` courses are listed but can't be opened yet (except in edit or admin mode). */
+  languages: { id: string; title: string; path: string; comingSoon?: boolean }[]
 }
 
 export interface LoadedSection {

@@ -36,6 +36,8 @@ export interface PythonChallengeRunResult {
   tests: PythonChallengeTestResult[]
   /** Present when user/setup code throws before or during test assertions. */
   error: FriendlyPythonError | null
+  /** What the learner's code printed during the check. */
+  output: string
 }
 
 type RunRequest = { type: 'run'; code: string; stdin: string }
@@ -46,9 +48,11 @@ type TestsRequest = {
   tests: RuntimeAssertionTest[]
   stdin: string
 }
+/** A challenge's "Run": its setup, then the learner's code, with no tests. */
+type TryRequest = { type: 'try'; userCode: string; setupCode: string }
 /** Downloads the packages imported by `code` without running it. */
 type PreloadRequest = { type: 'preload'; code: string }
-type WorkerRequest = RunRequest | TestsRequest | PreloadRequest
+type WorkerRequest = RunRequest | TestsRequest | TryRequest | PreloadRequest
 
 /**
  * What a run is doing, for the UI:
@@ -68,7 +72,7 @@ export interface PythonRunOptions {
 }
 
 type RunPayload = { output: string; error: string | null }
-type TestsPayload = { tests: PythonChallengeTestResult[]; error: string | null }
+type TestsPayload = { tests: PythonChallengeTestResult[]; error: string | null; output?: string }
 
 type WorkerReply =
   | { type: 'ready' }
@@ -389,10 +393,26 @@ export async function runPythonCode(
   stdin = '',
   options: PythonRunOptions = {},
 ): Promise<SandboxRunResult> {
+  return runForOutput({ type: 'run', code: source, stdin }, options)
+}
+
+/**
+ * Runs a challenge answer the way a check does (same setup, so sample files and
+ * typed answers for input() are there) but without its tests, to see what it prints.
+ */
+export async function runPythonChallengeCode(
+  userCode: string,
+  setupCode: string | undefined,
+  options: PythonRunOptions = {},
+): Promise<SandboxRunResult> {
+  return runForOutput({ type: 'try', userCode, setupCode: setupCode ?? '' }, options)
+}
+
+async function runForOutput(request: RunRequest | TryRequest, options: PythonRunOptions): Promise<SandboxRunResult> {
   let outcome: JobOutcome
   let partialOutput: string
   try {
-    ;({ outcome, partialOutput } = await enqueue({ type: 'run', code: source, stdin }, options))
+    ;({ outcome, partialOutput } = await enqueue(request, options))
   } catch (error: unknown) {
     return { output: '', error: error instanceof RunStoppedError ? stoppedError() : loadError() }
   }
@@ -423,14 +443,16 @@ export async function runPythonChallengeTests(
       passed: false,
       tests: [],
       error: error instanceof RunStoppedError ? stoppedError() : loadError(),
+      output: '',
     }
   }
   if (outcome.kind !== 'result') {
-    return { passed: false, tests: [], error: await outcomeError(outcome) }
+    return { passed: false, tests: [], error: await outcomeError(outcome), output: '' }
   }
   const payload = outcome.payload as TestsPayload
+  const output = typeof payload.output === 'string' ? payload.output : ''
   if (payload.error) {
-    return { passed: false, tests: [], error: await explainPythonError(payload.error) }
+    return { passed: false, tests: [], error: await explainPythonError(payload.error), output }
   }
   const results = Array.isArray(payload.tests) ? payload.tests : []
   return {
@@ -438,5 +460,6 @@ export async function runPythonChallengeTests(
     passed: results.length > 0 && results.every((t) => t.passed),
     tests: results,
     error: null,
+    output,
   }
 }

@@ -2,11 +2,16 @@ import { LAST_LEVEL_STORAGE_KEY, SELECTED_LANGUAGE_STORAGE_KEY, STREAK_STORAGE_K
 import { notifyProgressChanged } from './progressStorage'
 
 const PROGRESS_PREFIX = 'codequest:progress:'
+/**
+ * Says the progress was saved with challenge fingerprints (progressFingerprint.ts). It
+ * travels with the backup, so an older backup without it is checked like old progress.
+ */
+const PROGRESS_FORMAT_PREFIX = 'codequest:progress-format:'
 const SINGLE_KEYS = [STREAK_STORAGE_KEY, LAST_LEVEL_STORAGE_KEY, SELECTED_LANGUAGE_STORAGE_KEY]
 
 /** Learner data only: never editor drafts, GitHub sign-in or install-banner settings. */
 export function isBackupKey(key: string): boolean {
-  return key.startsWith(PROGRESS_PREFIX) || SINGLE_KEYS.includes(key)
+  return key.startsWith(PROGRESS_PREFIX) || key.startsWith(PROGRESS_FORMAT_PREFIX) || SINGLE_KEYS.includes(key)
 }
 
 export interface ProgressBackup {

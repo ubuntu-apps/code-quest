@@ -340,7 +340,8 @@
                 "label": "A file object"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`dumps` (dump string) turns Python data into JSON text."
           },
           {
             "id": "json_basics_q2",
@@ -349,7 +350,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "loads"
-            }
+            },
+            "explanation": "`loads` (load string) parses JSON text into dicts, lists, strings and numbers."
           },
           {
             "id": "json_basics_q3",
@@ -373,7 +375,8 @@
                 "label": "An empty string"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "JSON's \"no value\" is `null`, which Python reads back as `None`."
           },
           {
             "id": "json_basics_q4",
@@ -397,7 +400,8 @@
                 "label": "Unique per file"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "JSON object keys are always strings in double quotes."
           },
           {
             "id": "json_basics_q5",
@@ -421,7 +425,8 @@
                 "label": "`{\"1\": \"a\"}`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "JSON keys must be strings, so the int key 1 is written as `\"1\"`."
           },
           {
             "id": "json_basics_q6",
@@ -430,7 +435,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "JSONDecodeError"
-            }
+            },
+            "explanation": "`json.JSONDecodeError` (a kind of `ValueError`) reports where the text stopped being valid JSON."
           },
           {
             "id": "json_basics_q7",
@@ -454,7 +460,8 @@
                 "label": "Compresses the output"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`indent` adds new lines and that many spaces per nesting level."
           },
           {
             "id": "json_basics_q8",
@@ -478,7 +485,8 @@
                 "label": "There is no difference"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`dump` writes to a file object; `dumps` returns a string."
           },
           {
             "id": "json_basics_q9",
@@ -502,7 +510,8 @@
                 "label": "`{\"0\": 1, \"1\": 2}`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "JSON has arrays but no tuples, so a tuple comes back as a list."
           },
           {
             "id": "json_basics_q10",
@@ -526,7 +535,8 @@
                 "label": "Datetimes are mutable"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "JSON only knows strings, numbers, booleans, null, arrays and objects; store dates as ISO strings."
           }
         ]
       }
@@ -564,7 +574,7 @@
       ],
       "intro": {
         "title": "CSV data",
-        "bodyMarkdown": "CSV (\"comma-separated values\") is the simplest table format: one row per line, values separated by commas, and usually a first line (the header) with the column names. Spreadsheets and databases can all export it.\n\n```\nname,score\nAna,90\nBob,85\n```\n\nPython's `csv` module reads and writes CSV correctly, including tricky cases, so you don't have to split lines yourself. It works with files and with `io.StringIO`, which wraps a string so it behaves like an open file. The examples here use `StringIO`, so you can try everything without creating files.\n\n`csv.reader` gives you each row as a list of strings. `csv.DictReader` reads the header first and gives each row as a dict, so you can write `row[\"score\"]` instead of remembering that the score is `row[1]`.\n\n```\nimport csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\n\"\nfor row in csv.DictReader(StringIO(data)):\n    print(row[\"name\"], row[\"score\"])\n```\n\nEvery value csv reads is a **string**, even `90`, so `sum(row[\"score\"] for row in rows)` fails. Convert first with `int(...)` or `float(...)`. If some rows may be empty or broken, put the conversion in `try`/`except ValueError` and skip those rows.\n\nTo write, create a `csv.writer` and call `writerow` for one row or `writerows` for many. `csv.DictWriter` writes dicts: give it the `fieldnames`, call `writeheader()` to write the header row, then `writerows`. When a value contains a comma, csv puts it in quotes, like `\"Lee, Jr.\"`, so it stays one value.\n\n```\nbuf = StringIO()\nwriter = csv.writer(buf)\nwriter.writerow([\"name\", \"score\"])\nwriter.writerows([[\"Ana\", 90], [\"Lee, Jr.\", 85]])\nprint(buf.getvalue())\n```\n\nNot every CSV uses commas. Many European exports separate values with `;`, because there the comma is the decimal point (`1,5`). Pass `delimiter=\";\"` to the reader, and swap the decimal comma before converting: `float(\"1,5\".replace(\",\", \".\"))`.\n\nWith real files, open them with `newline=\"\"`, because the csv module handles line endings itself (otherwise you can get blank rows on Windows), and with `encoding=\"utf-8\"`, so names like Zoë survive: `open(\"people.csv\", \"w\", newline=\"\", encoding=\"utf-8\")`.\n\nTo total a column per group, loop over the rows and add to a dict: `totals[region] = totals.get(region, 0) + amount`. For bigger analyses, pandas (later in this chapter) reads a CSV into a table you can filter and group in one line.",
+        "bodyMarkdown": "CSV (\"comma-separated values\") is the simplest table format: one row per line, values separated by commas, and usually a first line (the header) with the column names. Spreadsheets and databases can all export it.\n\n```\nname,score\nAna,90\nBob,85\n```\n\nPython's `csv` module reads and writes CSV correctly, including tricky cases, so you don't have to split lines yourself. It works with files and with `io.StringIO`, which wraps a string so it behaves like an open file. The examples here use `StringIO`, so you can try everything without creating files.\n\n`csv.reader` gives you each row as a list of strings. `csv.DictReader` reads the header first and gives each row as a dict, so you can write `row[\"score\"]` instead of remembering that the score is `row[1]`.\n\n```\nimport csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\n\"\nfor row in csv.DictReader(StringIO(data)):\n    print(row[\"name\"], row[\"score\"])\n```\n\nEvery value csv reads is a **string**, even `90`, so `sum(row[\"score\"] for row in rows)` fails. Convert first with `int(...)` or `float(...)`. If some rows may be empty or broken, put the conversion in `try`/`except ValueError` and skip those rows.\n\nTo write, create a `csv.writer` and call `writerow` for one row or `writerows` for many. `csv.DictWriter` writes dicts: give it the `fieldnames`, call `writeheader()` to write the header row, then `writerows`. When a value contains a comma, csv puts it in quotes, like `\"Lee, Jr.\"`, so it stays one value.\n\n```\nbuf = StringIO()\nwriter = csv.writer(buf)\nwriter.writerow([\"name\", \"score\"])\nwriter.writerows([[\"Ana\", 90], [\"Lee, Jr.\", 85]])\nprint(buf.getvalue())\n```\n\nNot every CSV uses commas. Many European exports separate values with `;`, because there the comma is the decimal point (`1,5`). Pass `delimiter=\";\"` to the reader, and swap the decimal comma before converting: `float(\"1,5\".replace(\",\", \".\"))`.\n\nWith real files, open them with `newline=\"\"`, because the csv module handles line endings itself (otherwise you can get blank rows on Windows), and with `encoding=\"utf-8\"`, so names like Zoë survive: `open(\"people.csv\", \"w\", newline=\"\", encoding=\"utf-8\")`.\n\nTo total a column per group, loop over the rows and add to a dict: `totals[region] = totals.get(region, 0) + amount`. For bigger analyses, pandas (later in this section) reads a CSV into a table you can filter and group in one line.",
         "sandboxCode": "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\nCleo,80\\n\"\nrows = list(csv.DictReader(StringIO(data)))\nprint(rows[0])\nprint(sum(int(row[\"score\"]) for row in rows))",
         "readMore": {
           "label": "Python docs: the csv module",
@@ -819,7 +829,8 @@
                 "label": "Column sorted values"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "CSV is plain text with one record per line and commas between the fields."
           },
           {
             "id": "csv_data_q2",
@@ -843,7 +854,8 @@
                 "label": "`int` or `str`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "csv doesn't guess types: every field is a string until you convert it."
           },
           {
             "id": "csv_data_q3",
@@ -852,7 +864,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "DictReader"
-            }
+            },
+            "explanation": "`DictReader` uses the header row as the keys of each row dict."
           },
           {
             "id": "csv_data_q4",
@@ -876,7 +889,8 @@
                 "label": "`writerow`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`writerow` writes one sequence as one line, adding commas and quotes as needed."
           },
           {
             "id": "csv_data_q5",
@@ -900,7 +914,8 @@
                 "label": "It is required for reading only"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Without `newline=\"\"`, line endings can be doubled, which shows up as blank rows on Windows."
           },
           {
             "id": "csv_data_q6",
@@ -924,7 +939,8 @@
                 "label": "It raises an error"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A field that contains the delimiter is quoted so it stays one value."
           },
           {
             "id": "csv_data_q7",
@@ -933,7 +949,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "delimiter"
-            }
+            },
+            "explanation": "`delimiter` sets the character that separates fields."
           },
           {
             "id": "csv_data_q8",
@@ -957,7 +974,8 @@
                 "label": "`writerow(None)`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`writeheader` writes the `fieldnames` as the first row."
           },
           {
             "id": "csv_data_q9",
@@ -981,7 +999,8 @@
                 "label": "Rows are read-only"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "csv values are text, so convert them with `int()` before adding."
           },
           {
             "id": "csv_data_q10",
@@ -1005,7 +1024,8 @@
                 "label": "Analysing large tables with filtering and grouping"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "pandas does whole-table operations like filtering and grouping in a few lines."
           }
         ]
       }
@@ -1313,7 +1333,8 @@
                 "label": "One before 1970"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A naive datetime has no `tzinfo`, so it doesn't say which time zone it is in."
           },
           {
             "id": "datetime_data_q2",
@@ -1337,7 +1358,8 @@
                 "label": "Midnight"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`Z` (\"Zulu\") marks UTC, the same as `+00:00`."
           },
           {
             "id": "datetime_data_q3",
@@ -1361,7 +1383,8 @@
                 "label": "A date in ISO form"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Unix time counts seconds from the epoch, 1970-01-01 00:00 UTC."
           },
           {
             "id": "datetime_data_q4",
@@ -1385,7 +1408,8 @@
                 "label": "Without it, the answer depends on the computer's own clock"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Without a time zone, `fromtimestamp` uses the computer's local time."
           },
           {
             "id": "datetime_data_q5",
@@ -1409,7 +1433,8 @@
                 "label": "Comparing them raises an error"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "14:00 at +02:00 minus 2 hours is 12:00 UTC."
           },
           {
             "id": "datetime_data_q6",
@@ -1433,7 +1458,8 @@
                 "label": "It works"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Python refuses to order a naive and an aware datetime, because the naive one's zone is unknown."
           },
           {
             "id": "datetime_data_q7",
@@ -1442,7 +1468,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "astimezone"
-            }
+            },
+            "explanation": "`astimezone` converts an aware datetime to another zone; the moment stays the same."
           },
           {
             "id": "datetime_data_q8",
@@ -1466,7 +1493,8 @@
                 "label": "Make them aware, work in UTC, convert only to show them"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Store and calculate in UTC; local time is only for display."
           },
           {
             "id": "datetime_data_q9",
@@ -1490,7 +1518,8 @@
                 "label": "`locale`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`zoneinfo` uses the time zone database, which includes summer-time changes."
           },
           {
             "id": "datetime_data_q10",
@@ -1514,7 +1543,8 @@
                 "label": "They can't"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Before Python 3.11, `fromisoformat` didn't accept `Z`, but it did accept `+00:00`."
           }
         ]
       }
@@ -1812,7 +1842,8 @@
                 "label": "Any character"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`\\d` is a digit and `+` means one or more of it."
           },
           {
             "id": "regex_basics_q2",
@@ -1836,7 +1867,8 @@
                 "label": "Python requires it"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "In a raw string, backslashes aren't escapes, so `\\d` reaches `re` as written."
           },
           {
             "id": "regex_basics_q3",
@@ -1860,7 +1892,8 @@
                 "label": "`re.sub`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`fullmatch` succeeds only if the pattern covers the whole string."
           },
           {
             "id": "regex_basics_q4",
@@ -1884,7 +1917,8 @@
                 "label": "`None`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Without a match, `search` returns `None`, so check before calling `.group()`."
           },
           {
             "id": "regex_basics_q5",
@@ -1908,7 +1942,8 @@
                 "label": "`[\"#\"]`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "With a group in the pattern, `findall` returns only the captured part of each match."
           },
           {
             "id": "regex_basics_q6",
@@ -1932,7 +1967,8 @@
                 "label": "Nothing"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "A group captures part of the match, which you can read with `.group(1)` or get from `findall`."
           },
           {
             "id": "regex_basics_q7",
@@ -1941,7 +1977,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "sub"
-            }
+            },
+            "explanation": "`re.sub` replaces each match with the text you give."
           },
           {
             "id": "regex_basics_q8",
@@ -1965,7 +2002,8 @@
                 "label": "Optional: zero or one"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`?` makes the item before it optional."
           },
           {
             "id": "regex_basics_q9",
@@ -1989,7 +2027,8 @@
                 "label": "`re.LOWER`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`re.IGNORECASE` (or `re.I`) makes letters match in either case."
           },
           {
             "id": "regex_basics_q10",
@@ -2013,7 +2052,8 @@
                 "label": "Only for numbers"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Methods like `startswith` and `split` are easier to read when they are enough."
           }
         ]
       }
@@ -2074,12 +2114,12 @@
               {
                 "id": "t1",
                 "label": "Nothing missing",
-                "assertion": "missing_fields({\"name\": \"Ana\", \"email\": \"a@x.io\"}, [\"name\", \"email\"]) == []"
+                "assertion": "missing_fields({\"name\": \"Ana\", \"email\": \"a@example.net\"}, [\"name\", \"email\"]) == []"
               },
               {
                 "id": "t2",
                 "label": "Some missing, in order",
-                "assertion": "missing_fields({\"email\": \"a@x.io\"}, [\"name\", \"email\", \"age\"]) == [\"name\", \"age\"]"
+                "assertion": "missing_fields({\"email\": \"a@example.net\"}, [\"name\", \"email\", \"age\"]) == [\"name\", \"age\"]"
               }
             ]
           }
@@ -2166,7 +2206,7 @@
               {
                 "id": "t1",
                 "label": "Accepts normal addresses",
-                "assertion": "looks_like_email(\"ana@example.com\") and looks_like_email(\"a.b+tag@mail.co.uk\")"
+                "assertion": "looks_like_email(\"ana@example.com\") and looks_like_email(\"a.b+tag@example.co.uk\")"
               },
               {
                 "id": "t2",
@@ -2371,7 +2411,8 @@
                 "label": "Never; trust the client"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Checking at the boundary stops bad data before it spreads."
           },
           {
             "id": "data_validation_q2",
@@ -2395,7 +2436,8 @@
                 "label": "It returns `False`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`True` passes an `int` check, so exclude bools explicitly."
           },
           {
             "id": "data_validation_q3",
@@ -2404,7 +2446,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "ValueError"
-            }
+            },
+            "explanation": "`ValueError` is for a value of the right type that is out of range or malformed."
           },
           {
             "id": "data_validation_q4",
@@ -2428,7 +2471,8 @@
                 "label": "Errors become warnings"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Reporting every problem at once saves round trips."
           },
           {
             "id": "data_validation_q5",
@@ -2452,7 +2496,8 @@
                 "label": "Everything from a form arrives as text"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Form fields, query strings and environment variables are always strings."
           },
           {
             "id": "data_validation_q6",
@@ -2476,7 +2521,8 @@
                 "label": "The string length"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`fullmatch` rejects text with extra characters before or after the pattern."
           },
           {
             "id": "data_validation_q7",
@@ -2485,7 +2531,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "__post_init__"
-            }
+            },
+            "explanation": "`__post_init__` runs after the dataclass's generated `__init__`."
           },
           {
             "id": "data_validation_q8",
@@ -2509,7 +2556,8 @@
                 "label": "`csv`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "pydantic checks data against classes with type hints and reports every problem."
           },
           {
             "id": "data_validation_q9",
@@ -2533,7 +2581,8 @@
                 "label": "Is logged but never shown"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Say which field failed and what was expected, so it can be fixed."
           },
           {
             "id": "data_validation_q10",
@@ -2557,7 +2606,8 @@
                 "label": "Converts it to a warning"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`from None` suppresses the chained exception, leaving a cleaner message."
           }
         ]
       }
@@ -2870,7 +2920,8 @@
                 "label": "In the browser cache"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`:memory:` creates a temporary database in RAM."
           },
           {
             "id": "sqlite_basics_q2",
@@ -2879,7 +2930,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "?"
-            }
+            },
+            "explanation": "sqlite3 uses `?` for positional placeholders (and `:name` for named ones)."
           },
           {
             "id": "sqlite_basics_q3",
@@ -2903,7 +2955,8 @@
                 "label": "f-strings are slower"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "With placeholders the values are sent separately and never read as SQL."
           },
           {
             "id": "sqlite_basics_q4",
@@ -2927,7 +2980,8 @@
                 "label": "A `dict`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`fetchone` returns one row as a tuple, or `None` when there are none left."
           },
           {
             "id": "sqlite_basics_q5",
@@ -2951,7 +3005,8 @@
                 "label": "`executemany`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`executemany` runs the statement once for each item in the sequence."
           },
           {
             "id": "sqlite_basics_q6",
@@ -2975,7 +3030,8 @@
                 "label": "Locks the file forever"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "The connection as a context manager commits on success and rolls back on an error."
           },
           {
             "id": "sqlite_basics_q7",
@@ -2984,7 +3040,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "group by"
-            }
+            },
+            "explanation": "`GROUP BY` makes one group per value, and aggregates like `COUNT` work per group."
           },
           {
             "id": "sqlite_basics_q8",
@@ -3008,7 +3065,8 @@
                 "label": "Neither works"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A one-item tuple needs a comma; `(\"Ana\")` is just a string."
           },
           {
             "id": "sqlite_basics_q9",
@@ -3032,7 +3090,8 @@
                 "label": "Sorted rows"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`sqlite3.Row` lets you read a column by name as well as by position."
           },
           {
             "id": "sqlite_basics_q10",
@@ -3056,7 +3115,8 @@
                 "label": "`ON CONFLICT … DO UPDATE`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`ON CONFLICT ... DO UPDATE` updates the existing row instead of failing."
           }
         ]
       }
@@ -3354,7 +3414,8 @@
                 "label": "A database server"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "A DataFrame is a table: rows and named columns, each column a Series."
           },
           {
             "id": "pandas_intro_q2",
@@ -3363,7 +3424,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "read_csv"
-            }
+            },
+            "explanation": "`pd.read_csv` reads a CSV file into a DataFrame."
           },
           {
             "id": "pandas_intro_q3",
@@ -3387,7 +3449,8 @@
                 "label": "A `dict`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Selecting one column gives a Series."
           },
           {
             "id": "pandas_intro_q4",
@@ -3411,7 +3474,8 @@
                 "label": "3 random rows"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`head(n)` returns the first `n` rows."
           },
           {
             "id": "pandas_intro_q5",
@@ -3435,7 +3499,8 @@
                 "label": "`df[df[\"score\"] > 80]`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "The comparison gives True/False per row, and indexing with it keeps the True rows."
           },
           {
             "id": "pandas_intro_q6",
@@ -3459,7 +3524,8 @@
                 "label": "Removes duplicate regions"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`groupby` splits the rows by region and `sum` totals each group."
           },
           {
             "id": "pandas_intro_q7",
@@ -3468,7 +3534,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "dropna"
-            }
+            },
+            "explanation": "`dropna` removes rows with missing values (NaN)."
           },
           {
             "id": "pandas_intro_q8",
@@ -3492,7 +3559,8 @@
                 "label": "Counts missing values"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`fillna` replaces missing values with the value you give."
           },
           {
             "id": "pandas_intro_q9",
@@ -3516,7 +3584,8 @@
                 "label": "`zip`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`merge` joins rows that share a value in the key column, like a SQL join."
           },
           {
             "id": "pandas_intro_q10",
@@ -3540,7 +3609,8 @@
                 "label": "How often each value appears"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`value_counts` counts each distinct value, most common first."
           }
         ]
       }
@@ -3883,7 +3953,8 @@
                 "label": "A list of lines"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "The response body arrives as bytes; decode it before treating it as text."
           },
           {
             "id": "urllib_requests_q2",
@@ -3892,7 +3963,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "urlencode"
-            }
+            },
+            "explanation": "`urlencode` builds a query string and escapes special characters."
           },
           {
             "id": "urllib_requests_q3",
@@ -3916,7 +3988,8 @@
                 "label": "To cache the response"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Without a timeout, a request to a server that never answers can wait forever."
           },
           {
             "id": "urllib_requests_q4",
@@ -3940,7 +4013,8 @@
                 "label": "Unauthorized"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "404 means the server has no resource at that URL."
           },
           {
             "id": "urllib_requests_q5",
@@ -3964,7 +4038,8 @@
                 "label": "`HTTPError`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`urlopen` raises `HTTPError` for 4xx and 5xx responses."
           },
           {
             "id": "urllib_requests_q6",
@@ -3988,7 +4063,8 @@
                 "label": "JSON"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Request bodies are bytes, so encode text or JSON first."
           },
           {
             "id": "urllib_requests_q7",
@@ -3997,7 +4073,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "netloc"
-            }
+            },
+            "explanation": "`netloc` is the network location: the host name (and port)."
           },
           {
             "id": "urllib_requests_q8",
@@ -4021,7 +4098,8 @@
                 "label": "Servers require lowercase"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`quote` percent-encodes characters that have special meaning in URLs."
           },
           {
             "id": "urllib_requests_q9",
@@ -4045,7 +4123,8 @@
                 "label": "Every error"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Network glitches and \"try again later\" responses can work on a retry; 4xx errors won't."
           },
           {
             "id": "urllib_requests_q10",
@@ -4069,7 +4148,8 @@
                 "label": "Nothing unless data is set"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`method` sets the HTTP verb the request uses."
           }
         ]
       }
@@ -4422,7 +4502,8 @@
                 "label": "`DELETE`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`GET` only reads, so it is safe to repeat."
           },
           {
             "id": "rest_apis_q2",
@@ -4431,7 +4512,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "201"
-            }
+            },
+            "explanation": "201 Created confirms that a new resource was made."
           },
           {
             "id": "rest_apis_q3",
@@ -4455,7 +4537,8 @@
                 "label": "A cookie"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Each resource has its own URL, such as `/books/42`."
           },
           {
             "id": "rest_apis_q4",
@@ -4479,7 +4562,8 @@
                 "label": "Redirect"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "204 No Content means it worked and there is nothing to send back."
           },
           {
             "id": "rest_apis_q5",
@@ -4503,7 +4587,8 @@
                 "label": "`PUT`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`PUT` sends the full new version; `PATCH` changes only some fields."
           },
           {
             "id": "rest_apis_q6",
@@ -4527,7 +4612,8 @@
                 "label": "A redirect"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "4xx codes mean the client sent something wrong; 5xx codes mean the server failed."
           },
           {
             "id": "rest_apis_q7",
@@ -4536,7 +4622,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "404"
-            }
+            },
+            "explanation": "404 means the resource doesn't exist."
           },
           {
             "id": "rest_apis_q8",
@@ -4560,7 +4647,8 @@
                 "label": "They cannot fail"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Doing the same PUT or DELETE again leaves the resource in the same state."
           },
           {
             "id": "rest_apis_q9",
@@ -4584,7 +4672,8 @@
                 "label": "Throttling"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Pagination splits a long list into pages, each pointing to the next."
           },
           {
             "id": "rest_apis_q10",
@@ -4608,7 +4697,8 @@
                 "label": "So the API can change without breaking existing clients"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Old clients keep using `/v1/` while `/v2/` makes changes that would break them."
           }
         ]
       }
@@ -4931,7 +5021,8 @@
                 "label": "It slows the program"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Anything in the code is shared wherever the code goes, including public repositories."
           },
           {
             "id": "config_secrets_q2",
@@ -4955,7 +5046,8 @@
                 "label": "`8000`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`get` returns the default when the variable isn't set, and environment values are strings."
           },
           {
             "id": "config_secrets_q3",
@@ -4979,7 +5071,8 @@
                 "label": "`bytes`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Environment variables are always strings, so convert numbers yourself."
           },
           {
             "id": "config_secrets_q4",
@@ -5003,7 +5096,8 @@
                 "label": "Raises `KeyError`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`os.environ` acts like a dict, and square brackets raise `KeyError` for a missing name."
           },
           {
             "id": "config_secrets_q5",
@@ -5027,7 +5121,8 @@
                 "label": "`json`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`configparser` reads and writes INI-style files with `[sections]`."
           },
           {
             "id": "config_secrets_q6",
@@ -5051,7 +5146,8 @@
                 "label": "Whichever is longest"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "The most specific source wins: environment, then file, then defaults."
           },
           {
             "id": "config_secrets_q7",
@@ -5060,7 +5156,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": ".gitignore"
-            }
+            },
+            "explanation": "`.gitignore` lists patterns of files git should leave out."
           },
           {
             "id": "config_secrets_q8",
@@ -5084,7 +5181,8 @@
                 "label": "Show only its last few characters"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Showing a few characters confirms which key is in use without revealing it."
           },
           {
             "id": "config_secrets_q9",
@@ -5108,7 +5206,8 @@
                 "label": "Any text"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`getboolean` understands the usual yes/no words: yes/no, on/off, true/false, 1/0."
           },
           {
             "id": "config_secrets_q10",
@@ -5132,7 +5231,8 @@
                 "label": "The code itself only"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "A program inherits its environment from whatever started it."
           }
         ]
       }
@@ -5146,12 +5246,12 @@
         {
           "id": "group_values",
           "label": "Group values",
-          "code": "groups = {}\nfor movie, stars in [(\"Dune\", 5), (\"Alien\", 3), (\"Dune\", 4)]:\n    groups.setdefault(movie, []).append(stars)\nprint(groups)"
+          "code": "groups = {}\nfor movie, stars in [(\"Harbor\", 5), (\"Comet\", 3), (\"Harbor\", 4)]:\n    groups.setdefault(movie, []).append(stars)\nprint(groups)"
         },
         {
           "id": "sort_by_score_then_name",
           "label": "Sort by score, then name",
-          "code": "avgs = {\"Heat\": 4.0, \"Dune\": 4.5, \"Alien\": 4.0}\nprint(sorted(avgs.items(), key=lambda item: (-item[1], item[0])))"
+          "code": "avgs = {\"Glacier\": 4.0, \"Harbor\": 4.5, \"Comet\": 4.0}\nprint(sorted(avgs.items(), key=lambda item: (-item[1], item[0])))"
         },
         {
           "id": "stars",
@@ -5161,8 +5261,8 @@
       ],
       "intro": {
         "title": "Easy project: Movie ratings",
-        "bodyMarkdown": "A film club collects its members' ratings in a CSV file, one rating of 1 to 5 stars per line. Turn the file into something useful: the average for each movie, the top picks, a JSON report for the club's website, and a summary to print.\n\n```\nmovie,user,stars\nDune,ana,5\nDune,ben,4\nAlien,ana,4\nCats,ana,two\n```\n\nReal files are messy. Someone typed `two` instead of `2`, someone left the stars empty, and someone gave a film 6 stars. The program skips those rows but notes each one, with its line number in the file, so nothing disappears silently. The finished summary looks like this:\n\n```\n7 ratings of 4 movies, 3 skipped\nDune    ★★★★★ 4.5\nAlien   ★★★★☆ 4.0\nHeat    ★★★★☆ 4.0\nCats    ★☆☆☆☆ 1.0\n```",
-        "sandboxCode": "import csv\nfrom io import StringIO\n\ndata = \"movie,stars\\nDune,5\\nDune,4\\nAlien,3\\n\"\ntotals = {}\nfor row in csv.DictReader(StringIO(data)):\n    totals.setdefault(row[\"movie\"], []).append(int(row[\"stars\"]))\nprint({movie: sum(s) / len(s) for movie, s in totals.items()})"
+        "bodyMarkdown": "A film club collects its members' ratings in a CSV file, one rating of 1 to 5 stars per line. Turn the file into something useful: the average for each movie, the top picks, a JSON report for the club's website, and a summary to print.\n\n```\nmovie,user,stars\nHarbor,ana,5\nHarbor,ben,4\nComet,ana,4\nTinsel,ana,two\n```\n\nReal files are messy. Someone typed `two` instead of `2`, someone left the stars empty, and someone gave a film 6 stars. The program skips those rows but notes each one, with its line number in the file, so nothing disappears silently. The finished summary looks like this:\n\n```\n7 ratings of 4 movies, 3 skipped\nHarbor  ★★★★★ 4.5\nComet   ★★★★☆ 4.0\nGlacier ★★★★☆ 4.0\nTinsel  ★☆☆☆☆ 1.0\n```",
+        "sandboxCode": "import csv\nfrom io import StringIO\n\ndata = \"movie,stars\\nHarbor,5\\nHarbor,4\\nComet,3\\n\"\ntotals = {}\nfor row in csv.DictReader(StringIO(data)):\n    totals.setdefault(row[\"movie\"], []).append(int(row[\"stars\"]))\nprint({movie: sum(s) / len(s) for movie, s in totals.items()})"
       },
       "challenges": [
         {
@@ -5174,7 +5274,7 @@
           "solution": "import csv\nimport json\n\ndef load_ratings(path):\n    with open(path, newline=\"\", encoding=\"utf-8\") as f:\n        return [{\"movie\": r[\"movie\"], \"user\": r[\"user\"], \"stars\": int(r[\"stars\"])} for r in csv.DictReader(f)]\n",
           "validation": {
             "mode": "python_tests",
-            "setupCode": "import os as _os\nwith open('good.csv', \"w\", encoding=\"utf-8\") as _f:\n    _f.write('movie,user,stars\\nDune,ana,5\\nDune,ben,4\\nAlien,ana,4\\nAlien,cy,5\\nAlien,ben,3\\nCats,cy,1\\n')\n",
+            "setupCode": "import os as _os\nwith open('good.csv', \"w\", encoding=\"utf-8\") as _f:\n    _f.write('movie,user,stars\\nHarbor,ana,5\\nHarbor,ben,4\\nComet,ana,4\\nComet,cy,5\\nComet,ben,3\\nTinsel,cy,1\\n')\n",
             "tests": [
               {
                 "id": "t1",
@@ -5184,7 +5284,7 @@
               {
                 "id": "t2",
                 "label": "The first",
-                "assertion": "load_ratings(\"good.csv\")[0] == {\"movie\": \"Dune\", \"user\": \"ana\", \"stars\": 5}"
+                "assertion": "load_ratings(\"good.csv\")[0] == {\"movie\": \"Harbor\", \"user\": \"ana\", \"stars\": 5}"
               }
             ]
           }
@@ -5203,7 +5303,7 @@
               {
                 "id": "t1",
                 "label": "Averages",
-                "assertion": "averages([{\"movie\": \"Dune\", \"user\": \"a\", \"stars\": 5}, {\"movie\": \"Dune\", \"user\": \"b\", \"stars\": 4}, {\"movie\": \"Alien\", \"user\": \"a\", \"stars\": 3}]) == {\"Dune\": 4.5, \"Alien\": 3.0}"
+                "assertion": "averages([{\"movie\": \"Harbor\", \"user\": \"a\", \"stars\": 5}, {\"movie\": \"Harbor\", \"user\": \"b\", \"stars\": 4}, {\"movie\": \"Comet\", \"user\": \"a\", \"stars\": 3}]) == {\"Harbor\": 4.5, \"Comet\": 3.0}"
               },
               {
                 "id": "t2",
@@ -5227,12 +5327,12 @@
               {
                 "id": "t1",
                 "label": "Top 3",
-                "assertion": "top_movies({\"Heat\": 4.0, \"Dune\": 4.5, \"Alien\": 4.0, \"Cats\": 1.0}) == [\"Dune\", \"Alien\", \"Heat\"]"
+                "assertion": "top_movies({\"Glacier\": 4.0, \"Harbor\": 4.5, \"Comet\": 4.0, \"Tinsel\": 1.0}) == [\"Harbor\", \"Comet\", \"Glacier\"]"
               },
               {
                 "id": "t2",
                 "label": "Top 1",
-                "assertion": "top_movies({\"Up\": 2.0, \"Cats\": 1.0}, 1) == [\"Up\"]"
+                "assertion": "top_movies({\"Orbit\": 2.0, \"Tinsel\": 1.0}, 1) == [\"Orbit\"]"
               }
             ]
           }
@@ -5246,7 +5346,7 @@
           "solution": "import csv\nimport json\n\ndef load_ratings(path):\n    ratings = []\n    problems = []\n    with open(path, newline=\"\", encoding=\"utf-8\") as f:\n        for line, row in enumerate(csv.DictReader(f), start=2):\n            try:\n                stars = int(row[\"stars\"])\n            except ValueError:\n                problems.append(f\"line {line}: bad stars {row['stars']!r}\")\n                continue\n            if not 1 <= stars <= 5:\n                problems.append(f\"line {line}: stars out of range {stars}\")\n                continue\n            ratings.append({\"movie\": row[\"movie\"], \"user\": row[\"user\"], \"stars\": stars})\n    return ratings, problems\n",
           "validation": {
             "mode": "python_tests",
-            "setupCode": "import os as _os\nwith open('ratings.csv', \"w\", encoding=\"utf-8\") as _f:\n    _f.write('movie,user,stars\\nDune,ana,5\\nDune,ben,4\\nAlien,ana,4\\nAlien,cy,5\\nAlien,ben,3\\nCats,cy,1\\nCats,ana,two\\nHeat,ben,\\nHeat,cy,4\\nUp,ana,6\\n')\n",
+            "setupCode": "import os as _os\nwith open('ratings.csv', \"w\", encoding=\"utf-8\") as _f:\n    _f.write('movie,user,stars\\nHarbor,ana,5\\nHarbor,ben,4\\nComet,ana,4\\nComet,cy,5\\nComet,ben,3\\nTinsel,cy,1\\nTinsel,ana,two\\nGlacier,ben,\\nGlacier,cy,4\\nOrbit,ana,6\\n')\n",
             "tests": [
               {
                 "id": "t1",
@@ -5275,7 +5375,7 @@
               {
                 "id": "t1",
                 "label": "Reads back",
-                "assertion": "(save_report({\"Dune\": 4.5, \"Alien\": 4.0}, \"report.json\"), __import__(\"json\").load(open(\"report.json\")))[1] == {\"Alien\": 4.0, \"Dune\": 4.5}"
+                "assertion": "(save_report({\"Harbor\": 4.5, \"Comet\": 4.0}, \"report.json\"), __import__(\"json\").load(open(\"report.json\")))[1] == {\"Comet\": 4.0, \"Harbor\": 4.5}"
               },
               {
                 "id": "t2",
@@ -5294,12 +5394,12 @@
           "solution": "import csv\nimport json\n\ndef load_ratings(path):\n    ratings = []\n    problems = []\n    with open(path, newline=\"\", encoding=\"utf-8\") as f:\n        for line, row in enumerate(csv.DictReader(f), start=2):\n            try:\n                stars = int(row[\"stars\"])\n            except ValueError:\n                problems.append(f\"line {line}: bad stars {row['stars']!r}\")\n                continue\n            if not 1 <= stars <= 5:\n                problems.append(f\"line {line}: stars out of range {stars}\")\n                continue\n            ratings.append({\"movie\": row[\"movie\"], \"user\": row[\"user\"], \"stars\": stars})\n    return ratings, problems\n\ndef averages(ratings):\n    totals = {}\n    for r in ratings:\n        totals.setdefault(r[\"movie\"], []).append(r[\"stars\"])\n    return {movie: round(sum(s) / len(s), 1) for movie, s in totals.items()}\n\ndef top_movies(avgs, n=3):\n    ranked = sorted(avgs.items(), key=lambda item: (-item[1], item[0]))\n    return [movie for movie, avg in ranked[:n]]\n\ndef stars_text(avg):\n    full = int(avg + 0.5)   # round halves up\n    return \"★\" * full + \"☆\" * (5 - full)\n\n\ndef summary(path):\n    ratings, problems = load_ratings(path)\n    avgs = averages(ratings)\n    lines = [f\"{len(ratings)} ratings of {len(avgs)} movies, {len(problems)} skipped\"]\n    for movie in top_movies(avgs, len(avgs)):\n        lines.append(f\"{movie:<8}{stars_text(avgs[movie])} {avgs[movie]}\")\n    return lines\n",
           "validation": {
             "mode": "python_tests",
-            "setupCode": "import os as _os\nwith open('ratings.csv', \"w\", encoding=\"utf-8\") as _f:\n    _f.write('movie,user,stars\\nDune,ana,5\\nDune,ben,4\\nAlien,ana,4\\nAlien,cy,5\\nAlien,ben,3\\nCats,cy,1\\nCats,ana,two\\nHeat,ben,\\nHeat,cy,4\\nUp,ana,6\\n')\n",
+            "setupCode": "import os as _os\nwith open('ratings.csv', \"w\", encoding=\"utf-8\") as _f:\n    _f.write('movie,user,stars\\nHarbor,ana,5\\nHarbor,ben,4\\nComet,ana,4\\nComet,cy,5\\nComet,ben,3\\nTinsel,cy,1\\nTinsel,ana,two\\nGlacier,ben,\\nGlacier,cy,4\\nOrbit,ana,6\\n')\n",
             "tests": [
               {
                 "id": "t1",
                 "label": "The summary",
-                "assertion": "summary(\"ratings.csv\") == [\"7 ratings of 4 movies, 3 skipped\", \"Dune    ★★★★★ 4.5\", \"Alien   ★★★★☆ 4.0\", \"Heat    ★★★★☆ 4.0\", \"Cats    ★☆☆☆☆ 1.0\"]"
+                "assertion": "summary(\"ratings.csv\") == [\"7 ratings of 4 movies, 3 skipped\", \"Harbor  ★★★★★ 4.5\", \"Comet   ★★★★☆ 4.0\", \"Glacier ★★★★☆ 4.0\", \"Tinsel  ★☆☆☆☆ 1.0\"]"
               }
             ]
           }
@@ -5330,7 +5430,8 @@
                 "label": "To make the file smaller"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Reporting skipped rows means bad data is noticed, not silently dropped."
           },
           {
             "id": "proj_movie_ratings_q2",
@@ -5354,7 +5455,8 @@
                 "label": "It is a typo"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "The header is line 1, so the first data row is line 2."
           },
           {
             "id": "proj_movie_ratings_q3",
@@ -5378,7 +5480,8 @@
                 "label": "Nothing for dicts"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`sort_keys=True` writes dict keys in sorted order, so the output is the same every time."
           },
           {
             "id": "proj_movie_ratings_q4",
@@ -5402,7 +5505,8 @@
                 "label": "Highest average first, ties alphabetically"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "The minus sign puts high averages first, and the name breaks ties."
           },
           {
             "id": "proj_movie_ratings_q5",
@@ -5411,7 +5515,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "4.5"
-            }
+            },
+            "explanation": "(5 + 4) / 2 is 4.5."
           },
           {
             "id": "proj_movie_ratings_q6",
@@ -5435,7 +5540,8 @@
                 "label": "Two stars aren't allowed"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`int(\"two\")` raises `ValueError`, so the row is reported and skipped."
           }
         ]
       }
@@ -5648,7 +5754,8 @@
                 "label": "To hide it"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Passing the `api` function in lets tests use a fake instead of real HTTP."
           },
           {
             "id": "proj_bookshop_client_q2",
@@ -5672,7 +5779,8 @@
                 "label": "To slow them down"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "One helper keeps the status checks and decoding in one place."
           },
           {
             "id": "proj_bookshop_client_q3",
@@ -5696,7 +5804,8 @@
                 "label": "Anything but 200"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "4xx and 5xx statuses are errors, so `_call` raises for anything 400 or above."
           },
           {
             "id": "proj_bookshop_client_q4",
@@ -5720,7 +5829,8 @@
                 "label": "When `next_page` is `None`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "The API sets `next_page` to `None` on the last page."
           },
           {
             "id": "proj_bookshop_client_q5",
@@ -5729,7 +5839,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "POST"
-            }
+            },
+            "explanation": "`POST` creates a new resource."
           },
           {
             "id": "proj_bookshop_client_q6",
@@ -5753,7 +5864,8 @@
                 "label": "It is required for GET"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`urlencode` escapes the space so the query stays valid."
           }
         ]
       }
@@ -5981,7 +6093,8 @@
                 "label": "To convert the date"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A pattern can check the format but not the calendar, so use both."
           },
           {
             "id": "proj_sales_pipeline_q2",
@@ -6005,7 +6118,8 @@
                 "label": "It is required by CSV"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Normalising first means one region isn't counted twice under different spellings."
           },
           {
             "id": "proj_sales_pipeline_q3",
@@ -6029,7 +6143,8 @@
                 "label": "To count the lines"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Rejected rows are listed so problems are visible and can be fixed."
           },
           {
             "id": "proj_sales_pipeline_q4",
@@ -6053,7 +6168,8 @@
                 "label": "Takes the value from the `date` key of the row dict"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`:date` is a named placeholder filled from the dict's `date` key."
           },
           {
             "id": "proj_sales_pipeline_q5",
@@ -6062,7 +6178,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "GROUP BY"
-            }
+            },
+            "explanation": "`GROUP BY` puts rows with the same value together for `SUM` or `COUNT`."
           },
           {
             "id": "proj_sales_pipeline_q6",
@@ -6086,7 +6203,8 @@
                 "label": "`2025-03-14`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`substr` counts from 1, so the first 7 characters are the year and month."
           }
         ]
       }

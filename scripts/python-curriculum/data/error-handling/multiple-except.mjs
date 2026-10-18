@@ -88,7 +88,7 @@ export default makeTopic({
       hint: "Put the whole lookup in `try` and catch the three in one tuple.",
       solution: "def email_of(data, i):\n    try:\n        return data[\"users\"][i][\"email\"]\n    except (KeyError, IndexError, TypeError):\n        return None",
       tests: [
-        ["Found", "email_of({\"users\": [{\"email\": \"a@x.io\"}]}, 0) == \"a@x.io\""],
+        ["Found", "email_of({\"users\": [{\"email\": \"a@example.net\"}]}, 0) == \"a@example.net\""],
         ["No users key", "email_of({}, 0) is None"],
         ["Index out of range", "email_of({\"users\": []}, 0) is None"],
         ["A user that is None", "email_of({\"users\": [None]}, 0) is None"],

@@ -8,7 +8,7 @@ export default makeProject("medium", {
     "Build a word counter: give it some text and it reports how many words there are, how many different ones, and which words are used most. It's the kind of program behind word clouds and search engines, and it uses lists, sets, dicts, sorting and comprehensions.",
     "Words need cleaning before they can be counted: `Data`, `data,` and `data.` should all count as the same word. Make every word lowercase and `strip` the punctuation off its ends with `w.strip(\".,!?:\")`.",
     "For the text in this project, the finished report is:",
-    "```\nWords: 23\nDifferent: 15\ndata: 5\ncode: 4\nbeats: 2\n```",
+    "```\nWords: 23\nDifferent: 15\ndata: 5\ncode: 4\nkeeps: 2\n```",
     "The plan: clean the words into a list, count them all with `len`, count the different ones with a set, count each word in a dict, and sort the dict's keys by their counts to find the top three.",
     "Build it in steps; the last challenge puts everything together.",
   ],
@@ -30,20 +30,20 @@ export default makeProject("medium", {
     }),
     task("easy", "All the words", {
       prompt: "Set `words` to a list of every word in `text`, lowercase and without punctuation, using a list comprehension.",
-      starter: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\n",
+      starter: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\n",
       hint: "Split the lowercase text, and strip each piece: `[w.strip(\".,!?:\") for w in text.lower().split()]`.",
-      solution: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
+      solution: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
       tests: [
-        ["words starts right", "words[:5] == [\"clean\", \"data\", \"beats\", \"clever\", \"code\"]"],
+        ["words starts right", "words[:5] == [\"tidy\", \"data\", \"keeps\", \"code\", \"simple\"]"],
         ["There are 23 words", "len(words) == 23"],
         ["No punctuation is left", "all(w.isalpha() for w in words)"],
       ],
     }),
     task("medium", "How many?", {
       prompt: "Set `total` to the number of words and `different` to the number of different words.",
-      starter: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
+      starter: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
       hint: "`len(words)` counts them all; a set keeps one of each: `len(set(words))`.",
-      solution: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ntotal = len(words)\ndifferent = len(set(words))",
+      solution: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ntotal = len(words)\ndifferent = len(set(words))",
       tests: [
         ["total is 23", "total == 23"],
         ["different is 15", "different == 15"],
@@ -51,9 +51,9 @@ export default makeProject("medium", {
     }),
     task("medium", "Count every word", {
       prompt: "Build `counts`: a dict mapping each word to how often it appears.",
-      starter: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
+      starter: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
       hint: "Start with `counts = {}`. For each word: `counts[w] = counts.get(w, 0) + 1`.",
-      solution: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
+      solution: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
       tests: [
         ["data appears 5 times", "counts[\"data\"] == 5"],
         ["code appears 4 times", "counts[\"code\"] == 4"],
@@ -62,20 +62,20 @@ export default makeProject("medium", {
     }),
     task("hard", "The top three", {
       prompt: "Set `top3` to the three most used words, most used first.",
-      starter: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
+      starter: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
       hint: "Sort the keys by their counts, highest first, and slice: `sorted(counts, key=counts.get, reverse=True)[:3]`.",
-      solution: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\ntop3 = sorted(counts, key=counts.get, reverse=True)[:3]",
+      solution: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\ntop3 = sorted(counts, key=counts.get, reverse=True)[:3]",
       tests: [
-        ["top3 is right", "top3 == [\"data\", \"code\", \"beats\"]"],
+        ["top3 is right", "top3 == [\"data\", \"code\", \"keeps\"]"],
       ],
     }),
     task("expert", "The report", {
       prompt: "Put it all together and print the report from the lesson: `Words: 23`, `Different: 15`, then the top three words with their counts, like `data: 5`.",
-      starter: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\n",
+      starter: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\n",
       hint: "Clean the words, count them, find the top three, then print two summary lines and loop over the top three.",
-      solution: "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(f\"Words: {len(words)}\")\nprint(f\"Different: {len(counts)}\")\nfor w in sorted(counts, key=counts.get, reverse=True)[:3]:\n    print(f\"{w}: {counts[w]}\")",
+      solution: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(f\"Words: {len(words)}\")\nprint(f\"Different: {len(counts)}\")\nfor w in sorted(counts, key=counts.get, reverse=True)[:3]:\n    print(f\"{w}: {counts[w]}\")",
       tests: [
-        ["Prints the report", "_cq_stdout.strip().splitlines() == [\"Words: 23\", \"Different: 15\", \"data: 5\", \"code: 4\", \"beats: 2\"]"],
+        ["Prints the report", "_cq_stdout.strip().splitlines() == [\"Words: 23\", \"Different: 15\", \"data: 5\", \"code: 4\", \"keeps: 2\"]"],
       ],
     }),
   ],

@@ -92,8 +92,8 @@ export default makeTopic({
       solution: "class User:\n    def __init__(self, email):\n        self.email = email\n\n    @property\n    def email(self):\n        return self._email\n\n    @email.setter\n    def email(self, value):\n        cleaned = value.strip().lower()\n        if \"@\" not in cleaned:\n            raise ValueError(f\"Bad email: {value}\")\n        self._email = cleaned",
       setup: "import io as _io, contextlib as _cl\ndef _out(fn, *a, **k):\n    buf = _io.StringIO()\n    with _cl.redirect_stdout(buf):\n        fn(*a, **k)\n    return buf.getvalue()\ndef _raises(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return type(e).__name__\n    return None\ndef _error(fn, *a, **k):\n    try:\n        fn(*a, **k)\n    except Exception as e:\n        return f\"{type(e).__name__}: {e}\"\n    return None\ndef _logs(fn, *a, **k):\n    import logging as _lg\n    records = []\n    class _H(_lg.Handler):\n        def emit(self, r):\n            records.append(f\"{r.levelname}: {r.getMessage()}\")\n    h = _H()\n    root = _lg.getLogger()\n    old = root.level\n    root.addHandler(h)\n    root.setLevel(_lg.DEBUG)\n    try:\n        fn(*a, **k)\n    finally:\n        root.removeHandler(h)\n        root.setLevel(old)\n    return records\ndef _raise(exc):\n    raise exc\ndef _catches(test_fn, name, fake):\n    g = test_fn.__globals__\n    real = g[name]\n    g[name] = fake\n    try:\n        test_fn()\n    except AssertionError:\n        return True\n    finally:\n        g[name] = real\n    return False\n",
       tests: [
-        ["Tidied", "User(\"  Ana@Mail.COM \").email == \"ana@mail.com\""],
-        ["Changed later", "(lambda u: (setattr(u, \"email\", \"BEN@x.org\"), u.email)[1])(User(\"a@b.c\")) == \"ben@x.org\""],
+        ["Tidied", "User(\"  Ana@Example.COM \").email == \"ana@example.com\""],
+        ["Changed later", "(lambda u: (setattr(u, \"email\", \"BEN@example.org\"), u.email)[1])(User(\"a@b.c\")) == \"ben@example.org\""],
         ["Refused", "_error(User, \"nope\") == \"ValueError: Bad email: nope\""],
       ],
     }),

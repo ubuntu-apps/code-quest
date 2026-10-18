@@ -156,6 +156,13 @@ export function TestStep({
                         )}
                       </>
                     )}
+                    {/* Like the right answers, explanations stay hidden on wrong answers until
+                        the quiz is passed, so they can't be used to fix a failed attempt. */}
+                    {showFeedback && q.explanation && (questionPassed || revealAnswers) ? (
+                      <div className="cq-test-explanation">
+                        <InlineMarkdown text={q.explanation} />
+                      </div>
+                    ) : null}
                   </div>
                   <ListEditorActions
                     canMoveUp={qi > 0}

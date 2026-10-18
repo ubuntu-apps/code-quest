@@ -31,8 +31,8 @@ export default makeTopic({
       hint: "`[name for name in required if name not in record]`.",
       solution: "def missing_fields(record, required):\n    return [name for name in required if name not in record]",
       tests: [
-        ["Nothing missing", "missing_fields({\"name\": \"Ana\", \"email\": \"a@x.io\"}, [\"name\", \"email\"]) == []"],
-        ["Some missing, in order", "missing_fields({\"email\": \"a@x.io\"}, [\"name\", \"email\", \"age\"]) == [\"name\", \"age\"]"],
+        ["Nothing missing", "missing_fields({\"name\": \"Ana\", \"email\": \"a@example.net\"}, [\"name\", \"email\"]) == []"],
+        ["Some missing, in order", "missing_fields({\"email\": \"a@example.net\"}, [\"name\", \"email\", \"age\"]) == [\"name\", \"age\"]"],
       ],
     }),
     task("easy", "Check type and range", {
@@ -65,7 +65,7 @@ export default makeTopic({
       hint: "`re.fullmatch(r\"[^@\\s]+@[^@\\s]+\\.[^@\\s]+\", text) is not None`.",
       solution: "import re\n\ndef looks_like_email(text):\n    return re.fullmatch(r\"[^@\\s]+@[^@\\s]+\\.[^@\\s]+\", text) is not None",
       tests: [
-        ["Accepts normal addresses", "looks_like_email(\"ana@example.com\") and looks_like_email(\"a.b+tag@mail.co.uk\")"],
+        ["Accepts normal addresses", "looks_like_email(\"ana@example.com\") and looks_like_email(\"a.b+tag@example.co.uk\")"],
         ["Rejects missing parts", "not looks_like_email(\"ana@\") and not looks_like_email(\"@example.com\") and not looks_like_email(\"ana@example\")"],
         ["Rejects spaces and two @", "not looks_like_email(\"an a@example.com\") and not looks_like_email(\"a@b@c.com\")"],
       ],

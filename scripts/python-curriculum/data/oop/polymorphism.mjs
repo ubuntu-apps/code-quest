@@ -103,7 +103,7 @@ export default makeTopic({
       hint: "The two `send` methods differ; `notify_all` doesn't care which it calls.",
       solution: "class EmailNotifier:\n    def __init__(self, address):\n        self.address = address\n\n    def send(self, message):\n        return f\"Email to {self.address}: {message}\"\n\nclass SmsNotifier:\n    def __init__(self, number):\n        self.number = number\n\n    def send(self, message):\n        return f\"SMS to {self.number}: {message[:20]}\"\n\ndef notify_all(notifiers, message):\n    return [n.send(message) for n in notifiers]",
       tests: [
-        ["Both", "notify_all([EmailNotifier(\"ana@mail.com\"), SmsNotifier(\"555-0101\")], \"Your order has shipped today\") == [\"Email to ana@mail.com: Your order has shipped today\", \"SMS to 555-0101: Your order has shipp\"]"],
+        ["Both", "notify_all([EmailNotifier(\"ana@example.com\"), SmsNotifier(\"555-0101\")], \"Your order has shipped today\") == [\"Email to ana@example.com: Your order has shipped today\", \"SMS to 555-0101: Your order has shipp\"]"],
         ["Nobody", "notify_all([], \"hi\") == []"],
       ],
     }),

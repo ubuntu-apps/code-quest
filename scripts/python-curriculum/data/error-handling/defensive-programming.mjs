@@ -70,7 +70,7 @@ export default makeTopic({
       hint: "Use `form.get(key, \"\")` so a missing key counts as blank. Append a message for each failed rule, in that order.",
       solution: "def problems(form):\n    found = []\n    if not form.get(\"name\", \"\").strip():\n        found.append(\"name is required\")\n    if not form.get(\"age\", \"\").isdigit():\n        found.append(\"age must be a number\")\n    if \"@\" not in form.get(\"email\", \"\"):\n        found.append(\"email needs an @\")\n    return found",
       tests: [
-        ["A valid form", "problems({\"name\": \"Ana\", \"age\": \"30\", \"email\": \"a@x.io\"}) == []"],
+        ["A valid form", "problems({\"name\": \"Ana\", \"age\": \"30\", \"email\": \"a@example.net\"}) == []"],
         ["Everything wrong", "problems({\"name\": \"  \", \"age\": \"old\"}) == [\"name is required\", \"age must be a number\", \"email needs an @\"]"],
         ["One problem", "problems({\"name\": \"Ben\", \"age\": \"40\", \"email\": \"ben\"}) == [\"email needs an @\"]"],
       ],

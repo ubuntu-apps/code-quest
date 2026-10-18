@@ -320,7 +320,8 @@
                 "label": "Restarts the program"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "An uncaught exception stops the program, and the traceback shows where it happened."
           },
           {
             "id": "try_except_q2",
@@ -344,7 +345,8 @@
                 "label": "None of them"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "The last line gives the exception's type and message; the lines above it show how the program got there."
           },
           {
             "id": "try_except_q3",
@@ -368,7 +370,8 @@
                 "label": "Before the `try` block"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`except` runs only if the code in `try` raises a matching exception."
           },
           {
             "id": "try_except_q4",
@@ -392,7 +395,8 @@
                 "label": "It also hides real bugs, like typos"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "A bare `except:` catches everything, including mistakes you would want to see."
           },
           {
             "id": "try_except_q5",
@@ -401,7 +405,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "ValueError"
-            }
+            },
+            "explanation": "`ValueError` means the type was right (a string) but its value can't be converted."
           },
           {
             "id": "try_except_q6",
@@ -425,7 +430,8 @@
                 "label": "The value that was typed"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`as e` stores the exception object, and `str(e)` is its message."
           },
           {
             "id": "try_except_q7",
@@ -449,7 +455,8 @@
                 "label": "`NameError`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Square brackets on a dictionary raise `KeyError` for a key that isn't there."
           },
           {
             "id": "try_except_q8",
@@ -473,7 +480,8 @@
                 "label": "`TypeError`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Index 5 is past the end of a two-item list, so Python raises `IndexError`."
           },
           {
             "id": "try_except_q9",
@@ -497,7 +505,8 @@
                 "label": "It is skipped"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Python jumps to the matching `except` at once, so the rest of the `try` block doesn't run."
           },
           {
             "id": "try_except_q10",
@@ -521,7 +530,8 @@
                 "label": "A bare `except:`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "The loop repeats, `try` catches bad input, and `break` leaves once a value converts."
           }
         ]
       }
@@ -751,7 +761,7 @@
               {
                 "id": "t1",
                 "label": "Found",
-                "assertion": "email_of({\"users\": [{\"email\": \"a@x.io\"}]}, 0) == \"a@x.io\""
+                "assertion": "email_of({\"users\": [{\"email\": \"a@example.net\"}]}, 0) == \"a@example.net\""
               },
               {
                 "id": "t2",
@@ -889,7 +899,8 @@
                 "label": "One per line of code"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Add one `except` per kind of problem you want to handle differently."
           },
           {
             "id": "multiple_except_q2",
@@ -913,7 +924,8 @@
                 "label": "The most specific, wherever it is"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Python checks the clauses in order and runs only the first match."
           },
           {
             "id": "multiple_except_q3",
@@ -937,7 +949,8 @@
                 "label": "`except KeyError and IndexError:`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "A tuple of exception types catches any of them in one clause."
           },
           {
             "id": "multiple_except_q4",
@@ -961,7 +974,8 @@
                 "label": "`\"ValueError\"`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`type(e)` is the exception's class, and `__name__` is that class's name as a string."
           },
           {
             "id": "multiple_except_q5",
@@ -970,7 +984,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "ZeroDivisionError"
-            }
+            },
+            "explanation": "Dividing by zero raises `ZeroDivisionError`."
           },
           {
             "id": "multiple_except_q6",
@@ -994,7 +1009,8 @@
                 "label": "It only works at the end"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Clauses are tried in order, so a broad one placed first takes every exception."
           },
           {
             "id": "multiple_except_q7",
@@ -1018,7 +1034,8 @@
                 "label": "`KeyError`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`split` gives one part, and unpacking one value into two names raises a `ValueError`."
           },
           {
             "id": "multiple_except_q8",
@@ -1042,7 +1059,8 @@
                 "label": "Only for `KeyError`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "A catch-all is acceptable when the loop must keep going and the error is still reported."
           },
           {
             "id": "multiple_except_q9",
@@ -1066,7 +1084,8 @@
                 "label": "`TypeError`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`None` is the wrong type entirely, not a bad value, so `float` raises a `TypeError`."
           },
           {
             "id": "multiple_except_q10",
@@ -1090,7 +1109,8 @@
                 "label": "Check the line count"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Different causes share the same exception type; the message says which one it was."
           }
         ]
       }
@@ -1403,7 +1423,8 @@
                 "label": "Before `try`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`else` runs only if the `try` block finished without raising."
           },
           {
             "id": "else_finally_q2",
@@ -1427,7 +1448,8 @@
                 "label": "Never, if there is a `return`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`finally` runs whether the `try` succeeded, failed or returned."
           },
           {
             "id": "else_finally_q3",
@@ -1451,7 +1473,8 @@
                 "label": "So it runs twice"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Code in `else` isn't protected by the `except` clauses, so its own bugs still show up."
           },
           {
             "id": "else_finally_q4",
@@ -1475,7 +1498,8 @@
                 "label": "Yes, just before the function returns"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`finally` runs even when `try` returns, just before the function hands the value back."
           },
           {
             "id": "else_finally_q5",
@@ -1484,7 +1508,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "finally"
-            }
+            },
+            "explanation": "`finally` is the place for cleanup that must always happen."
           },
           {
             "id": "else_finally_q6",
@@ -1508,7 +1533,8 @@
                 "label": "`except`, `try`, `else`, `finally`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`try` comes first, then any `except` clauses, then `else`, and `finally` last."
           },
           {
             "id": "else_finally_q7",
@@ -1532,7 +1558,8 @@
                 "label": "Only with `else`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`try`/`finally` cleans up and then lets the exception carry on to the caller."
           },
           {
             "id": "else_finally_q8",
@@ -1556,7 +1583,8 @@
                 "label": "It makes the function slower"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "A `return` in `finally` overrides the earlier return and swallows any exception in flight."
           },
           {
             "id": "else_finally_q9",
@@ -1580,7 +1608,8 @@
                 "label": "`finally` runs, then the `KeyError` carries on to the caller"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "No clause matches `KeyError`, so `finally` runs and then the exception carries on to the caller."
           },
           {
             "id": "else_finally_q10",
@@ -1604,7 +1633,8 @@
                 "label": "None"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`else` only makes sense when there is an `except` it is the alternative to."
           }
         ]
       }
@@ -1957,7 +1987,8 @@
                 "label": "Only `KeyError`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "An `except` clause also catches every subclass of the exception it names."
           },
           {
             "id": "exception_hierarchy_q2",
@@ -1981,7 +2012,8 @@
                 "label": "`TypeError`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`ZeroDivisionError` is a subclass of `ArithmeticError`."
           },
           {
             "id": "exception_hierarchy_q3",
@@ -2005,7 +2037,8 @@
                 "label": "`None`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`KeyError` comes from `LookupError`, which comes from `Exception`."
           },
           {
             "id": "exception_hierarchy_q4",
@@ -2029,7 +2062,8 @@
                 "label": "It also traps `KeyboardInterrupt` and `SystemExit`, which stop the program"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`BaseException` includes Ctrl+C (`KeyboardInterrupt`) and `sys.exit()`, which should be allowed to stop the program."
           },
           {
             "id": "exception_hierarchy_q5",
@@ -2038,7 +2072,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "LookupError"
-            }
+            },
+            "explanation": "`KeyError` and `IndexError` are both kinds of `LookupError`."
           },
           {
             "id": "exception_hierarchy_q6",
@@ -2062,7 +2097,8 @@
                 "label": "Only one is allowed"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Put the specific clause first; the general one would otherwise catch everything first."
           },
           {
             "id": "exception_hierarchy_q7",
@@ -2086,7 +2122,8 @@
                 "label": "`e.family`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`isinstance` is also true for subclasses, so it checks the whole family."
           },
           {
             "id": "exception_hierarchy_q8",
@@ -2110,7 +2147,8 @@
                 "label": "Raises a `SyntaxError`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Catching too broadly hides the `NameError`, so the bug is never reported."
           },
           {
             "id": "exception_hierarchy_q9",
@@ -2134,7 +2172,8 @@
                 "label": "The class and its ancestors, in order"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "The MRO (method resolution order) lists the class and each of its parents, in order."
           },
           {
             "id": "exception_hierarchy_q10",
@@ -2158,7 +2197,8 @@
                 "label": "`NameError`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "File problems like `FileNotFoundError` are kinds of `OSError`."
           }
         ]
       }
@@ -2526,7 +2566,8 @@
                 "label": "Nothing until the program ends"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`raise` stops the function at once and sends the exception to the caller."
           },
           {
             "id": "raising_exceptions_q2",
@@ -2550,7 +2591,8 @@
                 "label": "`NameError`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "The type (an int) is right, but the value is out of range, which is a `ValueError`."
           },
           {
             "id": "raising_exceptions_q3",
@@ -2574,7 +2616,8 @@
                 "label": "`ZeroDivisionError`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "A value of the wrong type is a `TypeError`."
           },
           {
             "id": "raising_exceptions_q4",
@@ -2598,7 +2641,8 @@
                 "label": "An exception can't be ignored by accident, and it points at the cause"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "A returned `None` is easy to miss, but an exception stops the program and points at the problem."
           },
           {
             "id": "raising_exceptions_q5",
@@ -2607,7 +2651,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "raise"
-            }
+            },
+            "explanation": "`raise` followed by an exception object raises it."
           },
           {
             "id": "raising_exceptions_q6",
@@ -2631,7 +2676,8 @@
                 "label": "Is a `SyntaxError`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A bare `raise` inside `except` raises the same exception again, with its traceback."
           },
           {
             "id": "raising_exceptions_q7",
@@ -2655,7 +2701,8 @@
                 "label": "The line number only"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`from e` chains the exceptions, so the traceback shows the original cause too."
           },
           {
             "id": "raising_exceptions_q8",
@@ -2679,7 +2726,8 @@
                 "label": "In a separate file"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Checking inputs first means bad values fail before any work is half done."
           },
           {
             "id": "raising_exceptions_q9",
@@ -2703,7 +2751,8 @@
                 "label": "What was wrong, and ideally what was expected"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "A useful message names the bad value and says what was expected."
           },
           {
             "id": "raising_exceptions_q10",
@@ -2727,7 +2776,8 @@
                 "label": "The next line runs"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "An uncaught exception travels up through every caller and then stops the program."
           }
         ]
       }
@@ -3075,7 +3125,8 @@
                 "label": "`raise MyError`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "An exception type is a class that inherits from `Exception` or one of its subclasses."
           },
           {
             "id": "custom_exceptions_q2",
@@ -3099,7 +3150,8 @@
                 "label": "Nothing"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "The class in brackets is the parent, so `InvalidAge` is a kind of `ValueError`."
           },
           {
             "id": "custom_exceptions_q3",
@@ -3123,7 +3175,8 @@
                 "label": "To make them faster"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`except BankError:` then catches every exception in the family."
           },
           {
             "id": "custom_exceptions_q4",
@@ -3147,7 +3200,8 @@
                 "label": "Yes"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "An `except` clause catches subclasses too, and `AccountLocked` is a subclass of `BankError`."
           },
           {
             "id": "custom_exceptions_q5",
@@ -3156,7 +3210,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "bad"
-            }
+            },
+            "explanation": "An exception's `str()` is the message it was created with."
           },
           {
             "id": "custom_exceptions_q6",
@@ -3180,7 +3235,8 @@
                 "label": "To skip the message"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Existing `except ValueError:` code still catches the new, more specific error."
           },
           {
             "id": "custom_exceptions_q7",
@@ -3204,7 +3260,8 @@
                 "label": "`insufficientfunds()`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Exception classes use CapWords, and the standard ones often end in `Error`."
           },
           {
             "id": "custom_exceptions_q8",
@@ -3228,7 +3285,8 @@
                 "label": "Ends the program"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`pass` fills the required class body; all the behaviour comes from the parent."
           },
           {
             "id": "custom_exceptions_q9",
@@ -3252,7 +3310,8 @@
                 "label": "Exactly which problem is being handled"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "A specific exception name documents the exact situation being handled."
           },
           {
             "id": "custom_exceptions_q10",
@@ -3276,7 +3335,8 @@
                 "label": "In Files"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "The Classes and objects section explains what `class` and inheritance mean."
           }
         ]
       }
@@ -3609,7 +3669,8 @@
                 "label": "Returns `True`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "An `assert` does nothing when its condition is true."
           },
           {
             "id": "assertions_q2",
@@ -3633,7 +3694,8 @@
                 "label": "Missing files"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Assertions state what you believe must be true; if one fails, the code has a bug."
           },
           {
             "id": "assertions_q3",
@@ -3657,7 +3719,8 @@
                 "label": "It is a syntax error"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Running Python with `-O` removes `assert` statements, so they can't be relied on for checking input."
           },
           {
             "id": "assertions_q4",
@@ -3681,7 +3744,8 @@
                 "label": "Like assertions: each check is a condition run against your code"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Each check is a condition evaluated after your code runs, just like an `assert`."
           },
           {
             "id": "assertions_q5",
@@ -3690,7 +3754,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "AssertionError"
-            }
+            },
+            "explanation": "A false `assert` raises `AssertionError` with the message."
           },
           {
             "id": "assertions_q6",
@@ -3714,7 +3779,8 @@
                 "label": "When it is called twice"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A test passes when none of its assertions fail."
           },
           {
             "id": "assertions_q7",
@@ -3738,7 +3804,8 @@
                 "label": "Random values"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Bugs hide at the edges, so test typical values and boundary cases."
           },
           {
             "id": "assertions_q8",
@@ -3762,7 +3829,8 @@
                 "label": "It makes the test faster"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "A message with the actual values shows what went wrong without rerunning the code."
           },
           {
             "id": "assertions_q9",
@@ -3786,7 +3854,8 @@
                 "label": "Fails"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "A test exists to catch a broken case."
           },
           {
             "id": "assertions_q10",
@@ -3810,7 +3879,8 @@
                 "label": "logging"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "pytest finds functions named `test_...` and reports each one's result."
           }
         ]
       }
@@ -3982,7 +4052,7 @@
               {
                 "id": "t1",
                 "label": "A valid form",
-                "assertion": "problems({\"name\": \"Ana\", \"age\": \"30\", \"email\": \"a@x.io\"}) == []"
+                "assertion": "problems({\"name\": \"Ana\", \"age\": \"30\", \"email\": \"a@example.net\"}) == []"
               },
               {
                 "id": "t2",
@@ -4168,7 +4238,8 @@
                 "label": "A test function"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A guard clause checks for a problem first and returns or raises straight away."
           },
           {
             "id": "defensive_programming_q2",
@@ -4192,7 +4263,8 @@
                 "label": "To make it longer"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Normalising removes harmless differences like case and extra spaces."
           },
           {
             "id": "defensive_programming_q3",
@@ -4216,7 +4288,8 @@
                 "label": "Exit after first problem"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "EAFP: try the operation and handle the exception if it fails."
           },
           {
             "id": "defensive_programming_q4",
@@ -4240,7 +4313,8 @@
                 "label": "`if k in prices:`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "LBYL (look before you leap) checks first, as `if k in prices:` does."
           },
           {
             "id": "defensive_programming_q5",
@@ -4249,7 +4323,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "10"
-            }
+            },
+            "explanation": "15 is above the upper limit, so it is clamped to 10."
           },
           {
             "id": "defensive_programming_q6",
@@ -4273,7 +4348,8 @@
                 "label": "Functions can't return 0"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "A made-up value hides the problem, and wrong totals spread through the program."
           },
           {
             "id": "defensive_programming_q7",
@@ -4297,7 +4373,8 @@
                 "label": "It uses less memory"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Reporting every problem at once saves the user a round of fixing and resubmitting."
           },
           {
             "id": "defensive_programming_q8",
@@ -4321,7 +4398,8 @@
                 "label": "It doesn't matter"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Change nothing until every check passes, so a failed transfer leaves both balances as they were."
           },
           {
             "id": "defensive_programming_q9",
@@ -4345,7 +4423,8 @@
                 "label": "`try: int(text)` with `except ValueError`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`int()` itself knows what a valid number is, so try it and catch the `ValueError`."
           },
           {
             "id": "defensive_programming_q10",
@@ -4369,7 +4448,8 @@
                 "label": "Restart the program"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "An error that is raised straight away is far easier to trace than bad data found later."
           }
         ]
       }
@@ -4672,7 +4752,8 @@
                 "label": "It doesn't matter"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "The bottom of the traceback names the error and the line that raised it."
           },
           {
             "id": "debugging_q2",
@@ -4696,7 +4777,8 @@
                 "label": "`{total=}`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`=` in an f-string shows the expression's text and its value."
           },
           {
             "id": "debugging_q3",
@@ -4720,7 +4802,8 @@
                 "label": "Python runs faster"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "The smaller the input that still fails, the fewer places the bug can hide."
           },
           {
             "id": "debugging_q4",
@@ -4744,7 +4827,8 @@
                 "label": "Its type, with `print(type(x), repr(x))`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`repr` shows `'7'` with quotes for a string, which `print(x)` alone hides."
           },
           {
             "id": "debugging_q5",
@@ -4753,7 +4837,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "4"
-            }
+            },
+            "explanation": "`range(1, 5)` gives 1, 2, 3, 4: the stop value is left out."
           },
           {
             "id": "debugging_q6",
@@ -4777,7 +4862,8 @@
                 "label": "`upper` needs an argument"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "String methods return a new string, and that line doesn't store it."
           },
           {
             "id": "debugging_q7",
@@ -4801,7 +4887,8 @@
                 "label": "It raises an error"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "The reset runs each round, so only the last item is counted."
           },
           {
             "id": "debugging_q8",
@@ -4825,7 +4912,8 @@
                 "label": "A Python module"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Explaining each line forces you to check what the code really does."
           },
           {
             "id": "debugging_q9",
@@ -4849,7 +4937,8 @@
                 "label": "Remove the debug prints and add a test for that case"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Clean up the temporary prints, and a test makes sure the bug can't quietly come back."
           },
           {
             "id": "debugging_q10",
@@ -4873,7 +4962,8 @@
                 "label": "Subtracts"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`=+` is `=` followed by a unary plus, so `total` is replaced, not added to."
           }
         ]
       }
@@ -5176,7 +5266,8 @@
                 "label": "Only `ERROR`"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "The default level is `WARNING`, so `DEBUG` and `INFO` messages are hidden."
           },
           {
             "id": "logging_basics_q2",
@@ -5200,7 +5291,8 @@
                 "label": "`CRITICAL`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`DEBUG` is the lowest level, for detailed information while you investigate."
           },
           {
             "id": "logging_basics_q3",
@@ -5224,7 +5316,8 @@
                 "label": "Never"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`basicConfig` sets up logging once; later calls do nothing once logging is configured."
           },
           {
             "id": "logging_basics_q4",
@@ -5248,7 +5341,8 @@
                 "label": "The level, such as `ERROR`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`%(levelname)s` is replaced with the message's level name."
           },
           {
             "id": "logging_basics_q5",
@@ -5257,7 +5351,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "WARNING"
-            }
+            },
+            "explanation": "The levels from low to high are DEBUG, INFO, WARNING, ERROR, CRITICAL."
           },
           {
             "id": "logging_basics_q6",
@@ -5281,7 +5376,8 @@
                 "label": "Prints only the message"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`logger.exception` logs an ERROR and adds the current traceback."
           },
           {
             "id": "logging_basics_q7",
@@ -5305,7 +5401,8 @@
                 "label": "It sets the level to DEBUG"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "Named loggers show where each message came from and can be set up separately."
           },
           {
             "id": "logging_basics_q8",
@@ -5329,7 +5426,8 @@
                 "label": "They raise errors"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Debug messages can stay in the code and be shown only when needed."
           },
           {
             "id": "logging_basics_q9",
@@ -5353,7 +5451,8 @@
                 "label": "No: DEBUG is below INFO"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Messages below the configured level are dropped, and DEBUG is below INFO."
           },
           {
             "id": "logging_basics_q10",
@@ -5377,7 +5476,8 @@
                 "label": "It raises on errors"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "With `%s` arguments, the message is only formatted if it will actually be shown."
           }
         ]
       }
@@ -5600,7 +5700,8 @@
                 "label": "Raising is shorter"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "The parts raise; one top-level function decides how errors are shown."
           },
           {
             "id": "proj_safe_calculator_q2",
@@ -5624,7 +5725,8 @@
                 "label": "`7g`"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "`g` (general format) drops a trailing `.0`."
           },
           {
             "id": "proj_safe_calculator_q3",
@@ -5648,7 +5750,8 @@
                 "label": "`KeyError`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`\"hello\".split()` gives one part, and unpacking needs three."
           },
           {
             "id": "proj_safe_calculator_q4",
@@ -5672,7 +5775,8 @@
                 "label": "To give a clearer message and keep the original as the cause"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`from e` adds a clear message while keeping the original error as the cause."
           },
           {
             "id": "proj_safe_calculator_q5",
@@ -5681,7 +5785,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "= 42"
-            }
+            },
+            "explanation": "6 * 7 is 42, and the function puts `= ` before the result."
           },
           {
             "id": "proj_safe_calculator_q6",
@@ -5705,7 +5810,8 @@
                 "label": "None of them"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Only the outer function catches errors and turns them into messages; the others just raise."
           }
         ]
       }
@@ -5873,7 +5979,7 @@
               {
                 "id": "t1",
                 "label": "A good form",
-                "assertion": "validate({\"name\": \"ana\", \"email\": \"Ana@x.io\", \"age\": \"30\", \"password\": \"sunshine7\"}) == ({\"name\": \"Ana\", \"email\": \"ana@x.io\", \"age\": 30, \"password\": \"sunshine7\"}, [])"
+                "assertion": "validate({\"name\": \"ana\", \"email\": \"Ana@example.net\", \"age\": \"30\", \"password\": \"sunshine7\"}) == ({\"name\": \"Ana\", \"email\": \"ana@example.net\", \"age\": 30, \"password\": \"sunshine7\"}, [])"
               },
               {
                 "id": "t2",
@@ -5933,7 +6039,8 @@
                 "label": "So it can't be caught"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "As a subclass, it is still caught as a `ValueError`, and its own name says exactly what failed."
           },
           {
             "id": "proj_signup_form_q2",
@@ -5957,7 +6064,8 @@
                 "label": "To raise more errors"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Reporting every problem at once means the user can fix them all in one go."
           },
           {
             "id": "proj_signup_form_q3",
@@ -5981,7 +6089,8 @@
                 "label": "`0`"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "`get` returns the default you give, here an empty string, when the key is missing."
           },
           {
             "id": "proj_signup_form_q4",
@@ -6005,7 +6114,8 @@
                 "label": "Its message is added to the list and the next check runs"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "Each check has its own `try`, so a failure is recorded and the loop moves on."
           },
           {
             "id": "proj_signup_form_q5",
@@ -6014,7 +6124,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "Ana Lima"
-            }
+            },
+            "explanation": "`strip` removes the outer spaces, and `title` capitalises each word."
           },
           {
             "id": "proj_signup_form_q6",
@@ -6038,7 +6149,8 @@
                 "label": "It is required for ints"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "`from e` keeps the original error as the cause of the clearer one."
           }
         ]
       }
@@ -6271,7 +6383,8 @@
                 "label": "To avoid messages"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Its own exception type lets callers handle bad rows separately from other failures."
           },
           {
             "id": "proj_data_importer_q2",
@@ -6295,7 +6408,8 @@
                 "label": "It must"
               }
             ],
-            "correctChoiceId": "c"
+            "correctChoiceId": "c",
+            "explanation": "Chaining with `from e` gives a clear message and keeps the original error."
           },
           {
             "id": "proj_data_importer_q3",
@@ -6319,7 +6433,8 @@
                 "label": "The program crashes"
               }
             ],
-            "correctChoiceId": "a"
+            "correctChoiceId": "a",
+            "explanation": "In normal mode a bad row is reported and skipped, so the good rows still get imported."
           },
           {
             "id": "proj_data_importer_q4",
@@ -6343,7 +6458,8 @@
                 "label": "In `finally`"
               }
             ],
-            "correctChoiceId": "d"
+            "correctChoiceId": "d",
+            "explanation": "`finally` always runs, whether the import succeeded or raised."
           },
           {
             "id": "proj_data_importer_q5",
@@ -6352,7 +6468,8 @@
             "validation": {
               "mode": "equalsNormalized",
               "expected": "2"
-            }
+            },
+            "explanation": "Splitting on the comma gives the part before it and the part after it."
           },
           {
             "id": "proj_data_importer_q6",
@@ -6376,7 +6493,8 @@
                 "label": "Ignores blank lines"
               }
             ],
-            "correctChoiceId": "b"
+            "correctChoiceId": "b",
+            "explanation": "Strict mode raises on the first bad row instead of skipping it."
           }
         ]
       }

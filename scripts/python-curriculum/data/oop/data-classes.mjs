@@ -15,7 +15,7 @@ export default makeTopic({
     "```\nfrom dataclasses import dataclass\n\n@dataclass(frozen=True, order=True)\nclass Version:\n    major: int\n    minor: int\n\nversions = [Version(1, 10), Version(1, 2), Version(0, 9)]\nprint(sorted(versions)[0])           # Version(major=0, minor=9)\nprint(len({Version(1, 0), Version(1, 0)}))   # 1\n```",
     "`dataclasses.asdict(obj)` turns a data class into a dict, ready for `json.dumps`, and `Point(**d)` turns a dict back into an object. Reach for a data class when a class is mainly a record of values; when the behaviour is the point, like an account that guards its balance, a regular class is often clearer.",
   ],
-  sandboxCode: "from dataclasses import dataclass, field, asdict\n\n@dataclass\nclass Contact:\n    name: str\n    email: str\n    tags: list = field(default_factory=list)\n\nc = Contact(\"Ana\", \"ana@mail.com\")\nc.tags.append(\"friend\")\nprint(c)\nprint(asdict(c))\nprint(c == Contact(\"Ana\", \"ana@mail.com\", [\"friend\"]))",
+  sandboxCode: "from dataclasses import dataclass, field, asdict\n\n@dataclass\nclass Contact:\n    name: str\n    email: str\n    tags: list = field(default_factory=list)\n\nc = Contact(\"Ana\", \"ana@example.com\")\nc.tags.append(\"friend\")\nprint(c)\nprint(asdict(c))\nprint(c == Contact(\"Ana\", \"ana@example.com\", [\"friend\"]))",
   sandboxSnippets: [
     snippet("A data class", "from dataclasses import dataclass\n\n@dataclass\nclass Item:\n    name: str\n    price: float = 0.0\n\nprint(Item(\"pen\"), Item(\"pen\", 1.5) == Item(\"pen\", 1.5))"),
     snippet("A list field", "from dataclasses import dataclass, field\n\n@dataclass\nclass Team:\n    name: str\n    members: list = field(default_factory=list)\n\na, b = Team(\"A\"), Team(\"B\")\na.members.append(\"Ana\")\nprint(a, b)"),
@@ -115,8 +115,8 @@ export default makeTopic({
       hint: "`json.dumps([asdict(c) for c in contacts])`, and `[Contact(**d) for d in json.loads(text)]`.",
       solution: "import json\nfrom dataclasses import dataclass, asdict\n\n@dataclass\nclass Contact:\n    name: str\n    email: str\n    phone: str = None\n\ndef to_json(contacts):\n    return json.dumps([asdict(c) for c in contacts])\n\ndef from_json(text):\n    return [Contact(**d) for d in json.loads(text)]",
       tests: [
-        ["to_json", "to_json([Contact(\"Ana\", \"a@x.com\")]) == '[{\"name\": \"Ana\", \"email\": \"a@x.com\", \"phone\": null}]'"],
-        ["A round trip", "(lambda cs: from_json(to_json(cs)) == cs)([Contact(\"Ana\", \"a@x.com\", \"555\"), Contact(\"Ben\", \"b@x.com\")])"],
+        ["to_json", "to_json([Contact(\"Ana\", \"a@example.com\")]) == '[{\"name\": \"Ana\", \"email\": \"a@example.com\", \"phone\": null}]'"],
+        ["A round trip", "(lambda cs: from_json(to_json(cs)) == cs)([Contact(\"Ana\", \"a@example.com\", \"555\"), Contact(\"Ben\", \"b@example.com\")])"],
         ["Empty", "from_json(\"[]\") == []"],
       ],
     }),

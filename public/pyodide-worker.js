@@ -228,7 +228,7 @@ var PY_HELPERS = [
   '            sys.stdout, sys.stderr = old_out, old_err',
   '    except BaseException:',
   '        sys.stdout, sys.stderr, sys.stdin = old_out, old_err, old_in',
-  '        return json.dumps({"tests": [], "error": _cq_error_text()})',
+  '        return json.dumps({"tests": [], "error": _cq_error_text(), "output": buf.getvalue()})',
   '    sys.stdin = old_in',
   '    ns["_cq_stdout"] = buf.getvalue()',
   '    results = []',
@@ -241,7 +241,33 @@ var PY_HELPERS = [
   '        if not ok:',
   '            result["detail"] = detail',
   '        results.append(result)',
-  '    return json.dumps({"tests": results, "error": None})',
+  '    return json.dumps({"tests": results, "error": None, "output": ns["_cq_stdout"]})',
+  '',
+  'def _cq_try(user, setup, on_output=None):',
+  '    # "Run" on a challenge: the same setup as a check (sample files, typed answers for',
+  '    # input(), ...), then the learner\'s code with its output streamed, but no tests.',
+  '    home = os.getcwd()',
+  '    os.chdir(tempfile.mkdtemp(prefix="cq-try-"))',
+  '    buf = _CqOutput(on_output)',
+  '    ns = _cq_fresh_ns("", buf)',
+  '    old_out, old_err, old_in = sys.stdout, sys.stderr, sys.stdin',
+  '    sys.stdin = io.StringIO("")',
+  '    error = None',
+  '    try:',
+  '        ns["_cq_source"] = user',
+  '        if setup.strip():',
+  '            # Anything the setup itself prints is not the learner\'s output.',
+  '            sys.stdout = sys.stderr = io.StringIO()',
+  '            exec(compile(setup, "<challenge_setup>", "exec"), ns, ns)',
+  '        sys.stdout = sys.stderr = buf',
+  '        exec(compile(user, "<challenge_user>", "exec"), ns, ns)',
+  '    except BaseException:',
+  '        error = _cq_error_text()',
+  '    finally:',
+  '        buf.flush()',
+  '        sys.stdout, sys.stderr, sys.stdin = old_out, old_err, old_in',
+  '        os.chdir(home)',
+  '    return json.dumps({"output": buf.getvalue(), "error": error})',
 ].join('\n')
 
 function loadRuntime(cdnBase) {
@@ -333,6 +359,11 @@ self.onmessage = async function (event) {
         self.postMessage({ id: msg.id, type: 'output', text: String(text) })
       }
       raw = callPy(pyodide, '_cq_run', [msg.code, msg.stdin || '', onOutput])
+    } else if (msg.type === 'try') {
+      var onTryOutput = function (text) {
+        self.postMessage({ id: msg.id, type: 'output', text: String(text) })
+      }
+      raw = callPy(pyodide, '_cq_try', [msg.userCode, msg.setupCode || '', onTryOutput])
     } else if (msg.type === 'tests') {
       raw = callPy(pyodide, '_cq_tests', [
         msg.userCode,
