@@ -1,0 +1,164 @@
+/* Badges on the home page, the streak details, and the daily reminder sheet. */
+
+.cq-badges .cq-subtitle {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.cq-badges-count {
+  font-size: var(--cq-text-sm);
+  font-weight: 400;
+  color: var(--cq-muted);
+}
+
+.cq-badges-empty {
+  margin: 0;
+  font-size: var(--cq-text-sm);
+}
+
+.cq-badge-grid {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.5rem;
+}
+
+.cq-badge-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 10px;
+  background: var(--cq-inset);
+}
+
+.cq-badge-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--badge-color);
+  background: color-mix(in srgb, var(--badge-color) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--badge-color) 45%, transparent);
+}
+
+.cq-badge-tile--start,
+.cq-badge-tile--xp {
+  --badge-color: var(--cq-accent);
+}
+
+.cq-badge-tile--section {
+  --badge-color: var(--cq-hl-keyword);
+}
+
+.cq-badge-tile--course {
+  --badge-color: var(--cq-success);
+}
+
+.cq-badge-tile--streak {
+  --badge-color: var(--cq-hl-number);
+}
+
+.cq-badge-tile--locked {
+  --badge-color: var(--cq-muted);
+}
+
+.cq-badge-tile--locked .cq-badge-icon {
+  background: transparent;
+  border-style: dashed;
+}
+
+.cq-badge-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cq-badge-title {
+  font-weight: 600;
+  font-size: var(--cq-text-sm);
+  overflow-wrap: anywhere;
+}
+
+.cq-badge-detail {
+  font-size: var(--cq-text-xs);
+  color: var(--cq-muted);
+}
+
+.cq-badges-more {
+  margin-top: 0.75rem;
+}
+
+.cq-badges-more summary {
+  cursor: pointer;
+  color: var(--cq-accent-text);
+  font-size: var(--cq-text-sm);
+}
+
+/* Streak details under the count */
+.cq-streak-at-risk {
+  color: var(--cq-text);
+}
+
+.cq-streak-freezes {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+
+.cq-reminder-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  font-size: var(--cq-text-xs);
+}
+
+/* "Badge earned" pop-up: just above the XP one, so both can show at once. */
+.cq-badge-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+  border-color: var(--cq-hl-keyword);
+  font-weight: 600;
+  animation: cq-xp-pop 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cq-badge-toast {
+    animation: none;
+  }
+}
+
+/* Daily reminder sheet */
+.cq-reminder-time {
+  max-width: 10rem;
+}
+
+.cq-reminder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.cq-reminder-actions .cq-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+
+.cq-reminder-note {
+  margin: 0.75rem 0 0;
+  font-size: var(--cq-text-sm);
+}

@@ -4,62 +4,19 @@ import {
   CHALLENGE_XP,
   CHALLENGE_XP_AFTER_ANSWER,
   LOCK_SECTIONS_BY_QUIZZES,
-  STREAK_STORAGE_KEY,
   TEST_XP,
 } from './constants'
 import { loadProgress } from './progressStorage'
 import { hasTestedOut } from './testOut'
 
-export type StreakState = { lastDate: string; count: number }
-
-/** Calendar day in the learner's own time zone (toISOString() would use UTC). */
-export function localDateKey(d: Date): string {
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${d.getFullYear()}-${month}-${day}`
-}
-
-export function loadStreakState(): StreakState {
-  try {
-    const raw = localStorage.getItem(STREAK_STORAGE_KEY)
-    if (!raw) return { lastDate: '', count: 0 }
-    const parsed = JSON.parse(raw) as Partial<StreakState>
-    return {
-      lastDate: typeof parsed.lastDate === 'string' ? parsed.lastDate : '',
-      count: typeof parsed.count === 'number' ? parsed.count : 0,
-    }
-  } catch {
-    return { lastDate: '', count: 0 }
-  }
-}
-
-export function recordDailyActivity(now: Date = new Date()): number {
-  const today = localDateKey(now)
-  // Step back one calendar day (not 24 hours) so DST changes can't skip or repeat a day.
-  const yesterdayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1)
-  const yesterday = localDateKey(yesterdayDate)
-  const curr = loadStreakState()
-  let next: StreakState
-  if (curr.lastDate === today) {
-    next = curr
-  } else if (curr.lastDate === yesterday) {
-    next = { lastDate: today, count: curr.count + 1 }
-  } else {
-    next = { lastDate: today, count: 1 }
-  }
-  localStorage.setItem(STREAK_STORAGE_KEY, JSON.stringify(next))
-  return next.count
-}
-
-/**
- * The streak to show today: the stored count while it is still alive (activity
- * today or yesterday), otherwise 0. The stored count only resets on the next activity.
- */
-export function currentStreak(state: StreakState, now: Date = new Date()): number {
-  const today = localDateKey(now)
-  const yesterday = localDateKey(new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1))
-  return state.lastDate === today || state.lastDate === yesterday ? state.count : 0
-}
+// The streak lives in streak.ts; these re-exports keep older imports working.
+export {
+  currentStreak,
+  loadStreakState,
+  localDateKey,
+  recordDailyActivity,
+  type StreakState,
+} from './streak'
 
 /**
  * IDs of this level's challenges that are marked complete. Saved progress can hold

@@ -3,6 +3,7 @@ import { notifyProgressChanged } from './progressStorage'
 import { TEST_OUT_PREFIX } from './testOut'
 import { notifySupporterChanged, SUPPORTER_STORAGE_KEY } from '../support/supporterStorage'
 import { CERTIFICATE_EARNED_PREFIX, CERTIFICATE_NAME_KEY } from '../certificate/certificateStorage'
+import { BADGES_STORAGE_KEY } from '../badges/badges'
 
 const PROGRESS_PREFIX = 'codequest:progress:'
 /**
@@ -14,9 +15,10 @@ const SINGLE_KEYS = [
   STREAK_STORAGE_KEY,
   LAST_LEVEL_STORAGE_KEY,
   SELECTED_LANGUAGE_STORAGE_KEY,
-  // Supporter status and the certificate move to a new device with the progress.
+  // Supporter status, the certificate and badges move to a new device with the progress.
   SUPPORTER_STORAGE_KEY,
   CERTIFICATE_NAME_KEY,
+  BADGES_STORAGE_KEY,
 ]
 
 /** Learner data only: never editor drafts, GitHub sign-in or install-banner settings. */
