@@ -6,7 +6,7 @@ import { useAdminMode } from '../adminMode'
 import type { Challenge } from '../types'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
 import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
-import { CodeTextareaWithErrorLine } from '../codeEditor'
+import { CodeEditor } from '../codeEditor'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
 import { rErrorSummaryLine } from '../rErrorHelper'
 import { PythonErrorPanel } from './PythonErrorPanel'
@@ -224,16 +224,16 @@ export function ChallengeCard({
           {ch.solution ? <HighlightedCode code={ch.solution} /> : 'No answer available for this challenge yet.'}
         </pre>
       ) : null}
-      <label className="cq-label" htmlFor={`code-${ch.id}`}>
+      <label className="cq-label" id={`code-label-${ch.id}`} htmlFor={`code-${ch.id}`}>
         Your answer
       </label>
-      <CodeTextareaWithErrorLine
+      <CodeEditor
         id={`code-${ch.id}`}
-        className="cq-code-input"
+        labelId={`code-label-${ch.id}`}
+        language={ch.validation.mode === 'r_tests' ? 'plain' : 'python'}
         rows={4}
-        spellCheck={false}
         value={draft}
-        onChange={(e) => onDraftChange(e.target.value)}
+        onChange={onDraftChange}
         errorLine={isRuntimeTests && pyRuntimeErr?.line != null ? pyRuntimeErr.line : null}
         errorSummary={
           isRuntimeTests && pyRuntimeErr?.detail

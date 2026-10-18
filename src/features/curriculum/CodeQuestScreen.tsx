@@ -21,6 +21,7 @@ import { loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { hasTestedOut } from './testOut'
 import { warmUpPython } from './pythonSandbox'
+import { preloadCodeEditor } from './codeEditor'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { Breadcrumbs } from './components/Breadcrumbs'
@@ -497,10 +498,13 @@ export function CodeQuestScreen() {
     return null
   }
 
-  // Once a Python lesson is open, load Python in the background (after the page has
-  // settled), so the first Run or Check starts straight away.
+  // Once a lesson is open, load the code editor, and for Python lessons Python itself in
+  // the background (after the page has settled), so the first Run or Check starts straight away.
   useEffect(() => {
-    if (learnView !== 'level' || languageId !== 'python') return
+    if (learnView !== 'level') return
+    // The code editor is small next to Python; fetch it straight away.
+    preloadCodeEditor()
+    if (languageId !== 'python') return
     const timer = window.setTimeout(warmUpPython, 1500)
     return () => window.clearTimeout(timer)
   }, [learnView, languageId])
