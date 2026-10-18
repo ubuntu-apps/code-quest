@@ -10,6 +10,7 @@ import '../../styles/sandbox.css'
 import '../../styles/quiz.css'
 import '../../styles/about.css'
 import '../../styles/editor-mode.css'
+import '../../styles/support.css'
 
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, Info, Share2 } from 'lucide-react'
@@ -364,6 +365,7 @@ export function CodeQuestScreen() {
           onMoveSection={(id, dir) => languageId && moveSection(languageId, id, dir)}
           onRemoveSection={handleRemoveSection}
           onAddSection={() => languageId && addSection(languageId)}
+          baseUrl={baseUrl}
         />
       )
     }

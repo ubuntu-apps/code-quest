@@ -7,6 +7,7 @@ import { AdminPanel } from '../components/AdminPanel'
 import { useAdminMode } from '../adminMode'
 import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
 import { AppearancePanel } from '../components/AppearancePanel'
+import { SupportPanel } from '../../support/SupportPanel'
 
 interface AboutTabProps {
   aboutLead: string
@@ -88,6 +89,7 @@ export function AboutTab({
           </div>
         ) : null}
       </section>
+      <SupportPanel baseUrl={baseUrl} />
       <AppearancePanel />
       <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
       <ProgressBackupPanel />
