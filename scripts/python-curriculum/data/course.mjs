@@ -100,15 +100,13 @@ export const COURSE = [
     sectionId: 'projects',
     filename: 'projects.json',
     title: 'Capstone projects',
-    // Easiest first. The unit converter, guess game and quiz app are left out:
-    // Fundamentals and Decisions and loops have their own.
+    // Easiest first; planning your own project comes last.
     topics: topics(
-      'password_generator',
-      'todo_list',
-      'contact_book',
+      'hangman',
       'expense_tracker',
-      'weather_cli',
-      'web_scraper_basics',
+      'tic_tac_toe',
+      'markdown_converter',
+      'text_adventure',
       'capstone_planning',
     ),
   },
