@@ -95,12 +95,14 @@ interface EditableMarkdownProps {
   value: string
   onChange: (value: string) => void
   label?: string
+  /** Shown as "Try it" on code blocks when not editing (see SimpleMarkdown). */
+  onTryCode?: (code: string) => void
 }
 
-export function EditableMarkdown({ value, onChange, label }: EditableMarkdownProps) {
+export function EditableMarkdown({ value, onChange, label, onTryCode }: EditableMarkdownProps) {
   const { canEdit, isEditingLocal } = useEditorMode()
   if (!canEdit || !isEditingLocal) {
-    return <SimpleMarkdown text={value} />
+    return <SimpleMarkdown text={value} onTryCode={onTryCode} />
   }
   return (
     <div className="cq-editable-markdown">

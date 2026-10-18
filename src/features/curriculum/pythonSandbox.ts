@@ -3,6 +3,7 @@ import { explainPythonError, type FriendlyPythonError } from './pythonErrorHelpe
 export type { FriendlyPythonError } from './pythonErrorHelper'
 
 import { PYODIDE_CDN_BASE } from '../../runtimeVersions'
+import { isCodeRuntimeSupported } from './sandboxSupport'
 
 /** How long learner code may run before it is stopped (infinite-loop guard). */
 export const PYTHON_RUN_TIME_LIMIT_MS = 10_000
@@ -29,6 +30,8 @@ export interface PythonChallengeTestResult {
   label: string
   passed: boolean
   detail?: string
+  /** Both values of a failed `a == b` test, so the difference can be highlighted. */
+  diff?: { expected: string; actual: string; text: boolean }
 }
 
 export interface PythonChallengeRunResult {
@@ -300,6 +303,19 @@ function enqueue(request: WorkerRequest, options: PythonRunOptions = {}): Promis
     })
   queue = run.catch(() => undefined)
   return Promise.race([run, droppedResult])
+}
+
+/**
+ * Starts downloading and starting Python in the background, so the learner's first
+ * Run or Check doesn't wait for it. Skipped on data-saver and very slow connections,
+ * and when this browser can't run Python; a failure is silent (the first run retries).
+ */
+export function warmUpPython(): void {
+  if (worker || !isCodeRuntimeSupported()) return
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } })
+    .connection
+  if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType ?? '')) return
+  ensureWorker().catch(() => undefined)
 }
 
 /**

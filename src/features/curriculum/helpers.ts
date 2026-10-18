@@ -8,6 +8,7 @@ import {
   TEST_XP,
 } from './constants'
 import { loadProgress } from './progressStorage'
+import { hasTestedOut } from './testOut'
 
 export type StreakState = { lastDate: string; count: number }
 
@@ -133,16 +134,18 @@ export function hasRequiredProjects(levels: Level[]): boolean {
 /**
  * A section unlocks when the previous one is finished: its easy and medium projects
  * if it has any, otherwise (when `lockByQuizzes` is on) the quiz of every topic in it.
+ * Testing out of the previous section (testOut.ts) also counts as finishing it.
  */
 export function isSectionUnlocked(
   languageId: string,
-  sections: { file: { levels: Level[] } }[],
+  sections: { sectionRef?: { id: string }; file: { levels: Level[] } }[],
   sectionIndex: number,
   { lockByQuizzes = LOCK_SECTIONS_BY_QUIZZES }: { lockByQuizzes?: boolean } = {},
 ): boolean {
   if (sectionIndex <= 0) return true
   const previous = sections[sectionIndex - 1]
   if (!previous) return true
+  if (previous.sectionRef && hasTestedOut(languageId, previous.sectionRef.id)) return true
   const levels = previous.file.levels
   if (hasRequiredProjects(levels)) return areRequiredSectionProjectsComplete(languageId, levels)
   if (!lockByQuizzes) return true

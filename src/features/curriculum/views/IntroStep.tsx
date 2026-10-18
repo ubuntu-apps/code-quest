@@ -44,6 +44,13 @@ export function IntroStep({
 }: IntroStepProps) {
   const { isEditingLocal } = useEditorMode()
 
+  /** "Try it" on a lesson's code block: load it into the sandbox below and scroll there. */
+  const tryCode = (code: string) => {
+    onSandboxCodeChange(code)
+    onSandboxErrorClear()
+    document.getElementById('cq-sandbox')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <section className="cq-panel">
       {/* The level's name is already the page heading, so an intro title that repeats it is skipped. */}
@@ -59,6 +66,7 @@ export function IntroStep({
       <EditableMarkdown
         value={level.intro.bodyMarkdown}
         onChange={(bodyMarkdown) => onUpdateIntro({ bodyMarkdown })}
+        onTryCode={languageId === 'python' ? tryCode : undefined}
       />
       {(level.intro.readMore || isEditingLocal) && (
         <div className="cq-row">

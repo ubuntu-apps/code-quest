@@ -3,6 +3,8 @@ import { loadProgress } from '../progressStorage'
 import { completedChallengeIds } from '../helpers'
 import { AddItemButton, EditableText } from '../../editor'
 import { CatalogListItem } from '../components/CatalogListItem'
+import { TestOutPanel } from '../components/TestOutPanel'
+import { hasTestedOut } from '../testOut'
 
 interface LearnLevelsProps {
   selectedSection: LoadedSection
@@ -11,6 +13,8 @@ interface LearnLevelsProps {
   isLevelUnlocked: (levels: Level[], index: number) => boolean
   /** Set when the section's prerequisite isn't met yet: why its levels are locked. */
   sectionLockedHint: string | null
+  /** The section after this one (a test-out unlocks it), or null for the last section. */
+  nextSectionTitle: string | null
   onOpenLevel: (level: Level) => void
   onUpdateSectionTitle: (title: string) => void
   onUpdateLevelTitle: (levelId: string, title: string) => void
@@ -25,6 +29,7 @@ export function LearnLevels({
   isEditMode,
   isLevelUnlocked,
   sectionLockedHint,
+  nextSectionTitle,
   onOpenLevel,
   onUpdateSectionTitle,
   onUpdateLevelTitle,
@@ -41,6 +46,14 @@ export function LearnLevels({
         onChange={onUpdateSectionTitle}
       />
       {sectionLockedHint && !isEditMode ? <p className="cq-muted cq-section-preview-note">{sectionLockedHint}</p> : null}
+      {/* Offered until every lesson quiz here is passed; after a test-out it says so. */}
+      {!isEditMode &&
+      (hasTestedOut(languageId, selectedSection.sectionRef.id) ||
+        !selectedSection.file.levels
+          .filter((lvl) => lvl.kind !== 'project')
+          .every((lvl) => loadProgress(languageId, lvl.id).testPassed)) ? (
+        <TestOutPanel languageId={languageId} section={selectedSection} nextSectionTitle={nextSectionTitle} />
+      ) : null}
       <ul className="cq-card-list">
         {selectedSection.file.levels.map((lvl, lvlIndex) => {
           const levelIndex = selectedSection.file.levels.findIndex((v) => v.id === lvl.id)

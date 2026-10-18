@@ -5,6 +5,7 @@ import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditorMode } from '../../editor'
 import { YesNoQuestionInput } from '../components/YesNoQuestionInput'
 import { isYesNoQuestion, yesNoCorrectAnswer } from '../testQuestionUtils'
+import { reportProblemUrl } from '../reportProblem'
 
 interface TestStepProps {
   level: Level
@@ -23,6 +24,12 @@ interface TestStepProps {
   onAddQuestion: (type: 'mcq' | 'shortText') => void
   onSubmit: () => void
   onRetake: () => void
+  /** Shown as a "Next lesson" button once the quiz is passed (null: no next lesson). */
+  nextLevelTitle?: string | null
+  onGoToNextLevel?: () => void
+  /** Solved challenges, for a gentle "practise first" note before the first attempt. */
+  challengesDone?: number
+  onGoToChallenges?: () => void
 }
 
 export function TestStep({
@@ -41,8 +48,21 @@ export function TestStep({
   onAddQuestion,
   onSubmit,
   onRetake,
+  nextLevelTitle = null,
+  onGoToNextLevel,
+  challengesDone,
+  onGoToChallenges,
 }: TestStepProps) {
   const { isEditingLocal } = useEditorMode()
+  // Before a first attempt, nudge learners who skipped most of the challenges (not a lock).
+  const challengesTotal = level.challenges.length
+  const suggestPractice =
+    !isEditingLocal &&
+    !prog.testPassed &&
+    testResult === null &&
+    challengesDone !== undefined &&
+    challengesTotal > 0 &&
+    challengesDone < Math.ceil(challengesTotal / 2)
   // Right answers are shown only once the quiz is passed (now or before), so a
   // failed attempt can't be turned into a pass by reading the feedback.
   const revealAnswers = testResult !== null && (testResult.passed || prog.testPassed)
@@ -50,6 +70,16 @@ export function TestStep({
 
   return (
     <section className="cq-panel cq-test">
+      {suggestPractice ? (
+        <p className="cq-test-practice-note">
+          {`You've solved ${challengesDone} of ${challengesTotal} challenges. Working through them first makes this quiz much easier.`}{' '}
+          {onGoToChallenges ? (
+            <button type="button" className="cq-link-btn" onClick={onGoToChallenges}>
+              Go to the challenges
+            </button>
+          ) : null}
+        </p>
+      ) : null}
       <p className="cq-muted">
         Passing score:{' '}
         {isEditingLocal ? (
@@ -209,9 +239,26 @@ export function TestStep({
           {!revealAnswers && ' · Change the answers marked Incorrect and submit again. Correct answers are shown once you pass.'}
         </p>
       )}
+      {testResult && resultCurrent && testResult.passed && nextLevelTitle && onGoToNextLevel ? (
+        <div className="cq-row">
+          <button type="button" className="cq-btn cq-btn--primary" onClick={onGoToNextLevel}>
+            Next lesson: {nextLevelTitle}
+          </button>
+        </div>
+      ) : null}
       {testResult && !resultCurrent && (
         <p className="cq-muted">Answers you changed are no longer marked. Submit again to see your new score.</p>
       )}
+      {!isEditingLocal ? (
+        <a
+          className="cq-report-link"
+          href={reportProblemUrl(`the quiz for "${level.title}"`, `quiz for lesson ${level.id}`)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Report a problem with this quiz
+        </a>
+      ) : null}
     </section>
   )
 }

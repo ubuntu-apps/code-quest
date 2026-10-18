@@ -3,6 +3,7 @@ import { computeLevelXp, sectionUnlockHint } from '../helpers'
 import { loadProgress } from '../progressStorage'
 import { AddItemButton, EditableText } from '../../editor'
 import { CatalogListItem } from '../components/CatalogListItem'
+import { hasTestedOut } from '../testOut'
 
 interface LearnSectionsProps {
   bundle: LanguageBundle
@@ -53,13 +54,14 @@ export function LearnSections({
               : 0
           // A section whose prerequisite isn't met can still be opened to look inside;
           // its levels stay locked.
-          const previewOnly = !isEditMode && !isSectionUnlocked(secIndex)
+          const testedOut = languageId ? hasTestedOut(languageId, sec.id) : false
+          const previewOnly = !isEditMode && !isSectionUnlocked(secIndex) && !testedOut
           const previousRef = bundle.index.sections[secIndex - 1]
           const previousLevels =
             bundle.sections.find((s) => s.sectionRef.id === previousRef?.id)?.file.levels ?? []
           const statusMeta = previewOnly
             ? sectionUnlockHint(previousLevels, previousRef?.title ?? 'the previous section')
-            : `${completedCount}/${levels.length} levels complete · ${sectionXp} XP`
+            : `${testedOut ? 'Tested out · ' : ''}${completedCount}/${levels.length} levels complete · ${sectionXp} XP`
 
           return (
             <CatalogListItem

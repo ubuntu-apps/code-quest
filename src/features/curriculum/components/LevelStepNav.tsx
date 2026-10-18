@@ -13,6 +13,10 @@ interface LevelStepNavProps {
   onLevelStepChange: (step: LevelStep) => void
   onGoToNextLevel: () => void
   placement?: 'top' | 'bottom'
+  /** Solved challenges out of all of them, shown on the Challenges tab. */
+  challengeCount?: { done: number; total: number }
+  /** The quiz was passed, shown as a tick on the Test tab. */
+  testPassed?: boolean
 }
 
 export function LevelStepNav({
@@ -22,7 +26,17 @@ export function LevelStepNav({
   onLevelStepChange,
   onGoToNextLevel,
   placement = 'top',
+  challengeCount,
+  testPassed = false,
 }: LevelStepNavProps) {
+  const badge = (id: LevelStep): string | null => {
+    if (id === 'challenges' && challengeCount && challengeCount.total > 0) {
+      return `${challengeCount.done}/${challengeCount.total}`
+    }
+    if (id === 'test' && testPassed) return '✓'
+    return null
+  }
+
   return (
     <div
       className={`cq-step-tabs-row${placement === 'bottom' ? ' cq-step-tabs-row--bottom' : ''}`}
@@ -38,6 +52,17 @@ export function LevelStepNav({
             onClick={() => onLevelStepChange(t.id)}
           >
             {t.label}
+            {badge(t.id) ? (
+              <span
+                className={`cq-step-tab-badge${
+                  (t.id === 'challenges' && challengeCount?.done === challengeCount?.total) || t.id === 'test'
+                    ? ' cq-step-tab-badge--done'
+                    : ''
+                }`}
+              >
+                {badge(t.id)}
+              </span>
+            ) : null}
           </button>
         ))}
       </div>

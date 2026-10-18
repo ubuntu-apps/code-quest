@@ -45,6 +45,7 @@ describe('progress fingerprints', () => {
     expect(p.challengeAnswers).toEqual({})
     expect(p.answersViewed).toEqual([])
     expect(p.testPassed).toBe(true)
+    expect(p.challengesReset).toBe(1)
     expect(localStorage.getItem(progressFormatKey('python'))).toBe('2')
   })
 

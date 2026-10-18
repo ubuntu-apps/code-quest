@@ -1,5 +1,5 @@
 import type { Challenge, Level, TestGradeResult } from '../types'
-import type { LevelProgress } from '../progressStorage'
+import { saveProgress, type LevelProgress } from '../progressStorage'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
 import type { PythonChallengeTestResult } from '../pythonSandbox'
 import type { RChallengeTestResult } from '../rSandbox'
@@ -10,6 +10,7 @@ import { ChallengeCard } from '../components/ChallengeCard'
 import { LevelStepNav } from '../components/LevelStepNav'
 import { IntroStep } from './IntroStep'
 import { TestStep } from './TestStep'
+import { CodeLanguageContext } from '../codeLanguageContext'
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -140,98 +141,137 @@ export function LearnLevel({
     scrollToTop()
   }
 
+  const isDone = (id: string) => prog.challengesCompleted.includes(id)
   const stepNavProps = {
     levelStep,
     showNext,
     nextLevelTitle,
     onLevelStepChange: handleStepChange,
     onGoToNextLevel: handleGoToNext,
+    challengeCount: { done: level.challenges.filter((c) => isDone(c.id)).length, total: level.challenges.length },
+    testPassed: prog.testPassed,
+  }
+
+  /** After a solve: scroll to the next unsolved challenge, or go on to the quiz. */
+  const nextAfter = (chIndex: number): { label: string; go: () => void } => {
+    const rest = [...level.challenges.slice(chIndex + 1), ...level.challenges.slice(0, chIndex)]
+    const next = rest.find((c) => !isDone(c.id))
+    if (!next) return { label: 'Take the quiz', go: () => handleStepChange('test') }
+    return {
+      label: 'Next challenge',
+      go: () => document.getElementById(`challenge-${next.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+    }
   }
 
   return (
-    <div className="cq-stack cq-level">
-      <EditableText
-        as="h1"
-        className="cq-title"
-        value={level.title}
-        onChange={onUpdateLevelTitle}
-      />
-      <LevelStepNav {...stepNavProps} />
-
-      {levelStep === 'intro' && (
-        <IntroStep
-          level={level}
-          languageId={languageId}
-          sandboxCode={sandboxCode}
-          sandboxOutput={sandboxOutput}
-          sandboxRunning={sandboxRunning}
-          sandboxError={sandboxError}
-          sandboxErrorUiEpoch={sandboxErrorUiEpoch}
-          onUpdateIntro={onUpdateIntro}
-          onReadMoreOpen={onReadMoreOpen}
-          onSandboxCodeChange={onSandboxCodeChange}
-          onSandboxRun={onSandboxRun}
-          onSandboxStop={onSandboxStop}
-          onSandboxReset={onSandboxReset}
-          onSandboxErrorClear={onSandboxErrorClear}
+    <CodeLanguageContext.Provider value={languageId}>
+      <div className="cq-stack cq-level">
+        <EditableText
+          as="h1"
+          className="cq-title"
+          value={level.title}
+          onChange={onUpdateLevelTitle}
         />
-      )}
+        <LevelStepNav {...stepNavProps} />
 
-      {levelStep === 'challenges' && (
-        <section className="cq-challenges">
-          {level.challenges.map((ch, chIndex) => (
-            <ChallengeCard
-              key={ch.id}
-              challenge={ch}
-              chIndex={chIndex}
-              totalChallenges={level.challenges.length}
-              draft={challengeDrafts[ch.id] ?? ''}
-              done={prog.challengesCompleted.includes(ch.id)}
-              status={challengeStatus[ch.id]}
-              answerViewed={prog.answersViewed?.includes(ch.id) ?? false}
-              testResults={challengeTestResults[ch.id] ?? []}
-              runtimeError={challengeRuntimeError[ch.id] ?? null}
-              errorExpanded={challengeErrorExpanded[ch.id] ?? false}
-              errorUiEpoch={challengeErrorUiEpoch[ch.id] ?? 0}
-              checkingMessage={challengeChecking[ch.id] ?? null}
-              runningMessage={challengeRunning[ch.id] ?? null}
-              output={challengeOutput[ch.id] ?? null}
-              onRun={() => onRunChallenge(ch)}
-              onDraftChange={(value) => onChallengeDraftChange(ch.id, value)}
-              onCheck={() => onCheckChallenge(ch)}
-              onStopCheck={() => onStopChallengeCheck(ch.id)}
-              onRevealAnswer={() => onRevealAnswer(ch.id)}
-              onUpdateChallenge={(patch) => onUpdateChallenge(ch.id, patch)}
-              onMove={(dir) => onMoveChallenge(ch.id, dir)}
-              onDelete={() => onRemoveChallenge(ch.id)}
-              onToggleErrorExpanded={() => onToggleChallengeErrorExpanded(ch.id)}
-            />
-          ))}
-          <AddItemButton label="Add challenge" onClick={onAddChallenge} />
-        </section>
-      )}
+        {prog.challengesReset ? (
+          <div className="cq-reset-note" role="status">
+            <p>
+              {prog.challengesReset === 1
+                ? 'This lesson was updated since you last worked on it, so your earlier answer to one challenge was cleared.'
+                : `This lesson was updated since you last worked on it, so your earlier answers to ${prog.challengesReset} challenges were cleared.`}{' '}
+              Passed quizzes always stay passed.
+            </p>
+            <button
+              type="button"
+              className="cq-btn cq-btn--sm"
+              onClick={() => saveProgress(languageId, level.id, { ...prog, challengesReset: undefined })}
+            >
+              OK
+            </button>
+          </div>
+        ) : null}
 
-      {levelStep === 'test' && (
-        <TestStep
-          level={level}
-          prog={prog}
-          testShort={testShort}
-          testMcq={testMcq}
-          testResult={testResult}
-          testEdited={testEdited}
-          onTestShortChange={onTestShortChange}
-          onTestMcqChange={onTestMcqChange}
-          onUpdatePassingScore={onUpdatePassingScore}
-          onUpdateQuestion={onUpdateQuestion}
-          onMoveQuestion={onMoveQuestion}
-          onRemoveQuestion={onRemoveQuestion}
-          onAddQuestion={onAddQuestion}
-          onSubmit={onSubmitTest}
-          onRetake={onRetakeTest}
-        />
-      )}
+        {levelStep === 'intro' && (
+          <IntroStep
+            level={level}
+            languageId={languageId}
+            sandboxCode={sandboxCode}
+            sandboxOutput={sandboxOutput}
+            sandboxRunning={sandboxRunning}
+            sandboxError={sandboxError}
+            sandboxErrorUiEpoch={sandboxErrorUiEpoch}
+            onUpdateIntro={onUpdateIntro}
+            onReadMoreOpen={onReadMoreOpen}
+            onSandboxCodeChange={onSandboxCodeChange}
+            onSandboxRun={onSandboxRun}
+            onSandboxStop={onSandboxStop}
+            onSandboxReset={onSandboxReset}
+            onSandboxErrorClear={onSandboxErrorClear}
+          />
+        )}
 
-      <LevelStepNav {...stepNavProps} placement="bottom" />
-    </div>
+        {levelStep === 'challenges' && (
+          <section className="cq-challenges">
+            {level.challenges.map((ch, chIndex) => (
+              <ChallengeCard
+                key={ch.id}
+                challenge={ch}
+                chIndex={chIndex}
+                totalChallenges={level.challenges.length}
+                draft={challengeDrafts[ch.id] ?? ''}
+                done={prog.challengesCompleted.includes(ch.id)}
+                status={challengeStatus[ch.id]}
+                answerViewed={prog.answersViewed?.includes(ch.id) ?? false}
+                testResults={challengeTestResults[ch.id] ?? []}
+                runtimeError={challengeRuntimeError[ch.id] ?? null}
+                errorExpanded={challengeErrorExpanded[ch.id] ?? false}
+                errorUiEpoch={challengeErrorUiEpoch[ch.id] ?? 0}
+                checkingMessage={challengeChecking[ch.id] ?? null}
+                runningMessage={challengeRunning[ch.id] ?? null}
+                output={challengeOutput[ch.id] ?? null}
+                onRun={() => onRunChallenge(ch)}
+                onDraftChange={(value) => onChallengeDraftChange(ch.id, value)}
+                onCheck={() => onCheckChallenge(ch)}
+                onStopCheck={() => onStopChallengeCheck(ch.id)}
+                onRevealAnswer={() => onRevealAnswer(ch.id)}
+                onUpdateChallenge={(patch) => onUpdateChallenge(ch.id, patch)}
+                onMove={(dir) => onMoveChallenge(ch.id, dir)}
+                onDelete={() => onRemoveChallenge(ch.id)}
+                onToggleErrorExpanded={() => onToggleChallengeErrorExpanded(ch.id)}
+                next={nextAfter(chIndex)}
+              />
+            ))}
+            <AddItemButton label="Add challenge" onClick={onAddChallenge} />
+          </section>
+        )}
+
+        {levelStep === 'test' && (
+          <TestStep
+            level={level}
+            prog={prog}
+            testShort={testShort}
+            testMcq={testMcq}
+            testResult={testResult}
+            testEdited={testEdited}
+            onTestShortChange={onTestShortChange}
+            onTestMcqChange={onTestMcqChange}
+            onUpdatePassingScore={onUpdatePassingScore}
+            onUpdateQuestion={onUpdateQuestion}
+            onMoveQuestion={onMoveQuestion}
+            onRemoveQuestion={onRemoveQuestion}
+            onAddQuestion={onAddQuestion}
+            onSubmit={onSubmitTest}
+            onRetake={onRetakeTest}
+            nextLevelTitle={showNext ? nextLevelTitle : null}
+            onGoToNextLevel={handleGoToNext}
+            challengesDone={stepNavProps.challengeCount.done}
+            onGoToChallenges={() => handleStepChange('challenges')}
+          />
+        )}
+
+        <LevelStepNav {...stepNavProps} placement="bottom" />
+      </div>
+    </CodeLanguageContext.Provider>
   )
 }
