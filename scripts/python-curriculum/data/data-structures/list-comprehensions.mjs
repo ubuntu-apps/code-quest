@@ -89,11 +89,11 @@ export default makeTopic({
     }),
     task("hard", "Clean the names", {
       prompt: "Set `names` to the names in `raw` without the spaces around them and in title case, leaving out the empty ones.",
-      starter: "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo smith\"]\n",
+      starter: "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo marsh\"]\n",
       hint: "Transform with `n.strip().title()` and filter with `if n.strip()`, which is falsy for empty text.",
-      solution: "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo smith\"]\nnames = [n.strip().title() for n in raw if n.strip()]",
+      solution: "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo marsh\"]\nnames = [n.strip().title() for n in raw if n.strip()]",
       tests: [
-        ["names is right", "names == [\"Ana\", \"Ben\", \"Cleo Smith\"]"],
+        ["names is right", "names == [\"Ana\", \"Ben\", \"Cleo Marsh\"]"],
       ],
     }),
     task("expert", "Flatten", {

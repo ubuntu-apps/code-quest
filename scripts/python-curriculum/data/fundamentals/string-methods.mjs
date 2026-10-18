@@ -90,11 +90,11 @@ export default makeTopic({
     }),
     task("hard", "Find the domain", {
       prompt: "Set `domain` to the part of `email` after the `@`. Use `find` to locate the `@`, then a slice.",
-      starter: "email = \"grace@navy.mil\"\n",
+      starter: "email = \"grace@example.org\"\n",
       hint: "`at = email.find(\"@\")` is the index of the `@`. The domain starts one character later: `email[at + 1:]`.",
-      solution: "email = \"grace@navy.mil\"\nat = email.find(\"@\")\ndomain = email[at + 1:]",
+      solution: "email = \"grace@example.org\"\nat = email.find(\"@\")\ndomain = email[at + 1:]",
       tests: [
-        ["domain is navy.mil", "domain == \"navy.mil\""],
+        ["domain is example.org", "domain == \"example.org\""],
       ],
     }),
     task("expert", "Make a username", {

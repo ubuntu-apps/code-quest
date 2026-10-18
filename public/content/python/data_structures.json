@@ -3025,9 +3025,9 @@
           "id": "list_comprehensions_ch8",
           "title": "Hard: Clean the names",
           "promptMarkdown": "Set `names` to the names in `raw` without the spaces around them and in title case, leaving out the empty ones.",
-          "starterCode": "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo smith\"]\n",
+          "starterCode": "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo marsh\"]\n",
           "hint": "Transform with `n.strip().title()` and filter with `if n.strip()`, which is falsy for empty text.",
-          "solution": "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo smith\"]\nnames = [n.strip().title() for n in raw if n.strip()]",
+          "solution": "raw = [\"  ana \", \"\", \"BEN\", \"   \", \"cleo marsh\"]\nnames = [n.strip().title() for n in raw if n.strip()]",
           "validation": {
             "mode": "python_tests",
             "setupCode": "",
@@ -3035,7 +3035,7 @@
               {
                 "id": "t1",
                 "label": "names is right",
-                "assertion": "names == [\"Ana\", \"Ben\", \"Cleo Smith\"]"
+                "assertion": "names == [\"Ana\", \"Ben\", \"Cleo Marsh\"]"
               }
             ]
           }
@@ -5528,7 +5528,7 @@
       ],
       "intro": {
         "title": "Medium project: Word counter",
-        "bodyMarkdown": "Build a word counter: give it some text and it reports how many words there are, how many different ones, and which words are used most. It's the kind of program behind word clouds and search engines, and it uses lists, sets, dicts, sorting and comprehensions.\n\nWords need cleaning before they can be counted: `Data`, `data,` and `data.` should all count as the same word. Make every word lowercase and `strip` the punctuation off its ends with `w.strip(\".,!?:\")`.\n\nFor the text in this project, the finished report is:\n\n```\nWords: 23\nDifferent: 15\ndata: 5\ncode: 4\nbeats: 2\n```\n\nThe plan: clean the words into a list, count them all with `len`, count the different ones with a set, count each word in a dict, and sort the dict's keys by their counts to find the top three.\n\nBuild it in steps; the last challenge puts everything together.",
+        "bodyMarkdown": "Build a word counter: give it some text and it reports how many words there are, how many different ones, and which words are used most. It's the kind of program behind word clouds and search engines, and it uses lists, sets, dicts, sorting and comprehensions.\n\nWords need cleaning before they can be counted: `Data`, `data,` and `data.` should all count as the same word. Make every word lowercase and `strip` the punctuation off its ends with `w.strip(\".,!?:\")`.\n\nFor the text in this project, the finished report is:\n\n```\nWords: 23\nDifferent: 15\ndata: 5\ncode: 4\nkeeps: 2\n```\n\nThe plan: clean the words into a list, count them all with `len`, count the different ones with a set, count each word in a dict, and sort the dict's keys by their counts to find the top three.\n\nBuild it in steps; the last challenge puts everything together.",
         "sandboxCode": "text = \"The cat and the hat. The end!\"\nwords = [w.strip(\".,!?\") for w in text.lower().split()]\nprint(words)\nprint(len(words), len(set(words)))\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(sorted(counts, key=counts.get, reverse=True)[:2])"
       },
       "challenges": [
@@ -5555,9 +5555,9 @@
           "id": "proj_word_counter_ch2",
           "title": "Easy: All the words",
           "promptMarkdown": "Set `words` to a list of every word in `text`, lowercase and without punctuation, using a list comprehension.",
-          "starterCode": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\n",
+          "starterCode": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\n",
           "hint": "Split the lowercase text, and strip each piece: `[w.strip(\".,!?:\") for w in text.lower().split()]`.",
-          "solution": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
+          "solution": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
           "validation": {
             "mode": "python_tests",
             "setupCode": "",
@@ -5565,7 +5565,7 @@
               {
                 "id": "t1",
                 "label": "words starts right",
-                "assertion": "words[:5] == [\"clean\", \"data\", \"beats\", \"clever\", \"code\"]"
+                "assertion": "words[:5] == [\"tidy\", \"data\", \"keeps\", \"code\", \"simple\"]"
               },
               {
                 "id": "t2",
@@ -5584,9 +5584,9 @@
           "id": "proj_word_counter_ch3",
           "title": "Medium: How many?",
           "promptMarkdown": "Set `total` to the number of words and `different` to the number of different words.",
-          "starterCode": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
+          "starterCode": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
           "hint": "`len(words)` counts them all; a set keeps one of each: `len(set(words))`.",
-          "solution": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ntotal = len(words)\ndifferent = len(set(words))",
+          "solution": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ntotal = len(words)\ndifferent = len(set(words))",
           "validation": {
             "mode": "python_tests",
             "setupCode": "",
@@ -5608,9 +5608,9 @@
           "id": "proj_word_counter_ch4",
           "title": "Medium: Count every word",
           "promptMarkdown": "Build `counts`: a dict mapping each word to how often it appears.",
-          "starterCode": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
+          "starterCode": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\n",
           "hint": "Start with `counts = {}`. For each word: `counts[w] = counts.get(w, 0) + 1`.",
-          "solution": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
+          "solution": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
           "validation": {
             "mode": "python_tests",
             "setupCode": "",
@@ -5637,9 +5637,9 @@
           "id": "proj_word_counter_ch5",
           "title": "Hard: The top three",
           "promptMarkdown": "Set `top3` to the three most used words, most used first.",
-          "starterCode": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
+          "starterCode": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\n",
           "hint": "Sort the keys by their counts, highest first, and slice: `sorted(counts, key=counts.get, reverse=True)[:3]`.",
-          "solution": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\ntop3 = sorted(counts, key=counts.get, reverse=True)[:3]",
+          "solution": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\ntop3 = sorted(counts, key=counts.get, reverse=True)[:3]",
           "validation": {
             "mode": "python_tests",
             "setupCode": "",
@@ -5647,7 +5647,7 @@
               {
                 "id": "t1",
                 "label": "top3 is right",
-                "assertion": "top3 == [\"data\", \"code\", \"beats\"]"
+                "assertion": "top3 == [\"data\", \"code\", \"keeps\"]"
               }
             ]
           }
@@ -5656,9 +5656,9 @@
           "id": "proj_word_counter_ch6",
           "title": "Expert: The report",
           "promptMarkdown": "Put it all together and print the report from the lesson: `Words: 23`, `Different: 15`, then the top three words with their counts, like `data: 5`.",
-          "starterCode": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\n",
+          "starterCode": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\n",
           "hint": "Clean the words, count them, find the top three, then print two summary lines and loop over the top three.",
-          "solution": "text = \"Clean data beats clever code. Good data beats more data, and new code means bugs! Data first, then code: data wins, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(f\"Words: {len(words)}\")\nprint(f\"Different: {len(counts)}\")\nfor w in sorted(counts, key=counts.get, reverse=True)[:3]:\n    print(f\"{w}: {counts[w]}\")",
+          "solution": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(f\"Words: {len(words)}\")\nprint(f\"Different: {len(counts)}\")\nfor w in sorted(counts, key=counts.get, reverse=True)[:3]:\n    print(f\"{w}: {counts[w]}\")",
           "validation": {
             "mode": "python_tests",
             "setupCode": "",
@@ -5666,7 +5666,7 @@
               {
                 "id": "t1",
                 "label": "Prints the report",
-                "assertion": "_cq_stdout.strip().splitlines() == [\"Words: 23\", \"Different: 15\", \"data: 5\", \"code: 4\", \"beats: 2\"]"
+                "assertion": "_cq_stdout.strip().splitlines() == [\"Words: 23\", \"Different: 15\", \"data: 5\", \"code: 4\", \"keeps: 2\"]"
               }
             ]
           }

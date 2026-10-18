@@ -6,11 +6,11 @@ export default makeProject("easy", {
   title: "Playlist",
   paragraphs: [
     "Build a music playlist out of two classes: a `Song`, which knows its title, artist and length, and a `Playlist`, which holds songs and works out things about them. When it's done, `playlist.show()` gives:",
-    "```\nRoad trip (3 songs, 8:44)\n1. Yesterday - The Beatles (2:05)\n2. Halo - Beyonce (4:21)\n3. Help! - The Beatles (2:18)\n```",
+    "```\nRoad trip (3 songs, 8:44)\n1. Morning Tide - The Paper Owls (2:05)\n2. Copper Kites - Mira Vale (4:21)\n3. Lights On! - The Paper Owls (2:18)\n```",
     "Lengths are stored as whole seconds, which are easy to add up, and only turned into `minutes:seconds` text when they're shown, through properties. The playlist uses special methods, so `len(playlist)` and `for song in playlist` work like they do for a list.",
     "Each step adds to the classes from the step before, which are already written for you.",
   ],
-  sandboxCode: "class Song:\n    def __init__(self, title, seconds):\n        self.title = title\n        self.seconds = seconds\n\nsongs = [Song(\"Yesterday\", 125), Song(\"Halo\", 261)]\ntotal = sum(s.seconds for s in songs)\nprint(f\"{total // 60}:{total % 60:02d}\")",
+  sandboxCode: "class Song:\n    def __init__(self, title, seconds):\n        self.title = title\n        self.seconds = seconds\n\nsongs = [Song(\"Morning Tide\", 125), Song(\"Copper Kites\", 261)]\ntotal = sum(s.seconds for s in songs)\nprint(f\"{total // 60}:{total % 60:02d}\")",
   sandboxSnippets: [
     snippet("Seconds to m:ss", "seconds = 261\nprint(f\"{seconds // 60}:{seconds % 60:02d}\")"),
     snippet("Hours too", "total = 3723\nhours, rest = divmod(total, 3600)\nminutes, seconds = divmod(rest, 60)\nprint(f\"{hours}:{minutes:02d}:{seconds:02d}\")"),
@@ -18,12 +18,12 @@ export default makeProject("easy", {
   ],
   challenges: [
     task("easy", "A song", {
-      prompt: "Define `Song(title, artist, seconds)` with a `length` property like `4:21` and a `__str__` like `Halo - Beyonce (4:21)`.",
+      prompt: "Define `Song(title, artist, seconds)` with a `length` property like `4:21` and a `__str__` like `Copper Kites - Mira Vale (4:21)`.",
       hint: "`f\"{self.seconds // 60}:{self.seconds % 60:02d}\"` pads the seconds with a zero.",
       solution: "class Song:\n    def __init__(self, title, artist, seconds):\n        self.title = title\n        self.artist = artist\n        self.seconds = seconds\n\n    @property\n    def length(self):\n        return f\"{self.seconds // 60}:{self.seconds % 60:02d}\"\n\n    def __str__(self):\n        return f\"{self.title} - {self.artist} ({self.length})\"\n",
       tests: [
-        ["length", "Song(\"Halo\", \"Beyonce\", 261).length == \"4:21\" and Song(\"Short\", \"X\", 65).length == \"1:05\""],
-        ["str", "str(Song(\"Halo\", \"Beyonce\", 261)) == \"Halo - Beyonce (4:21)\""],
+        ["length", "Song(\"Copper Kites\", \"Mira Vale\", 261).length == \"4:21\" and Song(\"Short\", \"X\", 65).length == \"1:05\""],
+        ["str", "str(Song(\"Copper Kites\", \"Mira Vale\", 261)) == \"Copper Kites - Mira Vale (4:21)\""],
       ],
     }),
     task("medium", "A playlist", {
@@ -32,8 +32,8 @@ export default makeProject("easy", {
       hint: "Keep `self.songs = []`; `__iter__` returns `iter(self.songs)`.",
       solution: "class Song:\n    def __init__(self, title, artist, seconds):\n        self.title = title\n        self.artist = artist\n        self.seconds = seconds\n\n    @property\n    def length(self):\n        return f\"{self.seconds // 60}:{self.seconds % 60:02d}\"\n\n    def __str__(self):\n        return f\"{self.title} - {self.artist} ({self.length})\"\n\nclass Playlist:\n    def __init__(self, name):\n        self.name = name\n        self.songs = []\n\n    def add(self, song):\n        self.songs.append(song)\n\n    def __len__(self):\n        return len(self.songs)\n\n    def __iter__(self):\n        return iter(self.songs)\n\n    def total_seconds(self):\n        return sum(song.seconds for song in self.songs)\n",
       tests: [
-        ["len and total", "(lambda p: (len(p), p.total_seconds()))((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (3, 524)"],
-        ["A for loop", "[s.title for s in (lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))] == [\"Yesterday\", \"Halo\", \"Help!\"]"],
+        ["len and total", "(lambda p: (len(p), p.total_seconds()))((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (3, 524)"],
+        ["A for loop", "[s.title for s in (lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))] == [\"Morning Tide\", \"Copper Kites\", \"Lights On!\"]"],
         ["Empty", "len(Playlist(\"x\")) == 0 and Playlist(\"x\").total_seconds() == 0"],
       ],
     }),
@@ -43,8 +43,8 @@ export default makeProject("easy", {
       hint: "Loop over `self.songs`; when the title matches, `self.songs.remove(song)` and `return True`.",
       solution: "class Song:\n    def __init__(self, title, artist, seconds):\n        self.title = title\n        self.artist = artist\n        self.seconds = seconds\n\n    @property\n    def length(self):\n        return f\"{self.seconds // 60}:{self.seconds % 60:02d}\"\n\n    def __str__(self):\n        return f\"{self.title} - {self.artist} ({self.length})\"\n\nclass Playlist:\n    def __init__(self, name):\n        self.name = name\n        self.songs = []\n\n    def add(self, song):\n        self.songs.append(song)\n\n    def __len__(self):\n        return len(self.songs)\n\n    def __iter__(self):\n        return iter(self.songs)\n\n    def total_seconds(self):\n        return sum(song.seconds for song in self.songs)\n\n    def remove(self, title):\n        for song in self.songs:\n            if song.title == title:\n                self.songs.remove(song)\n                return True\n        return False\n",
       tests: [
-        ["Removed", "(lambda p: (p.remove(\"Halo\"), [s.title for s in p])[0:2])((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (True, [\"Yesterday\", \"Help!\"])"],
-        ["Not there", "(lambda p: (p.remove(\"Imagine\"), len(p)))((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (False, 3)"],
+        ["Removed", "(lambda p: (p.remove(\"Copper Kites\"), [s.title for s in p])[0:2])((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (True, [\"Morning Tide\", \"Lights On!\"])"],
+        ["Not there", "(lambda p: (p.remove(\"Blue Hour\"), len(p)))((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\"))) == (False, 3)"],
       ],
     }),
     task("hard", "How long?", {
@@ -53,7 +53,7 @@ export default makeProject("easy", {
       hint: "`divmod(total, 3600)`, then `divmod(rest, 60)`.",
       solution: "class Song:\n    def __init__(self, title, artist, seconds):\n        self.title = title\n        self.artist = artist\n        self.seconds = seconds\n\n    @property\n    def length(self):\n        return f\"{self.seconds // 60}:{self.seconds % 60:02d}\"\n\n    def __str__(self):\n        return f\"{self.title} - {self.artist} ({self.length})\"\n\nclass Playlist:\n    def __init__(self, name):\n        self.name = name\n        self.songs = []\n\n    def add(self, song):\n        self.songs.append(song)\n\n    def __len__(self):\n        return len(self.songs)\n\n    def __iter__(self):\n        return iter(self.songs)\n\n    def total_seconds(self):\n        return sum(song.seconds for song in self.songs)\n\n    def remove(self, title):\n        for song in self.songs:\n            if song.title == title:\n                self.songs.remove(song)\n                return True\n        return False\n\n    @property\n    def duration(self):\n        total = self.total_seconds()\n        hours, rest = divmod(total, 3600)\n        minutes, seconds = divmod(rest, 60)\n        if hours:\n            return f\"{hours}:{minutes:02d}:{seconds:02d}\"\n        return f\"{minutes}:{seconds:02d}\"\n",
       tests: [
-        ["Under an hour", "(lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).duration == \"8:44\""],
+        ["Under an hour", "(lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).duration == \"8:44\""],
         ["Over an hour", "(lambda p: (p.add(Song(\"Long\", \"X\", 3723)), p.duration)[1])(Playlist(\"x\")) == \"1:02:03\""],
         ["Empty", "Playlist(\"x\").duration == \"0:00\""],
       ],
@@ -64,8 +64,8 @@ export default makeProject("easy", {
       hint: "`max(self.songs, key=lambda song: song.seconds, default=None)`.",
       solution: "class Song:\n    def __init__(self, title, artist, seconds):\n        self.title = title\n        self.artist = artist\n        self.seconds = seconds\n\n    @property\n    def length(self):\n        return f\"{self.seconds // 60}:{self.seconds % 60:02d}\"\n\n    def __str__(self):\n        return f\"{self.title} - {self.artist} ({self.length})\"\n\nclass Playlist:\n    def __init__(self, name):\n        self.name = name\n        self.songs = []\n\n    def add(self, song):\n        self.songs.append(song)\n\n    def __len__(self):\n        return len(self.songs)\n\n    def __iter__(self):\n        return iter(self.songs)\n\n    def total_seconds(self):\n        return sum(song.seconds for song in self.songs)\n\n    def remove(self, title):\n        for song in self.songs:\n            if song.title == title:\n                self.songs.remove(song)\n                return True\n        return False\n\n    @property\n    def duration(self):\n        total = self.total_seconds()\n        hours, rest = divmod(total, 3600)\n        minutes, seconds = divmod(rest, 60)\n        if hours:\n            return f\"{hours}:{minutes:02d}:{seconds:02d}\"\n        return f\"{minutes}:{seconds:02d}\"\n\n    def by_artist(self, artist):\n        return [song.title for song in self.songs if song.artist.lower() == artist.lower()]\n\n    def longest(self):\n        return max(self.songs, key=lambda song: song.seconds, default=None)\n",
       tests: [
-        ["by_artist", "(lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).by_artist(\"the beatles\") == [\"Yesterday\", \"Help!\"]"],
-        ["longest", "str((lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).longest()) == \"Halo - Beyonce (4:21)\" and Playlist(\"x\").longest() is None"],
+        ["by_artist", "(lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).by_artist(\"the paper owls\") == [\"Morning Tide\", \"Lights On!\"]"],
+        ["longest", "str((lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).longest()) == \"Copper Kites - Mira Vale (4:21)\" and Playlist(\"x\").longest() is None"],
       ],
     }),
     task("expert", "Show it", {
@@ -74,8 +74,8 @@ export default makeProject("easy", {
       hint: "Use `len(self)`, `self.duration` and `enumerate(self, start=1)`; each song line uses `str(song)`.",
       solution: "class Song:\n    def __init__(self, title, artist, seconds):\n        self.title = title\n        self.artist = artist\n        self.seconds = seconds\n\n    @property\n    def length(self):\n        return f\"{self.seconds // 60}:{self.seconds % 60:02d}\"\n\n    def __str__(self):\n        return f\"{self.title} - {self.artist} ({self.length})\"\n\nclass Playlist:\n    def __init__(self, name):\n        self.name = name\n        self.songs = []\n\n    def add(self, song):\n        self.songs.append(song)\n\n    def __len__(self):\n        return len(self.songs)\n\n    def __iter__(self):\n        return iter(self.songs)\n\n    def total_seconds(self):\n        return sum(song.seconds for song in self.songs)\n\n    def remove(self, title):\n        for song in self.songs:\n            if song.title == title:\n                self.songs.remove(song)\n                return True\n        return False\n\n    @property\n    def duration(self):\n        total = self.total_seconds()\n        hours, rest = divmod(total, 3600)\n        minutes, seconds = divmod(rest, 60)\n        if hours:\n            return f\"{hours}:{minutes:02d}:{seconds:02d}\"\n        return f\"{minutes}:{seconds:02d}\"\n\n    def by_artist(self, artist):\n        return [song.title for song in self.songs if song.artist.lower() == artist.lower()]\n\n    def longest(self):\n        return max(self.songs, key=lambda song: song.seconds, default=None)\n\n    def show(self):\n        word = \"song\" if len(self) == 1 else \"songs\"\n        lines = [f\"{self.name} ({len(self)} {word}, {self.duration})\"]\n        for number, song in enumerate(self, start=1):\n            lines.append(f\"{number}. {song}\")\n        return lines\n",
       tests: [
-        ["Three songs", "(lambda p: ([p.add(s) for s in [Song(\"Yesterday\", \"The Beatles\", 125), Song(\"Halo\", \"Beyonce\", 261), Song(\"Help!\", \"The Beatles\", 138)]], p)[1])(Playlist(\"Road trip\")).show() == [\"Road trip (3 songs, 8:44)\", \"1. Yesterday - The Beatles (2:05)\", \"2. Halo - Beyonce (4:21)\", \"3. Help! - The Beatles (2:18)\"]"],
-        ["One song", "(lambda p: (p.add(Song(\"Halo\", \"Beyonce\", 261)), p.show())[1])(Playlist(\"Mine\")) == [\"Mine (1 song, 4:21)\", \"1. Halo - Beyonce (4:21)\"]"],
+        ["Three songs", "(lambda p: ([p.add(s) for s in [Song(\"Morning Tide\", \"The Paper Owls\", 125), Song(\"Copper Kites\", \"Mira Vale\", 261), Song(\"Lights On!\", \"The Paper Owls\", 138)]], p)[1])(Playlist(\"Road trip\")).show() == [\"Road trip (3 songs, 8:44)\", \"1. Morning Tide - The Paper Owls (2:05)\", \"2. Copper Kites - Mira Vale (4:21)\", \"3. Lights On! - The Paper Owls (2:18)\"]"],
+        ["One song", "(lambda p: (p.add(Song(\"Copper Kites\", \"Mira Vale\", 261)), p.show())[1])(Playlist(\"Mine\")) == [\"Mine (1 song, 4:21)\", \"1. Copper Kites - Mira Vale (4:21)\"]"],
         ["Empty", "Playlist(\"Empty\").show() == [\"Empty (0 songs, 0:00)\"]"],
       ],
     }),
