@@ -224,7 +224,7 @@ local({
       const test = tests.find((t) => t.id === id)
       return {
         id: id ?? 'unknown',
-        label: test?.label ?? id ?? 'Test',
+        label: test?.label ?? id ?? 'Check',
         passed,
         detail: passed ? undefined : detail || undefined,
       }

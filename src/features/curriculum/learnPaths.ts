@@ -9,7 +9,7 @@ export interface ParsedLearnPath {
   step: LevelStep
 }
 
-const LEVEL_STEPS = new Set<LevelStep>(['intro', 'challenges', 'test'])
+const LEVEL_STEPS = new Set<LevelStep>(['intro', 'challenges', 'quiz'])
 
 function normalizePath(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, '') || '/'
@@ -48,8 +48,10 @@ export function parseAppPath(pathname: string): ParsedLearnPath {
   }
 
   const [, langId, sectionId, levelId, maybeStep] = learnMatch
+  // The quiz step used to be called "test"; old links and bookmarks still open it.
+  const stepName = maybeStep === 'test' ? 'quiz' : maybeStep
   const step =
-    maybeStep && LEVEL_STEPS.has(maybeStep as LevelStep) ? (maybeStep as LevelStep) : 'intro'
+    stepName && LEVEL_STEPS.has(stepName as LevelStep) ? (stepName as LevelStep) : 'intro'
   const resolvedLevelId = levelId && !LEVEL_STEPS.has(levelId as LevelStep) ? levelId : null
 
   return {

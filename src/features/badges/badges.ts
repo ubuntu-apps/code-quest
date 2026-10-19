@@ -62,7 +62,7 @@ export function badgeDefinitions({
         id: `section:${languageId}:${sec.id}`,
         kind: 'section',
         title: sec.title,
-        description: `Pass every quiz in ${sec.title}, or test out of it`,
+        description: `Pass every quiz in ${sec.title}, or its skip-ahead quiz`,
         earned: sec.finished,
       }),
     ),

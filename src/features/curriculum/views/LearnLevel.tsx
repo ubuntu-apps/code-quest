@@ -156,7 +156,7 @@ export function LearnLevel({
   const nextAfter = (chIndex: number): { label: string; go: () => void } => {
     const rest = [...level.challenges.slice(chIndex + 1), ...level.challenges.slice(0, chIndex)]
     const next = rest.find((c) => !isDone(c.id))
-    if (!next) return { label: 'Take the quiz', go: () => handleStepChange('test') }
+    if (!next) return { label: 'Take the quiz', go: () => handleStepChange('quiz') }
     return {
       label: 'Next challenge',
       go: () => document.getElementById(`challenge-${next.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
@@ -248,7 +248,7 @@ export function LearnLevel({
             </section>
           )}
 
-          {levelStep === 'test' && (
+          {levelStep === 'quiz' && (
             <TestStep
               level={level}
               prog={prog}

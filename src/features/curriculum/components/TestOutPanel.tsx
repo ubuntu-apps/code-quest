@@ -60,7 +60,7 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
   if (testedOut && !open) {
     return (
       <p className="cq-testout-done" role="status">
-        {`You tested out of this section, so you can open ${unlocks}. The lessons are still here to practise.`}
+        {`You passed the skip-ahead quiz, so you can open ${unlocks}. The lessons are still here to practise.`}
       </p>
     )
   }
@@ -70,11 +70,11 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
       <section className="cq-panel cq-testout">
         <h2 className="cq-subtitle">Already know this?</h2>
         <p className="cq-muted">
-          {`Take a test-out quiz of ${buildTestOutQuestions(levels, undefined, () => 0).length} questions from this section's lessons. Score ${TEST_OUT_PASS_PERCENT}% or more to open ${unlocks}. It doesn't earn XP, and you can take it again.`}
+          {`Take a skip-ahead quiz of ${buildTestOutQuestions(levels, undefined, () => 0).length} questions from this section's lessons. Score ${TEST_OUT_PASS_PERCENT}% or more to open ${unlocks}. It doesn't earn XP, and you can take it again.`}
         </p>
         <div className="cq-row">
           <button type="button" className="cq-btn" onClick={start}>
-            Start the test-out quiz
+            Start the skip-ahead quiz
           </button>
         </div>
       </section>
@@ -84,7 +84,7 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
   // TestStep shows any quiz; this one is a made-up "level" holding the picked questions.
   const quizLevel = {
     id: `testout_${sectionId}`,
-    title: `${section.sectionRef.title} test-out`,
+    title: `${section.sectionRef.title} skip-ahead quiz`,
     intro: { bodyMarkdown: '' },
     challenges: [],
     test: { passingScorePercent: TEST_OUT_PASS_PERCENT, questions },
@@ -93,7 +93,7 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
   return (
     <section className="cq-testout cq-testout--open">
       <div className="cq-card-row cq-card-row--panel">
-        <h2 className="cq-subtitle">Test-out quiz</h2>
+        <h2 className="cq-subtitle">Skip-ahead quiz</h2>
         <button type="button" className="cq-btn cq-btn--sm" onClick={() => setOpen(false)}>
           Close
         </button>

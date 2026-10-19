@@ -4,7 +4,7 @@ import { STEP_PANEL_ID, stepTabId, type LevelStep } from '../constants'
 const STEP_TABS: { id: LevelStep; label: string }[] = [
   { id: 'intro', label: 'Intro' },
   { id: 'challenges', label: 'Challenges' },
-  { id: 'test', label: 'Test' },
+  { id: 'quiz', label: 'Quiz' },
 ]
 
 interface LevelStepNavProps {
@@ -16,7 +16,7 @@ interface LevelStepNavProps {
   placement?: 'top' | 'bottom'
   /** Solved challenges out of all of them, shown on the Challenges tab. */
   challengeCount?: { done: number; total: number }
-  /** The quiz was passed, shown as a tick on the Test tab. */
+  /** The quiz was passed, shown as a tick on the Quiz tab. */
   testPassed?: boolean
 }
 
@@ -34,12 +34,12 @@ export function LevelStepNav({
     if (id === 'challenges' && challengeCount && challengeCount.total > 0) {
       return `${challengeCount.done}/${challengeCount.total}`
     }
-    if (id === 'test' && testPassed) return '✓'
+    if (id === 'quiz' && testPassed) return '✓'
     return null
   }
   /** What the badge says to a screen reader. */
   const badgeSpoken = (id: LevelStep): string =>
-    id === 'test' ? ', passed' : `, ${challengeCount?.done ?? 0} of ${challengeCount?.total ?? 0} solved`
+    id === 'quiz' ? ', passed' : `, ${challengeCount?.done ?? 0} of ${challengeCount?.total ?? 0} solved`
 
   // The top row is a tab list (arrow keys move between tabs, Tab moves on to the
   // content). The bottom row repeats it as plain buttons for after a long page.
@@ -91,7 +91,7 @@ export function LevelStepNav({
               {badgeText ? (
                 <span
                   className={`cq-step-tab-badge${
-                    (t.id === 'challenges' && challengeCount?.done === challengeCount?.total) || t.id === 'test'
+                    (t.id === 'challenges' && challengeCount?.done === challengeCount?.total) || t.id === 'quiz'
                       ? ' cq-step-tab-badge--done'
                       : ''
                   }`}

@@ -1,6 +1,6 @@
 export type TabId = 'learn' | 'about'
 export type LearnView = 'languages' | 'sections' | 'levels' | 'level'
-export type LevelStep = 'intro' | 'challenges' | 'test'
+export type LevelStep = 'intro' | 'challenges' | 'quiz'
 
 export const PASS_DEFAULT = 70
 export const DEFAULT_SANDBOX_CODE: Record<string, string> = {
