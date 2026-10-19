@@ -77,7 +77,7 @@ export function EditableValidationEditor({ validation, onChange }: EditableValid
           {(validation.tests ?? []).map((t, i) => (
             <div key={t.id} className="cq-editable-nested">
               <EditableTextarea
-                label={`Test ${i + 1} label`}
+                label={`Check ${i + 1} label`}
                 rows={1}
                 value={t.label}
                 onChange={(label) => {
@@ -87,7 +87,7 @@ export function EditableValidationEditor({ validation, onChange }: EditableValid
                 }}
               />
               <EditableTextarea
-                label={`Test ${i + 1} assertion`}
+                label={`Check ${i + 1} assertion`}
                 rows={2}
                 value={t.assertion}
                 onChange={(assertion) => {

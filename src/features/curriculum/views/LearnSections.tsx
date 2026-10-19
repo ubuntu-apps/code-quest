@@ -80,7 +80,7 @@ export function LearnSections({
               : 'not-started'
           const statusLabel = finished
             ? testedOut && completedCount < levels.length
-              ? 'Tested out'
+              ? 'Skipped ahead'
               : 'Completed'
             : status === 'in-progress'
               ? 'In progress'

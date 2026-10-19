@@ -202,7 +202,7 @@ export function TestStep({
                     canMoveDown={qi < level.test.questions.length - 1}
                     onMoveUp={() => onMoveQuestion(q.id, -1)}
                     onMoveDown={() => onMoveQuestion(q.id, 1)}
-                    confirmMessage="Delete this test question?"
+                    confirmMessage="Delete this quiz question?"
                     onDelete={() => onRemoveQuestion(q.id)}
                   />
                 </div>
@@ -226,7 +226,7 @@ export function TestStep({
           className="cq-btn cq-btn--primary"
           onClick={resultCurrent ? onRetake : onSubmit}
         >
-          {resultCurrent ? 'Retake' : testResult ? 'Submit again' : 'Submit test'}
+          {resultCurrent ? 'Retake' : testResult ? 'Submit again' : 'Submit quiz'}
         </button>
         {testResult && !resultCurrent ? (
           <button type="button" className="cq-btn" onClick={onRetake}>

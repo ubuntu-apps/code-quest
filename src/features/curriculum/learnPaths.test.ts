@@ -40,12 +40,17 @@ describe('learnPaths', () => {
     })
   })
 
+  it('opens the quiz from old "test" links', () => {
+    expect(parseAppPath('/learn/python/fundamentals/l1/test')).toMatchObject({ levelId: 'l1', step: 'quiz' })
+    expect(parseAppPath('/learn/python/fundamentals/l1/quiz')).toMatchObject({ levelId: 'l1', step: 'quiz' })
+  })
+
   it('builds stable paths', () => {
     expect(learnHomePath()).toBe('/learn')
     expect(learnLanguagePath('python')).toBe('/learn/python')
     expect(learnSectionPath('python', 'fundamentals')).toBe('/learn/python/fundamentals')
-    expect(learnLevelPath('python', 'fundamentals', 'l1', 'test')).toBe(
-      '/learn/python/fundamentals/l1/test',
+    expect(learnLevelPath('python', 'fundamentals', 'l1', 'quiz')).toBe(
+      '/learn/python/fundamentals/l1/quiz',
     )
     expect(tabPath('about')).toBe('/about')
     expect(tabPath('learn', 'python')).toBe('/learn/python')
