@@ -2,7 +2,7 @@ import type { LoadedSection, Level } from '../types'
 import { loadProgress } from '../progressStorage'
 import { completedChallengeIds } from '../helpers'
 import { AddItemButton, EditableText } from '../../editor'
-import { CatalogListItem } from '../components/CatalogListItem'
+import { CatalogListItem, StatusMeta, type ProgressStatus } from '../components/CatalogListItem'
 import { TestOutPanel } from '../components/TestOutPanel'
 import { hasTestedOut } from '../testOut'
 
@@ -59,11 +59,31 @@ export function LearnLevels({
           const levelIndex = selectedSection.file.levels.findIndex((v) => v.id === lvl.id)
           const locked = !isEditMode && !isLevelUnlocked(selectedSection.file.levels, levelIndex)
           const p = loadProgress(languageId, lvl.id)
-          const challengesDone =
-            lvl.challenges.length === 0 ||
-            lvl.challenges.every((c) => p.challengesCompleted.includes(c.id))
-          const done = challengesDone && p.testPassed
-          const partial = !done && (completedChallengeIds(lvl, p.challengesCompleted).length > 0 || p.testPassed)
+          const solved = completedChallengeIds(lvl, p.challengesCompleted).length
+          const total = lvl.challenges.length
+          const challengesDone = total === 0 || solved === total
+          const challengeCount = total > 0 ? `${solved}/${total} challenges` : undefined
+
+          // Not started → in progress → all challenges solved → quiz passed (each with its colour).
+          const status: ProgressStatus = p.testPassed
+            ? 'passed'
+            : challengesDone && total > 0
+              ? 'challenges-done'
+              : solved > 0
+                ? 'in-progress'
+                : 'not-started'
+          const statusLabel =
+            status === 'passed'
+              ? challengesDone
+                ? 'Completed'
+                : 'Quiz passed'
+              : status === 'challenges-done'
+                ? 'Challenges done'
+                : status === 'in-progress'
+                  ? 'In progress'
+                  : 'Not started'
+          const statusDetails =
+            status === 'challenges-done' ? 'take the quiz' : status === 'passed' && challengesDone ? undefined : challengeCount
 
           const isProject = lvl.kind === 'project'
           const projectLabel =
@@ -72,21 +92,16 @@ export function LearnLevels({
               : lvl.projectDifficulty === 'hard'
                 ? 'Optional project'
                 : 'Project'
-          const statusMeta = locked
-            ? sectionLockedHint
-              ? 'Locked'
-              : 'Locked · pass previous test to unlock'
-            : done
-              ? isProject
-                ? `${projectLabel} · completed`
-                : 'Completed'
-              : partial
-                ? isProject
-                  ? `${projectLabel} · in progress`
-                  : 'In progress'
-                : isProject
-                  ? `${projectLabel} · not started`
-                  : 'Not started'
+          const lessonNumber = selectedSection.file.levels.slice(0, lvlIndex + 1).filter((l) => l.kind !== 'project').length
+          const lessonCount = selectedSection.file.levels.filter((l) => l.kind !== 'project').length
+          const eyebrow = isProject ? projectLabel : `Lesson ${lessonNumber} of ${lessonCount}`
+          const meta = locked ? (
+            <span className="cq-card-meta">
+              {sectionLockedHint ? 'Locked' : 'Locked · pass the previous quiz to unlock'}
+            </span>
+          ) : (
+            <StatusMeta status={status} label={statusLabel} details={statusDetails} />
+          )
 
           return (
             <CatalogListItem
@@ -97,7 +112,9 @@ export function LearnLevels({
                 if (locked && !isEditMode) return
                 onOpenLevel(lvl)
               }}
-              meta={<span className="cq-card-meta">{statusMeta}</span>}
+              eyebrow={eyebrow}
+              meta={meta}
+              status={locked ? undefined : status}
               locked={locked}
               disabled={locked}
               listIndex={lvlIndex}

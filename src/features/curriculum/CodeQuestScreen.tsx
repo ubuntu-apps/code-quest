@@ -42,6 +42,7 @@ import {
 import { mergeAboutContent } from '../editor/aboutContent'
 import type { TabId } from './constants'
 import { useLearnRoute } from './hooks/useLearnRoute'
+import { useTabMemory } from './hooks/useTabMemory'
 import { learnBreadcrumbs } from './learnPaths'
 import { rememberLastLevel } from './lastLevel'
 import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageStorage'
@@ -123,12 +124,14 @@ export function CodeQuestScreen() {
     levelId,
     levelStep,
     goToTab,
+    navigate,
     goToLanguage,
     goToSection,
     goToLevel,
     goToLevelStep,
     backFromLearn,
   } = useLearnRoute()
+  const switchTab = useTabMemory({ tab, activeLanguageId, goToTab, navigate })
 
   const prevLevelIdRef = useRef<string | null>(null)
 
@@ -570,7 +573,7 @@ export function CodeQuestScreen() {
 
       <Notices xpToast={xpToast} badgeToast={badgeToast} shareNotice={shareNotice} />
 
-      <BottomNav items={navItems} activeId={tab} onSelect={(id) => goToTab(id as TabId)} />
+      <BottomNav items={navItems} activeId={tab} onSelect={(id) => switchTab(id as TabId)} />
 
       {shareSheetOpen ? (
         <ShareSheet onSelect={(variant) => void handleShareSelect(variant)} onClose={closeShareSheet} />

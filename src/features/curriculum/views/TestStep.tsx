@@ -111,8 +111,10 @@ export function TestStep({
           return (
           <li key={q.id} className={`cq-test-item${itemClass}`}>
             <div className="cq-test-prompt">
-              <span className="cq-test-num">{qi + 1}.</span>
               <div className="cq-test-content">
+                <p className="cq-test-num">
+                  Question {qi + 1} of {level.test.questions.length}
+                </p>
                 <div className="cq-card-row cq-card-row--panel">
                   <div className="cq-test-body">
                     {showFeedback && (

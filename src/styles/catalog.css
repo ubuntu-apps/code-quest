@@ -47,6 +47,61 @@
   color: var(--cq-muted);
 }
 
+/* "Lesson 3 of 14" / "Section 2 of 10", above the card title. */
+.cq-card-eyebrow {
+  font-size: var(--cq-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--cq-muted);
+}
+
+/* Progress colours: a coloured edge on the card and a matching label.
+   Not started: plain. In progress: blue. Challenges done: orange. Passed: green. */
+.cq-card-btn--in-progress {
+  --status-color: var(--cq-accent);
+}
+
+.cq-card-btn--challenges-done {
+  --status-color: var(--cq-hl-number);
+}
+
+.cq-card-btn--passed {
+  --status-color: var(--cq-success);
+}
+
+.cq-card-btn--in-progress,
+.cq-card-btn--challenges-done,
+.cq-card-btn--passed {
+  border-left: 4px solid var(--status-color);
+  padding-left: calc(1rem - 3px);
+}
+
+.cq-status {
+  display: inline-block;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-weight: 600;
+  color: var(--status-color, var(--cq-muted));
+  background: color-mix(in srgb, var(--status-color, var(--cq-muted)) 12%, transparent);
+}
+
+.cq-status--not-started {
+  --status-color: var(--cq-muted);
+}
+
+.cq-status--in-progress {
+  --status-color: var(--cq-accent-text);
+}
+
+.cq-status--challenges-done {
+  /* A little toward the text colour, so the label is easy to read on its tint in both themes. */
+  --status-color: color-mix(in srgb, var(--cq-hl-number) 80%, var(--cq-text));
+}
+
+.cq-status--passed {
+  --status-color: var(--cq-success);
+}
+
 .cq-section-preview-note {
   margin: -0.25rem 0 0.25rem;
 }

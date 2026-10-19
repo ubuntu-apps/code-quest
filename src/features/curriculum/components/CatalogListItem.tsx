@@ -1,6 +1,19 @@
 import type { ReactNode } from 'react'
 import { EditableText, ListEditorActions } from '../../editor'
 
+/** Where the learner is with a lesson or section; each has its own colour. */
+export type ProgressStatus = 'not-started' | 'in-progress' | 'challenges-done' | 'passed'
+
+/** A coloured label such as "In progress", with optional details after it. */
+export function StatusMeta({ status, label, details }: { status: ProgressStatus; label: string; details?: string }) {
+  return (
+    <span className="cq-card-meta">
+      <span className={`cq-status cq-status--${status}`}>{label}</span>
+      {details ? <span className="cq-status-details"> · {details}</span> : null}
+    </span>
+  )
+}
+
 interface CatalogListItemProps {
   title: string
   onTitleChange: (title: string) => void
@@ -13,6 +26,10 @@ interface CatalogListItemProps {
     onChange: (value: string) => void
   }
   progressPercent?: number
+  /** Small line above the title, e.g. "Lesson 3 of 14". */
+  eyebrow?: string
+  /** Colours the card's edge to match its status label. */
+  status?: ProgressStatus
   locked?: boolean
   disabled?: boolean
   listIndex: number
@@ -32,6 +49,8 @@ export function CatalogListItem({
   meta,
   metaEditable,
   progressPercent,
+  eyebrow,
+  status,
   locked = false,
   disabled = false,
   listIndex,
@@ -46,10 +65,11 @@ export function CatalogListItem({
       <div className="cq-card-row">
         <button
           type="button"
-          className={`cq-card-btn${locked ? ' cq-card-btn--locked' : ''}`}
+          className={`cq-card-btn${locked ? ' cq-card-btn--locked' : ''}${status && !locked ? ` cq-card-btn--${status}` : ''}`}
           disabled={disabled}
           onClick={onClick}
         >
+          {eyebrow ? <span className="cq-card-eyebrow">{eyebrow}</span> : null}
           <EditableText
             className="cq-card-title"
             value={title}

@@ -123,6 +123,8 @@ export function ChallengeCard({
             ? `Not yet. ${failedChecks} of ${testResults.length} checks failed.`
             : 'Not yet. This answer did not pass.'
 
+  const challengeNumber = `Challenge ${chIndex + 1} of ${totalChallenges}`
+
   const toggleAnswer = () => {
     if (!showAnswer && !done && !answerViewed && !isEditingLocal && !isAdmin) onRevealAnswer()
     setShowAnswer((v) => !v)
@@ -131,6 +133,7 @@ export function ChallengeCard({
   if (collapsed) {
     return (
       <div id={`challenge-${ch.id}`} className="cq-panel cq-challenge-card cq-challenge-card--folded">
+        <p className="cq-challenge-number">{challengeNumber}</p>
         <div className="cq-card-row cq-card-row--panel">
           <h2 className="cq-subtitle">{ch.title}</h2>
           <span className="cq-badge cq-badge--ok">Solved</span>
@@ -149,6 +152,7 @@ export function ChallengeCard({
 
   return (
     <div id={`challenge-${ch.id}`} className="cq-panel cq-challenge-card">
+      <p className="cq-challenge-number">{challengeNumber}</p>
       <div className="cq-card-row cq-card-row--panel">
         <EditableText
           as="h2"

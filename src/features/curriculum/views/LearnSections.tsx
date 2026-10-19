@@ -2,7 +2,7 @@ import type { LanguageBundle } from '../types'
 import { computeLevelXp, sectionUnlockHint } from '../helpers'
 import { loadProgress } from '../progressStorage'
 import { AddItemButton, EditableText } from '../../editor'
-import { CatalogListItem } from '../components/CatalogListItem'
+import { CatalogListItem, StatusMeta, type ProgressStatus } from '../components/CatalogListItem'
 import { hasTestedOut } from '../testOut'
 import { courseCompletion } from '../../certificate/courseCompletion'
 import { CertificatePanel } from '../../certificate/CertificatePanel'
@@ -72,9 +72,30 @@ export function LearnSections({
           const previousRef = bundle.index.sections[secIndex - 1]
           const previousLevels =
             bundle.sections.find((s) => s.sectionRef.id === previousRef?.id)?.file.levels ?? []
-          const statusMeta = previewOnly
-            ? sectionUnlockHint(previousLevels, previousRef?.title ?? 'the previous section')
-            : `${testedOut ? 'Tested out · ' : ''}${completedCount}/${levels.length} levels complete · ${sectionXp} XP`
+          const finished = testedOut || (levels.length > 0 && completedCount === levels.length)
+          const status: ProgressStatus = finished
+            ? 'passed'
+            : completedCount > 0 || sectionXp > 0
+              ? 'in-progress'
+              : 'not-started'
+          const statusLabel = finished
+            ? testedOut && completedCount < levels.length
+              ? 'Tested out'
+              : 'Completed'
+            : status === 'in-progress'
+              ? 'In progress'
+              : 'Not started'
+          const meta = previewOnly ? (
+            <span className="cq-card-meta">
+              {sectionUnlockHint(previousLevels, previousRef?.title ?? 'the previous section')}
+            </span>
+          ) : (
+            <StatusMeta
+              status={status}
+              label={statusLabel}
+              details={`${completedCount}/${levels.length} levels complete · ${sectionXp} XP`}
+            />
+          )
 
           return (
             <CatalogListItem
@@ -84,7 +105,9 @@ export function LearnSections({
               onTitleChange={(title) => onUpdateSectionTitle(sec.id, title)}
               onTitleCommit={(title) => onUpdateSectionTitle(sec.id, title, { commit: true })}
               onClick={() => onSelectSection(sec.id)}
-              meta={<span className="cq-card-meta">{statusMeta}</span>}
+              eyebrow={`Section ${secIndex + 1} of ${bundle.index.sections.length}`}
+              meta={meta}
+              status={previewOnly ? undefined : status}
               progressPercent={pct}
               listIndex={secIndex}
               listLength={bundle.index.sections.length}
