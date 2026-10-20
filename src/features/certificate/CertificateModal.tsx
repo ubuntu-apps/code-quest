@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Download, Printer, X } from 'lucide-react'
 import { CertificateArt } from './CertificateArt'
-import { certificateFilename, certificatePng, downloadBlob, printCertificate, siteLabel } from './certificateImage'
+import { certificateFilename, printCertificate, saveCertificate, siteLabel } from './certificateImage'
 import { certificateEarnedOn, loadCertificateName, saveCertificateName } from './certificateStorage'
 import { subjectTitle, type CertificateSubject } from './certificateSubject'
 import { SUPPORT_CONFIG } from '../support/supportConfig'
@@ -26,6 +26,8 @@ export function CertificateModal({ subject, baseUrl, onClose }: CertificateModal
   const [edition, setEdition] = useState<'standard' | 'supporter'>('supporter')
   const showSupporterEdition = supporter && edition === 'supporter'
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [saveNote, setSaveNote] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
   const nameMissing = name.trim() === ''
 
   useEffect(() => {
@@ -37,13 +39,19 @@ export function CertificateModal({ subject, baseUrl, onClose }: CertificateModal
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onClose])
 
-  const download = async () => {
-    if (!svgRef.current) return
+  const save = async () => {
+    if (!svgRef.current || saving) return
     setSaveError(null)
+    setSaveNote(null)
+    setSaving(true)
     try {
-      downloadBlob(await certificatePng(svgRef.current), certificateFilename(subject))
+      const result = await saveCertificate(svgRef.current, certificateFilename(subject))
+      if (result.kind === 'saved') setSaveNote(`Saved as "${result.filename}".`)
+      else if (result.kind === 'downloaded') setSaveNote(`Downloaded as "${result.filename}" (usually to your Downloads folder).`)
     } catch (e: unknown) {
-      setSaveError(e instanceof Error ? e.message : 'Could not save the image.')
+      setSaveError(e instanceof Error ? e.message : 'Could not save the certificate.')
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -110,9 +118,14 @@ export function CertificateModal({ subject, baseUrl, onClose }: CertificateModal
         </div>
 
         <div className="cq-row cq-certificate-actions">
-          <button type="button" className="cq-btn cq-btn--primary" disabled={nameMissing} onClick={() => void download()}>
+          <button
+            type="button"
+            className="cq-btn cq-btn--primary"
+            disabled={nameMissing || saving}
+            onClick={() => void save()}
+          >
             <Download size={16} aria-hidden />
-            Save image
+            {saving ? 'Saving…' : 'Save as PDF'}
           </button>
           <button type="button" className="cq-btn" disabled={nameMissing} onClick={printCertificate}>
             <Printer size={16} aria-hidden />
@@ -120,6 +133,9 @@ export function CertificateModal({ subject, baseUrl, onClose }: CertificateModal
           </button>
           {nameMissing ? <span className="cq-muted">Type your name first.</span> : null}
         </div>
+        <p className="cq-muted cq-certificate-save-note" role="status">
+          {saveNote}
+        </p>
         {saveError ? (
           <p className="cq-error" role="alert">
             {saveError}
