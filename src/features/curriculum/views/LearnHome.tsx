@@ -25,6 +25,8 @@ interface LearnHomeProps {
   xpCurrentLevel: number
   totalXp: number
   streak: StreakStatus
+  /** The daily review, shown under the XP and streak. */
+  review?: ReactNode
   /** The badges panel, shown under the XP and streak. */
   badges?: ReactNode
   /** The app's address, for the reminder's link. */
@@ -53,6 +55,7 @@ export function LearnHome({
   xpCurrentLevel,
   totalXp,
   streak,
+  review,
   badges,
   appUrl,
   homeLead,
@@ -74,11 +77,11 @@ export function LearnHome({
   const nextFreezeAt = (Math.floor(streakCount / FREEZE_EVERY_DAYS) + 1) * FREEZE_EVERY_DAYS
   const streakHint =
     streakCount === 0
-      ? 'Solve a challenge or take a quiz each day to keep your streak.'
+      ? 'Solve a challenge, take a quiz or do the daily review each day to keep your streak.'
       : streak.atRisk && streak.coveredByFreeze > 0
-        ? `A streak freeze covers the day you missed. Do a challenge or quiz today to keep your streak.`
+        ? `A streak freeze covers the day you missed. Do a challenge, quiz or review today to keep your streak.`
         : streak.atRisk
-          ? 'Do a challenge or quiz today to keep it going.'
+          ? 'Do a challenge, quiz or review today to keep it going.'
           : 'Done for today. See you tomorrow!'
 
   return (
@@ -147,6 +150,7 @@ export function LearnHome({
           </div>
         </div>
       </div>
+      {review}
       {badges}
       <EditableText as="p" className="cq-lead" value={homeLead} onChange={onUpdateHomeLead} />
       <ul className="cq-card-list">

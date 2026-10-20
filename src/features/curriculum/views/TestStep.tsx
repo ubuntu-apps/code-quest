@@ -34,6 +34,13 @@ interface TestStepProps {
   onGoToChallenges?: () => void
   /** Shown under the result once the quiz is passed (e.g. a section certificate). */
   afterPass?: ReactNode
+  /**
+   * Practice (the daily review): no passing score, "Check answers", and the right answers
+   * and explanations are shown after the first check.
+   */
+  practice?: boolean
+  /** The lesson each question comes from, shown next to its number (used in review). */
+  questionSources?: Record<string, string>
 }
 
 export function TestStep({
@@ -57,6 +64,8 @@ export function TestStep({
   challengesDone,
   onGoToChallenges,
   afterPass,
+  practice = false,
+  questionSources,
 }: TestStepProps) {
   const { isEditingLocal } = useEditorMode()
   // Before a first attempt, nudge learners who skipped most of the challenges (not a lock).
@@ -69,8 +78,9 @@ export function TestStep({
     challengesTotal > 0 &&
     challengesDone < Math.ceil(challengesTotal / 2)
   // Right answers are shown only once the quiz is passed (now or before), so a
-  // failed attempt can't be turned into a pass by reading the feedback.
-  const revealAnswers = testResult !== null && (testResult.passed || prog.testPassed)
+  // failed attempt can't be turned into a pass by reading the feedback. In practice
+  // nothing is at stake, so they are shown after the first check.
+  const revealAnswers = testResult !== null && (practice || testResult.passed || prog.testPassed)
   const resultCurrent = testResult !== null && Object.keys(testEdited).length === 0
 
   return (
@@ -85,23 +95,25 @@ export function TestStep({
           ) : null}
         </p>
       ) : null}
-      <p className="cq-muted">
-        Passing score:{' '}
-        {isEditingLocal ? (
-          <input
-            type="number"
-            className="cq-editable-input"
-            style={{ width: '4rem', display: 'inline' }}
-            min={0}
-            max={100}
-            value={level.test.passingScorePercent ?? PASS_DEFAULT}
-            onChange={(e) => onUpdatePassingScore(Number(e.target.value))}
-          />
-        ) : (
-          (level.test.passingScorePercent ?? PASS_DEFAULT)
-        )}
-        % · {prog.testPassed ? 'You already passed at least once.' : 'Answer all questions, then Submit.'}
-      </p>
+      {practice ? null : (
+        <p className="cq-muted">
+          Passing score:{' '}
+          {isEditingLocal ? (
+            <input
+              type="number"
+              className="cq-editable-input"
+              style={{ width: '4rem', display: 'inline' }}
+              min={0}
+              max={100}
+              value={level.test.passingScorePercent ?? PASS_DEFAULT}
+              onChange={(e) => onUpdatePassingScore(Number(e.target.value))}
+            />
+          ) : (
+            (level.test.passingScorePercent ?? PASS_DEFAULT)
+          )}
+          % · {prog.testPassed ? 'You already passed at least once.' : 'Answer all questions, then Submit.'}
+        </p>
+      )}
       <ul className="cq-test-list">
         {level.test.questions.map((q, qi) => {
           const showFeedback = testResult !== null && !testEdited[q.id]
@@ -118,6 +130,7 @@ export function TestStep({
               <div className="cq-test-content">
                 <p className="cq-test-num">
                   Question {qi + 1} of {level.test.questions.length}
+                  {questionSources?.[q.id] ? <span className="cq-test-source"> · {questionSources[q.id]}</span> : null}
                 </p>
                 <div className="cq-card-row cq-card-row--panel">
                   <div className="cq-test-body">
@@ -230,9 +243,19 @@ export function TestStep({
           className="cq-btn cq-btn--primary"
           onClick={resultCurrent ? onRetake : onSubmit}
         >
-          {resultCurrent ? 'Retake' : testResult ? 'Submit again' : 'Submit quiz'}
+          {practice
+            ? resultCurrent
+              ? 'Done'
+              : testResult
+                ? 'Check again'
+                : 'Check answers'
+            : resultCurrent
+              ? 'Retake'
+              : testResult
+                ? 'Submit again'
+                : 'Submit quiz'}
         </button>
-        {testResult && !resultCurrent ? (
+        {testResult && !resultCurrent && !practice ? (
           <button type="button" className="cq-btn" onClick={onRetake}>
             Start over
           </button>
@@ -241,14 +264,20 @@ export function TestStep({
       {/* Read out after Submit; the score line below appears too late to be announced itself. */}
       <p className="cq-sr-only" role="status">
         {testResult && resultCurrent
-          ? `Score ${testResult.correct} out of ${testResult.total}. ${testResult.passed ? 'Passed.' : 'Not passed.'}`
+          ? `Score ${testResult.correct} out of ${testResult.total}.${practice ? '' : testResult.passed ? ' Passed.' : ' Not passed.'}`
           : ''}
       </p>
       {testResult && resultCurrent && (
-        <p className={testResult.passed ? 'cq-score cq-score--pass' : 'cq-score cq-score--fail'}>
+        <p
+          className={
+            (practice ? testResult.correct * 2 >= testResult.total : testResult.passed)
+              ? 'cq-score cq-score--pass'
+              : 'cq-score cq-score--fail'
+          }
+        >
           Score {testResult.correct}/{testResult.total} (
-          {Math.round((testResult.correct / Math.max(testResult.total, 1)) * 100)}%){' '}
-          {testResult.passed ? 'Passed' : 'Not passed'}
+          {Math.round((testResult.correct / Math.max(testResult.total, 1)) * 100)}%)
+          {practice ? null : testResult.passed ? ' Passed' : ' Not passed'}
           {!revealAnswers && ' · Change the answers marked Incorrect and submit again. Correct answers are shown once you pass.'}
         </p>
       )}
