@@ -23,6 +23,7 @@ import { hasTestedOut } from './testOut'
 import { warmUpPython } from './pythonSandbox'
 import { preloadCodeEditor } from './codeEditor'
 import { playSound } from '../sound/sound'
+import { SectionCertificateNotice } from '../certificate/SectionCertificateNotice'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { Breadcrumbs } from './components/Breadcrumbs'
@@ -398,6 +399,20 @@ export function CodeQuestScreen() {
       )
     }
 
+    // "Section complete" with its certificate, once every lesson here is passed (or skipped ahead).
+    const sectionCertificate =
+      bundleForView && selectedSection && languageId && !isEditMode ? (
+        <SectionCertificateNotice
+          languageId={languageId}
+          courseTitle={bundleForView.index.title}
+          section={selectedSection}
+          sectionNumber={
+            bundleForView.index.sections.findIndex((ref) => ref.id === selectedSection.sectionRef.id) + 1
+          }
+          baseUrl={baseUrl}
+        />
+      ) : null
+
     if (learnView === 'levels' && selectedSection && languageId) {
       const secId = selectedSection.sectionRef.id
       return (
@@ -420,6 +435,7 @@ export function CodeQuestScreen() {
               : null
           }
           nextSectionTitle={bundleForView?.sections[selectedSectionIndex + 1]?.sectionRef.title ?? null}
+          certificate={sectionCertificate}
           onOpenLevel={(lvl) => {
             if (secId) openLevel(secId, lvl.id)
           }}
@@ -502,6 +518,7 @@ export function CodeQuestScreen() {
           showNext={showNext}
           nextLevelTitle={nextLevel?.title ?? null}
           onGoToNextLevel={goToNextLevel}
+          afterQuizPassed={sectionCertificate}
         />
       )
     }

@@ -1,14 +1,12 @@
 import { forwardRef } from 'react'
+import type { CertificateSubject } from './certificateSubject'
 
 export const CERTIFICATE_WIDTH = 1100
 export const CERTIFICATE_HEIGHT = 780
 
 interface CertificateArtProps {
   name: string
-  courseTitle: string
-  sections: number
-  lessons: number
-  xp: number
+  subject: CertificateSubject
   earnedOn: Date
   /** Where the course was taken, e.g. "ubuntu-apps.github.io/code-quest". */
   siteLabel: string
@@ -27,11 +25,12 @@ const SERIF = "Georgia, 'Times New Roman', serif"
 const SANS = "system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 
 /**
- * The course certificate as an SVG, used for the preview, the downloaded image and
- * printing. The supporter edition has a gold frame and a supporter seal.
+ * A course or section certificate as an SVG, used for the preview, the downloaded image
+ * and printing. The supporter edition has a gold frame and a supporter seal; a section
+ * certificate has its own heading and the section number on the seal.
  */
 export const CertificateArt = forwardRef<SVGSVGElement, CertificateArtProps>(function CertificateArt(
-  { name, courseTitle, sections, lessons, xp, earnedOn, siteLabel, supporter },
+  { name, subject, earnedOn, siteLabel, supporter },
   ref,
 ) {
   const frame = supporter ? GOLD : ACCENT
@@ -40,6 +39,12 @@ export const CertificateArt = forwardRef<SVGSVGElement, CertificateArtProps>(fun
   const nameFits = shownName.length <= 26
   const date = earnedOn.toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' })
   const cx = CERTIFICATE_WIDTH / 2
+  const { courseTitle, section } = subject
+  const achievement = section
+    ? `has completed ${section.title}, section ${section.number} of the ${courseTitle} course`
+    : `has completed the ${courseTitle} course on CodeQuest`
+  // Like the name, a long line is squeezed to fit inside the frame.
+  const achievementFits = achievement.length <= 78
 
   return (
     <svg
@@ -50,7 +55,7 @@ export const CertificateArt = forwardRef<SVGSVGElement, CertificateArtProps>(fun
       height={CERTIFICATE_HEIGHT}
       viewBox={`0 0 ${CERTIFICATE_WIDTH} ${CERTIFICATE_HEIGHT}`}
       role="img"
-      aria-label={`Certificate: ${shownName} completed the ${courseTitle} course on CodeQuest, ${date}.`}
+      aria-label={`${section ? 'Section certificate' : 'Certificate'}: ${shownName} ${achievement}, ${date}.`}
     >
       <rect width={CERTIFICATE_WIDTH} height={CERTIFICATE_HEIGHT} fill={PAPER} />
       <rect x={24} y={24} width={CERTIFICATE_WIDTH - 48} height={CERTIFICATE_HEIGHT - 48} fill="none" stroke={frame} strokeWidth={supporter ? 6 : 3} />
@@ -60,7 +65,7 @@ export const CertificateArt = forwardRef<SVGSVGElement, CertificateArtProps>(fun
         CODEQUEST
       </text>
       <text x={cx} y={188} textAnchor="middle" fill={INK} fontFamily={SERIF} fontSize={48}>
-        Certificate of Completion
+        {section ? 'Section Certificate' : 'Certificate of Completion'}
       </text>
       <text x={cx} y={258} textAnchor="middle" fill={MUTED} fontFamily={SANS} fontSize={20}>
         This certifies that
@@ -78,11 +83,19 @@ export const CertificateArt = forwardRef<SVGSVGElement, CertificateArtProps>(fun
         {shownName}
       </text>
       <line x1={230} y1={366} x2={CERTIFICATE_WIDTH - 230} y2={366} stroke={MUTED} strokeWidth={1} />
-      <text x={cx} y={420} textAnchor="middle" fill={INK} fontFamily={SANS} fontSize={22}>
-        has completed the {courseTitle} course on CodeQuest
+      <text
+        x={cx}
+        y={420}
+        textAnchor="middle"
+        fill={INK}
+        fontFamily={SANS}
+        fontSize={22}
+        {...(achievementFits ? {} : { textLength: 900, lengthAdjust: 'spacingAndGlyphs' })}
+      >
+        {achievement}
       </text>
       <text x={cx} y={460} textAnchor="middle" fill={MUTED} fontFamily={SANS} fontSize={18}>
-        {sections} sections · {lessons} lessons · {xp} XP
+        {subject.stats}
       </text>
 
       {/* Seal */}
@@ -98,6 +111,15 @@ export const CertificateArt = forwardRef<SVGSVGElement, CertificateArtProps>(fun
             />
             <text y={34} textAnchor="middle" fill={GOLD} fontFamily={SANS} fontSize={12} fontWeight={700} letterSpacing={2}>
               SUPPORTER
+            </text>
+          </>
+        ) : section ? (
+          <>
+            <text y={6} textAnchor="middle" fill={ACCENT} fontFamily={SERIF} fontSize={30} fontWeight={700}>
+              CQ
+            </text>
+            <text y={32} textAnchor="middle" fill={ACCENT} fontFamily={SANS} fontSize={12} fontWeight={700} letterSpacing={2}>
+              SECTION {section.number}
             </text>
           </>
         ) : (
