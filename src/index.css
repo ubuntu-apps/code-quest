@@ -157,3 +157,13 @@ textarea,
 select {
   font-size: max(16px, 1em);
 }
+
+/* Some code fonts (Cascadia Code on Windows, Fira Code and others) join characters
+   such as != or >= into a single symbol. Learners need to see exactly what to type,
+   so every character is shown as written, in code, the editor and form fields alike
+   (form fields don't inherit it, hence the universal selector). */
+*,
+*::before,
+*::after {
+  font-variant-ligatures: none;
+}

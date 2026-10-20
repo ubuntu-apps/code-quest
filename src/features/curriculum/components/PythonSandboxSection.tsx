@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Check } from 'lucide-react'
 import { CodeEditor } from '../codeEditor'
 import { SANDBOX_SNIPPETS } from '../constants'
 import {
@@ -58,6 +59,8 @@ export function PythonSandboxSection({
   const runtimeSupported = isCodeRuntimeSupported()
   const snippets =
     snippetsOverride ?? SANDBOX_SNIPPETS[languageId] ?? SANDBOX_SNIPPETS.python
+  // The sample shown in the editor, while it is unchanged (editing it unmarks it).
+  const activeSnippetId = snippets.find((snippet) => snippet.code === code)?.id ?? null
 
   const handleReset = () => {
     onReset()
@@ -77,17 +80,22 @@ export function PythonSandboxSection({
       <label className="cq-label" id={`${languageId}-sandbox-label`} htmlFor={`${languageId}-sandbox-input`}>
         {languageLabel} code
       </label>
-      <div className="cq-sandbox-snippets">
-        {snippets.map((snippet) => (
-          <button
-            key={snippet.id}
-            type="button"
-            className="cq-btn cq-btn--snippet"
-            onClick={() => onCodeChange(snippet.code)}
-          >
-            {snippet.label}
-          </button>
-        ))}
+      <div className="cq-sandbox-snippets" role="group" aria-label="Sample code">
+        {snippets.map((snippet) => {
+          const active = snippet.id === activeSnippetId
+          return (
+            <button
+              key={snippet.id}
+              type="button"
+              className={`cq-btn cq-btn--snippet${active ? ' cq-btn--snippet-active' : ''}`}
+              aria-pressed={active}
+              onClick={() => onCodeChange(snippet.code)}
+            >
+              {active ? <Check size={12} aria-hidden /> : null}
+              {snippet.label}
+            </button>
+          )
+        })}
       </div>
       <CodeEditor
         id={`${languageId}-sandbox-input`}
