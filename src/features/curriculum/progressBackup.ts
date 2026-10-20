@@ -4,6 +4,7 @@ import { TEST_OUT_PREFIX } from './testOut'
 import { notifySupporterChanged, SUPPORTER_STORAGE_KEY } from '../support/supporterStorage'
 import { CERTIFICATE_EARNED_PREFIX, CERTIFICATE_NAME_KEY } from '../certificate/certificateStorage'
 import { BADGES_STORAGE_KEY } from '../badges/badges'
+import { REVIEW_PREFIX } from '../review/reviewStorage'
 
 const PROGRESS_PREFIX = 'codequest:progress:'
 /**
@@ -28,6 +29,7 @@ export function isBackupKey(key: string): boolean {
     key.startsWith(PROGRESS_FORMAT_PREFIX) ||
     key.startsWith(TEST_OUT_PREFIX) ||
     key.startsWith(CERTIFICATE_EARNED_PREFIX) ||
+    key.startsWith(REVIEW_PREFIX) ||
     SINGLE_KEYS.includes(key)
   )
 }

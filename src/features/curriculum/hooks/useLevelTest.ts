@@ -4,6 +4,7 @@ import { loadProgress, saveProgress } from '../progressStorage'
 import type { Level, TestGradeResult } from '../types'
 import { gradeTest } from '../validateAnswer'
 import { playSound } from '../../sound/sound'
+import { answeredQuestionIds, recordReviewAnswers } from '../../review/reviewStorage'
 
 /**
  * Answers and grading for a level's end-of-level test.
@@ -38,10 +39,11 @@ export function useLevelTest(
     const prev = loadProgress(languageId, level.id)
     saveProgress(languageId, level.id, { ...prev, testPassed: prev.testPassed || graded.passed })
     if (graded.passed && !prev.testPassed) onXp?.(TEST_XP)
+    // How each answered question went, for the daily review.
+    const answeredIds = answeredQuestionIds(short, mcq)
+    recordReviewAnswers(languageId, graded.byQuestion, answeredIds)
     // A blank submit isn't practice, so it doesn't keep the daily streak going.
-    const answered =
-      Object.values(short).some((value) => value.trim() !== '') || Object.keys(mcq).length > 0
-    if (answered) onActivity()
+    if (answeredIds.length > 0) onActivity()
   }
 
   const retake = () => {

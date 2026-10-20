@@ -12,6 +12,7 @@ import '../../styles/about.css'
 import '../../styles/editor-mode.css'
 import '../../styles/support.css'
 import '../../styles/badges.css'
+import '../../styles/review.css'
 
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, Info, Share2 } from 'lucide-react'
@@ -24,6 +25,7 @@ import { warmUpPython } from './pythonSandbox'
 import { preloadCodeEditor } from './codeEditor'
 import { playSound } from '../sound/sound'
 import { SectionCertificateNotice } from '../certificate/SectionCertificateNotice'
+import { ReviewPanel } from '../review/ReviewPanel'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { Breadcrumbs } from './components/Breadcrumbs'
@@ -347,6 +349,16 @@ export function CodeQuestScreen() {
           xpCurrentLevel={totalXp % 100}
           totalXp={totalXp}
           streak={streak}
+          review={
+            !isEditMode && activeOpenableId && languageBundles[activeOpenableId] ? (
+              <ReviewPanel
+                languageId={activeOpenableId}
+                bundle={languageBundles[activeOpenableId]}
+                progressVersion={progressVersion}
+                onActivity={recordActivity}
+              />
+            ) : null
+          }
           badges={<BadgesPanel earned={badges.earned} toEarn={badges.toEarn} />}
           appUrl={`${window.location.origin}${baseUrl}`}
           homeLead={displayHomeLead}
