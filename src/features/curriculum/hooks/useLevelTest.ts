@@ -3,6 +3,7 @@ import { PASS_DEFAULT, TEST_XP } from '../constants'
 import { loadProgress, saveProgress } from '../progressStorage'
 import type { Level, TestGradeResult } from '../types'
 import { gradeTest } from '../validateAnswer'
+import { playSound } from '../../sound/sound'
 
 /**
  * Answers and grading for a level's end-of-level test.
@@ -32,6 +33,7 @@ export function useLevelTest(
     const graded = gradeTest(level.test.questions, short, mcq, passing)
     setResult(graded)
     setEdited({})
+    playSound(graded.passed ? 'quizPass' : 'quizFail')
     if (graded.passed) setSessionReset(false)
     const prev = loadProgress(languageId, level.id)
     saveProgress(languageId, level.id, { ...prev, testPassed: prev.testPassed || graded.passed })

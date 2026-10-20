@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { LoadedSection, TestGradeResult, TestQuestion } from '../types'
 import { gradeTest } from '../validateAnswer'
+import { playSound } from '../../sound/sound'
 import { TestStep } from '../views/TestStep'
 import {
   buildTestOutQuestions,
@@ -50,6 +51,7 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
     const graded = gradeTest(questions, short, mcq, TEST_OUT_PASS_PERCENT)
     setResult(graded)
     setEdited({})
+    playSound(graded.passed ? 'quizPass' : 'quizFail')
     if (graded.passed && !testedOut) markTestedOut(languageId, sectionId)
   }
 

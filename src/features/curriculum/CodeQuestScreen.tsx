@@ -22,6 +22,7 @@ import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { hasTestedOut } from './testOut'
 import { warmUpPython } from './pythonSandbox'
 import { preloadCodeEditor } from './codeEditor'
+import { playSound } from '../sound/sound'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { Breadcrumbs } from './components/Breadcrumbs'
@@ -204,7 +205,14 @@ export function CodeQuestScreen() {
   }, [])
   const { xpToast, showXp } = useXpToast(totalXp)
   const { badgeToast, showBadges } = useBadgeToast()
-  const onBadgesEarned = useCallback((badges: EarnedBadge[]) => showBadges(badges.map((b) => b.title)), [showBadges])
+  const onBadgesEarned = useCallback(
+    (badges: EarnedBadge[]) => {
+      showBadges(badges.map((b) => b.title))
+      // Badges come with a passed check or quiz, so their sound follows that one.
+      playSound('badge', 0.6)
+    },
+    [showBadges],
+  )
   // Badges follow the published course being learned (not edit-mode drafts).
   const badges = useBadges({
     progressVersion,
