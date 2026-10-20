@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { LoadedSection, Level } from '../types'
 import { loadProgress } from '../progressStorage'
 import { completedChallengeIds } from '../helpers'
@@ -15,6 +16,8 @@ interface LearnLevelsProps {
   sectionLockedHint: string | null
   /** The section after this one (a test-out unlocks it), or null for the last section. */
   nextSectionTitle: string | null
+  /** "Section complete" and its certificate (shows nothing until the section is finished). */
+  certificate?: ReactNode
   onOpenLevel: (level: Level) => void
   onUpdateSectionTitle: (title: string) => void
   onUpdateLevelTitle: (levelId: string, title: string) => void
@@ -30,6 +33,7 @@ export function LearnLevels({
   isLevelUnlocked,
   sectionLockedHint,
   nextSectionTitle,
+  certificate,
   onOpenLevel,
   onUpdateSectionTitle,
   onUpdateLevelTitle,
@@ -46,6 +50,7 @@ export function LearnLevels({
         onChange={onUpdateSectionTitle}
       />
       {sectionLockedHint && !isEditMode ? <p className="cq-muted cq-section-preview-note">{sectionLockedHint}</p> : null}
+      {isEditMode ? null : certificate}
       {/* Offered until every lesson quiz here is passed; after a test-out it says so. */}
       {!isEditMode &&
       (hasTestedOut(languageId, selectedSection.sectionRef.id) ||

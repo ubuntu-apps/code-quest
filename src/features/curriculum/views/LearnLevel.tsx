@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { Challenge, Level, TestGradeResult } from '../types'
 import { saveProgress, type LevelProgress } from '../progressStorage'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
@@ -74,6 +75,8 @@ interface LearnLevelProps {
   showNext: boolean
   nextLevelTitle: string | null
   onGoToNextLevel: () => void
+  /** Shown under a passed quiz: "Section complete" when this lesson finished its section. */
+  afterQuizPassed?: ReactNode
 }
 
 export function LearnLevel({
@@ -130,6 +133,7 @@ export function LearnLevel({
   showNext,
   nextLevelTitle,
   onGoToNextLevel,
+  afterQuizPassed,
 }: LearnLevelProps) {
   const handleStepChange = (step: LevelStep) => {
     onLevelStepChange(step)
@@ -269,6 +273,7 @@ export function LearnLevel({
               onGoToNextLevel={handleGoToNext}
               challengesDone={stepNavProps.challengeCount.done}
               onGoToChallenges={() => handleStepChange('challenges')}
+              afterPass={afterQuizPassed}
             />
           )}
         </div>

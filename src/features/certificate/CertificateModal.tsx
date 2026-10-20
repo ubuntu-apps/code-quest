@@ -3,27 +3,25 @@ import { Download, Printer, X } from 'lucide-react'
 import { CertificateArt } from './CertificateArt'
 import { certificateFilename, certificatePng, downloadBlob, printCertificate, siteLabel } from './certificateImage'
 import { certificateEarnedOn, loadCertificateName, saveCertificateName } from './certificateStorage'
-import type { CourseCompletion } from './courseCompletion'
+import { subjectTitle, type CertificateSubject } from './certificateSubject'
 import { SUPPORT_CONFIG } from '../support/supportConfig'
 import { SupporterCodeForm } from '../support/SupporterCodeForm'
 import { useIsSupporter } from '../support/supporterStorage'
 
 interface CertificateModalProps {
-  languageId: string
-  courseTitle: string
-  completion: CourseCompletion
+  subject: CertificateSubject
   baseUrl: string
   onClose: () => void
 }
 
-/** The finished course's certificate: type a name, then save it as an image or print it. */
-export function CertificateModal({ languageId, courseTitle, completion, baseUrl, onClose }: CertificateModalProps) {
+/** A course or section certificate: type a name, then save it as an image or print it. */
+export function CertificateModal({ subject, baseUrl, onClose }: CertificateModalProps) {
   const titleId = useId()
   const nameId = useId()
   const svgRef = useRef<SVGSVGElement>(null)
   const nameRef = useRef<HTMLInputElement>(null)
   const [name, setName] = useState(loadCertificateName)
-  const [earnedOn] = useState(() => certificateEarnedOn(languageId))
+  const [earnedOn] = useState(() => certificateEarnedOn(subject.earnedKey))
   const supporter = useIsSupporter()
   const [edition, setEdition] = useState<'standard' | 'supporter'>('supporter')
   const showSupporterEdition = supporter && edition === 'supporter'
@@ -43,7 +41,7 @@ export function CertificateModal({ languageId, courseTitle, completion, baseUrl,
     if (!svgRef.current) return
     setSaveError(null)
     try {
-      downloadBlob(await certificatePng(svgRef.current), certificateFilename(courseTitle))
+      downloadBlob(await certificatePng(svgRef.current), certificateFilename(subject))
     } catch (e: unknown) {
       setSaveError(e instanceof Error ? e.message : 'Could not save the image.')
     }
@@ -60,7 +58,7 @@ export function CertificateModal({ languageId, courseTitle, completion, baseUrl,
       <div className="cq-certificate-dialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <div className="cq-share-sheet-header">
           <h2 id={titleId} className="cq-share-sheet-title">
-            Your {courseTitle} certificate
+            Your {subjectTitle(subject)} certificate
           </h2>
           <button type="button" className="cq-icon-btn" aria-label="Close" onClick={onClose}>
             <X size={20} />
@@ -104,10 +102,7 @@ export function CertificateModal({ languageId, courseTitle, completion, baseUrl,
           <CertificateArt
             ref={svgRef}
             name={name}
-            courseTitle={courseTitle}
-            sections={completion.sectionsTotal}
-            lessons={completion.lessonsTotal}
-            xp={completion.xp}
+            subject={subject}
             earnedOn={earnedOn}
             siteLabel={siteLabel(baseUrl)}
             supporter={showSupporterEdition}

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { Level, TestGradeResult, TestQuestion } from '../types'
 import type { LevelProgress } from '../progressStorage'
 import { PASS_DEFAULT } from '../constants'
@@ -31,6 +32,8 @@ interface TestStepProps {
   /** Solved challenges, for a gentle "practise first" note before the first attempt. */
   challengesDone?: number
   onGoToChallenges?: () => void
+  /** Shown under the result once the quiz is passed (e.g. a section certificate). */
+  afterPass?: ReactNode
 }
 
 export function TestStep({
@@ -53,6 +56,7 @@ export function TestStep({
   onGoToNextLevel,
   challengesDone,
   onGoToChallenges,
+  afterPass,
 }: TestStepProps) {
   const { isEditingLocal } = useEditorMode()
   // Before a first attempt, nudge learners who skipped most of the challenges (not a lock).
@@ -248,6 +252,7 @@ export function TestStep({
           {!revealAnswers && ' · Change the answers marked Incorrect and submit again. Correct answers are shown once you pass.'}
         </p>
       )}
+      {testResult && resultCurrent && testResult.passed && !isEditingLocal ? afterPass : null}
       {testResult && resultCurrent && testResult.passed && nextLevelTitle && onGoToNextLevel ? (
         <div className="cq-row">
           <button type="button" className="cq-btn cq-btn--primary" onClick={onGoToNextLevel}>

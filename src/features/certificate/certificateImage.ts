@@ -1,4 +1,5 @@
 import { CERTIFICATE_HEIGHT, CERTIFICATE_WIDTH } from './CertificateArt'
+import type { CertificateSubject } from './certificateSubject'
 
 /** Draws the certificate SVG onto a canvas and returns it as a PNG (2x for sharp printing). */
 export async function certificatePng(svg: SVGSVGElement, scale = 2): Promise<Blob> {
@@ -53,8 +54,9 @@ export function siteLabel(baseUrl: string): string {
   return `${window.location.host}${path}`
 }
 
-/** "codequest-python-certificate.png" */
-export function certificateFilename(courseTitle: string): string {
-  const slug = courseTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-  return `codequest-${slug || 'course'}-certificate.png`
+/** "codequest-python-certificate.png", or "codequest-python-fundamentals-certificate.png" for a section. */
+export function certificateFilename(subject: CertificateSubject): string {
+  const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+  const parts = [slug(subject.courseTitle) || 'course', subject.section ? slug(subject.section.title) : '']
+  return `codequest-${parts.filter(Boolean).join('-')}-certificate.png`
 }

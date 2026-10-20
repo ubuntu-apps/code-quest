@@ -123,7 +123,7 @@ export function LearnSections({
       {completion && languageId ? (
         <CertificatePanel
           languageId={languageId}
-          courseTitle={bundle.index.title}
+          bundle={bundle}
           completion={completion}
           baseUrl={baseUrl}
         />
