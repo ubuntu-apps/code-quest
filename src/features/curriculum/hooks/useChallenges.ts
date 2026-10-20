@@ -11,6 +11,7 @@ import { runRChallengeTests, type RChallengeTestResult } from '../rSandbox'
 import type { Challenge, Level } from '../types'
 import { validateAgainst } from '../validateAnswer'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
+import { playSound } from '../../sound/sound'
 
 type ChallengeTestResult = PythonChallengeTestResult | RChallengeTestResult
 
@@ -115,6 +116,7 @@ export function useChallenges(
       // A challenge solved earlier stays solved: trying something else afterwards
       // shouldn't take away its XP or lock the next section again.
       setStatus((s) => ({ ...s, [ch.id]: 'failed' }))
+      playSound('checkFail')
       return
     }
 
@@ -123,6 +125,7 @@ export function useChallenges(
     const answerSeen = (prev.answersViewed ?? []).includes(ch.id)
 
     setStatus((s) => ({ ...s, [ch.id]: 'passed' }))
+    playSound('checkPass')
     saveProgress(languageId, level.id, {
       ...prev,
       challengesCompleted: [...new Set([...prev.challengesCompleted, ch.id])],

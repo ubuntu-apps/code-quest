@@ -7,6 +7,7 @@ import { AdminPanel } from '../components/AdminPanel'
 import { useAdminMode } from '../adminMode'
 import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
 import { AppearancePanel } from '../components/AppearancePanel'
+import { SoundPanel } from '../../sound/SoundPanel'
 import { SupportPanel } from '../../support/SupportPanel'
 
 interface AboutTabProps {
@@ -91,6 +92,7 @@ export function AboutTab({
       </section>
       <SupportPanel baseUrl={baseUrl} />
       <AppearancePanel />
+      <SoundPanel />
       <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
       <ProgressBackupPanel />
       {isAdmin || adminRevealed ? <AdminPanel /> : null}

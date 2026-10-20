@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { shareApp, type ShareVariant } from '../../../lib/shareApp'
+import { playSound } from '../../sound/sound'
 
 /** "+10 XP" pop-up when a challenge or quiz earns XP for the first time. */
 export function useXpToast(totalXp: number) {
@@ -14,6 +15,8 @@ export function useXpToast(totalXp: number) {
     const before = Math.floor(totalXpRef.current / 100)
     const after = Math.floor((totalXpRef.current + xp) / 100)
     const levelUp = after > before ? ` · Level ${after + 1} reached!` : ''
+    // After the check or quiz sound that comes with the XP.
+    if (after > before) playSound('levelUp', 0.45)
     setXpToast({ text: `+${xp} XP${levelUp}`, key: Date.now() })
   }, [])
 
