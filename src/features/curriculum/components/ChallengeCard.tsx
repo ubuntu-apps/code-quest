@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useId, useMemo, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported } from '../sandboxSupport'
@@ -8,6 +8,7 @@ import type { Challenge } from '../types'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
 import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
 import { CodeEditor } from '../codeEditor'
+import { namesInMarkdown } from '../codeEditor/namesInMarkdown'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
 import { rErrorSummaryLine } from '../rErrorHelper'
 import { PythonErrorPanel } from './PythonErrorPanel'
@@ -125,6 +126,8 @@ export function ChallengeCard({
             : 'Not yet. This answer did not pass.'
 
   const challengeNumber = `Challenge ${chIndex + 1} of ${totalChallenges}`
+  // Names written as code in the instructions, like `day_off`, are suggested while typing.
+  const promptNames = useMemo(() => namesInMarkdown(ch.promptMarkdown), [ch.promptMarkdown])
 
   const toggleAnswer = () => {
     if (!showAnswer && !done && !answerViewed && !isEditingLocal && !isAdmin) onRevealAnswer()
@@ -237,6 +240,7 @@ export function ChallengeCard({
           Your answer
         </label>
         <CodeEditor
+          suggestNames={promptNames}
           id={`code-${ch.id}`}
           labelId={`code-label-${ch.id}`}
           language={ch.validation.mode === 'r_tests' ? 'plain' : 'python'}

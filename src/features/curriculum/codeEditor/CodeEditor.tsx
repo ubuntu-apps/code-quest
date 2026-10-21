@@ -40,6 +40,8 @@ export interface CodeEditorProps {
   errorSummary?: string | null
   /** Changes on each run, so a closed error message shows again for a new error. */
   errorUiEpoch?: number
+  /** More names to suggest while typing, such as the ones a challenge's instructions use. */
+  suggestNames?: string[]
 }
 
 /**
@@ -60,6 +62,7 @@ export function CodeEditor({
   errorTitle = null,
   errorSummary = null,
   errorUiEpoch = 0,
+  suggestNames,
 }: CodeEditorProps) {
   const hintId = useId()
   const [touch] = useState(hasCoarsePointer)
@@ -155,6 +158,7 @@ export function CodeEditor({
             className={className}
             onFocusChange={onFocusChange}
             onReady={onReady}
+            suggestNames={suggestNames}
           />
         </Suspense>
       </EditorLoadBoundary>
