@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { Download, Printer, X } from 'lucide-react'
 import { CertificateArt } from './CertificateArt'
 import { certificateFilename, printCertificate, saveCertificate, siteLabel } from './certificateImage'
+import { savedMessage } from '../../lib/saveFile'
 import { certificateEarnedOn, loadCertificateName, saveCertificateName } from './certificateStorage'
 import { subjectTitle, type CertificateSubject } from './certificateSubject'
 import { SUPPORT_CONFIG } from '../support/supportConfig'
@@ -46,8 +47,7 @@ export function CertificateModal({ subject, baseUrl, onClose }: CertificateModal
     setSaving(true)
     try {
       const result = await saveCertificate(svgRef.current, certificateFilename(subject))
-      if (result.kind === 'saved') setSaveNote(`Saved as "${result.filename}".`)
-      else if (result.kind === 'downloaded') setSaveNote(`Downloaded as "${result.filename}" (usually to your Downloads folder).`)
+      setSaveNote(savedMessage(result))
     } catch (e: unknown) {
       setSaveError(e instanceof Error ? e.message : 'Could not save the certificate.')
     } finally {

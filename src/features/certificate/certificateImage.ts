@@ -1,6 +1,7 @@
 import { CERTIFICATE_HEIGHT, CERTIFICATE_WIDTH } from './CertificateArt'
 import type { CertificateSubject } from './certificateSubject'
 import { imagePdf } from './certificatePdf'
+import { saveFile, type SaveResult } from '../../lib/saveFile'
 
 /** Draws the certificate SVG onto a canvas, `scale` times its size for sharp printing. */
 async function certificateCanvas(svg: SVGSVGElement, scale: number): Promise<HTMLCanvasElement> {
@@ -43,66 +44,19 @@ export async function certificatePdf(svg: SVGSVGElement, title: string): Promise
   return imagePdf({ jpeg, width: canvas.width, height: canvas.height }, { title })
 }
 
-export function downloadBlob(blob: Blob, filename: string): void {
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000)
-}
-
-/** The parts of the File System Access API used here (Chrome and Edge on computers). */
-interface SaveFilePickerOptions {
-  suggestedName?: string
-  startIn?: 'downloads' | 'documents' | 'desktop'
-  types?: { description: string; accept: Record<string, string[]> }[]
-}
-type ShowSaveFilePicker = (options?: SaveFilePickerOptions) => Promise<FileSystemFileHandle>
-
-export type SaveResult = { kind: 'saved' | 'downloaded'; filename: string } | { kind: 'cancelled' }
-
 /**
- * Saves the certificate. Where the browser can (Chrome, Edge), it asks where to save and
- * under what name, as a PDF or, if picked in that window, a PNG image. Elsewhere the PDF
- * is downloaded with the suggested name.
+ * Saves the certificate: as a PDF, or a PNG image if picked in the save dialog (see
+ * saveFile for where it goes).
  */
-export async function saveCertificate(svg: SVGSVGElement, name: string): Promise<SaveResult> {
-  const pdfName = `${name}.pdf`
-  const picker = (window as unknown as { showSaveFilePicker?: ShowSaveFilePicker }).showSaveFilePicker
-  // The picker is opened first, while the click still counts as the user's own action.
-  if (typeof picker === 'function' && window.self === window.top) {
-    let handle: FileSystemFileHandle | null = null
-    const openedAt = Date.now()
-    try {
-      handle = await picker({
-        suggestedName: pdfName,
-        startIn: 'downloads',
-        types: [
-          { description: 'PDF document', accept: { 'application/pdf': ['.pdf'] } },
-          { description: 'PNG image', accept: { 'image/png': ['.png'] } },
-        ],
-      })
-    } catch (e: unknown) {
-      // Some app windows close the picker at once without showing it; only a later
-      // close is the learner pressing Cancel.
-      const shown = Date.now() - openedAt > 600
-      if (e instanceof DOMException && e.name === 'AbortError' && shown) return { kind: 'cancelled' }
-      // Not allowed or not shown here: fall back to a download.
-    }
-    if (handle) {
-      const asPng = handle.name.toLowerCase().endsWith('.png')
-      const blob = asPng ? await certificatePng(svg) : await certificatePdf(svg, name)
-      const writable = await handle.createWritable()
-      await writable.write(blob)
-      await writable.close()
-      return { kind: 'saved', filename: handle.name }
-    }
-  }
-  downloadBlob(await certificatePdf(svg, name), pdfName)
-  return { kind: 'downloaded', filename: pdfName }
+export function saveCertificate(svg: SVGSVGElement, name: string): Promise<SaveResult> {
+  return saveFile(
+    name,
+    [
+      { description: 'PDF document', mimeType: 'application/pdf', extension: '.pdf' },
+      { description: 'PNG image', mimeType: 'image/png', extension: '.png' },
+    ],
+    (type) => (type.extension === '.png' ? certificatePng(svg) : certificatePdf(svg, name)),
+  )
 }
 
 /** Prints only the certificate: print styles hide the rest of the page while this class is on. */

@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { CalendarPlus, Download, X } from 'lucide-react'
-import { downloadBlob } from '../certificate/certificateImage'
+import { downloadBlob } from '../../lib/saveFile'
 import { googleCalendarUrl, reminderIcs } from './reminderCalendar'
 
 const TIME_KEY = 'codequest:reminder-time'

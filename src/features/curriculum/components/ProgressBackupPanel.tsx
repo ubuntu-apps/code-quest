@@ -8,17 +8,9 @@ import {
   restoreProgressBackup,
 } from '../progressBackup'
 import { getStoragePersistence, type StoragePersistence } from '../storagePersistence'
+import { saveFile, savedMessage } from '../../../lib/saveFile'
 
-function downloadText(fileName: string, text: string): void {
-  const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }))
-  const link = document.createElement('a')
-  link.href = url
-  link.download = fileName
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000)
-}
+const BACKUP_TYPE = { description: 'CodeQuest progress backup', mimeType: 'application/json', extension: '.json' }
 
 const PERSISTENCE_NOTE: Record<StoragePersistence, string | null> = {
   persisted: 'This browser will keep your progress unless you clear its site data.',
@@ -44,15 +36,24 @@ export function ProgressBackupPanel() {
     }
   }, [])
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const backup = createProgressBackup()
     const levels = countLevels(backup.entries)
     if (levels === 0) {
       setNotice({ text: 'Nothing to back up yet. Complete a challenge or quiz first.' })
       return
     }
-    downloadText(backupFileName(), `${JSON.stringify(backup, null, 2)}\n`)
-    setNotice({ text: `Backup downloaded (${levels} ${levels === 1 ? 'topic' : 'topics'}).` })
+    setNotice(null)
+    try {
+      // Asks where to save where the browser can; otherwise it goes to Downloads.
+      const result = await saveFile(backupFileName().replace(/\.json$/, ''), [BACKUP_TYPE], () =>
+        new Blob([`${JSON.stringify(backup, null, 2)}\n`], { type: 'application/json' }),
+      )
+      const where = savedMessage(result)
+      if (where) setNotice({ text: `${where} It has your progress in ${levels} ${levels === 1 ? 'topic' : 'topics'}.` })
+    } catch {
+      setNotice({ text: 'Could not save the backup. Please try again.', error: true })
+    }
   }
 
   const handleFile = async (file: File | undefined) => {
@@ -82,8 +83,8 @@ export function ProgressBackupPanel() {
       </p>
       {note ? <p className="cq-muted">{note}</p> : null}
       <div className="cq-row">
-        <button type="button" className="cq-btn" onClick={handleDownload}>
-          Download backup
+        <button type="button" className="cq-btn" onClick={() => void handleDownload()}>
+          Save a backup
         </button>
         <button type="button" className="cq-btn" onClick={() => fileInputRef.current?.click()}>
           Restore from file
