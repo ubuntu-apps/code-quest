@@ -119,7 +119,7 @@ export default makeTopic({
     mc("How do you make an empty set?", ["`set()`", "`{}`", "`[]`", "`()`"], 0),
     mc("Why does `places[0]` fail on a set?", ["The set is empty", "Sets start at index 1", "Sets can only hold numbers", "Sets have no order, so no indexes"], 3),
     mc("With `a = {1, 2, 3}` and `b = {2, 3, 4}`, what is `a & b`?", ["`{1, 2, 3, 4}`", "`{2, 3}`", "`{1}`", "`{1, 4}`"], 1),
-    mc("And what is `a - b`?", ["`{1}`", "`{4}`", "`{2, 3}`", "`{1, 4}`"], 0),
+    mc("With `a = {1, 2, 3}` and `b = {2, 3, 4}`, what is `a - b`?", ["`{1}`", "`{4}`", "`{2, 3}`", "`{1, 4}`"], 0),
     qShort("Which set method removes an item without an error if it is missing? (name only)", "discard"),
     mc("Why use a set for \"have I seen this before?\"", ["Sets keep things in order", "Sets can hold lists", "Sets are printed nicely", "Checking `in` a set is very fast"], 3),
     mc("What does `{\"a\", \"b\"} <= {\"a\", \"b\", \"c\"}` give?", ["`False`", "An error", "`True`", "`{\"c\"}`"], 2),

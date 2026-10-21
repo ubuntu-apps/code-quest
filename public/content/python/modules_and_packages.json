@@ -184,6 +184,26 @@
                 "id": "t2",
                 "label": "growth is 7.389",
                 "assertion": "growth == 7.389"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when e = 'garden' (direction)",
+                "assertion": "_cq_rerun({\"e\": 'garden'}, \"direction\") == 'garden'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when e = 'garden' (growth)",
+                "assertion": "_cq_round(_cq_rerun({\"e\": 'garden'}, \"growth\")) == _cq_round(7.389)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when e = 'rocket' (direction)",
+                "assertion": "_cq_rerun({\"e\": 'rocket'}, \"direction\") == 'rocket'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when e = 'rocket' (growth)",
+                "assertion": "_cq_round(_cq_rerun({\"e\": 'rocket'}, \"growth\")) == _cq_round(7.389)"
               }
             ]
           }
@@ -699,6 +719,16 @@
                 "id": "t3",
                 "label": "Ends with Cy and Dee",
                 "assertion": "pairs[-1] == (\"Cy\", \"Dee\")"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when players = ['Ben', 'Cy', 'Dee', 'Ana']",
+                "assertion": "_cq_rerun({\"players\": ['Ben', 'Cy', 'Dee', 'Ana']}, \"pairs\") == [('Ben', 'Cy'), ('Ben', 'Dee'), ('Ben', 'Ana'), ('Cy', 'Dee'), ('Cy', 'Ana'), ('Dee', 'Ana')]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when players = ['Dee', 'Cy', 'Ben', 'Ana']",
+                "assertion": "_cq_rerun({\"players\": ['Dee', 'Cy', 'Ben', 'Ana']}, \"pairs\") == [('Dee', 'Cy'), ('Dee', 'Ben'), ('Dee', 'Ana'), ('Cy', 'Ben'), ('Cy', 'Ana'), ('Ben', 'Ana')]"
               }
             ]
           }
@@ -723,6 +753,26 @@
                 "id": "t2",
                 "label": "spread is 2.0",
                 "assertion": "spread == 2.0"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when data = [5, 7, 7, 7, 8, 8, 10, 12] (average)",
+                "assertion": "_cq_rerun({\"data\": [5, 7, 7, 7, 8, 8, 10, 12]}, \"average\") == 8"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when data = [5, 7, 7, 7, 8, 8, 10, 12] (spread)",
+                "assertion": "_cq_round(_cq_rerun({\"data\": [5, 7, 7, 7, 8, 8, 10, 12]}, \"spread\")) == _cq_round(2.0)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when data = [2, 4, 4, 4, 5, 5, 7, 9, 14] (average)",
+                "assertion": "_cq_rerun({\"data\": [2, 4, 4, 4, 5, 5, 7, 9, 14]}, \"average\") == 6"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when data = [2, 4, 4, 4, 5, 5, 7, 9, 14] (spread)",
+                "assertion": "_cq_round(_cq_rerun({\"data\": [2, 4, 4, 4, 5, 5, 7, 9, 14]}, \"spread\")) == _cq_round(3.39934634239519)"
               }
             ]
           }
@@ -1204,6 +1254,16 @@
                 "id": "t2",
                 "label": "In a new order",
                 "assertion": "cards != [\"A\", \"K\", \"Q\", \"J\", \"10\", \"9\", \"8\", \"7\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different cards",
+                "assertion": "_cq_rerun({\"cards\": ['K', 'Q', 'J', '10', '9', '8', '7', 'A']}, \"cards\") == ['10', '7', 'Q', '8', 'A', 'K', '9', 'J']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different cards",
+                "assertion": "_cq_rerun({\"cards\": ['7', '8', '9', '10', 'J', 'Q', 'K', 'A']}, \"cards\") == ['10', 'K', '8', 'Q', 'A', '7', 'J', '9']"
               }
             ]
           }
@@ -4306,6 +4366,26 @@
                 "id": "t2",
                 "label": "version is 2.32.3",
                 "assertion": "version == \"2.32.3\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when line = 'requests==3.33.4' (name)",
+                "assertion": "_cq_rerun({\"line\": 'requests==3.33.4'}, \"name\") == 'requests'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when line = 'requests==3.33.4' (version)",
+                "assertion": "_cq_rerun({\"line\": 'requests==3.33.4'}, \"version\") == '3.33.4'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when line = 'requests==1.31.2' (name)",
+                "assertion": "_cq_rerun({\"line\": 'requests==1.31.2'}, \"name\") == 'requests'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when line = 'requests==1.31.2' (version)",
+                "assertion": "_cq_rerun({\"line\": 'requests==1.31.2'}, \"version\") == '1.31.2'"
               }
             ]
           }

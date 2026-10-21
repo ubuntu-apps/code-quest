@@ -1122,6 +1122,16 @@
                 "id": "t2",
                 "label": "Prints Area: 21",
                 "assertion": "_cq_stdout.strip() == \"Area: 21\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when width = 8",
+                "assertion": "_cq_rerun({\"width\": 8}, \"area\") == 24"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when width = 6",
+                "assertion": "_cq_rerun({\"width\": 6}, \"area\") == 18"
               }
             ]
           }
@@ -1204,6 +1214,26 @@
                 "id": "t3",
                 "label": "Prints Total: 25.0",
                 "assertion": "_cq_stdout.strip() == \"Total: 25.0\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when price = 21 (tax)",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 21}, \"tax\")) == _cq_round(5.25)"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when price = 21 (total)",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 21}, \"total\")) == _cq_round(26.25)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when price = 19 (tax)",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 19}, \"tax\")) == _cq_round(4.75)"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when price = 19 (total)",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 19}, \"total\")) == _cq_round(23.75)"
               }
             ]
           }
@@ -2055,6 +2085,16 @@
                 "id": "t2",
                 "label": "Prints 13.5",
                 "assertion": "_cq_stdout.strip() == \"13.5\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when length = 6.0",
+                "assertion": "_cq_round(_cq_rerun({\"length\": 6.0}, \"area\")) == _cq_round(18.0)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when length = 9.0",
+                "assertion": "_cq_round(_cq_rerun({\"length\": 9.0}, \"area\")) == _cq_round(27.0)"
               }
             ]
           }
@@ -2127,6 +2167,26 @@
                 "id": "t3",
                 "label": "Prints the sentence",
                 "assertion": "_cq_stdout.strip() == \"Each person gets 3 slices, 4 left over\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when slices = 23 (each)",
+                "assertion": "_cq_rerun({\"slices\": 23}, \"each\") == 3"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when slices = 23 (left)",
+                "assertion": "_cq_rerun({\"slices\": 23}, \"left\") == 5"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when slices = 21 (each)",
+                "assertion": "_cq_rerun({\"slices\": 21}, \"each\") == 3"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when slices = 21 (left)",
+                "assertion": "_cq_rerun({\"slices\": 21}, \"left\") == 3"
               }
             ]
           }
@@ -2151,6 +2211,26 @@
                 "id": "t2",
                 "label": "rest is 202",
                 "assertion": "rest == 202"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when n = 2027 (last)",
+                "assertion": "_cq_rerun({\"n\": 2027}, \"last\") == 7"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when n = 2027 (rest)",
+                "assertion": "_cq_rerun({\"n\": 2027}, \"rest\") == 202"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when n = 2025 (last)",
+                "assertion": "_cq_rerun({\"n\": 2025}, \"last\") == 5"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when n = 2025 (rest)",
+                "assertion": "_cq_rerun({\"n\": 2025}, \"rest\") == 202"
               }
             ]
           }
@@ -2209,6 +2289,36 @@
                 "id": "t4",
                 "label": "Prints 1 h 2 min 5 s",
                 "assertion": "_cq_stdout.strip() == \"1 h 2 min 5 s\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when total = 3726 (hours)",
+                "assertion": "_cq_rerun({\"total\": 3726}, \"hours\") == 1"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when total = 3726 (minutes)",
+                "assertion": "_cq_rerun({\"total\": 3726}, \"minutes\") == 2"
+              },
+              {
+                "id": "v1_3",
+                "label": "Also right when total = 3726 (seconds)",
+                "assertion": "_cq_rerun({\"total\": 3726}, \"seconds\") == 6"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when total = 3724 (hours)",
+                "assertion": "_cq_rerun({\"total\": 3724}, \"hours\") == 1"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when total = 3724 (minutes)",
+                "assertion": "_cq_rerun({\"total\": 3724}, \"minutes\") == 2"
+              },
+              {
+                "id": "v2_3",
+                "label": "Also right when total = 3724 (seconds)",
+                "assertion": "_cq_rerun({\"total\": 3724}, \"seconds\") == 4"
               }
             ]
           }
@@ -2257,6 +2367,26 @@
                 "id": "t2",
                 "label": "each is 25.185",
                 "assertion": "abs(each - 25.185) < 1e-9"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when total = 89.1 (each)",
+                "assertion": "_cq_round(_cq_rerun({\"total\": 89.1}, \"each\")) == _cq_round(25.616249999999997)"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when total = 89.1 (tip)",
+                "assertion": "_cq_round(_cq_rerun({\"total\": 89.1}, \"tip\")) == _cq_round(13.365)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when total = 175.2 (each)",
+                "assertion": "_cq_round(_cq_rerun({\"total\": 175.2}, \"each\")) == _cq_round(50.37)"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when total = 175.2 (tip)",
+                "assertion": "_cq_round(_cq_rerun({\"total\": 175.2}, \"tip\")) == _cq_round(26.28)"
               }
             ]
           }
@@ -2276,6 +2406,16 @@
                 "id": "t1",
                 "label": "final is 1157.625",
                 "assertion": "abs(final - 1157.625) < 1e-6"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when savings = 1001",
+                "assertion": "_cq_round(_cq_rerun({\"savings\": 1001}, \"final\")) == _cq_round(1158.782625)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when savings = 999",
+                "assertion": "_cq_round(_cq_rerun({\"savings\": 999}, \"final\")) == _cq_round(1156.4673750000002)"
               }
             ]
           }
@@ -2579,6 +2719,16 @@
                 "id": "t1",
                 "label": "distance is 8",
                 "assertion": "distance == 8"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a = 4",
+                "assertion": "_cq_rerun({\"a\": 4}, \"distance\") == 7"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a = 2",
+                "assertion": "_cq_rerun({\"a\": 2}, \"distance\") == 9"
               }
             ]
           }
@@ -2622,6 +2772,16 @@
                 "id": "t1",
                 "label": "rounded is 19.99",
                 "assertion": "rounded == 19.99"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when price = 21.48765",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 21.48765}, \"rounded\")) == _cq_round(21.49)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when price = 39.9753",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 39.9753}, \"rounded\")) == _cq_round(39.98)"
               }
             ]
           }
@@ -2641,6 +2801,16 @@
                 "id": "t1",
                 "label": "side is 7.0",
                 "assertion": "side == 7.0"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when area = 50",
+                "assertion": "_cq_round(_cq_rerun({\"area\": 50}, \"side\")) == _cq_round(7.0710678118654755)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when area = 48",
+                "assertion": "_cq_round(_cq_rerun({\"area\": 48}, \"side\")) == _cq_round(6.928203230275509)"
               }
             ]
           }
@@ -2660,6 +2830,16 @@
                 "id": "t1",
                 "label": "boxes is 5",
                 "assertion": "boxes == 5 and isinstance(boxes, int)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when items = 28",
+                "assertion": "_cq_rerun({\"items\": 28}, \"boxes\") == 6"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when items = 46",
+                "assertion": "_cq_rerun({\"items\": 46}, \"boxes\") == 10"
               }
             ]
           }
@@ -2684,6 +2864,26 @@
                 "id": "t2",
                 "label": "rest is 20",
                 "assertion": "rest == 20"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when minutes = 201 (hours)",
+                "assertion": "_cq_rerun({\"minutes\": 201}, \"hours\") == 3"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when minutes = 201 (rest)",
+                "assertion": "_cq_rerun({\"minutes\": 201}, \"rest\") == 21"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when minutes = 199 (hours)",
+                "assertion": "_cq_rerun({\"minutes\": 199}, \"hours\") == 3"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when minutes = 199 (rest)",
+                "assertion": "_cq_rerun({\"minutes\": 199}, \"rest\") == 19"
               }
             ]
           }
@@ -2703,6 +2903,16 @@
                 "id": "t1",
                 "label": "area is 12.57",
                 "assertion": "area == 12.57"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when radius = 3",
+                "assertion": "_cq_round(_cq_rerun({\"radius\": 3}, \"area\")) == _cq_round(28.27)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when radius = 7",
+                "assertion": "_cq_round(_cq_rerun({\"radius\": 7}, \"area\")) == _cq_round(153.94)"
               }
             ]
           }
@@ -2746,6 +2956,16 @@
                 "id": "t1",
                 "label": "rounded is 3",
                 "assertion": "rounded == 3 and isinstance(rounded, int)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when x = 4.0",
+                "assertion": "_cq_rerun({\"x\": 4.0}, \"rounded\") == 4"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when x = 5.0",
+                "assertion": "_cq_rerun({\"x\": 5.0}, \"rounded\") == 5"
               }
             ]
           }
@@ -2775,6 +2995,36 @@
                 "id": "t3",
                 "label": "Prints the total",
                 "assertion": "_cq_stdout.strip() == \"Total: 59 dollars 97 cents\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when price_cents = 2000 (cents)",
+                "assertion": "_cq_rerun({\"price_cents\": 2000}, \"cents\") == 0"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when price_cents = 2000 (dollars)",
+                "assertion": "_cq_rerun({\"price_cents\": 2000}, \"dollars\") == 60"
+              },
+              {
+                "id": "v1_3",
+                "label": "Also right when price_cents = 2000 (total_cents)",
+                "assertion": "_cq_rerun({\"price_cents\": 2000}, \"total_cents\") == 6000"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when price_cents = 1998 (cents)",
+                "assertion": "_cq_rerun({\"price_cents\": 1998}, \"cents\") == 94"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when price_cents = 1998 (dollars)",
+                "assertion": "_cq_rerun({\"price_cents\": 1998}, \"dollars\") == 59"
+              },
+              {
+                "id": "v2_3",
+                "label": "Also right when price_cents = 1998 (total_cents)",
+                "assertion": "_cq_rerun({\"price_cents\": 1998}, \"total_cents\") == 5994"
               }
             ]
           }
@@ -3083,6 +3333,16 @@
                 "id": "t2",
                 "label": "Prints it",
                 "assertion": "_cq_stdout.strip() == \"Ada Lovelace\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when first = 'Garden'",
+                "assertion": "_cq_rerun({\"first\": 'Garden'}, \"full\") == 'Garden Lovelace'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when first = 'Rocket'",
+                "assertion": "_cq_rerun({\"first\": 'Rocket'}, \"full\") == 'Rocket Lovelace'"
               }
             ]
           }
@@ -3126,6 +3386,26 @@
                 "id": "t2",
                 "label": "last is t",
                 "assertion": "last == \"t\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'garden' (first)",
+                "assertion": "_cq_rerun({\"word\": 'garden'}, \"first\") == 'g'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when word = 'garden' (last)",
+                "assertion": "_cq_rerun({\"word\": 'garden'}, \"last\") == 'n'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when word = 'rocket' (first)",
+                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"first\") == 'r'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when word = 'rocket' (last)",
+                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"last\") == 't'"
               }
             ]
           }
@@ -3145,6 +3425,16 @@
                 "id": "t1",
                 "label": "initials is GH",
                 "assertion": "initials == \"GH\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when first = 'Rocket'",
+                "assertion": "_cq_rerun({\"first\": 'Rocket'}, \"initials\") == 'RH'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when first = 'Level'",
+                "assertion": "_cq_rerun({\"first\": 'Level'}, \"initials\") == 'LH'"
               }
             ]
           }
@@ -3174,6 +3464,36 @@
                 "id": "t3",
                 "label": "day is 16",
                 "assertion": "day == \"16\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when stamp = '2027-11-17' (day)",
+                "assertion": "_cq_rerun({\"stamp\": '2027-11-17'}, \"day\") == '17'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when stamp = '2027-11-17' (month)",
+                "assertion": "_cq_rerun({\"stamp\": '2027-11-17'}, \"month\") == '11'"
+              },
+              {
+                "id": "v1_3",
+                "label": "Also right when stamp = '2027-11-17' (year)",
+                "assertion": "_cq_rerun({\"stamp\": '2027-11-17'}, \"year\") == '2027'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when stamp = '2025-09-15' (day)",
+                "assertion": "_cq_rerun({\"stamp\": '2025-09-15'}, \"day\") == '15'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when stamp = '2025-09-15' (month)",
+                "assertion": "_cq_rerun({\"stamp\": '2025-09-15'}, \"month\") == '09'"
+              },
+              {
+                "id": "v2_3",
+                "label": "Also right when stamp = '2025-09-15' (year)",
+                "assertion": "_cq_rerun({\"stamp\": '2025-09-15'}, \"year\") == '2025'"
               }
             ]
           }
@@ -3241,6 +3561,16 @@
                 "id": "t2",
                 "label": "word is still mango",
                 "assertion": "word == \"mango\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'garden'",
+                "assertion": "_cq_rerun({\"word\": 'garden'}, \"new_word\") == 'tarden'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when word = 'rocket'",
+                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"new_word\") == 'tocket'"
               }
             ]
           }
@@ -3260,6 +3590,16 @@
                 "id": "t1",
                 "label": "masked is ************4444",
                 "assertion": "masked == \"************4444\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when card = '4111222233334445'",
+                "assertion": "_cq_rerun({\"card\": '4111222233334445'}, \"masked\") == '************4445'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when card = '4111222233334443'",
+                "assertion": "_cq_rerun({\"card\": '4111222233334443'}, \"masked\") == '************4443'"
               }
             ]
           }
@@ -3279,6 +3619,16 @@
                 "id": "t1",
                 "label": "middle is e",
                 "assertion": "middle == \"e\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'garden'",
+                "assertion": "_cq_rerun({\"word\": 'garden'}, \"middle\") == 'd'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when word = 'rocket'",
+                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"middle\") == 'k'"
               }
             ]
           }
@@ -3582,6 +3932,16 @@
                 "id": "t1",
                 "label": "loud is WATCH OUT",
                 "assertion": "loud == \"WATCH OUT\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when message = 'out watch'",
+                "assertion": "_cq_rerun({\"message\": 'out watch'}, \"loud\") == 'OUT WATCH'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when message = 'garden out'",
+                "assertion": "_cq_rerun({\"message\": 'garden out'}, \"loud\") == 'GARDEN OUT'"
               }
             ]
           }
@@ -3601,6 +3961,16 @@
                 "id": "t1",
                 "label": "clean is banana",
                 "assertion": "clean == \"banana\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when raw = '   garden  '",
+                "assertion": "_cq_rerun({\"raw\": '   garden  '}, \"clean\") == 'garden'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when raw = '   rocket  '",
+                "assertion": "_cq_rerun({\"raw\": '   rocket  '}, \"clean\") == 'rocket'"
               }
             ]
           }
@@ -3620,6 +3990,16 @@
                 "id": "t1",
                 "label": "nice is The Hobbit",
                 "assertion": "nice == \"The Hobbit\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when book = 'hobbit the'",
+                "assertion": "_cq_rerun({\"book\": 'hobbit the'}, \"nice\") == 'Hobbit The'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when book = 'garden hobbit'",
+                "assertion": "_cq_rerun({\"book\": 'garden hobbit'}, \"nice\") == 'Garden Hobbit'"
               }
             ]
           }
@@ -3658,6 +4038,16 @@
                 "id": "t1",
                 "label": "fixed is 16/10/2026",
                 "assertion": "fixed == \"16/10/2026\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when date = '17.11.2027'",
+                "assertion": "_cq_rerun({\"date\": '17.11.2027'}, \"fixed\") == '17/11/2027'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when date = '15.09.2025'",
+                "assertion": "_cq_rerun({\"date\": '15.09.2025'}, \"fixed\") == '15/09/2025'"
               }
             ]
           }
@@ -3677,6 +4067,16 @@
                 "id": "t1",
                 "label": "s_count is 6",
                 "assertion": "s_count == 6"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when sentence = 'She sells sea'",
+                "assertion": "_cq_rerun({\"sentence\": 'She sells sea'}, \"s_count\") == 4"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when sentence = 'She sells'",
+                "assertion": "_cq_rerun({\"sentence\": 'She sells'}, \"s_count\") == 3"
               }
             ]
           }
@@ -3715,6 +4115,16 @@
                 "id": "t1",
                 "label": "domain is example.org",
                 "assertion": "domain == \"example.org\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when email = 'GRACE@EXAMPLE.ORG'",
+                "assertion": "_cq_rerun({\"email\": 'GRACE@EXAMPLE.ORG'}, \"domain\") == 'EXAMPLE.ORG'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when email = 'Grace@Example.Org'",
+                "assertion": "_cq_rerun({\"email\": 'Grace@Example.Org'}, \"domain\") == 'Example.Org'"
               }
             ]
           }
@@ -3734,6 +4144,16 @@
                 "id": "t1",
                 "label": "username is ada.lovelace",
                 "assertion": "username == \"ada.lovelace\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when full_name = 'Lovelace Ada'",
+                "assertion": "_cq_rerun({\"full_name\": 'Lovelace Ada'}, \"username\") == 'lovelace.ada'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when full_name = '  Garden Lovelace '",
+                "assertion": "_cq_rerun({\"full_name\": '  Garden Lovelace '}, \"username\") == 'garden.lovelace'"
               }
             ]
           }
@@ -3753,6 +4173,16 @@
                 "id": "t1",
                 "label": "result is #python #data #web",
                 "assertion": "result == \"#python #data #web\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when tags = ' data ,  web,python'",
+                "assertion": "_cq_rerun({\"tags\": ' data ,  web,python'}, \"result\") == '#data #web #python'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when tags = 'python, data '",
+                "assertion": "_cq_rerun({\"tags\": 'python, data '}, \"result\") == '#python #data'"
               }
             ]
           }
@@ -4151,6 +4581,16 @@
                 "id": "t1",
                 "label": "report is Oslo: 4.3°C",
                 "assertion": "report == \"Oslo: 4.3°C\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when city = 'Garden'",
+                "assertion": "_cq_rerun({\"city\": 'Garden'}, \"report\") == 'Garden: 4.3°C'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when city = 'Rocket'",
+                "assertion": "_cq_rerun({\"city\": 'Rocket'}, \"report\") == 'Rocket: 4.3°C'"
               }
             ]
           }
@@ -4170,6 +4610,16 @@
                 "id": "t1",
                 "label": "message is filled in",
                 "assertion": "message == \"Well done Lee, you scored 92!\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when name = 'Garden'",
+                "assertion": "_cq_rerun({\"name\": 'Garden'}, \"message\") == 'Well done Garden, you scored 92!'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when name = 'Rocket'",
+                "assertion": "_cq_rerun({\"name\": 'Rocket'}, \"message\") == 'Well done Rocket, you scored 92!'"
               }
             ]
           }
@@ -4227,6 +4677,16 @@
                 "id": "t1",
                 "label": "bar is right",
                 "assertion": "bar == \"[#######.............] 35%\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when done = 8",
+                "assertion": "_cq_rerun({\"done\": 8}, \"bar\") == '[########............] 40%'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when done = 6",
+                "assertion": "_cq_rerun({\"done\": 6}, \"bar\") == '[######..............] 30%'"
               }
             ]
           }
@@ -4530,6 +4990,16 @@
                 "id": "t1",
                 "label": "total is the number 42",
                 "assertion": "total == 42 and isinstance(total, int)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a = '13'",
+                "assertion": "_cq_rerun({\"a\": '13'}, \"total\") == 43"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a = '11'",
+                "assertion": "_cq_rerun({\"a\": '11'}, \"total\") == 41"
               }
             ]
           }
@@ -4549,6 +5019,16 @@
                 "id": "t1",
                 "label": "message is right",
                 "assertion": "message == \"You have 250 points\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when points = 251",
+                "assertion": "_cq_rerun({\"points\": 251}, \"message\") == 'You have 251 points'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when points = 249",
+                "assertion": "_cq_rerun({\"points\": 249}, \"message\") == 'You have 249 points'"
               }
             ]
           }
@@ -4568,6 +5048,16 @@
                 "id": "t1",
                 "label": "kg is the float 72.5",
                 "assertion": "kg == 72.5 and isinstance(kg, float)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when weight = '73.6'",
+                "assertion": "_cq_round(_cq_rerun({\"weight\": '73.6'}, \"kg\")) == _cq_round(73.6)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when weight = '71.4'",
+                "assertion": "_cq_round(_cq_rerun({\"weight\": '71.4'}, \"kg\")) == _cq_round(71.4)"
               }
             ]
           }
@@ -4592,6 +5082,26 @@
                 "id": "t2",
                 "label": "nearest is 8",
                 "assertion": "nearest == 8"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when value = 9.3 (cut)",
+                "assertion": "_cq_rerun({\"value\": 9.3}, \"cut\") == 9"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when value = 9.3 (nearest)",
+                "assertion": "_cq_rerun({\"value\": 9.3}, \"nearest\") == 9"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when value = 15.6 (cut)",
+                "assertion": "_cq_rerun({\"value\": 15.6}, \"cut\") == 15"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when value = 15.6 (nearest)",
+                "assertion": "_cq_rerun({\"value\": 15.6}, \"nearest\") == 16"
               }
             ]
           }
@@ -4611,6 +5121,16 @@
                 "id": "t1",
                 "label": "whole is 19",
                 "assertion": "whole == 19 and isinstance(whole, int)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when reading = '20.7'",
+                "assertion": "_cq_rerun({\"reading\": '20.7'}, \"whole\") == 20"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when reading = '18.5'",
+                "assertion": "_cq_rerun({\"reading\": '18.5'}, \"whole\") == 18"
               }
             ]
           }
@@ -4683,6 +5203,36 @@
                 "id": "t3",
                 "label": "blue is 0",
                 "assertion": "blue == 0"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when hex_green = '9c' (blue)",
+                "assertion": "_cq_rerun({\"hex_green\": '9c'}, \"blue\") == 0"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when hex_green = '9c' (green)",
+                "assertion": "_cq_rerun({\"hex_green\": '9c'}, \"green\") == 156"
+              },
+              {
+                "id": "v1_3",
+                "label": "Also right when hex_green = '9c' (red)",
+                "assertion": "_cq_rerun({\"hex_green\": '9c'}, \"red\") == 255"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when hex_green = '7c' (blue)",
+                "assertion": "_cq_rerun({\"hex_green\": '7c'}, \"blue\") == 0"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when hex_green = '7c' (green)",
+                "assertion": "_cq_rerun({\"hex_green\": '7c'}, \"green\") == 124"
+              },
+              {
+                "id": "v2_3",
+                "label": "Also right when hex_green = '7c' (red)",
+                "assertion": "_cq_rerun({\"hex_green\": '7c'}, \"red\") == 255"
               }
             ]
           }
@@ -4702,6 +5252,16 @@
                 "id": "t1",
                 "label": "amount is 1250",
                 "assertion": "amount == 1250 and isinstance(amount, int)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when raw = ' 2,251 '",
+                "assertion": "_cq_rerun({\"raw\": ' 2,251 '}, \"amount\") == 2251"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when raw = ' 1,350 '",
+                "assertion": "_cq_rerun({\"raw\": ' 1,350 '}, \"amount\") == 1350"
               }
             ]
           }
@@ -5034,6 +5594,16 @@
                 "id": "t2",
                 "label": "Prints Hello, Ana!",
                 "assertion": "_cq_stdout.strip().splitlines()[-1] == \"Hello, Ana!\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when you type \"Garden\"",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['Garden']}, \"name\") == 'Garden'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when you type \"Rocket\"",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['Rocket']}, \"name\") == 'Rocket'"
               }
             ]
           }
@@ -5129,6 +5699,16 @@
                 "id": "t1",
                 "label": "answer is yes",
                 "assertion": "answer == \"yes\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when you type \"  GARDEN \"",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['  GARDEN ']}, \"answer\") == 'garden'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when you type \"  ROCKET \"",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['  ROCKET ']}, \"answer\") == 'rocket'"
               }
             ]
           }
@@ -5523,6 +6103,16 @@
                 "id": "t1",
                 "label": "age is 28",
                 "assertion": "age == 28"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when birth_year = 1999",
+                "assertion": "_cq_rerun({\"birth_year\": 1999}, \"age\") == 27"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when birth_year = 1997",
+                "assertion": "_cq_rerun({\"birth_year\": 1997}, \"age\") == 29"
               }
             ]
           }
@@ -5542,6 +6132,16 @@
                 "id": "t1",
                 "label": "heading is SAM RIVERA",
                 "assertion": "heading == \"SAM RIVERA\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when name = 'Rivera Sam'",
+                "assertion": "_cq_rerun({\"name\": 'Rivera Sam'}, \"heading\") == 'RIVERA SAM'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when name = 'Garden Rivera'",
+                "assertion": "_cq_rerun({\"name\": 'Garden Rivera'}, \"heading\") == 'GARDEN RIVERA'"
               }
             ]
           }
@@ -5566,6 +6166,26 @@
                 "id": "t2",
                 "label": "days_text is 10,220",
                 "assertion": "days_text == \"10,220\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when age = 29 (days)",
+                "assertion": "_cq_rerun({\"age\": 29}, \"days\") == 10585"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when age = 29 (days_text)",
+                "assertion": "_cq_rerun({\"age\": 29}, \"days_text\") == '10,585'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when age = 27 (days)",
+                "assertion": "_cq_rerun({\"age\": 27}, \"days\") == 9855"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when age = 27 (days_text)",
+                "assertion": "_cq_rerun({\"age\": 27}, \"days_text\") == '9,855'"
               }
             ]
           }
@@ -5585,6 +6205,16 @@
                 "id": "t1",
                 "label": "age_line is right",
                 "assertion": "age_line == \"Age: 28 (born 1998)\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when birth_year = 1999",
+                "assertion": "_cq_rerun({\"birth_year\": 1999}, \"age_line\") == 'Age: 28 (born 1999)'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when birth_year = 1997",
+                "assertion": "_cq_rerun({\"birth_year\": 1997}, \"age_line\") == 'Age: 28 (born 1997)'"
               }
             ]
           }
@@ -5793,6 +6423,16 @@
                 "id": "t1",
                 "label": "miles is 6.21371",
                 "assertion": "abs(miles - 6.21371) < 1e-9"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when km = 11",
+                "assertion": "_cq_round(_cq_rerun({\"km\": 11}, \"miles\")) == _cq_round(6.835081)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when km = 9",
+                "assertion": "_cq_round(_cq_rerun({\"km\": 9}, \"miles\")) == _cq_round(5.592339)"
               }
             ]
           }
@@ -5812,6 +6452,16 @@
                 "id": "t1",
                 "label": "fahrenheit is 77.0",
                 "assertion": "fahrenheit == 77.0"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when celsius = 26",
+                "assertion": "_cq_round(_cq_rerun({\"celsius\": 26}, \"fahrenheit\")) == _cq_round(78.8)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when celsius = 24",
+                "assertion": "_cq_round(_cq_rerun({\"celsius\": 24}, \"fahrenheit\")) == _cq_round(75.2)"
               }
             ]
           }
@@ -5831,6 +6481,16 @@
                 "id": "t1",
                 "label": "pounds is 154.32",
                 "assertion": "pounds == 154.32"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when kg = 71",
+                "assertion": "_cq_round(_cq_rerun({\"kg\": 71}, \"pounds\")) == _cq_round(156.53)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when kg = 69",
+                "assertion": "_cq_round(_cq_rerun({\"kg\": 69}, \"pounds\")) == _cq_round(152.12)"
               }
             ]
           }
@@ -5850,6 +6510,16 @@
                 "id": "t1",
                 "label": "value is the float 10.0",
                 "assertion": "value == 10.0 and isinstance(value, float)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when you type 11",
+                "assertion": "_cq_round(_cq_rerun({\"_cq_answers\": ['11']}, \"value\")) == _cq_round(11.0)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when you type 09",
+                "assertion": "_cq_round(_cq_rerun({\"_cq_answers\": ['09']}, \"value\")) == _cq_round(9.0)"
               }
             ]
           }
@@ -6082,6 +6752,36 @@
                 "id": "t3",
                 "label": "quantity is the int 3",
                 "assertion": "quantity == 3 and isinstance(quantity, int)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when you type \"Garden\", 4.5 and 3 (item)",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['Garden', '4.5', '3']}, \"item\") == 'Garden'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when you type \"Garden\", 4.5 and 3 (price)",
+                "assertion": "_cq_round(_cq_rerun({\"_cq_answers\": ['Garden', '4.5', '3']}, \"price\")) == _cq_round(4.5)"
+              },
+              {
+                "id": "v1_3",
+                "label": "Also right when you type \"Garden\", 4.5 and 3 (quantity)",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['Garden', '4.5', '3']}, \"quantity\") == 3"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when you type \"Rocket\", 4.5 and 3 (item)",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['Rocket', '4.5', '3']}, \"item\") == 'Rocket'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when you type \"Rocket\", 4.5 and 3 (price)",
+                "assertion": "_cq_round(_cq_rerun({\"_cq_answers\": ['Rocket', '4.5', '3']}, \"price\")) == _cq_round(4.5)"
+              },
+              {
+                "id": "v2_3",
+                "label": "Also right when you type \"Rocket\", 4.5 and 3 (quantity)",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['Rocket', '4.5', '3']}, \"quantity\") == 3"
               }
             ]
           }
@@ -6101,6 +6801,16 @@
                 "id": "t1",
                 "label": "subtotal is 13.5",
                 "assertion": "subtotal == 13.5"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when price = 6.0",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 6.0}, \"subtotal\")) == _cq_round(18.0)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when price = 9.0",
+                "assertion": "_cq_round(_cq_rerun({\"price\": 9.0}, \"subtotal\")) == _cq_round(27.0)"
               }
             ]
           }
@@ -6125,6 +6835,26 @@
                 "id": "t2",
                 "label": "total is 16.2",
                 "assertion": "abs(total - 16.2) < 1e-9"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when subtotal = 15.0 (tip)",
+                "assertion": "_cq_round(_cq_rerun({\"subtotal\": 15.0}, \"tip\")) == _cq_round(3.0)"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when subtotal = 15.0 (total)",
+                "assertion": "_cq_round(_cq_rerun({\"subtotal\": 15.0}, \"total\")) == _cq_round(18.0)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when subtotal = 27.0 (tip)",
+                "assertion": "_cq_round(_cq_rerun({\"subtotal\": 27.0}, \"tip\")) == _cq_round(5.4)"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when subtotal = 27.0 (total)",
+                "assertion": "_cq_round(_cq_rerun({\"subtotal\": 27.0}, \"total\")) == _cq_round(32.4)"
               }
             ]
           }
@@ -6149,6 +6879,16 @@
                 "id": "t2",
                 "label": "line is right",
                 "assertion": "line == \"3 x Latte          13.50\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when label = 'x Latte 3'",
+                "assertion": "_cq_rerun({\"label\": 'x Latte 3'}, \"line\") == 'x Latte 3          13.50'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when label = 'Latte x 3'",
+                "assertion": "_cq_rerun({\"label\": 'Latte x 3'}, \"line\") == 'Latte x 3          13.50'"
               }
             ]
           }

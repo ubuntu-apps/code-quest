@@ -256,10 +256,15 @@ export function CodeQuestScreen() {
     [resetChallengesForLevel, resetTestForLevel, resetSandboxForLevel],
   )
 
+  // Load the starter code (or saved answers) when a lesson opens. On a reload or a link the
+  // lesson's content arrives after its id, so it only counts as opened once both are here.
   useEffect(() => {
-    if (levelId === prevLevelIdRef.current) return
+    if (!levelId) {
+      prevLevelIdRef.current = null
+      return
+    }
+    if (!selectedLevel || levelId === prevLevelIdRef.current) return
     prevLevelIdRef.current = levelId
-    if (!levelId || !selectedLevel) return
     void Promise.resolve().then(() => resetLevelWorkState(selectedLevel, languageId))
   }, [levelId, selectedLevel, languageId, resetLevelWorkState])
 

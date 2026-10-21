@@ -106,7 +106,7 @@ export default {
     "For each `i`, the inner loop goes through every `j`, so you get all four pairs in order.",
     "The outer loop runs 5 times and prints one line each time (the first line is empty).",
     "Both loops would share one variable, so the inner loop changes the value the outer loop relies on.",
-    "`range(row)` repeats `row` times, so row 3 gets 3 stars.",
+    "`range(row)` repeats `row` times, so the third row (`row` is 3) gets 3 stars.",
     "Nested loops multiply: 1,000 × 1,000 is a million rounds.",
     "Moving one square in any direction changes `row + col` by 1, so the pattern alternates.",
   ],

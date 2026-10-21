@@ -129,7 +129,7 @@ export default makeTopic({
   questions: [
     mc("Which keyword starts a function definition?", ["`function`", "`def`", "`func`", "`define`"], 1),
     mc("When does the body of a function run?", ["When it is defined", "When the program starts", "Each time the function is called", "Never"], 2),
-    mc("What does `say_hello` (without brackets) do on its own line?", ["Nothing: it is the function itself, not a call", "Calls the function", "Raises a `SyntaxError`", "Deletes the function"], 0),
+    mc("`say_hello` is a function. What does `say_hello` (without brackets) do on its own line?", ["Nothing: it is the function itself, not a call", "Calls the function", "Raises a `SyntaxError`", "Deletes the function"], 0),
     mc("Calling a function before its `def` line has run gives…", ["A `SyntaxError`", "Nothing", "A `TypeError`", "A `NameError`"], 3),
     qShort("A function is called three times and its body prints two lines. How many lines are printed? (a number)", "6"),
     mc("Which is the best function name?", ["`Function1`", "`print_receipt`", "`x`", "`DoIt`"], 1),

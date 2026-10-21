@@ -165,6 +165,16 @@
                 "id": "t2",
                 "label": "Complains twice",
                 "assertion": "_cq_stdout.count(\"Please type a number\") == 2"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when you type \"garden\", \"\" and 42",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['garden', '', '42']}, \"_cq_stdout\") == 'Age: garden\\nPlease type a number\\nAge:\\nPlease type a number\\nAge: 42'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when you type \"rocket\", \"\" and 42",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['rocket', '', '42']}, \"_cq_stdout\") == 'Age: rocket\\nPlease type a number\\nAge:\\nPlease type a number\\nAge: 42'"
               }
             ]
           }
@@ -189,6 +199,26 @@
                 "id": "t2",
                 "label": "bad is 2",
                 "assertion": "bad == 2"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when values = ['4', 'x', '10', ''] (bad)",
+                "assertion": "_cq_rerun({\"values\": ['4', 'x', '10', '']}, \"bad\") == 2"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when values = ['4', 'x', '10', ''] (total)",
+                "assertion": "_cq_rerun({\"values\": ['4', 'x', '10', '']}, \"total\") == 14"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when values = ['x', '10', '', '3'] (bad)",
+                "assertion": "_cq_rerun({\"values\": ['x', '10', '', '3']}, \"bad\") == 2"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when values = ['x', '10', '', '3'] (total)",
+                "assertion": "_cq_rerun({\"values\": ['x', '10', '', '3']}, \"total\") == 13"
               }
             ]
           }
@@ -4092,6 +4122,16 @@
                 "id": "t3",
                 "label": "Two out of range",
                 "assertion": "_cq_stdout.count(\"Must be 1 to 10\") == 2"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when you type \"garden\", 0, 15 and 3",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['garden', '0', '15', '3']}, \"_cq_stdout\") == 'Quantity (1-10): garden\\nPlease type a number\\nQuantity (1-10): 0\\nMust be 1 to 10\\nQuantity (1-10): 15\\nMust be 1 to 10\\nQuantity (1-10): 3'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when you type \"rocket\", 0, 15 and 3",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['rocket', '0', '15', '3']}, \"_cq_stdout\") == 'Quantity (1-10): rocket\\nPlease type a number\\nQuantity (1-10): 0\\nMust be 1 to 10\\nQuantity (1-10): 15\\nMust be 1 to 10\\nQuantity (1-10): 3'"
               }
             ]
           }

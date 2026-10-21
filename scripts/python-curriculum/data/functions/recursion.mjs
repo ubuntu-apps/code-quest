@@ -129,7 +129,7 @@ export default makeTopic({
     mc("What is recursion?", ["A loop that never ends", "A function that calls itself", "A function with no parameters", "Calling two functions at once"], 1),
     mc("What is the base case?", ["The case answered directly, without another recursive call", "The first line of the file", "The biggest input", "The recursive call"], 0),
     mc("What happens with no base case?", ["It returns `None`", "It runs once", "Python adds one for you", "The calls never stop, until a `RecursionError`"], 3),
-    mc("In `factorial(n)`, what makes each call get closer to the base case?", ["The `print`", "The `if`", "Calling it with `n - 1`", "The return value"], 2),
+    mc("In a recursive `factorial(n)`, what makes each call get closer to the base case?", ["The `print`", "The `if`", "Calling it with `n - 1`", "The return value"], 2),
     qShort("`def f(n): return 1 if n <= 1 else n * f(n - 1)`. What is `f(4)`? (a number)", "24"),
     mc("What does Python keep on the call stack?", ["Every unfinished call, waiting for the ones it called", "Only the first call", "The program's variables", "Nothing"], 0),
     mc("Which problem suits recursion best?", ["Printing 1 to 10", "Adding two numbers", "Totalling numbers in lists nested inside lists", "Reading one line of input"], 2),

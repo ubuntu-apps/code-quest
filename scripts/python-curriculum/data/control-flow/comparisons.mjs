@@ -25,7 +25,7 @@ export default makeTopic({
   readMore: { label: "Python docs: comparisons", url: "https://docs.python.org/3/reference/expressions.html#comparisons", source: "Python docs" },
   challenges: [
     task("easy", "Is it hot?", {
-      prompt: "Set `is_hot` to whether `temperature` is above 30.",
+      prompt: "The code starts with `temperature = 31`. Set `is_hot` to whether `temperature` is above 30.",
       starter: "temperature = 31\n",
       hint: "A comparison gives `True` or `False`, so you can store it directly: `is_hot = temperature > 30`.",
       solution: "temperature = 31\nis_hot = temperature > 30",

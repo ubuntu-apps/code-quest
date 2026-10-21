@@ -133,6 +133,6 @@ export default makeTopic({
     mc("Why can't you do `double_print(5) + 1` when the function only prints?", ["The call returns `None`, which can't be added to", "Printing is too slow", "Functions can't be added", "You can"], 0),
     mc("A `return` is indented inside a `for` loop by mistake. What happens?", ["The loop runs twice", "Nothing changes", "The function returns during the first round", "A `SyntaxError`"], 2),
     mc("Which style makes functions easiest to test and reuse?", ["Printing inside every function", "Using only global variables", "Never using parameters", "Returning results and letting the caller print"], 3),
-    mc("After `low, high = min_max([4, 2])`, what is `high`?", ["`2`", "`4`", "`(2, 4)`", "`None`"], 1),
+    mc("`min_max(items)` returns the smallest and the largest item as a pair. After `low, high = min_max([4, 2])`, what is `high`?", ["`2`", "`4`", "`(2, 4)`", "`None`"], 1),
   ],
 })
