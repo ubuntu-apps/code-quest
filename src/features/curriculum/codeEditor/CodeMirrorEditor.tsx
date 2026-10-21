@@ -64,6 +64,8 @@ export interface CodeMirrorEditorProps {
   onFocusChange?: (focused: boolean) => void
   /** Called once the editor is ready, with a handle for the phone key bar. */
   onReady?: (target: KeyBarTarget, view: EditorView) => void
+  /** More names to suggest while typing, such as the ones a challenge's instructions use. */
+  suggestNames?: string[]
 }
 
 /**
@@ -81,15 +83,27 @@ const PYTHON_WORDS: Completion[] = [
 ]
 
 /**
- * Suggestions start from the second letter of a word (one letter matches too much), and
- * the list closes again when the word is deleted.
+ * One list of suggestions for the word being typed: names used in this code first, then
+ * names from the challenge's instructions (so `day_off` is offered before it is written),
+ * then Python's words. Each name appears once. Suggestions start from the second letter
+ * of a word (one letter matches too much), and the list closes when the word is deleted.
  */
-function fromSecondLetter(source: CompletionSource): CompletionSource {
+function suggestions(extraNames: () => string[]): CompletionSource {
+  const pythonWords = completeFromList(PYTHON_WORDS)
   return async (context: CompletionContext) => {
     const word = context.matchBefore(/\w+/)
     if (!context.explicit && (!word || word.to - word.from < 2)) return null
-    const result = await source(context)
-    return result && { ...result, validFor: /^\w{2,}$/ }
+    const from = word ? word.from : context.pos
+    const byLabel = new Map<string, Completion>()
+    const add = (options: readonly Completion[] | undefined, boost: number) => {
+      for (const option of options ?? []) {
+        if (!byLabel.has(option.label)) byLabel.set(option.label, { ...option, boost })
+      }
+    }
+    add((await localCompletionSource(context))?.options, 2)
+    add(extraNames().map((label) => ({ label, type: 'variable' })), 1)
+    add((await pythonWords(context))?.options, 0)
+    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w{2,}$/ } : null
   }
 }
 
@@ -217,14 +231,15 @@ export default function CodeMirrorEditor({
   className,
   onFocusChange,
   onReady,
+  suggestNames,
 }: CodeMirrorEditorProps) {
   const hostRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   // The latest props for the editor's own callbacks, which are set up once.
-  const latest = useRef({ value, onChange, onFocusChange, onReady })
+  const latest = useRef({ value, onChange, onFocusChange, onReady, suggestNames })
 
   useEffect(() => {
-    latest.current = { value, onChange, onFocusChange, onReady }
+    latest.current = { value, onChange, onFocusChange, onReady, suggestNames }
   })
 
   // Create the editor once per language; later `value` changes are applied below.
@@ -258,7 +273,7 @@ export default function CodeMirrorEditor({
           // Only words that start with what was typed. Enter or Tab picks one; Escape closes.
           language === 'python'
             ? autocompletion({
-                override: [fromSecondLetter(localCompletionSource), fromSecondLetter(completeFromList(PYTHON_WORDS))],
+                override: [suggestions(() => latest.current.suggestNames ?? [])],
                 filterStrict: true,
                 icons: false,
                 maxRenderedOptions: 8,
