@@ -19,8 +19,19 @@ import {
   indentUnit,
   syntaxHighlighting,
 } from '@codemirror/language'
-import { closeBrackets, closeBracketsKeymap } from '@codemirror/autocomplete'
-import { python } from '@codemirror/lang-python'
+import {
+  acceptCompletion,
+  autocompletion,
+  closeBrackets,
+  closeBracketsKeymap,
+  completeFromList,
+  completionKeymap,
+  completionStatus,
+  type Completion,
+  type CompletionContext,
+  type CompletionSource,
+} from '@codemirror/autocomplete'
+import { localCompletionSource, python } from '@codemirror/lang-python'
 import { tags as t } from '@lezer/highlight'
 import type { KeyBarTarget } from './CodeKeyBar'
 
@@ -53,6 +64,33 @@ export interface CodeMirrorEditorProps {
   onFocusChange?: (focused: boolean) => void
   /** Called once the editor is ready, with a handle for the phone key bar. */
   onReady?: (target: KeyBarTarget, view: EditorView) => void
+}
+
+/**
+ * Suggested besides the names in the learner's own code: Python's keywords and the
+ * built-ins the course uses. Not the full list of built-ins, which is mostly noise for
+ * beginners (TabError, aiter, ...).
+ */
+const PYTHON_WORDS: Completion[] = [
+  ...'and as break case class continue def del elif else except False finally for from global if import in is lambda match None nonlocal not or pass raise return True try while with yield'
+    .split(' ')
+    .map((label) => ({ label, type: 'keyword' })),
+  ...'abs all any bool dict divmod enumerate float input int isinstance len list map max min open print range repr reversed round set sorted str sum tuple type zip'
+    .split(' ')
+    .map((label) => ({ label, type: 'function' })),
+]
+
+/**
+ * Suggestions start from the second letter of a word (one letter matches too much), and
+ * the list closes again when the word is deleted.
+ */
+function fromSecondLetter(source: CompletionSource): CompletionSource {
+  return async (context: CompletionContext) => {
+    const word = context.matchBefore(/\w+/)
+    if (!context.explicit && (!word || word.to - word.from < 2)) return null
+    const result = await source(context)
+    return result && { ...result, validFor: /^\w{2,}$/ }
+  }
 }
 
 /** Marks changes that came from the `value` prop, so they aren't echoed back as onChange. */
@@ -146,8 +184,9 @@ const codeQuestHighlight = HighlightStyle.define([
 function escapeThenTab(): Extension {
   let escaped = false
   return EditorView.domEventHandlers({
-    keydown(event) {
-      if (event.key === 'Escape') {
+    keydown(event, view) {
+      // Escape that only closes the suggestion list doesn't count.
+      if (event.key === 'Escape' && completionStatus(view.state) === null) {
         escaped = true
         return false
       }
@@ -164,8 +203,8 @@ function escapeThenTab(): Extension {
 
 /**
  * The code editor used for challenges and the sandbox: CodeMirror 6 with Python
- * colours, auto-indent, bracket matching and closing, undo, and the last error's line
- * marked. Loaded lazily (see CodeEditor), so pages without code don't download it.
+ * colours, auto-indent, bracket matching and closing, name suggestions, undo, and the
+ * last error's line marked. Loaded lazily (see CodeEditor), so pages without code don't download it.
  */
 export default function CodeMirrorEditor({
   value,
@@ -214,11 +253,29 @@ export default function CodeMirrorEditor({
           indentOnInput(),
           bracketMatching(),
           closeBrackets(),
+          // Suggestions while typing: names already used in this code (variables,
+          // functions), Python's keywords and common built-ins such as print and range.
+          // Only words that start with what was typed. Enter or Tab picks one; Escape closes.
+          language === 'python'
+            ? autocompletion({
+                override: [fromSecondLetter(localCompletionSource), fromSecondLetter(completeFromList(PYTHON_WORDS))],
+                filterStrict: true,
+                icons: false,
+                maxRenderedOptions: 8,
+              })
+            : [],
           EditorState.tabSize.of(4),
           indentUnit.of('    '),
           language === 'python' ? python() : [],
           syntaxHighlighting(codeQuestHighlight),
-          keymap.of([...closeBracketsKeymap, ...defaultKeymap, ...historyKeymap, indentWithTab]),
+          keymap.of([
+            ...closeBracketsKeymap,
+            ...completionKeymap,
+            { key: 'Tab', run: acceptCompletion },
+            ...defaultKeymap,
+            ...historyKeymap,
+            indentWithTab,
+          ]),
           EditorView.contentAttributes.of(contentAttributes),
           errorField,
           EditorView.updateListener.of((update) => {
