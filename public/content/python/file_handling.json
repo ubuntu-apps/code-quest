@@ -4056,6 +4056,16 @@
                 "id": "t1",
                 "label": "data is right",
                 "assertion": "data == b\"Gr\\xc3\\xbc\\xc3\\x9fe\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when text = 'Gardenüße'",
+                "assertion": "_cq_rerun({\"text\": 'Gardenüße'}, \"data\") == b'Garden\\xc3\\xbc\\xc3\\x9fe'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when text = 'Rocketüße'",
+                "assertion": "_cq_rerun({\"text\": 'Rocketüße'}, \"data\") == b'Rocket\\xc3\\xbc\\xc3\\x9fe'"
               }
             ]
           }
@@ -4099,6 +4109,26 @@
                 "id": "t2",
                 "label": "size is 6",
                 "assertion": "size == 6"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'gardenïve' (chars)",
+                "assertion": "_cq_rerun({\"word\": 'gardenïve'}, \"chars\") == 9"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when word = 'gardenïve' (size)",
+                "assertion": "_cq_rerun({\"word\": 'gardenïve'}, \"size\") == 10"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when word = 'levelïve' (chars)",
+                "assertion": "_cq_rerun({\"word\": 'levelïve'}, \"chars\") == 8"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when word = 'levelïve' (size)",
+                "assertion": "_cq_rerun({\"word\": 'levelïve'}, \"size\") == 9"
               }
             ]
           }
@@ -4214,6 +4244,16 @@
                 "id": "t1",
                 "label": "fixed is café",
                 "assertion": "fixed == \"café\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when garbled = 'gardenÃ©'",
+                "assertion": "_cq_rerun({\"garbled\": 'gardenÃ©'}, \"fixed\") == 'gardené'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when garbled = 'rocketÃ©'",
+                "assertion": "_cq_rerun({\"garbled\": 'rocketÃ©'}, \"fixed\") == 'rocketé'"
               }
             ]
           }

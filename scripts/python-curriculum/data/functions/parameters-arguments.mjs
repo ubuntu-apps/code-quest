@@ -131,7 +131,7 @@ export default makeTopic({
     mc("Can an argument be a calculation, like `square(x + 1)`?", ["No, only variables", "Yes, it is worked out first and the result is passed", "Only for numbers", "Only with brackets"], 1),
     mc("Where does a parameter exist?", ["Only inside the function, during a call", "Everywhere in the program", "Only before the function is called", "In the next function"], 0),
     mc("`def f(a, b): print(a - b)`. What does `f(2, 10)` print?", ["`8`", "`2`", "`-8`", "`12`"], 2),
-    mc("`describe_pet(\"dog\", \"Rex\")` prints `dog is a Rex.` Why?", ["Strings can't be passed", "The function is broken", "Python sorts the arguments", "The arguments are in the wrong positions"], 3),
+    mc("Why does `describe_pet(\"dog\", \"Rex\")` print `dog is a Rex.`?\n\n```\ndef describe_pet(name, animal):\n    print(f\"{name} is a {animal}.\")\n```", ["Strings can't be passed", "The function is broken", "Python sorts the arguments", "The arguments are in the wrong positions"], 3),
     mc("How many parameters can a function have?", ["As many as it needs", "One", "Two", "Ten"], 0),
   ],
 })

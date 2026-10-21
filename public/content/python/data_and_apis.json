@@ -117,6 +117,16 @@
                 "id": "t3",
                 "label": "Still valid JSON",
                 "assertion": "__import__('json').loads(text) == {\"city\": \"Zürich\", \"café\": \"Grüezi\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when place = {'city': 'Zürich'}",
+                "assertion": "_cq_rerun({\"place\": {'city': 'Zürich'}}, \"text\") == '{\"city\": \"Zürich\"}'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when place = {'café': 'Grüezi'}",
+                "assertion": "_cq_rerun({\"place\": {'café': 'Grüezi'}}, \"text\") == '{\"café\": \"Grüezi\"}'"
               }
             ]
           }
@@ -689,6 +699,16 @@
                 "id": "t1",
                 "label": "out has the header and both rows",
                 "assertion": "out.splitlines() == [\"name,score\", \"Ana,90\", \"Bob,85\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when scores = [['Bob', 85], ['Ana', 90]]",
+                "assertion": "_cq_rerun({\"scores\": [['Bob', 85], ['Ana', 90]]}, \"out\") == 'name,score\\r\\nBob,85\\r\\nAna,90\\r\\n'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when scores = [['Ana', 90]]",
+                "assertion": "_cq_rerun({\"scores\": [['Ana', 90]]}, \"out\") == 'name,score\\r\\nAna,90\\r\\n'"
               }
             ]
           }
@@ -1601,6 +1621,16 @@
                 "id": "t1",
                 "label": "numbers is right",
                 "assertion": "numbers == [12, 7, 103]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when text = 'Rooms 13, 8 and 104 are free'",
+                "assertion": "_cq_rerun({\"text\": 'Rooms 13, 8 and 104 are free'}, \"numbers\") == [13, 8, 104]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when text = 'Rooms 11, 6 and 102 are free'",
+                "assertion": "_cq_rerun({\"text\": 'Rooms 11, 6 and 102 are free'}, \"numbers\") == [11, 6, 102]"
               }
             ]
           }
@@ -1668,6 +1698,16 @@
                 "id": "t1",
                 "label": "dates is right",
                 "assertion": "dates == [\"2024-11-02\", \"2025-03-14\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different text",
+                "assertion": "_cq_rerun({\"text\": ' renewed 2025-03-14, ID 12345-67-89,Joined 2024-11-02'}, \"dates\") == ['2025-03-14', '2024-11-02']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different text",
+                "assertion": "_cq_rerun({\"text\": 'Joined 2025-12-03, renewed 2026-04-15, ID 12346-68-90'}, \"dates\") == ['2025-12-03', '2026-04-15']"
               }
             ]
           }

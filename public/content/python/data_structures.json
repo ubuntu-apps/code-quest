@@ -83,6 +83,26 @@
                 "id": "t2",
                 "label": "last is 61",
                 "assertion": "last == 61"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when scores = [75, 98, 91, 64] (first)",
+                "assertion": "_cq_rerun({\"scores\": [75, 98, 91, 64]}, \"first\") == 75"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when scores = [75, 98, 91, 64] (last)",
+                "assertion": "_cq_rerun({\"scores\": [75, 98, 91, 64]}, \"last\") == 64"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when scores = [95, 88, 61, 72] (first)",
+                "assertion": "_cq_rerun({\"scores\": [95, 88, 61, 72]}, \"first\") == 95"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when scores = [95, 88, 61, 72] (last)",
+                "assertion": "_cq_rerun({\"scores\": [95, 88, 61, 72]}, \"last\") == 72"
               }
             ]
           }
@@ -102,6 +122,16 @@
                 "id": "t1",
                 "label": "shopping ends with milk",
                 "assertion": "shopping == [\"eggs\", \"bread\", \"milk\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when shopping = ['bread', 'eggs']",
+                "assertion": "_cq_rerun({\"shopping\": ['bread', 'eggs']}, \"shopping\") == ['bread', 'eggs', 'milk']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when shopping = ['eggs']",
+                "assertion": "_cq_rerun({\"shopping\": ['eggs']}, \"shopping\") == ['eggs', 'milk']"
               }
             ]
           }
@@ -145,6 +175,26 @@
                 "id": "t2",
                 "label": "inbox is right",
                 "assertion": "inbox == [\"hi\", \"meeting\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different inbox (inbox)",
+                "assertion": "_cq_rerun({\"inbox\": ['spam', 'meeting', 'lunch?', 'hi']}, \"inbox\") == ['meeting', 'lunch?']"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different inbox (latest)",
+                "assertion": "_cq_rerun({\"inbox\": ['spam', 'meeting', 'lunch?', 'hi']}, \"latest\") == 'hi'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different inbox (inbox)",
+                "assertion": "_cq_rerun({\"inbox\": ['lunch?', 'meeting', 'spam', 'hi']}, \"inbox\") == ['lunch?', 'meeting']"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when a different inbox (latest)",
+                "assertion": "_cq_rerun({\"inbox\": ['lunch?', 'meeting', 'spam', 'hi']}, \"latest\") == 'hi'"
               }
             ]
           }
@@ -174,6 +224,36 @@
                 "id": "t3",
                 "label": "average is 20.0",
                 "assertion": "average == 20.0"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when temps = [21, 24, 20, 28, 22] (average)",
+                "assertion": "_cq_round(_cq_rerun({\"temps\": [21, 24, 20, 28, 22]}, \"average\")) == _cq_round(23.0)"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when temps = [21, 24, 20, 28, 22] (highest)",
+                "assertion": "_cq_rerun({\"temps\": [21, 24, 20, 28, 22]}, \"highest\") == 28"
+              },
+              {
+                "id": "v1_3",
+                "label": "Also right when temps = [21, 24, 20, 28, 22] (lowest)",
+                "assertion": "_cq_rerun({\"temps\": [21, 24, 20, 28, 22]}, \"lowest\") == 20"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when temps = [18, 21, 17, 25, 19, 30] (average)",
+                "assertion": "_cq_round(_cq_rerun({\"temps\": [18, 21, 17, 25, 19, 30]}, \"average\")) == _cq_round(21.666666666666668)"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when temps = [18, 21, 17, 25, 19, 30] (highest)",
+                "assertion": "_cq_rerun({\"temps\": [18, 21, 17, 25, 19, 30]}, \"highest\") == 30"
+              },
+              {
+                "id": "v2_3",
+                "label": "Also right when temps = [18, 21, 17, 25, 19, 30] (lowest)",
+                "assertion": "_cq_rerun({\"temps\": [18, 21, 17, 25, 19, 30]}, \"lowest\") == 17"
               }
             ]
           }
@@ -198,6 +278,16 @@
                 "id": "t2",
                 "label": "scores is unchanged",
                 "assertion": "scores == [72, 95, 88, 61]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when scores = [75, 98, 91, 64]",
+                "assertion": "_cq_rerun({\"scores\": [75, 98, 91, 64]}, \"ranked\") == [98, 91, 75, 64]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when scores = [72, 95, 88, 61, 100]",
+                "assertion": "_cq_rerun({\"scores\": [72, 95, 88, 61, 100]}, \"ranked\") == [100, 95, 88, 72, 61]"
               }
             ]
           }
@@ -217,6 +307,16 @@
                 "id": "t1",
                 "label": "names is sorted",
                 "assertion": "names == [\"Ana\", \"Ben\", \"Cleo\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when names = ['Cleo', 'Ana']",
+                "assertion": "_cq_rerun({\"names\": ['Cleo', 'Ana']}, \"names\") == ['Ana', 'Cleo']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when names = ['Ana', 'Ben']",
+                "assertion": "_cq_rerun({\"names\": ['Ana', 'Ben']}, \"names\") == ['Ana', 'Ben']"
               }
             ]
           }
@@ -241,6 +341,26 @@
                 "id": "t2",
                 "label": "backup still has 3",
                 "assertion": "backup == [\"Song A\", \"Song B\", \"Song C\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when playlist = ['Song B', 'Song C', 'Song A'] (backup)",
+                "assertion": "_cq_rerun({\"playlist\": ['Song B', 'Song C', 'Song A']}, \"backup\") == ['Song B', 'Song C', 'Song A']"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when playlist = ['Song B', 'Song C', 'Song A'] (playlist)",
+                "assertion": "_cq_rerun({\"playlist\": ['Song B', 'Song C', 'Song A']}, \"playlist\") == ['Song B', 'Song C', 'Song A', 'Song D']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when playlist = ['Song C', 'Song B', 'Song A'] (backup)",
+                "assertion": "_cq_rerun({\"playlist\": ['Song C', 'Song B', 'Song A']}, \"backup\") == ['Song C', 'Song B', 'Song A']"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when playlist = ['Song C', 'Song B', 'Song A'] (playlist)",
+                "assertion": "_cq_rerun({\"playlist\": ['Song C', 'Song B', 'Song A']}, \"playlist\") == ['Song C', 'Song B', 'Song A', 'Song D']"
               }
             ]
           }
@@ -260,6 +380,16 @@
                 "id": "t1",
                 "label": "unique is right",
                 "assertion": "unique == [\"home\", \"shop\", \"park\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different visits",
+                "assertion": "_cq_rerun({\"visits\": ['shop', 'home', 'park', 'shop', 'home', 'home']}, \"unique\") == ['shop', 'home', 'park']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different visits",
+                "assertion": "_cq_rerun({\"visits\": ['HOME', 'SHOP', 'HOME', 'PARK', 'SHOP', 'HOME']}, \"unique\") == ['HOME', 'SHOP', 'PARK']"
               }
             ]
           }
@@ -563,6 +693,16 @@
                 "id": "t1",
                 "label": "top3 is right",
                 "assertion": "top3 == [98, 91, 87]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when scores = [101, 94, 90, 83, 79, 67]",
+                "assertion": "_cq_rerun({\"scores\": [101, 94, 90, 83, 79, 67]}, \"top3\") == [101, 94, 90]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when scores = [91, 87, 80, 76, 64, 98]",
+                "assertion": "_cq_rerun({\"scores\": [91, 87, 80, 76, 64, 98]}, \"top3\") == [91, 87, 80]"
               }
             ]
           }
@@ -582,6 +722,16 @@
                 "id": "t1",
                 "label": "last_two is right",
                 "assertion": "last_two == [\"clip\", \"tape\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different items",
+                "assertion": "_cq_rerun({\"items\": ['ink', 'paper', 'clip', 'tape', 'pen']}, \"last_two\") == ['tape', 'pen']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different items",
+                "assertion": "_cq_rerun({\"items\": ['tape', 'clip', 'paper', 'ink', 'pen']}, \"last_two\") == ['ink', 'pen']"
               }
             ]
           }
@@ -601,6 +751,16 @@
                 "id": "t1",
                 "label": "backwards is right",
                 "assertion": "backwards == [5, 4, 3, 2, 1]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when nums = [4, 5, 6, 7, 8]",
+                "assertion": "_cq_rerun({\"nums\": [4, 5, 6, 7, 8]}, \"backwards\") == [8, 7, 6, 5, 4]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when nums = [2, 3, 4, 5, 1]",
+                "assertion": "_cq_rerun({\"nums\": [2, 3, 4, 5, 1]}, \"backwards\") == [1, 5, 4, 3, 2]"
               }
             ]
           }
@@ -620,6 +780,16 @@
                 "id": "t1",
                 "label": "middle is right",
                 "assertion": "middle == [12, 15, 11, 14]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when readings = [3, 15, 18, 14, 17, 3]",
+                "assertion": "_cq_rerun({\"readings\": [3, 15, 18, 14, 17, 3]}, \"middle\") == [15, 18, 14, 17]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when readings = [12, 15, 11, 14, 0, 0]",
+                "assertion": "_cq_rerun({\"readings\": [12, 15, 11, 14, 0, 0]}, \"middle\") == [15, 11, 14, 0]"
               }
             ]
           }
@@ -639,6 +809,16 @@
                 "id": "t1",
                 "label": "every_other is right",
                 "assertion": "every_other == [\"Mon\", \"Wed\", \"Fri\", \"Sun\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different days",
+                "assertion": "_cq_rerun({\"days\": ['Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Mon']}, \"every_other\") == ['Tue', 'Thu', 'Sat', 'Mon']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different days",
+                "assertion": "_cq_rerun({\"days\": ['Sun', 'Sat', 'Fri', 'Thu', 'Wed', 'Tue', 'Mon']}, \"every_other\") == ['Sun', 'Fri', 'Wed', 'Mon']"
               }
             ]
           }
@@ -658,6 +838,11 @@
                 "id": "t1",
                 "label": "is_palindrome is True",
                 "assertion": "is_palindrome is True"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'Garden'",
+                "assertion": "_cq_rerun({\"word\": 'Garden'}, \"is_palindrome\") == False"
               }
             ]
           }
@@ -696,6 +881,16 @@
                 "id": "t1",
                 "label": "rotated is right",
                 "assertion": "rotated == [3, 4, 5, 6, 1, 2]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when items = [4, 5, 6, 7, 8, 9]",
+                "assertion": "_cq_rerun({\"items\": [4, 5, 6, 7, 8, 9]}, \"rotated\") == [6, 7, 8, 9, 4, 5]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when items = [2, 3, 4, 5, 6, 1]",
+                "assertion": "_cq_rerun({\"items\": [2, 3, 4, 5, 6, 1]}, \"rotated\") == [4, 5, 6, 1, 2, 3]"
               }
             ]
           }
@@ -715,6 +910,16 @@
                 "id": "t1",
                 "label": "shown is the last, short page",
                 "assertion": "shown == [\"j\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when per_page = 4",
+                "assertion": "_cq_rerun({\"per_page\": 4}, \"shown\") == []"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when per_page = 2",
+                "assertion": "_cq_rerun({\"per_page\": 2}, \"shown\") == ['g', 'h']"
               }
             ]
           }
@@ -1061,6 +1266,26 @@
                 "id": "t2",
                 "label": "y is 7",
                 "assertion": "y == 7"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when point = (4, 8) (x)",
+                "assertion": "_cq_rerun({\"point\": (4, 8)}, \"x\") == 4"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when point = (4, 8) (y)",
+                "assertion": "_cq_rerun({\"point\": (4, 8)}, \"y\") == 8"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when point = (5, 9) (x)",
+                "assertion": "_cq_rerun({\"point\": (5, 9)}, \"x\") == 5"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when point = (5, 9) (y)",
+                "assertion": "_cq_rerun({\"point\": (5, 9)}, \"y\") == 9"
               }
             ]
           }
@@ -1104,6 +1329,16 @@
                 "id": "t2",
                 "label": "date is unchanged",
                 "assertion": "date == (2026, 10, 17)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when date = (2027, 11, 18)",
+                "assertion": "_cq_rerun({\"date\": (2027, 11, 18)}, \"next_day\") == (2027, 11, 19)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when date = (2028, 12, 19)",
+                "assertion": "_cq_rerun({\"date\": (2028, 12, 19)}, \"next_day\") == (2028, 12, 20)"
               }
             ]
           }
@@ -1147,6 +1382,26 @@
                 "id": "t2",
                 "label": "others is the rest",
                 "assertion": "others == [87, 85, 70, 64]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when scores = [102, 90, 88, 73, 67] (best)",
+                "assertion": "_cq_rerun({\"scores\": [102, 90, 88, 73, 67]}, \"best\") == 102"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when scores = [102, 90, 88, 73, 67] (others)",
+                "assertion": "_cq_rerun({\"scores\": [102, 90, 88, 73, 67]}, \"others\") == [90, 88, 73, 67]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when scores = [87, 85, 70, 64, 99] (best)",
+                "assertion": "_cq_rerun({\"scores\": [87, 85, 70, 64, 99]}, \"best\") == 87"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when scores = [87, 85, 70, 64, 99] (others)",
+                "assertion": "_cq_rerun({\"scores\": [87, 85, 70, 64, 99]}, \"others\") == [85, 70, 64, 99]"
               }
             ]
           }
@@ -1171,6 +1426,26 @@
                 "id": "t2",
                 "label": "finish is School",
                 "assertion": "finish == \"School\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different route (finish)",
+                "assertion": "_cq_rerun({\"route\": ['Bakery', 'Park', 'Library', 'School', 'Home']}, \"finish\") == 'Home'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different route (start)",
+                "assertion": "_cq_rerun({\"route\": ['Bakery', 'Park', 'Library', 'School', 'Home']}, \"start\") == 'Bakery'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different route (finish)",
+                "assertion": "_cq_rerun({\"route\": ['School', 'Library', 'Park', 'Bakery', 'Home']}, \"finish\") == 'Home'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when a different route (start)",
+                "assertion": "_cq_rerun({\"route\": ['School', 'Library', 'Park', 'Bakery', 'Home']}, \"start\") == 'School'"
               }
             ]
           }
@@ -1190,6 +1465,16 @@
                 "id": "t1",
                 "label": "distance is 5.0",
                 "assertion": "distance == 5.0"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when p1 = (2, 3)",
+                "assertion": "_cq_round(_cq_rerun({\"p1\": (2, 3)}, \"distance\")) == _cq_round(3.605551275463989)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when p1 = (3, 4)",
+                "assertion": "_cq_round(_cq_rerun({\"p1\": (3, 4)}, \"distance\")) == _cq_round(2.23606797749979)"
               }
             ]
           }
@@ -1209,6 +1494,11 @@
                 "id": "t1",
                 "label": "position is (0, 3)",
                 "assertion": "position == (0, 3)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different moves",
+                "assertion": "_cq_rerun({\"moves\": [(0, 1), (1, 0), (0, 1), (-1, 0)]}, \"position\") == (0, 2)"
               }
             ]
           }
@@ -1228,6 +1518,16 @@
                 "id": "t1",
                 "label": "ranking is right",
                 "assertion": "ranking == [\"Ana\", \"Cleo\", \"Ben\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when results = [('Ana', 91), ('Ben', 78)]",
+                "assertion": "_cq_rerun({\"results\": [('Ana', 91), ('Ben', 78)]}, \"ranking\") == ['Ana', 'Ben']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when results = [('Ben', 78), ('Cleo', 85)]",
+                "assertion": "_cq_rerun({\"results\": [('Ben', 78), ('Cleo', 85)]}, \"ranking\") == ['Cleo', 'Ben']"
               }
             ]
           }
@@ -1550,6 +1850,16 @@
                 "id": "t1",
                 "label": "price is 2.5",
                 "assertion": "price == 2.5"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different prices",
+                "assertion": "_cq_round(_cq_rerun({\"prices\": {'coffee': 2.5, 'tea': 3.75, 'cake': 3.2}}, \"price\")) == _cq_round(3.75)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different prices",
+                "assertion": "_cq_round(_cq_rerun({\"prices\": {'coffee': 6.2, 'tea': 5.5, 'cake': 6.75}}, \"price\")) == _cq_round(5.5)"
               }
             ]
           }
@@ -1612,6 +1922,26 @@
                 "id": "t2",
                 "label": "settings has no temp",
                 "assertion": "settings == {\"theme\": \"dark\", \"size\": 14}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different settings (removed)",
+                "assertion": "_cq_rerun({\"settings\": {'theme': 'dark', 'temp': 'x1'}}, \"removed\") == 'x1'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different settings (settings)",
+                "assertion": "_cq_rerun({\"settings\": {'theme': 'dark', 'temp': 'x1'}}, \"settings\") == {'theme': 'dark'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when settings = {'temp': 'x1', 'size': 14} (removed)",
+                "assertion": "_cq_rerun({\"settings\": {'temp': 'x1', 'size': 14}}, \"removed\") == 'x1'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when settings = {'temp': 'x1', 'size': 14} (settings)",
+                "assertion": "_cq_rerun({\"settings\": {'temp': 'x1', 'size': 14}}, \"settings\") == {'size': 14}"
               }
             ]
           }
@@ -1650,6 +1980,16 @@
                 "id": "t1",
                 "label": "counts is right",
                 "assertion": "counts == {\"red\": 3, \"blue\": 2, \"green\": 1}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when text = 'red blue red green blue'",
+                "assertion": "_cq_rerun({\"text\": 'red blue red green blue'}, \"counts\") == {'red': 2, 'blue': 2, 'green': 1}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when text = 'red blue red'",
+                "assertion": "_cq_rerun({\"text\": 'red blue red'}, \"counts\") == {'red': 2, 'blue': 1}"
               }
             ]
           }
@@ -1688,6 +2028,16 @@
                 "id": "t1",
                 "label": "code_for is right",
                 "assertion": "code_for == {\"Norway\": \"NO\", \"Japan\": \"JP\", \"Kenya\": \"KE\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different codes",
+                "assertion": "_cq_rerun({\"codes\": {'NO': 'Norway', 'JP': 'Japan'}}, \"code_for\") == {'Norway': 'NO', 'Japan': 'JP'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when codes = {'JP': 'Japan', 'KE': 'Kenya'}",
+                "assertion": "_cq_rerun({\"codes\": {'JP': 'Japan', 'KE': 'Kenya'}}, \"code_for\") == {'Japan': 'JP', 'Kenya': 'KE'}"
               }
             ]
           }
@@ -1712,6 +2062,16 @@
                 "id": "t2",
                 "label": "Prints the total",
                 "assertion": "_cq_stdout.strip().splitlines()[-1] == \"Total: $20.75\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different prices",
+                "assertion": "_cq_round(_cq_rerun({\"prices\": {'tea': 3.75, 'cake': 4.0, 'jam': 2.5}}, \"total\")) == _cq_round(19.0)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different prices",
+                "assertion": "_cq_round(_cq_rerun({\"prices\": {'tea': 5.5, 'cake': 6.75, 'jam': 7.0}}, \"total\")) == _cq_round(38.75)"
               }
             ]
           }
@@ -2034,6 +2394,16 @@
                 "id": "t1",
                 "label": "unique is {1, 2, 3}",
                 "assertion": "unique == {1, 2, 3}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when numbers = [6, 4, 6, 5, 4, 6]",
+                "assertion": "_cq_rerun({\"numbers\": [6, 4, 6, 5, 4, 6]}, \"unique\") == {4, 5, 6}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when numbers = [3, 1, 3, 2, 1, 3, 8]",
+                "assertion": "_cq_rerun({\"numbers\": [3, 1, 3, 2, 1, 3, 8]}, \"unique\") == {8, 1, 2, 3}"
               }
             ]
           }
@@ -2072,6 +2442,16 @@
                 "id": "t1",
                 "label": "tags is right",
                 "assertion": "tags == {\"news\", \"python\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when tags = {'draft'}",
+                "assertion": "_cq_rerun({\"tags\": {'draft'}}, \"tags\") == {'python'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when tags = {'kiwi', 'draft', 'news'}",
+                "assertion": "_cq_rerun({\"tags\": {'kiwi', 'draft', 'news'}}, \"tags\") == {'python', 'kiwi', 'news'}"
               }
             ]
           }
@@ -2091,6 +2471,16 @@
                 "id": "t1",
                 "label": "shared is right",
                 "assertion": "shared == {\"chess\", \"films\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when ana = {'films', 'running'}",
+                "assertion": "_cq_rerun({\"ana\": {'films', 'running'}}, \"shared\") == {'films'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when ana = {'chess', 'running'}",
+                "assertion": "_cq_rerun({\"ana\": {'chess', 'running'}}, \"shared\") == {'chess'}"
               }
             ]
           }
@@ -2110,6 +2500,16 @@
                 "id": "t1",
                 "label": "only_ana is right",
                 "assertion": "only_ana == {\"running\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when ana = {'films', 'chess'}",
+                "assertion": "_cq_rerun({\"ana\": {'films', 'chess'}}, \"only_ana\") == set()"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different ana",
+                "assertion": "_cq_rerun({\"ana\": {'films', 'kiwi', 'chess', 'running'}}, \"only_ana\") == {'kiwi', 'running'}"
               }
             ]
           }
@@ -2129,6 +2529,16 @@
                 "id": "t1",
                 "label": "letters is right",
                 "assertion": "letters == [\"i\", \"m\", \"p\", \"s\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'garden'",
+                "assertion": "_cq_rerun({\"word\": 'garden'}, \"letters\") == ['a', 'd', 'e', 'g', 'n', 'r']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when word = 'rocket'",
+                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"letters\") == ['c', 'e', 'k', 'o', 'r', 't']"
               }
             ]
           }
@@ -2148,6 +2558,16 @@
                 "id": "t1",
                 "label": "missing is right",
                 "assertion": "missing == {\"tickets\", \"charger\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different needed",
+                "assertion": "_cq_rerun({\"needed\": {'socks', 'passport', 'tickets'}}, \"missing\") == {'tickets'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different needed",
+                "assertion": "_cq_rerun({\"needed\": {'socks', 'passport', 'charger'}}, \"missing\") == {'charger'}"
               }
             ]
           }
@@ -2167,6 +2587,11 @@
                 "id": "t1",
                 "label": "is_pangram is True",
                 "assertion": "is_pangram is True"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different sentence",
+                "assertion": "_cq_rerun({\"sentence\": 'The quick brown fox jumps over the lazy'}, \"is_pangram\") == False"
               }
             ]
           }
@@ -2186,6 +2611,16 @@
                 "id": "t1",
                 "label": "first_repeat is two",
                 "assertion": "first_repeat == \"two\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when text = 'one two three'",
+                "assertion": "_cq_rerun({\"text\": 'one two three'}, \"first_repeat\") == None"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when text = 'ONE TWO THREE TWO ONE FOUR'",
+                "assertion": "_cq_rerun({\"text\": 'ONE TWO THREE TWO ONE FOUR'}, \"first_repeat\") == 'TWO'"
               }
             ]
           }
@@ -2508,6 +2943,16 @@
                 "id": "t1",
                 "label": "total is 25",
                 "assertion": "total == 25"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different stock",
+                "assertion": "_cq_rerun({\"stock\": {'apple': 15, 'pear': 7, 'plum': 12}}, \"total\") == 34"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different stock",
+                "assertion": "_cq_rerun({\"stock\": {'apple': 24, 'pear': 8, 'plum': 18}}, \"total\") == 50"
               }
             ]
           }
@@ -2565,6 +3010,16 @@
                 "id": "t1",
                 "label": "phone_book is right",
                 "assertion": "phone_book == {\"Ana\": \"555-0101\", \"Ben\": \"555-0199\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when names = ['Ben', 'Ana']",
+                "assertion": "_cq_rerun({\"names\": ['Ben', 'Ana']}, \"phone_book\") == {'Ben': '555-0101', 'Ana': '555-0199'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when names = ['Ana']",
+                "assertion": "_cq_rerun({\"names\": ['Ana']}, \"phone_book\") == {'Ana': '555-0101'}"
               }
             ]
           }
@@ -2584,6 +3039,16 @@
                 "id": "t1",
                 "label": "by_length is right",
                 "assertion": "by_length == [\"fig\", \"kiwi\", \"banana\", \"cherry\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different words",
+                "assertion": "_cq_rerun({\"words\": ['fig', 'cherry', 'kiwi', 'banana']}, \"by_length\") == ['fig', 'kiwi', 'cherry', 'banana']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when words = ['banana', 'fig', 'cherry']",
+                "assertion": "_cq_rerun({\"words\": ['banana', 'fig', 'cherry']}, \"by_length\") == ['fig', 'banana', 'cherry']"
               }
             ]
           }
@@ -2603,6 +3068,11 @@
                 "id": "t1",
                 "label": "cheapest is water",
                 "assertion": "cheapest == \"water\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different prices",
+                "assertion": "_cq_rerun({\"prices\": {'tea': 3.75, 'cake': 1.0, 'water': 2.2, 'juice': 2.5}}, \"cheapest\") == 'cake'"
               }
             ]
           }
@@ -2622,6 +3092,16 @@
                 "id": "t1",
                 "label": "ranking is right",
                 "assertion": "ranking == [\"Dev\", \"Ana\", \"Cleo\", \"Ben\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ana': 78, 'Ben': 85, 'Cleo': 96, 'Dev': 91}}, \"ranking\") == ['Cleo', 'Dev', 'Ben', 'Ana']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ana': 91, 'Ben': 78, 'Cleo': 85}}, \"ranking\") == ['Ana', 'Cleo', 'Ben']"
               }
             ]
           }
@@ -2641,6 +3121,16 @@
                 "id": "t1",
                 "label": "nums is [3, 4]",
                 "assertion": "nums == [3, 4]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when nums = [6, 2, 1, 7, -2]",
+                "assertion": "_cq_rerun({\"nums\": [6, 2, 1, 7, -2]}, \"nums\") == [6, 2, 1, 7]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when nums = [-1, -2, 4, -5, 3]",
+                "assertion": "_cq_rerun({\"nums\": [-1, -2, 4, -5, 3]}, \"nums\") == [4, 3]"
               }
             ]
           }
@@ -2660,6 +3150,16 @@
                 "id": "t1",
                 "label": "changes is right",
                 "assertion": "changes == [3, -4, 7, 0]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when temps = [15, 11, 18, 18, 12]",
+                "assertion": "_cq_rerun({\"temps\": [15, 11, 18, 18, 12]}, \"changes\") == [-4, 7, 0, -6]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when temps = [18, 18, 11, 15, 12]",
+                "assertion": "_cq_rerun({\"temps\": [18, 18, 11, 15, 12]}, \"changes\") == [0, -7, 4, -3]"
               }
             ]
           }
@@ -2982,6 +3482,16 @@
                 "id": "t1",
                 "label": "loud is right",
                 "assertion": "loud == [\"HI\", \"THERE\", \"FRIEND\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when words = ['there', 'friend', 'hi']",
+                "assertion": "_cq_rerun({\"words\": ['there', 'friend', 'hi']}, \"loud\") == ['THERE', 'FRIEND', 'HI']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when words = ['friend', 'there', 'hi']",
+                "assertion": "_cq_rerun({\"words\": ['friend', 'there', 'hi']}, \"loud\") == ['FRIEND', 'THERE', 'HI']"
               }
             ]
           }
@@ -3001,6 +3511,16 @@
                 "id": "t1",
                 "label": "nums is right",
                 "assertion": "nums == [4, 8, 15, 16, 23, 42]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when data = '8 15 16 23 42 4'",
+                "assertion": "_cq_rerun({\"data\": '8 15 16 23 42 4'}, \"nums\") == [8, 15, 16, 23, 42, 4]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when data = '42 23 16 15 8 4'",
+                "assertion": "_cq_rerun({\"data\": '42 23 16 15 8 4'}, \"nums\") == [42, 23, 16, 15, 8, 4]"
               }
             ]
           }
@@ -3020,6 +3540,16 @@
                 "id": "t1",
                 "label": "evens is right",
                 "assertion": "evens == [12, 20, 8]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when nums = [8, 15, 10, 23, 6, 11]",
+                "assertion": "_cq_rerun({\"nums\": [8, 15, 10, 23, 6, 11]}, \"evens\") == [8, 10, 6]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when nums = [8, 3, 20, 7, 12, 5]",
+                "assertion": "_cq_rerun({\"nums\": [8, 3, 20, 7, 12, 5]}, \"evens\") == [8, 20, 12]"
               }
             ]
           }
@@ -3039,6 +3569,16 @@
                 "id": "t1",
                 "label": "long_words is right",
                 "assertion": "long_words == [\"quick\", \"brown\", \"jumps\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different text",
+                "assertion": "_cq_rerun({\"text\": 'dog lazy the over jumps fox brown quick the'}, \"long_words\") == ['jumps', 'brown', 'quick']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when text = 'the quick brown'",
+                "assertion": "_cq_rerun({\"text\": 'the quick brown'}, \"long_words\") == ['quick', 'brown']"
               }
             ]
           }
@@ -3058,6 +3598,16 @@
                 "id": "t1",
                 "label": "results is right",
                 "assertion": "results == [\"pass\", \"fail\", \"pass\", \"pass\", \"fail\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when scores = [45, 88, 50, 31, 72]",
+                "assertion": "_cq_rerun({\"scores\": [45, 88, 50, 31, 72]}, \"results\") == ['fail', 'pass', 'pass', 'fail', 'pass']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when scores = [72, 45, 88, 50, 31, 93]",
+                "assertion": "_cq_rerun({\"scores\": [72, 45, 88, 50, 31, 93]}, \"results\") == ['pass', 'fail', 'pass', 'pass', 'fail', 'pass']"
               }
             ]
           }
@@ -3077,6 +3627,16 @@
                 "id": "t1",
                 "label": "honours is right",
                 "assertion": "honours == [\"Ana\", \"Cleo\", \"Dev\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ana': 78, 'Ben': 85, 'Cleo': 96, 'Dev': 91}}, \"honours\") == ['Ben', 'Cleo', 'Dev']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ana': 182, 'Ben': 156, 'Cleo': 170, 'Dev': 192}}, \"honours\") == ['Ana', 'Ben', 'Cleo', 'Dev']"
               }
             ]
           }
@@ -3096,6 +3656,16 @@
                 "id": "t1",
                 "label": "names is right",
                 "assertion": "names == [\"Ana\", \"Ben\", \"Cleo Marsh\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different raw",
+                "assertion": "_cq_rerun({\"raw\": ['', 'BEN', '   ', 'cleo marsh', '  ana ']}, \"names\") == ['Ben', 'Cleo Marsh', 'Ana']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different raw",
+                "assertion": "_cq_rerun({\"raw\": ['cleo marsh', '   ', 'BEN', '', '  ana ']}, \"names\") == ['Cleo Marsh', 'Ben', 'Ana']"
               }
             ]
           }
@@ -3115,6 +3685,16 @@
                 "id": "t1",
                 "label": "flat is right",
                 "assertion": "flat == [1, 2, 3, 4, 5, 6]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when grid = [[4, 5], [6], [1, 2, 3]]",
+                "assertion": "_cq_rerun({\"grid\": [[4, 5], [6], [1, 2, 3]]}, \"flat\") == [4, 5, 6, 1, 2, 3]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when grid = [[6], [4, 5], [1, 2, 3]]",
+                "assertion": "_cq_rerun({\"grid\": [[6], [4, 5], [1, 2, 3]]}, \"flat\") == [6, 4, 5, 1, 2, 3]"
               }
             ]
           }
@@ -3437,6 +4017,16 @@
                 "id": "t1",
                 "label": "lengths is right",
                 "assertion": "lengths == {\"tea\": 3, \"cake\": 4, \"biscuit\": 7}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when words = ['tea', 'cake']",
+                "assertion": "_cq_rerun({\"words\": ['tea', 'cake']}, \"lengths\") == {'tea': 3, 'cake': 4}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when words = ['cake', 'biscuit']",
+                "assertion": "_cq_rerun({\"words\": ['cake', 'biscuit']}, \"lengths\") == {'cake': 4, 'biscuit': 7}"
               }
             ]
           }
@@ -3494,6 +4084,16 @@
                 "id": "t1",
                 "label": "new_prices is right",
                 "assertion": "new_prices == {\"tea\": 2.75, \"cake\": 4.18, \"jam\": 4.4}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different prices",
+                "assertion": "_cq_round(_cq_rerun({\"prices\": {'tea': 3.8, 'cake': 4.0, 'jam': 2.5}}, \"new_prices\")) == _cq_round({'tea': 4.18, 'cake': 4.4, 'jam': 2.75})"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different prices",
+                "assertion": "_cq_round(_cq_rerun({\"prices\": {'tea': 5.5, 'cake': 6.8, 'jam': 7.0}}, \"new_prices\")) == _cq_round({'tea': 6.05, 'cake': 7.48, 'jam': 7.7})"
               }
             ]
           }
@@ -3513,6 +4113,16 @@
                 "id": "t1",
                 "label": "available is right",
                 "assertion": "available == {\"apple\": 12, \"plum\": 9}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different stock",
+                "assertion": "_cq_rerun({\"stock\": {'apple': 0, 'pear': 9, 'plum': 0, 'fig': 12}}, \"available\") == {'pear': 9, 'fig': 12}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different stock",
+                "assertion": "_cq_rerun({\"stock\": {'apple': 15, 'pear': 3, 'plum': 12, 'fig': 3}}, \"available\") == {'apple': 15, 'pear': 3, 'plum': 12, 'fig': 3}"
               }
             ]
           }
@@ -3532,6 +4142,16 @@
                 "id": "t1",
                 "label": "ages is right",
                 "assertion": "ages == {\"Ana\": 30, \"Ben\": 25, \"Cleo\": 41}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when names = ['Ben', 'Cleo', 'Ana']",
+                "assertion": "_cq_rerun({\"names\": ['Ben', 'Cleo', 'Ana']}, \"ages\") == {'Ben': 30, 'Cleo': 25, 'Ana': 41}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when names = ['Cleo', 'Ben', 'Ana']",
+                "assertion": "_cq_rerun({\"names\": ['Cleo', 'Ben', 'Ana']}, \"ages\") == {'Cleo': 30, 'Ben': 25, 'Ana': 41}"
               }
             ]
           }
@@ -3551,6 +4171,16 @@
                 "id": "t1",
                 "label": "code_for is right",
                 "assertion": "code_for == {\"Norway\": \"NO\", \"Japan\": \"JP\", \"Kenya\": \"KE\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different countries",
+                "assertion": "_cq_rerun({\"countries\": {'NO': 'Norway', 'JP': 'Japan'}}, \"code_for\") == {'Norway': 'NO', 'Japan': 'JP'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when countries = {'JP': 'Japan', 'KE': 'Kenya'}",
+                "assertion": "_cq_rerun({\"countries\": {'JP': 'Japan', 'KE': 'Kenya'}}, \"code_for\") == {'Japan': 'JP', 'Kenya': 'KE'}"
               }
             ]
           }
@@ -3570,6 +4200,11 @@
                 "id": "t1",
                 "label": "initials is right",
                 "assertion": "initials == {\"A\", \"B\", \"C\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when names = ['Ana', 'ben', 'Amir', 'Bea']",
+                "assertion": "_cq_rerun({\"names\": ['Ana', 'ben', 'Amir', 'Bea']}, \"initials\") == {'B', 'A'}"
               }
             ]
           }
@@ -3589,6 +4224,16 @@
                 "id": "t1",
                 "label": "counts is right",
                 "assertion": "counts == {\"b\": 1, \"a\": 3, \"n\": 2}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'garden'",
+                "assertion": "_cq_rerun({\"word\": 'garden'}, \"counts\") == {'d': 1, 'n': 1, 'r': 1, 'g': 1, 'a': 1, 'e': 1}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when word = 'rocket'",
+                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"counts\") == {'c': 1, 'k': 1, 'r': 1, 't': 1, 'o': 1, 'e': 1}"
               }
             ]
           }
@@ -3608,6 +4253,16 @@
                 "id": "t1",
                 "label": "combined is right",
                 "assertion": "combined == {\"pear\": 6, \"fig\": 8}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different shop_a",
+                "assertion": "_cq_rerun({\"shop_a\": {'apple': 2, 'pear': 7, 'fig': 5}}, \"combined\") == {'pear': 11, 'fig': 6}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different shop_a",
+                "assertion": "_cq_rerun({\"shop_a\": {'apple': 8, 'pear': 5, 'fig': 10}}, \"combined\") == {'pear': 9, 'fig': 11}"
               }
             ]
           }
@@ -3911,6 +4566,11 @@
                 "id": "t1",
                 "label": "name is Ben",
                 "assertion": "name == \"Ben\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different people",
+                "assertion": "_cq_rerun({\"people\": [{'name': 'Ben', 'age': 25}, {'name': 'Ana', 'age': 30}]}, \"name\") == 'Ana'"
               }
             ]
           }
@@ -3930,6 +4590,11 @@
                 "id": "t1",
                 "label": "centre is 5",
                 "assertion": "centre == 5"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different grid",
+                "assertion": "_cq_rerun({\"grid\": [[4, 5, 6], [7, 8, 9], [1, 2, 3]]}, \"centre\") == 8"
               }
             ]
           }
@@ -3949,6 +4614,11 @@
                 "id": "t1",
                 "label": "groups is right",
                 "assertion": "groups == {\"fruit\": [\"apple\", \"pear\", \"plum\"], \"veg\": [\"leek\"]}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when groups = {'fruit': ['apple', 'pear']}",
+                "assertion": "_cq_rerun({\"groups\": {'fruit': ['apple', 'pear']}}, \"groups\") == {'fruit': ['apple', 'pear', 'plum']}"
               }
             ]
           }
@@ -3987,6 +4657,16 @@
                 "id": "t1",
                 "label": "total is 20.75",
                 "assertion": "total == 20.75"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different cart",
+                "assertion": "_cq_round(_cq_rerun({\"cart\": [{'item': 'tea', 'price': 2.5, 'qty': 2}, {'item': 'cake', 'price': 3.75, 'qty': 1}]}, \"total\")) == _cq_round(8.75)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different cart",
+                "assertion": "_cq_round(_cq_rerun({\"cart\": [{'item': 'cake', 'price': 3.75, 'qty': 1}, {'item': 'jam', 'price': 4.0, 'qty': 3}]}, \"total\")) == _cq_round(15.75)"
               }
             ]
           }
@@ -4006,6 +4686,16 @@
                 "id": "t1",
                 "label": "middle_column is right",
                 "assertion": "middle_column == [2, 5, 8]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different grid",
+                "assertion": "_cq_rerun({\"grid\": [[4, 5, 6], [7, 8, 9], [1, 2, 3]]}, \"middle_column\") == [5, 8, 2]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different grid",
+                "assertion": "_cq_rerun({\"grid\": [[7, 8, 9], [4, 5, 6], [1, 2, 3]]}, \"middle_column\") == [8, 5, 2]"
               }
             ]
           }
@@ -4025,6 +4715,16 @@
                 "id": "t1",
                 "label": "by_length is right",
                 "assertion": "by_length == {3: [\"tea\", \"jam\"], 4: [\"cake\", \"soup\"], 7: [\"biscuit\"]}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different words",
+                "assertion": "_cq_rerun({\"words\": ['cake', 'jam', 'soup', 'biscuit', 'tea']}, \"by_length\") == {4: ['cake', 'soup'], 3: ['jam', 'tea'], 7: ['biscuit']}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different words",
+                "assertion": "_cq_rerun({\"words\": ['biscuit', 'soup', 'jam', 'cake', 'tea']}, \"by_length\") == {7: ['biscuit'], 4: ['soup', 'cake'], 3: ['jam', 'tea']}"
               }
             ]
           }
@@ -4068,6 +4768,16 @@
                 "id": "t2",
                 "label": "backup does not",
                 "assertion": "backup == {\"colours\": [\"red\", \"blue\"], \"size\": 12}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when settings = {'colours': ['red', 'blue']} (backup)",
+                "assertion": "_cq_rerun({\"settings\": {'colours': ['red', 'blue']}}, \"backup\") == {'colours': ['red', 'blue']}"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when settings = {'colours': ['red', 'blue']} (settings)",
+                "assertion": "_cq_rerun({\"settings\": {'colours': ['red', 'blue']}}, \"settings\") == {'colours': ['red', 'blue', 'green']}"
               }
             ]
           }
@@ -4087,6 +4797,16 @@
                 "id": "t1",
                 "label": "averages is right",
                 "assertion": "averages == {\"Ana\": 84.0, \"Ben\": 66.0, \"Cleo\": 88.5}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different marks",
+                "assertion": "_cq_round(_cq_rerun({\"marks\": {'Ana': [90, 85, 77], 'Ben': [62, 70]}}, \"averages\")) == _cq_round({'Ana': 84.0, 'Ben': 66.0})"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different marks",
+                "assertion": "_cq_round(_cq_rerun({\"marks\": {'Ben': [62, 70], 'Cleo': [88, 91, 95, 80]}}, \"averages\")) == _cq_round({'Ben': 66.0, 'Cleo': 88.5})"
               }
             ]
           }
@@ -4409,6 +5129,16 @@
                 "id": "t1",
                 "label": "top2 is right",
                 "assertion": "top2 == [(\"the\", 3), (\"and\", 2)]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when text = 'the cat and'",
+                "assertion": "_cq_rerun({\"text\": 'the cat and'}, \"top2\") == [('the', 1), ('cat', 1)]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when text = 'the cat and the'",
+                "assertion": "_cq_rerun({\"text\": 'the cat and the'}, \"top2\") == [('the', 2), ('cat', 1)]"
               }
             ]
           }
@@ -4577,6 +5307,16 @@
                 "id": "t1",
                 "label": "averages is right",
                 "assertion": "averages == [2.0, 3.0, 4.0]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when readings = [4, 5, 6, 7, 8]",
+                "assertion": "_cq_round(_cq_rerun({\"readings\": [4, 5, 6, 7, 8]}, \"averages\")) == _cq_round([5.0, 6.0, 7.0])"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when readings = [2, 3, 4, 5, 1]",
+                "assertion": "_cq_round(_cq_rerun({\"readings\": [2, 3, 4, 5, 1]}, \"averages\")) == _cq_round([3.0, 4.0, 3.3333333333333335])"
               }
             ]
           }
@@ -4596,6 +5336,16 @@
                 "id": "t1",
                 "label": "podium is right",
                 "assertion": "podium == [\"Ben\", \"Dee\", \"Ana\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ana': 95, 'Ben': 72, 'Cy': 91, 'Dee': 79, 'Eli': 88}}, \"podium\") == ['Ana', 'Cy', 'Eli']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ben': 95, 'Cy': 72, 'Dee': 91, 'Eli': 79}}, \"podium\") == ['Ben', 'Dee', 'Eli']"
               }
             ]
           }
@@ -4904,6 +5654,26 @@
                 "id": "t2",
                 "label": "cake is 3.75",
                 "assertion": "cake == 3.75"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when pairs = [('tea', 2.5), ('cake', 3.75)] (cake)",
+                "assertion": "_cq_round(_cq_rerun({\"pairs\": [('tea', 2.5), ('cake', 3.75)]}, \"cake\")) == _cq_round(3.75)"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when pairs = [('tea', 2.5), ('cake', 3.75)] (prices)",
+                "assertion": "_cq_round(_cq_rerun({\"pairs\": [('tea', 2.5), ('cake', 3.75)]}, \"prices\")) == _cq_round({'tea': 2.5, 'cake': 3.75})"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when pairs = [('cake', 3.75), ('jam', 4.0)] (cake)",
+                "assertion": "_cq_round(_cq_rerun({\"pairs\": [('cake', 3.75), ('jam', 4.0)]}, \"cake\")) == _cq_round(3.75)"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when pairs = [('cake', 3.75), ('jam', 4.0)] (prices)",
+                "assertion": "_cq_round(_cq_rerun({\"pairs\": [('cake', 3.75), ('jam', 4.0)]}, \"prices\")) == _cq_round({'cake': 3.75, 'jam': 4.0})"
               }
             ]
           }
@@ -4923,6 +5693,11 @@
                 "id": "t1",
                 "label": "tag_set is right",
                 "assertion": "tag_set == {\"python\", \"data\", \"web\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different tags",
+                "assertion": "_cq_rerun({\"tags\": ['PYTHON', 'DATA', 'PYTHON', 'WEB', 'DATA']}, \"tag_set\") == {'WEB', 'DATA', 'PYTHON'}"
               }
             ]
           }
@@ -4942,6 +5717,16 @@
                 "id": "t1",
                 "label": "origin is the tuple (0, 0)",
                 "assertion": "origin == (0, 0) and isinstance(origin, tuple)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when coords = [3, 3]",
+                "assertion": "_cq_rerun({\"coords\": [3, 3]}, \"origin\") == (3, 3)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when coords = [0, 0, 5]",
+                "assertion": "_cq_rerun({\"coords\": [0, 0, 5]}, \"origin\") == (0, 0, 5)"
               }
             ]
           }
@@ -4966,6 +5751,26 @@
                 "id": "t2",
                 "label": "allowed is right",
                 "assertion": "allowed == [\"ana\", \"ben\", \"cleo\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when banned = ['bot7'] (allowed)",
+                "assertion": "_cq_rerun({\"banned\": ['bot7']}, \"allowed\") == ['ana', 'ben', 'spam1', 'cleo']"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when banned = ['bot7'] (banned_set)",
+                "assertion": "_cq_rerun({\"banned\": ['bot7']}, \"banned_set\") == {'bot7'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when banned = ['spam1'] (allowed)",
+                "assertion": "_cq_rerun({\"banned\": ['spam1']}, \"allowed\") == ['ana', 'bot7', 'ben', 'cleo']"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when banned = ['spam1'] (banned_set)",
+                "assertion": "_cq_rerun({\"banned\": ['spam1']}, \"banned_set\") == {'spam1'}"
               }
             ]
           }
@@ -5028,6 +5833,16 @@
                 "id": "t2",
                 "label": "cleo_age is 41",
                 "assertion": "cleo_age == 41"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different people (by_name)",
+                "assertion": "_cq_rerun({\"people\": [{'name': 'Ben', 'age': 25}, {'name': 'Cleo', 'age': 41}]}, \"by_name\") == {'Ben': {'name': 'Ben', 'age': 25}, 'Cleo': {'name': 'Cleo', 'age': 41}}"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different people (cleo_age)",
+                "assertion": "_cq_rerun({\"people\": [{'name': 'Ben', 'age': 25}, {'name': 'Cleo', 'age': 41}]}, \"cleo_age\") == 41"
               }
             ]
           }
@@ -5047,6 +5862,11 @@
                 "id": "t1",
                 "label": "returning is 3",
                 "assertion": "returning == 3"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different logins",
+                "assertion": "_cq_rerun({\"logins\": ['ana', 'ben', 'ana', 'cleo', 'ben']}, \"returning\") == 2"
               }
             ]
           }
@@ -5071,6 +5891,26 @@
                 "id": "t2",
                 "label": "low is right",
                 "assertion": "low == [\"tea\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different deliveries (low)",
+                "assertion": "_cq_rerun({\"deliveries\": [('tea', 3), ('jam', 6), ('tea', 1), ('cake', 2), ('jam', 1)]}, \"low\") == ['cake', 'tea']"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different deliveries (totals)",
+                "assertion": "_cq_rerun({\"deliveries\": [('tea', 3), ('jam', 6), ('tea', 1), ('cake', 2), ('jam', 1)]}, \"totals\") == {'tea': 4, 'jam': 7, 'cake': 2}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different deliveries (low)",
+                "assertion": "_cq_rerun({\"deliveries\": [('jam', 6), ('tea', 1), ('cake', 2), ('jam', 1), ('cake', 4)]}, \"low\") == ['tea']"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when a different deliveries (totals)",
+                "assertion": "_cq_rerun({\"deliveries\": [('jam', 6), ('tea', 1), ('cake', 2), ('jam', 1), ('cake', 4)]}, \"totals\") == {'jam': 7, 'tea': 1, 'cake': 6}"
               }
             ]
           }
@@ -5090,6 +5930,16 @@
                 "id": "t1",
                 "label": "groups is right",
                 "assertion": "groups == {\"eilnst\": [\"listen\", \"silent\", \"enlist\"], \"act\": [\"cat\", \"act\"], \"dgo\": [\"dog\"]}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different words",
+                "assertion": "_cq_rerun({\"words\": ['silent', 'cat', 'enlist', 'act', 'dog', 'listen']}, \"groups\") == {'eilnst': ['silent', 'enlist', 'listen'], 'act': ['cat', 'act'], 'dgo': ['dog']}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different words",
+                "assertion": "_cq_rerun({\"words\": ['dog', 'act', 'enlist', 'cat', 'silent', 'listen']}, \"groups\") == {'dgo': ['dog'], 'act': ['act', 'cat'], 'eilnst': ['enlist', 'silent', 'listen']}"
               }
             ]
           }
@@ -5417,6 +6267,16 @@
                 "id": "t1",
                 "label": "average is 78.0",
                 "assertion": "average == 78.0"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different grades",
+                "assertion": "_cq_round(_cq_rerun({\"grades\": {'Ana': 94, 'Ben': 81, 'Cleo': 88, 'Dev': 67, 'Eli': 75}}, \"average\")) == _cq_round(81.0)"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different grades",
+                "assertion": "_cq_round(_cq_rerun({\"grades\": {'Ana': 182, 'Ben': 156, 'Cleo': 170, 'Dev': 128, 'Eli': 144}}, \"average\")) == _cq_round(156.0)"
               }
             ]
           }
@@ -5436,6 +6296,16 @@
                 "id": "t1",
                 "label": "top is Ana",
                 "assertion": "top == \"Ana\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different grades",
+                "assertion": "_cq_rerun({\"grades\": {'Ana': 78, 'Ben': 85, 'Cleo': 64, 'Dev': 72, 'Eli': 91}}, \"top\") == 'Eli'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different grades",
+                "assertion": "_cq_rerun({\"grades\": {'Ben': 78, 'Cleo': 85, 'Dev': 64, 'Eli': 72}}, \"top\") == 'Cleo'"
               }
             ]
           }
@@ -5455,6 +6325,16 @@
                 "id": "t1",
                 "label": "letters is right",
                 "assertion": "letters == {\"Ana\": \"A\", \"Ben\": \"C\", \"Cleo\": \"B\", \"Dev\": \"F\", \"Eli\": \"C\"}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different grades",
+                "assertion": "_cq_rerun({\"grades\": {'Ana': 78, 'Ben': 85, 'Cleo': 64, 'Dev': 72, 'Eli': 91}}, \"letters\") == {'Ana': 'C', 'Ben': 'B', 'Cleo': 'F', 'Dev': 'C', 'Eli': 'A'}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different grades",
+                "assertion": "_cq_rerun({\"grades\": {'Ana': 94, 'Ben': 81, 'Cleo': 88, 'Dev': 67, 'Eli': 75}}, \"letters\") == {'Ana': 'A', 'Ben': 'B', 'Cleo': 'B', 'Dev': 'F', 'Eli': 'C'}"
               }
             ]
           }
@@ -5663,6 +6543,16 @@
                 "id": "t1",
                 "label": "clean is code",
                 "assertion": "clean == \"code\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when word = 'Garden.'",
+                "assertion": "_cq_rerun({\"word\": 'Garden.'}, \"clean\") == 'garden'"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when word = 'Rocket.'",
+                "assertion": "_cq_rerun({\"word\": 'Rocket.'}, \"clean\") == 'rocket'"
               }
             ]
           }
@@ -5692,6 +6582,16 @@
                 "id": "t3",
                 "label": "No punctuation is left",
                 "assertion": "all(w.isalpha() for w in words)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different text",
+                "assertion": "_cq_rerun({\"text\": ' and code saves time! Data first, then code: data grows, code follows.,Tidy data keeps code simple. Fresh data keeps old data useful'}, \"words\") == ['and', 'code', 'saves', 'time', 'data', 'first', 'then', 'code', 'data', 'grows', 'code', 'follows.,tidy', 'data', 'keeps', 'code', 'simple', 'fresh', 'data', 'keeps', 'old', 'data', 'useful']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different text",
+                "assertion": "_cq_rerun({\"text\": 'Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows'}, \"words\") == ['tidy', 'data', 'keeps', 'code', 'simple', 'fresh', 'data', 'keeps', 'old', 'data', 'useful', 'and', 'code', 'saves', 'time', 'data', 'first', 'then', 'code', 'data', 'grows']"
               }
             ]
           }
@@ -5716,6 +6616,26 @@
                 "id": "t2",
                 "label": "different is 15",
                 "assertion": "different == 15"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different text (different)",
+                "assertion": "_cq_rerun({\"text\": ' and code saves time! Data first, then code: data grows, code follows.,Tidy data keeps code simple. Fresh data keeps old data useful'}, \"different\") == 14"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different text (total)",
+                "assertion": "_cq_rerun({\"text\": ' and code saves time! Data first, then code: data grows, code follows.,Tidy data keeps code simple. Fresh data keeps old data useful'}, \"total\") == 22"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different text (different)",
+                "assertion": "_cq_rerun({\"text\": 'Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows'}, \"different\") == 14"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when a different text (total)",
+                "assertion": "_cq_rerun({\"text\": 'Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows'}, \"total\") == 21"
               }
             ]
           }
@@ -5745,6 +6665,16 @@
                 "id": "t3",
                 "label": "15 different words",
                 "assertion": "len(counts) == 15"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different text",
+                "assertion": "_cq_rerun({\"text\": ' and code saves time! Data first, then code: data grows, code follows.,Tidy data keeps code simple. Fresh data keeps old data useful'}, \"counts\") == {'and': 1, 'code': 4, 'saves': 1, 'time': 1, 'data': 5, 'first': 1, 'then': 1, 'grows': 1, 'follows.,tidy': 1, 'keeps': 2, 'simple': 1, 'fresh': 1, 'old': 1, 'useful': 1}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different text",
+                "assertion": "_cq_rerun({\"text\": 'Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows'}, \"counts\") == {'tidy': 1, 'data': 5, 'keeps': 2, 'code': 3, 'simple': 1, 'fresh': 1, 'old': 1, 'useful': 1, 'and': 1, 'saves': 1, 'time': 1, 'first': 1, 'then': 1, 'grows': 1}"
               }
             ]
           }
@@ -5982,6 +6912,36 @@
                 "id": "t3",
                 "label": "qty is the number 5",
                 "assertion": "qty == 5 and isinstance(qty, int)"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when command = 'add apple 6' (action)",
+                "assertion": "_cq_rerun({\"command\": 'add apple 6'}, \"action\") == 'add'"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when command = 'add apple 6' (item)",
+                "assertion": "_cq_rerun({\"command\": 'add apple 6'}, \"item\") == 'apple'"
+              },
+              {
+                "id": "v1_3",
+                "label": "Also right when command = 'add apple 6' (qty)",
+                "assertion": "_cq_rerun({\"command\": 'add apple 6'}, \"qty\") == 6"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when command = 'add apple 4' (action)",
+                "assertion": "_cq_rerun({\"command\": 'add apple 4'}, \"action\") == 'add'"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when command = 'add apple 4' (item)",
+                "assertion": "_cq_rerun({\"command\": 'add apple 4'}, \"item\") == 'apple'"
+              },
+              {
+                "id": "v2_3",
+                "label": "Also right when command = 'add apple 4' (qty)",
+                "assertion": "_cq_rerun({\"command\": 'add apple 4'}, \"qty\") == 4"
               }
             ]
           }
@@ -6001,6 +6961,16 @@
                 "id": "t1",
                 "label": "inventory is right",
                 "assertion": "inventory == {\"apple\": 8, \"pear\": 2}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when deliveries = [('apple', 5)]",
+                "assertion": "_cq_rerun({\"deliveries\": [('apple', 5)]}, \"inventory\") == {'apple': 8}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when deliveries = [('pear', 2)]",
+                "assertion": "_cq_rerun({\"deliveries\": [('pear', 2)]}, \"inventory\") == {'apple': 3, 'pear': 2}"
               }
             ]
           }
@@ -6025,6 +6995,16 @@
                 "id": "t2",
                 "label": "Says there were not enough pears",
                 "assertion": "_cq_stdout.strip() == \"Not enough pear\""
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when removals = [('apple', 3), ('pear', 5)]",
+                "assertion": "_cq_rerun({\"removals\": [('apple', 3), ('pear', 5)]}, \"inventory\") == {'apple': 5, 'pear': 2}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when removals = [('pear', 5), ('pear', 2)]",
+                "assertion": "_cq_rerun({\"removals\": [('pear', 5), ('pear', 2)]}, \"inventory\") == {'apple': 8}"
               }
             ]
           }
@@ -6087,6 +7067,16 @@
                 "id": "t2",
                 "label": "Ends with 3 apples and 2 pears",
                 "assertion": "inventory == {\"apple\": 3, \"pear\": 2}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when you type other answers",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['apple 5 add', 'add pear 2', 'remove pear 3', 'remove apple 2', 'show', 'sell fig 1', 'add apple', 'quit']}, \"inventory\") == {'pear': 2}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when you type other answers",
+                "assertion": "_cq_rerun({\"_cq_answers\": ['add apple 6', 'add pear 2', 'remove pear 3', 'remove apple 2', 'show', 'sell fig 1', 'add apple', 'quit']}, \"inventory\") == {'apple': 4, 'pear': 2}"
               }
             ]
           }

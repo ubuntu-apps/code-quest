@@ -126,7 +126,7 @@ export default makeTopic({
     qShort("What is `(lambda x, y: x * y)(3, 4)`? (a number)", "12"),
     mc("How do you see the result of `map(...)`?", ["It prints itself", "Wrap it in `list(...)`", "Call `.show()`", "You can't"], 1),
     mc("Which is usually clearer than `list(map(lambda n: n * 2, nums))`?", ["`[n * 2 for n in nums]`", "`nums * 2`", "`sum(nums)`", "`map(nums)`"], 0),
-    mc("What does `key=lambda s: (-s[1], s[0])` do?", ["Sorts by name only", "Sorts randomly", "Sorts by score high to low, then by name", "Raises an error"], 2),
+    mc("For a list of `(name, score)` pairs, what does `key=lambda s: (-s[1], s[0])` do?", ["Sorts by name only", "Sorts randomly", "Sorts by score high to low, then by name", "Raises an error"], 2),
     mc("Why prefer `def` over `name = lambda ...`?", ["Lambdas are slower", "Lambdas can't be called", "`def` makes shorter code", "A named function deserves `def`, which also shows its name in errors"], 3),
     mc("`def f(n): return lambda x: x + n`. What is `f(2)(5)`?", ["`2`", "`7`", "`10`", "A function"], 1),
   ],

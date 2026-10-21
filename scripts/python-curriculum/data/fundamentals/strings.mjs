@@ -126,7 +126,7 @@ export default makeTopic({
     mc("What is `\"ha\" * 3`?", ["`ha3`","`hahaha`","`ha ha ha`","An error"], 1),
     mc("What is `len(\"hi there\")`?", ["`7`","`2`","`8`","`9`"], 2),
     mc("For `word = \"Python\"`, what is `word[0]`?", ["`P`","`y`","`n`","`Python`"], 0),
-    mc("And what is `word[-1]`?", ["`P`","`n`","`o`","An error"], 1),
+    mc("For `word = \"Python\"`, what is `word[-1]`?", ["`P`","`n`","`o`","An error"], 1),
     mc("What is `\"Python\"[1:4]`?", ["`Pyt`","`ytho`","`tho`","`yth`"], 3),
     qShort("Which function counts the characters in a string? (name only)", "len"),
     mc("What does `\"cat\" in \"concatenate\"` give?", ["`True`","`False`","`3`","An error"], 0),

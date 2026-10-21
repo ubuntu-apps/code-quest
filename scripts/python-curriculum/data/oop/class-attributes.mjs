@@ -128,7 +128,7 @@ export default makeTopic({
     mc("Who shares a class attribute like `SIZES = (...)` in the class body?", ["Only the first object", "Every object of the class", "Nobody", "Only the class methods"], 1),
     mc("`self.made += 1` inside `__init__`, where `made` is a class attribute. What happens?", ["The class count goes up", "An error", "This object gets its own `made`; the class count doesn't change", "All objects are counted twice"], 2),
     mc("How do you update a class attribute from a method?", ["Through the class name: `Pizza.made += 1`", "`self.made += 1`", "`made += 1`", "`global made`"], 0),
-    mc("Why is `members = []` in a class body a bug for teams?", ["Lists can't be attributes", "It is slower", "It is read-only", "All teams share that one list"], 3),
+    mc("Why is `members = []` in the body of `class Team:` a bug?", ["Lists can't be attributes", "It is slower", "It is read-only", "All teams share that one list"], 3),
     mc("What does a class method receive as its first parameter?", ["The object", "The class, usually called `cls`", "Nothing", "The module"], 1),
     mc("What is a common use of a class method?", ["Another way to create objects, like `from_fahrenheit`", "Printing", "Deleting objects", "Comparing objects"], 0),
     qShort("Which decorator makes a method that gets neither `self` nor `cls`? (with the @)", "@staticmethod"),

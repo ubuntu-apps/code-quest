@@ -128,7 +128,7 @@ export default makeTopic({
     mc("Why does \"how many scores are above average?\" need two loops?", ["It doesn't", "Loops can only count", "To be faster", "You need the average before you can compare"], 3),
     mc("Which pattern finds whether an item exists and stops early?", ["Search with `break`", "Sum", "Two passes", "Build a string"], 0),
     mc("How do you add a dash between letters, but not at the end?", ["Add a dash after every letter", "Add a dash before every letter except the first", "Use `range(0)`", "Add two dashes"], 1),
-    mc("In a streak counter, what happens when the streak breaks?", ["The longest streak resets", "The loop stops", "The current run goes back to 0", "Nothing"], 2),
+    mc("A loop keeps track of the current streak and the longest streak so far. What happens when the streak breaks?", ["The longest streak resets", "The loop stops", "The current run goes back to 0", "Nothing"], 2),
     mc("What does `\"4 8 15\".split()` give?", ["`4 8 15`", "`[4, 8, 15]`", "`\"4815\"`", "`['4', '8', '15']`"], 3),
   ],
 })

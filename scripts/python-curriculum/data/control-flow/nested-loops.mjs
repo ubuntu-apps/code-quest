@@ -118,8 +118,8 @@ export default makeTopic({
     mc("What does this print?\n\n```\nfor i in range(2):\n    for j in range(2):\n        print(i, j)\n```", ["`0 0`, `0 1`, `1 0`, `1 1`", "`0 0` and `1 1`", "`0 1` and `1 0`", "`0`, `1`"], 0),
     qShort("How many lines does `for row in range(5): print(\"*\" * row)` print? (a number)", "5"),
     mc("What goes wrong if both loops use the variable `i`?", ["Nothing", "The inner loop overwrites the outer loop's `i`", "A `SyntaxError`", "The loops run in parallel"], 1),
-    mc("Which inner loop makes row 3 print 3 stars?", ["`for _ in range(3, row):`", "`for _ in range(1):`", "`for _ in range(row):`", "`for _ in range(row, 0):`"], 2),
+    mc("Which line goes in the blank so the third row prints `***`?\n\n```\nfor row in range(1, 4):\n    ____\n        print(\"*\", end=\"\")\n    print()\n```", ["`for _ in range(3, row):`", "`for _ in range(1):`", "`for _ in range(row):`", "`for _ in range(row, 0):`"], 2),
     mc("Why keep nested loops for when you need them?", ["They are a syntax error in Python 3", "They can't use `range`", "They need `while`", "The number of rounds multiplies and can get very large"], 3),
-    mc("In a checkerboard, which squares are `#` if the corner is `#`?", ["Those where `(row + col) % 2 == 0`", "Those where `row == col`", "Every second row", "Those where `col % 2 == 1`"], 0),
+    mc("A checkerboard is drawn with nested loops over `row` and `col`, both counting from 0. Which squares are `#` if the top-left corner (row 0, col 0) is `#`?", ["Those where `(row + col) % 2 == 0`", "Those where `row == col`", "Every second row", "Those where `col % 2 == 1`"], 0),
   ],
 })

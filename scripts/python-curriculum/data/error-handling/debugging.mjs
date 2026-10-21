@@ -131,7 +131,7 @@ export default makeTopic({
     mc("`x` looks like 7 but `x + 1` fails. What do you check first?", ["The line number", "The internet", "The file name", "Its type, with `print(type(x), repr(x))`"], 3),
     qShort("`range(1, 5)` gives how many numbers? (a number)", "4"),
     mc("Why does `name.upper()` on its own line change nothing?", ["It is a syntax error", "Strings can't change: the new string is thrown away", "It changes the next line", "`upper` needs an argument"], 1),
-    mc("`total = 0` is inside the loop. What happens?", ["The total is reset on every round", "Nothing changes", "It runs once", "It raises an error"], 0),
+    mc("A loop should add up a list of numbers, but `total = 0` was put inside the loop. What happens?", ["The total is reset on every round", "Nothing changes", "It runs once", "It raises an error"], 0),
     mc("What is \"rubber duck debugging\"?", ["Testing with toys", "Deleting code until it works", "Explaining the code line by line, out loud", "A Python module"], 2),
     mc("What should you do after fixing a bug?", ["Leave the debug prints in", "Rewrite the whole program", "Nothing", "Remove the debug prints and add a test for that case"], 3),
     mc("What does `total =+ score` do?", ["Adds `score` to `total`", "Sets `total` to `+score`, throwing the old total away", "A syntax error", "Subtracts"], 1),

@@ -123,10 +123,10 @@ export default makeTopic({
     mc("What is `{\"a\": 1}.get(\"b\", 0)`?", ["`0`", "`None`", "`1`", "A `KeyError`"], 0),
     mc("What does `ages[\"Ben\"] = 26` do if Ben is already a key?", ["Raises an error", "Adds a second Ben", "Replaces Ben's value", "Nothing"], 2),
     qShort("Which method returns a value, or a default when the key is missing? (name only)", "get"),
-    mc("What does `\"Ana\" in ages` check?", ["Whether Ana is one of the values", "Whether Ana is one of the keys", "Whether the dict is empty", "Whether Ana is the first key"], 1),
+    mc("For a dictionary `ages`, what does `\"Ana\" in ages` check?", ["Whether Ana is one of the values", "Whether Ana is one of the keys", "Whether the dict is empty", "Whether Ana is the first key"], 1),
     mc("Which loop gives you both keys and values?", ["`for k in d:`", "`for k, v in d:`", "`for v in d.values():`", "`for k, v in d.items():`"], 3),
     mc("Why can't a list be a dictionary key?", ["Lists can change, so they can't be keys", "Lists are too long", "Keys must be strings", "It can"], 0),
     mc("After `counts = {}` and `counts[\"x\"] = counts.get(\"x\", 0) + 1` twice, what is `counts`?", ["`{\"x\": 1}`", "`{\"x\": 0}`", "`{\"x\": 2}`", "An error"], 2),
-    mc("What does `d.pop(\"k\")` return?", ["The whole dict", "The value of `\"k\"`", "`None`", "The key `\"k\"`"], 1),
+    mc("For a dictionary `d`, what does `d.pop(\"k\")` return?", ["The whole dict", "The value of `\"k\"`", "`None`", "The key `\"k\"`"], 1),
   ],
 })

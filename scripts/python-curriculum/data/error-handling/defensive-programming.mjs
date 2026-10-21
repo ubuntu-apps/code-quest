@@ -139,7 +139,7 @@ export default makeTopic({
     qShort("`clamp(15, 0, 10)` keeps a value between 0 and 10. What does it return? (a number)", "10"),
     mc("Why is returning a made-up 0 for a missing price risky?", ["0 is not a number", "Bad data spreads quietly instead of failing clearly", "It is slower", "Functions can't return 0"], 1),
     mc("Why collect every problem in a sign-up form?", ["So the user can fix them all at once", "Python requires it", "To avoid using `if`", "It uses less memory"], 0),
-    mc("In a careful transfer, when should the balances change?", ["Before the checks", "Between the checks", "Only after every check has passed", "It doesn't matter"], 2),
+    mc("A function moves money between two accounts after checking the amount and the balance. When should the balances change?", ["Before the checks", "Between the checks", "Only after every check has passed", "It doesn't matter"], 2),
     mc("Which is the safest way to turn text into an int with a fallback?", ["Check that every character is a digit", "Use `eval(text)`", "Assume it is fine", "`try: int(text)` with `except ValueError`"], 3),
     mc("What does \"fail loudly\" mean?", ["Print in capitals", "Raise a clear error instead of carrying on with bad data", "Beep", "Restart the program"], 1),
   ],

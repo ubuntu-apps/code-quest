@@ -124,7 +124,7 @@ export default makeTopic({
     mc("What does a shallow `copy()` share with the original?", ["Nothing", "The keys only", "Its length", "The inner lists and dicts"], 3),
     qShort("Which module has `deepcopy`? (name only)", "copy"),
     mc("Which shape suits \"a table of records\"?", ["A set of strings", "A list of dicts", "A single dict", "A tuple of numbers"], 1),
-    mc("Before appending to `groups[key]` for a new key, what do you need?", ["`groups[key] = []`", "`groups.append(key)`", "`del groups[key]`", "Nothing"], 0),
+    mc("`groups` is a dict of lists. Before appending to `groups[key]` for a new key, what do you need?", ["`groups[key] = []`", "`groups.append(key)`", "`del groups[key]`", "Nothing"], 0),
     mc("How do you read `data[\"users\"][0][\"email\"]`?", ["From right to left", "All at once", "Left to right, one level deeper at each bracket", "It is a syntax error"], 2),
     mc("Which builds a 2 by 2 grid of zeros safely?", ["`[[0, 0]] * 2`", "`[0, 0] * 2`", "`[[0] * 2] * 2`", "`[[0] * 2 for _ in range(2)]`"], 3),
     mc("Why use `get` on records with optional keys?", ["It is faster", "So a missing key doesn't stop the program", "It sorts the keys", "It copies the dict"], 1),

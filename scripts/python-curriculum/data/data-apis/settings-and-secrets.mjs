@@ -140,7 +140,7 @@ export default makeTopic({
     mc("What type are environment variable values?", ["Always text (`str`)", "Whatever was set", "`int` or `str`", "`bytes`"], 0),
     mc("What does `os.environ[\"MISSING\"]` do when it isn't set?", ["Returns `None`", "Returns `\"\"`", "Creates it", "Raises `KeyError`"], 3),
     mc("Which standard module reads INI settings files?", ["`settings`", "`configparser`", "`ini`", "`json`"], 1),
-    mc("In a layered setup, which usually wins?", ["Environment variables, then the file, then the code's defaults", "The code's defaults", "The file always", "Whichever is longest"], 0),
+    mc("A setting can come from an environment variable, a config file or a default in the code. Which usually wins?", ["Environment variables, then the file, then the code's defaults", "The code's defaults", "The file always", "Whichever is longest"], 0),
     qShort("Which file lists files that git should never commit, such as `.env`? (the file name)", ".gitignore"),
     mc("How should a program show which secret key it uses?", ["Print it in full", "Never mention it", "Write it to a log", "Show only its last few characters"], 3),
     mc("What does `getboolean` accept as true?", ["Only `True`", "Only `1`", "Words like `yes`, `on`, `true` and `1`", "Any text"], 2),

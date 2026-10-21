@@ -2213,6 +2213,16 @@
                 "id": "t1",
                 "label": "ranked is right",
                 "assertion": "ranked == [95, 88, 72, 61]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when scores = [75, 98, 91, 64]",
+                "assertion": "_cq_rerun({\"scores\": [75, 98, 91, 64]}, \"ranked\") == [98, 91, 75, 64]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when scores = [72, 95, 88, 61, 100]",
+                "assertion": "_cq_rerun({\"scores\": [72, 95, 88, 61, 100]}, \"ranked\") == [100, 95, 88, 72, 61]"
               }
             ]
           }
@@ -2328,6 +2338,16 @@
                 "id": "t1",
                 "label": "by_length is right",
                 "assertion": "by_length == [\"banana\", \"cherry\", \"kiwi\", \"fig\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different words",
+                "assertion": "_cq_rerun({\"words\": ['cherry', 'kiwi', 'banana', 'fig']}, \"by_length\") == ['cherry', 'banana', 'kiwi', 'fig']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when words = ['fig', 'banana', 'kiwi']",
+                "assertion": "_cq_rerun({\"words\": ['fig', 'banana', 'kiwi']}, \"by_length\") == ['banana', 'kiwi', 'fig']"
               }
             ]
           }
@@ -3747,6 +3767,16 @@
                 "id": "t1",
                 "label": "by_score is right",
                 "assertion": "by_score == [(\"Ben\", 78), (\"Cleo\", 85), (\"Ana\", 91)]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when pairs = [('Ana', 91), ('Ben', 78)]",
+                "assertion": "_cq_rerun({\"pairs\": [('Ana', 91), ('Ben', 78)]}, \"by_score\") == [('Ben', 78), ('Ana', 91)]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when pairs = [('Ben', 78), ('Cleo', 85)]",
+                "assertion": "_cq_rerun({\"pairs\": [('Ben', 78), ('Cleo', 85)]}, \"by_score\") == [('Ben', 78), ('Cleo', 85)]"
               }
             ]
           }
@@ -3766,6 +3796,16 @@
                 "id": "t1",
                 "label": "ordered is right",
                 "assertion": "ordered == [\"Alice\", \"bob\", \"carol\", \"Dan\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when names = ['bob', 'Alice', 'carol']",
+                "assertion": "_cq_rerun({\"names\": ['bob', 'Alice', 'carol']}, \"ordered\") == ['Alice', 'bob', 'carol']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when names = ['Alice', 'carol', 'Dan']",
+                "assertion": "_cq_rerun({\"names\": ['Alice', 'carol', 'Dan']}, \"ordered\") == ['Alice', 'carol', 'Dan']"
               }
             ]
           }
@@ -3785,6 +3825,16 @@
                 "id": "t1",
                 "label": "by_last is right",
                 "assertion": "by_last == [\"tea\", \"bread\", \"cake\", \"jam\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when words = ['tea', 'cake', 'jam']",
+                "assertion": "_cq_rerun({\"words\": ['tea', 'cake', 'jam']}, \"by_last\") == ['tea', 'cake', 'jam']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when words = ['cake', 'jam', 'bread']",
+                "assertion": "_cq_rerun({\"words\": ['cake', 'jam', 'bread']}, \"by_last\") == ['bread', 'cake', 'jam']"
               }
             ]
           }
@@ -3823,6 +3873,16 @@
                 "id": "t1",
                 "label": "evens is right",
                 "assertion": "evens == [12, 20, 8]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when nums = [8, 15, 10, 23, 6, 11]",
+                "assertion": "_cq_rerun({\"nums\": [8, 15, 10, 23, 6, 11]}, \"evens\") == [8, 10, 6]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when nums = [8, 3, 20, 7, 12, 5]",
+                "assertion": "_cq_rerun({\"nums\": [8, 3, 20, 7, 12, 5]}, \"evens\") == [8, 20, 12]"
               }
             ]
           }
@@ -3842,6 +3902,16 @@
                 "id": "t1",
                 "label": "fahrenheit is right",
                 "assertion": "fahrenheit == [32.0, 50.0, 77.0, 212.0]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when celsius = [3, 13, 28, 103]",
+                "assertion": "_cq_round(_cq_rerun({\"celsius\": [3, 13, 28, 103]}, \"fahrenheit\")) == _cq_round([37.4, 55.4, 82.4, 217.4])"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when celsius = [10, 25, 100, 0]",
+                "assertion": "_cq_round(_cq_rerun({\"celsius\": [10, 25, 100, 0]}, \"fahrenheit\")) == _cq_round([50.0, 77.0, 212.0, 32.0])"
               }
             ]
           }
@@ -3861,6 +3931,16 @@
                 "id": "t1",
                 "label": "ranking is right",
                 "assertion": "ranking == [(\"Ben\", 95), (\"Ana\", 90), (\"Cleo\", 90), (\"Dev\", 80)]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": [('Cleo', 90), ('Ben', 95), ('Ana', 90)]}, \"ranking\") == [('Ben', 95), ('Ana', 90), ('Cleo', 90)]"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": [('Ben', 95), ('Ana', 90), ('Dev', 80)]}, \"ranking\") == [('Ben', 95), ('Ana', 90), ('Dev', 80)]"
               }
             ]
           }
@@ -3928,6 +4008,16 @@
                 "id": "t1",
                 "label": "top_two is right",
                 "assertion": "top_two == [\"Ben\", \"Dev\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ana': 95, 'Ben': 72, 'Cleo': 91, 'Dev': 88}}, \"top_two\") == ['Ana', 'Cleo']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different scores",
+                "assertion": "_cq_rerun({\"scores\": {'Ana': 88, 'Ben': 95, 'Cleo': 72}}, \"top_two\") == ['Ben', 'Ana']"
               }
             ]
           }
@@ -4260,6 +4350,16 @@
                 "id": "t1",
                 "label": "result is 12",
                 "assertion": "result == 12"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when size = [6, 7]",
+                "assertion": "_cq_rerun({\"size\": [6, 7]}, \"result\") == 42"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when size = [6, 8]",
+                "assertion": "_cq_rerun({\"size\": [6, 8]}, \"result\") == 48"
               }
             ]
           }

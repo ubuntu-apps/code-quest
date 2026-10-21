@@ -6,6 +6,11 @@
  *   - the solution        → must pass every test
  *   - the starter code    → must NOT pass (otherwise the challenge is pre-solved)
  *   - empty code          → must NOT pass (otherwise setup code gives the answer away)
+ *   - "typed in"          → the starter code plus the solution's final values typed in as
+ *                           fixed values (and its output printed as fixed text); must NOT
+ *                           pass, or the checks don't make the learner work anything out.
+ *                           Fixed by checks that rerun the code with other starting values
+ *                           (`_cq_rerun`, see data/variations.mjs in python-curriculum).
  * It also flags missing prompts, hints and solutions, text-matched Python
  * challenges, and malformed quiz questions.
  *
@@ -28,6 +33,8 @@ const verbose = args.includes('--verbose')
 const onlySection = args.includes('--section') ? args[args.indexOf('--section') + 1] : null
 const config = JSON.parse(readFileSync(join(root, 'scripts', 'curriculum-check.json'), 'utf8'))
 const strictSections = new Set(config.strictSections ?? [])
+// Challenges where typing a fixed value in is the whole task (e.g. "make a variable").
+const typedAllowed = new Set(config.typedAllowed ?? [])
 
 const RULES = {
   'empty-prompt': 'Challenge has no instructions',
@@ -37,6 +44,7 @@ const RULES = {
   'solution-fails': 'Solution does not pass its own tests',
   'starter-passes': 'Starter code already passes (pre-solved)',
   'empty-passes': 'Empty code passes (setup gives the answer away)',
+  'typed-passes': 'Typing the answer in as fixed values passes (no check tries other values)',
   'text-matched': 'Python challenge graded by text matching instead of tests',
   'bad-quiz': 'Quiz question is malformed',
   'quiz-pattern': 'Every multiple-choice answer in this quiz is in the same position',
@@ -70,10 +78,66 @@ def on_alarm(signum, frame):
 if has_alarm:
     signal.signal(signal.SIGALRM, on_alarm)
 home = os.getcwd()
+
+def typed_variant(case):
+    # The starter code, then every value the tests look at, typed in as the solution leaves
+    # it, and the solution's output printed as fixed text: a learner who copied the answer.
+    sol = case["variants"].get("solution")
+    if not sol:
+        return None
+    names = set()
+    for t in case["tests"]:
+        try:
+            tree = ast.parse(t["assertion"], mode="eval")
+        except SyntaxError:
+            continue
+        names.update(n.id for n in ast.walk(tree) if isinstance(n, ast.Name))
+    os.chdir(tempfile.mkdtemp(prefix="cq-typed-"))
+    buf = io.StringIO()
+    ns = _cq_fresh_ns("", buf)
+    ns["_cq_source"] = sol
+    old_out, old_err = sys.stdout, sys.stderr
+    try:
+        if has_alarm:
+            signal.alarm(10)
+        if case["setup"].strip():
+            sys.stdout = sys.stderr = io.StringIO()
+            exec(compile(case["setup"], "<setup>", "exec"), ns, ns)
+        sys.stdout = sys.stderr = buf
+        exec(compile(sol, "<solution>", "exec"), ns, ns)
+    except BaseException:
+        return None
+    finally:
+        if has_alarm:
+            signal.alarm(0)
+        sys.stdout, sys.stderr = old_out, old_err
+        os.chdir(home)
+    lines = []
+    for name in sorted(names):
+        if name.startswith("_") or name not in ns or hasattr(builtins, name):
+            continue
+        value = ns[name]
+        try:
+            if type(eval(repr(value))) is not type(value) or eval(repr(value)) != value:
+                continue
+        except Exception:
+            continue
+        lines.append(name + " = " + repr(value))
+    if not lines:
+        return None
+    code = case["variants"].get("starter", "") + "\n" + "\n".join(lines) + "\n"
+    if buf.getvalue():
+        code += "print(" + repr(buf.getvalue()) + ", end='')\n"
+    return code
+
 results = []
 for case in cases:
     out = {}
-    for variant, code in case["variants"].items():
+    variants = dict(case["variants"])
+    typed = typed_variant(case)
+    if typed is not None:
+        variants["typed"] = typed
+    for variant, code in variants.items():
         workdir = tempfile.mkdtemp(prefix="cq-check-")
         os.chdir(workdir)
         try:
@@ -150,7 +214,7 @@ for (const lang of rootIndex.languages) {
     for (const level of file.levels) {
       for (const ch of level.challenges) {
         challengeCount += 1
-        const where = { section: sectionKey, level: level.id, item: ch.title }
+        const where = { section: sectionKey, level: level.id, item: ch.title, id: ch.id }
         const add = (rule, detail = '') => sectionIssues.push({ ...where, rule, detail })
         if (!ch.promptMarkdown?.trim()) add('empty-prompt')
         if (!(ch.hint ?? ch.hints?.[0])?.trim()) add('no-hint')
@@ -184,11 +248,13 @@ for (const lang of rootIndex.languages) {
       if (hasSolution && !res.solution.passed) add('solution-fails', res.solution.detail)
       if (res.empty.passed) add('empty-passes')
       else if (!starterBlank && res.starter.passed) add('starter-passes')
+      else if (res.typed?.passed && !typedAllowed.has(where.id)) add('typed-passes')
     })
 
     const strict = allStrict || strictSections.has(sectionKey)
     sectionStats.push({ sectionKey, challengeCount, issues: sectionIssues.length, strict })
-    issues.push(...sectionIssues.map((issue) => ({ ...issue, strict })))
+    // Typed-in answers are reported only: some challenges are fixed tasks ("print 1 to 10").
+    issues.push(...sectionIssues.map((issue) => ({ ...issue, strict: strict && issue.rule !== 'typed-passes' })))
   }
 }
 
