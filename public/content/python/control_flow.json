@@ -47,18 +47,23 @@
         {
           "id": "comparison_operators_ch1",
           "title": "Easy: Is it hot?",
-          "promptMarkdown": "Set `is_hot` to whether `temperature` is above 30.",
+          "promptMarkdown": "The code starts with `temperature = 31`. Set `is_hot` to whether `temperature` is above 30.\n\nUse a comparison rather than typing `True` yourself, so `is_hot` would still be right if the temperature changed.",
           "starterCode": "temperature = 31\n",
           "hint": "A comparison gives `True` or `False`, so you can store it directly: `is_hot = temperature > 30`.",
           "solution": "temperature = 31\nis_hot = temperature > 30",
           "validation": {
             "mode": "python_tests",
-            "setupCode": "",
+            "setupCode": "import re as _re\n\ndef is_hot_when(temp):\n    \"\"\"Runs your code again with a different temperature and returns is_hot.\"\"\"\n    code = _re.sub(r\"temperature\\s*=\\s*-?\\d+(\\.\\d+)?\", f\"temperature = {temp}\", _cq_source, count=1)\n    ns = {}\n    exec(code, ns)\n    return ns.get(\"is_hot\")\n",
             "tests": [
               {
                 "id": "t1",
-                "label": "is_hot is True",
+                "label": "is_hot is True for 31",
                 "assertion": "is_hot is True"
+              },
+              {
+                "id": "t2",
+                "label": "is_hot is False when temperature is 12",
+                "assertion": "is_hot_when(12) == False"
               }
             ]
           }
