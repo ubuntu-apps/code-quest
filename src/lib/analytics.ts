@@ -1,6 +1,7 @@
 import { useEffect, useSyncExternalStore } from 'react'
 import { useLocation } from 'react-router-dom'
 import { isAdminMode } from '../features/curriculum/adminMode'
+import { isStandalone } from './installPrompt'
 
 /**
  * Anonymous usage counts with GoatCounter (https://www.goatcounter.com): no cookies and
@@ -153,11 +154,6 @@ export function countOnce(name: string, title?: string): void {
   countEvent(name, title)
 }
 
-function isInstalledApp(): boolean {
-  const nav = navigator as Navigator & { standalone?: boolean }
-  return window.matchMedia?.('(display-mode: standalone)').matches === true || nav.standalone === true
-}
-
 let started = false
 
 /** Counts each screen the learner opens. Use once, inside the router. */
@@ -166,7 +162,7 @@ export function useScreenCounts(): void {
   useEffect(() => {
     if (!started) {
       started = true
-      if (isInstalledApp()) countEvent('opened/installed-app', 'Opened the installed app')
+      if (isStandalone()) countEvent('opened/installed-app', 'Opened the installed app')
       window.addEventListener('appinstalled', () => countEvent('app-installed', 'Installed the app'))
     }
     countScreen(pathname)
