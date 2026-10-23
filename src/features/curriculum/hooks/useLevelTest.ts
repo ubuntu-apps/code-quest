@@ -5,6 +5,7 @@ import type { Level, TestGradeResult } from '../types'
 import { gradeTest } from '../validateAnswer'
 import { playSound } from '../../sound/sound'
 import { answeredQuestionIds, recordReviewAnswers } from '../../review/reviewStorage'
+import { countEvent, countOnce } from '../../../lib/analytics'
 
 /**
  * Answers and grading for a level's end-of-level test.
@@ -39,11 +40,18 @@ export function useLevelTest(
     const prev = loadProgress(languageId, level.id)
     saveProgress(languageId, level.id, { ...prev, testPassed: prev.testPassed || graded.passed })
     if (graded.passed && !prev.testPassed) onXp?.(TEST_XP)
+    if (graded.passed) countOnce(`lesson-finished/${languageId}/${level.id}`, `Lesson finished: ${level.title}`)
     // How each answered question went, for the daily review.
     const answeredIds = answeredQuestionIds(short, mcq)
     recordReviewAnswers(languageId, graded.byQuestion, answeredIds)
     // A blank submit isn't practice, so it doesn't keep the daily streak going.
-    if (answeredIds.length > 0) onActivity()
+    if (answeredIds.length > 0) {
+      onActivity()
+      countEvent(
+        `quiz-${graded.passed ? 'passed' : 'failed'}/${level.id}`,
+        `Quiz ${graded.passed ? 'passed' : 'failed'}: ${level.title}`,
+      )
+    }
   }
 
   const retake = () => {

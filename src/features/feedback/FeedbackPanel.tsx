@@ -2,6 +2,7 @@ import { useId, useState } from 'react'
 import { detectPlatform } from '../../platform'
 import { APP_VERSION } from '../../version'
 import { copyToClipboard } from '../curriculum/helpers'
+import { countEvent } from '../../lib/analytics'
 import {
   FEEDBACK_EMAIL,
   FEEDBACK_KINDS,
@@ -75,9 +76,10 @@ export function FeedbackPanel({ installed }: { installed: boolean }) {
           <a
             className="cq-btn cq-btn--primary"
             href={feedbackMailto(email, draft)}
-            onClick={() =>
+            onClick={() => {
+              countEvent(`feedback-email/${kind}`, 'Opened a feedback email')
               setNotice(`Your email app should open with the message ready to send. If it didn't, copy the message and email it to ${email}.`)
-            }
+            }}
           >
             Open in my email app
           </a>
