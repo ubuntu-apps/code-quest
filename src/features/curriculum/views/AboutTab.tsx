@@ -9,6 +9,7 @@ import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
 import { AppearancePanel } from '../components/AppearancePanel'
 import { SoundPanel } from '../../sound/SoundPanel'
 import { SupportPanel } from '../../support/SupportPanel'
+import { FeedbackPanel } from '../../feedback/FeedbackPanel'
 
 interface AboutTabProps {
   aboutLead: string
@@ -90,6 +91,7 @@ export function AboutTab({
           </div>
         ) : null}
       </section>
+      <FeedbackPanel installed={installed} />
       <SupportPanel baseUrl={baseUrl} />
       <AppearancePanel />
       <SoundPanel />
