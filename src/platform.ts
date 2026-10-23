@@ -11,10 +11,10 @@ export const INSTALL_GUIDES: InstallGuide[] = [
     platform: 'ios',
     title: 'Install on iPhone / iPad',
     steps: [
-      'Open CodeQuest in Safari (required — other browsers cannot install PWAs on iOS).',
-      'Tap the Share button at the bottom of the screen (square with an arrow pointing up).',
-      'Scroll the share sheet and tap Add to Home Screen.',
-      'Tap Add in the top-right corner — CodeQuest appears on your home screen.',
+      'Open CodeQuest in Safari.',
+      'Tap ••• next to the address bar, then Share. (On older iOS, tap the Share button at the bottom of the screen: a square with an arrow pointing up.)',
+      'Tap Add to Home Screen. If you see Open as Web App, keep it switched on.',
+      'Tap Add. CodeQuest appears on your home screen.',
     ],
   },
   {
@@ -56,7 +56,7 @@ export function formatInstallGuidesTextShort(url: string): string {
     '',
     `Install: ${url}`,
     '',
-    'iPhone/iPad: open in Safari, tap Share, then Add to Home Screen',
+    'iPhone/iPad: open in Safari, tap ••• (or Share), then Add to Home Screen',
     'Android: open in Chrome, tap menu, then Install app',
     'Desktop: Chrome or Edge → Install in the address bar',
   ].join('\n')

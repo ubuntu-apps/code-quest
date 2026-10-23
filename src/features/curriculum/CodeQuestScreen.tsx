@@ -34,7 +34,6 @@ import { Notices } from './components/Notices'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { ShareSheet } from '../../components/ShareSheet'
 import { detectPlatform, installInstructions } from '../../platform'
-import { resetInstallBannerPreference } from '../../components/installBannerStorage'
 import {
   useEditorAbout,
   useEditorCatalog,
@@ -140,7 +139,6 @@ export function CodeQuestScreen() {
   const prevLevelIdRef = useRef<string | null>(null)
 
   const [readMoreOpen, setReadMoreOpen] = useState(false)
-  const [installResetNotice, setInstallResetNotice] = useState<string | null>(null)
   const { shareNotice, shareSheetOpen, openShareSheet, closeShareSheet, handleShareSelect } = useShareSheet()
 
   const isAdmin = useAdminMode()
@@ -600,12 +598,7 @@ export function CodeQuestScreen() {
         {tab === 'about' && (
           <AboutTab
             aboutLead={displayAboutContent.lead}
-            installResetNotice={installResetNotice}
             onUpdateLead={updateAboutLead}
-            onResetInstallPrompt={() => {
-              resetInstallBannerPreference()
-              setInstallResetNotice('Install prompt banner reset for this device.')
-            }}
             baseUrl={baseUrl}
             courses={openableLanguages}
             activeCourseId={activeLanguageId ?? null}

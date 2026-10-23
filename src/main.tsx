@@ -6,9 +6,11 @@ import App from './App.tsx'
 import { APP_VERSION } from './version'
 import { initPwa } from './pwaUpdate'
 import { initTheme } from './theme'
+import { initInstallPrompt } from './lib/installPrompt'
 
 initTheme()
 initPwa()
+initInstallPrompt()
 
 if ('serviceWorker' in navigator) {
   // On a first visit the new service worker also takes control (clientsClaim);
