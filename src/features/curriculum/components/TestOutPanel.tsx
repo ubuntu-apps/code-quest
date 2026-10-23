@@ -3,6 +3,7 @@ import type { LoadedSection, TestGradeResult, TestQuestion } from '../types'
 import { gradeTest } from '../validateAnswer'
 import { playSound } from '../../sound/sound'
 import { answeredQuestionIds, recordReviewAnswers } from '../../review/reviewStorage'
+import { countEvent } from '../../../lib/analytics'
 import { TestStep } from '../views/TestStep'
 import {
   buildTestOutQuestions,
@@ -55,6 +56,10 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
     playSound(graded.passed ? 'quizPass' : 'quizFail')
     recordReviewAnswers(languageId, graded.byQuestion, answeredQuestionIds(short, mcq))
     if (graded.passed && !testedOut) markTestedOut(languageId, sectionId)
+    countEvent(
+      `skip-ahead-${graded.passed ? 'passed' : 'failed'}/${sectionId}`,
+      `Skip-ahead quiz ${graded.passed ? 'passed' : 'failed'}: ${section.sectionRef.title}`,
+    )
   }
 
   const unlocks = nextSectionTitle

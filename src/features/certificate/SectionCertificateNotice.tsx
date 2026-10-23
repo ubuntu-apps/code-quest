@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Award } from 'lucide-react'
 import type { LoadedSection } from '../curriculum/types'
 import { isSectionFinished } from './courseCompletion'
 import { sectionSubject } from './certificateSubject'
 import { CertificateModal } from './CertificateModal'
+import { countOnce } from '../../lib/analytics'
 
 interface SectionCertificateNoticeProps {
   languageId: string
@@ -26,7 +27,16 @@ export function SectionCertificateNotice({
   baseUrl,
 }: SectionCertificateNoticeProps) {
   const [open, setOpen] = useState(false)
-  if (!isSectionFinished(languageId, section.sectionRef.id, section.file.levels)) return null
+  const finished = isSectionFinished(languageId, section.sectionRef.id, section.file.levels)
+  useEffect(() => {
+    if (finished) {
+      countOnce(
+        `section-finished/${languageId}/${section.sectionRef.id}`,
+        `Section finished: ${sectionNumber}. ${section.sectionRef.title}`,
+      )
+    }
+  }, [finished, languageId, section.sectionRef.id, section.sectionRef.title, sectionNumber])
+  if (!finished) return null
 
   return (
     <section className="cq-panel cq-certificate-panel">

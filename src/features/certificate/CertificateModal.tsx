@@ -3,6 +3,7 @@ import { Download, Printer, X } from 'lucide-react'
 import { CertificateArt } from './CertificateArt'
 import { certificateFilename, printCertificate, saveCertificate, siteLabel } from './certificateImage'
 import { savedMessage } from '../../lib/saveFile'
+import { countEvent } from '../../lib/analytics'
 import { certificateEarnedOn, loadCertificateName, saveCertificateName } from './certificateStorage'
 import { subjectTitle, type CertificateSubject } from './certificateSubject'
 import { SUPPORT_CONFIG } from '../support/supportConfig'
@@ -48,6 +49,12 @@ export function CertificateModal({ subject, baseUrl, onClose }: CertificateModal
     try {
       const result = await saveCertificate(svgRef.current, certificateFilename(subject))
       setSaveNote(savedMessage(result))
+      if (result.kind !== 'cancelled') {
+        countEvent(
+          subject.section ? `certificate-saved/section-${subject.section.number}` : 'certificate-saved/course',
+          subject.section ? `Certificate saved: Section ${subject.section.number}` : 'Certificate saved: course',
+        )
+      }
     } catch (e: unknown) {
       setSaveError(e instanceof Error ? e.message : 'Could not save the certificate.')
     } finally {

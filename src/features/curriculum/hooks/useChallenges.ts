@@ -12,6 +12,7 @@ import type { Challenge, Level } from '../types'
 import { validateAgainst } from '../validateAnswer'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import { playSound } from '../../sound/sound'
+import { countEvent } from '../../../lib/analytics'
 
 type ChallengeTestResult = PythonChallengeTestResult | RChallengeTestResult
 
@@ -43,6 +44,8 @@ export function useChallenges(
   /** Challenges being checked now, with what the check is doing ("Downloading Python…"). */
   const [checking, setChecking] = useState<Record<string, string>>({})
   const checkControllers = useRef<Record<string, AbortController>>({})
+  /** Failed checks per challenge this visit, to count a challenge once when people get stuck on it. */
+  const failedChecks = useRef<Record<string, number>>({})
   /** What each challenge's code printed on its last Run or Check (null: nothing to show). */
   const [output, setOutput] = useState<Record<string, string | null>>({})
   /** Challenges whose code is running now (Run, not Check), with what the run is doing. */
@@ -117,6 +120,9 @@ export function useChallenges(
       // shouldn't take away its XP or lock the next section again.
       setStatus((s) => ({ ...s, [ch.id]: 'failed' }))
       playSound('checkFail')
+      const fails = (failedChecks.current[ch.id] ?? 0) + 1
+      failedChecks.current[ch.id] = fails
+      if (fails === 3) countEvent(`challenge-stuck/${ch.id}`, `Stuck (3 failed checks): ${ch.title}`)
       return
     }
 
@@ -132,7 +138,10 @@ export function useChallenges(
       challengeAnswers: { ...(prev.challengeAnswers ?? {}), [ch.id]: answer },
     })
     onActivity()
-    if (firstSolve) onXp?.(answerSeen ? CHALLENGE_XP_AFTER_ANSWER : CHALLENGE_XP)
+    if (firstSolve) {
+      onXp?.(answerSeen ? CHALLENGE_XP_AFTER_ANSWER : CHALLENGE_XP)
+      countEvent(`challenge-solved/${ch.id}`, `Solved: ${ch.title}`)
+    }
   }
 
   /**

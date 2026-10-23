@@ -6,6 +6,7 @@ import { UpdateBanner } from './components/UpdateBanner'
 import { EditorProvider } from './features/editor'
 import { learnHomePath, learnLanguagePath } from './features/curriculum/learnPaths'
 import { SupporterLanding } from './features/support/SupporterLanding'
+import { useScreenCounts } from './lib/analytics'
 
 /** GitHub sign-in landing page for editors; learners never load it. */
 const GitHubAuthCallback = lazy(() =>
@@ -19,6 +20,7 @@ function OldProgressRedirect() {
 }
 
 function AppRoutes() {
+  useScreenCounts()
   return (
     <EditorProvider>
       <InstallAppBanner />

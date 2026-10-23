@@ -5,6 +5,7 @@ import { gradeTest } from '../curriculum/validateAnswer'
 import { localDateKey } from '../curriculum/streak'
 import { TestStep } from '../curriculum/views/TestStep'
 import { playSound } from '../sound/sound'
+import { countEvent } from '../../lib/analytics'
 import { pickReview, reviewPool, REVIEW_SIZE } from './reviewSchedule'
 import {
   answeredQuestionIds,
@@ -94,6 +95,7 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
     const answered = answeredQuestionIds(short, mcq)
     recordReviewAnswers(languageId, graded.byQuestion, answered)
     finishReviewSession(languageId, graded.correct)
+    countEvent('review-done', 'Daily review done')
     if (answered.length > 0) onActivity()
     playSound(
       graded.correct === graded.total ? 'quizPass' : graded.correct * 2 >= graded.total ? 'checkPass' : 'checkFail',

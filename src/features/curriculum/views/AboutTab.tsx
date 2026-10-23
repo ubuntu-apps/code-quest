@@ -6,6 +6,7 @@ import { VersionPanel } from '../components/VersionPanel'
 import { AdminPanel } from '../components/AdminPanel'
 import { useAdminMode } from '../adminMode'
 import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
+import { PrivacyPanel } from '../components/PrivacyPanel'
 import { AppearancePanel } from '../components/AppearancePanel'
 import { SoundPanel } from '../../sound/SoundPanel'
 import { SupportPanel } from '../../support/SupportPanel'
@@ -97,6 +98,7 @@ export function AboutTab({
       <SoundPanel />
       <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
       <ProgressBackupPanel />
+      <PrivacyPanel />
       {isAdmin || adminRevealed ? <AdminPanel /> : null}
       <VersionPanel onRevealAdmin={() => setAdminRevealed(true)} />
     </div>
