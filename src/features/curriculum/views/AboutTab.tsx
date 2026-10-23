@@ -43,7 +43,7 @@ export function AboutTab({
 }: AboutTabProps) {
   const currentPlatform = detectPlatform()
   const currentGuide = INSTALL_GUIDES.find((g) => g.platform === currentPlatform)
-  const { canInstall, installed } = useInstallState()
+  const { canInstall, installed, justInstalled } = useInstallState()
   const [installNote, setInstallNote] = useState<string | null>(null)
   const isAdmin = useAdminMode()
   // Admin mode is for testing the course, so its panel stays hidden from learners
@@ -58,6 +58,10 @@ export function AboutTab({
         <h2 className="cq-subtitle">Install CodeQuest</h2>
         {installed ? (
           <p className="cq-muted cq-install-intro">{"You're using the installed app."}</p>
+        ) : justInstalled ? (
+          <p className="cq-muted cq-install-intro" role="status">
+            CodeQuest is installed. From now on, open it from your apps list or home screen.
+          </p>
         ) : (
           <>
             <p className="cq-muted cq-install-intro">

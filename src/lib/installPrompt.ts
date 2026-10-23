@@ -13,8 +13,10 @@ type BeforeInstallPromptEvent = Event & {
 export interface InstallState {
   /** The browser will show its install window when asked. */
   canInstall: boolean
-  /** Running as the installed app, or installed during this visit. */
+  /** Running as the installed app (not in a browser tab). */
   installed: boolean
+  /** Installed during this visit, from this browser tab. */
+  justInstalled: boolean
 }
 
 export function isStandalone(): boolean {
@@ -24,7 +26,7 @@ export function isStandalone(): boolean {
 }
 
 let deferred: BeforeInstallPromptEvent | null = null
-let state: InstallState = { canInstall: false, installed: false }
+let state: InstallState = { canInstall: false, installed: false, justInstalled: false }
 const listeners = new Set<() => void>()
 
 function update(next: Partial<InstallState>): void {
@@ -38,7 +40,7 @@ let started = false
 export function initInstallPrompt(): void {
   if (started || typeof window === 'undefined') return
   started = true
-  state = { canInstall: false, installed: isStandalone() }
+  state = { canInstall: false, installed: isStandalone(), justInstalled: false }
   window.addEventListener('beforeinstallprompt', (event) => {
     // Keep it for our own buttons instead of the browser's mini bar.
     event.preventDefault()
@@ -47,7 +49,7 @@ export function initInstallPrompt(): void {
   })
   window.addEventListener('appinstalled', () => {
     deferred = null
-    update({ canInstall: false, installed: true })
+    update({ canInstall: false, justInstalled: !state.installed })
   })
 }
 
@@ -71,7 +73,7 @@ export async function promptInstall(): Promise<'accepted' | 'dismissed' | 'unava
   try {
     await event.prompt()
     const { outcome } = await event.userChoice
-    if (outcome === 'accepted') update({ installed: true })
+    if (outcome === 'accepted') update({ justInstalled: true })
     return outcome
   } catch {
     return 'unavailable'

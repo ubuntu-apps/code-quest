@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { INSTALL_BANNER_DISMISS_KEY } from './installBannerStorage'
 import { promptInstall, useInstallState } from '../lib/installPrompt'
+import { parseAppPath } from '../features/curriculum/learnPaths'
 
 function isIos(): boolean {
   return /iphone|ipad|ipod/i.test(navigator.userAgent)
@@ -16,11 +18,13 @@ function readDismissed(): boolean {
 
 /** A small bar offering to install the app. Closed once, it stays closed (About still has an Install button). */
 export function InstallAppBanner() {
-  const { canInstall, installed } = useInstallState()
+  const { canInstall, installed, justInstalled } = useInstallState()
+  const { pathname } = useLocation()
   const [dismissed, setDismissed] = useState(readDismissed)
   const ios = useMemo(() => isIos(), [])
 
-  if (dismissed || installed) return null
+  // The About tab has its own Install button and steps.
+  if (dismissed || installed || justInstalled || parseAppPath(pathname).tab === 'about') return null
 
   const showInstallButton = canInstall && !ios
   const showIosInstructions = ios && !canInstall
