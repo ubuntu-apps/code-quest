@@ -160,7 +160,7 @@ export function highlightSql(code: string): Token[] {
   return tokens
 }
 
-const SQL_STATEMENT = /^\s*(SELECT|WITH|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER)\b/i
+const SQL_STATEMENT = /^\s*(SELECT|WITH|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|ALTER|BEGIN|PRAGMA|EXPLAIN)\b/i
 
 /** Whether a lesson's code block is SQL that can be run (not a result table or a sketch). */
 export function looksLikeSql(code: string): boolean {

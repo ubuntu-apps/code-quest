@@ -308,7 +308,7 @@ function lessonSql(level) {
   for (const snippet of level.sandboxSnippets ?? []) blocks.push([`sample "${snippet.label}"`, snippet.code])
   for (const match of (level.intro.bodyMarkdown ?? '').matchAll(/```\w*\n([\s\S]*?)```/g)) {
     const code = match[1]
-    if (/^\s*(SELECT|WITH|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER)\b/i.test(code.split('\n').find((l) => l.trim() && !l.trim().startsWith('--')) ?? '')) {
+    if (/^\s*(SELECT|WITH|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|ALTER|BEGIN|PRAGMA|EXPLAIN)\b/i.test(code.split('\n').find((l) => l.trim() && !l.trim().startsWith('--')) ?? '')) {
       blocks.push(['"Try it" block', code])
     }
   }
