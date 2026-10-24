@@ -3882,7 +3882,7 @@
       ],
       "intro": {
         "title": "Summary reports",
-        "bodyMarkdown": "A real report often uses every clause at once. It helps to know the order SQL works through them, which is **not** the order they are written in:\n\n`FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `ORDER BY` → `LIMIT`\n\nIn words: take the table, keep the rows that match `WHERE`, put them into groups, keep the groups that match `HAVING`, work out the columns (and their `AS` names), sort them, and keep the first few.\n\nThat order explains the rules you've met. `WHERE` can't use totals, because grouping comes later. `ORDER BY` can use a name from `SELECT`, because it comes after it, but `WHERE` can't.\n\nA full report, the three best-selling products with more than 20 in takings:\n\n```\nSELECT product, SUM(quantity) AS items,\n       ROUND(SUM(quantity * unit_price), 2) AS revenue\nFROM sales\nWHERE payment IS NOT NULL\nGROUP BY product\nHAVING SUM(quantity * unit_price) > 20\nORDER BY revenue DESC\nLIMIT 3;\n```\n\nRead it in the order it runs: from the sales, keep those with a recorded payment, group by product, keep products with more than 20 in takings, work out the columns, sort by takings and keep the first three.\n\nWhen a report gets long, build it step by step in the sandbox: get the grouping right first, then add the totals, then the filters and the sort.",
+        "bodyMarkdown": "A real report often uses every clause at once. It helps to know the order SQL works through them, which is **not** the order they are written in:\n\n`FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `ORDER BY` → `LIMIT`\n\nIn words: take the table, keep the rows that match `WHERE`, put them into groups, keep the groups that match `HAVING`, work out the columns (and their `AS` names), sort them, and keep the first few.\n\nThat order explains the rules you've met. `WHERE` can't use totals, because grouping comes later. `ORDER BY` can use a name from `SELECT`, because it comes after it. In standard SQL, `WHERE` can't, because it comes before. (SQLite is lenient and accepts it, but most databases give an error, so write the calculation out in `WHERE`.)\n\nA full report, the three best-selling products with more than 20 in takings:\n\n```\nSELECT product, SUM(quantity) AS items,\n       ROUND(SUM(quantity * unit_price), 2) AS revenue\nFROM sales\nWHERE payment IS NOT NULL\nGROUP BY product\nHAVING SUM(quantity * unit_price) > 20\nORDER BY revenue DESC\nLIMIT 3;\n```\n\nRead it in the order it runs: from the sales, keep those with a recorded payment, group by product, keep products with more than 20 in takings, work out the columns, sort by takings and keep the first three.\n\nWhen a report gets long, build it step by step in the sandbox: get the grouping right first, then add the totals, then the filters and the sort.",
         "sandboxCode": "SELECT product, SUM(quantity) AS items,\n       ROUND(SUM(quantity * unit_price), 2) AS revenue\nFROM sales\nWHERE payment IS NOT NULL\nGROUP BY product\nHAVING SUM(quantity * unit_price) > 20\nORDER BY revenue DESC\nLIMIT 3;",
         "readMore": {
           "label": "SQLite: the SELECT statement",
@@ -4068,7 +4068,7 @@
           {
             "id": "summary_reports_q3",
             "type": "mcq",
-            "prompt": "Why can ORDER BY use an AS name, but WHERE can't?",
+            "prompt": "In standard SQL, why can ORDER BY use an AS name, but WHERE can't?",
             "choices": [
               {
                 "id": "a",
@@ -4088,7 +4088,7 @@
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "Names are given in SELECT, so only later steps can use them."
+            "explanation": "Names are given in SELECT, so only later steps can use them. (SQLite also allows them in WHERE, but most databases don't.)"
           },
           {
             "id": "summary_reports_q4",
@@ -4469,9 +4469,10 @@
           {
             "id": "proj_cafe_report_q4",
             "type": "shortText",
-            "prompt": "Which `strftime` code gives the week of the year?",
+            "prompt": "Which `strftime` code gives the week of the year? (Capitals matter.)",
             "validation": {
-              "mode": "equalsNormalized",
+              "mode": "regex",
+              "pattern": "^\\s*%W\\s*$",
               "expected": "%W"
             },
             "explanation": "%W is the week number, with weeks starting on Monday."
@@ -4686,7 +4687,7 @@
               },
               {
                 "id": "d",
-                "label": "`SUM(score IS NULL)` only in other databases"
+                "label": "`SUM(score)`"
               }
             ],
             "correctChoiceId": "a",

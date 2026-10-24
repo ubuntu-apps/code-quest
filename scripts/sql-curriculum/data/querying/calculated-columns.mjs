@@ -54,7 +54,7 @@ export default makeTopic({
       solution: "SELECT title || ' by ' || author AS label FROM books;",
     }),
     query('medium', 'How old is the book?', {
-      prompt: "Show each book's `title` and how many years it was before 2026 when it came out, in a column called `years_old`.",
+      prompt: "Show each book's `title` and how many years before 2026 it came out (2026 minus its `year`), in a column called `years_old`.",
       hint: '`2026 - year AS years_old`.',
       solution: 'SELECT title, 2026 - year AS years_old FROM books;',
     }),

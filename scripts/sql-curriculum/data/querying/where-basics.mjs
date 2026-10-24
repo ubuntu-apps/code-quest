@@ -84,8 +84,8 @@ export default makeTopic({
   questions: [
     mc('What does `WHERE` do?', ['Chooses the columns', 'Keeps only the rows that match a condition', 'Sorts the rows', 'Names the table'], 1,
       '`WHERE` filters rows: only those where its condition is true are kept.'),
-    mc("Which is right for text?", ["`WHERE species = dog`", '`WHERE species == "dog"` only', "`WHERE species = 'dog'`", '`WHERE species = (dog)`'], 2,
-      'Text values go in single quotes; without them SQLite reads `dog` as a column name.'),
+    mc("Which is right for text?", ["`WHERE species = dog`", "`WHERE 'species' = 'dog'`", "`WHERE species = 'dog'`", '`WHERE species = (dog)`'], 2,
+      'Text values go in single quotes; without them SQLite reads `dog` as a column name. Quoting the column too makes it the text species, which never equals dog.'),
     mc('`WHERE species = dog` gives an error. Which one?', ['`no such column: dog`', '`no such table: dog`', '`syntax error`', 'No error, just no rows'], 0,
       'An unquoted word is read as a column name, and `pets` has no column called `dog`.'),
     qShort('Which operator means "not equal" in SQL (two characters, not `!=`)?', '<>',

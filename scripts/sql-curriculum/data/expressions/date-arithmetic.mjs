@@ -1,5 +1,5 @@
 // Functions and expressions: Date arithmetic.
-import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { makeTopic, mc, qPattern, query, snippet } from '../_builders.mjs'
 import { EXPRESSIONS_DB } from '../expressions-db.mjs'
 
 export default makeTopic({
@@ -87,7 +87,7 @@ export default makeTopic({
       'julianday turns each date into a day count, so the difference is in days.'),
     mc("How do you get the last day of a date's month?", ["`date(d, '+1 month')`", "`date(d, 'end of month')`", "`date(d, '-1 day')`", "`date(d, 'start of month', '+1 month', '-1 day')`"], 3,
       'Go to the 1st, forward a month, then back a day. (There is no end of month modifier.)'),
-    qShort("Complete the modifier that adds a year: `date(joined, '___')`", '+1 year',
+    qPattern("Complete the modifier that adds a year: `date(joined, '___')`", '^\\s*\\+\\s*1\\s+years?\\s*$', '+1 year',
       "Modifiers like '+1 year', '-3 months' and '+7 days' move a date."),
     mc('Why does a day difference show as `2.0`?', ['julianday counts fractions of days too, so the result is a decimal number', 'It is a rounding error', 'Dates are always decimals', 'Because of the time zone'], 0,
       'julianday includes the time of day, so its numbers have decimals.'),

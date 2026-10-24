@@ -95,7 +95,7 @@ export default makeTopic({
       'Sort cheapest first, then keep one row.'),
     mc('What does `SELECT DISTINCT genre FROM books` show?', ['Every book', 'Each genre once', 'The number of genres', 'The first genre'], 1,
       'Each different genre appears once.'),
-    mc('How do you show the 2nd row only, after sorting?', ['`LIMIT 2`', '`OFFSET 2`', '`LIMIT 2 OFFSET 1` only', '`LIMIT 1 OFFSET 1`'], 3,
+    mc('How do you show the 2nd row only, after sorting?', ['`LIMIT 2`', '`OFFSET 2`', '`LIMIT 2 OFFSET 1`', '`LIMIT 1 OFFSET 1`'], 3,
       'Skip one row, then keep one.'),
     mc('Where does DISTINCT go?', ['Right after SELECT', 'After FROM', 'At the end', 'After WHERE'], 0,
       'It is written straight after SELECT: `SELECT DISTINCT …`.'),
