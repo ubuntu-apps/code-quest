@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { highlightPython, looksLikePython } from './codeHighlight'
+import { highlightPython, highlightSql, looksLikePython, looksLikeSql } from './codeHighlight'
 
 function kinds(code: string): string {
   return highlightPython(code)
@@ -40,5 +40,36 @@ describe('looksLikePython', () => {
     expect(looksLikePython('shop/\n    __init__.py\n    prices.py')).toBe(false)
     expect(looksLikePython('python -m pip install requests')).toBe(false)
     expect(looksLikePython('> look\nHall')).toBe(false)
+  })
+})
+
+describe('highlightSql', () => {
+  const kinds = (code: string) =>
+    highlightSql(code)
+      .filter((t) => t.kind !== 'plain')
+      .map((t) => `${t.kind}:${t.text}`)
+
+  it('colours keywords in any case, text, numbers, comments and functions', () => {
+    expect(kinds("select UPPER(name) FROM pets WHERE age > 3 -- old\nAND species = 'dog'")).toEqual([
+      'keyword:select',
+      'builtin:UPPER',
+      'keyword:FROM',
+      'keyword:WHERE',
+      'number:3',
+      'comment:-- old',
+      'keyword:AND',
+      "string:'dog'",
+    ])
+  })
+
+  it('keeps a doubled quote inside text, and shows NULL as a constant', () => {
+    expect(kinds("SELECT 'it''s', NULL")).toEqual(['keyword:SELECT', "string:'it''s'", 'constant:NULL'])
+  })
+})
+
+describe('looksLikeSql', () => {
+  it('is true for runnable statements only', () => {
+    expect(looksLikeSql('-- every pet\nSELECT * FROM pets;')).toBe(true)
+    expect(looksLikeSql('title | year\n------+-----')).toBe(false)
   })
 })

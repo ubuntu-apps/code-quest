@@ -5,6 +5,9 @@ import {
   pythonStatusMessage,
   runPythonChallengeCode,
   runPythonChallengeTests,
+  runSqlChallengeTests,
+  runSqlCode,
+  sqlStatusMessage,
   type PythonChallengeTestResult,
 } from '../pythonSandbox'
 import { runRChallengeTests, type RChallengeTestResult } from '../rSandbox'
@@ -99,6 +102,26 @@ export function useChallenges(
         // A check that printed nothing (e.g. only defines a function) shows no output box.
         setOutput((prev) => ({ ...prev, [ch.id]: run.output ? run.output : null }))
         ok = run.passed
+      } else if (ch.validation.mode === 'sql_tests') {
+        const run = await runSqlChallengeTests(
+          answer,
+          {
+            setupSql: level.database?.setupSql ?? '',
+            altSetupSql: level.database?.altSetupSql,
+            solutionSql: ch.solution ?? '',
+            ordered: ch.validation.ordered,
+            checks: ch.validation.tests,
+          },
+          {
+            signal: controller.signal,
+            onStatus: (status) =>
+              setCheckingMessage(ch.id, status === 'running' ? 'Checking…' : sqlStatusMessage(status)),
+          },
+        )
+        if (controller.signal.aborted) return
+        showRunFeedback(ch.id, run)
+        setOutput((prev) => ({ ...prev, [ch.id]: run.output ? run.output : null }))
+        ok = run.passed
       } else if (ch.validation.mode === 'r_tests') {
         const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
         if (controller.signal.aborted) return
@@ -149,8 +172,10 @@ export function useChallenges(
    * what it prints. Not an attempt, so it doesn't change progress or unlock the answer.
    */
   const run = async (ch: Challenge) => {
-    if (!languageId || !level || ch.validation.mode !== 'python_tests') return
+    const isSql = ch.validation.mode === 'sql_tests'
+    if (!languageId || !level || (ch.validation.mode !== 'python_tests' && !isSql)) return
     if (runControllers.current[ch.id] || checkControllers.current[ch.id]) return
+    const statusMessage = isSql ? sqlStatusMessage : pythonStatusMessage
     const answer = drafts[ch.id] ?? ''
     const controller = new AbortController()
     runControllers.current[ch.id] = controller
@@ -161,17 +186,20 @@ export function useChallenges(
         else next[ch.id] = message
         return next
       })
-    setRunningMessage(pythonStatusMessage('running'))
+    setRunningMessage(statusMessage('running'))
     setOutput((prev) => ({ ...prev, [ch.id]: '' }))
     setErrorUiEpoch((prev) => ({ ...prev, [ch.id]: (prev[ch.id] ?? 0) + 1 }))
     try {
-      const result = await runPythonChallengeCode(answer, ch.validation.setupCode, {
+      const options = {
         signal: controller.signal,
-        onStatus: (status) => setRunningMessage(pythonStatusMessage(status)),
-        onOutput: (text) => {
+        onStatus: (status: Parameters<typeof statusMessage>[0]) => setRunningMessage(statusMessage(status)),
+        onOutput: (text: string) => {
           if (runControllers.current[ch.id] === controller) setOutput((prev) => ({ ...prev, [ch.id]: text }))
         },
-      })
+      }
+      const result = isSql
+        ? await runSqlCode(answer, level.database?.setupSql ?? '', options)
+        : await runPythonChallengeCode(answer, ch.validation.setupCode, options)
       // Leaving the level stops the run; the new level's state is already fresh.
       if (runControllers.current[ch.id] !== controller) return
       setOutput((prev) => ({ ...prev, [ch.id]: result.output }))

@@ -223,6 +223,7 @@ export function LearnLevel({
                 <ChallengeCard
                   key={ch.id}
                   challenge={ch}
+                  tables={level.database?.tables}
                   chIndex={chIndex}
                   totalChallenges={level.challenges.length}
                   draft={challengeDrafts[ch.id] ?? ''}

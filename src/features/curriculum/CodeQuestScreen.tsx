@@ -547,7 +547,8 @@ export function CodeQuestScreen() {
     if (learnView !== 'level') return
     // The code editor is small next to Python; fetch it straight away.
     preloadCodeEditor()
-    if (languageId !== 'python') return
+    // SQL runs on the Python runtime too (SQLite through Python's sqlite3).
+    if (languageId !== 'python' && languageId !== 'sql') return
     const timer = window.setTimeout(warmUpPython, 1500)
     return () => window.clearTimeout(timer)
   }, [learnView, languageId])

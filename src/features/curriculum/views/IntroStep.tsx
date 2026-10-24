@@ -66,7 +66,7 @@ export function IntroStep({
       <EditableMarkdown
         value={level.intro.bodyMarkdown}
         onChange={(bodyMarkdown) => onUpdateIntro({ bodyMarkdown })}
-        onTryCode={languageId === 'python' ? tryCode : undefined}
+        onTryCode={languageId === 'python' || languageId === 'sql' ? tryCode : undefined}
       />
       {(level.intro.readMore || isEditingLocal) && (
         <div className="cq-row">
@@ -133,9 +133,10 @@ export function IntroStep({
           />
         </EditableBlock>
       )}
-      {(languageId === 'python' || languageId === 'r') && (
+      {(languageId === 'python' || languageId === 'r' || languageId === 'sql') && (
         <CodeSandboxSection
           languageId={languageId}
+          tables={level.database?.tables}
           snippets={level.sandboxSnippets}
           code={sandboxCode}
           onCodeChange={onSandboxCodeChange}

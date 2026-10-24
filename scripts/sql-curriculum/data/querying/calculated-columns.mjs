@@ -1,0 +1,105 @@
+// Querying a table: Calculated columns.
+import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { QUERYING_DB } from '../databases.mjs'
+
+export default makeTopic({
+  id: 'calculated_columns',
+  title: 'Calculated columns',
+  database: QUERYING_DB,
+  paragraphs: [
+    'A column in the result can be a **calculation** instead of a stored value. This shows how much each product\'s stock is worth:',
+    '```\nSELECT name, price * stock AS stock_value FROM products;\n```',
+    'You can use `+`, `-`, `*` and `/`, with brackets as in maths. **Always name a calculated column with `AS`**: otherwise its heading is the calculation itself, such as `price * stock`.',
+    '**Watch out for whole-number division.** When both numbers are whole, SQLite gives a whole-number answer: `7 / 2` is `3`. If either number has a decimal point, you get decimals: `7 / 2.0` is `3.5`. So `stock / 8.0` keeps the decimals that `stock / 8` drops.',
+    '`ROUND(value, 2)` rounds to 2 decimal places, which is handy for money: `ROUND(price * 0.8, 2)`.',
+    '`||` joins text together. Numbers can be joined too:',
+    "```\nSELECT title || ' (' || year || ')' AS label FROM books;\n```",
+    '`UPPER(text)` and `LOWER(text)` change the case, and `LENGTH(text)` counts the characters. The next section has many more functions.',
+    'A calculation can be used in `WHERE` and `ORDER BY` too. In `WHERE`, write the calculation again rather than using its `AS` name: most databases don\'t allow the name there.',
+    '```\nSELECT name, price * stock AS stock_value FROM products\nWHERE price * stock > 500\nORDER BY stock_value DESC;\n```',
+  ],
+  sandboxCode: 'SELECT name, price * stock AS stock_value FROM products;',
+  sandboxSnippets: [
+    snippet('Stock value', 'SELECT name, price * stock AS stock_value FROM products;'),
+    snippet('Whole-number division', 'SELECT 7 / 2 AS whole, 7 / 2.0 AS exact;'),
+    snippet('Rounding', 'SELECT name, ROUND(price * 0.8, 2) AS sale_price FROM products;'),
+    snippet('Joining text', "SELECT title || ' (' || year || ')' AS label FROM books;"),
+    snippet('Filter on a calculation', 'SELECT name, price * stock AS stock_value FROM products\nWHERE price * stock > 500\nORDER BY stock_value DESC;'),
+  ],
+  readMore: { label: 'SQLite: core functions', url: 'https://www.sqlite.org/lang_corefunc.html', source: 'SQLite documentation' },
+  challenges: [
+    query('easy', 'Stock value', {
+      prompt: "Show each product's `name` and its price times its stock, in a column called `stock_value`.",
+      hint: '`SELECT name, price * stock AS stock_value FROM products;`',
+      solution: 'SELECT name, price * stock AS stock_value FROM products;',
+    }),
+    query('easy', 'Next year', {
+      prompt: "Show each pet's `name` and its age next year, in a column called `next_year`.",
+      hint: '`age + 1 AS next_year`.',
+      solution: 'SELECT name, age + 1 AS next_year FROM pets;',
+    }),
+    query('easy', 'Grams', {
+      prompt: "Show each pet's `name` and its weight in grams (kilograms times 1000), in a column called `grams`.",
+      hint: '`weight_kg * 1000 AS grams`.',
+      solution: 'SELECT name, weight_kg * 1000 AS grams FROM pets;',
+    }),
+    query('medium', 'Sale price', {
+      prompt: "Show each product's `name` and its price with 20% off, rounded to 2 decimals, in a column called `sale_price`.",
+      hint: '20% off means paying 80%: `ROUND(price * 0.8, 2) AS sale_price`.',
+      solution: 'SELECT name, ROUND(price * 0.8, 2) AS sale_price FROM products;',
+    }),
+    query('medium', 'Title by author', {
+      prompt: 'Show one column called `label` with each book\'s title, the word `by` and the author, like `Dune by Frank Herbert`.',
+      hint: "Join with `||`, with spaces inside the quotes: `title || ' by ' || author AS label`.",
+      solution: "SELECT title || ' by ' || author AS label FROM books;",
+    }),
+    query('medium', 'How old is the book?', {
+      prompt: "Show each book's `title` and how many years it was before 2026 when it came out, in a column called `years_old`.",
+      hint: '`2026 - year AS years_old`.',
+      solution: 'SELECT title, 2026 - year AS years_old FROM books;',
+    }),
+    query('hard', 'Price per 100 pages', {
+      prompt: "Show each book's `title` and its price per 100 pages, rounded to 2 decimals, in a column called `per_100_pages`.",
+      hint: '`ROUND(price / pages * 100, 2)`. The price has decimals, so the division keeps them.',
+      solution: 'SELECT title, ROUND(price / pages * 100, 2) AS per_100_pages FROM books;',
+    }),
+    query('hard', 'Shouting names', {
+      prompt: "Show each pet's name in capitals, in a column called `loud_name`.",
+      hint: '`UPPER(name) AS loud_name`.',
+      solution: 'SELECT UPPER(name) AS loud_name FROM pets;',
+    }),
+    query('expert', 'Worth over 500', {
+      prompt: 'Show the `name` and `stock_value` (price times stock) of the products whose stock is worth more than 500, highest value first.',
+      hint: 'Repeat the calculation in WHERE: `WHERE price * stock > 500 ORDER BY stock_value DESC`.',
+      solution: 'SELECT name, price * stock AS stock_value FROM products\nWHERE price * stock > 500\nORDER BY stock_value DESC;',
+    }),
+    query('expert', 'Keep the decimals', {
+      prompt: "This query should show an eighth of each product's stock, but it loses the decimals (Backpack shows 1 instead of 1.875). Fix it.",
+      starter: 'SELECT name, stock / 8 AS eighth FROM products;',
+      hint: 'Make one of the numbers a decimal: `stock / 8.0`.',
+      solution: 'SELECT name, stock / 8.0 AS eighth FROM products;',
+    }),
+  ],
+  questions: [
+    mc('Why name a calculated column with AS?', ['It is required, or the query fails', 'Otherwise its heading is the calculation itself', 'It makes the calculation faster', 'It saves the column in the table'], 1,
+      'Without a name, the column is headed by its expression, such as `price * stock`.'),
+    mc('What is `7 / 2` in SQLite?', ['`3`', '`3.5`', '`4`', 'An error'], 0,
+      'Both numbers are whole, so the result is a whole number: 3.'),
+    mc('Which gives `3.5`?', ['`7 / 2`', '`ROUND(7 / 2)`', '`7 / 2.0`', '`7 // 2`'], 2,
+      'With a decimal number in the division, the result keeps its decimals.'),
+    qShort('Which two characters join text together in SQL?', '||',
+      '`||` joins (concatenates) text: `first || \' \' || last`.'),
+    mc('What does `ROUND(12.3456, 2)` give?', ['`12`', '`12.3`', '`12.34`', '`12.35`'], 3,
+      'ROUND to 2 decimals rounds 12.3456 to 12.35.'),
+    mc("What does `UPPER('dog')` give?", ["`'DOG'`", "`'Dog'`", "`'dog'`", '`3`'], 0,
+      'UPPER turns text into capital letters.'),
+    mc('How do you show 20% off a price?', ['`price - 20`', '`price * 0.2`', '`price / 20`', '`price * 0.8`'], 3,
+      '20% off leaves 80% of the price.'),
+    mc('How do you filter on `price * stock`?', ['`WHERE stock_value > 500` in every database', '`WHERE price * stock > 500`', 'It is not possible', '`HAVING price * stock`'], 1,
+      'Write the calculation again in WHERE; most databases don\'t allow the AS name there.'),
+    mc("What does `LENGTH('Luna')` give?", ['`4`', '`5`', "`'Luna'`", '`1`'], 0,
+      'LENGTH counts the characters in the text.'),
+    mc('Can ORDER BY sort by a calculated column\'s AS name?', ['No', 'Only for text', 'Yes', 'Only with LIMIT'], 2,
+      'ORDER BY can use the name given with AS.'),
+  ],
+})

@@ -1,11 +1,11 @@
 import { useContext, type FC, type ReactNode } from 'react'
-import { looksLikePython } from './codeHighlight'
+import { looksLikePython, looksLikeSql } from './codeHighlight'
 import { CodeLanguageContext } from './codeLanguageContext'
 import { HighlightedCode } from './components/HighlightedCode'
 
 /**
  * Minimal markdown: paragraphs, fenced ``` code blocks, inline `code`, **bold**.
- * With `onTryCode`, Python code blocks get a "Try it" button that hands their code over
+ * With `onTryCode`, Python and SQL code blocks get a "Try it" button that hands their code over
  * (sample output, folder layouts and shell commands don't get one).
  */
 export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: (code: string) => void }> = ({
@@ -23,7 +23,9 @@ export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: 
             <pre className="cq-md-pre">
               <HighlightedCode code={block.content} />
             </pre>
-            {onTryCode && language === 'python' && looksLikePython(block.content) ? (
+            {onTryCode &&
+            ((language === 'python' && looksLikePython(block.content)) ||
+              (language === 'sql' && looksLikeSql(block.content))) ? (
               <button
                 type="button"
                 className="cq-btn cq-btn--sm cq-md-try"

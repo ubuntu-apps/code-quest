@@ -6,17 +6,22 @@ import {
   CODE_RUNTIME_UNSUPPORTED_MESSAGE,
   isCodeRuntimeSupported,
 } from '../sandboxSupport'
-import type { SandboxSnippet } from '../types'
+import type { SandboxSnippet, SqlTable } from '../types'
 import { PythonErrorPanel } from './PythonErrorPanel'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
 import { rErrorSummaryLine } from '../rErrorHelper'
+import { sqlErrorSummaryLine } from '../sqlErrorHelper'
+import { SqlTablesNote } from './SqlTablesNote'
+import { sqlTableNames } from '../sqlWords'
 import type { FriendlyPythonError } from '../pythonSandbox'
 import type { FriendlyRError } from '../rSandbox'
 
 type FriendlySandboxError = FriendlyPythonError | FriendlyRError
 
+type SandboxLanguage = 'python' | 'r' | 'sql'
+
 interface PythonSandboxSectionProps {
-  languageId: 'python' | 'r'
+  languageId: SandboxLanguage
   snippets?: SandboxSnippet[]
   code: string
   onCodeChange: (code: string) => void
@@ -28,10 +33,12 @@ interface PythonSandboxSectionProps {
   onStop?: () => void
   onReset: () => void
   onErrorClear: () => void
+  tables?: SqlTable[]
 }
 
-function errorSummary(error: FriendlySandboxError | null, languageId: 'python' | 'r'): string | null {
+function errorSummary(error: FriendlySandboxError | null, languageId: SandboxLanguage): string | null {
   if (!error?.detail) return null
+  if (languageId === 'sql') return sqlErrorSummaryLine(error.detail)
   return languageId === 'r' ? rErrorSummaryLine(error.detail) : pythonErrorSummaryLine(error.detail)
 }
 
@@ -48,14 +55,17 @@ export function PythonSandboxSection({
   onStop,
   onReset,
   onErrorClear,
+  tables,
 }: PythonSandboxSectionProps) {
   const [expanded, setExpanded] = useState(false)
   const [stdin, setStdin] = useState('')
-  // Input and Stop are Python-only: the R runtime has no stdin hook or stop control here.
+  // Input is Python-only, and Stop works for the worker (Python and SQL), not for R.
   const isPython = languageId === 'python'
+  const canStop = languageId !== 'r'
+  const suggestNames = languageId === 'sql' ? sqlTableNames(tables) : undefined
   // Only show the Input box when the code asks for input.
   const usesInput = isPython && /\binput\s*\(/.test(code)
-  const languageLabel = languageId === 'r' ? 'R' : 'Python'
+  const languageLabel = languageId === 'r' ? 'R' : languageId === 'sql' ? 'SQL' : 'Python'
   const runtimeSupported = isCodeRuntimeSupported()
   const snippets =
     snippetsOverride ?? SANDBOX_SNIPPETS[languageId] ?? SANDBOX_SNIPPETS.python
@@ -97,10 +107,12 @@ export function PythonSandboxSection({
           )
         })}
       </div>
+      {languageId === 'sql' && tables ? <SqlTablesNote tables={tables} /> : null}
       <CodeEditor
         id={`${languageId}-sandbox-input`}
         labelId={`${languageId}-sandbox-label`}
-        language={languageId === 'python' ? 'python' : 'plain'}
+        language={languageId === 'r' ? 'plain' : languageId}
+        suggestNames={suggestNames}
         className="cq-sandbox-input"
         rows={6}
         value={code}
@@ -143,7 +155,7 @@ export function PythonSandboxSection({
         >
           {running ? 'Running...' : 'Run code'}
         </button>
-        {running && isPython && onStop ? (
+        {running && canStop && onStop ? (
           <button type="button" className="cq-btn" onClick={onStop}>
             Stop
           </button>
@@ -153,7 +165,9 @@ export function PythonSandboxSection({
         </button>
       </div>
       <div className="cq-label">Output</div>
-      <pre className="cq-sandbox-output">{output || 'Run code to see output.'}</pre>
+      <pre className={`cq-sandbox-output${languageId === 'sql' ? ' cq-sandbox-output--table' : ''}`}>
+        {output || 'Run code to see output.'}
+      </pre>
       {error && (
         <PythonErrorPanel
           error={error as FriendlyPythonError}

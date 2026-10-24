@@ -1,4 +1,4 @@
-export type ValidationMode = 'regex' | 'includesAll' | 'equalsNormalized' | 'python_tests' | 'r_tests'
+export type ValidationMode = 'regex' | 'includesAll' | 'equalsNormalized' | 'python_tests' | 'r_tests' | 'sql_tests'
 
 export interface RuntimeAssertionTest {
   id: string
@@ -15,7 +15,29 @@ export interface Validation {
   needles?: string[]
   expected?: string
   setupCode?: string
+  /**
+   * `python_tests`: Python assertions. `sql_tests`: extra queries run after the learner's SQL
+   * and the solution, whose results must match (for statements that change data).
+   */
   tests?: RuntimeAssertionTest[]
+  /** `sql_tests`: the rows must come in the same order as the solution's (it uses ORDER BY). */
+  ordered?: boolean
+}
+
+/** A table in a SQL lesson's database, listed for the learner. */
+export interface SqlTable {
+  name: string
+  columns: string[]
+}
+
+/**
+ * A SQL lesson's database. `setupSql` makes it fresh for every run; `altSetupSql` has the
+ * same tables with other rows, so a Check can tell a real query from a typed-in answer.
+ */
+export interface SqlDatabase {
+  setupSql: string
+  altSetupSql?: string
+  tables: SqlTable[]
 }
 
 export interface Challenge {
@@ -88,6 +110,8 @@ export interface Level {
   }
   challenges: Challenge[]
   test: LevelTest
+  /** SQL lessons: the database the sandbox and challenges run on. */
+  database?: SqlDatabase
 }
 
 export interface SectionFile {
