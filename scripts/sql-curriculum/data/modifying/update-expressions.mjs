@@ -1,0 +1,108 @@
+// Changing data: Calculated updates.
+import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { AFTER, MODIFYING_DB } from '../modifying-db.mjs'
+
+export default makeTopic({
+  id: 'update_expressions',
+  title: 'Calculated updates',
+  database: MODIFYING_DB,
+  paragraphs: [
+    "The new value in `SET` can be calculated, usually from the row's own values. Every book gets one more copy:",
+    '```\nUPDATE books\nSET copies = copies + 1,\n    available = available + 1;\n```',
+    "On the right of `=`, a column means the row's value **before** the update. So `copies + 1` reads the old count and stores one more, and all the assignments in one `SET` see the same old values. That makes swapping two columns easy: `SET copies = available, available = copies`.",
+    'Any expression works: functions, text joined with `||`, dates, and `CASE` to choose a different value for different rows:',
+    "```\nUPDATE members\nSET status = CASE\n  WHEN joined < '2024-01-01' THEN 'long-time'\n  ELSE 'new'\nEND\nWHERE status IS NOT 'suspended';\n```",
+    "Running a calculated update twice usually does it twice: two runs of `copies + 1` add two copies. In this app every Run starts from fresh data, but in a real database you'd check the numbers before running it again.",
+  ],
+  sandboxCode: 'UPDATE books\nSET copies = copies + 1,\n    available = available + 1;\nSELECT * FROM books;',
+  sandboxSnippets: [
+    snippet('One more of each', 'UPDATE books\nSET copies = copies + 1,\n    available = available + 1;\nSELECT * FROM books;'),
+    snippet('Swap two columns', 'UPDATE books\nSET copies = available, available = copies\nWHERE id = 6;\nSELECT * FROM books;'),
+    snippet('With CASE', "UPDATE members\nSET status = CASE\n  WHEN joined < '2024-01-01' THEN 'long-time'\n  ELSE 'new'\nEND\nWHERE status IS NOT 'suspended';\nSELECT * FROM members;"),
+  ],
+  readMore: { label: 'SQLite: UPDATE', url: 'https://www.sqlite.org/lang_update.html', source: 'SQLite documentation' },
+  challenges: [
+    query('easy', 'One more copy', {
+      prompt: 'Every book gets one more copy, available straight away: add 1 to both `copies` and `available` of every book.',
+      hint: '`SET copies = copies + 1, available = available + 1` with no WHERE.',
+      solution: 'UPDATE books\nSET copies = copies + 1,\n    available = available + 1;',
+      checks: [AFTER.books],
+    }),
+    query('easy', 'Fines go up', {
+      prompt: 'Add `0.5` to every fine.',
+      hint: '`UPDATE fines SET amount = amount + 0.5;`',
+      solution: 'UPDATE fines\nSET amount = amount + 0.5;',
+      checks: [AFTER.fines],
+    }),
+    query('easy', 'Two more of book 2', {
+      prompt: 'Book 2 gets 2 new copies, both available. Add 2 to its `copies` and `available`.',
+      hint: '`SET copies = copies + 2, available = available + 2 WHERE id = 2`.',
+      solution: 'UPDATE books\nSET copies = copies + 2,\n    available = available + 2\nWHERE id = 2;',
+      checks: [AFTER.books],
+    }),
+    query('medium', 'Ten percent', {
+      prompt: 'Raise every fine by 10%, rounded to 2 decimals.',
+      hint: '`SET amount = ROUND(amount * 1.1, 2)`.',
+      solution: 'UPDATE fines\nSET amount = ROUND(amount * 1.1, 2);',
+      checks: [AFTER.fines],
+    }),
+    query('medium', 'Out of stock label', {
+      prompt: "Put `[out] ` (with the space) in front of the title of every book with no copies available.",
+      hint: "`SET title = '[out] ' || title WHERE available = 0`.",
+      solution: "UPDATE books\nSET title = '[out] ' || title\nWHERE available = 0;",
+      checks: [AFTER.books],
+    }),
+    query('medium', 'Long-time or new', {
+      prompt: "For every member who isn't suspended (members with no status included), set the status to `long-time` if they joined before `2024-01-01`, and `new` otherwise.",
+      hint: "`SET status = CASE WHEN joined < '2024-01-01' THEN 'long-time' ELSE 'new' END WHERE status IS NOT 'suspended'`.",
+      solution: "UPDATE members\nSET status = CASE\n  WHEN joined < '2024-01-01' THEN 'long-time'\n  ELSE 'new'\nEND\nWHERE status IS NOT 'suspended';",
+      checks: [AFTER.members],
+    }),
+    query('hard', 'Swapped by mistake', {
+      prompt: "For book 6, the `copies` and `available` numbers were typed the wrong way round. Swap them with one UPDATE.",
+      hint: 'Both assignments see the old values: `SET copies = available, available = copies`.',
+      solution: 'UPDATE books\nSET copies = available, available = copies\nWHERE id = 6;',
+      checks: [AFTER.books],
+    }),
+    query('hard', 'Longer loan period', {
+      prompt: "Member 3 is allowed 28 days. For member 3's loans that are still out, set `due` to 28 days after `borrowed`.",
+      hint: "`SET due = date(borrowed, '+28 days') WHERE member_id = 3 AND returned IS NULL`.",
+      solution: "UPDATE loans\nSET due = date(borrowed, '+28 days')\nWHERE member_id = 3 AND returned IS NULL;",
+      checks: [AFTER.loans],
+    }),
+    query('expert', 'New status names', {
+      prompt: "The library renames its statuses: `inactive` becomes `closed` and `suspended` becomes `blocked`. Other statuses, including missing ones, stay as they are. Use one UPDATE with CASE.",
+      hint: "`SET status = CASE status WHEN 'inactive' THEN 'closed' WHEN 'suspended' THEN 'blocked' ELSE status END`.",
+      solution: "UPDATE members\nSET status = CASE status\n  WHEN 'inactive' THEN 'closed'\n  WHEN 'suspended' THEN 'blocked'\n  ELSE status\nEND;",
+      checks: [AFTER.members],
+    }),
+    query('expert', 'Round up to 50 cents', {
+      prompt: 'Round every fine up to the next 0.50 (so 2.10 becomes 2.50 and 3.00 stays 3.00).',
+      hint: 'Double it, round up with `CEIL`, then halve: `CEIL(amount * 2) / 2.0`.',
+      solution: 'UPDATE fines\nSET amount = CEIL(amount * 2) / 2.0;',
+      checks: [AFTER.fines],
+    }),
+  ],
+  questions: [
+    mc("In `SET copies = copies + 1`, which value does `copies` on the right mean?", ["The row's value before the update", 'The new value', '1', 'The largest copies in the table'], 0,
+      'It reads the old value and stores one more.'),
+    mc('What does `SET copies = available, available = copies` do?', ['Gives an error', 'Nothing', 'Sets both to the same value', 'Swaps the two values'], 3,
+      'Both assignments use the old values.'),
+    mc('Can SET use CASE?', ['No', 'Only in WHERE', 'Yes, to pick a value per row', 'Only for numbers'], 2,
+      'CASE gives a value, so it works anywhere a value can go.'),
+    mc('What happens if you run `UPDATE books SET copies = copies + 1;` twice on the same data?', ['Copies go back down', 'Every book gets two more copies', 'Nothing the second time', 'An error'], 1,
+      'Each run adds one again.'),
+    qShort('Which operator joins text, as in `\'[out] \' ___ title`?', '||',
+      'Two vertical bars join text.'),
+    mc("What does `CASE status WHEN 'inactive' THEN 'closed' ELSE status END` give for a NULL status?", ["'inactive'", 'An error', 'NULL', "'closed'"], 2,
+      'ELSE keeps the old value, which is NULL.'),
+    mc('Why is `ELSE status` needed in the renaming CASE?', ['To sort the rows', 'CASE needs an ELSE always', 'It is not', 'Without it, every other status would become NULL'], 3,
+      'A CASE with no matching WHEN and no ELSE gives NULL.'),
+    mc('What does `CEIL(2.1 * 2) / 2.0` give?', ['2.5', '3.0', '2.0', '2.1'], 0,
+      '4.2 rounds up to 5, and 5 / 2.0 is 2.5.'),
+    mc("Which moves member 3's open loans to 28 days after borrowing?", ["`SET due = date(borrowed, '+28 days')`", "`SET due = '+28 days'`", "`SET borrowed = date(due, '+28 days')`", "`SET due = due + 28`"], 0,
+      'date() with a modifier, starting from the borrowed date.'),
+    mc('Do all the assignments in one SET see the same old values?', ['No, each sees the one before it', 'Only in SQLite', 'Only for numbers', 'Yes'], 3,
+      'That is why a swap works in a single UPDATE.'),
+  ],
+})
