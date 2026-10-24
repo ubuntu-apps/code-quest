@@ -1,0 +1,108 @@
+// Changing data: Changes across tables.
+import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { AFTER, MODIFYING_DB } from '../modifying-db.mjs'
+
+export default makeTopic({
+  id: 'changes_across_tables',
+  title: 'Changes across tables',
+  database: MODIFYING_DB,
+  paragraphs: [
+    'Real tasks rarely touch one table. Removing a member also means their loans and fines; merging two records means moving everything from one to the other. Three habits keep the data consistent:',
+    '**Put the steps in one transaction**, so the task happens completely or not at all.',
+    "**Think about the order.** Delete the rows that point to something before the thing they point to: fines and loans before the member. And read what you need before you change it: to put a book back on the shelf, find its id from the loan before deleting the loan.",
+    '```\nBEGIN;\nUPDATE books SET available = available + 1\nWHERE id = (SELECT book_id FROM loans WHERE id = 8);\nDELETE FROM loans WHERE id = 8;\nCOMMIT;\n```',
+    "**Change things by their keys.** Two members can share a name, as the two Carla Ruiz records do here. Moving rows by `id` makes sure nothing ends up with the wrong person.",
+    "This library's data has a few mistakes for you to fix: Carla Ruiz entered twice (members 3 and 8), and fines that have to be worked out again from the loans.",
+  ],
+  sandboxCode: 'BEGIN;\nUPDATE books SET available = available + 1\nWHERE id = (SELECT book_id FROM loans WHERE id = 8);\nDELETE FROM loans WHERE id = 8;\nCOMMIT;\nSELECT * FROM books;',
+  sandboxSnippets: [
+    snippet('Cancel a loan', 'BEGIN;\nUPDATE books SET available = available + 1\nWHERE id = (SELECT book_id FROM loans WHERE id = 8);\nDELETE FROM loans WHERE id = 8;\nCOMMIT;\nSELECT * FROM books;'),
+    snippet('The duplicate', "SELECT * FROM members WHERE name = 'Carla Ruiz';\nSELECT * FROM loans WHERE member_id IN (3, 8);"),
+    snippet('Days late', "SELECT id, member_id, due, returned,\n  julianday(COALESCE(returned, '2026-10-24')) - julianday(due) AS days_late\nFROM loans;"),
+  ],
+  readMore: { label: 'SQLite: transactions', url: 'https://www.sqlite.org/lang_transaction.html', source: 'SQLite documentation' },
+  challenges: [
+    query('easy', 'Leaving the library', {
+      prompt: "Member 7 is leaving. In one transaction, delete their fines, their loans and then the member.",
+      hint: 'Three DELETEs, children first: fines, loans, members.',
+      solution: 'BEGIN;\nDELETE FROM fines WHERE member_id = 7;\nDELETE FROM loans WHERE member_id = 7;\nDELETE FROM members WHERE id = 7;\nCOMMIT;',
+      checks: [AFTER.fines, AFTER.loans, AFTER.members],
+    }),
+    query('easy', 'Full name', {
+      prompt: "The author `L. Brandt` should be written `Lea Brandt` on every book.",
+      hint: "`UPDATE books SET author = 'Lea Brandt' WHERE author = 'L. Brandt';`",
+      solution: "UPDATE books\nSET author = 'Lea Brandt'\nWHERE author = 'L. Brandt';",
+      checks: [AFTER.books],
+    }),
+    query('easy', 'Cancel a loan', {
+      prompt: "Loan 8 was a mistake. In one transaction, put its book back (raise `available` by 1, finding the book from the loan), then delete the loan.",
+      hint: 'Update books first, `WHERE id = (SELECT book_id FROM loans WHERE id = 8)`, then delete the loan.',
+      solution: 'BEGIN;\nUPDATE books SET available = available + 1\nWHERE id = (SELECT book_id FROM loans WHERE id = 8);\nDELETE FROM loans WHERE id = 8;\nCOMMIT;',
+      checks: [AFTER.books, AFTER.loans],
+    }),
+    query('medium', 'Merge Carla', {
+      prompt: "Member 8 is a duplicate of member 3. In one transaction, move member 8's loans to member 3, then delete member 8.",
+      hint: 'UPDATE loans SET member_id = 3 WHERE member_id = 8; DELETE FROM members WHERE id = 8;',
+      solution: 'BEGIN;\nUPDATE loans SET member_id = 3 WHERE member_id = 8;\nDELETE FROM members WHERE id = 8;\nCOMMIT;',
+      checks: [AFTER.loans, AFTER.members],
+    }),
+    query('medium', 'Withdraw a book', {
+      prompt: "Book 3 is being withdrawn. In one transaction, delete its loans and then the book.",
+      hint: 'DELETE FROM loans WHERE book_id = 3; DELETE FROM books WHERE id = 3;',
+      solution: 'BEGIN;\nDELETE FROM loans WHERE book_id = 3;\nDELETE FROM books WHERE id = 3;\nCOMMIT;',
+      checks: [AFTER.loans, AFTER.books],
+    }),
+    query('medium', 'Suspend and fine', {
+      prompt: "In one transaction, set every member with an overdue loan (still out, due before `2026-10-24`) to `suspended`, and add `2.0` to each such member's fine, creating fine rows where needed.",
+      hint: "An UPDATE of members with `id IN (…)`, then `INSERT INTO fines SELECT DISTINCT member_id, 2.0 FROM loans WHERE … ON CONFLICT (member_id) DO UPDATE SET amount = amount + excluded.amount`.",
+      solution: "BEGIN;\nUPDATE members SET status = 'suspended'\nWHERE id IN (SELECT member_id FROM loans WHERE returned IS NULL AND due < '2026-10-24');\nINSERT INTO fines (member_id, amount)\nSELECT DISTINCT member_id, 2.0\nFROM loans\nWHERE returned IS NULL AND due < '2026-10-24'\nON CONFLICT (member_id) DO UPDATE\nSET amount = amount + excluded.amount;\nCOMMIT;",
+      checks: [AFTER.members, AFTER.fines],
+    }),
+    query('hard', 'Merge every duplicate', {
+      prompt: "Members with the same name are the same person. Move every loan to the lowest id among the members with that member's name, then delete the members that are no longer the lowest id of their name.",
+      hint: 'Loans: `SET member_id = (SELECT MIN(m2.id) FROM members m2 WHERE m2.name = (SELECT name FROM members WHERE id = loans.member_id))`. Members: `WHERE id NOT IN (SELECT MIN(id) FROM members GROUP BY name)`.',
+      solution: 'BEGIN;\nUPDATE loans\nSET member_id = (\n  SELECT MIN(m2.id) FROM members m2\n  WHERE m2.name = (SELECT name FROM members WHERE id = loans.member_id)\n)\nWHERE member_id IN (SELECT id FROM members);\nDELETE FROM members\nWHERE id NOT IN (SELECT MIN(id) FROM members GROUP BY name);\nCOMMIT;',
+      checks: [AFTER.loans, AFTER.members],
+    }),
+    query('hard', 'Close suspended accounts', {
+      prompt: "In one transaction, for every `suspended` member: put the books they still have back on the shelf (raise `available`), mark those loans returned on `2026-10-24`, delete their fines, and set their status to `closed`.",
+      hint: 'Four statements, in that order. For the books: `available + (SELECT COUNT(*) FROM loans WHERE loans.book_id = books.id AND returned IS NULL AND member_id IN (suspended ids))`.',
+      solution: "BEGIN;\nUPDATE books\nSET available = available + (\n  SELECT COUNT(*) FROM loans\n  WHERE loans.book_id = books.id AND loans.returned IS NULL\n    AND loans.member_id IN (SELECT id FROM members WHERE status = 'suspended')\n);\nUPDATE loans SET returned = '2026-10-24'\nWHERE returned IS NULL\n  AND member_id IN (SELECT id FROM members WHERE status = 'suspended');\nDELETE FROM fines\nWHERE member_id IN (SELECT id FROM members WHERE status = 'suspended');\nUPDATE members SET status = 'closed' WHERE status = 'suspended';\nCOMMIT;",
+      checks: [AFTER.books, AFTER.loans, AFTER.fines, AFTER.members],
+    }),
+    query('expert', 'Overdue day', {
+      prompt: "Every overdue loan (still out, due before `2026-10-24`) comes back today. In one transaction: add 0.25 per day overdue to each member's fine (creating rows where needed), put the books back on the shelf, then mark the loans returned on `2026-10-24`.",
+      hint: "Fines first, while the loans are still out: `INSERT INTO fines SELECT member_id, SUM(julianday('2026-10-24') - julianday(due)) * 0.25 FROM loans WHERE … GROUP BY member_id ON CONFLICT … DO UPDATE …`. Then books, then loans.",
+      solution: "BEGIN;\nINSERT INTO fines (member_id, amount)\nSELECT member_id, SUM(julianday('2026-10-24') - julianday(due)) * 0.25\nFROM loans\nWHERE returned IS NULL AND due < '2026-10-24'\nGROUP BY member_id\nON CONFLICT (member_id) DO UPDATE\nSET amount = amount + excluded.amount;\nUPDATE books\nSET available = available + (\n  SELECT COUNT(*) FROM loans\n  WHERE loans.book_id = books.id AND returned IS NULL AND due < '2026-10-24'\n);\nUPDATE loans SET returned = '2026-10-24'\nWHERE returned IS NULL AND due < '2026-10-24';\nCOMMIT;",
+      checks: [AFTER.fines, AFTER.books, AFTER.loans],
+    }),
+    query('expert', 'Fines from scratch', {
+      prompt: "Work the fines out again. In one transaction, delete all fines, then give each member 0.25 per day late, added up over their loans and rounded to 2 decimals. A loan is late if it was returned after its due date, or is still out and was due before `2026-10-24` (count up to today).",
+      hint: "Days late: `julianday(COALESCE(returned, '2026-10-24')) - julianday(due)`, for loans where that is more than 0. Group by member_id.",
+      solution: "BEGIN;\nDELETE FROM fines;\nINSERT INTO fines (member_id, amount)\nSELECT member_id,\n       ROUND(SUM(julianday(COALESCE(returned, '2026-10-24')) - julianday(due)) * 0.25, 2)\nFROM loans\nWHERE julianday(COALESCE(returned, '2026-10-24')) - julianday(due) > 0\nGROUP BY member_id;\nCOMMIT;",
+      checks: [AFTER.fines],
+    }),
+  ],
+  questions: [
+    mc('Why delete a member\'s loans and fines before the member?', ['To sort them', 'So no rows are left pointing to a member who no longer exists', 'SQLite requires that order', 'It is faster'], 1,
+      'Children first, then the parent they point to.'),
+    mc('Why put the steps of a task in one transaction?', ['It is required for DELETE', 'So the task happens completely or not at all', 'To make it faster', 'To see the rows'], 1,
+      'A half-finished task leaves the data inconsistent.'),
+    mc('When cancelling loan 8, why update books before deleting the loan?', ['The book id is read from the loan, which won\'t exist after the DELETE', 'It doesn\'t matter', 'books must always change first', 'DELETE needs a transaction'], 0,
+      'Read what you need before you change it.'),
+    mc('Why move loans by member id, not by name?', ['It is faster', 'Two members can share a name', 'Names are text', 'ids are shorter'], 1,
+      'Keys identify exactly one row.'),
+    qShort('Which keyword makes a transaction\'s changes permanent?', 'COMMIT',
+      '`BEGIN; … COMMIT;`'),
+    mc('Which finds the duplicates to delete after merging by name?', ['`id IN (SELECT MIN(id) …)`', '`name IS NULL`', '`DISTINCT name`', '`id NOT IN (SELECT MIN(id) FROM members GROUP BY name)`'], 3,
+      'Keep the lowest id of each name; delete the rest.'),
+    mc('In "Overdue day", why work out the fines first?', ['To avoid ON CONFLICT', 'Fines must always come first', 'The fines need the loans while they are still out, before they are marked returned', 'INSERT is faster than UPDATE'], 2,
+      'After marking them returned, the WHERE would find no overdue loans.'),
+    mc("What does `julianday(COALESCE(returned, '2026-10-24')) - julianday(due)` give?", ['The due date', 'Days late, counting loans still out up to today', 'The return date', 'The loan length'], 1,
+      'COALESCE uses today for loans not yet returned.'),
+    mc('Why delete all fines before inserting the recalculated ones?', ['To save space', 'Otherwise the new rows would clash with the old ones, or be added to them', 'DELETE is required before INSERT', 'To sort them'], 1,
+      'Starting from empty makes the new fines the whole truth.'),
+    mc('What happens to member 8\'s loans if you delete member 8 without moving them?', ['They still point to id 8, which no longer exists', 'They move to member 3 by themselves', 'They are deleted too', 'An error'], 0,
+      'Without foreign keys, nothing stops that.'),
+  ],
+})

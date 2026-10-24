@@ -40,6 +40,8 @@ import { joinsTopics } from './joins.mjs'
 import { joinsProjects } from './joins-projects.mjs'
 import { subqueriesTopics } from './subqueries.mjs'
 import { subqueriesProjects } from './subqueries-projects.mjs'
+import { modifyingTopics } from './modifying.mjs'
+import { modifyingProjects } from './modifying-projects.mjs'
 
 export const COURSE = [
   { sectionId: 'querying', filename: 'querying.json', title: 'Querying a table', topics: [...queryingTopics, ...queryingProjects] },
@@ -47,7 +49,7 @@ export const COURSE = [
   { sectionId: 'aggregation', filename: 'aggregation.json', title: 'Summarising data', topics: [...aggregationTopics, ...aggregationProjects] },
   { sectionId: 'joins', filename: 'joins.json', title: 'Joining tables', topics: [...joinsTopics, ...joinsProjects] },
   { sectionId: 'subqueries', filename: 'subqueries.json', title: 'Subqueries and sets', topics: [...subqueriesTopics, ...subqueriesProjects] },
-  { sectionId: 'modifying_data', filename: 'modifying_data.json', title: 'Changing data', topics: [] },
+  { sectionId: 'modifying_data', filename: 'modifying_data.json', title: 'Changing data', topics: [...modifyingTopics, ...modifyingProjects] },
   { sectionId: 'schema_design', filename: 'schema_design.json', title: 'Designing tables', topics: [] },
   { sectionId: 'window_functions', filename: 'window_functions.json', title: 'Window functions', topics: [] },
   { sectionId: 'advanced', filename: 'advanced.json', title: 'Advanced queries', topics: [] },

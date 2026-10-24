@@ -1,0 +1,108 @@
+// Changing data: Seeing what changed with RETURNING.
+import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { AFTER, MODIFYING_DB } from '../modifying-db.mjs'
+
+export default makeTopic({
+  id: 'returning',
+  title: 'Seeing what changed: RETURNING',
+  database: MODIFYING_DB,
+  paragraphs: [
+    "`INSERT`, `UPDATE` and `DELETE` normally only say how many rows they changed. Add `RETURNING` at the end and they also show the rows themselves, like a `SELECT`:",
+    "```\nINSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24')\nRETURNING id, name;\n```",
+    'That is the easiest way to find out the id SQLite gave a new row. After an `UPDATE`, `RETURNING` shows the new values; after a `DELETE`, it shows the rows that were removed, which makes a handy record of what went:',
+    "```\nDELETE FROM loans\nWHERE returned < '2026-09-01'\nRETURNING id, member_id, returned;\n```",
+    'After `RETURNING` you can list columns, use `*`, calculate and rename with `AS`, just like in a `SELECT` list. You can\'t use aggregates like `COUNT` there, and the rows come back in no particular order.',
+    "`RETURNING` arrived in SQLite 3.35 (2021). PostgreSQL has it too; other databases have their own ways of doing the same thing.",
+  ],
+  sandboxCode: "INSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24')\nRETURNING id, name;",
+  sandboxSnippets: [
+    snippet('The new id', "INSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24')\nRETURNING id, name;"),
+    snippet('What was deleted', "DELETE FROM loans\nWHERE returned < '2026-09-01'\nRETURNING id, member_id, returned;"),
+    snippet('Calculated', 'UPDATE books\nSET available = available - 1\nWHERE id = 4\nRETURNING title, available, copies - available AS on_loan;'),
+  ],
+  readMore: { label: 'SQLite: the RETURNING clause', url: 'https://www.sqlite.org/lang_returning.html', source: 'SQLite documentation' },
+  challenges: [
+    query('easy', 'What is her id?', {
+      prompt: "Add `Hana Sato` (`hana.sato@example.com`, joined `2026-10-24`) and return her `id` and `name`.",
+      hint: '`INSERT … VALUES (…) RETURNING id, name;`',
+      solution: "INSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24')\nRETURNING id, name;",
+      checks: [AFTER.members],
+    }),
+    query('easy', 'Returned, and shown', {
+      prompt: "Mark loan 6 returned on `2026-10-24`, returning its `id`, `member_id` and `returned`.",
+      hint: "`UPDATE loans SET returned = '2026-10-24' WHERE id = 6 RETURNING id, member_id, returned;`",
+      solution: "UPDATE loans\nSET returned = '2026-10-24'\nWHERE id = 6\nRETURNING id, member_id, returned;",
+      checks: [AFTER.loans],
+    }),
+    query('easy', 'Which fines went', {
+      prompt: 'Delete the fines of 0 or less, returning the `member_id` of each deleted row.',
+      hint: '`DELETE FROM fines WHERE amount <= 0 RETURNING member_id;`',
+      solution: 'DELETE FROM fines\nWHERE amount <= 0\nRETURNING member_id;',
+      checks: [AFTER.fines],
+    }),
+    query('medium', 'New due dates', {
+      prompt: "Give every loan still out and due before `2026-10-24` one more week, returning each changed loan's `id` and new `due` date.",
+      hint: "`SET due = date(due, '+7 days') WHERE … RETURNING id, due`.",
+      solution: "UPDATE loans\nSET due = date(due, '+7 days')\nWHERE returned IS NULL AND due < '2026-10-24'\nRETURNING id, due;",
+      checks: [AFTER.loans],
+    }),
+    query('medium', 'Ten percent, shown', {
+      prompt: 'Raise every fine by 10%, rounded to 2 decimals, returning `member_id` and the new `amount`.',
+      hint: '`SET amount = ROUND(amount * 1.1, 2) RETURNING member_id, amount`.',
+      solution: 'UPDATE fines\nSET amount = ROUND(amount * 1.1, 2)\nRETURNING member_id, amount;',
+      checks: [AFTER.fines],
+    }),
+    query('medium', 'Shelved, with ids', {
+      prompt: "Copy the arrivals whose title isn't in `books` yet into `books` (copies missing count as 1, all available), returning the new books' `id` and `title`.",
+      hint: 'The INSERT … SELECT with COALESCE and NOT IN, then `RETURNING id, title`.',
+      solution: 'INSERT INTO books (title, author, copies, available)\nSELECT title, author, COALESCE(copies, 1), COALESCE(copies, 1)\nFROM arrivals\nWHERE title NOT IN (SELECT title FROM books)\nRETURNING id, title;',
+      checks: [AFTER.books],
+    }),
+    query('hard', 'One out, how many left', {
+      prompt: "Lower book 4's `available` by 1, returning its `title`, the new `available` and the number of copies now on loan, called `on_loan`.",
+      hint: '`RETURNING title, available, copies - available AS on_loan`.',
+      solution: 'UPDATE books\nSET available = available - 1\nWHERE id = 4\nRETURNING title, available, copies - available AS on_loan;',
+      checks: [AFTER.books],
+    }),
+    query('hard', 'A record of what went', {
+      prompt: "Delete the loans returned before `2026-09-01`, returning the `id`, `member_id` and `returned` date of each.",
+      hint: "`DELETE FROM loans WHERE returned < '2026-09-01' RETURNING id, member_id, returned;`",
+      solution: "DELETE FROM loans\nWHERE returned < '2026-09-01'\nRETURNING id, member_id, returned;",
+      checks: [AFTER.loans],
+    }),
+    query('expert', 'Upsert, shown', {
+      prompt: "Add `1.0` to the fines of members 2 and 3 (creating rows where needed), returning `member_id` and the resulting `amount`.",
+      hint: 'The upsert from the last lesson, then `RETURNING member_id, amount`.',
+      solution: 'INSERT INTO fines (member_id, amount)\nVALUES (2, 1.0), (3, 1.0)\nON CONFLICT (member_id) DO UPDATE\nSET amount = amount + excluded.amount\nRETURNING member_id, amount;',
+      checks: [AFTER.fines],
+    }),
+    query('expert', 'Lend them all', {
+      prompt: "Member 7 borrows every book by `S. Laine` or `H. Varga` today (borrowed `2026-10-24`, due `2026-11-07`). Add the loans and return the new loans' `id` and `book_id`.",
+      hint: "INSERT … SELECT 7, id, … FROM books WHERE author IN ('S. Laine', 'H. Varga') RETURNING id, book_id.",
+      solution: "INSERT INTO loans (member_id, book_id, borrowed, due)\nSELECT 7, id, '2026-10-24', '2026-11-07'\nFROM books\nWHERE author IN ('S. Laine', 'H. Varga')\nRETURNING id, book_id;",
+      checks: [AFTER.loans],
+    }),
+  ],
+  questions: [
+    mc('What does RETURNING add to an INSERT, UPDATE or DELETE?', ['It undoes the change', 'It returns the number of rows only', 'It makes it a transaction', 'It shows the changed rows, like a SELECT'], 3,
+      'You see exactly which rows changed and how.'),
+    mc('After an UPDATE, does RETURNING show the old or new values?', ['Both', 'Neither', 'The old values', 'The new values'], 3,
+      'It shows the rows as they are after the change.'),
+    mc('After a DELETE, what does RETURNING show?', ['Nothing', 'The rows that are left', 'The rows that were removed', 'The table name'], 2,
+      'A record of what went.'),
+    mc('Which is the easiest way to get the id of a new row?', ['`RETURNING id`', 'SELECT MAX(id)', 'Count the rows', 'Guess the next number'], 0,
+      'It gives exactly the id SQLite assigned.'),
+    qShort('Which keyword, at the end of an INSERT, shows the inserted rows?', 'RETURNING',
+      '`… RETURNING id, name;`'),
+    mc('Can RETURNING calculate and rename, like `copies - available AS on_loan`?', ['Only for INSERT', 'Yes, like a SELECT list', 'No, only column names', 'Only with GROUP BY'], 1,
+      'Expressions and AS work as in SELECT.'),
+    mc('Can you use COUNT(*) after RETURNING?', ['Only with ORDER BY', 'Yes', 'No, aggregates are not allowed there', 'Only after DELETE'], 2,
+      'RETURNING gives one row per changed row.'),
+    mc('In which order do RETURNING rows come?', ['Alphabetically', 'No particular order', 'Newest first', 'By id'], 1,
+      'Don\'t rely on any order.'),
+    mc('Which SQLite version added RETURNING?', ['3.0', '3.24', '3.39', '3.35'], 3,
+      'It arrived in 2021.'),
+    mc('Does RETURNING work with an upsert?', ['Yes, it shows the inserted or updated rows', 'No', 'Only for DO NOTHING', 'Only with REPLACE'], 0,
+      'It shows each row as it ended up.'),
+  ],
+})
