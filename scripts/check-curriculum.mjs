@@ -18,7 +18,8 @@
  * pass; the starter code, empty code and the solution's result typed in as fixed values
  * (SELECT 'Dune' ... UNION ALL ...) must not. The solution must return rows on the lesson's
  * data and a different result on the other rows (altSetupSql), or the checks can't tell a
- * real query from a typed-in one. Lesson sandbox code, samples and "Try it" blocks must run.
+ * real query from a typed-in one. Lesson sandbox code, samples and "Try it" blocks must run,
+ * except samples that show an error on purpose (they start with "-- This gives an error").
  *
  * Sections listed in scripts/curriculum-check.json ("strictSections") must be
  * clean or the script exits with code 1. Other sections are reported only.
@@ -311,7 +312,8 @@ function lessonSql(level) {
       blocks.push(['"Try it" block', code])
     }
   }
-  return blocks
+  // Samples that show an error on purpose are marked with a comment.
+  return blocks.filter(([, code]) => !/^\s*--\s*This gives an error/i.test(code))
 }
 
 function checkQuiz(question) {

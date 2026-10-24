@@ -116,6 +116,7 @@ export const languageIndexSchema = z.object({
   id: z.string(),
   title: z.string(),
   sections: z.array(sectionRefSchema),
+  upcoming: z.array(z.object({ id: z.string(), title: z.string() })).optional(),
 })
 
 export const rootIndexSchema = z.object({

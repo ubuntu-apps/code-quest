@@ -36,6 +36,9 @@ export function LearnSections({
   baseUrl,
 }: LearnSectionsProps) {
   const completion = languageId && !isEditMode ? courseCompletion(languageId, bundle) : null
+  // Sections still being written are listed last, without lessons.
+  const upcoming = bundle.index.upcoming ?? []
+  const sectionCount = bundle.index.sections.length + upcoming.length
   return (
     <div className="cq-stack">
       <EditableText
@@ -105,7 +108,7 @@ export function LearnSections({
               onTitleChange={(title) => onUpdateSectionTitle(sec.id, title)}
               onTitleCommit={(title) => onUpdateSectionTitle(sec.id, title, { commit: true })}
               onClick={() => onSelectSection(sec.id)}
-              eyebrow={`Section ${secIndex + 1} of ${bundle.index.sections.length}`}
+              eyebrow={`Section ${secIndex + 1} of ${sectionCount}`}
               meta={meta}
               status={previewOnly ? undefined : status}
               progressPercent={pct}
@@ -118,6 +121,17 @@ export function LearnSections({
             />
           )
         })}
+        {upcoming.map((sec, i) => (
+          <li key={sec.id} className="cq-card-list-item">
+            <div className="cq-card-row">
+              <div className="cq-card-btn cq-card-btn--locked cq-card-btn--soon" aria-disabled="true">
+                <span className="cq-card-eyebrow">{`Section ${bundle.index.sections.length + i + 1} of ${sectionCount}`}</span>
+                <span className="cq-card-title">{sec.title}</span>
+                <span className="cq-card-meta">Coming soon</span>
+              </div>
+            </div>
+          </li>
+        ))}
       </ul>
       {languageId && <AddItemButton label="Add section" onClick={onAddSection} />}
       {completion && languageId ? (
