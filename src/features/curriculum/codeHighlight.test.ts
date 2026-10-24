@@ -71,5 +71,7 @@ describe('looksLikeSql', () => {
   it('is true for runnable statements only', () => {
     expect(looksLikeSql('-- every pet\nSELECT * FROM pets;')).toBe(true)
     expect(looksLikeSql('title | year\n------+-----')).toBe(false)
+    expect(looksLikeSql('PRAGMA foreign_keys = ON;\nCREATE TABLE t (id INTEGER);')).toBe(true)
+    expect(looksLikeSql('BEGIN;\nDELETE FROM loans;\nROLLBACK;')).toBe(true)
   })
 })

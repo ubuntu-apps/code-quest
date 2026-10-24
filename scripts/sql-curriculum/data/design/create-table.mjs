@@ -1,0 +1,115 @@
+// Designing tables: CREATE TABLE and types.
+import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { CHECK, DESIGN_DB } from '../design-db.mjs'
+
+const { columns, rows, tryIt } = CHECK
+
+export default makeTopic({
+  id: 'create_table',
+  title: 'CREATE TABLE and types',
+  database: DESIGN_DB,
+  paragraphs: [
+    "Until now the tables were already there. This section is about making them. The database belongs to an events venue that has kept its bookings in one spreadsheet-like table, `ticket_sheet`, and wants proper tables instead.",
+    '`CREATE TABLE` names the table and lists its columns, each with a type:',
+    '```\nCREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);\n```',
+    "SQLite has five kinds of values: `INTEGER` (whole numbers), `REAL` (numbers with decimals), `TEXT`, `BLOB` (raw bytes) and `NULL`. Use `INTEGER`, `REAL` and `TEXT` as column types. There is no date type: store dates as `TEXT` in the form `YYYY-MM-DD`, and true/false as `INTEGER` 0 or 1.",
+    "SQLite is relaxed about types. A column's type is a preference, not a rule, so it will store the text `'ten'` in an `INTEGER` column. Add `STRICT` after the closing bracket to make SQLite refuse values of the wrong type: `CREATE TABLE scores (…) STRICT;`.",
+    "To see a table's columns, query `pragma_table_info`:",
+    "```\nSELECT name, type FROM pragma_table_info('rooms');\n```",
+    "`CREATE TABLE` gives an error if the table already exists. `CREATE TABLE IF NOT EXISTS` skips it quietly instead, which is useful in scripts that may run more than once.",
+  ],
+  sandboxCode: "CREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);\nSELECT name, type FROM pragma_table_info('guests');",
+  sandboxSnippets: [
+    snippet('Create and look', "CREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);\nSELECT name, type FROM pragma_table_info('guests');"),
+    snippet('Relaxed types', "CREATE TABLE loose (n INTEGER);\nINSERT INTO loose VALUES (5), ('ten');\nSELECT n, typeof(n) FROM loose;"),
+    snippet('STRICT', "-- This gives an error: a STRICT table refuses text in an INTEGER column\nCREATE TABLE scores (player TEXT, points INTEGER) STRICT;\nINSERT INTO scores VALUES ('Ana', 'ten');"),
+    snippet('Already there', '-- This gives an error: rooms already exists\nCREATE TABLE rooms (id INTEGER);'),
+  ],
+  readMore: { label: 'SQLite: datatypes', url: 'https://www.sqlite.org/datatype3.html', source: 'SQLite documentation' },
+  challenges: [
+    query('easy', 'A guests table', {
+      prompt: "Create a table `guests` with the columns `name` (TEXT), `email` (TEXT) and `visits` (INTEGER), in that order.",
+      hint: '`CREATE TABLE guests (name TEXT, email TEXT, visits INTEGER);`',
+      solution: 'CREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);',
+      checks: [columns('guests')],
+    }),
+    query('easy', 'An events table', {
+      prompt: "Create a table `events` with `title` (TEXT), `event_date` (TEXT) and `price` (REAL).",
+      hint: 'Dates are TEXT; prices with decimals are REAL.',
+      solution: 'CREATE TABLE events (\n  title TEXT,\n  event_date TEXT,\n  price REAL\n);',
+      checks: [columns('events')],
+    }),
+    query('easy', 'Create and fill', {
+      prompt: "Create a table `notes` with `body` (TEXT) and `written` (TEXT), then add one note: `Book the piano tuner`, written `2026-10-24`.",
+      hint: 'A CREATE TABLE, then an INSERT.',
+      solution: "CREATE TABLE notes (\n  body TEXT,\n  written TEXT\n);\nINSERT INTO notes (body, written) VALUES ('Book the piano tuner', '2026-10-24');",
+      checks: [columns('notes'), rows('notes', 'body')],
+    }),
+    query('medium', 'Safe to run twice', {
+      prompt: "Write a CREATE TABLE for `waitlist` (`guest` TEXT, `event` TEXT) that does nothing if the table already exists, and run it twice in a row without an error.",
+      hint: '`CREATE TABLE IF NOT EXISTS waitlist (…);` written twice.',
+      solution: 'CREATE TABLE IF NOT EXISTS waitlist (guest TEXT, event TEXT);\nCREATE TABLE IF NOT EXISTS waitlist (guest TEXT, event TEXT);',
+      checks: [columns('waitlist')],
+    }),
+    query('medium', 'Fix the comma', {
+      prompt: 'This should create `tickets` with `seat` (TEXT) and `price` (REAL), but gives a syntax error. Fix it.',
+      starter: 'CREATE TABLE tickets (\n  seat TEXT,\n  price REAL,\n);',
+      hint: 'The last column has no comma after it.',
+      solution: 'CREATE TABLE tickets (\n  seat TEXT,\n  price REAL\n);',
+      checks: [columns('tickets')],
+    }),
+    query('medium', 'Strict scores', {
+      prompt: "Create a STRICT table `scores` with `player` (TEXT) and `points` (INTEGER), so that text in `points` is refused.",
+      hint: '`CREATE TABLE scores (player TEXT, points INTEGER) STRICT;`',
+      solution: 'CREATE TABLE scores (\n  player TEXT,\n  points INTEGER\n) STRICT;',
+      checks: [columns('scores'), tryIt("Text in points is refused", "INSERT INTO scores (player, points) VALUES ('Ana', 'ten')")],
+    }),
+    query('hard', 'Bookings', {
+      prompt: "Create `bookings` for overnight stays with: `guest` (text), `nights` (a whole number), `rate` (a price with decimals), `arrival` (a date) and `paid` (true or false), in that order. Pick the types.",
+      hint: 'Dates are TEXT; true/false is INTEGER 0 or 1.',
+      solution: 'CREATE TABLE bookings (\n  guest TEXT,\n  nights INTEGER,\n  rate REAL,\n  arrival TEXT,\n  paid INTEGER\n);',
+      checks: [columns('bookings')],
+    }),
+    query('hard', 'Fix the type', {
+      prompt: "Amounts in this table sort as text (`'100.0'` comes before `'9.5'`). Fix the table so `amount` holds numbers with decimals.",
+      starter: 'CREATE TABLE prices (\n  item TEXT,\n  amount TEXT\n);',
+      hint: '`amount REAL`.',
+      solution: 'CREATE TABLE prices (\n  item TEXT,\n  amount REAL\n);',
+      checks: [columns('prices')],
+    }),
+    query('expert', 'Real numbers only', {
+      prompt: "Create a STRICT table `measurements` with `label` (TEXT) and `value` (REAL), then insert the row `('width', 3)`. Even though 3 has no decimals, it is stored as a real number.",
+      hint: 'In a STRICT REAL column, whole numbers are stored as real. Check with `typeof(value)`.',
+      solution: "CREATE TABLE measurements (\n  label TEXT,\n  value REAL\n) STRICT;\nINSERT INTO measurements (label, value) VALUES ('width', 3);",
+      checks: [columns('measurements'), tryIt('The value is stored as real', 'SELECT label, value, typeof(value) FROM measurements')],
+    }),
+    query('expert', 'A log', {
+      prompt: "Create `event_log` with `happened` (TEXT) and `detail` (TEXT), then add two rows in one INSERT: `2026-10-24`, `Doors opened` and `2026-10-24`, `Sound check`.",
+      hint: 'CREATE TABLE, then `INSERT INTO event_log (happened, detail) VALUES (…), (…);`',
+      solution: "CREATE TABLE event_log (\n  happened TEXT,\n  detail TEXT\n);\nINSERT INTO event_log (happened, detail) VALUES\n  ('2026-10-24', 'Doors opened'),\n  ('2026-10-24', 'Sound check');",
+      checks: [columns('event_log'), rows('event_log', 'detail')],
+    }),
+  ],
+  questions: [
+    mc('Which type would you use for a price like 12.50?', ['TEXT', 'DATE', 'REAL', 'INTEGER'], 2,
+      'REAL holds numbers with decimals.'),
+    mc('How are dates usually stored in SQLite?', ["As TEXT like '2026-11-06'", 'As three columns', 'As REAL only', 'As a DATE type'], 0,
+      'SQLite has no date type; YYYY-MM-DD text sorts in date order.'),
+    mc('How is true/false usually stored?', ['As BLOB', 'As INTEGER 0 or 1', 'As REAL', "As TEXT 'yes'/'no'"], 1,
+      'SQLite has no boolean type.'),
+    mc("Does a normal (not STRICT) INTEGER column accept the text 'ten'?", ['Yes, SQLite stores it as text', 'No, it gives an error', 'It stores NULL', 'It stores 0'], 0,
+      'Column types are preferences unless the table is STRICT.'),
+    qShort('Which word after the closing bracket makes SQLite refuse values of the wrong type?', 'STRICT',
+      '`CREATE TABLE t (…) STRICT;`'),
+    mc('What does `CREATE TABLE IF NOT EXISTS` do when the table exists?', ['Nothing, without an error', 'Replaces it', 'Gives an error', 'Empties it'], 0,
+      'Handy for scripts that may run again.'),
+    mc('Which shows the columns of `rooms`?', ['`SELECT * FROM columns`', "`SELECT name, type FROM pragma_table_info('rooms')`", '`SHOW rooms`', '`DESCRIBE rooms`'], 1,
+      'pragma_table_info lists one row per column.'),
+    mc('Why might `CREATE TABLE tickets (seat TEXT, price REAL,);` fail?', ['The name is taken', 'REAL is not a type', 'Tables need an id', 'There is a comma after the last column'], 3,
+      'The comma makes SQLite expect another column.'),
+    mc('Which is NOT one of SQLite\'s kinds of values?', ['DATE', 'INTEGER', 'TEXT', 'BLOB'], 0,
+      'The five are INTEGER, REAL, TEXT, BLOB and NULL.'),
+    mc('Why store amounts as REAL instead of TEXT?', ['TEXT can\'t hold digits', 'REAL is shorter', 'TEXT is not allowed', 'So they sort and calculate as numbers'], 3,
+      "As text, '100.0' sorts before '9.5'."),
+  ],
+})
