@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import type { FriendlySandboxError } from '../components/CodeSandboxSection'
-import { pythonStatusMessage, runPythonCode } from '../pythonSandbox'
+import { pythonStatusMessage, runPythonCode, runSqlCode, sqlStatusMessage } from '../pythonSandbox'
 import { runRCode } from '../rSandbox'
 import { defaultSandboxForLanguage } from '../sandboxDefaults'
 import type { Level } from '../types'
@@ -20,12 +20,15 @@ export function useSandbox(languageId: string | null) {
   const levelEpochRef = useRef(0)
   /** Stops the current Python run (and only that run). */
   const runControllerRef = useRef<AbortController | null>(null)
+  /** SQL lessons: the SQL that makes the lesson's database, fresh for every run. */
+  const setupSqlRef = useRef('')
 
   const run = async (stdin = '') => {
     const epoch = levelEpochRef.current
     const stillCurrent = () => levelEpochRef.current === epoch
     setRunning(true)
     setError(null)
+    const isSql = languageId === 'sql'
     setOutput(
       languageId === 'r'
         ? 'Loading R runtime (first run downloads ~30MB, may take a minute)...'
@@ -37,23 +40,30 @@ export function useSandbox(languageId: string | null) {
       const result =
         languageId === 'r'
           ? await runRCode(code)
-          : await runPythonCode(code, stdin, {
-              signal: controller.signal,
-              onStatus: (status) => {
-                if (stillCurrent()) setOutput(pythonStatusMessage(status))
-              },
-              // Show printed lines as they arrive, not only when the run ends.
-              onOutput: (text) => {
-                if (stillCurrent()) setOutput(text)
-              },
-            })
+          : isSql
+            ? await runSqlCode(code, setupSqlRef.current, {
+                signal: controller.signal,
+                onStatus: (status) => {
+                  if (stillCurrent()) setOutput(sqlStatusMessage(status))
+                },
+              })
+            : await runPythonCode(code, stdin, {
+                signal: controller.signal,
+                onStatus: (status) => {
+                  if (stillCurrent()) setOutput(pythonStatusMessage(status))
+                },
+                // Show printed lines as they arrive, not only when the run ends.
+                onOutput: (text) => {
+                  if (stillCurrent()) setOutput(text)
+                },
+              })
       if (!stillCurrent()) return
       setOutput(result.output.trim() ? result.output : '[no output]')
       setError(result.error)
     } catch (err: unknown) {
       if (!stillCurrent()) return
       setOutput('')
-      const runtimeName = languageId === 'r' ? 'R' : 'Python'
+      const runtimeName = languageId === 'r' ? 'R' : isSql ? 'SQL' : 'Python'
       setError({
         title: `${runtimeName} runtime failed`,
         detail: err instanceof Error ? err.message : `Could not start the ${runtimeName} runtime`,
@@ -79,6 +89,7 @@ export function useSandbox(languageId: string | null) {
   /** Fresh sandbox when a level is opened. */
   const resetForLevel = useCallback((level: Level, langId: string | null) => {
     levelEpochRef.current += 1
+    setupSqlRef.current = level.database?.setupSql ?? ''
     // A run from the previous level is no longer shown, so don't let it hold up the next one.
     runControllerRef.current?.abort()
     runControllerRef.current = null

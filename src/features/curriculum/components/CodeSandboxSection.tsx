@@ -1,7 +1,7 @@
 import { PythonSandboxSection } from './PythonSandboxSection'
 import type { FriendlyPythonError } from '../pythonSandbox'
 import type { FriendlyRError } from '../rSandbox'
-import type { SandboxSnippet } from '../types'
+import type { SandboxSnippet, SqlTable } from '../types'
 
 export type FriendlySandboxError = FriendlyPythonError | FriendlyRError
 
@@ -18,16 +18,13 @@ interface CodeSandboxSectionProps {
   onStop?: () => void
   onReset: () => void
   onErrorClear: () => void
+  /** SQL lessons: the tables the sandbox's database has. */
+  tables?: SqlTable[]
 }
 
 export function CodeSandboxSection(props: CodeSandboxSectionProps) {
-  if (props.languageId === 'python' || props.languageId === 'r') {
-    return (
-      <PythonSandboxSection
-        {...props}
-        languageId={props.languageId as 'python' | 'r'}
-      />
-    )
+  if (props.languageId === 'python' || props.languageId === 'r' || props.languageId === 'sql') {
+    return <PythonSandboxSection {...props} languageId={props.languageId} />
   }
   return null
 }

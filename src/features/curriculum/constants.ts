@@ -6,6 +6,7 @@ export const PASS_DEFAULT = 70
 export const DEFAULT_SANDBOX_CODE: Record<string, string> = {
   python: 'print("Hello from CodeQuest!")',
   r: 'print("Hello from CodeQuest!")',
+  sql: "SELECT 'Hello from CodeQuest!' AS greeting;",
 }
 export const STREAK_STORAGE_KEY = 'codequest:streak'
 export const LAST_LEVEL_STORAGE_KEY = 'codequest:lastLevel'
@@ -42,6 +43,10 @@ export const SANDBOX_SNIPPETS: Record<string, { id: string; label: string; code:
     },
     { id: 'vector', label: 'Vector', code: 'nums <- c(1, 2, 3)\nprint(nums * 2)' },
     { id: 'function', label: 'Function', code: 'add <- function(a, b) a + b\nprint(add(2, 3))' },
+  ],
+  sql: [
+    { id: 'hello', label: 'Hello', code: "SELECT 'Hello, SQL!' AS greeting;" },
+    { id: 'maths', label: 'Maths', code: 'SELECT 2 + 3 AS total, 10 / 4.0 AS quarter;' },
   ],
 }
 

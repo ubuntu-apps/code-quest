@@ -46,8 +46,9 @@ export function CertificatePanel({ languageId, bundle, completion, baseUrl }: Ce
       ) : (
         <p className="cq-muted cq-certificate-hint">
           <Award size={16} aria-hidden />
-          Finish all {completion.sectionsTotal} sections to earn your {courseTitle} certificate (
-          {completion.sectionsFinished} done so far).
+          {completion.sectionsTotal === 1
+            ? `Finish the section to earn your ${courseTitle} certificate.`
+            : `Finish all ${completion.sectionsTotal} sections to earn your ${courseTitle} certificate (${completion.sectionsFinished} done so far).`}
         </p>
       )}
 

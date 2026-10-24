@@ -98,3 +98,51 @@
   font-family: var(--cq-mono);
   font-size: var(--cq-text-xs);
 }
+
+/* SQL lessons: the tables the database has, folded under one line above the editor. */
+.cq-sql-tables {
+  margin: 0.5rem 0;
+  font-size: var(--cq-text-xs);
+  color: var(--cq-muted);
+}
+
+.cq-sql-tables summary {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.cq-sql-tables ul {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.cq-sql-tables li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.cq-sql-tables li > code:first-child {
+  font-weight: 650;
+  color: var(--cq-text);
+}
+
+.cq-sql-columns {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+/* SQL results are tables: keep each row on one line and scroll sideways when wide. */
+.cq-sandbox-output--table,
+.cq-diff-value--table {
+  white-space: pre;
+  overflow-x: auto;
+}

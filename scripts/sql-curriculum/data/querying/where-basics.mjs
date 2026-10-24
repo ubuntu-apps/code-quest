@@ -1,0 +1,106 @@
+// Querying a table: Filtering rows with WHERE.
+import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { QUERYING_DB } from '../databases.mjs'
+
+export default makeTopic({
+  id: 'where_basics',
+  title: 'Filtering with WHERE',
+  database: QUERYING_DB,
+  paragraphs: [
+    '`WHERE` keeps only the rows that match a condition. It comes after `FROM`:',
+    "```\nSELECT name, age FROM pets WHERE species = 'dog';\n```",
+    'SQLite checks the condition for every row and keeps the ones where it is true. Here, that is every dog.',
+    'Conditions compare values. `=` means equal (just one `=`), `<>` means not equal (`!=` works too), and `<`, `>`, `<=` and `>=` compare sizes:',
+    '```\nSELECT title, year FROM books WHERE year < 1900;\n```',
+    "Numbers are written as they are: `year < 1900`. **Text goes in single quotes**: `species = 'dog'`. Without quotes, SQLite reads the word as a column name, so `WHERE species = dog` gives the error `no such column: dog`.",
+    "Text comparisons are exact and case-sensitive: `'Dog'` is not the same as `'dog'`. Look at how the values are written in the table before you filter on them.",
+    'You can filter on a column you don\'t show. This lists the titles of mystery books, without showing the genre:',
+    "```\nSELECT title FROM books WHERE genre = 'Mystery';\n```",
+    'The clauses always come in this order: `SELECT` … `FROM` … `WHERE` ….',
+  ],
+  sandboxCode: "SELECT name, age FROM pets WHERE species = 'dog';",
+  sandboxSnippets: [
+    snippet('Only dogs', "SELECT name, age FROM pets WHERE species = 'dog';"),
+    snippet('Before 1900', 'SELECT title, year FROM books WHERE year < 1900;'),
+    snippet('Not equal', "SELECT name, category FROM products WHERE category <> 'stationery';"),
+    snippet('At least 400', 'SELECT title, pages FROM books WHERE pages >= 400;'),
+    snippet('Case matters', "-- no rows: the table says 'cat', not 'Cat'\nSELECT name FROM pets WHERE species = 'Cat';"),
+  ],
+  readMore: { label: 'SQLite: expressions and operators', url: 'https://www.sqlite.org/lang_expr.html', source: 'SQLite documentation' },
+  challenges: [
+    query('easy', 'Only dogs', {
+      prompt: 'Show every column for the pets whose `species` is `dog`.',
+      hint: "`SELECT * FROM pets WHERE species = 'dog';` (text in single quotes).",
+      solution: "SELECT * FROM pets WHERE species = 'dog';",
+    }),
+    query('easy', 'Old books', {
+      prompt: 'Show the `title` and `year` of books published before 1900.',
+      hint: '`WHERE year < 1900`.',
+      solution: 'SELECT title, year FROM books WHERE year < 1900;',
+    }),
+    query('easy', 'Out of stock', {
+      prompt: 'Show the `name` of every product whose `stock` is 0.',
+      hint: '`WHERE stock = 0`. Numbers don\'t need quotes.',
+      solution: 'SELECT name FROM products WHERE stock = 0;',
+    }),
+    query('medium', 'Not a dog', {
+      prompt: 'Show the `name` and `species` of every pet that is not a dog.',
+      hint: "Not equal is `<>`: `WHERE species <> 'dog'`.",
+      solution: "SELECT name, species FROM pets WHERE species <> 'dog';",
+    }),
+    query('medium', 'Long books', {
+      prompt: 'Show the `title` and `pages` of books with at least 400 pages.',
+      hint: '"At least" includes 400 itself, so use `>=`.',
+      solution: 'SELECT title, pages FROM books WHERE pages >= 400;',
+    }),
+    query('medium', 'Fix the quotes', {
+      prompt: 'This query should show the titles of the books by Jane Austen. Fix it.',
+      starter: 'SELECT title FROM books WHERE author = Jane Austen;',
+      hint: "Text values need single quotes: `'Jane Austen'`.",
+      solution: "SELECT title FROM books WHERE author = 'Jane Austen';",
+    }),
+    query('hard', 'Cheap products', {
+      prompt: 'Show the `name` and `price` of products that cost less than 5.',
+      hint: '`WHERE price < 5`.',
+      solution: 'SELECT name, price FROM products WHERE price < 5;',
+    }),
+    query('hard', 'Heavy pets', {
+      prompt: 'Show the `name` and `weight_kg` of pets that weigh more than 10 kg.',
+      hint: '"More than" doesn\'t include 10 itself: `>`.',
+      solution: 'SELECT name, weight_kg FROM pets WHERE weight_kg > 10;',
+    }),
+    query('expert', 'A hidden filter', {
+      prompt: 'Show only the `title` of the books whose `genre` is `Mystery` (the genre itself is not shown).',
+      hint: 'You can filter on a column you don\'t select: `SELECT title ... WHERE genre = ...`',
+      solution: "SELECT title FROM books WHERE genre = 'Mystery';",
+    }),
+    query('expert', 'Case matters', {
+      prompt: 'This query should list the names of the cats, but it returns no rows. Fix it.',
+      starter: "SELECT name FROM pets WHERE species = 'Cat';",
+      hint: 'Run `SELECT species FROM pets;` to see how the species are written: all in lower case.',
+      solution: "SELECT name FROM pets WHERE species = 'cat';",
+    }),
+  ],
+  questions: [
+    mc('What does `WHERE` do?', ['Chooses the columns', 'Keeps only the rows that match a condition', 'Sorts the rows', 'Names the table'], 1,
+      '`WHERE` filters rows: only those where its condition is true are kept.'),
+    mc("Which is right for text?", ["`WHERE species = dog`", '`WHERE species == "dog"` only', "`WHERE species = 'dog'`", '`WHERE species = (dog)`'], 2,
+      'Text values go in single quotes; without them SQLite reads `dog` as a column name.'),
+    mc('`WHERE species = dog` gives an error. Which one?', ['`no such column: dog`', '`no such table: dog`', '`syntax error`', 'No error, just no rows'], 0,
+      'An unquoted word is read as a column name, and `pets` has no column called `dog`.'),
+    qShort('Which operator means "not equal" in SQL (two characters, not `!=`)?', '<>',
+      '`<>` is SQL\'s not-equal operator; SQLite also accepts `!=`.'),
+    mc('Which rows does `WHERE pages >= 400` keep?', ['Fewer than 400 pages', 'Exactly 400 pages', 'More than 400 pages only', '400 pages or more'], 3,
+      '`>=` means greater than or equal, so 400 itself is included.'),
+    mc("Does `WHERE species = 'Dog'` match a row whose species is `dog`?", ['No, text comparisons are case-sensitive', 'Yes, case is ignored', 'Only in SQLite', 'Only with `<>`'], 0,
+      'With `=`, text must match exactly, including upper and lower case.'),
+    mc('In which order do the clauses go?', ['FROM, SELECT, WHERE', 'SELECT, WHERE, FROM', 'SELECT, FROM, WHERE', 'WHERE, SELECT, FROM'], 2,
+      'A query is written `SELECT` … `FROM` … `WHERE` ….'),
+    mc('Can you filter on a column you don\'t show?', ['No, it must be in the SELECT list', 'Yes, WHERE can use any column of the table', 'Only for numbers', 'Only with `*`'], 1,
+      'WHERE looks at the whole row, whatever the SELECT list shows.'),
+    mc('Which keeps products cheaper than 5?', ['`WHERE price > 5`', '`WHERE price = 5`', '`WHERE 5 < price`', '`WHERE price < 5`'], 3,
+      '`price < 5` is true for prices below 5.'),
+    mc('How many `=` signs does SQL use to test equality?', ['One', 'Two', 'Three', 'None'], 0,
+      'SQL uses a single `=`. (SQLite also accepts `==`, but most databases don\'t.)'),
+  ],
+})

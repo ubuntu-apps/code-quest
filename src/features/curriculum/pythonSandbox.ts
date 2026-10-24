@@ -4,6 +4,7 @@ export type { FriendlyPythonError } from './pythonErrorHelper'
 
 import { PYODIDE_CDN_BASE } from '../../runtimeVersions'
 import { isCodeRuntimeSupported } from './sandboxSupport'
+import { explainSqlError, type SqlErrorPayload } from './sqlErrorHelper'
 
 /** How long learner code may run before it is stopped (infinite-loop guard). */
 export const PYTHON_RUN_TIME_LIMIT_MS = 10_000
@@ -31,7 +32,7 @@ export interface PythonChallengeTestResult {
   passed: boolean
   detail?: string
   /** Both values of a failed `a == b` test, so the difference can be highlighted. */
-  diff?: { expected: string; actual: string; text: boolean }
+  diff?: { expected: string; actual: string; text: boolean; table?: boolean }
 }
 
 export interface PythonChallengeRunResult {
@@ -55,7 +56,19 @@ type TestsRequest = {
 type TryRequest = { type: 'try'; userCode: string; setupCode: string }
 /** Downloads the packages imported by `code` without running it. */
 type PreloadRequest = { type: 'preload'; code: string }
-type WorkerRequest = RunRequest | TestsRequest | TryRequest | PreloadRequest
+/** SQL on SQLite, through Python's sqlite3 module: the learner's SQL on a fresh copy of the lesson's database. */
+type SqlRunRequest = { type: 'sql-run'; sql: string; setupSql: string }
+/** A SQL challenge's Check: compared with the solution, on the lesson's rows and on other rows. */
+type SqlTestsRequest = {
+  type: 'sql-tests'
+  sql: string
+  setupSql: string
+  altSetupSql: string
+  solutionSql: string
+  ordered: boolean
+  checks: RuntimeAssertionTest[]
+}
+type WorkerRequest = RunRequest | TestsRequest | TryRequest | PreloadRequest | SqlRunRequest | SqlTestsRequest
 
 /**
  * What a run is doing, for the UI:
@@ -74,8 +87,8 @@ export interface PythonRunOptions {
   signal?: AbortSignal
 }
 
-type RunPayload = { output: string; error: string | null }
-type TestsPayload = { tests: PythonChallengeTestResult[]; error: string | null; output?: string }
+type RunPayload = { output: string; error: string | null; sqlError?: SqlErrorPayload | null }
+type TestsPayload = { tests: PythonChallengeTestResult[]; error: string | null; output?: string; sqlError?: SqlErrorPayload | null }
 
 type WorkerReply =
   | { type: 'ready' }
@@ -478,4 +491,99 @@ export async function runPythonChallengeTests(
     error: null,
     output,
   }
+}
+
+/** What to show while a SQL run is in a given state (SQL runs on the Python runtime). */
+export function sqlStatusMessage(status: PythonRunStatus): string {
+  switch (status) {
+    case 'loading':
+      return 'Getting the SQL engine ready (first run only, about 10 MB)…'
+    case 'packages':
+      return 'Downloading SQLite (first run only)…'
+    default:
+      return pythonStatusMessage(status)
+  }
+}
+
+/** Runs the learner's SQL on a fresh database made by `setupSql`, and shows each result as a table. */
+export async function runSqlCode(
+  sql: string,
+  setupSql: string,
+  options: PythonRunOptions = {},
+): Promise<SandboxRunResult> {
+  let outcome: JobOutcome
+  try {
+    outcome = (await enqueue({ type: 'sql-run', sql, setupSql }, options)).outcome
+  } catch (error: unknown) {
+    return { output: '', error: error instanceof RunStoppedError ? stoppedError() : loadError() }
+  }
+  if (outcome.kind !== 'result') return { output: '', error: await sqlOutcomeError(outcome) }
+  const payload = outcome.payload as RunPayload
+  return {
+    output: payload.output ?? '',
+    error: payload.sqlError ? explainSqlError(payload.sqlError, sql) : null,
+  }
+}
+
+async function sqlOutcomeError(outcome: Exclude<JobOutcome, { kind: 'result' }>): Promise<FriendlyPythonError> {
+  if (outcome.kind === 'timeout') {
+    return {
+      title: 'The query took too long',
+      detail: `It was still running after ${Math.round(PYTHON_RUN_TIME_LIMIT_MS / 1000)} seconds, so it was stopped.`,
+      tip: 'A query that joins tables without a condition can make a huge number of rows. Check your ON or WHERE conditions.',
+      errorType: 'Timeout',
+    }
+  }
+  if (outcome.kind === 'package-timeout' || outcome.kind === 'package-error') {
+    return {
+      title: 'Could not download SQLite',
+      detail: 'The SQL engine has to be downloaded the first time, and the download did not finish.',
+      tip: 'Check your internet connection and run the SQL again.',
+      errorType: 'PackageError',
+    }
+  }
+  return outcomeError(outcome)
+}
+
+/**
+ * A SQL challenge's Check: the learner's SQL is compared with the solution's result on the
+ * lesson's data and, with `altSetupSql`, on the same tables with other rows. `checks` are
+ * queries run on both databases afterwards (for statements that change data).
+ */
+export async function runSqlChallengeTests(
+  sql: string,
+  spec: { setupSql: string; altSetupSql?: string; solutionSql: string; ordered?: boolean; checks?: RuntimeAssertionTest[] },
+  options: PythonRunOptions = {},
+): Promise<PythonChallengeRunResult> {
+  let outcome: JobOutcome
+  try {
+    outcome = (
+      await enqueue(
+        {
+          type: 'sql-tests',
+          sql,
+          setupSql: spec.setupSql,
+          altSetupSql: spec.altSetupSql ?? '',
+          solutionSql: spec.solutionSql,
+          ordered: spec.ordered ?? false,
+          checks: spec.checks ?? [],
+        },
+        options,
+      )
+    ).outcome
+  } catch (error: unknown) {
+    return { passed: false, tests: [], error: error instanceof RunStoppedError ? stoppedError() : loadError(), output: '' }
+  }
+  if (outcome.kind !== 'result') return { passed: false, tests: [], error: await sqlOutcomeError(outcome), output: '' }
+  const payload = outcome.payload as TestsPayload
+  const output = typeof payload.output === 'string' ? payload.output : ''
+  if (payload.sqlError) return { passed: false, tests: [], error: explainSqlError(payload.sqlError, sql), output }
+  if (payload.error) return { passed: false, tests: [], error: await explainPythonError(payload.error), output }
+  const results = Array.isArray(payload.tests) ? payload.tests : []
+  return { passed: results.length > 0 && results.every((t) => t.passed), tests: results, error: null, output }
+}
+
+/** Downloads the Python runtime and SQLite for offline use. */
+export async function prepareSqlOffline(signal?: AbortSignal): Promise<void> {
+  return preparePythonOffline('import sqlite3', signal)
 }

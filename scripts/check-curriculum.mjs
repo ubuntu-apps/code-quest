@@ -14,6 +14,12 @@
  * It also flags missing prompts, hints and solutions, text-matched Python
  * challenges, and malformed quiz questions.
  *
+ * SQL challenges (`sql_tests`) run on SQLite through the same helpers: the solution must
+ * pass; the starter code, empty code and the solution's result typed in as fixed values
+ * (SELECT 'Dune' ... UNION ALL ...) must not. The solution must return rows on the lesson's
+ * data and a different result on the other rows (altSetupSql), or the checks can't tell a
+ * real query from a typed-in one. Lesson sandbox code, samples and "Try it" blocks must run.
+ *
  * Sections listed in scripts/curriculum-check.json ("strictSections") must be
  * clean or the script exits with code 1. Other sections are reported only.
  *
@@ -48,6 +54,10 @@ const RULES = {
   'text-matched': 'Python challenge graded by text matching instead of tests',
   'bad-quiz': 'Quiz question is malformed',
   'quiz-pattern': 'Every multiple-choice answer in this quiz is in the same position',
+  'empty-result': 'Solution returns no rows on the lesson data (nothing to compare)',
+  'alt-same': 'Solution gives the same result on the other rows, so a typed-in answer could pass',
+  'sandbox-error': 'Lesson SQL (sandbox, sample or "Try it" block) stops with an error',
+  'order-ties': 'Rows that tie in the ORDER BY can come in either order, so a correct answer may fail the order check (add a tie-breaker)',
 }
 
 function readJson(path) {
@@ -161,6 +171,102 @@ for case in cases:
 json.dump(results, result_channel)
 `
 
+const SQL_RUNNER = String.raw`
+import json, sys
+helpers = sys.argv[1]
+exec(helpers, globals())
+data = json.load(sys.stdin)
+
+def lit(v):
+    if v is None:
+        return "NULL"
+    if isinstance(v, str):
+        return "'" + v.replace("'", "''") + "'"
+    return repr(v)
+
+def ident(name):
+    return '"' + name.replace('"', '""') + '"'
+
+def last_result(setup, sql):
+    con = _cq_sql_db(setup)
+    try:
+        return _cq_sql_last_rows(_cq_sql_exec(con, sql))
+    finally:
+        con.close()
+
+def typed_variant(case):
+    # The solution's result typed in as fixed values: a learner who copied the answer table.
+    try:
+        res = last_result(case["setup"], case["solution"])
+    except Exception:
+        return None
+    if res is None:
+        return None
+    cols, rows = res
+    if not rows:
+        return None
+    first = "SELECT " + ", ".join(lit(v) + " AS " + ident(c) for v, c in zip(rows[0], cols))
+    rest = ["SELECT " + ", ".join(lit(v) for v in r) for r in rows[1:]]
+    return "\nUNION ALL\n".join([first] + rest) + ";"
+
+results = []
+for case in data["cases"]:
+    out = {"variants": {}}
+    variants = dict(case["variants"])
+    typed = typed_variant(case)
+    if typed is not None:
+        variants["typed"] = typed
+    for name, code in variants.items():
+        try:
+            raw = json.loads(_cq_sql_tests(code, case["setup"], case["alt"], case["solution"], case["ordered"], json.dumps(case["checks"])))
+            tests = raw["tests"]
+            err = raw.get("sqlError") or (raw["error"] and {"message": raw["error"].strip().splitlines()[-1]})
+            passed = not err and len(tests) > 0 and all(t["passed"] for t in tests)
+            detail = err["message"] if err else "; ".join(t["label"] + ": " + str(t.get("detail", "")) for t in tests if not t["passed"])
+        except BaseException as e:
+            passed, detail = False, repr(e)
+        out["variants"][name] = {"passed": passed, "detail": detail}
+    try:
+        main = last_result(case["setup"], case["solution"])
+        alt = last_result(case["alt"], case["solution"]) if case["alt"].strip() else None
+        out["mainRows"] = None if main is None else len(main[1])
+        out["altSame"] = main is not None and alt is not None and sorted(map(repr, main[1])) == sorted(map(repr, alt[1]))
+        # Ties in the sort: add a random tie-breaker to the ORDER BY and run it a few times.
+        out["ties"] = False
+        if case["ordered"]:
+            import re as _re
+            sol = case["solution"]
+            m = list(_re.finditer(r"\border\s+by\b", sol, _re.I))
+            if m:
+                start = m[-1].end()
+                end_m = _re.search(r"\b(limit|offset)\b|;", sol[start:], _re.I)
+                end = start + end_m.start() if end_m else len(sol)
+                shuffled = sol[:end].rstrip() + ", random()" + (" " if end_m else "") + sol[end:]
+                for setup in [case["setup"], case["alt"]]:
+                    if not setup.strip():
+                        continue
+                    con = _cq_sql_db(setup)
+                    try:
+                        plain = _cq_sql_last_rows(_cq_sql_exec(con, sol))
+                        for _ in range(8):
+                            other = _cq_sql_last_rows(_cq_sql_exec(con, shuffled))
+                            if plain and other and plain[1] != other[1]:
+                                out["ties"] = True
+                                break
+                    finally:
+                        con.close()
+    except BaseException:
+        out["mainRows"], out["altSame"] = None, False
+    results.append(out)
+
+runs = []
+for run in data["runs"]:
+    raw = json.loads(_cq_sql_run(run["sql"], run["setup"]))
+    runs.append(raw["sqlError"]["message"] if raw.get("sqlError") else None)
+
+json.dump({"cases": results, "runs": runs}, sys.stdout)
+`
+
 function findPython() {
   const candidates = [process.env.CQ_PYTHON, 'python3', 'python'].filter(Boolean)
   for (const cmd of candidates) {
@@ -180,6 +286,32 @@ function runPython(python, helpers, cases) {
   })
   if (r.status !== 0) throw new Error(`Python runner failed:\n${r.stderr}`)
   return JSON.parse(r.stdout)
+}
+
+function runSql(python, helpers, data) {
+  if (data.cases.length === 0 && data.runs.length === 0) return { cases: [], runs: [] }
+  const r = spawnSync(python, ['-c', SQL_RUNNER, helpers], {
+    input: JSON.stringify(data),
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+    timeout: 15 * 60 * 1000,
+  })
+  if (r.status !== 0) throw new Error(`SQL runner failed:\n${r.stderr}`)
+  return JSON.parse(r.stdout)
+}
+
+/** Runnable SQL in a lesson: the sandbox's code, its samples and the "Try it" code blocks. */
+function lessonSql(level) {
+  const blocks = []
+  if (level.intro.sandboxCode) blocks.push(['sandbox', level.intro.sandboxCode])
+  for (const snippet of level.sandboxSnippets ?? []) blocks.push([`sample "${snippet.label}"`, snippet.code])
+  for (const match of (level.intro.bodyMarkdown ?? '').matchAll(/```\w*\n([\s\S]*?)```/g)) {
+    const code = match[1]
+    if (/^\s*(SELECT|WITH|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER)\b/i.test(code.split('\n').find((l) => l.trim() && !l.trim().startsWith('--')) ?? '')) {
+      blocks.push(['"Try it" block', code])
+    }
+  }
+  return blocks
 }
 
 function checkQuiz(question) {
@@ -209,9 +341,18 @@ for (const lang of rootIndex.languages) {
     const sectionIssues = []
     const cases = []
     const caseRefs = []
+    const sqlData = { cases: [], runs: [] }
+    const sqlRefs = []
+    const runRefs = []
     let challengeCount = 0
 
     for (const level of file.levels) {
+      if (level.database) {
+        for (const [what, sql] of lessonSql(level)) {
+          sqlData.runs.push({ sql, setup: level.database.setupSql })
+          runRefs.push({ section: sectionKey, level: level.id, item: what })
+        }
+      }
       for (const ch of level.challenges) {
         challengeCount += 1
         const where = { section: sectionKey, level: level.id, item: ch.title, id: ch.id }
@@ -221,6 +362,19 @@ for (const lang of rootIndex.languages) {
         if (!ch.solution?.trim()) add('no-solution')
         const mode = ch.validation?.mode
         if (lang.id === 'python' && (mode === 'includesAll' || mode === 'regex')) add('text-matched', mode)
+        if (mode === 'sql_tests') {
+          if (!ch.solution?.trim()) continue
+          sqlData.cases.push({
+            setup: level.database?.setupSql ?? '',
+            alt: level.database?.altSetupSql ?? '',
+            solution: ch.solution,
+            ordered: Boolean(ch.validation.ordered),
+            checks: ch.validation.tests ?? [],
+            variants: { solution: ch.solution, starter: ch.starterCode ?? '', empty: '' },
+          })
+          sqlRefs.push({ where, starterBlank: !(ch.starterCode ?? '').trim(), changesData: Boolean(ch.validation.tests?.length) })
+          continue
+        }
         if (mode !== 'python_tests') continue
         if (!ch.validation.tests?.length) {
           add('no-tests')
@@ -249,6 +403,23 @@ for (const lang of rootIndex.languages) {
       if (res.empty.passed) add('empty-passes')
       else if (!starterBlank && res.starter.passed) add('starter-passes')
       else if (res.typed?.passed && !typedAllowed.has(where.id)) add('typed-passes')
+    })
+
+    const sql = runSql(python, helpers, sqlData)
+    sql.cases.forEach((res, i) => {
+      const { where, starterBlank, changesData } = sqlRefs[i]
+      const add = (rule, detail = '') => sectionIssues.push({ ...where, rule, detail })
+      const v = res.variants
+      if (!v.solution.passed) add('solution-fails', v.solution.detail)
+      if (v.empty.passed) add('empty-passes')
+      else if (!starterBlank && v.starter.passed) add('starter-passes')
+      else if (v.typed?.passed && !typedAllowed.has(where.id)) add('typed-passes')
+      if (!changesData && res.mainRows === 0) add('empty-result')
+      if (res.altSame && !typedAllowed.has(where.id)) add('alt-same')
+      if (res.ties) add('order-ties')
+    })
+    sql.runs.forEach((message, i) => {
+      if (message) sectionIssues.push({ ...runRefs[i], rule: 'sandbox-error', detail: message })
     })
 
     const strict = allStrict || strictSections.has(sectionKey)

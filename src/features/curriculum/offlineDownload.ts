@@ -1,5 +1,5 @@
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
-import { preparePythonOffline } from './pythonSandbox'
+import { preparePythonOffline, prepareSqlOffline } from './pythonSandbox'
 import { prepareROffline } from './rSandbox'
 import { requestPersistentStorageOnce } from './storagePersistence'
 import type { LanguageBundle } from './types'
@@ -20,7 +20,7 @@ export interface OfflineState {
   runtimes: string[]
 }
 
-export type OfflineStep = 'lessons' | 'python' | 'r'
+export type OfflineStep = 'lessons' | 'python' | 'sql' | 'r'
 
 export function loadOfflineState(): OfflineState | null {
   try {
@@ -105,6 +105,17 @@ export async function downloadForOffline(options: {
       throw error
     }
     runtimes.push('python')
+  }
+  if (runtimeCourses.includes('sql') && bundles.sql) {
+    throwIfCancelled()
+    onStep?.('sql')
+    try {
+      await prepareSqlOffline(signal)
+    } catch (error) {
+      throwIfCancelled()
+      throw error
+    }
+    runtimes.push('sql')
   }
   if (runtimeCourses.includes('r') && bundles.r) {
     throwIfCancelled()

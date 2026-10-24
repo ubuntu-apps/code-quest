@@ -4,13 +4,16 @@ import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported } from '../sandboxSupport'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import { useAdminMode } from '../adminMode'
-import type { Challenge } from '../types'
+import type { Challenge, SqlTable } from '../types'
 import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
 import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
 import { CodeEditor } from '../codeEditor'
 import { namesInMarkdown } from '../codeEditor/namesInMarkdown'
 import { pythonErrorSummaryLine } from '../pythonErrorHelper'
 import { rErrorSummaryLine } from '../rErrorHelper'
+import { sqlErrorSummaryLine } from '../sqlErrorHelper'
+import { SqlTablesNote } from './SqlTablesNote'
+import { sqlTableNames } from '../sqlWords'
 import { PythonErrorPanel } from './PythonErrorPanel'
 import { ValueDiff } from './ValueDiff'
 import { HighlightedCode } from './HighlightedCode'
@@ -54,6 +57,8 @@ interface ChallengeCardProps {
   onToggleErrorExpanded: () => void
   /** Where to go after solving this one: the next unsolved challenge, or the quiz. */
   next?: { label: string; go: () => void }
+  /** SQL lessons: the tables the answer can use. */
+  tables?: SqlTable[]
 }
 
 export function ChallengeCard({
@@ -81,6 +86,7 @@ export function ChallengeCard({
   onDelete,
   onToggleErrorExpanded,
   next,
+  tables,
 }: ChallengeCardProps) {
   const { isEditingLocal } = useEditorMode()
   // Admin mode (for testing) opens answers straight away, without the XP penalty.
@@ -90,8 +96,11 @@ export function ChallengeCard({
   const [showHint, setShowHint] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const hintText = ch.hint ?? ch.hints?.[0]
-  const isRuntimeTests =
-    ch.validation.mode === 'python_tests' || ch.validation.mode === 'r_tests'
+  const mode = ch.validation.mode
+  const isSql = mode === 'sql_tests'
+  const isRuntimeTests = mode === 'python_tests' || mode === 'r_tests' || isSql
+  // Python and SQL run in the same worker, so both can be run, stopped and checked the same way.
+  const runsInWorker = mode === 'python_tests' || isSql
   // Very old browsers can't run the code runtimes, so these challenges can't be checked there.
   const cannotRun = isRuntimeTests && !isCodeRuntimeSupported()
   const answerNoteId = useId()
@@ -99,7 +108,7 @@ export function ChallengeCard({
   const running = runningMessage !== null
   const busy = checking || running
   // Run shows what the code prints before it is graded (Python challenges only).
-  const canRun = ch.validation.mode === 'python_tests' && !cannotRun
+  const canRun = runsInWorker && !cannotRun
   // An empty box next to an error says nothing, so it shows only when there is output or no error.
   const showOutput = output !== null && (output !== '' || running || !pyRuntimeErr)
   // The answer unlocks after one Check attempt, so learners try first.
@@ -127,7 +136,10 @@ export function ChallengeCard({
 
   const challengeNumber = `Challenge ${chIndex + 1} of ${totalChallenges}`
   // Names written as code in the instructions, like `day_off`, are suggested while typing.
-  const promptNames = useMemo(() => namesInMarkdown(ch.promptMarkdown), [ch.promptMarkdown])
+  const promptNames = useMemo(
+    () => [...namesInMarkdown(ch.promptMarkdown), ...sqlTableNames(isSql ? tables : undefined)],
+    [ch.promptMarkdown, isSql, tables],
+  )
 
   const toggleAnswer = () => {
     if (!showAnswer && !done && !answerViewed && !isEditingLocal && !isAdmin) onRevealAnswer()
@@ -236,6 +248,7 @@ export function ChallengeCard({
             {ch.solution ? <HighlightedCode code={ch.solution} /> : 'No answer available for this challenge yet.'}
           </pre>
         ) : null}
+        {isSql && tables ? <SqlTablesNote tables={tables} /> : null}
         <label className="cq-label" id={`code-label-${ch.id}`} htmlFor={`code-${ch.id}`}>
           Your answer
         </label>
@@ -243,16 +256,18 @@ export function ChallengeCard({
           suggestNames={promptNames}
           id={`code-${ch.id}`}
           labelId={`code-label-${ch.id}`}
-          language={ch.validation.mode === 'r_tests' ? 'plain' : 'python'}
+          language={mode === 'r_tests' ? 'plain' : isSql ? 'sql' : 'python'}
           rows={4}
           value={draft}
           onChange={onDraftChange}
           errorLine={isRuntimeTests && pyRuntimeErr?.line != null ? pyRuntimeErr.line : null}
           errorSummary={
             isRuntimeTests && pyRuntimeErr?.detail
-              ? ch.validation.mode === 'r_tests'
+              ? mode === 'r_tests'
                 ? rErrorSummaryLine(pyRuntimeErr.detail)
-                : pythonErrorSummaryLine(pyRuntimeErr.detail)
+                : isSql
+                  ? sqlErrorSummaryLine(pyRuntimeErr.detail)
+                  : pythonErrorSummaryLine(pyRuntimeErr.detail)
               : null
           }
           errorTitle={isRuntimeTests ? (pyRuntimeErr?.title ?? null) : null}
@@ -278,7 +293,7 @@ export function ChallengeCard({
           >
             {checking ? 'Checking…' : status === 'failed' ? 'Try again' : done ? 'Check again' : 'Check'}
           </button>
-          {busy && ch.validation.mode === 'python_tests' ? (
+          {busy && runsInWorker ? (
             <button type="button" className="cq-btn" onClick={onStopCheck}>
               Stop
             </button>
@@ -308,7 +323,9 @@ export function ChallengeCard({
         {showOutput ? (
           <>
             <div className="cq-label">Output</div>
-            <pre className="cq-sandbox-output">{output || (running ? '' : 'Your code ran but printed nothing.')}</pre>
+            <pre className={`cq-sandbox-output${isSql ? ' cq-sandbox-output--table' : ''}`}>
+              {output || (running ? '' : 'Your code ran but printed nothing.')}
+            </pre>
           </>
         ) : null}
         {isRuntimeTests && pyRuntimeErr && (

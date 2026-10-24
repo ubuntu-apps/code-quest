@@ -13,12 +13,19 @@ const runtimeAssertionTestSchema = z.object({
 })
 
 const validationSchema = z.object({
-  mode: z.enum(['regex', 'includesAll', 'equalsNormalized', 'python_tests', 'r_tests']),
+  mode: z.enum(['regex', 'includesAll', 'equalsNormalized', 'python_tests', 'r_tests', 'sql_tests']),
   pattern: z.string().optional(),
   needles: z.array(z.string()).optional(),
   expected: z.string().optional(),
   setupCode: z.string().optional(),
   tests: z.array(runtimeAssertionTestSchema).optional(),
+  ordered: z.boolean().optional(),
+})
+
+const sqlDatabaseSchema = z.object({
+  setupSql: z.string(),
+  altSetupSql: z.string().optional(),
+  tables: z.array(z.object({ name: z.string(), columns: z.array(z.string()) })),
 })
 
 const mcqChoiceSchema = z.object({
@@ -90,6 +97,7 @@ const levelSchema = z.object({
     passingScorePercent: z.number().optional(),
     questions: z.array(testQuestionSchema),
   }),
+  database: sqlDatabaseSchema.optional(),
 })
 
 export const sectionFileSchema = z.object({

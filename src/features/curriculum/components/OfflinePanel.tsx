@@ -9,11 +9,12 @@ import {
 } from '../offlineDownload'
 
 /** Courses whose code runs in the browser and can be downloaded. */
-const RUNTIME_COURSES = new Set(['python', 'r'])
+const RUNTIME_COURSES = new Set(['python', 'sql', 'r'])
 
 const STEP_LABEL: Record<OfflineStep, string> = {
   lessons: 'Downloading lessons…',
   python: 'Downloading Python and the packages lessons use…',
+  sql: 'Downloading the SQL engine…',
   r: 'Downloading R…',
 }
 

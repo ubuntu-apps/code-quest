@@ -34,6 +34,8 @@ import {
 import { localCompletionSource, python } from '@codemirror/lang-python'
 import { tags as t } from '@lezer/highlight'
 import type { KeyBarTarget } from './CodeKeyBar'
+import { sqlLanguage } from './sqlLanguage'
+import { SQL_FUNCTIONS, SQL_KEYWORDS } from '../sqlWords'
 
 /** The error from the last Run or Check, shown on its line. */
 export interface EditorError {
@@ -53,7 +55,7 @@ export interface EditorError {
 export interface CodeMirrorEditorProps {
   value: string
   onChange: (value: string) => void
-  language: 'python' | 'plain'
+  language: 'python' | 'sql' | 'plain'
   /** Height to start at, in lines; the editor grows with the code. */
   minLines: number
   /** Element ids naming and describing the editor (its label, the keyboard hint). */
@@ -103,6 +105,42 @@ function suggestions(extraNames: () => string[]): CompletionSource {
     add((await localCompletionSource(context))?.options, 2)
     add(extraNames().map((label) => ({ label, type: 'variable' })), 1)
     add((await pythonWords(context))?.options, 0)
+    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w{2,}$/ } : null
+  }
+}
+
+const SQL_WORDS: Completion[] = [
+  ...SQL_KEYWORDS.map((label) => ({ label, type: 'keyword' })),
+  ...SQL_FUNCTIONS.map((label) => ({ label, type: 'function' })),
+]
+const SQL_KEYWORD_SET = new Set(SQL_KEYWORDS.map((w) => w.toLowerCase()))
+
+/**
+ * SQL suggestions: the lesson's table and column names first (and other names already
+ * typed), then SQL's keywords and functions. Like Python's, they start from the second letter.
+ */
+function sqlSuggestions(extraNames: () => string[]): CompletionSource {
+  const sqlWords = completeFromList(SQL_WORDS)
+  return async (context: CompletionContext) => {
+    const word = context.matchBefore(/\w+/)
+    if (!context.explicit && (!word || word.to - word.from < 2)) return null
+    const from = word ? word.from : context.pos
+    const byLabel = new Map<string, Completion>()
+    const add = (options: readonly Completion[] | undefined, boost: number) => {
+      for (const option of options ?? []) {
+        if (!byLabel.has(option.label.toLowerCase())) byLabel.set(option.label.toLowerCase(), { ...option, boost })
+      }
+    }
+    add(extraNames().map((label) => ({ label, type: 'variable' })), 2)
+    const typed = context.state.doc.toString().match(/[A-Za-z_]\w+/g) ?? []
+    const current = word ? context.state.sliceDoc(word.from, word.to) : ''
+    add(
+      [...new Set(typed)]
+        .filter((name) => name !== current && !SQL_KEYWORD_SET.has(name.toLowerCase()))
+        .map((label) => ({ label, type: 'variable' })),
+      1,
+    )
+    add((await sqlWords(context))?.options, 0)
     return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w{2,}$/ } : null
   }
 }
@@ -271,9 +309,11 @@ export default function CodeMirrorEditor({
           // Suggestions while typing: names already used in this code (variables,
           // functions), Python's keywords and common built-ins such as print and range.
           // Only words that start with what was typed. Enter or Tab picks one; Escape closes.
-          language === 'python'
+          language !== 'plain'
             ? autocompletion({
-                override: [suggestions(() => latest.current.suggestNames ?? [])],
+                override: [
+                  (language === 'sql' ? sqlSuggestions : suggestions)(() => latest.current.suggestNames ?? []),
+                ],
                 filterStrict: true,
                 icons: false,
                 maxRenderedOptions: 8,
@@ -281,7 +321,7 @@ export default function CodeMirrorEditor({
             : [],
           EditorState.tabSize.of(4),
           indentUnit.of('    '),
-          language === 'python' ? python() : [],
+          language === 'python' ? python() : language === 'sql' ? sqlLanguage : [],
           syntaxHighlighting(codeQuestHighlight),
           keymap.of([
             ...closeBracketsKeymap,

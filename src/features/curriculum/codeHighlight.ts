@@ -1,3 +1,5 @@
+import { SQL_FUNCTIONS, SQL_KEYWORDS } from './sqlWords'
+
 /** Kinds of Python token that get their own colour. */
 export type TokenKind = 'keyword' | 'builtin' | 'constant' | 'string' | 'number' | 'comment' | 'name' | 'decorator' | 'plain'
 
@@ -110,4 +112,58 @@ export function looksLikePython(code: string): boolean {
   if (lines.length === 0) return false
   if (lines.some((l) => NOT_CODE_LINE.some((re) => re.test(l)))) return false
   return lines.some((l) => CODE_LINE.some((re) => re.test(l)))
+}
+
+const SQL_TOKEN_RE = new RegExp(
+  [
+    String.raw`(--[^\n]*|\/\*[\s\S]*?(?:\*\/|$))`, // 1 comment
+    String.raw`('(?:[^']|'')*'?)`, // 2 text
+    String.raw`(\b\d+(?:\.\d*)?(?:[eE][+-]?\d+)?\b|\.\d+\b)`, // 3 number
+    String.raw`([A-Za-z_][\w$]*)`, // 4 name
+  ].join('|'),
+  'g',
+)
+
+const SQL_KEYWORD_SET = new Set(SQL_KEYWORDS.map((w) => w.toLowerCase()))
+const SQL_FUNCTION_SET = new Set(SQL_FUNCTIONS.map((w) => w.toLowerCase()))
+
+/** Splits SQL into coloured tokens: keywords, functions, text, numbers and comments. */
+export function highlightSql(code: string): Token[] {
+  const tokens: Token[] = []
+  let last = 0
+  SQL_TOKEN_RE.lastIndex = 0
+  let m: RegExpExecArray | null
+  while ((m = SQL_TOKEN_RE.exec(code)) !== null) {
+    push(tokens, code.slice(last, m.index), 'plain')
+    const [text, comment, string, number, name] = m
+    if (comment) push(tokens, text, 'comment')
+    else if (string) push(tokens, text, 'string')
+    else if (number) push(tokens, text, 'number')
+    else if (name) {
+      const lower = name.toLowerCase()
+      const isCall = code.slice(m.index + text.length).trimStart().startsWith('(')
+      push(
+        tokens,
+        text,
+        lower === 'null' || lower === 'true' || lower === 'false'
+          ? 'constant'
+          : SQL_KEYWORD_SET.has(lower)
+            ? 'keyword'
+            : isCall && SQL_FUNCTION_SET.has(lower)
+              ? 'builtin'
+              : 'plain',
+      )
+    }
+    last = m.index + text.length
+  }
+  push(tokens, code.slice(last), 'plain')
+  return tokens
+}
+
+const SQL_STATEMENT = /^\s*(SELECT|WITH|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER)\b/i
+
+/** Whether a lesson's code block is SQL that can be run (not a result table or a sketch). */
+export function looksLikeSql(code: string): boolean {
+  const lines = code.split('\n').filter((l) => l.trim() !== '' && !l.trim().startsWith('--'))
+  return lines.length > 0 && SQL_STATEMENT.test(lines[0])
 }

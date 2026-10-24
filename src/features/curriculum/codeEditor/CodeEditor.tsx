@@ -28,7 +28,7 @@ export interface CodeEditorProps {
   id: string
   value: string
   onChange: (value: string) => void
-  language?: 'python' | 'plain'
+  language?: 'python' | 'sql' | 'plain'
   /** Starting height in lines. */
   rows?: number
   /** Extra classes for the plain text box (e.g. pass/fail borders). */
