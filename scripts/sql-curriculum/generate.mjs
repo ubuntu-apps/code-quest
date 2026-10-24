@@ -54,6 +54,8 @@ const index = {
   id: 'sql',
   title: 'SQL',
   sections: written.map((s) => ({ id: s.sectionId, title: s.title, path: s.filename })),
+  // Sections without lessons yet are listed as "Coming soon".
+  upcoming: COURSE.filter((s) => s.topics.length === 0).map((s) => ({ id: s.sectionId, title: s.title })),
 }
 await writeFile(resolve(outDir, 'index.json'), `${JSON.stringify(index, null, 2)}\n`, 'utf8')
 console.log('Wrote index.json')

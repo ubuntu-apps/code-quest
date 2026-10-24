@@ -130,6 +130,8 @@ export interface LanguageIndex {
   id: string
   title: string
   sections: SectionRef[]
+  /** Sections still being written: listed after the others as "Coming soon", with no lessons yet. */
+  upcoming?: { id: string; title: string }[]
 }
 
 export interface RootIndex {

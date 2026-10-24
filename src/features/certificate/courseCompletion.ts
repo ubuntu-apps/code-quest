@@ -39,7 +39,8 @@ export function courseCompletion(languageId: string, bundle: LanguageBundle): Co
       lastFinishedTitle = sectionRef.title
     }
   }
-  const sectionsTotal = bundle.sections.length
+  // Sections still being written count too, so the course certificate waits for the whole course.
+  const sectionsTotal = bundle.sections.length + (bundle.index.upcoming?.length ?? 0)
   return {
     sectionsTotal,
     sectionsFinished,
