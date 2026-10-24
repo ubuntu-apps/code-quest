@@ -16,14 +16,14 @@ function tablesOf(schema) {
   }))
 }
 
-function insert(table, columns, rows) {
+export function insert(table, columns, rows) {
   const value = (v) => (v === null ? 'NULL' : typeof v === 'string' ? `'${v.replace(/'/g, "''")}'` : String(v))
   return `INSERT INTO ${table} (${columns.join(', ')}) VALUES\n${rows
     .map((row) => `  (${row.map(value).join(', ')})`)
     .join(',\n')};`
 }
 
-function database(schema, data, altData) {
+export function database(schema, data, altData) {
   return { setupSql: `${schema}\n${data}\n`, altSetupSql: `${schema}\n${altData}\n`, tables: tablesOf(schema) }
 }
 
