@@ -32,10 +32,12 @@
  */
 import { queryingTopics } from './querying.mjs'
 import { queryingProjects } from './querying-projects.mjs'
+import { expressionsTopics } from './expressions.mjs'
+import { expressionsProjects } from './expressions-projects.mjs'
 
 export const COURSE = [
   { sectionId: 'querying', filename: 'querying.json', title: 'Querying a table', topics: [...queryingTopics, ...queryingProjects] },
-  { sectionId: 'expressions', filename: 'expressions.json', title: 'Functions and expressions', topics: [] },
+  { sectionId: 'expressions', filename: 'expressions.json', title: 'Functions and expressions', topics: [...expressionsTopics, ...expressionsProjects] },
   { sectionId: 'aggregation', filename: 'aggregation.json', title: 'Summarising data', topics: [] },
   { sectionId: 'joins', filename: 'joins.json', title: 'Joining tables', topics: [] },
   { sectionId: 'subqueries', filename: 'subqueries.json', title: 'Subqueries and sets', topics: [] },
