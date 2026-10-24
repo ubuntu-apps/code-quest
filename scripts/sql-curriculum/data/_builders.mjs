@@ -88,3 +88,11 @@ export function mc(prompt, options, correct, explanation) {
 export function qShort(prompt, expected, explanation) {
   return { type: 'shortText', prompt, validation: { mode: 'equalsNormalized', expected }, explanation }
 }
+
+/**
+ * Short typed answer where case matters (like strftime's %W and %w) or several spellings
+ * are right: checked with a regular expression. `expected` is the answer shown on reveal.
+ */
+export function qPattern(prompt, pattern, expected, explanation) {
+  return { type: 'shortText', prompt, validation: { mode: 'regex', pattern, expected }, explanation }
+}

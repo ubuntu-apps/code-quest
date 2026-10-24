@@ -1,5 +1,5 @@
 // Summarising data: the section's projects (easy, medium, hard).
-import { makeProject, mc, qShort, query, snippet } from './_builders.mjs'
+import { makeProject, mc, qPattern, qShort, query, snippet } from './_builders.mjs'
 import { AGGREGATION_DB } from './aggregation-db.mjs'
 
 const cafeReport = makeProject('easy', {
@@ -56,7 +56,7 @@ const cafeReport = makeProject('easy', {
       'It tests a group total.'),
     mc("Which counts the cash sales in each store while keeping every store?", ["`WHERE payment = 'cash'`", "`SUM(CASE WHEN payment = 'cash' THEN 1 ELSE 0 END)`", "`COUNT(cash)`", "`HAVING payment = 'cash'`"], 1,
       'A conditional sum counts some rows without removing the others.'),
-    qShort("Which `strftime` code gives the week of the year?", '%W',
+    qPattern("Which `strftime` code gives the week of the year? (Capitals matter.)", '^\\s*%W\\s*$', '%W',
       '%W is the week number, with weeks starting on Monday.'),
     mc('Why add `product` after `revenue DESC` in ORDER BY?', ['It is required', 'To group by product', 'To show the product', 'To fix the order of equal takings'], 3,
       'A tie-breaker makes the order the same every time.'),
@@ -113,7 +113,7 @@ const examBoard = makeProject('medium', {
     }),
   ],
   questions: [
-    mc('Which counts absences per student?', ['`COUNT(*) - COUNT(score)`', '`COUNT(score)`', '`COUNT(NULL)`', '`SUM(score IS NULL)` only in other databases'], 0,
+    mc('Which counts absences per student?', ['`COUNT(*) - COUNT(score)`', '`COUNT(score)`', '`COUNT(NULL)`', '`SUM(score)`'], 0,
       'All rows minus the rows with a score.'),
     mc('Why does a NULL score not count as a D in `SUM(CASE WHEN score < 60 THEN 1 ELSE 0 END)`?', ['NULL is 0', 'CASE skips NULL rows', '`NULL < 60` is not true, so it falls to ELSE 0', 'It does count'], 2,
       'Comparisons with NULL are not true.'),

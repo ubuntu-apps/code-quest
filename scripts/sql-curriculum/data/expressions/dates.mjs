@@ -1,5 +1,5 @@
 // Functions and expressions: Dates.
-import { makeTopic, mc, qShort, query, snippet } from '../_builders.mjs'
+import { makeTopic, mc, qPattern, query, snippet } from '../_builders.mjs'
 import { EXPRESSIONS_DB } from '../expressions-db.mjs'
 
 export default makeTopic({
@@ -7,7 +7,7 @@ export default makeTopic({
   title: 'Dates',
   database: EXPRESSIONS_DB,
   paragraphs: [
-    "SQLite has no separate date type: dates are stored as text in the form `YYYY-MM-DD`, such as `2026-03-01`. That form is chosen on purpose. With the year first, then the month, then the day, sorting the text alphabetically also sorts the dates, and comparisons work too:",
+    "SQLite has no separate date type: dates are usually stored as text in the form `YYYY-MM-DD`, such as `2026-03-01`. That form is chosen on purpose. With the year first, then the month, then the day, sorting the text alphabetically also sorts the dates, and comparisons work too:",
     "```\nSELECT id, order_date FROM orders\nWHERE order_date BETWEEN '2026-03-01' AND '2026-03-31'\nORDER BY order_date;\n```",
     "Months and days always have two digits (`03`, not `3`): without them, `'2026-10-02'` would sort before `'2026-9-28'`.",
     "`strftime(format, date)` takes the parts you want out of a date, as text. `%Y` is the year, `%m` the month, `%d` the day, `%w` the day of the week (`0` is Sunday, `6` is Saturday) and `%j` the day of the year. Other characters are kept as they are:",
@@ -85,7 +85,7 @@ export default makeTopic({
       '%Y is the year, given back as text.'),
     mc("What does `strftime('%w', date)` give for a Sunday?", ["`'7'`", "`'Sunday'`", "`'1'`", "`'0'`"], 3,
       '%w counts the days of the week from 0 (Sunday) to 6 (Saturday).'),
-    qShort("Which `strftime` code gives the month, like `03`?", '%m',
+    qPattern("Which `strftime` code gives the month, like `03`? (Capitals matter.)", '^\\s*%m\\s*$', '%m',
       "`%m` is the two-digit month; `%M` would be minutes."),
     mc("Which finds the customers who joined in 2024?", ["`WHERE strftime('%Y', joined) = '2024'`", '`WHERE joined = 2024`', "`WHERE strftime('%m', joined) = '2024'`", "`WHERE joined LIKE '%2024'`"], 0,
       'Take the year out of the date and compare it with the text 2024.'),

@@ -741,7 +741,7 @@
           {
             "id": "select_columns_q6",
             "type": "mcq",
-            "prompt": "How do you name a column `Book title`, with a space?",
+            "prompt": "What is the standard way to name a column `Book title`, with a space?",
             "choices": [
               {
                 "id": "a",
@@ -757,11 +757,11 @@
               },
               {
                 "id": "d",
-                "label": "`AS [Book title]` only"
+                "label": "`AS (Book title)`"
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "Names with spaces go in double quotes; single quotes are for text values."
+            "explanation": "Names with spaces go in double quotes; single quotes are for text values. (SQLite also accepts single quotes here, but that is not standard.)"
           },
           {
             "id": "select_columns_q7",
@@ -1094,7 +1094,7 @@
               },
               {
                 "id": "b",
-                "label": "`WHERE species == \"dog\"` only"
+                "label": "`WHERE 'species' = 'dog'`"
               },
               {
                 "id": "c",
@@ -1106,7 +1106,7 @@
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "Text values go in single quotes; without them SQLite reads `dog` as a column name."
+            "explanation": "Text values go in single quotes; without them SQLite reads `dog` as a column name. Quoting the column too makes it the text species, which never equals dog."
           },
           {
             "id": "where_basics_q3",
@@ -3928,7 +3928,7 @@
               },
               {
                 "id": "c",
-                "label": "`LIMIT 2 OFFSET 1` only"
+                "label": "`LIMIT 2 OFFSET 1`"
               },
               {
                 "id": "d",
@@ -4112,7 +4112,7 @@
         {
           "id": "calculated_columns_ch6",
           "title": "Medium: How old is the book?",
-          "promptMarkdown": "Show each book's `title` and how many years it was before 2026 when it came out, in a column called `years_old`.",
+          "promptMarkdown": "Show each book's `title` and how many years before 2026 it came out (2026 minus its `year`), in a column called `years_old`.",
           "starterCode": "",
           "hint": "`2026 - year AS years_old`.",
           "solution": "SELECT title, 2026 - year AS years_old FROM books;",

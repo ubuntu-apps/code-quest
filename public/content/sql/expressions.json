@@ -2705,7 +2705,7 @@
       ],
       "intro": {
         "title": "Dates",
-        "bodyMarkdown": "SQLite has no separate date type: dates are stored as text in the form `YYYY-MM-DD`, such as `2026-03-01`. That form is chosen on purpose. With the year first, then the month, then the day, sorting the text alphabetically also sorts the dates, and comparisons work too:\n\n```\nSELECT id, order_date FROM orders\nWHERE order_date BETWEEN '2026-03-01' AND '2026-03-31'\nORDER BY order_date;\n```\n\nMonths and days always have two digits (`03`, not `3`): without them, `'2026-10-02'` would sort before `'2026-9-28'`.\n\n`strftime(format, date)` takes the parts you want out of a date, as text. `%Y` is the year, `%m` the month, `%d` the day, `%w` the day of the week (`0` is Sunday, `6` is Saturday) and `%j` the day of the year. Other characters are kept as they are:\n\n```\nSELECT order_date,\n  strftime('%Y', order_date) AS year,\n  strftime('%m', order_date) AS month,\n  strftime('%d/%m/%Y', order_date) AS written\nFROM orders;\n```\n\nBecause the parts are text, compare them with text: `strftime('%Y', joined) = '2024'`, or `strftime('%w', order_date) IN ('0', '6')` for weekends.\n\n`date(text)` gives a date in the standard form (or `NULL` if the text isn't a date). `date('now')` is today's date, but its result changes every day, so the challenges here use fixed dates.",
+        "bodyMarkdown": "SQLite has no separate date type: dates are usually stored as text in the form `YYYY-MM-DD`, such as `2026-03-01`. That form is chosen on purpose. With the year first, then the month, then the day, sorting the text alphabetically also sorts the dates, and comparisons work too:\n\n```\nSELECT id, order_date FROM orders\nWHERE order_date BETWEEN '2026-03-01' AND '2026-03-31'\nORDER BY order_date;\n```\n\nMonths and days always have two digits (`03`, not `3`): without them, `'2026-10-02'` would sort before `'2026-9-28'`.\n\n`strftime(format, date)` takes the parts you want out of a date, as text. `%Y` is the year, `%m` the month, `%d` the day, `%w` the day of the week (`0` is Sunday, `6` is Saturday) and `%j` the day of the year. Other characters are kept as they are:\n\n```\nSELECT order_date,\n  strftime('%Y', order_date) AS year,\n  strftime('%m', order_date) AS month,\n  strftime('%d/%m/%Y', order_date) AS written\nFROM orders;\n```\n\nBecause the parts are text, compare them with text: `strftime('%Y', joined) = '2024'`, or `strftime('%w', order_date) IN ('0', '6')` for weekends.\n\n`date(text)` gives a date in the standard form (or `NULL` if the text isn't a date). `date('now')` is today's date, but its result changes every day, so the challenges here use fixed dates.",
         "sandboxCode": "SELECT order_date,\n  strftime('%Y', order_date) AS year,\n  strftime('%m', order_date) AS month,\n  strftime('%d/%m/%Y', order_date) AS written\nFROM orders;",
         "readMore": {
           "label": "SQLite: date and time functions",
@@ -2941,9 +2941,10 @@
           {
             "id": "dates_q5",
             "type": "shortText",
-            "prompt": "Which `strftime` code gives the month, like `03`?",
+            "prompt": "Which `strftime` code gives the month, like `03`? (Capitals matter.)",
             "validation": {
-              "mode": "equalsNormalized",
+              "mode": "regex",
+              "pattern": "^\\s*%m\\s*$",
               "expected": "%m"
             },
             "explanation": "`%m` is the two-digit month; `%M` would be minutes."
@@ -3388,7 +3389,8 @@
             "type": "shortText",
             "prompt": "Complete the modifier that adds a year: `date(joined, '___')`",
             "validation": {
-              "mode": "equalsNormalized",
+              "mode": "regex",
+              "pattern": "^\\s*\\+\\s*1\\s+years?\\s*$",
               "expected": "+1 year"
             },
             "explanation": "Modifiers like '+1 year', '-3 months' and '+7 days' move a date."
