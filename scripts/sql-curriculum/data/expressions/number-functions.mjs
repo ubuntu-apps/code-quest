@@ -60,11 +60,6 @@ export default makeTopic({
       hint: '`ABS(total - 100) AS distance ... ORDER BY distance LIMIT 3`.',
       solution: 'SELECT id, total, ABS(total - 100) AS distance FROM orders ORDER BY distance LIMIT 3;',
     }),
-    query('hard', 'Salaries in thousands', {
-      prompt: "Show each employee's `name` and salary in thousands, rounded to 1 decimal (65500 becomes 65.5), in a column called `thousands`.",
-      hint: '`ROUND(salary / 1000.0, 1) AS thousands`.',
-      solution: 'SELECT name, ROUND(salary / 1000.0, 1) AS thousands FROM employees;',
-    }),
     query('expert', 'What was paid', {
       prompt: 'For the orders with a discount, show the `id` and the amount paid after the discount, rounded to 2 decimals, called `paid`. Highest first.',
       hint: 'Paying (100 - discount) percent: `ROUND(total * (100 - discount) / 100.0, 2) AS paid`.',

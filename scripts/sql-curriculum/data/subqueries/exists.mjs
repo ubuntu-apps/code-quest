@@ -34,11 +34,6 @@ export default makeTopic({
       hint: '`WHERE NOT EXISTS (SELECT 1 FROM plays p WHERE p.listener_id = l.id)`.',
       solution: 'SELECT name\nFROM listeners l\nWHERE NOT EXISTS (SELECT 1 FROM plays p WHERE p.listener_id = l.id);',
     }),
-    query('easy', 'Unplayed tracks', {
-      prompt: 'Show the `title` of every track that has never been played, using `NOT EXISTS`.',
-      hint: '`FROM tracks t WHERE NOT EXISTS (SELECT 1 FROM plays p WHERE p.track_id = t.id)`.',
-      solution: 'SELECT title\nFROM tracks t\nWHERE NOT EXISTS (SELECT 1 FROM plays p WHERE p.track_id = t.id);',
-    }),
     query('medium', 'Premium followers', {
       prompt: 'Show the `name` of every artist followed by at least one premium listener.',
       hint: "`WHERE EXISTS (SELECT 1 FROM follows f JOIN listeners l ON l.id = f.listener_id WHERE f.artist_id = a.id AND l.plan = 'premium')`.",

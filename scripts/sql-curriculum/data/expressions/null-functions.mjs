@@ -81,8 +81,6 @@ export default makeTopic({
       'Any calculation with a missing value gives a missing value.'),
     mc("What does `COALESCE(NULL, NULL, 'x')` give?", ["`'x'`", '`NULL`', 'An error', "`'NULL'`"], 0,
       'COALESCE gives the first value that is not NULL.'),
-    mc('What does `COALESCE(phone, email)` give for a customer with both?', ['The email', 'Both, joined', 'The phone', 'NULL'], 2,
-      'The first non-NULL value wins, and the phone comes first.'),
     mc('How is `IFNULL(a, b)` different from `COALESCE(a, b)`?', ['IFNULL works on text only', 'IFNULL gives NULL back', 'COALESCE only takes one value', 'It takes exactly two values; COALESCE takes any number'], 3,
       'With two values they do the same; COALESCE is standard and takes more.'),
     mc('What does `NULLIF(0, 0)` give?', ['`NULL`', '`0`', '`1`', 'An error'], 0,

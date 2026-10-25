@@ -38,11 +38,6 @@ export default makeTopic({
       hint: '`age + 1 AS next_year`.',
       solution: 'SELECT name, age + 1 AS next_year FROM pets;',
     }),
-    query('easy', 'Grams', {
-      prompt: "Show each pet's `name` and its weight in grams (kilograms times 1000), in a column called `grams`.",
-      hint: '`weight_kg * 1000 AS grams`.',
-      solution: 'SELECT name, weight_kg * 1000 AS grams FROM pets;',
-    }),
     query('medium', 'Sale price', {
       prompt: "Show each product's `name` and its price with 20% off, rounded to 2 decimals, in a column called `sale_price`.",
       hint: '20% off means paying 80%: `ROUND(price * 0.8, 2) AS sale_price`.',

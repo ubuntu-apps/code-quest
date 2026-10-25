@@ -31,12 +31,6 @@ export default makeTopic({
       solution: 'CREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT\n);',
       checks: [columns('guests'), tryIt('A guest without a name is refused', "INSERT INTO guests (email) VALUES ('x@example.com')")],
     }),
-    query('easy', 'Booked by default', {
-      prompt: "Create `tickets` with `id` (INTEGER PRIMARY KEY), `seat` (TEXT) and `status` (TEXT, default `'booked'`), then add a ticket for seat `A1` without giving a status.",
-      hint: "`status TEXT DEFAULT 'booked'`, then `INSERT INTO tickets (seat) VALUES ('A1');`",
-      solution: "CREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  seat TEXT,\n  status TEXT DEFAULT 'booked'\n);\nINSERT INTO tickets (seat) VALUES ('A1');",
-      checks: [columns('tickets'), rows('tickets', 'id')],
-    }),
     query('easy', 'Free unless priced', {
       prompt: "Create `events` with `id` (INTEGER PRIMARY KEY), `title` (TEXT, NOT NULL) and `price` (REAL, NOT NULL, default 0).",
       hint: '`price REAL NOT NULL DEFAULT 0`.',

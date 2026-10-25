@@ -60,25 +60,6 @@
         },
         {
           "id": "insert_rows_ch2",
-          "title": "Easy: A new book",
-          "promptMarkdown": "Add the book `The Tin Garden` by `A. Moreau`, with 2 copies, both available.",
-          "starterCode": "",
-          "hint": "`INSERT INTO books (title, author, copies, available) VALUES (…);`",
-          "solution": "INSERT INTO books (title, author, copies, available)\nVALUES ('The Tin Garden', 'A. Moreau', 2, 2);",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The books table is right afterwards",
-                "assertion": "SELECT * FROM books ORDER BY id"
-              }
-            ]
-          }
-        },
-        {
-          "id": "insert_rows_ch3",
           "title": "Easy: No email",
           "promptMarkdown": "Add a member called `Ivo Petrov` who joined on `2026-10-24` and has no email. Leave the email column out.",
           "starterCode": "",
@@ -97,7 +78,7 @@
           }
         },
         {
-          "id": "insert_rows_ch4",
+          "id": "insert_rows_ch3",
           "title": "Medium: A new loan",
           "promptMarkdown": "Member 7 borrows book 4 today (`2026-10-24`), due back on `2026-11-07`. Add the loan (it hasn't been returned, so leave `returned` out).",
           "starterCode": "",
@@ -116,7 +97,7 @@
           }
         },
         {
-          "id": "insert_rows_ch5",
+          "id": "insert_rows_ch4",
           "title": "Medium: Fix the missing columns",
           "promptMarkdown": "This should add the member `Jun Park` (`jun.park@example.com`, joined `2026-10-24`), but gives the error **table members has 5 columns but 3 values were supplied**. Fix it.",
           "starterCode": "INSERT INTO members VALUES ('Jun Park', 'jun.park@example.com', '2026-10-24');",
@@ -135,7 +116,7 @@
           }
         },
         {
-          "id": "insert_rows_ch6",
+          "id": "insert_rows_ch5",
           "title": "Medium: Trial member",
           "promptMarkdown": "Add `Kofi Asante` (`kofi.asante@example.com`, joined `2026-10-24`) with the status `trial` instead of the default.",
           "starterCode": "",
@@ -154,7 +135,7 @@
           }
         },
         {
-          "id": "insert_rows_ch7",
+          "id": "insert_rows_ch6",
           "title": "Hard: Fix the quote",
           "promptMarkdown": "This should add the book `The Baker's Map` by `E. Lund` (1 copy, 1 available), but gives a syntax error. Fix it.",
           "starterCode": "INSERT INTO books (title, author, copies, available)\nVALUES ('The Baker's Map', 'E. Lund', 1, 1);",
@@ -173,7 +154,7 @@
           }
         },
         {
-          "id": "insert_rows_ch8",
+          "id": "insert_rows_ch7",
           "title": "Hard: Due in two weeks",
           "promptMarkdown": "Member 2 borrows book 7 today. Add the loan with `borrowed` = `2026-10-24` and `due` worked out with `date()` as 14 days later.",
           "starterCode": "",
@@ -192,7 +173,7 @@
           }
         },
         {
-          "id": "insert_rows_ch9",
+          "id": "insert_rows_ch8",
           "title": "Expert: Choosing the id",
           "promptMarkdown": "Add `Lena Ortiz` (joined `2026-10-24`, no email) with the id `20`, then add `Mo Yilmaz` (joined `2026-10-24`, no email) without giving an id. Look at the id Mo gets.",
           "starterCode": "",
@@ -211,7 +192,7 @@
           }
         },
         {
-          "id": "insert_rows_ch10",
+          "id": "insert_rows_ch9",
           "title": "Expert: Fix the duplicate email",
           "promptMarkdown": "This should add `Ama Boateng`, who shares a family email with Ama Mensah, but gives **UNIQUE constraint failed: members.email** because emails must be different. Add her without an email instead.",
           "starterCode": "INSERT INTO members (name, email, joined)\nVALUES ('Ama Boateng', 'ama.mensah@example.com', '2026-10-24');",
@@ -595,25 +576,6 @@
         },
         {
           "id": "insert_many_ch3",
-          "title": "Easy: Two books",
-          "promptMarkdown": "Add two books in one statement: `The Tin Garden` by `A. Moreau` (2 copies, 2 available) and `Quiet Rooms` by `B. Lowe` (1 copy, 1 available).",
-          "starterCode": "",
-          "hint": "One INSERT, two brackets of values.",
-          "solution": "INSERT INTO books (title, author, copies, available) VALUES\n  ('The Tin Garden', 'A. Moreau', 2, 2),\n  ('Quiet Rooms', 'B. Lowe', 1, 1);",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The books table is right afterwards",
-                "assertion": "SELECT * FROM books ORDER BY id"
-              }
-            ]
-          }
-        },
-        {
-          "id": "insert_many_ch4",
           "title": "Medium: Only new titles",
           "promptMarkdown": "Copy into `books` only the arrivals whose title isn't in `books` yet, with all copies available.",
           "starterCode": "",
@@ -632,7 +594,7 @@
           }
         },
         {
-          "id": "insert_many_ch5",
+          "id": "insert_many_ch4",
           "title": "Medium: Overdue fines",
           "promptMarkdown": "Give every member with an overdue loan (not returned, due before `2026-10-24`) a fine of `1.0`, one row per member. None of them has a fine yet.",
           "starterCode": "",
@@ -651,7 +613,7 @@
           }
         },
         {
-          "id": "insert_many_ch6",
+          "id": "insert_many_ch5",
           "title": "Medium: Borrow the whole author",
           "promptMarkdown": "Member 7 borrows every book by `S. Laine` today. Add one loan per book, borrowed `2026-10-24` and due `2026-11-07`.",
           "starterCode": "",
@@ -670,7 +632,7 @@
           }
         },
         {
-          "id": "insert_many_ch7",
+          "id": "insert_many_ch6",
           "title": "Hard: Fines by the day",
           "promptMarkdown": "Give each member with overdue loans a fine of 0.25 for every day overdue on `2026-10-24`, added up over their overdue loans and rounded to 2 decimals.",
           "starterCode": "",
@@ -689,7 +651,7 @@
           }
         },
         {
-          "id": "insert_many_ch8",
+          "id": "insert_many_ch7",
           "title": "Hard: Fix the column count",
           "promptMarkdown": "This should copy the arrivals into `books` with all copies available, but gives the error **3 values for 4 columns**. Fix it.",
           "starterCode": "INSERT INTO books (title, author, copies, available)\nSELECT title, author, copies\nFROM arrivals;",
@@ -708,7 +670,7 @@
           }
         },
         {
-          "id": "insert_many_ch9",
+          "id": "insert_many_ch8",
           "title": "Expert: Welcome loans",
           "promptMarkdown": "Every active member who has never borrowed anything gets `Paper Comets` today (`2026-10-24`, due `2026-11-07`). Add those loans without typing the book's id.",
           "starterCode": "",
@@ -727,7 +689,7 @@
           }
         },
         {
-          "id": "insert_many_ch10",
+          "id": "insert_many_ch9",
           "title": "Expert: Careful shelving",
           "promptMarkdown": "Copy the arrivals whose title isn't in `books` yet. When the number of copies is missing, use 1. All copies are available.",
           "starterCode": "",
@@ -1116,25 +1078,6 @@
         },
         {
           "id": "update_rows_ch3",
-          "title": "Easy: Suspended",
-          "promptMarkdown": "Set the status of member 6 to `suspended`.",
-          "starterCode": "",
-          "hint": "`UPDATE members SET status = 'suspended' WHERE id = 6;`",
-          "solution": "UPDATE members\nSET status = 'suspended'\nWHERE id = 6;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The members table is right afterwards",
-                "assertion": "SELECT * FROM members ORDER BY id"
-              }
-            ]
-          }
-        },
-        {
-          "id": "update_rows_ch4",
           "title": "Medium: Old memberships",
           "promptMarkdown": "Set the status of every member who joined before `2023-01-01` to `inactive`.",
           "starterCode": "",
@@ -1153,7 +1096,7 @@
           }
         },
         {
-          "id": "update_rows_ch5",
+          "id": "update_rows_ch4",
           "title": "Medium: Fix the missing WHERE",
           "promptMarkdown": "This should mark only book 3 as having no copies available, but it changes every book. Fix it.",
           "starterCode": "UPDATE books\nSET available = 0;",
@@ -1172,7 +1115,7 @@
           }
         },
         {
-          "id": "update_rows_ch6",
+          "id": "update_rows_ch5",
           "title": "Medium: More copies",
           "promptMarkdown": "Book 4 now has 3 copies, all 3 available. Change both columns in one statement.",
           "starterCode": "",
@@ -1191,7 +1134,7 @@
           }
         },
         {
-          "id": "update_rows_ch7",
+          "id": "update_rows_ch6",
           "title": "Hard: Everything back",
           "promptMarkdown": "Member 2 returned all their books today. Set `returned` to `2026-10-24` on all of member 2's loans that are still out, and no others.",
           "starterCode": "",
@@ -1210,7 +1153,7 @@
           }
         },
         {
-          "id": "update_rows_ch8",
+          "id": "update_rows_ch7",
           "title": "Hard: Fix the skipped member",
           "promptMarkdown": "This should set the status of every member who isn't suspended to `reviewed`, but members with a missing status are skipped. Fix it.",
           "starterCode": "UPDATE members\nSET status = 'reviewed'\nWHERE status <> 'suspended';",
@@ -1229,7 +1172,7 @@
           }
         },
         {
-          "id": "update_rows_ch9",
+          "id": "update_rows_ch8",
           "title": "Expert: A week longer",
           "promptMarkdown": "Every loan that is still out and was due before `2026-10-24` gets one more week: move its `due` date 7 days later.",
           "starterCode": "",
@@ -1248,7 +1191,7 @@
           }
         },
         {
-          "id": "update_rows_ch10",
+          "id": "update_rows_ch9",
           "title": "Expert: Tidy emails",
           "promptMarkdown": "Some emails have capital letters. Change every email to lower case, but only update the rows that actually change.",
           "starterCode": "",
@@ -1632,25 +1575,6 @@
         },
         {
           "id": "update_expressions_ch3",
-          "title": "Easy: Two more of book 2",
-          "promptMarkdown": "Book 2 gets 2 new copies, both available. Add 2 to its `copies` and `available`.",
-          "starterCode": "",
-          "hint": "`SET copies = copies + 2, available = available + 2 WHERE id = 2`.",
-          "solution": "UPDATE books\nSET copies = copies + 2,\n    available = available + 2\nWHERE id = 2;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The books table is right afterwards",
-                "assertion": "SELECT * FROM books ORDER BY id"
-              }
-            ]
-          }
-        },
-        {
-          "id": "update_expressions_ch4",
           "title": "Medium: Ten percent",
           "promptMarkdown": "Raise every fine by 10%, rounded to 2 decimals.",
           "starterCode": "",
@@ -1669,7 +1593,7 @@
           }
         },
         {
-          "id": "update_expressions_ch5",
+          "id": "update_expressions_ch4",
           "title": "Medium: Out of stock label",
           "promptMarkdown": "Put `[out] ` (with the space) in front of the title of every book with no copies available.",
           "starterCode": "",
@@ -1688,7 +1612,7 @@
           }
         },
         {
-          "id": "update_expressions_ch6",
+          "id": "update_expressions_ch5",
           "title": "Medium: Long-time or new",
           "promptMarkdown": "For every member who isn't suspended (members with no status included), set the status to `long-time` if they joined before `2024-01-01`, and `new` otherwise.",
           "starterCode": "",
@@ -1707,7 +1631,7 @@
           }
         },
         {
-          "id": "update_expressions_ch7",
+          "id": "update_expressions_ch6",
           "title": "Hard: Swapped by mistake",
           "promptMarkdown": "For book 6, the `copies` and `available` numbers were typed the wrong way round. Swap them with one UPDATE.",
           "starterCode": "",
@@ -1726,7 +1650,7 @@
           }
         },
         {
-          "id": "update_expressions_ch8",
+          "id": "update_expressions_ch7",
           "title": "Hard: Longer loan period",
           "promptMarkdown": "Member 3 is allowed 28 days. For member 3's loans that are still out, set `due` to 28 days after `borrowed`.",
           "starterCode": "",
@@ -1745,7 +1669,7 @@
           }
         },
         {
-          "id": "update_expressions_ch9",
+          "id": "update_expressions_ch8",
           "title": "Expert: New status names",
           "promptMarkdown": "The library renames its statuses: `inactive` becomes `closed` and `suspended` becomes `blocked`. Other statuses, including missing ones, stay as they are. Use one UPDATE with CASE.",
           "starterCode": "",
@@ -1764,7 +1688,7 @@
           }
         },
         {
-          "id": "update_expressions_ch10",
+          "id": "update_expressions_ch9",
           "title": "Expert: Round up to 50 cents",
           "promptMarkdown": "Round every fine up to the next 0.50 (so 2.10 becomes 2.50 and 3.00 stays 3.00).",
           "starterCode": "",
@@ -4588,31 +4512,6 @@
           },
           {
             "id": "returning_q9",
-            "type": "mcq",
-            "prompt": "Which SQLite version added RETURNING?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "3.0"
-              },
-              {
-                "id": "b",
-                "label": "3.24"
-              },
-              {
-                "id": "c",
-                "label": "3.39"
-              },
-              {
-                "id": "d",
-                "label": "3.35"
-              }
-            ],
-            "correctChoiceId": "d",
-            "explanation": "It arrived in 2021."
-          },
-          {
-            "id": "returning_q10",
             "type": "mcq",
             "prompt": "Does RETURNING work with an upsert?",
             "choices": [

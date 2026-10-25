@@ -151,18 +151,6 @@
             "mode": "sql_tests",
             "ordered": true
           }
-        },
-        {
-          "id": "text_functions_ch10",
-          "title": "Expert: Shortest names first",
-          "promptMarkdown": "Show each employee's `name`, shortest name first. Names of the same length go in alphabetical order.",
-          "starterCode": "",
-          "hint": "You can sort by a function you don't show: `ORDER BY LENGTH(name), name`.",
-          "solution": "SELECT name FROM employees ORDER BY LENGTH(name), name;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
         }
       ],
       "test": {
@@ -1020,18 +1008,6 @@
         },
         {
           "id": "number_functions_ch8",
-          "title": "Hard: Salaries in thousands",
-          "promptMarkdown": "Show each employee's `name` and salary in thousands, rounded to 1 decimal (65500 becomes 65.5), in a column called `thousands`.",
-          "starterCode": "",
-          "hint": "`ROUND(salary / 1000.0, 1) AS thousands`.",
-          "solution": "SELECT name, ROUND(salary / 1000.0, 1) AS thousands FROM employees;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "number_functions_ch9",
           "title": "Expert: What was paid",
           "promptMarkdown": "For the orders with a discount, show the `id` and the amount paid after the discount, rounded to 2 decimals, called `paid`. Highest first.",
           "starterCode": "",
@@ -1043,7 +1019,7 @@
           }
         },
         {
-          "id": "number_functions_ch10",
+          "id": "number_functions_ch9",
           "title": "Expert: Weekly pay, rounded up to 10",
           "promptMarkdown": "Show each employee's `name` and their weekly pay (salary divided by 52) rounded **up** to the next multiple of 10, in a column called `weekly`. For 72000 that is 1390.",
           "starterCode": "",
@@ -1465,18 +1441,6 @@
         },
         {
           "id": "case_basics_ch8",
-          "title": "Hard: Three sizes",
-          "promptMarkdown": "Show each order's `id` and a `size`: `small` for totals under 20, `medium` for under 100, and `large` for the rest.",
-          "starterCode": "",
-          "hint": "`WHEN total < 20 THEN 'small' WHEN total < 100 THEN 'medium' ELSE 'large'`.",
-          "solution": "SELECT id,\n  CASE\n    WHEN total < 20 THEN 'small'\n    WHEN total < 100 THEN 'medium'\n    ELSE 'large'\n  END AS size\nFROM orders;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "case_basics_ch9",
           "title": "Expert: Teams",
           "promptMarkdown": "Show each employee's `name`, `role` and a `team`: `Product` for developers, designers and analysts, `Service` for support, and `Other` for everyone else.",
           "starterCode": "",
@@ -1488,7 +1452,7 @@
           }
         },
         {
-          "id": "case_basics_ch10",
+          "id": "case_basics_ch9",
           "title": "Expert: Fix the order",
           "promptMarkdown": "This query should label totals of 200 or more as `large`, 50 or more as `medium`, and the rest as `small`, but no order is ever `large`. Fix it.",
           "starterCode": "SELECT id, total,\n  CASE\n    WHEN total >= 50 THEN 'medium'\n    WHEN total >= 200 THEN 'large'\n    ELSE 'small'\n  END AS size\nFROM orders;",
@@ -1641,31 +1605,6 @@
           {
             "id": "case_basics_q7",
             "type": "mcq",
-            "prompt": "How should you order the WHENs for bands like ≥ 60000 and ≥ 40000?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Any order works"
-              },
-              {
-                "id": "b",
-                "label": "Smallest limit first"
-              },
-              {
-                "id": "c",
-                "label": "Strictest (largest) limit first"
-              },
-              {
-                "id": "d",
-                "label": "ELSE first"
-              }
-            ],
-            "correctChoiceId": "c",
-            "explanation": "Put the strictest condition first, or the looser one catches every row."
-          },
-          {
-            "id": "case_basics_q8",
-            "type": "mcq",
             "prompt": "Which parts of CASE are needed?",
             "choices": [
               {
@@ -1689,7 +1628,7 @@
             "explanation": "ELSE is optional; CASE, WHEN … THEN and END are needed."
           },
           {
-            "id": "case_basics_q9",
+            "id": "case_basics_q8",
             "type": "mcq",
             "prompt": "How do you test for a missing value inside CASE?",
             "choices": [
@@ -1714,7 +1653,7 @@
             "explanation": "As in WHERE, missing values are tested with IS NULL."
           },
           {
-            "id": "case_basics_q10",
+            "id": "case_basics_q9",
             "type": "mcq",
             "prompt": "Does a CASE column need a name?",
             "choices": [
@@ -2446,31 +2385,6 @@
           {
             "id": "null_functions_q3",
             "type": "mcq",
-            "prompt": "What does `COALESCE(phone, email)` give for a customer with both?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "The email"
-              },
-              {
-                "id": "b",
-                "label": "Both, joined"
-              },
-              {
-                "id": "c",
-                "label": "The phone"
-              },
-              {
-                "id": "d",
-                "label": "NULL"
-              }
-            ],
-            "correctChoiceId": "c",
-            "explanation": "The first non-NULL value wins, and the phone comes first."
-          },
-          {
-            "id": "null_functions_q4",
-            "type": "mcq",
             "prompt": "How is `IFNULL(a, b)` different from `COALESCE(a, b)`?",
             "choices": [
               {
@@ -2494,7 +2408,7 @@
             "explanation": "With two values they do the same; COALESCE is standard and takes more."
           },
           {
-            "id": "null_functions_q5",
+            "id": "null_functions_q4",
             "type": "mcq",
             "prompt": "What does `NULLIF(0, 0)` give?",
             "choices": [
@@ -2519,7 +2433,7 @@
             "explanation": "NULLIF gives NULL when its two values are equal."
           },
           {
-            "id": "null_functions_q6",
+            "id": "null_functions_q5",
             "type": "mcq",
             "prompt": "What does `NULLIF(15, 0)` give?",
             "choices": [
@@ -2544,7 +2458,7 @@
             "explanation": "The values differ, so the first one is given back."
           },
           {
-            "id": "null_functions_q7",
+            "id": "null_functions_q6",
             "type": "shortText",
             "prompt": "Which function gives the first of its values that is not NULL?",
             "validation": {
@@ -2554,7 +2468,7 @@
             "explanation": "`COALESCE(a, b, …)` returns the first non-NULL value."
           },
           {
-            "id": "null_functions_q8",
+            "id": "null_functions_q7",
             "type": "mcq",
             "prompt": "What is `'Grace' || ' from ' || NULL`?",
             "choices": [
@@ -2579,7 +2493,7 @@
             "explanation": "Joining text with NULL gives NULL, which is why COALESCE helps."
           },
           {
-            "id": "null_functions_q9",
+            "id": "null_functions_q8",
             "type": "mcq",
             "prompt": "How can NULLIF prevent dividing by zero?",
             "choices": [
@@ -2604,7 +2518,7 @@
             "explanation": "`x / NULLIF(y, 0)` gives NULL when y is 0."
           },
           {
-            "id": "null_functions_q10",
+            "id": "null_functions_q9",
             "type": "mcq",
             "prompt": "Which still finds the orders that really have no discount?",
             "choices": [
@@ -2752,18 +2666,6 @@
         },
         {
           "id": "dates_ch4",
-          "title": "Medium: Joined in 2024",
-          "promptMarkdown": "Show the `first_name` and `joined` date of the customers who joined in 2024.",
-          "starterCode": "",
-          "hint": "`WHERE strftime('%Y', joined) = '2024'` (text, so in quotes).",
-          "solution": "SELECT first_name, joined FROM customers WHERE strftime('%Y', joined) = '2024';",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "dates_ch5",
           "title": "Medium: Order months",
           "promptMarkdown": "Show each order's `id` and the month it was placed (`01` to `12`), in a column called `month`.",
           "starterCode": "",
@@ -2775,7 +2677,7 @@
           }
         },
         {
-          "id": "dates_ch6",
+          "id": "dates_ch5",
           "title": "Medium: Hired before 2020",
           "promptMarkdown": "Show the `name` and `hire_date` of the employees hired before 2020, earliest first.",
           "starterCode": "",
@@ -2787,7 +2689,7 @@
           }
         },
         {
-          "id": "dates_ch7",
+          "id": "dates_ch6",
           "title": "Hard: Day of the week",
           "promptMarkdown": "Show each order's `id`, `order_date` and its day of the week as a number (0 for Sunday to 6 for Saturday), called `weekday`.",
           "starterCode": "",
@@ -2799,7 +2701,7 @@
           }
         },
         {
-          "id": "dates_ch8",
+          "id": "dates_ch7",
           "title": "Hard: Weekend orders",
           "promptMarkdown": "Show the `id` and `order_date` of the orders placed on a Saturday or Sunday.",
           "starterCode": "",
@@ -2811,7 +2713,7 @@
           }
         },
         {
-          "id": "dates_ch9",
+          "id": "dates_ch8",
           "title": "Expert: Day/month/year",
           "promptMarkdown": "Show each order's `id` and its date written as day/month/year, like `05/01/2026`, in a column called `written`.",
           "starterCode": "",
@@ -2823,7 +2725,7 @@
           }
         },
         {
-          "id": "dates_ch10",
+          "id": "dates_ch9",
           "title": "Expert: Early in the month",
           "promptMarkdown": "Show the `id` and `order_date` of the orders placed on the 1st to the 5th of a month, oldest first.",
           "starterCode": "",
@@ -2952,31 +2854,6 @@
           {
             "id": "dates_q6",
             "type": "mcq",
-            "prompt": "Which finds the customers who joined in 2024?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`WHERE strftime('%Y', joined) = '2024'`"
-              },
-              {
-                "id": "b",
-                "label": "`WHERE joined = 2024`"
-              },
-              {
-                "id": "c",
-                "label": "`WHERE strftime('%m', joined) = '2024'`"
-              },
-              {
-                "id": "d",
-                "label": "`WHERE joined LIKE '%2024'`"
-              }
-            ],
-            "correctChoiceId": "a",
-            "explanation": "Take the year out of the date and compare it with the text 2024."
-          },
-          {
-            "id": "dates_q7",
-            "type": "mcq",
             "prompt": "What does `strftime('%d/%m/%Y', '2026-01-05')` give?",
             "choices": [
               {
@@ -3000,7 +2877,7 @@
             "explanation": "%d is the day, %m the month and %Y the year; the slashes are kept."
           },
           {
-            "id": "dates_q8",
+            "id": "dates_q7",
             "type": "mcq",
             "prompt": "Why do challenges avoid `date('now')`?",
             "choices": [
@@ -3025,7 +2902,7 @@
             "explanation": "'now' depends on the day the query runs, so a fixed date gives repeatable results."
           },
           {
-            "id": "dates_q9",
+            "id": "dates_q8",
             "type": "mcq",
             "prompt": "Is `'2026-10-02' > '2026-09-28'`?",
             "choices": [
@@ -3050,7 +2927,7 @@
             "explanation": "Compared character by character, '10' comes after '09', so October is later."
           },
           {
-            "id": "dates_q10",
+            "id": "dates_q9",
             "type": "mcq",
             "prompt": "Which keeps the orders from March 2026?",
             "choices": [
@@ -3423,31 +3300,6 @@
           {
             "id": "date_arithmetic_q7",
             "type": "mcq",
-            "prompt": "Why do the challenges use '2026-10-24' instead of date('now')?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "date('now') is not allowed"
-              },
-              {
-                "id": "b",
-                "label": "So the right answer stays the same every day"
-              },
-              {
-                "id": "c",
-                "label": "It is faster"
-              },
-              {
-                "id": "d",
-                "label": "It is in the future"
-              }
-            ],
-            "correctChoiceId": "b",
-            "explanation": "A fixed \"today\" keeps the expected results from changing."
-          },
-          {
-            "id": "date_arithmetic_q8",
-            "type": "mcq",
             "prompt": "What does `date('2024-02-28', '+1 day')` give?",
             "choices": [
               {
@@ -3471,7 +3323,7 @@
             "explanation": "2024 is a leap year, and SQLite knows it."
           },
           {
-            "id": "date_arithmetic_q9",
+            "id": "date_arithmetic_q8",
             "type": "mcq",
             "prompt": "How do you turn a number of days into whole years?",
             "choices": [
@@ -3496,7 +3348,7 @@
             "explanation": "365.25 days per year allows for leap years; FLOOR keeps whole years."
           },
           {
-            "id": "date_arithmetic_q10",
+            "id": "date_arithmetic_q9",
             "type": "mcq",
             "prompt": "Which finds orders shipped by the next day?",
             "choices": [
@@ -3656,18 +3508,6 @@
         },
         {
           "id": "types_cast_ch5",
-          "title": "Medium: Months in number order",
-          "promptMarkdown": "Show each customer's `first_name` and the month they joined as a number, called `month`, sorted by month and then by name.",
-          "starterCode": "",
-          "hint": "`CAST(SUBSTR(joined, 6, 2) AS INTEGER) AS month ... ORDER BY month, first_name`.",
-          "solution": "SELECT first_name, CAST(SUBSTR(joined, 6, 2) AS INTEGER) AS month FROM customers\nORDER BY month, first_name;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "types_cast_ch6",
           "title": "Medium: Years since hiring",
           "promptMarkdown": "Show each employee's `name` and 2026 minus the year they were hired (as a number), called `years`.",
           "starterCode": "",
@@ -3679,7 +3519,7 @@
           }
         },
         {
-          "id": "types_cast_ch7",
+          "id": "types_cast_ch6",
           "title": "Hard: Phone as a number",
           "promptMarkdown": "Show each customer's `id` and their phone number with the dash removed, turned into an integer, called `phone_number`.",
           "starterCode": "",
@@ -3691,7 +3531,7 @@
           }
         },
         {
-          "id": "types_cast_ch8",
+          "id": "types_cast_ch7",
           "title": "Hard: Sort by number, not text",
           "promptMarkdown": "This query should list the orders from the smallest total to the largest, but the totals are sorted as text (so 120.0 comes before 15.99). Fix it.",
           "starterCode": "SELECT id, total FROM orders ORDER BY CAST(total AS TEXT);",
@@ -3703,7 +3543,7 @@
           }
         },
         {
-          "id": "types_cast_ch9",
+          "id": "types_cast_ch8",
           "title": "Expert: Cut or round?",
           "promptMarkdown": "Show the `id`, `total`, the total with its decimals cut off (`cut`) and the rounded total (`rounded`), only for the orders where the two differ.",
           "starterCode": "",
@@ -3715,7 +3555,7 @@
           }
         },
         {
-          "id": "types_cast_ch10",
+          "id": "types_cast_ch9",
           "title": "Expert: Pay per day",
           "promptMarkdown": "Show each employee's `name` and a `daily` column like `197 per day`: their salary divided by 365, rounded to a whole number, without a `.0`.",
           "starterCode": "",
@@ -4089,18 +3929,6 @@
         },
         {
           "id": "printf_formatting_ch4",
-          "title": "Medium: Total lines",
-          "promptMarkdown": "Show each order's `id` and a `line` like `Total: 42.50`.",
-          "starterCode": "",
-          "hint": "`printf('Total: %.2f', total) AS line`.",
-          "solution": "SELECT id, printf('Total: %.2f', total) AS line FROM orders;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "printf_formatting_ch5",
           "title": "Medium: Monthly pay sentence",
           "promptMarkdown": "Show one column called `line` like `Maria Lopez earns 6000.00 a month` (salary divided by 12, two decimals).",
           "starterCode": "",
@@ -4112,7 +3940,7 @@
           }
         },
         {
-          "id": "printf_formatting_ch6",
+          "id": "printf_formatting_ch5",
           "title": "Medium: Percent signs",
           "promptMarkdown": "For the orders with a discount, show the `id` and the discount with a percent sign (`10%`), in a column called `discount`.",
           "starterCode": "",
@@ -4124,7 +3952,7 @@
           }
         },
         {
-          "id": "printf_formatting_ch7",
+          "id": "printf_formatting_ch6",
           "title": "Hard: Readable salaries",
           "promptMarkdown": "Show each employee's `name` and their salary with thousands separators (`72,000`), called `salary`. Highest salary first.",
           "starterCode": "",
@@ -4136,7 +3964,7 @@
           }
         },
         {
-          "id": "printf_formatting_ch8",
+          "id": "printf_formatting_ch7",
           "title": "Hard: Customer cards",
           "promptMarkdown": "Show one column called `card` like `Ana Silva <ana.silva@example.com>`, with the email in lower case.",
           "starterCode": "",
@@ -4148,7 +3976,7 @@
           }
         },
         {
-          "id": "printf_formatting_ch9",
+          "id": "printf_formatting_ch8",
           "title": "Expert: Receipt lines",
           "promptMarkdown": "Show one `line` per order like `#3 2026-02-02 15.99` (a #, the id, the date and the total with two decimals, separated by spaces), in order of `id`.",
           "starterCode": "",
@@ -4160,7 +3988,7 @@
           }
         },
         {
-          "id": "printf_formatting_ch10",
+          "id": "printf_formatting_ch9",
           "title": "Expert: Quarters",
           "promptMarkdown": "Show each order's `id` and its quarter like `2026-Q1` (months 1–3 are Q1, 4–6 Q2, and so on), called `quarter`.",
           "starterCode": "",

@@ -36,20 +36,10 @@ export default makeTopic({
       hint: 'Say which table each column comes from: `o.id, c.name`.',
       solution: 'SELECT o.id, c.name\nFROM orders o\nJOIN customers c ON o.customer_id = c.id;',
     }),
-    query('easy', 'Lines with aliases', {
-      prompt: 'Using the aliases `i` and `p`, show each order line\'s `order_id`, the product `name` and the `quantity`.',
-      hint: '`FROM order_items i JOIN products p ON i.product_id = p.id`.',
-      solution: 'SELECT i.order_id, p.name, i.quantity\nFROM order_items i\nJOIN products p ON i.product_id = p.id;',
-    }),
     query('medium', 'Two ids', {
       prompt: "Show each order's id as `order_id`, its customer's id as `customer_id`, and the customer's name as `customer`.",
       hint: '`o.id AS order_id, c.id AS customer_id, c.name AS customer`.',
       solution: 'SELECT o.id AS order_id, c.id AS customer_id, c.name AS customer\nFROM orders o\nJOIN customers c ON o.customer_id = c.id;',
-    }),
-    query('medium', 'Line and product ids', {
-      prompt: "For each order line, show the line's id as `line_id`, the product's id as `product_id` and the product's name as `product`.",
-      hint: '`i.id AS line_id, p.id AS product_id, p.name AS product`.',
-      solution: 'SELECT i.id AS line_id, p.id AS product_id, p.name AS product\nFROM order_items i\nJOIN products p ON i.product_id = p.id;',
     }),
     query('medium', 'Fix the old name', {
       prompt: "This query should show the shipped orders with their customer's name, but gives the error **no such column: orders.status**. Fix it.",

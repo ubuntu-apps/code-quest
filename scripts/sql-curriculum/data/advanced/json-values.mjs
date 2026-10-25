@@ -29,11 +29,6 @@ export default makeTopic({
       hint: "`json_extract(details, '$.colour') AS colour … WHERE colour IS NOT NULL`.",
       solution: "SELECT name, json_extract(details, '$.colour') AS colour\nFROM products\nWHERE json_extract(details, '$.colour') IS NOT NULL\nORDER BY name;",
     }),
-    query('easy', 'Tallest first', {
-      prompt: "Show the `name` and `height_cm` of every product with a height, tallest first, then by name.",
-      hint: "Heights are numbers in the JSON, so they sort as numbers.",
-      solution: "SELECT name, json_extract(details, '$.height_cm') AS height_cm\nFROM products\nWHERE json_extract(details, '$.height_cm') IS NOT NULL\nORDER BY height_cm DESC, name;",
-    }),
     query('easy', 'Watering', {
       prompt: "Show the `name` and `water` need (inside `care`) of every product that has one. Sort by name.",
       hint: "`json_extract(details, '$.care.water')`.",

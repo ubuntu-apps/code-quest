@@ -40,11 +40,6 @@ export default makeTopic({
       hint: "`strftime('%Y', hire_date) AS year`.",
       solution: "SELECT name, strftime('%Y', hire_date) AS year FROM employees;",
     }),
-    query('medium', 'Joined in 2024', {
-      prompt: 'Show the `first_name` and `joined` date of the customers who joined in 2024.',
-      hint: "`WHERE strftime('%Y', joined) = '2024'` (text, so in quotes).",
-      solution: "SELECT first_name, joined FROM customers WHERE strftime('%Y', joined) = '2024';",
-    }),
     query('medium', 'Order months', {
       prompt: "Show each order's `id` and the month it was placed (`01` to `12`), in a column called `month`.",
       hint: "`strftime('%m', order_date) AS month`.",
@@ -87,8 +82,6 @@ export default makeTopic({
       '%w counts the days of the week from 0 (Sunday) to 6 (Saturday).'),
     qPattern("Which `strftime` code gives the month, like `03`? (Capitals matter.)", '^\\s*%m\\s*$', '%m',
       "`%m` is the two-digit month; `%M` would be minutes."),
-    mc("Which finds the customers who joined in 2024?", ["`WHERE strftime('%Y', joined) = '2024'`", '`WHERE joined = 2024`', "`WHERE strftime('%m', joined) = '2024'`", "`WHERE joined LIKE '%2024'`"], 0,
-      'Take the year out of the date and compare it with the text 2024.'),
     mc("What does `strftime('%d/%m/%Y', '2026-01-05')` give?", ["`'2026/01/05'`", "`'5/1/2026'`", "`'05/01/2026'`", "`'01/05/2026'`"], 2,
       '%d is the day, %m the month and %Y the year; the slashes are kept.'),
     mc('Why do challenges avoid `date(\'now\')`?', ['It is not SQL', 'Its result changes every day', 'It gives an error in SQLite', 'It is slow'], 1,

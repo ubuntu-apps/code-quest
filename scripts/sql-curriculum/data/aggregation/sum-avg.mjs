@@ -55,11 +55,6 @@ export default makeTopic({
       hint: '`MIN(sale_date) AS first_day, MAX(sale_date) AS last_day`. Dates in this form sort correctly as text.',
       solution: 'SELECT MIN(sale_date) AS first_day, MAX(sale_date) AS last_day FROM sales;',
     }),
-    query('hard', 'Maths average', {
-      prompt: 'Show the average `Maths` score, rounded to 1 decimal, in a column called `maths_average`.',
-      hint: "`ROUND(AVG(score), 1) ... WHERE subject = 'Maths'`.",
-      solution: "SELECT ROUND(AVG(score), 1) AS maths_average FROM results WHERE subject = 'Maths';",
-    }),
     query('hard', 'Average sale', {
       prompt: 'Show the average value of a sale (`quantity` times `unit_price`), rounded to 2 decimals, in a column called `average_sale`.',
       hint: '`ROUND(AVG(quantity * unit_price), 2)`.',

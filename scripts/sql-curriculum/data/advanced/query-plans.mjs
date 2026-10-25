@@ -32,12 +32,6 @@ export default makeTopic({
       solution: 'CREATE INDEX sales_product ON sales (product_id);',
       checks: [indexes('sales'), plan('The query searches with the index', 'SELECT * FROM sales WHERE product_id = 5')],
     }),
-    query('easy', 'Search by day', {
-      prompt: "Create an index called `sales_day` so that `SELECT * FROM sales WHERE sold_on = '2026-10-07'` searches instead of scanning.",
-      hint: 'Index the column in the WHERE: `sales (sold_on)`.',
-      solution: 'CREATE INDEX sales_day ON sales (sold_on);',
-      checks: [indexes('sales'), plan('The query searches with the index', "SELECT * FROM sales WHERE sold_on = '2026-10-07'")],
-    }),
     query('easy', 'Search by name', {
       prompt: "Create an index called `products_name` so that `SELECT price FROM products WHERE name = 'Hosta'` searches instead of scanning.",
       hint: '`CREATE INDEX products_name ON products (name);`',

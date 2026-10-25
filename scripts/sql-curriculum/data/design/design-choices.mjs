@@ -128,7 +128,5 @@ export default makeTopic({
       'History is rows, not columns.'),
     mc('What does `UNIQUE (event_id, position)` stop?', ['Two guests at the same position on one waitlist', 'Two events with position 1', 'Any repeated position', 'Missing positions'], 0,
       'Each position once per event.'),
-    mc('Many-to-many needs…', ['A list column', 'Two foreign keys in one of the tables', 'Nothing special', 'A junction table with a key for each side'], 3,
-      'Like event_performers.'),
   ],
 })

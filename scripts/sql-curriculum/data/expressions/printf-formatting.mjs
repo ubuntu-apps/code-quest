@@ -40,11 +40,6 @@ export default makeTopic({
       hint: "`printf('%s (%s)', name, role) AS staff`.",
       solution: "SELECT printf('%s (%s)', name, role) AS staff FROM employees;",
     }),
-    query('medium', 'Total lines', {
-      prompt: "Show each order's `id` and a `line` like `Total: 42.50`.",
-      hint: "`printf('Total: %.2f', total) AS line`.",
-      solution: "SELECT id, printf('Total: %.2f', total) AS line FROM orders;",
-    }),
     query('medium', 'Monthly pay sentence', {
       prompt: "Show one column called `line` like `Maria Lopez earns 6000.00 a month` (salary divided by 12, two decimals).",
       hint: "`printf('%s earns %.2f a month', name, salary / 12.0) AS line`.",

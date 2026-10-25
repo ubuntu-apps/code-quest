@@ -65,12 +65,6 @@ export default makeTopic({
       solution: "CREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT\n);\nINSERT INTO guests (name) VALUES ('Ana Lima');",
       checks: [columns('guests'), rows('guests', 'name')],
     }),
-    query('medium', 'Guests from the sheet', {
-      prompt: "Create `guests` (`id` INTEGER PRIMARY KEY, `name` TEXT, `email` TEXT) and fill it with each different guest name and email from `ticket_sheet`, in name order, letting SQLite number them.",
-      hint: '`INSERT INTO guests (name, email) SELECT DISTINCT guest_name, guest_email FROM ticket_sheet ORDER BY guest_name;`',
-      solution: 'CREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  email TEXT\n);\nINSERT INTO guests (name, email)\nSELECT DISTINCT guest_name, guest_email\nFROM ticket_sheet\nORDER BY guest_name;',
-      checks: [columns('guests'), rows('guests', 'id')],
-    }),
     query('hard', 'Never again', {
       prompt: "Create `invoices` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` REAL). Add invoices of 10, 20 and 30, delete the one with id 3, then add one of 40. The new invoice must get id 4, not 3.",
       hint: 'With AUTOINCREMENT, SQLite remembers the largest id ever used.',

@@ -85,8 +85,6 @@ export default makeTopic({
       'Each CTE has one row per artist, so the join adds no extra rows.'),
     qShort('Which function turns a missing count from a LEFT JOIN into 0?', 'COALESCE',
       '`COALESCE(ap.plays, 0)`.'),
-    mc('How many times do you write the word WITH for three CTEs?', ['Twice', 'None', 'Once', 'Three times'], 2,
-      'One WITH starts the list.'),
     mc('Why LEFT JOIN the CTEs to artists?', ['It is faster', 'To keep artists that have nothing to count', 'CTEs need it', 'To remove duplicates'], 1,
       'An inner join would drop them.'),
     mc('What is the advantage of a chain of CTEs?', ['Each step is small and can be checked on its own', 'It avoids SELECT', 'It changes the data', 'It always runs faster'], 0,

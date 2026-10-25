@@ -53,18 +53,6 @@
         },
         {
           "id": "count_rows_ch2",
-          "title": "Easy: How many results?",
-          "promptMarkdown": "Count the rows in the `results` table, in a column called `results`.",
-          "starterCode": "",
-          "hint": "`SELECT COUNT(*) AS results FROM results;`",
-          "solution": "SELECT COUNT(*) AS results FROM results;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "count_rows_ch3",
           "title": "Easy: Card payments",
           "promptMarkdown": "Count the sales paid by `card`, in a column called `card_sales`.",
           "starterCode": "",
@@ -76,7 +64,7 @@
           }
         },
         {
-          "id": "count_rows_ch4",
+          "id": "count_rows_ch3",
           "title": "Medium: Recorded payments",
           "promptMarkdown": "Count how many sales have a payment method recorded (not NULL), in a column called `recorded`. Use `COUNT` on the column.",
           "starterCode": "",
@@ -88,19 +76,7 @@
           }
         },
         {
-          "id": "count_rows_ch5",
-          "title": "Medium: Exams taken",
-          "promptMarkdown": "Count how many exams were actually taken (the score is not NULL), in a column called `taken`.",
-          "starterCode": "",
-          "hint": "`COUNT(score) AS taken`.",
-          "solution": "SELECT COUNT(score) AS taken FROM results;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "count_rows_ch6",
+          "id": "count_rows_ch4",
           "title": "Medium: Coffee at North",
           "promptMarkdown": "Count the `Coffee` sales at the `North` store, in a column called `coffees`.",
           "starterCode": "",
@@ -112,7 +88,7 @@
           }
         },
         {
-          "id": "count_rows_ch7",
+          "id": "count_rows_ch5",
           "title": "Hard: Missing payments",
           "promptMarkdown": "Show how many sales have no payment method recorded, in a column called `missing`, by subtracting one count from another.",
           "starterCode": "",
@@ -124,7 +100,7 @@
           }
         },
         {
-          "id": "count_rows_ch8",
+          "id": "count_rows_ch6",
           "title": "Hard: Big sales",
           "promptMarkdown": "Count the sales of 5 or more items (`quantity`), in a column called `big_sales`.",
           "starterCode": "",
@@ -136,24 +112,12 @@
           }
         },
         {
-          "id": "count_rows_ch9",
+          "id": "count_rows_ch7",
           "title": "Expert: The first week",
           "promptMarkdown": "Count the sales from 2026-10-01 to 2026-10-07 (both included), in a column called `first_week`.",
           "starterCode": "",
           "hint": "`WHERE sale_date BETWEEN '2026-10-01' AND '2026-10-07'`.",
           "solution": "SELECT COUNT(*) AS first_week FROM sales WHERE sale_date BETWEEN '2026-10-01' AND '2026-10-07';",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "count_rows_ch10",
-          "title": "Expert: High spring scores",
-          "promptMarkdown": "Count the `Spring` results with a score of 80 or more, in a column called `high`.",
-          "starterCode": "",
-          "hint": "`WHERE term = 'Spring' AND score >= 80`.",
-          "solution": "SELECT COUNT(*) AS high FROM results WHERE term = 'Spring' AND score >= 80;",
           "validation": {
             "mode": "sql_tests",
             "ordered": false
@@ -351,31 +315,6 @@
           {
             "id": "count_rows_q9",
             "type": "mcq",
-            "prompt": "Is COUNT(*) affected by NULLs?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Yes, it skips rows with any NULL"
-              },
-              {
-                "id": "b",
-                "label": "Only in SQLite"
-              },
-              {
-                "id": "c",
-                "label": "Only with WHERE"
-              },
-              {
-                "id": "d",
-                "label": "No, it counts every row"
-              }
-            ],
-            "correctChoiceId": "d",
-            "explanation": "COUNT(*) counts rows, NULLs or not."
-          },
-          {
-            "id": "count_rows_q10",
-            "type": "mcq",
             "prompt": "What does `COUNT(*)` give for a WHERE that matches no rows?",
             "choices": [
               {
@@ -546,18 +485,6 @@
         },
         {
           "id": "sum_avg_ch7",
-          "title": "Hard: Maths average",
-          "promptMarkdown": "Show the average `Maths` score, rounded to 1 decimal, in a column called `maths_average`.",
-          "starterCode": "",
-          "hint": "`ROUND(AVG(score), 1) ... WHERE subject = 'Maths'`.",
-          "solution": "SELECT ROUND(AVG(score), 1) AS maths_average FROM results WHERE subject = 'Maths';",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "sum_avg_ch8",
           "title": "Hard: Average sale",
           "promptMarkdown": "Show the average value of a sale (`quantity` times `unit_price`), rounded to 2 decimals, in a column called `average_sale`.",
           "starterCode": "",
@@ -569,7 +496,7 @@
           }
         },
         {
-          "id": "sum_avg_ch9",
+          "id": "sum_avg_ch8",
           "title": "Expert: Spring spread",
           "promptMarkdown": "Show the gap between the highest and lowest `Spring` score, in a column called `spread`.",
           "starterCode": "",
@@ -581,7 +508,7 @@
           }
         },
         {
-          "id": "sum_avg_ch10",
+          "id": "sum_avg_ch9",
           "title": "Expert: Two kinds of average",
           "promptMarkdown": "In one row, show the average score of the exams taken (`of_taken`) and the average if absences counted as 0 (`absences_as_zero`), both rounded to 1 decimal.",
           "starterCode": "",
@@ -1782,18 +1709,6 @@
         },
         {
           "id": "group_several_ch3",
-          "title": "Easy: Store and payment",
-          "promptMarkdown": "Show each `store` and `payment` combination (missing payments included) and its number of sales, called `sales`.",
-          "starterCode": "",
-          "hint": "`GROUP BY store, payment`.",
-          "solution": "SELECT store, payment, COUNT(*) AS sales FROM sales GROUP BY store, payment;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "group_several_ch4",
           "title": "Medium: Category takings per store",
           "promptMarkdown": "Show each `store`, `category` and its takings rounded to 2 decimals, called `revenue`. Sort by store, then highest revenue first.",
           "starterCode": "",
@@ -1805,7 +1720,7 @@
           }
         },
         {
-          "id": "group_several_ch5",
+          "id": "group_several_ch4",
           "title": "Medium: Each student, each term",
           "promptMarkdown": "Show each `student` and `term` with the student's average that term, rounded to 1 decimal, called `average`. Sort by student, then term.",
           "starterCode": "",
@@ -1817,7 +1732,7 @@
           }
         },
         {
-          "id": "group_several_ch6",
+          "id": "group_several_ch5",
           "title": "Medium: Products per store",
           "promptMarkdown": "Show each `store` and `product` with the number of items sold, called `items`. Sort by store, then most items first, then product.",
           "starterCode": "",
@@ -1829,7 +1744,7 @@
           }
         },
         {
-          "id": "group_several_ch7",
+          "id": "group_several_ch6",
           "title": "Hard: Best result per subject",
           "promptMarkdown": "Show each `student` and `subject` with the student's best score in it (from either term), called `best`.",
           "starterCode": "",
@@ -1841,7 +1756,7 @@
           }
         },
         {
-          "id": "group_several_ch8",
+          "id": "group_several_ch7",
           "title": "Hard: Coffee per store per day",
           "promptMarkdown": "For `Coffee` only, show each `sale_date` and `store` with the number of coffees sold, called `coffees`. Sort by date, then store.",
           "starterCode": "",
@@ -1853,7 +1768,7 @@
           }
         },
         {
-          "id": "group_several_ch9",
+          "id": "group_several_ch8",
           "title": "Expert: Weekends per store",
           "promptMarkdown": "Show each `store`, a `part` column (`weekend` or `weekday`) and the number of sales, called `sales`. Sort by store, then part.",
           "starterCode": "",
@@ -1865,7 +1780,7 @@
           }
         },
         {
-          "id": "group_several_ch10",
+          "id": "group_several_ch9",
           "title": "Expert: Top three pairs",
           "promptMarkdown": "Show the three `store` and `category` combinations with the highest takings (rounded to 2 decimals, called `revenue`), highest first.",
           "starterCode": "",
@@ -2638,18 +2553,6 @@
         },
         {
           "id": "distinct_concat_ch3",
-          "title": "Easy: Students per subject",
-          "promptMarkdown": "Show each `subject` and the number of different students with results in it, called `students`.",
-          "starterCode": "",
-          "hint": "`COUNT(DISTINCT student) AS students ... GROUP BY subject`.",
-          "solution": "SELECT subject, COUNT(DISTINCT student) AS students FROM results GROUP BY subject;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "distinct_concat_ch4",
           "title": "Medium: Range per store",
           "promptMarkdown": "Show each `store` and the number of different products it sold, called `products`.",
           "starterCode": "",
@@ -2661,7 +2564,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch5",
+          "id": "distinct_concat_ch4",
           "title": "Medium: Sold everywhere",
           "promptMarkdown": "Show the `product`s that were sold in all three stores.",
           "starterCode": "",
@@ -2673,7 +2576,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch6",
+          "id": "distinct_concat_ch5",
           "title": "Medium: Trading days",
           "promptMarkdown": "Show each `store` and the number of different days it made a sale, called `days`.",
           "starterCode": "",
@@ -2685,7 +2588,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch7",
+          "id": "distinct_concat_ch6",
           "title": "Hard: What each category sells",
           "promptMarkdown": "Show each `category` and a list of its different products, called `products` (use `GROUP_CONCAT(DISTINCT product)`).",
           "starterCode": "",
@@ -2697,19 +2600,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch8",
-          "title": "Hard: Payment methods per store",
-          "promptMarkdown": "Show each `store` and how many different payment methods were recorded there, called `methods`.",
-          "starterCode": "",
-          "hint": "`COUNT(DISTINCT payment)` skips the unrecorded ones.",
-          "solution": "SELECT store, COUNT(DISTINCT payment) AS methods FROM sales GROUP BY store;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "distinct_concat_ch9",
+          "id": "distinct_concat_ch7",
           "title": "Expert: When each product sold",
           "promptMarkdown": "Show each `product` and the dates it was sold on, joined with a comma and a space (`2026-10-01, 2026-10-03`), called `dates`.",
           "starterCode": "",
@@ -2721,7 +2612,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch10",
+          "id": "distinct_concat_ch8",
           "title": "Expert: Sales per trading day",
           "promptMarkdown": "Show each `store` and its average number of sales per day it traded (sales divided by different days), rounded to 2 decimals, called `per_day`.",
           "starterCode": "",
@@ -2945,31 +2836,6 @@
             ],
             "correctChoiceId": "d",
             "explanation": "It is an aggregate, so HAVING can test it."
-          },
-          {
-            "id": "distinct_concat_q10",
-            "type": "mcq",
-            "prompt": "Which gives each category's products as one text?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`GROUP_CONCAT(DISTINCT product) ... GROUP BY category`"
-              },
-              {
-                "id": "b",
-                "label": "`COUNT(DISTINCT product)`"
-              },
-              {
-                "id": "c",
-                "label": "`DISTINCT category, product`"
-              },
-              {
-                "id": "d",
-                "label": "`SUM(product)`"
-              }
-            ],
-            "correctChoiceId": "a",
-            "explanation": "GROUP_CONCAT joins the product names of each category."
           }
         ]
       },
@@ -3494,18 +3360,6 @@
         },
         {
           "id": "careful_totals_ch3",
-          "title": "Easy: Paid per item, per store",
-          "promptMarkdown": "Show each `store` and the average price paid per item there, rounded to 2 decimals, called `price_per_item`.",
-          "starterCode": "",
-          "hint": "The same calculation with `GROUP BY store`.",
-          "solution": "SELECT store, ROUND(SUM(quantity * unit_price) / SUM(quantity), 2) AS price_per_item FROM sales GROUP BY store;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "careful_totals_ch4",
           "title": "Medium: Two kinds of average price",
           "promptMarkdown": "In one row, show the plain average of `unit_price` (`average_listed_price`) and the price paid per item (`paid_per_item`), both rounded to 2 decimals.",
           "starterCode": "",
@@ -3517,7 +3371,7 @@
           }
         },
         {
-          "id": "careful_totals_ch5",
+          "id": "careful_totals_ch4",
           "title": "Medium: Fix the average",
           "promptMarkdown": "This query should show each student's average score with 1 decimal, but it drops the decimals. Fix it, keeping the name `average`.",
           "starterCode": "SELECT student, SUM(score) / COUNT(score) AS average FROM results GROUP BY student;",
@@ -3529,7 +3383,7 @@
           }
         },
         {
-          "id": "careful_totals_ch6",
+          "id": "careful_totals_ch5",
           "title": "Medium: Items per sale",
           "promptMarkdown": "Show each `category` and the average number of items per sale, rounded to 2 decimals, called `avg_items`.",
           "starterCode": "",
@@ -3541,7 +3395,7 @@
           }
         },
         {
-          "id": "careful_totals_ch7",
+          "id": "careful_totals_ch6",
           "title": "Hard: Takings per trading day",
           "promptMarkdown": "Show each `store` and its takings per day it traded (takings divided by the number of different sale dates), rounded to 2 decimals, called `per_day`.",
           "starterCode": "",
@@ -3553,7 +3407,7 @@
           }
         },
         {
-          "id": "careful_totals_ch8",
+          "id": "careful_totals_ch7",
           "title": "Hard: First, last and count",
           "promptMarkdown": "Show each `store` with its first sale date (`first_sale`), last sale date (`last_sale`) and number of sales (`sales`).",
           "starterCode": "",
@@ -3565,7 +3419,7 @@
           }
         },
         {
-          "id": "careful_totals_ch9",
+          "id": "careful_totals_ch8",
           "title": "Expert: Biggest gaps",
           "promptMarkdown": "Show each `student` and the gap between their best and worst score, called `gap`. Biggest gap first, then by name.",
           "starterCode": "",
@@ -3577,7 +3431,7 @@
           }
         },
         {
-          "id": "careful_totals_ch10",
+          "id": "careful_totals_ch9",
           "title": "Expert: Tea, or zero",
           "promptMarkdown": "Show each `store` and the number of `Tea` items it sold, called `tea_items`, with 0 for a store that sold none.",
           "starterCode": "",

@@ -29,11 +29,6 @@ export default makeTopic({
       hint: '`SELECT orders.id, customers.name FROM orders JOIN customers ON orders.customer_id = customers.id;`',
       solution: 'SELECT orders.id, customers.name\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;',
     }),
-    query('easy', 'Names and dates', {
-      prompt: "Show each order's customer `name` and `order_date`.",
-      hint: 'The same join, with `customers.name, orders.order_date`.',
-      solution: 'SELECT customers.name, orders.order_date\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;',
-    }),
     query('easy', 'What was ordered', {
       prompt: 'For every order line, show the `order_id`, the product `name` and the `quantity`.',
       hint: '`FROM order_items JOIN products ON order_items.product_id = products.id`.',

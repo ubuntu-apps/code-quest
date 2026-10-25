@@ -59,16 +59,6 @@ export default makeTopic({
       hint: "Text values need single quotes: `'Jane Austen'`.",
       solution: "SELECT title FROM books WHERE author = 'Jane Austen';",
     }),
-    query('hard', 'Cheap products', {
-      prompt: 'Show the `name` and `price` of products that cost less than 5.',
-      hint: '`WHERE price < 5`.',
-      solution: 'SELECT name, price FROM products WHERE price < 5;',
-    }),
-    query('hard', 'Heavy pets', {
-      prompt: 'Show the `name` and `weight_kg` of pets that weigh more than 10 kg.',
-      hint: '"More than" doesn\'t include 10 itself: `>`.',
-      solution: 'SELECT name, weight_kg FROM pets WHERE weight_kg > 10;',
-    }),
     query('expert', 'A hidden filter', {
       prompt: 'Show only the `title` of the books whose `genre` is `Mystery` (the genre itself is not shown).',
       hint: 'You can filter on a column you don\'t select: `SELECT title ... WHERE genre = ...`',
@@ -98,8 +88,6 @@ export default makeTopic({
       'A query is written `SELECT` … `FROM` … `WHERE` ….'),
     mc('Can you filter on a column you don\'t show?', ['No, it must be in the SELECT list', 'Yes, WHERE can use any column of the table', 'Only for numbers', 'Only with `*`'], 1,
       'WHERE looks at the whole row, whatever the SELECT list shows.'),
-    mc('Which keeps products cheaper than 5?', ['`WHERE price > 5`', '`WHERE price = 5`', '`WHERE 5 < price`', '`WHERE price < 5`'], 3,
-      '`price < 5` is true for prices below 5.'),
     mc('How many `=` signs does SQL use to test equality?', ['One', 'Two', 'Three', 'None'], 0,
       'SQL uses a single `=`. (SQLite also accepts `==`, but most databases don\'t.)'),
   ],

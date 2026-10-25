@@ -30,11 +30,6 @@ export default makeTopic({
       hint: '`SELECT COUNT(*) AS sales FROM sales;`',
       solution: 'SELECT COUNT(*) AS sales FROM sales;',
     }),
-    query('easy', 'How many results?', {
-      prompt: 'Count the rows in the `results` table, in a column called `results`.',
-      hint: '`SELECT COUNT(*) AS results FROM results;`',
-      solution: 'SELECT COUNT(*) AS results FROM results;',
-    }),
     query('easy', 'Card payments', {
       prompt: 'Count the sales paid by `card`, in a column called `card_sales`.',
       hint: "`COUNT(*) ... WHERE payment = 'card'`.",
@@ -44,11 +39,6 @@ export default makeTopic({
       prompt: 'Count how many sales have a payment method recorded (not NULL), in a column called `recorded`. Use `COUNT` on the column.',
       hint: '`COUNT(payment)` skips the NULLs.',
       solution: 'SELECT COUNT(payment) AS recorded FROM sales;',
-    }),
-    query('medium', 'Exams taken', {
-      prompt: 'Count how many exams were actually taken (the score is not NULL), in a column called `taken`.',
-      hint: '`COUNT(score) AS taken`.',
-      solution: 'SELECT COUNT(score) AS taken FROM results;',
     }),
     query('medium', 'Coffee at North', {
       prompt: 'Count the `Coffee` sales at the `North` store, in a column called `coffees`.',
@@ -70,11 +60,6 @@ export default makeTopic({
       hint: "`WHERE sale_date BETWEEN '2026-10-01' AND '2026-10-07'`.",
       solution: "SELECT COUNT(*) AS first_week FROM sales WHERE sale_date BETWEEN '2026-10-01' AND '2026-10-07';",
     }),
-    query('expert', 'High spring scores', {
-      prompt: 'Count the `Spring` results with a score of 80 or more, in a column called `high`.',
-      hint: "`WHERE term = 'Spring' AND score >= 80`.",
-      solution: "SELECT COUNT(*) AS high FROM results WHERE term = 'Spring' AND score >= 80;",
-    }),
   ],
   questions: [
     mc('What does an aggregate function do?', ['Turns many rows into one value', 'Adds a column to the table', 'Sorts the rows', 'Joins two tables'], 0,
@@ -93,8 +78,6 @@ export default makeTopic({
       'All rows minus the rows with a score leaves the missing ones.'),
     mc('Why name a count with AS?', ["It's required", 'To change the count', 'So the heading says what it is, instead of COUNT(*)', 'To make it faster'], 2,
       'Like any calculated column, it is headed by its expression unless you name it.'),
-    mc('Is COUNT(*) affected by NULLs?', ['Yes, it skips rows with any NULL', 'Only in SQLite', 'Only with WHERE', 'No, it counts every row'], 3,
-      'COUNT(*) counts rows, NULLs or not.'),
     mc('What does `COUNT(*)` give for a WHERE that matches no rows?', ['`0`', '`NULL`', 'No result row', 'An error'], 0,
       'Counting nothing gives 0, in a single row.'),
   ],

@@ -101,18 +101,6 @@
         },
         {
           "id": "keys_relationships_ch6",
-          "title": "Medium: Orders per employee id",
-          "promptMarkdown": "Show each `employee_id` in `orders` and how many orders that employee handled, called `orders`, most first, then by id.",
-          "starterCode": "",
-          "hint": "`GROUP BY employee_id ORDER BY orders DESC, employee_id`.",
-          "solution": "SELECT employee_id, COUNT(*) AS orders FROM orders GROUP BY employee_id ORDER BY orders DESC, employee_id;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "keys_relationships_ch7",
           "title": "Hard: Most ordered product id",
           "promptMarkdown": "Show the `product_id` with the most items ordered (sum of `quantity` in `order_items`) and that number, called `items`. One row.",
           "starterCode": "",
@@ -124,7 +112,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch8",
+          "id": "keys_relationships_ch7",
           "title": "Hard: The top boss",
           "promptMarkdown": "Show the `name` of the employee who has no manager.",
           "starterCode": "",
@@ -136,7 +124,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch9",
+          "id": "keys_relationships_ch8",
           "title": "Expert: Customers who ordered",
           "promptMarkdown": "Show each `customer_id` that appears in `orders`, once each, in order.",
           "starterCode": "",
@@ -148,7 +136,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch10",
+          "id": "keys_relationships_ch9",
           "title": "Expert: Busy orders",
           "promptMarkdown": "Show each `order_id` with three or more lines in `order_items`, and its number of lines, called `lines`.",
           "starterCode": "",
@@ -504,18 +492,6 @@
         },
         {
           "id": "inner_join_ch2",
-          "title": "Easy: Names and dates",
-          "promptMarkdown": "Show each order's customer `name` and `order_date`.",
-          "starterCode": "",
-          "hint": "The same join, with `customers.name, orders.order_date`.",
-          "solution": "SELECT customers.name, orders.order_date\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "inner_join_ch3",
           "title": "Easy: What was ordered",
           "promptMarkdown": "For every order line, show the `order_id`, the product `name` and the `quantity`.",
           "starterCode": "",
@@ -527,7 +503,7 @@
           }
         },
         {
-          "id": "inner_join_ch4",
+          "id": "inner_join_ch3",
           "title": "Medium: Who handled it",
           "promptMarkdown": "Show each order's `id` and the name of the employee who handled it, in a column called `employee`.",
           "starterCode": "",
@@ -539,7 +515,7 @@
           }
         },
         {
-          "id": "inner_join_ch5",
+          "id": "inner_join_ch4",
           "title": "Medium: Prices on the lines",
           "promptMarkdown": "For every order line, show the product `name`, its `price` and the `quantity`.",
           "starterCode": "",
@@ -551,7 +527,7 @@
           }
         },
         {
-          "id": "inner_join_ch6",
+          "id": "inner_join_ch5",
           "title": "Medium: Line totals",
           "promptMarkdown": "For every order line, show the `order_id`, the product `name` and the line total (quantity times price, rounded to 2 decimals), called `line_total`.",
           "starterCode": "",
@@ -563,7 +539,7 @@
           }
         },
         {
-          "id": "inner_join_ch7",
+          "id": "inner_join_ch6",
           "title": "Hard: Fix the ON",
           "promptMarkdown": "This query should show each order with its customer's name, but it pairs the wrong rows (order 4 shows Dev Patel, who didn't place it). Fix it.",
           "starterCode": "SELECT orders.id, customers.name\nFROM orders\nJOIN customers ON orders.id = customers.id;",
@@ -575,7 +551,7 @@
           }
         },
         {
-          "id": "inner_join_ch8",
+          "id": "inner_join_ch7",
           "title": "Hard: Where orders go",
           "promptMarkdown": "Show each order's `id` and the customer's `city`.",
           "starterCode": "",
@@ -587,7 +563,7 @@
           }
         },
         {
-          "id": "inner_join_ch9",
+          "id": "inner_join_ch8",
           "title": "Expert: Categories ordered",
           "promptMarkdown": "For every order line, show the `order_id` and the `category` of its product.",
           "starterCode": "",
@@ -599,7 +575,7 @@
           }
         },
         {
-          "id": "inner_join_ch10",
+          "id": "inner_join_ch9",
           "title": "Expert: From the employee side",
           "promptMarkdown": "Start from `employees` this time: show each employee's `name` with the `order_date` and `status` of every order they handled.",
           "starterCode": "",
@@ -967,18 +943,6 @@
         },
         {
           "id": "table_aliases_ch3",
-          "title": "Easy: Lines with aliases",
-          "promptMarkdown": "Using the aliases `i` and `p`, show each order line's `order_id`, the product `name` and the `quantity`.",
-          "starterCode": "",
-          "hint": "`FROM order_items i JOIN products p ON i.product_id = p.id`.",
-          "solution": "SELECT i.order_id, p.name, i.quantity\nFROM order_items i\nJOIN products p ON i.product_id = p.id;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "table_aliases_ch4",
           "title": "Medium: Two ids",
           "promptMarkdown": "Show each order's id as `order_id`, its customer's id as `customer_id`, and the customer's name as `customer`.",
           "starterCode": "",
@@ -990,19 +954,7 @@
           }
         },
         {
-          "id": "table_aliases_ch5",
-          "title": "Medium: Line and product ids",
-          "promptMarkdown": "For each order line, show the line's id as `line_id`, the product's id as `product_id` and the product's name as `product`.",
-          "starterCode": "",
-          "hint": "`i.id AS line_id, p.id AS product_id, p.name AS product`.",
-          "solution": "SELECT i.id AS line_id, p.id AS product_id, p.name AS product\nFROM order_items i\nJOIN products p ON i.product_id = p.id;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "table_aliases_ch6",
+          "id": "table_aliases_ch4",
           "title": "Medium: Fix the old name",
           "promptMarkdown": "This query should show the shipped orders with their customer's name, but gives the error **no such column: orders.status**. Fix it.",
           "starterCode": "SELECT o.id, c.name\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE orders.status = 'shipped';",
@@ -1014,7 +966,7 @@
           }
         },
         {
-          "id": "table_aliases_ch7",
+          "id": "table_aliases_ch5",
           "title": "Hard: Who handled it, shorter",
           "promptMarkdown": "Using the aliases `o` and `e`, show each order's id as `order_id` and the employee's name and role as `employee` and `role`.",
           "starterCode": "",
@@ -1026,7 +978,7 @@
           }
         },
         {
-          "id": "table_aliases_ch8",
+          "id": "table_aliases_ch6",
           "title": "Hard: Fix two problems",
           "promptMarkdown": "This query should show each order line's id, its product's id and name. It has an ambiguous name, and both ids would be called `id`. Show them as `line_id`, `product_id` and `name`.",
           "starterCode": "SELECT id, id, name\nFROM order_items i\nJOIN products p ON i.product_id = p.id;",
@@ -1038,7 +990,7 @@
           }
         },
         {
-          "id": "table_aliases_ch9",
+          "id": "table_aliases_ch7",
           "title": "Expert: Lines with their dates",
           "promptMarkdown": "Join `order_items` (alias `i`) to `orders` (alias `o`) and show each line's `order_id`, the `order_date`, the `product_id` and the `quantity`.",
           "starterCode": "",
@@ -1050,7 +1002,7 @@
           }
         },
         {
-          "id": "table_aliases_ch10",
+          "id": "table_aliases_ch8",
           "title": "Expert: A tidy order list",
           "promptMarkdown": "Show each order as `order_id`, its `status`, the customer's name as `customer` and the customer's `city`, in order id order.",
           "starterCode": "",
@@ -1864,18 +1816,6 @@
         },
         {
           "id": "join_aggregate_ch3",
-          "title": "Easy: Orders per employee",
-          "promptMarkdown": "Show the `name` of each employee who handled orders and how many, called `orders`.",
-          "starterCode": "",
-          "hint": "Join orders to employees and group by the employee.",
-          "solution": "SELECT e.name, COUNT(*) AS orders\nFROM orders o\nJOIN employees e ON o.employee_id = e.id\nGROUP BY e.id, e.name;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "join_aggregate_ch4",
           "title": "Medium: Order totals",
           "promptMarkdown": "Show each `order_id` and its total (sum of quantity times price, 2 decimals), called `total`.",
           "starterCode": "",
@@ -1887,7 +1827,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch5",
+          "id": "join_aggregate_ch4",
           "title": "Medium: Items per category",
           "promptMarkdown": "Show each product `category` and the total quantity ordered, called `items`. Most first, then by category.",
           "starterCode": "",
@@ -1899,7 +1839,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch6",
+          "id": "join_aggregate_ch5",
           "title": "Medium: Shipped per customer",
           "promptMarkdown": "Show each customer's `name` and their number of shipped orders (`shipped`). Most first, then by name.",
           "starterCode": "",
@@ -1911,7 +1851,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch7",
+          "id": "join_aggregate_ch6",
           "title": "Hard: Repeat customers",
           "promptMarkdown": "Show the `name` of each customer with two or more orders, and their number of orders (`orders`).",
           "starterCode": "",
@@ -1923,7 +1863,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch8",
+          "id": "join_aggregate_ch7",
           "title": "Hard: Top three products",
           "promptMarkdown": "Show the three products with the highest takings: `name` and `revenue` (sum of quantity times price, 2 decimals). Highest first.",
           "starterCode": "",
@@ -1935,7 +1875,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch9",
+          "id": "join_aggregate_ch8",
           "title": "Expert: Last order",
           "promptMarkdown": "Show each customer's `name` and the date of their latest order (`last_order`). Most recent first.",
           "starterCode": "",
@@ -1947,7 +1887,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch10",
+          "id": "join_aggregate_ch9",
           "title": "Expert: Big orders",
           "promptMarkdown": "Show the orders worth more than 50: `order_id`, number of lines (`lines`) and `total` (2 decimals). Biggest first.",
           "starterCode": "",
@@ -2356,18 +2296,6 @@
         },
         {
           "id": "left_join_ch6",
-          "title": "Medium: Every employee",
-          "promptMarkdown": "Show every employee's `name` and how many orders they handled (`orders`), including 0. Most first, then by name.",
-          "starterCode": "",
-          "hint": "`FROM employees e LEFT JOIN orders o ON o.employee_id = e.id`, `COUNT(o.id)`.",
-          "solution": "SELECT e.name, COUNT(o.id) AS orders\nFROM employees e\nLEFT JOIN orders o ON o.employee_id = e.id\nGROUP BY e.id, e.name\nORDER BY orders DESC, e.name;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "left_join_ch7",
           "title": "Hard: Shipped, with zeros",
           "promptMarkdown": "Show every customer's `name` and their number of shipped orders (`shipped`), with 0 for customers who have none.",
           "starterCode": "",
@@ -2379,7 +2307,7 @@
           }
         },
         {
-          "id": "left_join_ch8",
+          "id": "left_join_ch7",
           "title": "Hard: Fix the lost customers",
           "promptMarkdown": "This query should show every customer's number of pending orders (`pending`), including 0, but most customers are missing. Fix it.",
           "starterCode": "SELECT c.name, COUNT(o.id) AS pending\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'pending'\nGROUP BY c.id, c.name;",
@@ -2391,7 +2319,7 @@
           }
         },
         {
-          "id": "left_join_ch9",
+          "id": "left_join_ch8",
           "title": "Expert: Takings per product",
           "promptMarkdown": "Show every product's `name` and its takings (`revenue`: sum of quantity times price, 2 decimals), with 0 for products never ordered. Highest first, then by name.",
           "starterCode": "",
@@ -2403,7 +2331,7 @@
           }
         },
         {
-          "id": "left_join_ch10",
+          "id": "left_join_ch9",
           "title": "Expert: Last order, or never",
           "promptMarkdown": "Show every customer's `name` and the date of their latest order (`last_order`), or the text `never` if they haven't ordered. In name order.",
           "starterCode": "",
@@ -2766,18 +2694,6 @@
         },
         {
           "id": "unmatched_rows_ch3",
-          "title": "Easy: No orders handled",
-          "promptMarkdown": "Show the `name` and `role` of every employee who handled no orders.",
-          "starterCode": "",
-          "hint": "`FROM employees e LEFT JOIN orders o ON o.employee_id = e.id WHERE o.id IS NULL`.",
-          "solution": "SELECT e.name, e.role\nFROM employees e\nLEFT JOIN orders o ON o.employee_id = e.id\nWHERE o.id IS NULL;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "unmatched_rows_ch4",
           "title": "Medium: Unsold stock",
           "promptMarkdown": "Show the `name`, `category` and `price` of every product never ordered, most expensive first.",
           "starterCode": "",
@@ -2789,7 +2705,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch5",
+          "id": "unmatched_rows_ch4",
           "title": "Medium: How many never ordered?",
           "promptMarkdown": "Show how many customers have never ordered, in a column called `customers`.",
           "starterCode": "",
@@ -2801,7 +2717,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch6",
+          "id": "unmatched_rows_ch5",
           "title": "Medium: No shipped order",
           "promptMarkdown": "Show the `name` of every customer with no shipped order (they may have other orders, or none).",
           "starterCode": "",
@@ -2813,7 +2729,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch7",
+          "id": "unmatched_rows_ch6",
           "title": "Hard: Cancelled, or not",
           "promptMarkdown": "This query should show every customer with the date of their cancelled order (`cancelled_on`), or NULL if they have none. It only shows one customer. Fix it.",
           "starterCode": "SELECT c.name, o.order_date AS cancelled_on\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'cancelled';",
@@ -2825,7 +2741,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch8",
+          "id": "unmatched_rows_ch7",
           "title": "Hard: Quiet sales staff",
           "promptMarkdown": "Show the `name` of each employee with the role `Sales` who handled no orders.",
           "starterCode": "",
@@ -2837,7 +2753,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch9",
+          "id": "unmatched_rows_ch8",
           "title": "Expert: Empty categories",
           "promptMarkdown": "Show each product `category` in which no product was ever ordered.",
           "starterCode": "",
@@ -2849,7 +2765,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch10",
+          "id": "unmatched_rows_ch9",
           "title": "Expert: Ordered, but nothing shipped",
           "promptMarkdown": "Show the `name` of every customer who has placed at least one order, but none of whose orders shipped.",
           "starterCode": "",

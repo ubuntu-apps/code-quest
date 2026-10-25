@@ -52,11 +52,6 @@ export default makeTopic({
       hint: '`WHERE price BETWEEN 5 AND 15`.',
       solution: 'SELECT name, price FROM products WHERE price BETWEEN 5 AND 15;',
     }),
-    query('medium', 'Medium-length books', {
-      prompt: 'Show the `title` and `pages` of books with 250 to 320 pages, both included.',
-      hint: '`BETWEEN 250 AND 320` includes both ends.',
-      solution: 'SELECT title, pages FROM books WHERE pages BETWEEN 250 AND 320;',
-    }),
     query('hard', "Ana's and Ben's pets", {
       prompt: 'Show the `name` and `owner` of the pets owned by `Ana` or `Ben`.',
       hint: "`WHERE owner IN ('Ana', 'Ben')`.",
@@ -93,8 +88,6 @@ export default makeTopic({
       '`IN (…)` is true when the value is one of those in the list.'),
     mc("Does `name BETWEEN 'A' AND 'D'` keep `Daisy`?", ["No: 'Daisy' comes after 'D' alphabetically", 'Yes, D is included', 'Only in SQLite', 'Text can\'t use BETWEEN'], 0,
       "Alphabetically, 'D' comes before 'Daisy', so the range stops just before it."),
-    mc('How is the list in `IN` written?', ['Without brackets', 'With semicolons between the values', 'In brackets, with commas between the values', 'One value only'], 2,
-      'The values go in round brackets, separated by commas.'),
     mc('Which finds pets aged 1, 2 or 3?', ['`age IN 1, 2, 3`', '`age BETWEEN 1 OR 3`', '`age = (1, 2, 3)`', '`age BETWEEN 1 AND 3`'], 3,
       '`age BETWEEN 1 AND 3` (or `age IN (1, 2, 3)`) works; the others are not valid.'),
     mc('Can IN and BETWEEN be combined with AND?', ['Yes, like any other condition', 'No, only one per query', 'Only IN', 'Only with brackets'], 0,

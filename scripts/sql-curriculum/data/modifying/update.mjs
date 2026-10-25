@@ -35,12 +35,6 @@ export default makeTopic({
       solution: "UPDATE members\nSET email = 'ama.m@example.com'\nWHERE id = 1;",
       checks: [AFTER.members],
     }),
-    query('easy', 'Suspended', {
-      prompt: "Set the status of member 6 to `suspended`.",
-      hint: "`UPDATE members SET status = 'suspended' WHERE id = 6;`",
-      solution: "UPDATE members\nSET status = 'suspended'\nWHERE id = 6;",
-      checks: [AFTER.members],
-    }),
     query('medium', 'Old memberships', {
       prompt: "Set the status of every member who joined before `2023-01-01` to `inactive`.",
       hint: "`WHERE joined < '2023-01-01'`.",

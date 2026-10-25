@@ -36,11 +36,6 @@ export default makeTopic({
       hint: '`COUNT(DISTINCT store) AS stores ... GROUP BY product`.',
       solution: 'SELECT product, COUNT(DISTINCT store) AS stores FROM sales GROUP BY product;',
     }),
-    query('easy', 'Students per subject', {
-      prompt: 'Show each `subject` and the number of different students with results in it, called `students`.',
-      hint: '`COUNT(DISTINCT student) AS students ... GROUP BY subject`.',
-      solution: 'SELECT subject, COUNT(DISTINCT student) AS students FROM results GROUP BY subject;',
-    }),
     query('medium', 'Range per store', {
       prompt: 'Show each `store` and the number of different products it sold, called `products`.',
       hint: '`COUNT(DISTINCT product) AS products ... GROUP BY store`.',
@@ -60,11 +55,6 @@ export default makeTopic({
       prompt: 'Show each `category` and a list of its different products, called `products` (use `GROUP_CONCAT(DISTINCT product)`).',
       hint: '`GROUP_CONCAT(DISTINCT product) AS products ... GROUP BY category`.',
       solution: 'SELECT category, GROUP_CONCAT(DISTINCT product) AS products FROM sales GROUP BY category;',
-    }),
-    query('hard', 'Payment methods per store', {
-      prompt: 'Show each `store` and how many different payment methods were recorded there, called `methods`.',
-      hint: '`COUNT(DISTINCT payment)` skips the unrecorded ones.',
-      solution: 'SELECT store, COUNT(DISTINCT payment) AS methods FROM sales GROUP BY store;',
     }),
     query('expert', 'When each product sold', {
       prompt: "Show each `product` and the dates it was sold on, joined with a comma and a space (`2026-10-01, 2026-10-03`), called `dates`.",
@@ -96,7 +86,5 @@ export default makeTopic({
       'Sales divided by the number of different days (times 1.0 to keep decimals).'),
     mc('Can COUNT(DISTINCT …) be used in HAVING?', ['No', 'Only in WHERE', 'Only with GROUP_CONCAT', 'Yes, like any aggregate'], 3,
       'It is an aggregate, so HAVING can test it.'),
-    mc('Which gives each category\'s products as one text?', ['`GROUP_CONCAT(DISTINCT product) ... GROUP BY category`', '`COUNT(DISTINCT product)`', '`DISTINCT category, product`', '`SUM(product)`'], 0,
-      'GROUP_CONCAT joins the product names of each category.'),
   ],
 })

@@ -1519,18 +1519,6 @@
         },
         {
           "id": "fill_gaps_ch3",
-          "title": "Easy: Items every day",
-          "promptMarkdown": "Show every `day` from the first sale to the last with the items sold (`items`, 0 on days with none). In date order.",
-          "starterCode": "",
-          "hint": "`COALESCE(SUM(s.quantity), 0)`.",
-          "solution": "WITH RECURSIVE days(day) AS (\n  SELECT MIN(sold_on) FROM sales\n  UNION ALL\n  SELECT date(day, '+1 day') FROM days\n  WHERE day < (SELECT MAX(sold_on) FROM sales)\n)\nSELECT d.day, COALESCE(SUM(s.quantity), 0) AS items\nFROM days d\nLEFT JOIN sales s ON s.sold_on = d.day\nGROUP BY d.day\nORDER BY d.day;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "fill_gaps_ch4",
           "title": "Medium: Empty days",
           "promptMarkdown": "Show the days (`day`) between the first and last sale that had no sales at all. In date order.",
           "starterCode": "",
@@ -1542,7 +1530,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch5",
+          "id": "fill_gaps_ch4",
           "title": "Medium: Takings every day",
           "promptMarkdown": "Show every `day` with its `takings` (quantity times price, 2 decimals, 0 on days with none). In date order.",
           "starterCode": "",
@@ -1554,7 +1542,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch6",
+          "id": "fill_gaps_ch5",
           "title": "Medium: Named weekdays",
           "promptMarkdown": "Show every `day`, its weekday name (`weekday`: `Sun`, `Mon`, `Tue`, `Wed`, `Thu`, `Fri` or `Sat`) and its number of `sales`. In date order.",
           "starterCode": "",
@@ -1566,7 +1554,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch7",
+          "id": "fill_gaps_ch6",
           "title": "Hard: Running items",
           "promptMarkdown": "Show every `day`, its `items` (0 if none) and the running total of items so far (`items_so_far`). In date order.",
           "starterCode": "",
@@ -1578,7 +1566,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch8",
+          "id": "fill_gaps_ch7",
           "title": "Hard: Three-day items",
           "promptMarkdown": "Show every `day`, its `items` (0 if none) and the items of that day and the two days before it (`three_days`). Because every day is a row, two rows back really is two days back. In date order.",
           "starterCode": "",
@@ -1590,7 +1578,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch9",
+          "id": "fill_gaps_ch8",
           "title": "Expert: Quiet spells",
           "promptMarkdown": "List each run of days in a row with no sales: `started`, `ended` and `days`. In date order.",
           "starterCode": "",
@@ -1602,7 +1590,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch10",
+          "id": "fill_gaps_ch9",
           "title": "Expert: Days since a sale",
           "promptMarkdown": "Show every `day` and how many days it had been since the last day with sales (`days_since`: 0 on a day with sales). In date order.",
           "starterCode": "",
@@ -2851,18 +2839,6 @@
         },
         {
           "id": "json_values_ch2",
-          "title": "Easy: Tallest first",
-          "promptMarkdown": "Show the `name` and `height_cm` of every product with a height, tallest first, then by name.",
-          "starterCode": "",
-          "hint": "Heights are numbers in the JSON, so they sort as numbers.",
-          "solution": "SELECT name, json_extract(details, '$.height_cm') AS height_cm\nFROM products\nWHERE json_extract(details, '$.height_cm') IS NOT NULL\nORDER BY height_cm DESC, name;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "json_values_ch3",
           "title": "Easy: Watering",
           "promptMarkdown": "Show the `name` and `water` need (inside `care`) of every product that has one. Sort by name.",
           "starterCode": "",
@@ -2874,7 +2850,7 @@
           }
         },
         {
-          "id": "json_values_ch4",
+          "id": "json_values_ch3",
           "title": "Medium: First tags",
           "promptMarkdown": "Show the `name` and first tag (`first_tag`) of every product with at least one tag. Sort by name.",
           "starterCode": "",
@@ -2886,7 +2862,7 @@
           }
         },
         {
-          "id": "json_values_ch5",
+          "id": "json_values_ch4",
           "title": "Medium: Out of the sun",
           "promptMarkdown": "Show the `name` and `light` need of the products whose light is `shade` or `part shade`. Sort by name.",
           "starterCode": "",
@@ -2898,7 +2874,7 @@
           }
         },
         {
-          "id": "json_values_ch6",
+          "id": "json_values_ch5",
           "title": "Medium: By colour",
           "promptMarkdown": "For each colour, show `colour`, how many products have it (`products`) and their average price (`average_price`, 2 decimals). Leave out products without a colour. Sort by colour.",
           "starterCode": "",
@@ -2910,7 +2886,7 @@
           }
         },
         {
-          "id": "json_values_ch7",
+          "id": "json_values_ch6",
           "title": "Hard: Build objects",
           "promptMarkdown": "For each product with a price, show `item`: a JSON object with its `name` and `price`, like `{\"name\":\"Hosta\",\"price\":8.0}`. Sort by name.",
           "starterCode": "",
@@ -2922,7 +2898,7 @@
           }
         },
         {
-          "id": "json_values_ch8",
+          "id": "json_values_ch7",
           "title": "Hard: Water less",
           "promptMarkdown": "Change the details of every product whose water need is `low` so that it is `very low` instead. Leave the rest of the JSON as it is.",
           "starterCode": "",
@@ -2941,7 +2917,7 @@
           }
         },
         {
-          "id": "json_values_ch9",
+          "id": "json_values_ch8",
           "title": "Expert: Add a size",
           "promptMarkdown": "For every product with a `height_cm`, add a `size` key to its details: `small` under 50 cm, `medium` from 50 to 99, `large` from 100.",
           "starterCode": "",
@@ -2960,7 +2936,7 @@
           }
         },
         {
-          "id": "json_values_ch10",
+          "id": "json_values_ch9",
           "title": "Expert: Tidy empty tags",
           "promptMarkdown": "Some products have an empty `tags` array. Remove the `tags` key from their details, and leave the others alone.",
           "starterCode": "",
@@ -3785,30 +3761,6 @@
         },
         {
           "id": "query_plans_ch2",
-          "title": "Easy: Search by day",
-          "promptMarkdown": "Create an index called `sales_day` so that `SELECT * FROM sales WHERE sold_on = '2026-10-07'` searches instead of scanning.",
-          "starterCode": "",
-          "hint": "Index the column in the WHERE: `sales (sold_on)`.",
-          "solution": "CREATE INDEX sales_day ON sales (sold_on);",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The sales table has the right indexes",
-                "assertion": "SELECT (SELECT group_concat(COALESCE(ii.name, '(expression)'), ', ') FROM pragma_index_info(il.name) ii) AS columns,\n       il.\"unique\", il.partial\nFROM pragma_index_list('sales') il\nWHERE il.origin = 'c'\nORDER BY columns"
-              },
-              {
-                "id": "t2",
-                "label": "The query searches with the index",
-                "assertion": "EXPLAIN QUERY PLAN SELECT * FROM sales WHERE sold_on = '2026-10-07'"
-              }
-            ]
-          }
-        },
-        {
-          "id": "query_plans_ch3",
           "title": "Easy: Search by name",
           "promptMarkdown": "Create an index called `products_name` so that `SELECT price FROM products WHERE name = 'Hosta'` searches instead of scanning.",
           "starterCode": "",
@@ -3832,7 +3784,7 @@
           }
         },
         {
-          "id": "query_plans_ch4",
+          "id": "query_plans_ch3",
           "title": "Medium: Two columns",
           "promptMarkdown": "Create one index called `sales_staff_day` that lets `SELECT * FROM sales WHERE staff_id = 4 AND sold_on >= '2026-10-07'` search on both columns: staff_id first, then sold_on.",
           "starterCode": "",
@@ -3856,7 +3808,7 @@
           }
         },
         {
-          "id": "query_plans_ch5",
+          "id": "query_plans_ch4",
           "title": "Medium: Covering index",
           "promptMarkdown": "Create an index called `sales_day_quantity` on `sales (sold_on, quantity)`, so that `SELECT sold_on, SUM(quantity) FROM sales GROUP BY sold_on` is answered from the index alone (a covering index).",
           "starterCode": "",
@@ -3880,7 +3832,7 @@
           }
         },
         {
-          "id": "query_plans_ch6",
+          "id": "query_plans_ch5",
           "title": "Medium: Already in order",
           "promptMarkdown": "`SELECT name, price FROM products WHERE price IS NOT NULL ORDER BY price` sorts with a temporary B-tree. Create an index called `products_price` on price, so the rows come out of the index already in order.",
           "starterCode": "",
@@ -3904,7 +3856,7 @@
           }
         },
         {
-          "id": "query_plans_ch7",
+          "id": "query_plans_ch6",
           "title": "Hard: An index on JSON",
           "promptMarkdown": "Create an index called `products_colour` on the expression `json_extract(details, '$.colour')`, so that `SELECT name FROM products WHERE json_extract(details, '$.colour') = 'green'` searches.",
           "starterCode": "",
@@ -3928,7 +3880,7 @@
           }
         },
         {
-          "id": "query_plans_ch8",
+          "id": "query_plans_ch7",
           "title": "Hard: One index too many",
           "promptMarkdown": "The starter makes two indexes. `sales_product` is not needed: `sales_product_qty` starts with the same column, so it can do the same job. Keep the starter's lines and drop `sales_product`.",
           "starterCode": "CREATE INDEX sales_product ON sales (product_id);\nCREATE INDEX sales_product_qty ON sales (product_id, quantity);\n",
@@ -3952,7 +3904,7 @@
           }
         },
         {
-          "id": "query_plans_ch9",
+          "id": "query_plans_ch8",
           "title": "Expert: A join that searches",
           "promptMarkdown": "In `SELECT p.name, s.quantity FROM products p JOIN sales s ON s.product_id = p.id WHERE p.name = 'Hosta'`, SQLite reads every row of sales (`SCAN s`) and looks each product up by id. Create just one index, `sales_product` on `sales (product_id)`, so the sales side of the join is a SEARCH.",
           "starterCode": "",
@@ -3976,7 +3928,7 @@
           }
         },
         {
-          "id": "query_plans_ch10",
+          "id": "query_plans_ch9",
           "title": "Expert: A partial index",
           "promptMarkdown": "Self-checkout sales (no staff_id) are checked by day. Create a partial index called `sales_self_checkout` on `sales (sold_on)` that only holds the rows `WHERE staff_id IS NULL`, so that `SELECT * FROM sales WHERE staff_id IS NULL AND sold_on = '2026-10-10'` searches with it.",
           "starterCode": "",

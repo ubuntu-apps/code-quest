@@ -50,11 +50,6 @@ export default makeTopic({
       hint: '`GROUP BY customer_id`.',
       solution: 'SELECT customer_id, COUNT(*) AS orders FROM orders GROUP BY customer_id;',
     }),
-    query('medium', 'Orders per employee id', {
-      prompt: 'Show each `employee_id` in `orders` and how many orders that employee handled, called `orders`, most first, then by id.',
-      hint: '`GROUP BY employee_id ORDER BY orders DESC, employee_id`.',
-      solution: 'SELECT employee_id, COUNT(*) AS orders FROM orders GROUP BY employee_id ORDER BY orders DESC, employee_id;',
-    }),
     query('hard', 'Most ordered product id', {
       prompt: 'Show the `product_id` with the most items ordered (sum of `quantity` in `order_items`) and that number, called `items`. One row.',
       hint: '`GROUP BY product_id ORDER BY items DESC LIMIT 1`.',

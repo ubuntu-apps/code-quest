@@ -34,12 +34,6 @@ export default makeTopic({
       solution: 'INSERT INTO books (title, author, copies, available)\nSELECT title, author, copies, copies\nFROM arrivals;',
       checks: [AFTER.books],
     }),
-    query('easy', 'Two books', {
-      prompt: "Add two books in one statement: `The Tin Garden` by `A. Moreau` (2 copies, 2 available) and `Quiet Rooms` by `B. Lowe` (1 copy, 1 available).",
-      hint: 'One INSERT, two brackets of values.',
-      solution: "INSERT INTO books (title, author, copies, available) VALUES\n  ('The Tin Garden', 'A. Moreau', 2, 2),\n  ('Quiet Rooms', 'B. Lowe', 1, 1);",
-      checks: [AFTER.books],
-    }),
     query('medium', 'Only new titles', {
       prompt: "Copy into `books` only the arrivals whose title isn't in `books` yet, with all copies available.",
       hint: 'Add `WHERE title NOT IN (SELECT title FROM books)` to the SELECT.',

@@ -35,11 +35,6 @@ export default makeTopic({
       hint: '`ROUND(SUM(quantity * unit_price) / SUM(quantity), 2)`.',
       solution: 'SELECT ROUND(SUM(quantity * unit_price) / SUM(quantity), 2) AS price_per_item FROM sales;',
     }),
-    query('easy', 'Paid per item, per store', {
-      prompt: 'Show each `store` and the average price paid per item there, rounded to 2 decimals, called `price_per_item`.',
-      hint: 'The same calculation with `GROUP BY store`.',
-      solution: 'SELECT store, ROUND(SUM(quantity * unit_price) / SUM(quantity), 2) AS price_per_item FROM sales GROUP BY store;',
-    }),
     query('medium', 'Two kinds of average price', {
       prompt: 'In one row, show the plain average of `unit_price` (`average_listed_price`) and the price paid per item (`paid_per_item`), both rounded to 2 decimals.',
       hint: '`ROUND(AVG(unit_price), 2)` and `ROUND(SUM(quantity * unit_price) / SUM(quantity), 2)`.',

@@ -62,11 +62,6 @@ export default makeTopic({
       hint: "The month is `SUBSTR(order_date, 6, 2)`. Use `WHEN SUBSTR(order_date, 6, 2) IN ('12', '01', '02') THEN 'winter'` and so on.",
       solution: "SELECT id, order_date,\n  CASE\n    WHEN SUBSTR(order_date, 6, 2) IN ('12', '01', '02') THEN 'winter'\n    WHEN SUBSTR(order_date, 6, 2) IN ('03', '04', '05') THEN 'spring'\n    WHEN SUBSTR(order_date, 6, 2) IN ('06', '07', '08') THEN 'summer'\n    ELSE 'autumn'\n  END AS season\nFROM orders;",
     }),
-    query('hard', 'Three sizes', {
-      prompt: "Show each order's `id` and a `size`: `small` for totals under 20, `medium` for under 100, and `large` for the rest.",
-      hint: "`WHEN total < 20 THEN 'small' WHEN total < 100 THEN 'medium' ELSE 'large'`.",
-      solution: "SELECT id,\n  CASE\n    WHEN total < 20 THEN 'small'\n    WHEN total < 100 THEN 'medium'\n    ELSE 'large'\n  END AS size\nFROM orders;",
-    }),
     query('expert', 'Teams', {
       prompt: "Show each employee's `name`, `role` and a `team`: `Product` for developers, designers and analysts, `Service` for support, and `Other` for everyone else.",
       hint: "`WHEN role IN ('Developer', 'Designer', 'Analyst') THEN 'Product' WHEN role = 'Support' THEN 'Service' ELSE 'Other'`.",
@@ -92,8 +87,6 @@ export default makeTopic({
       'The first WHEN is already true, so the second one is never reached.'),
     mc("Which is the short form for comparing `status`?", ["`CASE status WHEN 'shipped' THEN 'Sent' END`", "`CASE WHEN 'shipped' THEN 'Sent' END`", "`CASE status = 'shipped' THEN 'Sent'`", "`WHEN status CASE 'shipped'`"], 0,
       "Name the column after CASE, then give only values after each WHEN."),
-    mc('How should you order the WHENs for bands like ≥ 60000 and ≥ 40000?', ['Any order works', 'Smallest limit first', 'Strictest (largest) limit first', 'ELSE first'], 2,
-      'Put the strictest condition first, or the looser one catches every row.'),
     mc('Which parts of CASE are needed?', ['Only ELSE', 'CASE, at least one WHEN … THEN, and END', 'CASE and ELSE', 'WHEN and ELSE'], 1,
       'ELSE is optional; CASE, WHEN … THEN and END are needed.'),
     mc("How do you test for a missing value inside CASE?", ["`WHEN phone = NULL`", "`WHEN phone == NULL`", "`WHEN NULL`", '`WHEN phone IS NULL`'], 3,
