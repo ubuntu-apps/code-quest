@@ -137,7 +137,6 @@ export default makeTopic({
     mc("`settings.TAX_RATE` is changed while the program runs. Which import sees the new value?", ["`import settings`, then `settings.TAX_RATE`", "`from settings import TAX_RATE`", "Both", "Neither"], 0),
     mc("How are test files usually named?", ["`convert_check.py`", "`test_convert.py`", "`convert.test`", "`tests.py` only"], 1),
     mc("What usually goes in `requirements.txt`?", ["The tests", "The program's output", "Notes for users", "The packages the project needs"], 3),
-    mc("Which folder usually holds the checks for a project's code?", ["`src/`", "`docs/`", "`tests/`", "`.venv/`"], 2),
     mc("Where do settings like a tax rate belong?", ["In one place, such as `settings.py`", "Copied into every function", "In the README", "In the test files"], 0),
   ],
 })

@@ -88,6 +88,15 @@ export default makeTopic({
         ["is_primary is False", "is_primary is False"],
       ],
     }),
+    task("hard", "Check before you divide", {
+      prompt: "`busy` should say whether the average order has more than 5 items. Nobody has ordered yet, so `orders` is 0 and the line crashes with `ZeroDivisionError`. Fix it with `and`, so that the division is only worked out when there are orders.",
+      starter: "orders = 0\nitems = 0\nbusy = items / orders > 5\nprint(busy)",
+      hint: "`and` stops as soon as its left side is false. Put `orders > 0 and` in front of the division.",
+      solution: "orders = 0\nitems = 0\nbusy = orders > 0 and items / orders > 5\nprint(busy)",
+      tests: [
+        ["busy is False when there are no orders", "busy is False"],
+      ],
+    }),
     task("hard", "Leap years", {
       prompt: "A year is a leap year if it divides by 4, except years that divide by 100, unless they also divide by 400. Set `leap1`, `leap2` and `leap3` for the three years.",
       starter: "y1, y2, y3 = 2024, 1900, 2000\n",

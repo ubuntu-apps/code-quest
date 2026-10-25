@@ -10,7 +10,6 @@ export default {
     "When Python can't find a module of that name, it raises `ModuleNotFoundError`.",
     "A module runs once, on its first import; later imports get the same module object.",
     "`dir` lists the names (functions, constants and so on) a module defines.",
-    "`import x as y` binds the module to the name you choose.",
     "Imports at the top show at a glance everything the file depends on.",
     "`importlib.import_module` takes the module's name as a string.",
   ],
@@ -60,7 +59,6 @@ export default {
     "`global` lets a function assign to a variable at the module's top level.",
     "Modules are cached in `sys.modules`, so every importer shares one object.",
     "ALL_CAPS names are constants by convention.",
-    "The checks save your code to a file and import it like any other module.",
   ],
   name_main: [
     "Python sets `__name__` to `\"__main__\"` in the file it was asked to run.",
@@ -69,7 +67,6 @@ export default {
     "A `main()` function keeps the program's variables local and can be called from tests.",
     "Top-level code runs on import, so the `input()` call happens during the import.",
     "`sys.argv` holds the program name followed by the command-line arguments, all as strings.",
-    "The running file's `__name__` is `\"__main__\"`.",
     "Importing runs all the top-level code, and the guard skips its block because `__name__` isn't `\"__main__\"`.",
     "`sys.argv[0]` is the script's own name; the arguments start at index 1.",
     "The guard goes last, after everything it calls has been defined.",
@@ -119,7 +116,6 @@ export default {
     "`settings.TAX_RATE` is looked up at the moment you use it, while `from ... import` copies the value once.",
     "pytest finds files named `test_*.py` automatically.",
     "`requirements.txt` lists the packages to install for the project.",
-    "Projects usually keep their tests together in a `tests/` folder.",
     "One source for each setting means one place to change it.",
   ],
   proj_dice_roller: [

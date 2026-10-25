@@ -131,7 +131,6 @@ export default makeTopic({
     mc("With `def greet(name, greeting=\"Hello\"):`, what does `greet(\"Ana\")` use for `greeting`?", ["Nothing: it raises an error", "`None`", "The default, `\"Hello\"`", "An empty string"], 2),
     mc("Why is `def f(a=1, b):` a `SyntaxError`?", ["Parameters with defaults must come after the required ones", "Defaults must be strings", "A function can't have two parameters", "`b` is a reserved word"], 0),
     mc("When is a default value created?", ["On every call", "Never", "When the program ends", "Once, when the `def` line runs"], 3),
-    qShort("`def power(b, e=2): return b ** e`. What is `power(3)`? (a number)", "9"),
     mc("Why is the default in `def add_item(item, basket=[]):` a trap?", ["Lists can't be defaults", "The same list is shared by every call, so items pile up", "It makes the function slower", "It is a `SyntaxError`"], 1),
     mc("What is the usual fix for a list default?", ["A tuple default", "A global list", "`basket=None`, then make a new list inside", "No default at all"], 2),
     mc("Which built-in has an optional argument?", ["`round`, as in `round(x, 2)`", "`len`", "`type`", "`input`, which needs one"], 0),

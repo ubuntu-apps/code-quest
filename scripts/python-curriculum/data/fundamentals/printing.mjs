@@ -78,6 +78,15 @@ export default makeTopic({
         ["Prints two lines", "_cq_stdout.strip().splitlines() == [\"Name: Ana\", \"Age: 30\"]"],
       ],
     }),
+    task("medium", "Triple quotes", {
+      prompt: "Print these three lines with a single `print`, writing the text in triple quotes with real line breaks (no `\\n`):\n\n```\nMorning: tea\nAfternoon: code\nEvening: rest\n```",
+      starter: "print()",
+      hint: "Start the text with `\"\"\"`, press Enter where each new line should begin, and end it with `\"\"\"`.",
+      solution: "print(\"\"\"Morning: tea\nAfternoon: code\nEvening: rest\"\"\")",
+      tests: [
+        ["Prints the three lines", "_cq_stdout == \"Morning: tea\\nAfternoon: code\\nEvening: rest\\n\""],
+      ],
+    }),
     task("hard", "Columns with tabs", {
       prompt: "Print this two-row table, with a tab (`\\t`) between the columns:\n\n```\nItem\tPrice\nTea\t2.50\n```\n\nWrite the price as text, so the trailing zero stays.",
       starter: "print(\"Item\\tPrice\")\n",

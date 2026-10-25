@@ -79,6 +79,15 @@ export default makeTopic({
         ["s_count is 6", "s_count == 6"],
       ],
     }),
+    task("medium", "Only digits?", {
+      prompt: "A PIN must be exactly 4 digits. Set `valid` to whether `pin` is one: every character a digit, and 4 characters long.",
+      starter: "pin = \"40a6\"\n",
+      hint: "`pin.isdigit()` checks the characters and `len(pin) == 4` the length. Join them with `and`.",
+      solution: "pin = \"40a6\"\nvalid = pin.isdigit() and len(pin) == 4",
+      tests: [
+        ["valid is False for 40a6", "valid is False"],
+      ],
+    }),
     task("hard", "Is it a photo?", {
       prompt: "Set `is_photo` to whether `filename` ends in `.jpg`, whatever its capital letters.",
       starter: "filename = \"Holiday.JPG\"\n",
@@ -95,6 +104,15 @@ export default makeTopic({
       solution: "email = \"grace@example.org\"\nat = email.find(\"@\")\ndomain = email[at + 1:]",
       tests: [
         ["domain is example.org", "domain == \"example.org\""],
+      ],
+    }),
+    task("hard", "Count the words", {
+      prompt: "Set `word_count` to the number of words in `sentence`. Some words are separated by more than one space.",
+      starter: "sentence = \"  The quick   brown fox  jumps \"\n",
+      hint: "`split()` with no argument splits at any run of spaces and ignores the ones at the ends. `len()` counts the pieces.",
+      solution: "sentence = \"  The quick   brown fox  jumps \"\nword_count = len(sentence.split())",
+      tests: [
+        ["word_count is 5", "word_count == 5"],
       ],
     }),
     task("expert", "Make a username", {
@@ -120,6 +138,7 @@ export default makeTopic({
     mc("What does `\"hi\".upper()` return?", ["`hi`","`HI`","`Hi`","An error"], 1),
     qShort("Which method removes spaces from both ends of a string? (name only)", "strip"),
     mc("After `name = \" Ana \"` and then `name.strip()`, what is `name`?", ["`\"Ana\"`","`\"\"`","`\" Ana \"`: the result was never stored","An error"], 2),
+    mc("What does `\"  Hi There \".strip().lower()` give?", ["`\"  hi there \"`","`\"Hi There\"`","`\"hithere\"`","`\"hi there\"`"], 3),
     mc("What does `\"a-b-c\".replace(\"-\", \"\")` give?", ["`abc`","`a b c`","`a-b-c`","`-`"], 0),
     mc("What is `\"banana\".count(\"a\")`?", ["`1`","`2`","`3`","`6`"], 2),
     mc("What does `\"hello\".find(\"z\")` give?", ["`0`","`None`","An error","`-1`"], 3),

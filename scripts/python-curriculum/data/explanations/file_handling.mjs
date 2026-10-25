@@ -12,7 +12,6 @@ export default {
     "`read(n)` reads up to `n` characters, starting where the last read stopped.",
     "`\\n` is the newline character that ends each line.",
     "Writes can sit in a buffer until the file is closed, and open files can be locked.",
-    "Each check runs in its own new folder, so files from earlier runs can't change the result.",
   ],
   with_statement: [
     "`with` closes the file automatically when the block ends.",
@@ -55,12 +54,10 @@ export default {
     "`\"a\"` creates the file if needed, then appends.",
     "`\"x\"` means exclusive creation: it fails rather than overwrite.",
     "Appended text starts exactly where the file ends, so a missing final newline joins the lines.",
-    "`\"a\"` is append mode.",
     "`\"r+\"` opens an existing file for reading and writing, starting at the beginning.",
     "A number stored in a file has to be read, changed in Python and written back.",
     "`b` means binary: reading and writing work with bytes, not strings.",
     "`\"x\"` refuses to touch an existing file, so nothing can be overwritten.",
-    "Without a mode, `open` reads text.",
   ],
   file_paths: [
     "A relative path starts from the current working directory, wherever the program was started.",

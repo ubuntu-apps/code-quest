@@ -62,6 +62,15 @@ export default makeTopic({
         ["fruit is right", "fruit == [\"apple\", \"kiwi\", \"plum\"]"],
       ],
     }),
+    task("medium", "Jump the queue", {
+      prompt: "`vip` goes to the front of `queue`, and the late arrivals in `late` join at the back. Use `insert` and `extend`.",
+      starter: "queue = [\"Ben\", \"Cleo\"]\nvip = \"Ana\"\nlate = [\"Dev\", \"Eli\"]\n",
+      hint: "`queue.insert(0, vip)` puts Ana at index 0; `queue.extend(late)` adds every item of `late` at the end.",
+      solution: "queue = [\"Ben\", \"Cleo\"]\nvip = \"Ana\"\nlate = [\"Dev\", \"Eli\"]\nqueue.insert(0, vip)\nqueue.extend(late)",
+      tests: [
+        ["queue is right", "queue == [\"Ana\", \"Ben\", \"Cleo\", \"Dev\", \"Eli\"]"],
+      ],
+    }),
     task("medium", "Clean the inbox", {
       prompt: "Remove `spam` from `inbox`, then take the last message off the list with `pop` and store it in `latest`.",
       starter: "inbox = [\"hi\", \"spam\", \"meeting\", \"lunch?\"]\n",
@@ -100,6 +109,16 @@ export default makeTopic({
       solution: "names = [\"Cleo\", \"Ana\", \"Ben\"]\nnames.sort()",
       tests: [
         ["names is sorted", "names == [\"Ana\", \"Ben\", \"Cleo\"]"],
+      ],
+    }),
+    task("hard", "Where and how often", {
+      prompt: "Set `first_rain` to the position of the first `rain` in `weather`, and `rainy_days` to how many days were `rain`. If there was no rain at all, `first_rain` should be `None`.",
+      starter: "weather = [\"sun\", \"cloud\", \"rain\", \"sun\", \"rain\"]\n",
+      hint: "`weather.count(\"rain\")` counts. `weather.index(\"rain\")` finds the first one, but raises `ValueError` when it isn't there, so check `\"rain\" in weather` first.",
+      solution: "weather = [\"sun\", \"cloud\", \"rain\", \"sun\", \"rain\"]\nrainy_days = weather.count(\"rain\")\nif \"rain\" in weather:\n    first_rain = weather.index(\"rain\")\nelse:\n    first_rain = None",
+      tests: [
+        ["first_rain is 2", "first_rain == 2"],
+        ["rainy_days is 2", "rainy_days == 2"],
       ],
     }),
     task("expert", "A real backup", {

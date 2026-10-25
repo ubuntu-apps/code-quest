@@ -157,6 +157,35 @@
         },
         {
           "id": "lists_ch5",
+          "title": "Medium: Jump the queue",
+          "promptMarkdown": "`vip` goes to the front of `queue`, and the late arrivals in `late` join at the back. Use `insert` and `extend`.",
+          "starterCode": "queue = [\"Ben\", \"Cleo\"]\nvip = \"Ana\"\nlate = [\"Dev\", \"Eli\"]\n",
+          "hint": "`queue.insert(0, vip)` puts Ana at index 0; `queue.extend(late)` adds every item of `late` at the end.",
+          "solution": "queue = [\"Ben\", \"Cleo\"]\nvip = \"Ana\"\nlate = [\"Dev\", \"Eli\"]\nqueue.insert(0, vip)\nqueue.extend(late)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "queue is right",
+                "assertion": "queue == [\"Ana\", \"Ben\", \"Cleo\", \"Dev\", \"Eli\"]"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when queue = ['Cleo', 'Ben']",
+                "assertion": "_cq_rerun({\"queue\": ['Cleo', 'Ben']}, \"queue\") == ['Ana', 'Cleo', 'Ben', 'Dev', 'Eli']"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when queue = ['Ben']",
+                "assertion": "_cq_rerun({\"queue\": ['Ben']}, \"queue\") == ['Ana', 'Ben', 'Dev', 'Eli']"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lists_ch6",
           "title": "Medium: Clean the inbox",
           "promptMarkdown": "Remove `spam` from `inbox`, then take the last message off the list with `pop` and store it in `latest`.",
           "starterCode": "inbox = [\"hi\", \"spam\", \"meeting\", \"lunch?\"]\n",
@@ -200,7 +229,7 @@
           }
         },
         {
-          "id": "lists_ch6",
+          "id": "lists_ch7",
           "title": "Medium: Temperature stats",
           "promptMarkdown": "Set `highest`, `lowest` and `average` for `temps`.",
           "starterCode": "temps = [18, 21, 17, 25, 19]\n",
@@ -259,7 +288,7 @@
           }
         },
         {
-          "id": "lists_ch7",
+          "id": "lists_ch8",
           "title": "Hard: A ranking",
           "promptMarkdown": "Set `ranked` to the scores from high to low, without changing `scores` itself.",
           "starterCode": "scores = [72, 95, 88, 61]\n",
@@ -293,7 +322,7 @@
           }
         },
         {
-          "id": "lists_ch8",
+          "id": "lists_ch9",
           "title": "Hard: Fix the sort",
           "promptMarkdown": "`names` should be sorted alphabetically, but after this line it is `None`. Fix it.",
           "starterCode": "names = [\"Cleo\", \"Ana\", \"Ben\"]\nnames = names.sort()\n",
@@ -322,7 +351,51 @@
           }
         },
         {
-          "id": "lists_ch9",
+          "id": "lists_ch10",
+          "title": "Hard: Where and how often",
+          "promptMarkdown": "Set `first_rain` to the position of the first `rain` in `weather`, and `rainy_days` to how many days were `rain`. If there was no rain at all, `first_rain` should be `None`.",
+          "starterCode": "weather = [\"sun\", \"cloud\", \"rain\", \"sun\", \"rain\"]\n",
+          "hint": "`weather.count(\"rain\")` counts. `weather.index(\"rain\")` finds the first one, but raises `ValueError` when it isn't there, so check `\"rain\" in weather` first.",
+          "solution": "weather = [\"sun\", \"cloud\", \"rain\", \"sun\", \"rain\"]\nrainy_days = weather.count(\"rain\")\nif \"rain\" in weather:\n    first_rain = weather.index(\"rain\")\nelse:\n    first_rain = None",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "first_rain is 2",
+                "assertion": "first_rain == 2"
+              },
+              {
+                "id": "t2",
+                "label": "rainy_days is 2",
+                "assertion": "rainy_days == 2"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different weather (first_rain)",
+                "assertion": "_cq_rerun({\"weather\": ['cloud', 'rain', 'sun', 'rain', 'sun']}, \"first_rain\") == 1"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different weather (rainy_days)",
+                "assertion": "_cq_rerun({\"weather\": ['cloud', 'rain', 'sun', 'rain', 'sun']}, \"rainy_days\") == 2"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when a different weather (first_rain)",
+                "assertion": "_cq_rerun({\"weather\": ['rain', 'sun', 'rain', 'cloud', 'sun']}, \"first_rain\") == 0"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when a different weather (rainy_days)",
+                "assertion": "_cq_rerun({\"weather\": ['rain', 'sun', 'rain', 'cloud', 'sun']}, \"rainy_days\") == 2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lists_ch11",
           "title": "Expert: A real backup",
           "promptMarkdown": "`backup` should keep the playlist as it was before the new song was added, but it changes too. Fix it.",
           "starterCode": "playlist = [\"Song A\", \"Song B\", \"Song C\"]\nbackup = playlist\nplaylist.append(\"Song D\")\n",
@@ -366,7 +439,7 @@
           }
         },
         {
-          "id": "lists_ch10",
+          "id": "lists_ch12",
           "title": "Expert: No duplicates",
           "promptMarkdown": "Build `unique`: the items of `visits` without repeats, in the order they first appear.",
           "starterCode": "visits = [\"home\", \"shop\", \"home\", \"park\", \"shop\", \"home\"]\n",
@@ -1967,6 +2040,40 @@
         },
         {
           "id": "dictionaries_ch7",
+          "title": "Medium: Merge the settings",
+          "promptMarkdown": "Set `final` to the `defaults` with the user's `choices` merged in (the user's values win), without changing `defaults`.",
+          "starterCode": "defaults = {\"theme\": \"light\", \"size\": 14, \"sound\": True}\nchoices = {\"theme\": \"dark\", \"size\": 16}\n",
+          "hint": "`defaults | choices` builds a new dict; when a key is in both, the value on the right wins.",
+          "solution": "defaults = {\"theme\": \"light\", \"size\": 14, \"sound\": True}\nchoices = {\"theme\": \"dark\", \"size\": 16}\nfinal = defaults | choices",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "final is merged",
+                "assertion": "final == {\"theme\": \"dark\", \"size\": 16, \"sound\": True}"
+              },
+              {
+                "id": "t2",
+                "label": "defaults is unchanged",
+                "assertion": "defaults == {\"theme\": \"light\", \"size\": 14, \"sound\": True}"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when defaults = {'theme': 'light', 'size': 14}",
+                "assertion": "_cq_rerun({\"defaults\": {'theme': 'light', 'size': 14}}, \"final\") == {'theme': 'dark', 'size': 16}"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when choices = {'theme': 'dark'}",
+                "assertion": "_cq_rerun({\"choices\": {'theme': 'dark'}}, \"final\") == {'theme': 'dark', 'size': 14, 'sound': True}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dictionaries_ch8",
           "title": "Hard: Count the words",
           "promptMarkdown": "Build `counts`: how often each word appears in `text`.",
           "starterCode": "text = \"red blue red green blue red\"\n",
@@ -1995,7 +2102,7 @@
           }
         },
         {
-          "id": "dictionaries_ch8",
+          "id": "dictionaries_ch9",
           "title": "Hard: Fix the KeyError",
           "promptMarkdown": "Dan has no score yet, so this crashes. Fix it so it prints `Dan: no score` (and still prints the score for a name that has one).",
           "starterCode": "scores = {\"Ana\": 91, \"Ben\": 78}\nname = \"Dan\"\nprint(f\"{name}: {scores[name]}\")\n",
@@ -2014,7 +2121,7 @@
           }
         },
         {
-          "id": "dictionaries_ch9",
+          "id": "dictionaries_ch10",
           "title": "Expert: Turn it around",
           "promptMarkdown": "Build `code_for`: `codes` the other way round, mapping each country name to its code.",
           "starterCode": "codes = {\"NO\": \"Norway\", \"JP\": \"Japan\", \"KE\": \"Kenya\"}\n",
@@ -2043,7 +2150,7 @@
           }
         },
         {
-          "id": "dictionaries_ch10",
+          "id": "dictionaries_ch11",
           "title": "Expert: The bill",
           "promptMarkdown": "Set `total` to the cost of `order` (item to quantity) using `prices`, then print `Total: $20.75`.",
           "starterCode": "prices = {\"tea\": 2.5, \"cake\": 3.75, \"jam\": 4.0}\norder = {\"tea\": 2, \"cake\": 1, \"jam\": 3}\n",
@@ -2450,8 +2557,8 @@
               },
               {
                 "id": "v2_1",
-                "label": "Also right when tags = {'kiwi', 'draft', 'news'}",
-                "assertion": "_cq_rerun({\"tags\": {'kiwi', 'draft', 'news'}}, \"tags\") == {'python', 'kiwi', 'news'}"
+                "label": "Also right when tags = {'draft', 'news', 'kiwi'}",
+                "assertion": "_cq_rerun({\"tags\": {'draft', 'news', 'kiwi'}}, \"tags\") == {'python', 'news', 'kiwi'}"
               }
             ]
           }
@@ -2474,13 +2581,13 @@
               },
               {
                 "id": "v1_1",
-                "label": "Also right when ana = {'films', 'running'}",
-                "assertion": "_cq_rerun({\"ana\": {'films', 'running'}}, \"shared\") == {'films'}"
+                "label": "Also right when ana = {'running', 'films'}",
+                "assertion": "_cq_rerun({\"ana\": {'running', 'films'}}, \"shared\") == {'films'}"
               },
               {
                 "id": "v2_1",
-                "label": "Also right when ana = {'chess', 'running'}",
-                "assertion": "_cq_rerun({\"ana\": {'chess', 'running'}}, \"shared\") == {'chess'}"
+                "label": "Also right when ana = {'running', 'chess'}",
+                "assertion": "_cq_rerun({\"ana\": {'running', 'chess'}}, \"shared\") == {'chess'}"
               }
             ]
           }
@@ -2509,13 +2616,57 @@
               {
                 "id": "v2_1",
                 "label": "Also right when a different ana",
-                "assertion": "_cq_rerun({\"ana\": {'films', 'kiwi', 'chess', 'running'}}, \"only_ana\") == {'kiwi', 'running'}"
+                "assertion": "_cq_rerun({\"ana\": {'running', 'films', 'chess', 'kiwi'}}, \"only_ana\") == {'running', 'kiwi'}"
               }
             ]
           }
         },
         {
           "id": "sets_ch7",
+          "title": "Medium: All packed, nothing clashing",
+          "promptMarkdown": "Set `ready` to whether every item in `required` is in `packed`, and `safe` to whether `menu` has nothing in common with `allergies`. Use `<=` and `isdisjoint`.",
+          "starterCode": "required = {\"passport\", \"tickets\", \"charger\"}\npacked = {\"tickets\", \"snacks\", \"passport\", \"charger\"}\nallergies = {\"nuts\"}\nmenu = {\"bread\", \"nuts\", \"soup\"}\n",
+          "hint": "`required <= packed` asks whether `required` is a subset of `packed`; `allergies.isdisjoint(menu)` is `True` when they share nothing.",
+          "solution": "required = {\"passport\", \"tickets\", \"charger\"}\npacked = {\"tickets\", \"snacks\", \"passport\", \"charger\"}\nallergies = {\"nuts\"}\nmenu = {\"bread\", \"nuts\", \"soup\"}\nready = required <= packed\nsafe = allergies.isdisjoint(menu)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ready is True",
+                "assertion": "ready is True"
+              },
+              {
+                "id": "t2",
+                "label": "safe is False",
+                "assertion": "safe is False"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when a different required (ready)",
+                "assertion": "_cq_rerun({\"required\": {'passport', 'charger', 'kiwi', 'tickets'}}, \"ready\") == False"
+              },
+              {
+                "id": "v1_2",
+                "label": "Also right when a different required (safe)",
+                "assertion": "_cq_rerun({\"required\": {'passport', 'charger', 'kiwi', 'tickets'}}, \"safe\") == False"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when allergies = set() (ready)",
+                "assertion": "_cq_rerun({\"allergies\": set()}, \"ready\") == True"
+              },
+              {
+                "id": "v2_2",
+                "label": "Also right when allergies = set() (safe)",
+                "assertion": "_cq_rerun({\"allergies\": set()}, \"safe\") == True"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_ch8",
           "title": "Hard: Letters used",
           "promptMarkdown": "Set `letters` to a sorted list of the different letters in `word`.",
           "starterCode": "word = \"mississippi\"\n",
@@ -2544,7 +2695,7 @@
           }
         },
         {
-          "id": "sets_ch8",
+          "id": "sets_ch9",
           "title": "Hard: Forgot something?",
           "promptMarkdown": "Set `missing` to the set of things in `needed` that aren't in the `packed` list.",
           "starterCode": "needed = {\"passport\", \"tickets\", \"charger\", \"socks\"}\npacked = [\"socks\", \"book\", \"passport\"]\n",
@@ -2562,18 +2713,18 @@
               {
                 "id": "v1_1",
                 "label": "Also right when a different needed",
-                "assertion": "_cq_rerun({\"needed\": {'socks', 'passport', 'tickets'}}, \"missing\") == {'tickets'}"
+                "assertion": "_cq_rerun({\"needed\": {'passport', 'socks', 'tickets'}}, \"missing\") == {'tickets'}"
               },
               {
                 "id": "v2_1",
                 "label": "Also right when a different needed",
-                "assertion": "_cq_rerun({\"needed\": {'socks', 'passport', 'charger'}}, \"missing\") == {'charger'}"
+                "assertion": "_cq_rerun({\"needed\": {'passport', 'socks', 'charger'}}, \"missing\") == {'charger'}"
               }
             ]
           }
         },
         {
-          "id": "sets_ch9",
+          "id": "sets_ch10",
           "title": "Expert: Every letter?",
           "promptMarkdown": "A pangram uses every letter of the alphabet. Set `is_pangram` for `sentence`, using sets.",
           "starterCode": "sentence = \"The quick brown fox jumps over the lazy dog\"\nalphabet = \"abcdefghijklmnopqrstuvwxyz\"\n",
@@ -2597,7 +2748,7 @@
           }
         },
         {
-          "id": "sets_ch10",
+          "id": "sets_ch11",
           "title": "Expert: The first repeat",
           "promptMarkdown": "Set `first_repeat` to the first word in `text` that has already appeared earlier. Keep the words seen so far in a set.",
           "starterCode": "text = \"one two three two one four\"\n",
@@ -4204,7 +4355,7 @@
               {
                 "id": "v1_1",
                 "label": "Also right when names = ['Ana', 'ben', 'Amir', 'Bea']",
-                "assertion": "_cq_rerun({\"names\": ['Ana', 'ben', 'Amir', 'Bea']}, \"initials\") == {'B', 'A'}"
+                "assertion": "_cq_rerun({\"names\": ['Ana', 'ben', 'Amir', 'Bea']}, \"initials\") == {'A', 'B'}"
               }
             ]
           }
@@ -4228,12 +4379,12 @@
               {
                 "id": "v1_1",
                 "label": "Also right when word = 'garden'",
-                "assertion": "_cq_rerun({\"word\": 'garden'}, \"counts\") == {'d': 1, 'n': 1, 'r': 1, 'g': 1, 'a': 1, 'e': 1}"
+                "assertion": "_cq_rerun({\"word\": 'garden'}, \"counts\") == {'g': 1, 'e': 1, 'd': 1, 'r': 1, 'a': 1, 'n': 1}"
               },
               {
                 "id": "v2_1",
                 "label": "Also right when word = 'rocket'",
-                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"counts\") == {'c': 1, 'k': 1, 'r': 1, 't': 1, 'o': 1, 'e': 1}"
+                "assertion": "_cq_rerun({\"word\": 'rocket'}, \"counts\") == {'o': 1, 'e': 1, 't': 1, 'k': 1, 'r': 1, 'c': 1}"
               }
             ]
           }
@@ -4257,12 +4408,12 @@
               {
                 "id": "v1_1",
                 "label": "Also right when a different shop_a",
-                "assertion": "_cq_rerun({\"shop_a\": {'apple': 2, 'pear': 7, 'fig': 5}}, \"combined\") == {'pear': 11, 'fig': 6}"
+                "assertion": "_cq_rerun({\"shop_a\": {'apple': 2, 'pear': 7, 'fig': 5}}, \"combined\") == {'fig': 6, 'pear': 11}"
               },
               {
                 "id": "v2_1",
                 "label": "Also right when a different shop_a",
-                "assertion": "_cq_rerun({\"shop_a\": {'apple': 8, 'pear': 5, 'fig': 10}}, \"combined\") == {'pear': 9, 'fig': 11}"
+                "assertion": "_cq_rerun({\"shop_a\": {'apple': 8, 'pear': 5, 'fig': 10}}, \"combined\") == {'fig': 11, 'pear': 9}"
               }
             ]
           }
@@ -5145,25 +5296,6 @@
         },
         {
           "id": "collections_data_ch3",
-          "title": "Easy: Zero, not an error",
-          "promptMarkdown": "Set `kiwis` to the count of `kiwi` in `counts`. A `Counter` gives 0 for a missing item, so no `get` is needed.",
-          "starterCode": "from collections import Counter\n\ncounts = Counter([\"apple\", \"pear\", \"apple\"])\n",
-          "hint": "Just look it up: `counts[\"kiwi\"]`.",
-          "solution": "from collections import Counter\n\ncounts = Counter([\"apple\", \"pear\", \"apple\"])\nkiwis = counts[\"kiwi\"]",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "kiwis is 0",
-                "assertion": "kiwis == 0"
-              }
-            ]
-          }
-        },
-        {
-          "id": "collections_data_ch4",
           "title": "Medium: Group by first letter",
           "promptMarkdown": "Build `by_letter` with `defaultdict(list)`, so `by_letter[\"A\"]` is the list of names starting with A.",
           "starterCode": "from collections import defaultdict\n\nnames = [\"Ana\", \"Ben\", \"Amir\", \"Bea\", \"Cleo\"]\n",
@@ -5192,7 +5324,7 @@
           }
         },
         {
-          "id": "collections_data_ch5",
+          "id": "collections_data_ch4",
           "title": "Medium: Name the fields",
           "promptMarkdown": "Make a `namedtuple` called `Point` with fields `x` and `y`, and set `p` to the point (3, 4).",
           "starterCode": "from collections import namedtuple\n\n",
@@ -5221,7 +5353,7 @@
           }
         },
         {
-          "id": "collections_data_ch6",
+          "id": "collections_data_ch5",
           "title": "Medium: Stock after sales",
           "promptMarkdown": "Set `remaining` to the stock left after the sales, by subtracting the counters.",
           "starterCode": "from collections import Counter\n\nstock = Counter({\"apple\": 10, \"pear\": 4, \"fig\": 2})\nsold = Counter({\"apple\": 3, \"fig\": 2})\n",
@@ -5240,6 +5372,30 @@
                 "id": "t2",
                 "label": "Sold-out figs are gone",
                 "assertion": "\"fig\" not in remaining"
+              }
+            ]
+          }
+        },
+        {
+          "id": "collections_data_ch6",
+          "title": "Medium: Serve the queue",
+          "promptMarkdown": "Dev joins the back of `queue` and Eli, who has a priority pass, joins the front. Then serve two people from the front: set `served` to their names, in order. The rest stay in `queue`.",
+          "starterCode": "from collections import deque\n\nqueue = deque([\"Ana\", \"Ben\", \"Cleo\"])\n",
+          "hint": "`append` adds at the back, `appendleft` at the front, and `popleft` takes from the front: `served = [queue.popleft(), queue.popleft()]`.",
+          "solution": "from collections import deque\n\nqueue = deque([\"Ana\", \"Ben\", \"Cleo\"])\nqueue.append(\"Dev\")\nqueue.appendleft(\"Eli\")\nserved = [queue.popleft(), queue.popleft()]",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "served is Eli, then Ana",
+                "assertion": "served == [\"Eli\", \"Ana\"]"
+              },
+              {
+                "id": "t2",
+                "label": "queue holds the rest",
+                "assertion": "list(queue) == [\"Ben\", \"Cleo\", \"Dev\"]"
               }
             ]
           }
@@ -5294,6 +5450,40 @@
         },
         {
           "id": "collections_data_ch9",
+          "title": "Hard: Layered settings",
+          "promptMarkdown": "Set `settings` to a `ChainMap` that looks a key up in `command_line` first, then `file_settings`, then `defaults`. Then set `port`, `debug` and `host` from it.",
+          "starterCode": "from collections import ChainMap\n\ndefaults = {\"port\": 8000, \"debug\": False, \"host\": \"localhost\"}\nfile_settings = {\"port\": 9000}\ncommand_line = {\"debug\": True}\n",
+          "hint": "List the dicts in the order to search: `ChainMap(command_line, file_settings, defaults)`. Then `settings[\"port\"]` and so on.",
+          "solution": "from collections import ChainMap\n\ndefaults = {\"port\": 8000, \"debug\": False, \"host\": \"localhost\"}\nfile_settings = {\"port\": 9000}\ncommand_line = {\"debug\": True}\nsettings = ChainMap(command_line, file_settings, defaults)\nport = settings[\"port\"]\ndebug = settings[\"debug\"]\nhost = settings[\"host\"]",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "settings is a ChainMap",
+                "assertion": "isinstance(settings, ChainMap)"
+              },
+              {
+                "id": "t2",
+                "label": "port comes from the file",
+                "assertion": "port == 9000"
+              },
+              {
+                "id": "t3",
+                "label": "debug comes from the command line",
+                "assertion": "debug is True"
+              },
+              {
+                "id": "t4",
+                "label": "host comes from the defaults",
+                "assertion": "host == \"localhost\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "collections_data_ch10",
           "title": "Expert: Moving average",
           "promptMarkdown": "Set `averages` to the average of every run of 3 readings in a row, using a `deque(maxlen=3)` as a sliding window.",
           "starterCode": "from collections import deque\n\nreadings = [1, 2, 3, 4, 5]\n",
@@ -5322,7 +5512,7 @@
           }
         },
         {
-          "id": "collections_data_ch10",
+          "id": "collections_data_ch11",
           "title": "Expert: The top three",
           "promptMarkdown": "Set `podium` to the names of the 3 highest scorers, best first, using `heapq.nlargest`.",
           "starterCode": "import heapq\n\nscores = {\"Ana\": 88, \"Ben\": 95, \"Cy\": 72, \"Dee\": 91, \"Eli\": 79}\n",
@@ -6135,31 +6325,6 @@
           },
           {
             "id": "choosing_structures_q9",
-            "type": "mcq",
-            "prompt": "What does `sorted({3, 1, 2})` give?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`{1, 2, 3}`"
-              },
-              {
-                "id": "b",
-                "label": "`[1, 2, 3]`"
-              },
-              {
-                "id": "c",
-                "label": "`(1, 2, 3)`"
-              },
-              {
-                "id": "d",
-                "label": "An error"
-              }
-            ],
-            "correctChoiceId": "b",
-            "explanation": "`sorted` returns a list, whatever collection it is given."
-          },
-          {
-            "id": "choosing_structures_q10",
             "type": "mcq",
             "prompt": "Which is the best starting point when no special needs apply?",
             "choices": [

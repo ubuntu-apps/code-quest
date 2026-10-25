@@ -42,15 +42,6 @@ export default makeTopic({
         ["correct is True", "correct is True"],
       ],
     }),
-    task("easy", "Not the same", {
-      prompt: "Set `different` to whether `a` and `b` are not equal.",
-      starter: "a = \"cat\"\nb = \"Cat\"\n",
-      hint: "`!=` means \"not equal\". Capital letters count, so these two are different.",
-      solution: "a = \"cat\"\nb = \"Cat\"\ndifferent = a != b",
-      tests: [
-        ["different is True", "different is True"],
-      ],
-    }),
     task("medium", "The pass mark", {
       prompt: "The pass mark is 50 or more. Set `passed` to whether `score` passes, then print it.",
       starter: "score = 49\n",
@@ -119,7 +110,6 @@ export default makeTopic({
   ],
   questions: [
     mc("What does `5 > 3` give?", ["`True`", "`False`", "`5`", "`3`"], 0),
-    qShort("Which operator asks whether two values are equal?", "=="),
     mc("What is `\"Zebra\" < \"apple\"`?", ["`False`", "`True`", "An error", "`None`"], 1),
     mc("What is `1 == 1.0`?", ["`False`", "An error", "`True`", "`None`"], 2),
     mc("What does `\"5\" == 5` give?", ["`True`", "An error", "`5`", "`False`"], 3),

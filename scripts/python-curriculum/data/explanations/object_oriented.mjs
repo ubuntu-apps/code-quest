@@ -23,7 +23,6 @@ export default {
     "Each object needs its own list, so it is made in `__init__` for each new object.",
     "`self` is only a convention, but every Python programmer expects it.",
     "Methods that change the object usually return `None`; methods that answer a question return the answer.",
-    "Built-in values are objects too, and their methods are called the same way.",
     "Keeping the rules next to the data means the balance can only change through checked code.",
   ],
   dunder_methods: [
@@ -69,7 +68,6 @@ export default {
     "A read-only property refuses assignment with an `AttributeError`.",
     "Assigning through the property runs the setter, so its check applies from the start.",
     "Reading the property already gives a value, and the brackets then try to call that value.",
-    "`@property` turns the method into a read-only attribute.",
     "A plain attribute can later become a property, and the code using it doesn't change.",
     "Reading a property looks like reading an attribute, so it should be quick and have no side effects.",
     "The property controls access, and the underscore attribute holds the actual value.",

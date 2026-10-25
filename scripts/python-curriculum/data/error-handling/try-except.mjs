@@ -130,7 +130,6 @@ export default makeTopic({
     qShort("Which exception does `int(\"abc\")` raise? (class name)", "ValueError"),
     mc("In `except ValueError as e:`, what is `e`?", ["The line number", "The exception object, whose text is the message", "A string with the code", "The value that was typed"], 1),
     mc("Which exception does `{\"a\": 1}[\"b\"]` raise?", ["`ValueError`", "`IndexError`", "`KeyError`", "`NameError`"], 2),
-    mc("Which exception does `[1, 2][5]` raise?", ["`IndexError`", "`KeyError`", "`ValueError`", "`TypeError`"], 0),
     mc("What happens to the rest of `try` after the line that raised?", ["It still runs", "It runs after `except`", "It runs twice", "It is skipped"], 3),
     mc("Which pattern asks again until the input is valid?", ["`if` with `else`", "`while True:` with `try`, `break` when it works", "`for` over the input", "A bare `except:`"], 1),
   ],

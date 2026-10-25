@@ -132,6 +132,5 @@ export default makeTopic({
     mc("What does `\"cat\" in \"concatenate\"` give?", ["`True`","`False`","`3`","An error"], 0),
     mc("Why does `word[0] = \"J\"` fail?", ["Index `0` does not exist","`J` must be lowercase","Strings are immutable: they can't be changed in place","You need double quotes"], 2),
     mc("What does `\"Age: \" + str(30)` give?", ["A `TypeError`","`Age: 30`","`Age: str(30)`","`Age:30`"], 1),
-    mc("What is `\"Python\"[:2]`?", ["`Py`","`Pyt`","`on`","`th`"], 0),
   ],
 })

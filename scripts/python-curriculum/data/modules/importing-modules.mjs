@@ -135,7 +135,6 @@ export default makeTopic({
     mc("What does `import maths` raise when there is no such module?", ["`ModuleNotFoundError`", "`NameError`", "`AttributeError`", "`SyntaxError`"], 0),
     mc("What happens if the same module is imported twice?", ["It runs twice", "Python reuses the copy it already loaded", "An error", "The second import is ignored and the name is deleted"], 1),
     mc("What does `dir(math)` give?", ["The folder math is in", "The math documentation", "A list of the names inside the module", "The module's size"], 2),
-    qShort("Which keyword gives an imported module a different name? (one word)", "as"),
     mc("Where do imports usually go?", ["At the bottom", "Inside each function", "In a separate file", "At the top of the file"], 3),
     mc("Which imports a module whose name is in a string?", ["`importlib.import_module(\"math\")`", "`import \"math\"`", "`open(\"math\")`", "`dir(\"math\")`"], 0),
   ],

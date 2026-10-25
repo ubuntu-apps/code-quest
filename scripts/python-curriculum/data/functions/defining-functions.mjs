@@ -37,15 +37,6 @@ export default makeTopic({
         ["Your program printed Hello!", "_cq_stdout.strip() == \"Hello!\""],
       ],
     }),
-    task("easy", "Three cheers", {
-      prompt: "The function is ready. Call it three times.",
-      starter: "def cheer():\n    print(\"Hooray!\")\n\n",
-      hint: "Write `cheer()` on three lines.",
-      solution: "def cheer():\n    print(\"Hooray!\")\n\ncheer()\ncheer()\ncheer()",
-      tests: [
-        ["Prints Hooray! three times", "_cq_stdout.strip().splitlines() == [\"Hooray!\"] * 3"],
-      ],
-    }),
     task("easy", "Fix the call", {
       prompt: "This should print the menu, but nothing happens. Fix the last line.",
       starter: "def show_menu():\n    print(\"1. Start\")\n    print(\"2. Quit\")\n\nshow_menu\n",
@@ -133,9 +124,7 @@ export default makeTopic({
     mc("Calling a function before its `def` line has run gives…", ["A `SyntaxError`", "Nothing", "A `TypeError`", "A `NameError`"], 3),
     qShort("A function is called three times and its body prints two lines. How many lines are printed? (a number)", "6"),
     mc("Which is the best function name?", ["`Function1`", "`print_receipt`", "`x`", "`DoIt`"], 1),
-    mc("What must end the `def` line?", ["A colon `:`", "A semicolon", "Brackets `()`", "Nothing"], 0),
     mc("Can a function call another function?", ["No", "Only built-in ones", "Yes", "Only if they have the same name"], 2),
-    mc("What does a function body that only contains `pass` do?", ["Raises an error", "Ends the program", "Calls itself", "Nothing"], 3),
     mc("Why turn repeated code into a function?", ["It runs twice as fast", "You change it in one place and every call follows", "Python requires it", "It hides the code"], 1),
   ],
 })

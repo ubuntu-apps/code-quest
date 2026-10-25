@@ -4,7 +4,6 @@
 export default {
   comparison_operators: [
     "A comparison gives a bool, and 5 really is greater than 3.",
-    "`==` compares two values; a single `=` assigns.",
     "Strings compare by character code, and every capital letter comes before every lowercase one.",
     "Numbers compare by value, so the int 1 and the float 1.0 are equal.",
     "A string is never equal to a number, even when it holds the same digits.",
@@ -71,7 +70,6 @@ export default {
     "The accumulator is created once before the loop, then each round adds to it.",
     "Each letter is put in front of what was built so far, which reverses the string.",
     "`range(3)` counts from 0 and stops before 3.",
-    "The name between `for` and `in` takes each item in turn.",
     "`in` checks whether \"e\" appears in the string of vowels.",
   ],
   range_function: [
@@ -115,7 +113,6 @@ export default {
     "If every number were negative, a start of 0 would wrongly stay the largest.",
     "The average is the total divided by how many items there are.",
     "`enumerate` gives each item together with its index, starting at 0.",
-    "`int` understands a leading minus sign.",
     "The first loop works out the average; the second compares each score with it.",
     "`break` stops the search as soon as the item is found.",
     "Adding the separator before every item except the first means no dash is left at the end.",

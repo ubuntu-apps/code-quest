@@ -143,7 +143,6 @@ export default makeTopic({
     mc("Why put a program's steps in a `main()` function?", ["Python requires it", "It runs twice", "It hides errors", "Its variables stay local and it is easy to call or test"], 3),
     mc("A module without a guard calls `input()` at the top level. What happens when it is imported?", ["Nothing", "It asks for input during the import", "The input is skipped", "It is imported twice"], 1),
     mc("What is in `sys.argv` for `python add.py 3 4`?", ["`[\"add.py\", \"3\", \"4\"]`", "`[3, 4]`", "`\"3 4\"`", "`[\"3\", \"4\", \"add.py\"]`"], 0),
-    qShort("What value does `__name__` have in the file being run? (include the underscores)", "__main__"),
     mc("After `import greetings`, which part of a guarded `greetings.py` runs?", ["Only the guarded part", "Nothing at all", "Everything", "Everything except the guarded part"], 3),
     mc("Why does `sys.argv[1:]` skip the first item?", ["It is always empty", "It is a number", "The first item is the program's own name", "It is a secret"], 2),
     mc("Where does the main guard usually go?", ["At the bottom of the file", "At the top", "Inside `main()`", "In a separate file"], 0),

@@ -127,6 +127,5 @@ export default makeTopic({
     mc("What does `f.read(5)` do?", ["Reads at most 5 characters, from where the file object is", "Reads line 5", "Reads 5 lines", "Skips 5 characters"], 0),
     mc("Which character marks the end of each line in the text?", ["`\\t`", "`;`", "`\\n`", "`.`"], 2),
     mc("Why must a file be closed?", ["To delete it", "To read it again", "Python requires it before printing", "Open files can stay locked or half-written"], 3),
-    mc("In CodeQuest, where do challenge checks run?", ["In your computer's Documents folder", "In a fresh folder with that challenge's sample files", "On a server", "In the sandbox's folder"], 1),
   ],
 })

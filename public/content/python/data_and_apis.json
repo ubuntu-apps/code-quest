@@ -191,6 +191,30 @@
         },
         {
           "id": "json_basics_ch6",
+          "title": "Medium: Save and load a file",
+          "promptMarkdown": "Save `settings` to the file `settings.json` with `json.dump`, then open the file again and read it back into `loaded` with `json.load`.",
+          "starterCode": "import json\n\nsettings = {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}\n",
+          "hint": "`with open(\"settings.json\", \"w\", encoding=\"utf-8\") as f: json.dump(settings, f)`, then the same with `\"r\"` and `loaded = json.load(f)`.",
+          "solution": "import json\n\nsettings = {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}\nwith open(\"settings.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(settings, f)\nwith open(\"settings.json\", encoding=\"utf-8\") as f:\n    loaded = json.load(f)",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "settings.json holds the settings",
+                "assertion": "__import__('json').loads(open(\"settings.json\", encoding=\"utf-8\").read()) == {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}"
+              },
+              {
+                "id": "t2",
+                "label": "loaded equals settings",
+                "assertion": "loaded == {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}"
+              }
+            ]
+          }
+        },
+        {
+          "id": "json_basics_ch7",
           "title": "Medium: Filter records from an API",
           "promptMarkdown": "`raw` is a JSON list of users from an API. Build `active_names`: the names of active users, sorted alphabetically.",
           "starterCode": "import json\n\nraw = '[{\"name\": \"Zoe\", \"active\": true}, {\"name\": \"Ben\", \"active\": false}, {\"name\": \"Amir\", \"active\": true}, {\"name\": \"Kai\", \"active\": true}]'\nusers = json.loads(raw)\nactive_names = ___",
@@ -209,7 +233,7 @@
           }
         },
         {
-          "id": "json_basics_ch7",
+          "id": "json_basics_ch8",
           "title": "Hard: Dig into nested JSON",
           "promptMarkdown": "Parse the order in `raw`. Set `email` to the customer's email and `total_qty` to the sum of `qty` over all items.",
           "starterCode": "import json\n\nraw = '''\n{\"id\": 7,\n \"customer\": {\"name\": \"Lee\", \"email\": \"lee@example.com\"},\n \"items\": [{\"sku\": \"A1\", \"qty\": 2}, {\"sku\": \"B4\", \"qty\": 1}, {\"sku\": \"C9\", \"qty\": 5}]}\n'''\norder = json.loads(raw)\nemail = ___\ntotal_qty = ___",
@@ -233,7 +257,7 @@
           }
         },
         {
-          "id": "json_basics_ch8",
+          "id": "json_basics_ch9",
           "title": "Hard: Survive bad JSON",
           "promptMarkdown": "Write `safe_parse(text)`. It returns the parsed value, or `None` if `text` is not valid JSON (catch `json.JSONDecodeError`).",
           "starterCode": "import json\n\ndef safe_parse(text):\n    ___",
@@ -267,7 +291,7 @@
           }
         },
         {
-          "id": "json_basics_ch9",
+          "id": "json_basics_ch10",
           "title": "Expert: Dates in JSON",
           "promptMarkdown": "JSON has no date type, so `json.dumps` fails on a `date`. Write `to_json(event)` that dumps the dict, turning any `date` into an ISO string like `\"2026-10-16\"`. Use the `default=` argument.",
           "starterCode": "import json\nfrom datetime import date\n\ndef to_json(event):\n    ___\n\nprint(to_json({\"name\": \"Launch\", \"on\": date(2026, 10, 16)}))",
@@ -296,7 +320,7 @@
           }
         },
         {
-          "id": "json_basics_ch10",
+          "id": "json_basics_ch11",
           "title": "Expert: Merge settings",
           "promptMarkdown": "Write `merge_settings(defaults_json, user_json)`. Parse both JSON strings and return a dict where the user's values win. The nested `\"colors\"` dict must be merged too, not replaced.",
           "starterCode": "import json\n\ndef merge_settings(defaults_json, user_json):\n    ___",

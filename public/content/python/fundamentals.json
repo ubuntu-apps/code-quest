@@ -634,6 +634,25 @@
         },
         {
           "id": "printing_ch7",
+          "title": "Medium: Triple quotes",
+          "promptMarkdown": "Print these three lines with a single `print`, writing the text in triple quotes with real line breaks (no `\\n`):\n\n```\nMorning: tea\nAfternoon: code\nEvening: rest\n```",
+          "starterCode": "print()",
+          "hint": "Start the text with `\"\"\"`, press Enter where each new line should begin, and end it with `\"\"\"`.",
+          "solution": "print(\"\"\"Morning: tea\nAfternoon: code\nEvening: rest\"\"\")",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Prints the three lines",
+                "assertion": "_cq_stdout == \"Morning: tea\\nAfternoon: code\\nEvening: rest\\n\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "printing_ch8",
           "title": "Hard: Columns with tabs",
           "promptMarkdown": "Print this two-row table, with a tab (`\\t`) between the columns:\n\n```\nItem\tPrice\nTea\t2.50\n```\n\nWrite the price as text, so the trailing zero stays.",
           "starterCode": "print(\"Item\\tPrice\")\n",
@@ -652,7 +671,7 @@
           }
         },
         {
-          "id": "printing_ch8",
+          "id": "printing_ch9",
           "title": "Hard: A Windows path",
           "promptMarkdown": "Print this file path exactly: `C:\\Users\\Ana\\notes.txt`",
           "starterCode": "print(\"C:\\Users\\Ana\\notes.txt\")",
@@ -671,7 +690,7 @@
           }
         },
         {
-          "id": "printing_ch9",
+          "id": "printing_ch10",
           "title": "Expert: A triangle",
           "promptMarkdown": "Using a single `print`, draw this triangle. Mind the spaces at the start of the first two lines.\n\n```\n  *\n ***\n*****\n```",
           "starterCode": "print()",
@@ -690,7 +709,7 @@
           }
         },
         {
-          "id": "printing_ch10",
+          "id": "printing_ch11",
           "title": "Expert: Show the spaces",
           "promptMarkdown": "Print the text ` hi ` (with a space before and after) using `repr`, so that the output shows the quotes and the spaces: `' hi '`",
           "starterCode": "print(\" hi \")",
@@ -3846,31 +3865,6 @@
             ],
             "correctChoiceId": "b",
             "explanation": "`str(30)` turns the number into text, so `+` can join the two strings."
-          },
-          {
-            "id": "strings_q10",
-            "type": "mcq",
-            "prompt": "What is `\"Python\"[:2]`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`Py`"
-              },
-              {
-                "id": "b",
-                "label": "`Pyt`"
-              },
-              {
-                "id": "c",
-                "label": "`on`"
-              },
-              {
-                "id": "d",
-                "label": "`th`"
-              }
-            ],
-            "correctChoiceId": "a",
-            "explanation": "Leaving out the start of a slice means \"from the beginning\", so `[:2]` is the first two characters."
           }
         ]
       }
@@ -4083,6 +4077,35 @@
         },
         {
           "id": "string_methods_ch7",
+          "title": "Medium: Only digits?",
+          "promptMarkdown": "A PIN must be exactly 4 digits. Set `valid` to whether `pin` is one: every character a digit, and 4 characters long.",
+          "starterCode": "pin = \"40a6\"\n",
+          "hint": "`pin.isdigit()` checks the characters and `len(pin) == 4` the length. Join them with `and`.",
+          "solution": "pin = \"40a6\"\nvalid = pin.isdigit() and len(pin) == 4",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "valid is False for 40a6",
+                "assertion": "valid is False"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when pin = '2580'",
+                "assertion": "_cq_rerun({\"pin\": '2580'}, \"valid\") == True"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when pin = '25801'",
+                "assertion": "_cq_rerun({\"pin\": '25801'}, \"valid\") == False"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods_ch8",
           "title": "Hard: Is it a photo?",
           "promptMarkdown": "Set `is_photo` to whether `filename` ends in `.jpg`, whatever its capital letters.",
           "starterCode": "filename = \"Holiday.JPG\"\n",
@@ -4101,7 +4124,7 @@
           }
         },
         {
-          "id": "string_methods_ch8",
+          "id": "string_methods_ch9",
           "title": "Hard: Find the domain",
           "promptMarkdown": "Set `domain` to the part of `email` after the `@`. Use `find` to locate the `@`, then a slice.",
           "starterCode": "email = \"grace@example.org\"\n",
@@ -4130,7 +4153,36 @@
           }
         },
         {
-          "id": "string_methods_ch9",
+          "id": "string_methods_ch10",
+          "title": "Hard: Count the words",
+          "promptMarkdown": "Set `word_count` to the number of words in `sentence`. Some words are separated by more than one space.",
+          "starterCode": "sentence = \"  The quick   brown fox  jumps \"\n",
+          "hint": "`split()` with no argument splits at any run of spaces and ignores the ones at the ends. `len()` counts the pieces.",
+          "solution": "sentence = \"  The quick   brown fox  jumps \"\nword_count = len(sentence.split())",
+          "validation": {
+            "mode": "python_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "word_count is 5",
+                "assertion": "word_count == 5"
+              },
+              {
+                "id": "v1_1",
+                "label": "Also right when sentence = 'The quick brown fox'",
+                "assertion": "_cq_rerun({\"sentence\": 'The quick brown fox'}, \"word_count\") == 4"
+              },
+              {
+                "id": "v2_1",
+                "label": "Also right when sentence = 'The quick brown'",
+                "assertion": "_cq_rerun({\"sentence\": 'The quick brown'}, \"word_count\") == 3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods_ch11",
           "title": "Expert: Make a username",
           "promptMarkdown": "Turn `full_name` into a username like `ada.lovelace`: no spaces around it, all lowercase, and a dot instead of the space between the names.",
           "starterCode": "full_name = \"  Ada Lovelace \"\n",
@@ -4159,7 +4211,7 @@
           }
         },
         {
-          "id": "string_methods_ch10",
+          "id": "string_methods_ch12",
           "title": "Expert: Hashtags",
           "promptMarkdown": "Turn `tags` into `result`, the text `#python #data #web`. The spacing in `tags` is messy.",
           "starterCode": "tags = \"python, data ,  web\"\n",
@@ -4254,6 +4306,31 @@
           {
             "id": "string_methods_q4",
             "type": "mcq",
+            "prompt": "What does `\"  Hi There \".strip().lower()` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"  hi there \"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Hi There\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"hithere\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"hi there\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Chained methods run left to right: `strip()` removes the outer spaces, then `lower()` works on that result. The space between the words stays."
+          },
+          {
+            "id": "string_methods_q5",
+            "type": "mcq",
             "prompt": "What does `\"a-b-c\".replace(\"-\", \"\")` give?",
             "choices": [
               {
@@ -4277,7 +4354,7 @@
             "explanation": "Replacing every `-` with an empty string removes them all."
           },
           {
-            "id": "string_methods_q5",
+            "id": "string_methods_q6",
             "type": "mcq",
             "prompt": "What is `\"banana\".count(\"a\")`?",
             "choices": [
@@ -4302,7 +4379,7 @@
             "explanation": "`.count` returns how many times the text appears, and \"banana\" has three a's."
           },
           {
-            "id": "string_methods_q6",
+            "id": "string_methods_q7",
             "type": "mcq",
             "prompt": "What does `\"hello\".find(\"z\")` give?",
             "choices": [
@@ -4327,7 +4404,7 @@
             "explanation": "`.find` returns -1 when the text isn't there; `.index` would raise an error instead."
           },
           {
-            "id": "string_methods_q7",
+            "id": "string_methods_q8",
             "type": "mcq",
             "prompt": "What is `\"photo.png\".endswith(\".png\")`?",
             "choices": [
@@ -4352,7 +4429,7 @@
             "explanation": "`.endswith` checks the end of the string, which makes it handy for file extensions."
           },
           {
-            "id": "string_methods_q8",
+            "id": "string_methods_q9",
             "type": "mcq",
             "prompt": "What is `\"12a\".isdigit()`?",
             "choices": [
@@ -4377,7 +4454,7 @@
             "explanation": "`.isdigit()` is `True` only when every character is a digit, and `a` isn't one."
           },
           {
-            "id": "string_methods_q9",
+            "id": "string_methods_q10",
             "type": "mcq",
             "prompt": "What does `\"a b c\".split()` give?",
             "choices": [
@@ -4402,7 +4479,7 @@
             "explanation": "With no argument, `.split()` splits on runs of whitespace and returns a list of words."
           },
           {
-            "id": "string_methods_q10",
+            "id": "string_methods_q11",
             "type": "mcq",
             "prompt": "What does `\"-\".join([\"2026\", \"10\", \"16\"])` give?",
             "choices": [
@@ -5610,25 +5687,6 @@
         },
         {
           "id": "reading_input_ch2",
-          "title": "Easy: Favourite colour",
-          "promptMarkdown": "Ask for a favourite colour and print `I like <colour> too.` The check types `green`.",
-          "starterCode": "",
-          "hint": "Store the answer, for example in `colour`, and use it in an f-string.",
-          "solution": "colour = input(\"Favourite colour? \")\nprint(f\"I like {colour} too.\")",
-          "validation": {
-            "mode": "python_tests",
-            "setupCode": "_cq_answers = ['green']\ndef input(prompt=\"\"):\n    if not _cq_answers:\n        raise EOFError(\"This check only types 1 answer(s): call input() fewer times.\")\n    value = _cq_answers.pop(0)\n    print(str(prompt) + value)\n    return value\n",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "Prints I like green too.",
-                "assertion": "_cq_stdout.strip().splitlines()[-1] == \"I like green too.\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "reading_input_ch3",
           "title": "Easy: It's a string",
           "promptMarkdown": "This program crashes when the user types `41`. Fix it so it prints `42`.",
           "starterCode": "age = input(\"Age? \")\nprint(age + 1)",
@@ -5647,7 +5705,7 @@
           }
         },
         {
-          "id": "reading_input_ch4",
+          "id": "reading_input_ch3",
           "title": "Medium: Add two numbers",
           "promptMarkdown": "Ask for two whole numbers and print `Sum: <total>`. The check types `7` and `35`.",
           "starterCode": "",
@@ -5666,7 +5724,7 @@
           }
         },
         {
-          "id": "reading_input_ch5",
+          "id": "reading_input_ch4",
           "title": "Medium: Height in centimetres",
           "promptMarkdown": "Ask for a height in metres and print it in centimetres as a whole number, like `Height: 175 cm`. The check types `1.75`.",
           "starterCode": "",
@@ -5685,7 +5743,7 @@
           }
         },
         {
-          "id": "reading_input_ch6",
+          "id": "reading_input_ch5",
           "title": "Medium: Tidy the answer",
           "promptMarkdown": "Ask `Continue? ` and store the answer in `answer`, without spaces at the ends and in lowercase. The check types `  YES `.",
           "starterCode": "",
@@ -5714,7 +5772,7 @@
           }
         },
         {
-          "id": "reading_input_ch7",
+          "id": "reading_input_ch6",
           "title": "Hard: Distance converter",
           "promptMarkdown": "Ask for a distance in km and print `<km> km is <miles> miles`, with the miles to 2 decimals (1 km = 0.621371 miles). The check types `5`, so it expects `5.0 km is 3.11 miles`.",
           "starterCode": "",
@@ -5733,7 +5791,7 @@
           }
         },
         {
-          "id": "reading_input_ch8",
+          "id": "reading_input_ch7",
           "title": "Hard: Rectangle calculator",
           "promptMarkdown": "Ask for a width and a height (decimals allowed), then print the area and the perimeter on two lines: `Area: 9.0` and `Perimeter: 13.0`. The check types `4.5` and `2`.",
           "starterCode": "",
@@ -5752,7 +5810,7 @@
           }
         },
         {
-          "id": "reading_input_ch9",
+          "id": "reading_input_ch8",
           "title": "Expert: Minutes to hours",
           "promptMarkdown": "Ask for a number of minutes and print it as hours and minutes, like `135 minutes is 2 h 15 min`. The check types `135`.",
           "starterCode": "",
@@ -5771,7 +5829,7 @@
           }
         },
         {
-          "id": "reading_input_ch10",
+          "id": "reading_input_ch9",
           "title": "Expert: Shopping total",
           "promptMarkdown": "Ask for an item name, its price and the quantity (in that order), then print a line like `4 x Pens = 5.00`. The check types `Pens`, `1.25` and `4`.",
           "starterCode": "",

@@ -80,6 +80,16 @@ export default makeTopic({
         ["back is a new list, not the same object", "back is not scores"],
       ],
     }),
+    task("medium", "Save and load a file", {
+      prompt: "Save `settings` to the file `settings.json` with `json.dump`, then open the file again and read it back into `loaded` with `json.load`.",
+      starter: "import json\n\nsettings = {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}\n",
+      hint: "`with open(\"settings.json\", \"w\", encoding=\"utf-8\") as f: json.dump(settings, f)`, then the same with `\"r\"` and `loaded = json.load(f)`.",
+      solution: "import json\n\nsettings = {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}\nwith open(\"settings.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(settings, f)\nwith open(\"settings.json\", encoding=\"utf-8\") as f:\n    loaded = json.load(f)",
+      tests: [
+        ["settings.json holds the settings", "__import__('json').loads(open(\"settings.json\", encoding=\"utf-8\").read()) == {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}"],
+        ["loaded equals settings", "loaded == {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}"],
+      ],
+    }),
     task("medium", "Filter records from an API", {
       prompt: "`raw` is a JSON list of users from an API. Build `active_names`: the names of active users, sorted alphabetically.",
       starter: "import json\n\nraw = '[{\"name\": \"Zoe\", \"active\": true}, {\"name\": \"Ben\", \"active\": false}, {\"name\": \"Amir\", \"active\": true}, {\"name\": \"Kai\", \"active\": true}]'\nusers = json.loads(raw)\nactive_names = ___",

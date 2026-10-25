@@ -35,15 +35,6 @@ export default makeTopic({
         ["Prints Hello, Ana!", "_cq_stdout.strip().splitlines()[-1] == \"Hello, Ana!\""],
       ],
     }),
-    task("easy", "Favourite colour", {
-      prompt: "Ask for a favourite colour and print `I like <colour> too.` The check types `green`.",
-      hint: "Store the answer, for example in `colour`, and use it in an f-string.",
-      solution: "colour = input(\"Favourite colour? \")\nprint(f\"I like {colour} too.\")",
-      setup: typedInput("green"),
-      tests: [
-        ["Prints I like green too.", "_cq_stdout.strip().splitlines()[-1] == \"I like green too.\""],
-      ],
-    }),
     task("easy", "It's a string", {
       prompt: "This program crashes when the user types `41`. Fix it so it prints `42`.",
       starter: "age = input(\"Age? \")\nprint(age + 1)",

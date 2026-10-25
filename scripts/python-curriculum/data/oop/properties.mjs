@@ -138,7 +138,6 @@ export default makeTopic({
     mc("What happens when you assign to a property that has no setter?", ["It works", "Nothing", "`ValueError`", "`AttributeError`"], 3),
     mc("Why does `__init__` write `self.age = age` rather than `self._age = age`?", ["It is shorter", "So the setter's check runs for new objects too", "It is faster", "Underscores aren't allowed in `__init__`"], 1),
     mc("`c.diameter` is a property. What does `c.diameter()` do?", ["Calls the value it returns, usually a `TypeError`", "Works the same", "Returns the method", "Sets the diameter"], 0),
-    qShort("What word goes after `@` to turn a method into a property?", "property"),
     mc("What is a big advantage of properties over `get_x()`/`set_x()` methods?", ["They are faster", "They are private", "They can't raise errors", "You can add one later without changing the code that uses the attribute"], 3),
     mc("What should reading a property not do?", ["Return a value", "Use `self`", "Do slow work or change the object", "Use other attributes"], 2),
     mc("Where does a property with a setter usually keep its value?", ["In an attribute with a leading underscore, like `self._age`", "In a global variable", "In the class", "Nowhere"], 0),
