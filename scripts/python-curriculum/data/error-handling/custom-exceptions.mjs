@@ -145,6 +145,5 @@ export default makeTopic({
     mc("Which name follows the convention for an exception type?", ["`InsufficientFunds`", "`insufficient_funds`", "`INSUFFICIENT`", "`insufficientfunds()`"], 0),
     mc("What does `pass` do in `class TooCold(Exception): pass`?", ["Raises the exception", "Catches it", "Nothing: the class adds nothing beyond its parent", "Ends the program"], 2),
     mc("What does `except AccountLocked:` tell a reader that `except ValueError:` doesn't?", ["Nothing", "The line number", "The value", "Exactly which problem is being handled"], 3),
-    mc("Where will you learn what `class` really means?", ["Nowhere: it is magic", "In the Classes and objects section", "In Fundamentals", "In Files"], 1),
   ],
 })

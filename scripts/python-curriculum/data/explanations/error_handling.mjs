@@ -10,7 +10,6 @@ export default {
     "`ValueError` means the type was right (a string) but its value can't be converted.",
     "`as e` stores the exception object, and `str(e)` is its message.",
     "Square brackets on a dictionary raise `KeyError` for a key that isn't there.",
-    "Index 5 is past the end of a two-item list, so Python raises `IndexError`.",
     "Python jumps to the matching `except` at once, so the rest of the `try` block doesn't run.",
     "The loop repeats, `try` catches bad input, and `break` leaves once a value converts.",
   ],
@@ -72,7 +71,6 @@ export default {
     "Exception classes use CapWords, and the standard ones often end in `Error`.",
     "`pass` fills the required class body; all the behaviour comes from the parent.",
     "A specific exception name documents the exact situation being handled.",
-    "The Classes and objects section explains what `class` and inheritance mean.",
   ],
   assertions: [
     "An `assert` does nothing when its condition is true.",
@@ -91,7 +89,6 @@ export default {
     "Normalising removes harmless differences like case and extra spaces.",
     "EAFP: try the operation and handle the exception if it fails.",
     "LBYL (look before you leap) checks first, as `if k in prices:` does.",
-    "15 is above the upper limit, so it is clamped to 10.",
     "A made-up value hides the problem, and wrong totals spread through the program.",
     "Reporting every problem at once saves the user a round of fixing and resubmitting.",
     "Change nothing until every check passes, so a failed transfer leaves both balances as they were.",

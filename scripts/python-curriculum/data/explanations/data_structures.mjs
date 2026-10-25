@@ -131,7 +131,6 @@ export default {
     "A list keeps items in order and lets you add and remove them.",
     "A list search checks items one at a time; a dict keyed by name finds a record directly.",
     "A dict maps each word to its count, and `Counter` does exactly that.",
-    "`sorted` returns a list, whatever collection it is given.",
     "A list is the simplest general collection; reach for others when a need appears.",
   ],
   proj_grade_book: [

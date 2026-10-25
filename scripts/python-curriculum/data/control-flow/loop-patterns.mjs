@@ -124,7 +124,6 @@ export default makeTopic({
     mc("Why start the largest-so-far at the first item rather than at 0?", ["It is faster", "So it works when every number is negative", "Python requires it", "0 is not a number"], 1),
     mc("How do you get the average from a loop?", ["Count the items and divide the total by the count", "Use `range`", "Divide by 2", "Take the middle item"], 0),
     mc("What does `enumerate(\"ab\")` give a loop?", ["`\"a\"` and `\"b\"`", "`0` and `1`", "Pairs of index and item: `(0, \"a\")`, `(1, \"b\")`", "The length"], 2),
-    qShort("What is `int(\"-30\")`? (a number)", "-30"),
     mc("Why does \"how many scores are above average?\" need two loops?", ["It doesn't", "Loops can only count", "To be faster", "You need the average before you can compare"], 3),
     mc("Which pattern finds whether an item exists and stops early?", ["Search with `break`", "Sum", "Two passes", "Build a string"], 0),
     mc("How do you add a dash between letters, but not at the end?", ["Add a dash after every letter", "Add a dash before every letter except the first", "Use `range(0)`", "Add two dashes"], 1),

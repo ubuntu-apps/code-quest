@@ -137,6 +137,5 @@ export default makeTopic({
     qShort("Which keyword lets a function change a module-level variable? (one word)", "global"),
     mc("Two modules both `import config`. How many `config` module objects are there?", ["Two", "None", "It depends on the order", "One, shared by both"], 3),
     mc("What does a name in capitals, like `MAX_PLAYERS`, usually mean?", ["A class", "A function", "A constant that shouldn't change", "A module"], 2),
-    mc("In this section's challenges, what happens to your code?", ["It is saved as a module file and imported by the checks", "It is ignored", "It is printed", "It is renamed to main.py and deleted"], 0),
   ],
 })

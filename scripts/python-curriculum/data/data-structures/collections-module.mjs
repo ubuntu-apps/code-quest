@@ -44,15 +44,6 @@ export default makeTopic({
         ["top2 is right", "top2 == [(\"the\", 3), (\"and\", 2)]"],
       ],
     }),
-    task("easy", "Zero, not an error", {
-      prompt: "Set `kiwis` to the count of `kiwi` in `counts`. A `Counter` gives 0 for a missing item, so no `get` is needed.",
-      starter: "from collections import Counter\n\ncounts = Counter([\"apple\", \"pear\", \"apple\"])\n",
-      hint: "Just look it up: `counts[\"kiwi\"]`.",
-      solution: "from collections import Counter\n\ncounts = Counter([\"apple\", \"pear\", \"apple\"])\nkiwis = counts[\"kiwi\"]",
-      tests: [
-        ["kiwis is 0", "kiwis == 0"],
-      ],
-    }),
     task("medium", "Group by first letter", {
       prompt: "Build `by_letter` with `defaultdict(list)`, so `by_letter[\"A\"]` is the list of names starting with A.",
       starter: "from collections import defaultdict\n\nnames = [\"Ana\", \"Ben\", \"Amir\", \"Bea\", \"Cleo\"]\n",
@@ -85,6 +76,16 @@ export default makeTopic({
         ["Sold-out figs are gone", "\"fig\" not in remaining"],
       ],
     }),
+    task("medium", "Serve the queue", {
+      prompt: "Dev joins the back of `queue` and Eli, who has a priority pass, joins the front. Then serve two people from the front: set `served` to their names, in order. The rest stay in `queue`.",
+      starter: "from collections import deque\n\nqueue = deque([\"Ana\", \"Ben\", \"Cleo\"])\n",
+      hint: "`append` adds at the back, `appendleft` at the front, and `popleft` takes from the front: `served = [queue.popleft(), queue.popleft()]`.",
+      solution: "from collections import deque\n\nqueue = deque([\"Ana\", \"Ben\", \"Cleo\"])\nqueue.append(\"Dev\")\nqueue.appendleft(\"Eli\")\nserved = [queue.popleft(), queue.popleft()]",
+      tests: [
+        ["served is Eli, then Ana", "served == [\"Eli\", \"Ana\"]"],
+        ["queue holds the rest", "list(queue) == [\"Ben\", \"Cleo\", \"Dev\"]"],
+      ],
+    }),
     task("hard", "The last three", {
       prompt: "Keep only the latest 3 readings: add every reading to a `deque` with `maxlen=3` called `recent`.",
       starter: "from collections import deque\n\nreadings = [20.5, 21.0, 22.4, 23.1, 22.8]\n",
@@ -103,6 +104,18 @@ export default makeTopic({
         ["python is in 1 and 3", "index[\"python\"] == {1, 3}"],
         ["data is in 1 and 2", "index[\"data\"] == {1, 2}"],
         ["fun is in 3", "index[\"fun\"] == {3}"],
+      ],
+    }),
+    task("hard", "Layered settings", {
+      prompt: "Set `settings` to a `ChainMap` that looks a key up in `command_line` first, then `file_settings`, then `defaults`. Then set `port`, `debug` and `host` from it.",
+      starter: "from collections import ChainMap\n\ndefaults = {\"port\": 8000, \"debug\": False, \"host\": \"localhost\"}\nfile_settings = {\"port\": 9000}\ncommand_line = {\"debug\": True}\n",
+      hint: "List the dicts in the order to search: `ChainMap(command_line, file_settings, defaults)`. Then `settings[\"port\"]` and so on.",
+      solution: "from collections import ChainMap\n\ndefaults = {\"port\": 8000, \"debug\": False, \"host\": \"localhost\"}\nfile_settings = {\"port\": 9000}\ncommand_line = {\"debug\": True}\nsettings = ChainMap(command_line, file_settings, defaults)\nport = settings[\"port\"]\ndebug = settings[\"debug\"]\nhost = settings[\"host\"]",
+      tests: [
+        ["settings is a ChainMap", "isinstance(settings, ChainMap)"],
+        ["port comes from the file", "port == 9000"],
+        ["debug comes from the command line", "debug is True"],
+        ["host comes from the defaults", "host == \"localhost\""],
       ],
     }),
     task("expert", "Moving average", {

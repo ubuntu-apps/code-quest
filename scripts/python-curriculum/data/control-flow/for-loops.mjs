@@ -125,7 +125,6 @@ export default makeTopic({
     mc("Where do you create the total in the accumulator pattern?", ["Before the loop", "Inside the loop", "After the loop", "In the `for` line"], 0),
     mc("What does this build?\n\n```\nresult = \"\"\nfor ch in \"abc\":\n    result = ch + result\n```", ["`\"abc\"`", "`\"cba\"`", "`\"aabbcc\"`", "`\"\"`"], 1),
     mc("What does `for i in range(3):` set `i` to?", ["1, 2 and 3", "3", "0, 1 and 2", "0, 1, 2 and 3"], 2),
-    mc("What is the loop variable in `for letter in word:`?", ["`for`", "`word`", "`in`", "`letter`"], 3),
     mc("What does `\"e\" in \"aeiou\"` give?", ["`True`", "`False`", "`1`", "An error"], 0),
   ],
 })

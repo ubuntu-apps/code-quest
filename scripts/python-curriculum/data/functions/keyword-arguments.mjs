@@ -33,15 +33,6 @@ export default makeTopic({
         ["order is right", "order == \"Tea, milk: True, sugars: 2\""],
       ],
     }),
-    task("easy", "A date with sep", {
-      prompt: "Print the parts of the date as `17/10/2026`, using the `sep` keyword argument of `print`.",
-      starter: "day, month, year = 17, 10, 2026\n",
-      hint: "`print(day, month, year, sep=\"/\")`.",
-      solution: "day, month, year = 17, 10, 2026\nprint(day, month, year, sep=\"/\")",
-      tests: [
-        ["Prints 17/10/2026", "_cq_stdout.strip() == \"17/10/2026\""],
-      ],
-    }),
     task("easy", "High to low", {
       prompt: "Set `ranked` to `scores` sorted from high to low, with the `reverse` keyword argument.",
       starter: "scores = [72, 95, 88, 61]\n",

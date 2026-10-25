@@ -77,6 +77,16 @@ export default makeTopic({
         ["only_ana is right", "only_ana == {\"running\"}"],
       ],
     }),
+    task("medium", "All packed, nothing clashing", {
+      prompt: "Set `ready` to whether every item in `required` is in `packed`, and `safe` to whether `menu` has nothing in common with `allergies`. Use `<=` and `isdisjoint`.",
+      starter: "required = {\"passport\", \"tickets\", \"charger\"}\npacked = {\"tickets\", \"snacks\", \"passport\", \"charger\"}\nallergies = {\"nuts\"}\nmenu = {\"bread\", \"nuts\", \"soup\"}\n",
+      hint: "`required <= packed` asks whether `required` is a subset of `packed`; `allergies.isdisjoint(menu)` is `True` when they share nothing.",
+      solution: "required = {\"passport\", \"tickets\", \"charger\"}\npacked = {\"tickets\", \"snacks\", \"passport\", \"charger\"}\nallergies = {\"nuts\"}\nmenu = {\"bread\", \"nuts\", \"soup\"}\nready = required <= packed\nsafe = allergies.isdisjoint(menu)",
+      tests: [
+        ["ready is True", "ready is True"],
+        ["safe is False", "safe is False"],
+      ],
+    }),
     task("hard", "Letters used", {
       prompt: "Set `letters` to a sorted list of the different letters in `word`.",
       starter: "word = \"mississippi\"\n",

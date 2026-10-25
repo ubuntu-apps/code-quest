@@ -126,11 +126,9 @@ export default makeTopic({
     mc("What does mode `\"a\"` do when the file doesn't exist?", ["Raises `FileNotFoundError`", "Asks first", "Creates it", "Nothing"], 2),
     mc("What does mode `\"x\"` do if the file already exists?", ["Raises `FileExistsError`", "Overwrites it", "Appends to it", "Renames it"], 0),
     mc("Why do appended lines sometimes join the last line?", ["Append mode removes line breaks", "The file was opened with `\"r\"`", "Python adds a space", "The file didn't end with a line break"], 3),
-    qShort("Which mode letter adds to the end of a file? (one letter)", "a"),
     mc("Which mode reads and writes an existing file from the start?", ["`\"w+\"`", "`\"r+\"`", "`\"a\"`", "`\"x\"`"], 1),
     mc("How do you update a counter stored in a file?", ["Read it, add 1, write it back with `\"w\"`", "Open it with `\"x\"`", "Append the new number", "Rename the file"], 0),
     mc("What does adding `b` to a mode, as in `\"rb\"`, mean?", ["Bigger buffer", "Backup first", "Binary: bytes instead of text", "Blank file"], 2),
     mc("Which mode is safest for a new save file you must not overwrite?", ["`\"w\"`", "`\"a\"`", "`\"r+\"`", "`\"x\"`"], 3),
-    mc("Which mode is the default?", ["`\"w\"`", "`\"r\"`", "`\"a\"`", "`\"x\"`"], 1),
   ],
 })

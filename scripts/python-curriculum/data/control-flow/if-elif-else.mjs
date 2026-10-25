@@ -79,6 +79,15 @@ export default makeTopic({
         ["price is 8", "price == 8"],
       ],
     }),
+    task("medium", "Did they type anything?", {
+      prompt: "Set `greeting` to `Hello, <name>!` when `name` isn't empty, and to `Who are you?` when it is. Use the name itself as the condition (`if name:`), not a comparison.",
+      starter: "name = \"\"\n",
+      hint: "Empty text is falsy, so `if name:` is false for `\"\"` and true for any other text.",
+      solution: "name = \"\"\nif name:\n    greeting = f\"Hello, {name}!\"\nelse:\n    greeting = \"Who are you?\"",
+      tests: [
+        ["greeting is Who are you?", "greeting == \"Who are you?\""],
+      ],
+    }),
     task("hard", "Order matters", {
       prompt: "A score of 90 or more should give `distinction`, 50 or more `pass`, and anything else `fail`. A score of 95 gets `pass` here. Fix the order.",
       starter: "score = 95\nif score >= 50:\n    result = \"pass\"\nelif score >= 90:\n    result = \"distinction\"\nelse:\n    result = \"fail\"\nprint(result)",

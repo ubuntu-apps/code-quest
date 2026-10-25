@@ -129,7 +129,6 @@ export default makeTopic({
     mc("A to-do list where order matters and you add and remove items. Which fits?", ["A list", "A tuple", "A set", "A frozen set"], 0),
     mc("What is wrong with searching a list of records for a name thousands of times?", ["Nothing", "Lists can't hold records", "It raises an error", "Each search checks the items one by one, which is slow"], 3),
     mc("How do you count how often each word appears?", ["A set", "A tuple", "A dict or a `Counter`", "A sorted list"], 2),
-    mc("What does `sorted({3, 1, 2})` give?", ["`{1, 2, 3}`", "`[1, 2, 3]`", "`(1, 2, 3)`", "An error"], 1),
     mc("Which is the best starting point when no special needs apply?", ["A list", "A `deque`", "A `ChainMap`", "A dict of sets"], 0),
   ],
 })

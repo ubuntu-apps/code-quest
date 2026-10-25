@@ -84,12 +84,12 @@ export default {
     "`in` checks whether one string appears anywhere inside another, and \"concatenate\" contains \"cat\".",
     "Strings are immutable, so you build a new string instead, such as `\"J\" + word[1:]`.",
     "`str(30)` turns the number into text, so `+` can join the two strings.",
-    "Leaving out the start of a slice means \"from the beginning\", so `[:2]` is the first two characters.",
   ],
   string_methods: [
     "`.upper()` returns a copy with every letter in capitals.",
     "`.strip()` removes spaces (and other whitespace such as new lines) from both ends.",
     "String methods return a new string and never change the original, so you have to store the result.",
+    "Chained methods run left to right: `strip()` removes the outer spaces, then `lower()` works on that result. The space between the words stays.",
     "Replacing every `-` with an empty string removes them all.",
     "`.count` returns how many times the text appears, and \"banana\" has three a's.",
     "`.find` returns -1 when the text isn't there; `.index` would raise an error instead.",

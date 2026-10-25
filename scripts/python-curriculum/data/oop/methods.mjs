@@ -130,7 +130,6 @@ export default makeTopic({
     mc("Where should a list attribute like `self.items` be created?", ["In `__init__`, so each object gets its own", "Outside the class", "In each method", "In a global variable"], 0),
     qShort("What is the conventional name of a method's first parameter?", "self"),
     mc("Which kind of method usually returns nothing?", ["One that answers a question", "One that prints", "One that is called first", "One that changes the object"], 3),
-    mc("What does `\"hi\".upper()` show about strings?", ["They are lists", "Strings can't change", "Strings are objects with methods", "`upper` is a keyword"], 2),
     mc("Why put `deposit` and `withdraw` inside the class?", ["So the code that keeps the balance right lives with the balance", "It is faster", "Functions can't change numbers", "To hide the balance"], 0),
   ],
 })

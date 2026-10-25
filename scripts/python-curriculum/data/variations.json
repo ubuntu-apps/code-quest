@@ -691,6 +691,36 @@
   "collections_data_ch10": [
     {
       "set": {
+        "readings": "[4, 5, 6, 7, 8]"
+      },
+      "expect": {
+        "averages": "[5.0, 6.0, 7.0]"
+      },
+      "tests": [
+        {
+          "label": "Also right when readings = [4, 5, 6, 7, 8]",
+          "assertion": "_cq_round(_cq_rerun({\"readings\": [4, 5, 6, 7, 8]}, \"averages\")) == _cq_round([5.0, 6.0, 7.0])"
+        }
+      ]
+    },
+    {
+      "set": {
+        "readings": "[2, 3, 4, 5, 1]"
+      },
+      "expect": {
+        "averages": "[3.0, 4.0, 3.3333333333333335]"
+      },
+      "tests": [
+        {
+          "label": "Also right when readings = [2, 3, 4, 5, 1]",
+          "assertion": "_cq_round(_cq_rerun({\"readings\": [2, 3, 4, 5, 1]}, \"averages\")) == _cq_round([3.0, 4.0, 3.3333333333333335])"
+        }
+      ]
+    }
+  ],
+  "collections_data_ch11": [
+    {
+      "set": {
         "scores": "{'Ana': 95, 'Ben': 72, 'Cy': 91, 'Dee': 79, 'Eli': 88}"
       },
       "expect": {
@@ -748,36 +778,6 @@
       ]
     }
   ],
-  "collections_data_ch9": [
-    {
-      "set": {
-        "readings": "[4, 5, 6, 7, 8]"
-      },
-      "expect": {
-        "averages": "[5.0, 6.0, 7.0]"
-      },
-      "tests": [
-        {
-          "label": "Also right when readings = [4, 5, 6, 7, 8]",
-          "assertion": "_cq_round(_cq_rerun({\"readings\": [4, 5, 6, 7, 8]}, \"averages\")) == _cq_round([5.0, 6.0, 7.0])"
-        }
-      ]
-    },
-    {
-      "set": {
-        "readings": "[2, 3, 4, 5, 1]"
-      },
-      "expect": {
-        "averages": "[3.0, 4.0, 3.3333333333333335]"
-      },
-      "tests": [
-        {
-          "label": "Also right when readings = [2, 3, 4, 5, 1]",
-          "assertion": "_cq_round(_cq_rerun({\"readings\": [2, 3, 4, 5, 1]}, \"averages\")) == _cq_round([3.0, 4.0, 3.3333333333333335])"
-        }
-      ]
-    }
-  ],
   "comparison_operators_ch1": [
     {
       "set": {
@@ -790,22 +790,6 @@
         {
           "label": "Also right when temperature = 30",
           "assertion": "_cq_rerun({\"temperature\": 30}, \"is_hot\") == False"
-        }
-      ]
-    }
-  ],
-  "comparison_operators_ch10": [
-    {
-      "set": {
-        "price": "190"
-      },
-      "expect": {
-        "close": "False"
-      },
-      "tests": [
-        {
-          "label": "Also right when price = 190",
-          "assertion": "_cq_rerun({\"price\": 190}, \"close\") == False"
         }
       ]
     }
@@ -829,22 +813,6 @@
   "comparison_operators_ch3": [
     {
       "set": {
-        "a": "'Cat'"
-      },
-      "expect": {
-        "different": "False"
-      },
-      "tests": [
-        {
-          "label": "Also right when a = 'Cat'",
-          "assertion": "_cq_rerun({\"a\": 'Cat'}, \"different\") == False"
-        }
-      ]
-    }
-  ],
-  "comparison_operators_ch4": [
-    {
-      "set": {
         "score": "50"
       },
       "expect": {
@@ -858,7 +826,7 @@
       ]
     }
   ],
-  "comparison_operators_ch5": [
+  "comparison_operators_ch4": [
     {
       "set": {
         "score": "100"
@@ -874,7 +842,7 @@
       ]
     }
   ],
-  "comparison_operators_ch6": [
+  "comparison_operators_ch5": [
     {
       "set": {
         "w1": "'PEAR'"
@@ -890,7 +858,7 @@
       ]
     }
   ],
-  "comparison_operators_ch7": [
+  "comparison_operators_ch6": [
     {
       "set": {
         "answer": "'Garden'"
@@ -906,7 +874,7 @@
       ]
     }
   ],
-  "comparison_operators_ch8": [
+  "comparison_operators_ch7": [
     {
       "set": {
         "age": "17"
@@ -922,7 +890,7 @@
       ]
     }
   ],
-  "comparison_operators_ch9": [
+  "comparison_operators_ch8": [
     {
       "set": {
         "typed": "'43'"
@@ -934,6 +902,22 @@
         {
           "label": "Also right when typed = '43'",
           "assertion": "_cq_rerun({\"typed\": '43'}, \"same\") == False"
+        }
+      ]
+    }
+  ],
+  "comparison_operators_ch9": [
+    {
+      "set": {
+        "price": "190"
+      },
+      "expect": {
+        "close": "False"
+      },
+      "tests": [
+        {
+          "label": "Also right when price = 190",
+          "assertion": "_cq_rerun({\"price\": 190}, \"close\") == False"
         }
       ]
     }
@@ -1034,12 +1018,12 @@
         "shop_a": "{'apple': 2, 'pear': 7, 'fig': 5}"
       },
       "expect": {
-        "combined": "{'pear': 11, 'fig': 6}"
+        "combined": "{'fig': 6, 'pear': 11}"
       },
       "tests": [
         {
           "label": "Also right when a different shop_a",
-          "assertion": "_cq_rerun({\"shop_a\": {'apple': 2, 'pear': 7, 'fig': 5}}, \"combined\") == {'pear': 11, 'fig': 6}"
+          "assertion": "_cq_rerun({\"shop_a\": {'apple': 2, 'pear': 7, 'fig': 5}}, \"combined\") == {'fig': 6, 'pear': 11}"
         }
       ]
     },
@@ -1048,12 +1032,12 @@
         "shop_a": "{'apple': 8, 'pear': 5, 'fig': 10}"
       },
       "expect": {
-        "combined": "{'pear': 9, 'fig': 11}"
+        "combined": "{'fig': 11, 'pear': 9}"
       },
       "tests": [
         {
           "label": "Also right when a different shop_a",
-          "assertion": "_cq_rerun({\"shop_a\": {'apple': 8, 'pear': 5, 'fig': 10}}, \"combined\") == {'pear': 9, 'fig': 11}"
+          "assertion": "_cq_rerun({\"shop_a\": {'apple': 8, 'pear': 5, 'fig': 10}}, \"combined\") == {'fig': 11, 'pear': 9}"
         }
       ]
     }
@@ -1184,12 +1168,12 @@
         "names": "['Ana', 'ben', 'Amir', 'Bea']"
       },
       "expect": {
-        "initials": "{'B', 'A'}"
+        "initials": "{'A', 'B'}"
       },
       "tests": [
         {
           "label": "Also right when names = ['Ana', 'ben', 'Amir', 'Bea']",
-          "assertion": "_cq_rerun({\"names\": ['Ana', 'ben', 'Amir', 'Bea']}, \"initials\") == {'B', 'A'}"
+          "assertion": "_cq_rerun({\"names\": ['Ana', 'ben', 'Amir', 'Bea']}, \"initials\") == {'A', 'B'}"
         }
       ]
     }
@@ -1200,12 +1184,12 @@
         "word": "'garden'"
       },
       "expect": {
-        "counts": "{'d': 1, 'n': 1, 'r': 1, 'g': 1, 'a': 1, 'e': 1}"
+        "counts": "{'g': 1, 'e': 1, 'd': 1, 'r': 1, 'a': 1, 'n': 1}"
       },
       "tests": [
         {
           "label": "Also right when word = 'garden'",
-          "assertion": "_cq_rerun({\"word\": 'garden'}, \"counts\") == {'d': 1, 'n': 1, 'r': 1, 'g': 1, 'a': 1, 'e': 1}"
+          "assertion": "_cq_rerun({\"word\": 'garden'}, \"counts\") == {'g': 1, 'e': 1, 'd': 1, 'r': 1, 'a': 1, 'n': 1}"
         }
       ]
     },
@@ -1214,17 +1198,47 @@
         "word": "'rocket'"
       },
       "expect": {
-        "counts": "{'c': 1, 'k': 1, 'r': 1, 't': 1, 'o': 1, 'e': 1}"
+        "counts": "{'o': 1, 'e': 1, 't': 1, 'k': 1, 'r': 1, 'c': 1}"
       },
       "tests": [
         {
           "label": "Also right when word = 'rocket'",
-          "assertion": "_cq_rerun({\"word\": 'rocket'}, \"counts\") == {'c': 1, 'k': 1, 'r': 1, 't': 1, 'o': 1, 'e': 1}"
+          "assertion": "_cq_rerun({\"word\": 'rocket'}, \"counts\") == {'o': 1, 'e': 1, 't': 1, 'k': 1, 'r': 1, 'c': 1}"
         }
       ]
     }
   ],
   "dictionaries_ch10": [
+    {
+      "set": {
+        "codes": "{'NO': 'Norway', 'JP': 'Japan'}"
+      },
+      "expect": {
+        "code_for": "{'Norway': 'NO', 'Japan': 'JP'}"
+      },
+      "tests": [
+        {
+          "label": "Also right when a different codes",
+          "assertion": "_cq_rerun({\"codes\": {'NO': 'Norway', 'JP': 'Japan'}}, \"code_for\") == {'Norway': 'NO', 'Japan': 'JP'}"
+        }
+      ]
+    },
+    {
+      "set": {
+        "codes": "{'JP': 'Japan', 'KE': 'Kenya'}"
+      },
+      "expect": {
+        "code_for": "{'Japan': 'JP', 'Kenya': 'KE'}"
+      },
+      "tests": [
+        {
+          "label": "Also right when codes = {'JP': 'Japan', 'KE': 'Kenya'}",
+          "assertion": "_cq_rerun({\"codes\": {'JP': 'Japan', 'KE': 'Kenya'}}, \"code_for\") == {'Japan': 'JP', 'Kenya': 'KE'}"
+        }
+      ]
+    }
+  ],
+  "dictionaries_ch11": [
     {
       "set": {
         "prices": "{'tea': 3.75, 'cake': 4.0, 'jam': 2.5}"
@@ -1327,6 +1341,36 @@
   "dictionaries_ch7": [
     {
       "set": {
+        "defaults": "{'theme': 'light', 'size': 14}"
+      },
+      "expect": {
+        "final": "{'theme': 'dark', 'size': 16}"
+      },
+      "tests": [
+        {
+          "label": "Also right when defaults = {'theme': 'light', 'size': 14}",
+          "assertion": "_cq_rerun({\"defaults\": {'theme': 'light', 'size': 14}}, \"final\") == {'theme': 'dark', 'size': 16}"
+        }
+      ]
+    },
+    {
+      "set": {
+        "choices": "{'theme': 'dark'}"
+      },
+      "expect": {
+        "final": "{'theme': 'dark', 'size': 14, 'sound': True}"
+      },
+      "tests": [
+        {
+          "label": "Also right when choices = {'theme': 'dark'}",
+          "assertion": "_cq_rerun({\"choices\": {'theme': 'dark'}}, \"final\") == {'theme': 'dark', 'size': 14, 'sound': True}"
+        }
+      ]
+    }
+  ],
+  "dictionaries_ch8": [
+    {
+      "set": {
         "text": "'red blue red green blue'"
       },
       "expect": {
@@ -1350,36 +1394,6 @@
         {
           "label": "Also right when text = 'red blue red'",
           "assertion": "_cq_rerun({\"text\": 'red blue red'}, \"counts\") == {'red': 2, 'blue': 1}"
-        }
-      ]
-    }
-  ],
-  "dictionaries_ch9": [
-    {
-      "set": {
-        "codes": "{'NO': 'Norway', 'JP': 'Japan'}"
-      },
-      "expect": {
-        "code_for": "{'Norway': 'NO', 'Japan': 'JP'}"
-      },
-      "tests": [
-        {
-          "label": "Also right when a different codes",
-          "assertion": "_cq_rerun({\"codes\": {'NO': 'Norway', 'JP': 'Japan'}}, \"code_for\") == {'Norway': 'NO', 'Japan': 'JP'}"
-        }
-      ]
-    },
-    {
-      "set": {
-        "codes": "{'JP': 'Japan', 'KE': 'Kenya'}"
-      },
-      "expect": {
-        "code_for": "{'Japan': 'JP', 'Kenya': 'KE'}"
-      },
-      "tests": [
-        {
-          "label": "Also right when codes = {'JP': 'Japan', 'KE': 'Kenya'}",
-          "assertion": "_cq_rerun({\"codes\": {'JP': 'Japan', 'KE': 'Kenya'}}, \"code_for\") == {'Japan': 'JP', 'Kenya': 'KE'}"
         }
       ]
     }
@@ -1700,7 +1714,7 @@
       ]
     }
   ],
-  "if_elif_else_ch10": [
+  "if_elif_else_ch11": [
     {
       "set": {
         "weight": "7.0"
@@ -1793,6 +1807,37 @@
   "if_elif_else_ch7": [
     {
       "set": {
+        "name": "'Sam'"
+      },
+      "expect": {
+        "greeting": "'Hello, Sam!'"
+      },
+      "tests": [
+        {
+          "label": "Also right when name = 'Sam'",
+          "assertion": "_cq_rerun({\"name\": 'Sam'}, \"greeting\") == 'Hello, Sam!'"
+        }
+      ],
+      "locked": true
+    },
+    {
+      "set": {
+        "name": "'Lee'"
+      },
+      "expect": {
+        "greeting": "'Hello, Lee!'"
+      },
+      "tests": [
+        {
+          "label": "Also right when name = 'Lee'",
+          "assertion": "_cq_rerun({\"name\": 'Lee'}, \"greeting\") == 'Hello, Lee!'"
+        }
+      ]
+    }
+  ],
+  "if_elif_else_ch8": [
+    {
+      "set": {
         "score": "89"
       },
       "expect": {
@@ -1820,7 +1865,7 @@
       ]
     }
   ],
-  "if_elif_else_ch8": [
+  "if_elif_else_ch9": [
     {
       "set": {
         "n": "13"
@@ -2102,7 +2147,7 @@
       ]
     }
   ],
-  "keyword_arguments_ch3": [
+  "keyword_arguments_ch2": [
     {
       "set": {
         "scores": "[75, 98, 91, 64]"
@@ -2132,7 +2177,7 @@
       ]
     }
   ],
-  "keyword_arguments_ch8": [
+  "keyword_arguments_ch7": [
     {
       "set": {
         "words": "['cherry', 'kiwi', 'banana', 'fig']"
@@ -2615,6 +2660,86 @@
   "lists_ch10": [
     {
       "set": {
+        "weather": "['cloud', 'rain', 'sun', 'rain', 'sun']"
+      },
+      "expect": {
+        "first_rain": "1",
+        "rainy_days": "2"
+      },
+      "tests": [
+        {
+          "label": "Also right when a different weather (first_rain)",
+          "assertion": "_cq_rerun({\"weather\": ['cloud', 'rain', 'sun', 'rain', 'sun']}, \"first_rain\") == 1"
+        },
+        {
+          "label": "Also right when a different weather (rainy_days)",
+          "assertion": "_cq_rerun({\"weather\": ['cloud', 'rain', 'sun', 'rain', 'sun']}, \"rainy_days\") == 2"
+        }
+      ]
+    },
+    {
+      "set": {
+        "weather": "['rain', 'sun', 'rain', 'cloud', 'sun']"
+      },
+      "expect": {
+        "first_rain": "0",
+        "rainy_days": "2"
+      },
+      "tests": [
+        {
+          "label": "Also right when a different weather (first_rain)",
+          "assertion": "_cq_rerun({\"weather\": ['rain', 'sun', 'rain', 'cloud', 'sun']}, \"first_rain\") == 0"
+        },
+        {
+          "label": "Also right when a different weather (rainy_days)",
+          "assertion": "_cq_rerun({\"weather\": ['rain', 'sun', 'rain', 'cloud', 'sun']}, \"rainy_days\") == 2"
+        }
+      ]
+    }
+  ],
+  "lists_ch11": [
+    {
+      "set": {
+        "playlist": "['Song B', 'Song C', 'Song A']"
+      },
+      "expect": {
+        "backup": "['Song B', 'Song C', 'Song A']",
+        "playlist": "['Song B', 'Song C', 'Song A', 'Song D']"
+      },
+      "tests": [
+        {
+          "label": "Also right when playlist = ['Song B', 'Song C', 'Song A'] (backup)",
+          "assertion": "_cq_rerun({\"playlist\": ['Song B', 'Song C', 'Song A']}, \"backup\") == ['Song B', 'Song C', 'Song A']"
+        },
+        {
+          "label": "Also right when playlist = ['Song B', 'Song C', 'Song A'] (playlist)",
+          "assertion": "_cq_rerun({\"playlist\": ['Song B', 'Song C', 'Song A']}, \"playlist\") == ['Song B', 'Song C', 'Song A', 'Song D']"
+        }
+      ]
+    },
+    {
+      "set": {
+        "playlist": "['Song C', 'Song B', 'Song A']"
+      },
+      "expect": {
+        "backup": "['Song C', 'Song B', 'Song A']",
+        "playlist": "['Song C', 'Song B', 'Song A', 'Song D']"
+      },
+      "tests": [
+        {
+          "label": "Also right when playlist = ['Song C', 'Song B', 'Song A'] (backup)",
+          "assertion": "_cq_rerun({\"playlist\": ['Song C', 'Song B', 'Song A']}, \"backup\") == ['Song C', 'Song B', 'Song A']"
+        },
+        {
+          "label": "Also right when playlist = ['Song C', 'Song B', 'Song A'] (playlist)",
+          "assertion": "_cq_rerun({\"playlist\": ['Song C', 'Song B', 'Song A']}, \"playlist\") == ['Song C', 'Song B', 'Song A', 'Song D']"
+        }
+      ]
+    }
+  ],
+  "lists_ch12": [
+    {
+      "set": {
         "visits": "['shop', 'home', 'park', 'shop', 'home', 'home']"
       },
       "expect": {
@@ -2715,6 +2840,36 @@
   "lists_ch5": [
     {
       "set": {
+        "queue": "['Cleo', 'Ben']"
+      },
+      "expect": {
+        "queue": "['Ana', 'Cleo', 'Ben', 'Dev', 'Eli']"
+      },
+      "tests": [
+        {
+          "label": "Also right when queue = ['Cleo', 'Ben']",
+          "assertion": "_cq_rerun({\"queue\": ['Cleo', 'Ben']}, \"queue\") == ['Ana', 'Cleo', 'Ben', 'Dev', 'Eli']"
+        }
+      ]
+    },
+    {
+      "set": {
+        "queue": "['Ben']"
+      },
+      "expect": {
+        "queue": "['Ana', 'Ben', 'Dev', 'Eli']"
+      },
+      "tests": [
+        {
+          "label": "Also right when queue = ['Ben']",
+          "assertion": "_cq_rerun({\"queue\": ['Ben']}, \"queue\") == ['Ana', 'Ben', 'Dev', 'Eli']"
+        }
+      ]
+    }
+  ],
+  "lists_ch6": [
+    {
+      "set": {
         "inbox": "['spam', 'meeting', 'lunch?', 'hi']"
       },
       "expect": {
@@ -2752,7 +2907,7 @@
       ]
     }
   ],
-  "lists_ch6": [
+  "lists_ch7": [
     {
       "set": {
         "temps": "[21, 24, 20, 28, 22]"
@@ -2802,7 +2957,7 @@
       ]
     }
   ],
-  "lists_ch7": [
+  "lists_ch8": [
     {
       "set": {
         "scores": "[75, 98, 91, 64]"
@@ -2832,7 +2987,7 @@
       ]
     }
   ],
-  "lists_ch8": [
+  "lists_ch9": [
     {
       "set": {
         "names": "['Cleo', 'Ana']"
@@ -2858,46 +3013,6 @@
         {
           "label": "Also right when names = ['Ana', 'Ben']",
           "assertion": "_cq_rerun({\"names\": ['Ana', 'Ben']}, \"names\") == ['Ana', 'Ben']"
-        }
-      ]
-    }
-  ],
-  "lists_ch9": [
-    {
-      "set": {
-        "playlist": "['Song B', 'Song C', 'Song A']"
-      },
-      "expect": {
-        "backup": "['Song B', 'Song C', 'Song A']",
-        "playlist": "['Song B', 'Song C', 'Song A', 'Song D']"
-      },
-      "tests": [
-        {
-          "label": "Also right when playlist = ['Song B', 'Song C', 'Song A'] (backup)",
-          "assertion": "_cq_rerun({\"playlist\": ['Song B', 'Song C', 'Song A']}, \"backup\") == ['Song B', 'Song C', 'Song A']"
-        },
-        {
-          "label": "Also right when playlist = ['Song B', 'Song C', 'Song A'] (playlist)",
-          "assertion": "_cq_rerun({\"playlist\": ['Song B', 'Song C', 'Song A']}, \"playlist\") == ['Song B', 'Song C', 'Song A', 'Song D']"
-        }
-      ]
-    },
-    {
-      "set": {
-        "playlist": "['Song C', 'Song B', 'Song A']"
-      },
-      "expect": {
-        "backup": "['Song C', 'Song B', 'Song A']",
-        "playlist": "['Song C', 'Song B', 'Song A', 'Song D']"
-      },
-      "tests": [
-        {
-          "label": "Also right when playlist = ['Song C', 'Song B', 'Song A'] (backup)",
-          "assertion": "_cq_rerun({\"playlist\": ['Song C', 'Song B', 'Song A']}, \"backup\") == ['Song C', 'Song B', 'Song A']"
-        },
-        {
-          "label": "Also right when playlist = ['Song C', 'Song B', 'Song A'] (playlist)",
-          "assertion": "_cq_rerun({\"playlist\": ['Song C', 'Song B', 'Song A']}, \"playlist\") == ['Song C', 'Song B', 'Song A', 'Song D']"
         }
       ]
     }
@@ -5080,7 +5195,7 @@
       ]
     }
   ],
-  "reading_input_ch6": [
+  "reading_input_ch5": [
     {
       "set": {
         "_cq_answers": "['  GARDEN ']"
@@ -5173,6 +5288,22 @@
   "sets_ch10": [
     {
       "set": {
+        "sentence": "'The quick brown fox jumps over the lazy'"
+      },
+      "expect": {
+        "is_pangram": "False"
+      },
+      "tests": [
+        {
+          "label": "Also right when a different sentence",
+          "assertion": "_cq_rerun({\"sentence\": 'The quick brown fox jumps over the lazy'}, \"is_pangram\") == False"
+        }
+      ]
+    }
+  ],
+  "sets_ch11": [
+    {
+      "set": {
         "text": "'one two three'"
       },
       "expect": {
@@ -5247,15 +5378,15 @@
     },
     {
       "set": {
-        "tags": "{'kiwi', 'draft', 'news'}"
+        "tags": "{'draft', 'news', 'kiwi'}"
       },
       "expect": {
-        "tags": "{'python', 'kiwi', 'news'}"
+        "tags": "{'python', 'news', 'kiwi'}"
       },
       "tests": [
         {
-          "label": "Also right when tags = {'kiwi', 'draft', 'news'}",
-          "assertion": "_cq_rerun({\"tags\": {'kiwi', 'draft', 'news'}}, \"tags\") == {'python', 'kiwi', 'news'}"
+          "label": "Also right when tags = {'draft', 'news', 'kiwi'}",
+          "assertion": "_cq_rerun({\"tags\": {'draft', 'news', 'kiwi'}}, \"tags\") == {'python', 'news', 'kiwi'}"
         }
       ]
     }
@@ -5263,29 +5394,29 @@
   "sets_ch5": [
     {
       "set": {
-        "ana": "{'films', 'running'}"
+        "ana": "{'running', 'films'}"
       },
       "expect": {
         "shared": "{'films'}"
       },
       "tests": [
         {
-          "label": "Also right when ana = {'films', 'running'}",
-          "assertion": "_cq_rerun({\"ana\": {'films', 'running'}}, \"shared\") == {'films'}"
+          "label": "Also right when ana = {'running', 'films'}",
+          "assertion": "_cq_rerun({\"ana\": {'running', 'films'}}, \"shared\") == {'films'}"
         }
       ]
     },
     {
       "set": {
-        "ana": "{'chess', 'running'}"
+        "ana": "{'running', 'chess'}"
       },
       "expect": {
         "shared": "{'chess'}"
       },
       "tests": [
         {
-          "label": "Also right when ana = {'chess', 'running'}",
-          "assertion": "_cq_rerun({\"ana\": {'chess', 'running'}}, \"shared\") == {'chess'}"
+          "label": "Also right when ana = {'running', 'chess'}",
+          "assertion": "_cq_rerun({\"ana\": {'running', 'chess'}}, \"shared\") == {'chess'}"
         }
       ]
     }
@@ -5307,20 +5438,60 @@
     },
     {
       "set": {
-        "ana": "{'films', 'kiwi', 'chess', 'running'}"
+        "ana": "{'running', 'films', 'chess', 'kiwi'}"
       },
       "expect": {
-        "only_ana": "{'kiwi', 'running'}"
+        "only_ana": "{'running', 'kiwi'}"
       },
       "tests": [
         {
           "label": "Also right when a different ana",
-          "assertion": "_cq_rerun({\"ana\": {'films', 'kiwi', 'chess', 'running'}}, \"only_ana\") == {'kiwi', 'running'}"
+          "assertion": "_cq_rerun({\"ana\": {'running', 'films', 'chess', 'kiwi'}}, \"only_ana\") == {'running', 'kiwi'}"
         }
       ]
     }
   ],
   "sets_ch7": [
+    {
+      "set": {
+        "required": "{'passport', 'charger', 'kiwi', 'tickets'}"
+      },
+      "expect": {
+        "ready": "False",
+        "safe": "False"
+      },
+      "tests": [
+        {
+          "label": "Also right when a different required (ready)",
+          "assertion": "_cq_rerun({\"required\": {'passport', 'charger', 'kiwi', 'tickets'}}, \"ready\") == False"
+        },
+        {
+          "label": "Also right when a different required (safe)",
+          "assertion": "_cq_rerun({\"required\": {'passport', 'charger', 'kiwi', 'tickets'}}, \"safe\") == False"
+        }
+      ]
+    },
+    {
+      "set": {
+        "allergies": "set()"
+      },
+      "expect": {
+        "ready": "True",
+        "safe": "True"
+      },
+      "tests": [
+        {
+          "label": "Also right when allergies = set() (ready)",
+          "assertion": "_cq_rerun({\"allergies\": set()}, \"ready\") == True"
+        },
+        {
+          "label": "Also right when allergies = set() (safe)",
+          "assertion": "_cq_rerun({\"allergies\": set()}, \"safe\") == True"
+        }
+      ]
+    }
+  ],
+  "sets_ch8": [
     {
       "set": {
         "word": "'garden'"
@@ -5350,10 +5521,10 @@
       ]
     }
   ],
-  "sets_ch8": [
+  "sets_ch9": [
     {
       "set": {
-        "needed": "{'socks', 'passport', 'tickets'}"
+        "needed": "{'passport', 'socks', 'tickets'}"
       },
       "expect": {
         "missing": "{'tickets'}"
@@ -5361,13 +5532,13 @@
       "tests": [
         {
           "label": "Also right when a different needed",
-          "assertion": "_cq_rerun({\"needed\": {'socks', 'passport', 'tickets'}}, \"missing\") == {'tickets'}"
+          "assertion": "_cq_rerun({\"needed\": {'passport', 'socks', 'tickets'}}, \"missing\") == {'tickets'}"
         }
       ]
     },
     {
       "set": {
-        "needed": "{'socks', 'passport', 'charger'}"
+        "needed": "{'passport', 'socks', 'charger'}"
       },
       "expect": {
         "missing": "{'charger'}"
@@ -5375,23 +5546,7 @@
       "tests": [
         {
           "label": "Also right when a different needed",
-          "assertion": "_cq_rerun({\"needed\": {'socks', 'passport', 'charger'}}, \"missing\") == {'charger'}"
-        }
-      ]
-    }
-  ],
-  "sets_ch9": [
-    {
-      "set": {
-        "sentence": "'The quick brown fox jumps over the lazy'"
-      },
-      "expect": {
-        "is_pangram": "False"
-      },
-      "tests": [
-        {
-          "label": "Also right when a different sentence",
-          "assertion": "_cq_rerun({\"sentence\": 'The quick brown fox jumps over the lazy'}, \"is_pangram\") == False"
+          "assertion": "_cq_rerun({\"needed\": {'passport', 'socks', 'charger'}}, \"missing\") == {'charger'}"
         }
       ]
     }
@@ -5725,6 +5880,66 @@
   "string_methods_ch10": [
     {
       "set": {
+        "sentence": "'The quick brown fox'"
+      },
+      "expect": {
+        "word_count": "4"
+      },
+      "tests": [
+        {
+          "label": "Also right when sentence = 'The quick brown fox'",
+          "assertion": "_cq_rerun({\"sentence\": 'The quick brown fox'}, \"word_count\") == 4"
+        }
+      ]
+    },
+    {
+      "set": {
+        "sentence": "'The quick brown'"
+      },
+      "expect": {
+        "word_count": "3"
+      },
+      "tests": [
+        {
+          "label": "Also right when sentence = 'The quick brown'",
+          "assertion": "_cq_rerun({\"sentence\": 'The quick brown'}, \"word_count\") == 3"
+        }
+      ]
+    }
+  ],
+  "string_methods_ch11": [
+    {
+      "set": {
+        "full_name": "'Lovelace Ada'"
+      },
+      "expect": {
+        "username": "'lovelace.ada'"
+      },
+      "tests": [
+        {
+          "label": "Also right when full_name = 'Lovelace Ada'",
+          "assertion": "_cq_rerun({\"full_name\": 'Lovelace Ada'}, \"username\") == 'lovelace.ada'"
+        }
+      ]
+    },
+    {
+      "set": {
+        "full_name": "'  Garden Lovelace '"
+      },
+      "expect": {
+        "username": "'garden.lovelace'"
+      },
+      "tests": [
+        {
+          "label": "Also right when full_name = '  Garden Lovelace '",
+          "assertion": "_cq_rerun({\"full_name\": '  Garden Lovelace '}, \"username\") == 'garden.lovelace'"
+        }
+      ]
+    }
+  ],
+  "string_methods_ch12": [
+    {
+      "set": {
         "tags": "' data ,  web,python'"
       },
       "expect": {
@@ -5872,7 +6087,38 @@
       ]
     }
   ],
-  "string_methods_ch8": [
+  "string_methods_ch7": [
+    {
+      "set": {
+        "pin": "'2580'"
+      },
+      "expect": {
+        "valid": "True"
+      },
+      "tests": [
+        {
+          "label": "Also right when pin = '2580'",
+          "assertion": "_cq_rerun({\"pin\": '2580'}, \"valid\") == True"
+        }
+      ],
+      "locked": true
+    },
+    {
+      "set": {
+        "pin": "'25801'"
+      },
+      "expect": {
+        "valid": "False"
+      },
+      "tests": [
+        {
+          "label": "Also right when pin = '25801'",
+          "assertion": "_cq_rerun({\"pin\": '25801'}, \"valid\") == False"
+        }
+      ]
+    }
+  ],
+  "string_methods_ch9": [
     {
       "set": {
         "email": "'GRACE@EXAMPLE.ORG'"
@@ -5898,36 +6144,6 @@
         {
           "label": "Also right when email = 'Grace@Example.Org'",
           "assertion": "_cq_rerun({\"email\": 'Grace@Example.Org'}, \"domain\") == 'Example.Org'"
-        }
-      ]
-    }
-  ],
-  "string_methods_ch9": [
-    {
-      "set": {
-        "full_name": "'Lovelace Ada'"
-      },
-      "expect": {
-        "username": "'lovelace.ada'"
-      },
-      "tests": [
-        {
-          "label": "Also right when full_name = 'Lovelace Ada'",
-          "assertion": "_cq_rerun({\"full_name\": 'Lovelace Ada'}, \"username\") == 'lovelace.ada'"
-        }
-      ]
-    },
-    {
-      "set": {
-        "full_name": "'  Garden Lovelace '"
-      },
-      "expect": {
-        "username": "'garden.lovelace'"
-      },
-      "tests": [
-        {
-          "label": "Also right when full_name = '  Garden Lovelace '",
-          "assertion": "_cq_rerun({\"full_name\": '  Garden Lovelace '}, \"username\") == 'garden.lovelace'"
         }
       ]
     }

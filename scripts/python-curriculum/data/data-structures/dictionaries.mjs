@@ -79,6 +79,16 @@ export default makeTopic({
         ["Prints the menu", "_cq_stdout.strip().splitlines() == [\"coffee: $3.20\", \"tea: $2.50\", \"cake: $3.75\"]"],
       ],
     }),
+    task("medium", "Merge the settings", {
+      prompt: "Set `final` to the `defaults` with the user's `choices` merged in (the user's values win), without changing `defaults`.",
+      starter: "defaults = {\"theme\": \"light\", \"size\": 14, \"sound\": True}\nchoices = {\"theme\": \"dark\", \"size\": 16}\n",
+      hint: "`defaults | choices` builds a new dict; when a key is in both, the value on the right wins.",
+      solution: "defaults = {\"theme\": \"light\", \"size\": 14, \"sound\": True}\nchoices = {\"theme\": \"dark\", \"size\": 16}\nfinal = defaults | choices",
+      tests: [
+        ["final is merged", "final == {\"theme\": \"dark\", \"size\": 16, \"sound\": True}"],
+        ["defaults is unchanged", "defaults == {\"theme\": \"light\", \"size\": 14, \"sound\": True}"],
+      ],
+    }),
     task("hard", "Count the words", {
       prompt: "Build `counts`: how often each word appears in `text`.",
       starter: "text = \"red blue red green blue red\"\n",

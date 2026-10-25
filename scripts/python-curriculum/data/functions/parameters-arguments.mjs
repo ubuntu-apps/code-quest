@@ -127,7 +127,6 @@ export default makeTopic({
     mc("In `greet(\"Ana\")`, what is `\"Ana\"`?", ["A parameter", "The function name", "An argument", "A variable"], 2),
     mc("How are arguments matched to parameters by default?", ["By position: first to first, second to second", "By name", "Alphabetically", "At random"], 0),
     mc("What happens when you leave out a required argument?", ["The parameter becomes 0", "Nothing", "The parameter becomes `None`", "A `TypeError` says which argument is missing"], 3),
-    qShort("`def add(a, b): print(a + b)`. What does `add(2, 3)` print? (a number)", "5"),
     mc("Can an argument be a calculation, like `square(x + 1)`?", ["No, only variables", "Yes, it is worked out first and the result is passed", "Only for numbers", "Only with brackets"], 1),
     mc("Where does a parameter exist?", ["Only inside the function, during a call", "Everywhere in the program", "Only before the function is called", "In the next function"], 0),
     mc("`def f(a, b): print(a - b)`. What does `f(2, 10)` print?", ["`8`", "`2`", "`-8`", "`12`"], 2),
