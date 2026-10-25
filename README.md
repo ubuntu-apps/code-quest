@@ -9,7 +9,8 @@ Live site: <https://ubuntu-apps.github.io/code-quest/>
 | Course | Status | Code runs with |
 | --- | --- | --- |
 | Python | Live, 10 sections | [Pyodide](https://pyodide.org) in a Web Worker |
-| R | Live, 15 sections | [WebR](https://docs.r-wasm.org/webr/) |
+| SQL | Live, 10 sections | SQLite, through Pyodide's `sqlite3` in the same Web Worker |
+| R | Coming soon (`comingSoon` in `public/content/index.json`), 15 sections | [WebR](https://docs.r-wasm.org/webr/) |
 | Java | Draft, not listed in the app | none yet (text-checked only) |
 
 The Java files in `public/content/java/` are kept for later. To publish them, add a `java` entry to `public/content/index.json`.
@@ -69,7 +70,7 @@ node scripts/python-curriculum/generate.mjs
 node scripts/r-curriculum/generate.mjs
 ```
 
-Edit the `data/*.mjs` files, then regenerate. The course layout (section order and titles, and which topics go in each section) lives in `data/course.mjs`. Add `--only <sectionId>` to regenerate one section, e.g. `--only data_and_apis`. Challenge IDs come from the topic and position (`json_basics_ch3`), so regenerating keeps learners' progress unless you reorder challenges.
+Edit the `data/*.mjs` files, then regenerate. The course layout (section order and titles, and which topics go in each section) lives in `data/course.mjs`. Add `--only <sectionId>` to regenerate one section, e.g. `--only data_and_apis`. Challenge IDs come from the topic and the challenge's title (`json_basics-save-and-load-a-file`), and quiz question IDs from the topic and a hash of the prompt, so adding, removing or reordering items keeps learners' progress on the others. Renaming a challenge makes it a new one (`scripts/curriculum-ids.mjs`); progress saved under the older position-based IDs is moved over by the app (`idMigration.ts`).
 
 Write new challenges with the `task()` and `mc()` builders in `scripts/python-curriculum/data/_builders.mjs` (and `typedInput()` for challenges that read `input()`); see `data/fundamentals/`, `data/control-flow/`, `data/data-structures/`, `data/functions/`, `data/error-handling/`, `data/file-handling/`, `data/modules/`, `data/oop/`, `data/data-apis/` and `data/projects/` for examples. Sections listed in `scripts/curriculum-check.json` (every section of the Python course) must pass every check, or CI fails. Then run the content check:
 

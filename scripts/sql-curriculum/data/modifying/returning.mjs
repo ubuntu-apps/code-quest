@@ -30,13 +30,13 @@ export default makeTopic({
     }),
     query('easy', 'Returned, and shown', {
       prompt: "Mark loan 6 returned on `2026-10-24`, returning its `id`, `member_id` and `returned`.",
-      hint: "`UPDATE loans SET returned = '2026-10-24' WHERE id = 6 RETURNING id, member_id, returned;`",
+      hint: 'Write the UPDATE as usual, then add `RETURNING` and the columns to show.',
       solution: "UPDATE loans\nSET returned = '2026-10-24'\nWHERE id = 6\nRETURNING id, member_id, returned;",
       checks: [AFTER.loans],
     }),
     query('easy', 'Which fines went', {
       prompt: 'Delete the fines of 0 or less, returning the `member_id` of each deleted row.',
-      hint: '`DELETE FROM fines WHERE amount <= 0 RETURNING member_id;`',
+      hint: 'Write the DELETE as usual, then add `RETURNING member_id`.',
       solution: 'DELETE FROM fines\nWHERE amount <= 0\nRETURNING member_id;',
       checks: [AFTER.fines],
     }),
@@ -66,7 +66,7 @@ export default makeTopic({
     }),
     query('hard', 'A record of what went', {
       prompt: "Delete the loans returned before `2026-09-01`, returning the `id`, `member_id` and `returned` date of each.",
-      hint: "`DELETE FROM loans WHERE returned < '2026-09-01' RETURNING id, member_id, returned;`",
+      hint: 'A DELETE with a WHERE on `returned`, then `RETURNING` with the three columns.',
       solution: "DELETE FROM loans\nWHERE returned < '2026-09-01'\nRETURNING id, member_id, returned;",
       checks: [AFTER.loans],
     }),

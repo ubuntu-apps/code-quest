@@ -29,7 +29,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Emails in lower case', {
       prompt: "Show every customer's email in lower case, in a column called `email_lower`.",
-      hint: '`SELECT LOWER(email) AS email_lower FROM customers;`',
+      hint: '`LOWER(column)` turns text into lower case. Name the result with `AS`.',
       solution: 'SELECT LOWER(email) AS email_lower FROM customers;',
     }),
     query('easy', 'Cities in capitals', {

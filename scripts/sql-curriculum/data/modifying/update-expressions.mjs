@@ -30,7 +30,7 @@ export default makeTopic({
     }),
     query('easy', 'Fines go up', {
       prompt: 'Add `0.5` to every fine.',
-      hint: '`UPDATE fines SET amount = amount + 0.5;`',
+      hint: "SET can use the column's current value: `amount = amount + …`.",
       solution: 'UPDATE fines\nSET amount = amount + 0.5;',
       checks: [AFTER.fines],
     }),

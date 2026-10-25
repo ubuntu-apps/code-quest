@@ -27,7 +27,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'How many sales?', {
       prompt: 'Count the rows in the `sales` table, in a column called `sales`.',
-      hint: '`SELECT COUNT(*) AS sales FROM sales;`',
+      hint: '`COUNT(*)` counts rows. Give it a name with `AS`.',
       solution: 'SELECT COUNT(*) AS sales FROM sales;',
     }),
     query('easy', 'Card payments', {

@@ -28,13 +28,13 @@ export default makeTopic({
   challenges: [
     query('easy', 'Search by product', {
       prompt: "`SELECT * FROM sales WHERE product_id = 5` scans the whole table. Create an index called `sales_product` on `sales (product_id)` so it searches instead. (Run EXPLAIN QUERY PLAN to see the difference.)",
-      hint: '`CREATE INDEX sales_product ON sales (product_id);`',
+      hint: '`CREATE INDEX index_name ON table (column);`',
       solution: 'CREATE INDEX sales_product ON sales (product_id);',
       checks: [indexes('sales'), plan('The query searches with the index', 'SELECT * FROM sales WHERE product_id = 5')],
     }),
     query('easy', 'Search by name', {
       prompt: "Create an index called `products_name` so that `SELECT price FROM products WHERE name = 'Hosta'` searches instead of scanning.",
-      hint: '`CREATE INDEX products_name ON products (name);`',
+      hint: "The query searches by `name`, so that's the column to index. Use the index name the challenge gives.",
       solution: 'CREATE INDEX products_name ON products (name);',
       checks: [indexes('products'), plan('The query searches with the index', "SELECT price FROM products WHERE name = 'Hosta'")],
     }),
@@ -52,13 +52,13 @@ export default makeTopic({
     }),
     query('medium', 'Already in order', {
       prompt: "`SELECT name, price FROM products WHERE price IS NOT NULL ORDER BY price` sorts with a temporary B-tree. Create an index called `products_price` on price, so the rows come out of the index already in order.",
-      hint: '`CREATE INDEX products_price ON products (price);`, then the plan has no USE TEMP B-TREE.',
+      hint: 'Index the column the query sorts by. Afterwards the plan has no USE TEMP B-TREE.',
       solution: 'CREATE INDEX products_price ON products (price);',
       checks: [indexes('products'), plan('The query reads the index in order', 'SELECT name, price FROM products WHERE price IS NOT NULL ORDER BY price')],
     }),
     query('hard', 'An index on JSON', {
       prompt: "Create an index called `products_colour` on the expression `json_extract(details, '$.colour')`, so that `SELECT name FROM products WHERE json_extract(details, '$.colour') = 'green'` searches.",
-      hint: "An index can be on an expression: `CREATE INDEX products_colour ON products (json_extract(details, '$.colour'));`. The query must use the same expression.",
+      hint: 'An index can be on an expression: put the whole `json_extract(…)` call in the brackets where a column would go. The query must use the same expression.',
       solution: "CREATE INDEX products_colour ON products (json_extract(details, '$.colour'));",
       checks: [indexes('products'), plan('The query searches with the index', "SELECT name FROM products WHERE json_extract(details, '$.colour') = 'green'")],
     }),

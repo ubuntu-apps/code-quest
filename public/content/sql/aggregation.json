@@ -40,11 +40,11 @@
       },
       "challenges": [
         {
-          "id": "count_rows_ch1",
+          "id": "count_rows-how-many-sales",
           "title": "Easy: How many sales?",
           "promptMarkdown": "Count the rows in the `sales` table, in a column called `sales`.",
           "starterCode": "",
-          "hint": "`SELECT COUNT(*) AS sales FROM sales;`",
+          "hint": "`COUNT(*)` counts rows. Give it a name with `AS`.",
           "solution": "SELECT COUNT(*) AS sales FROM sales;",
           "validation": {
             "mode": "sql_tests",
@@ -52,7 +52,7 @@
           }
         },
         {
-          "id": "count_rows_ch2",
+          "id": "count_rows-card-payments",
           "title": "Easy: Card payments",
           "promptMarkdown": "Count the sales paid by `card`, in a column called `card_sales`.",
           "starterCode": "",
@@ -64,7 +64,7 @@
           }
         },
         {
-          "id": "count_rows_ch3",
+          "id": "count_rows-recorded-payments",
           "title": "Medium: Recorded payments",
           "promptMarkdown": "Count how many sales have a payment method recorded (not NULL), in a column called `recorded`. Use `COUNT` on the column.",
           "starterCode": "",
@@ -76,7 +76,7 @@
           }
         },
         {
-          "id": "count_rows_ch4",
+          "id": "count_rows-coffee-at-north",
           "title": "Medium: Coffee at North",
           "promptMarkdown": "Count the `Coffee` sales at the `North` store, in a column called `coffees`.",
           "starterCode": "",
@@ -88,7 +88,7 @@
           }
         },
         {
-          "id": "count_rows_ch5",
+          "id": "count_rows-missing-payments",
           "title": "Hard: Missing payments",
           "promptMarkdown": "Show how many sales have no payment method recorded, in a column called `missing`, by subtracting one count from another.",
           "starterCode": "",
@@ -100,7 +100,7 @@
           }
         },
         {
-          "id": "count_rows_ch6",
+          "id": "count_rows-big-sales",
           "title": "Hard: Big sales",
           "promptMarkdown": "Count the sales of 5 or more items (`quantity`), in a column called `big_sales`.",
           "starterCode": "",
@@ -112,7 +112,7 @@
           }
         },
         {
-          "id": "count_rows_ch7",
+          "id": "count_rows-the-first-week",
           "title": "Expert: The first week",
           "promptMarkdown": "Count the sales from 2026-10-01 to 2026-10-07 (both included), in a column called `first_week`.",
           "starterCode": "",
@@ -128,7 +128,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "count_rows_q1",
+            "id": "count_rows-q-13d1wpm",
             "type": "mcq",
             "prompt": "What does an aggregate function do?",
             "choices": [
@@ -153,7 +153,7 @@
             "explanation": "Aggregates such as COUNT, SUM and AVG summarise many rows into one value."
           },
           {
-            "id": "count_rows_q2",
+            "id": "count_rows-q-6vzg5o",
             "type": "mcq",
             "prompt": "What does `COUNT(*)` count?",
             "choices": [
@@ -178,7 +178,7 @@
             "explanation": "COUNT(*) counts every row, whatever is in it."
           },
           {
-            "id": "count_rows_q3",
+            "id": "count_rows-q-1biy0hs",
             "type": "mcq",
             "prompt": "What does `COUNT(payment)` count?",
             "choices": [
@@ -203,7 +203,7 @@
             "explanation": "COUNT on a column skips the rows where that column is NULL."
           },
           {
-            "id": "count_rows_q4",
+            "id": "count_rows-q-57hnhh",
             "type": "shortText",
             "prompt": "A table has 30 rows and 3 NULL payments. What is `COUNT(payment)`?",
             "validation": {
@@ -213,7 +213,7 @@
             "explanation": "30 rows minus the 3 without a value."
           },
           {
-            "id": "count_rows_q5",
+            "id": "count_rows-q-dxbl8s",
             "type": "mcq",
             "prompt": "How do you count only the card sales?",
             "choices": [
@@ -238,7 +238,7 @@
             "explanation": "WHERE picks the rows first, then COUNT counts them."
           },
           {
-            "id": "count_rows_q6",
+            "id": "count_rows-q-f13tht",
             "type": "mcq",
             "prompt": "How many rows does `SELECT COUNT(*) FROM sales` return?",
             "choices": [
@@ -263,7 +263,7 @@
             "explanation": "Without grouping, an aggregate gives a single row."
           },
           {
-            "id": "count_rows_q7",
+            "id": "count_rows-q-1gd9u5t",
             "type": "mcq",
             "prompt": "Which gives the number of missing scores?",
             "choices": [
@@ -288,7 +288,7 @@
             "explanation": "All rows minus the rows with a score leaves the missing ones."
           },
           {
-            "id": "count_rows_q8",
+            "id": "count_rows-q-1wjaidh",
             "type": "mcq",
             "prompt": "Why name a count with AS?",
             "choices": [
@@ -313,7 +313,7 @@
             "explanation": "Like any calculated column, it is headed by its expression unless you name it."
           },
           {
-            "id": "count_rows_q9",
+            "id": "count_rows-q-1xcxtr3",
             "type": "mcq",
             "prompt": "What does `COUNT(*)` give for a WHERE that matches no rows?",
             "choices": [
@@ -412,11 +412,11 @@
       },
       "challenges": [
         {
-          "id": "sum_avg_ch1",
+          "id": "sum_avg-items-sold",
           "title": "Easy: Items sold",
           "promptMarkdown": "Show the total number of items sold (the sum of `quantity`), in a column called `items`.",
           "starterCode": "",
-          "hint": "`SELECT SUM(quantity) AS items FROM sales;`",
+          "hint": "`SUM(column)` adds up a column. Name the result with `AS`.",
           "solution": "SELECT SUM(quantity) AS items FROM sales;",
           "validation": {
             "mode": "sql_tests",
@@ -424,7 +424,7 @@
           }
         },
         {
-          "id": "sum_avg_ch2",
+          "id": "sum_avg-average-score",
           "title": "Easy: Average score",
           "promptMarkdown": "Show the average `score`, rounded to 1 decimal, in a column called `average`.",
           "starterCode": "",
@@ -436,7 +436,7 @@
           }
         },
         {
-          "id": "sum_avg_ch3",
+          "id": "sum_avg-top-score",
           "title": "Easy: Top score",
           "promptMarkdown": "Show the highest `score`, in a column called `best`.",
           "starterCode": "",
@@ -448,7 +448,7 @@
           }
         },
         {
-          "id": "sum_avg_ch4",
+          "id": "sum_avg-revenue",
           "title": "Medium: Revenue",
           "promptMarkdown": "Show the total takings (the sum of `quantity` times `unit_price`), rounded to 2 decimals, in a column called `revenue`.",
           "starterCode": "",
@@ -460,7 +460,7 @@
           }
         },
         {
-          "id": "sum_avg_ch5",
+          "id": "sum_avg-cheapest-and-dearest",
           "title": "Medium: Cheapest and dearest",
           "promptMarkdown": "Show the lowest and highest `unit_price` in one row, in columns called `cheapest` and `dearest`.",
           "starterCode": "",
@@ -472,7 +472,7 @@
           }
         },
         {
-          "id": "sum_avg_ch6",
+          "id": "sum_avg-first-and-last-day",
           "title": "Medium: First and last day",
           "promptMarkdown": "Show the first and last `sale_date`, in columns called `first_day` and `last_day`.",
           "starterCode": "",
@@ -484,7 +484,7 @@
           }
         },
         {
-          "id": "sum_avg_ch7",
+          "id": "sum_avg-average-sale",
           "title": "Hard: Average sale",
           "promptMarkdown": "Show the average value of a sale (`quantity` times `unit_price`), rounded to 2 decimals, in a column called `average_sale`.",
           "starterCode": "",
@@ -496,7 +496,7 @@
           }
         },
         {
-          "id": "sum_avg_ch8",
+          "id": "sum_avg-spring-spread",
           "title": "Expert: Spring spread",
           "promptMarkdown": "Show the gap between the highest and lowest `Spring` score, in a column called `spread`.",
           "starterCode": "",
@@ -508,7 +508,7 @@
           }
         },
         {
-          "id": "sum_avg_ch9",
+          "id": "sum_avg-two-kinds-of-average",
           "title": "Expert: Two kinds of average",
           "promptMarkdown": "In one row, show the average score of the exams taken (`of_taken`) and the average if absences counted as 0 (`absences_as_zero`), both rounded to 1 decimal.",
           "starterCode": "",
@@ -524,7 +524,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "sum_avg_q1",
+            "id": "sum_avg-q-1nu0qkt",
             "type": "mcq",
             "prompt": "What does `AVG(score)` give?",
             "choices": [
@@ -549,7 +549,7 @@
             "explanation": "AVG adds the values and divides by how many there are: the mean."
           },
           {
-            "id": "sum_avg_q2",
+            "id": "sum_avg-q-1g513se",
             "type": "mcq",
             "prompt": "How do AVG and SUM treat NULL?",
             "choices": [
@@ -574,7 +574,7 @@
             "explanation": "Aggregates ignore NULL values (COUNT(*) is the one that counts every row)."
           },
           {
-            "id": "sum_avg_q3",
+            "id": "sum_avg-q-1cy6mu1",
             "type": "mcq",
             "prompt": "Which gives the total takings?",
             "choices": [
@@ -599,7 +599,7 @@
             "explanation": "Multiply each row first, then add them up. Multiplying two sums would count every item at every price."
           },
           {
-            "id": "sum_avg_q4",
+            "id": "sum_avg-q-1bdnsba",
             "type": "shortText",
             "prompt": "Which function gives the smallest value?",
             "validation": {
@@ -609,7 +609,7 @@
             "explanation": "MIN gives the smallest value; MAX the largest."
           },
           {
-            "id": "sum_avg_q5",
+            "id": "sum_avg-q-1s30dvz",
             "type": "mcq",
             "prompt": "What does `MIN(sale_date)` give for YYYY-MM-DD dates?",
             "choices": [
@@ -634,7 +634,7 @@
             "explanation": "This date form sorts in date order, so the smallest is the earliest."
           },
           {
-            "id": "sum_avg_q6",
+            "id": "sum_avg-q-cv76wz",
             "type": "mcq",
             "prompt": "Scores 80, 90 and one absence (NULL). What is AVG(score)?",
             "choices": [
@@ -659,7 +659,7 @@
             "explanation": "The NULL is skipped: (80 + 90) / 2 = 85."
           },
           {
-            "id": "sum_avg_q7",
+            "id": "sum_avg-q-2fxqs9",
             "type": "mcq",
             "prompt": "Same scores. What is `SUM(score) * 1.0 / COUNT(*)`?",
             "choices": [
@@ -684,7 +684,7 @@
             "explanation": "COUNT(*) counts all three rows, so the absence counts as 0: 170 / 3."
           },
           {
-            "id": "sum_avg_q8",
+            "id": "sum_avg-q-suy7k3",
             "type": "mcq",
             "prompt": "Can one query use several aggregates?",
             "choices": [
@@ -709,7 +709,7 @@
             "explanation": "For example `SELECT MIN(x), MAX(x), AVG(x)` gives them all in one row."
           },
           {
-            "id": "sum_avg_q9",
+            "id": "sum_avg-q-o45mqo",
             "type": "mcq",
             "prompt": "Why round an average?",
             "choices": [
@@ -734,7 +734,7 @@
             "explanation": "ROUND(AVG(x), 1) keeps it readable."
           },
           {
-            "id": "sum_avg_q10",
+            "id": "sum_avg-q-11p6aoa",
             "type": "mcq",
             "prompt": "What does `MAX(product)` give for text?",
             "choices": [
@@ -833,11 +833,11 @@
       },
       "challenges": [
         {
-          "id": "group_by_ch1",
+          "id": "group_by-sales-per-store",
           "title": "Easy: Sales per store",
           "promptMarkdown": "Show each `store` and its number of sales, in a column called `sales`.",
           "starterCode": "",
-          "hint": "`SELECT store, COUNT(*) AS sales FROM sales GROUP BY store;`",
+          "hint": "`COUNT(*)` with `GROUP BY store` counts the rows of each store.",
           "solution": "SELECT store, COUNT(*) AS sales FROM sales GROUP BY store;",
           "validation": {
             "mode": "sql_tests",
@@ -845,7 +845,7 @@
           }
         },
         {
-          "id": "group_by_ch2",
+          "id": "group_by-items-per-category",
           "title": "Easy: Items per category",
           "promptMarkdown": "Show each `category` and the number of items sold in it (sum of `quantity`), in a column called `items`.",
           "starterCode": "",
@@ -857,7 +857,7 @@
           }
         },
         {
-          "id": "group_by_ch3",
+          "id": "group_by-average-per-student",
           "title": "Easy: Average per student",
           "promptMarkdown": "Show each `student` and their average score rounded to 1 decimal, in a column called `average`.",
           "starterCode": "",
@@ -869,7 +869,7 @@
           }
         },
         {
-          "id": "group_by_ch4",
+          "id": "group_by-revenue-per-store",
           "title": "Medium: Revenue per store",
           "promptMarkdown": "Show each `store` and its takings (quantity times unit price, summed and rounded to 2 decimals), called `revenue`. Highest first.",
           "starterCode": "",
@@ -881,7 +881,7 @@
           }
         },
         {
-          "id": "group_by_ch5",
+          "id": "group_by-best-score-per-subject",
           "title": "Medium: Best score per subject",
           "promptMarkdown": "Show each `subject` and its highest score, in a column called `best`.",
           "starterCode": "",
@@ -893,7 +893,7 @@
           }
         },
         {
-          "id": "group_by_ch6",
+          "id": "group_by-how-people-paid",
           "title": "Medium: How people paid",
           "promptMarkdown": "Show each `payment` method and its number of sales, in a column called `sales`. (The unrecorded payments form their own group.)",
           "starterCode": "",
@@ -905,7 +905,7 @@
           }
         },
         {
-          "id": "group_by_ch7",
+          "id": "group_by-best-sellers",
           "title": "Hard: Best sellers",
           "promptMarkdown": "Show each `product` and the number of items sold, called `sold`. Most sold first; equal numbers in product order.",
           "starterCode": "",
@@ -917,7 +917,7 @@
           }
         },
         {
-          "id": "group_by_ch8",
+          "id": "group_by-card-sales-per-store",
           "title": "Hard: Card sales per store",
           "promptMarkdown": "Show each `store` and its number of sales paid by `card`, in a column called `card_sales`.",
           "starterCode": "",
@@ -929,7 +929,7 @@
           }
         },
         {
-          "id": "group_by_ch9",
+          "id": "group_by-subjects-ranked",
           "title": "Expert: Subjects ranked",
           "promptMarkdown": "Show each `subject` and its average score rounded to 1 decimal, called `average`, best subject first.",
           "starterCode": "",
@@ -941,7 +941,7 @@
           }
         },
         {
-          "id": "group_by_ch10",
+          "id": "group_by-the-busiest-day",
           "title": "Expert: The busiest day",
           "promptMarkdown": "Show the `sale_date` on which the most items were sold, and that number, called `items`. One row; if two days tie, the earlier one.",
           "starterCode": "",
@@ -957,7 +957,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "group_by_q1",
+            "id": "group_by-q-um8j9",
             "type": "mcq",
             "prompt": "What does `GROUP BY store` do?",
             "choices": [
@@ -982,7 +982,7 @@
             "explanation": "Each group becomes one row, and aggregates are worked out per group."
           },
           {
-            "id": "group_by_q2",
+            "id": "group_by-q-y229d4",
             "type": "mcq",
             "prompt": "Which SELECT works with `GROUP BY store`?",
             "choices": [
@@ -1007,7 +1007,7 @@
             "explanation": "Every column must be grouped or inside an aggregate; product is neither."
           },
           {
-            "id": "group_by_q3",
+            "id": "group_by-q-1xvvv8x",
             "type": "mcq",
             "prompt": "What does SQLite do with a column that is neither grouped nor aggregated?",
             "choices": [
@@ -1032,7 +1032,7 @@
             "explanation": "SQLite allows it but picks one row's value, which is easy to misread. Other databases refuse it."
           },
           {
-            "id": "group_by_q4",
+            "id": "group_by-q-1mrnclx",
             "type": "mcq",
             "prompt": "When does WHERE filter rows in a grouped query?",
             "choices": [
@@ -1057,7 +1057,7 @@
             "explanation": "WHERE works on individual rows, before GROUP BY."
           },
           {
-            "id": "group_by_q5",
+            "id": "group_by-q-kgv88b",
             "type": "shortText",
             "prompt": "Which clause goes right after WHERE: `GROUP BY` or `ORDER BY`?",
             "validation": {
@@ -1067,7 +1067,7 @@
             "explanation": "SELECT … FROM … WHERE … GROUP BY … ORDER BY … LIMIT."
           },
           {
-            "id": "group_by_q6",
+            "id": "group_by-q-1dvd5im",
             "type": "mcq",
             "prompt": "What happens to rows whose grouping value is NULL?",
             "choices": [
@@ -1092,7 +1092,7 @@
             "explanation": "NULLs are grouped together into one group."
           },
           {
-            "id": "group_by_q7",
+            "id": "group_by-q-1se4rk6",
             "type": "mcq",
             "prompt": "How do you sort the stores by their number of sales?",
             "choices": [
@@ -1117,7 +1117,7 @@
             "explanation": "ORDER BY can use the total's name."
           },
           {
-            "id": "group_by_q8",
+            "id": "group_by-q-1q35upy",
             "type": "mcq",
             "prompt": "Why show the grouping column in SELECT?",
             "choices": [
@@ -1142,7 +1142,7 @@
             "explanation": "Without it, you get a list of numbers with no labels."
           },
           {
-            "id": "group_by_q9",
+            "id": "group_by-q-16533h1",
             "type": "mcq",
             "prompt": "How many rows does `SELECT student, AVG(score) FROM results GROUP BY student` give for 5 students?",
             "choices": [
@@ -1167,7 +1167,7 @@
             "explanation": "One row per group: one per student."
           },
           {
-            "id": "group_by_q10",
+            "id": "group_by-q-184p0lb",
             "type": "mcq",
             "prompt": "Which counts card sales per store?",
             "choices": [
@@ -1261,11 +1261,11 @@
       },
       "challenges": [
         {
-          "id": "group_expressions_ch1",
+          "id": "group_expressions-sales-by-weekday",
           "title": "Easy: Sales by weekday",
           "promptMarkdown": "Show each day of the week as a number (`strftime('%w', sale_date)`, called `weekday`) and its number of sales, called `sales`.",
           "starterCode": "",
-          "hint": "`SELECT strftime('%w', sale_date) AS weekday, COUNT(*) AS sales FROM sales GROUP BY weekday;`",
+          "hint": "Give the `strftime` expression the name `weekday`, then group by that name.",
           "solution": "SELECT strftime('%w', sale_date) AS weekday, COUNT(*) AS sales FROM sales GROUP BY weekday;",
           "validation": {
             "mode": "sql_tests",
@@ -1273,7 +1273,7 @@
           }
         },
         {
-          "id": "group_expressions_ch2",
+          "id": "group_expressions-big-and-small",
           "title": "Easy: Big and small",
           "promptMarkdown": "Group the sales into `big` (5 or more items) and `small`, in a column called `size`, and count each group in a column called `sales`.",
           "starterCode": "",
@@ -1285,7 +1285,7 @@
           }
         },
         {
-          "id": "group_expressions_ch3",
+          "id": "group_expressions-grades",
           "title": "Easy: Grades",
           "promptMarkdown": "For the exams that were taken, show each `grade` (`A` for 90 or more, `B` for 75 or more, `C` for 60 or more, `D` otherwise) and how many results got it, called `results`. In grade order.",
           "starterCode": "",
@@ -1297,7 +1297,7 @@
           }
         },
         {
-          "id": "group_expressions_ch4",
+          "id": "group_expressions-takings-per-day",
           "title": "Medium: Takings per day",
           "promptMarkdown": "Show each `sale_date` and that day's takings (quantity times unit price, summed and rounded to 2 decimals), called `revenue`, in date order.",
           "starterCode": "",
@@ -1309,7 +1309,7 @@
           }
         },
         {
-          "id": "group_expressions_ch5",
+          "id": "group_expressions-price-bands",
           "title": "Medium: Price bands",
           "promptMarkdown": "Group the sales by price: `under 3` for a `unit_price` below 3 and `3 or more` otherwise, in a column called `band`, with the number of items sold in each, called `items`.",
           "starterCode": "",
@@ -1321,7 +1321,7 @@
           }
         },
         {
-          "id": "group_expressions_ch6",
+          "id": "group_expressions-unknown-payments-named",
           "title": "Medium: Unknown payments, named",
           "promptMarkdown": "Show each payment method, with `unknown` for the missing ones (call it `payment`), and the number of sales, called `sales`.",
           "starterCode": "",
@@ -1333,7 +1333,7 @@
           }
         },
         {
-          "id": "group_expressions_ch7",
+          "id": "group_expressions-weekly-takings",
           "title": "Hard: Weekly takings",
           "promptMarkdown": "Show each week of the year (`strftime('%W', sale_date)`, called `week`) and its takings, rounded to 2 decimals, called `revenue`. In week order.",
           "starterCode": "",
@@ -1345,7 +1345,7 @@
           }
         },
         {
-          "id": "group_expressions_ch8",
+          "id": "group_expressions-by-first-letter",
           "title": "Hard: By first letter",
           "promptMarkdown": "Show the first letter of each `product` (called `letter`) and the number of sales of products starting with it, called `sales`, in alphabetical order.",
           "starterCode": "",
@@ -1357,7 +1357,7 @@
           }
         },
         {
-          "id": "group_expressions_ch9",
+          "id": "group_expressions-weekend-or-weekday",
           "title": "Expert: Weekend or weekday",
           "promptMarkdown": "Show the takings on weekends and on weekdays: a column called `part` (`weekend` for Saturdays and Sundays, `weekday` otherwise) and the takings rounded to 2 decimals, called `revenue`.",
           "starterCode": "",
@@ -1369,7 +1369,7 @@
           }
         },
         {
-          "id": "group_expressions_ch10",
+          "id": "group_expressions-items-by-whole-price",
           "title": "Expert: Items by whole price",
           "promptMarkdown": "Show each `unit_price` rounded to a whole number (called `price`) and the number of items sold at it, called `items`, cheapest first.",
           "starterCode": "",
@@ -1385,7 +1385,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "group_expressions_q1",
+            "id": "group_expressions-q-1j0mqef",
             "type": "mcq",
             "prompt": "Can GROUP BY use a calculation, not only a column?",
             "choices": [
@@ -1410,7 +1410,7 @@
             "explanation": "Any expression can be a group: every row with the same result goes in the same group."
           },
           {
-            "id": "group_expressions_q2",
+            "id": "group_expressions-q-ip1f73",
             "type": "mcq",
             "prompt": "Does SQLite allow `GROUP BY weekday` when `weekday` is a name given with AS?",
             "choices": [
@@ -1435,7 +1435,7 @@
             "explanation": "SQLite allows it. Some other databases need the calculation written out again."
           },
           {
-            "id": "group_expressions_q3",
+            "id": "group_expressions-q-9417hr",
             "type": "mcq",
             "prompt": "What does `strftime('%W', date)` give?",
             "choices": [
@@ -1460,7 +1460,7 @@
             "explanation": "%W is the week number (weeks starting on Monday); %w is the day of the week."
           },
           {
-            "id": "group_expressions_q4",
+            "id": "group_expressions-q-vp8d37",
             "type": "shortText",
             "prompt": "How many groups does `CASE WHEN quantity >= 5 THEN 'big' ELSE 'small' END` make?",
             "validation": {
@@ -1470,7 +1470,7 @@
             "explanation": "Every row is either big or small."
           },
           {
-            "id": "group_expressions_q5",
+            "id": "group_expressions-q-1hjidg4",
             "type": "mcq",
             "prompt": "How do you give the NULL payment group a readable name?",
             "choices": [
@@ -1495,7 +1495,7 @@
             "explanation": "COALESCE turns NULL into a label before grouping."
           },
           {
-            "id": "group_expressions_q6",
+            "id": "group_expressions-q-1ydldfx",
             "type": "mcq",
             "prompt": "Grades by CASE: why add `WHERE score IS NOT NULL`?",
             "choices": [
@@ -1520,7 +1520,7 @@
             "explanation": "A NULL score fails every WHEN and would be counted as a D."
           },
           {
-            "id": "group_expressions_q7",
+            "id": "group_expressions-q-300j1e",
             "type": "mcq",
             "prompt": "Which gives one row per day?",
             "choices": [
@@ -1545,7 +1545,7 @@
             "explanation": "Each date is its own group."
           },
           {
-            "id": "group_expressions_q8",
+            "id": "group_expressions-q-4wr97t",
             "type": "mcq",
             "prompt": "Which shows the busiest weekday first?",
             "choices": [
@@ -1570,7 +1570,7 @@
             "explanation": "Sort the groups by their count."
           },
           {
-            "id": "group_expressions_q9",
+            "id": "group_expressions-q-1d49yd7",
             "type": "mcq",
             "prompt": "What is weekday 0 in SQLite?",
             "choices": [
@@ -1595,7 +1595,7 @@
             "explanation": "strftime('%w') counts from 0 for Sunday to 6 for Saturday."
           },
           {
-            "id": "group_expressions_q10",
+            "id": "group_expressions-q-9pkwxt",
             "type": "mcq",
             "prompt": "Grouping by `ROUND(unit_price)` puts 2.5 and 2.6 in…",
             "choices": [
@@ -1684,7 +1684,7 @@
       },
       "challenges": [
         {
-          "id": "group_several_ch1",
+          "id": "group_several-store-and-category",
           "title": "Easy: Store and category",
           "promptMarkdown": "Show each `store` and `category` combination and its number of sales, called `sales`.",
           "starterCode": "",
@@ -1696,7 +1696,7 @@
           }
         },
         {
-          "id": "group_several_ch2",
+          "id": "group_several-subject-and-term",
           "title": "Easy: Subject and term",
           "promptMarkdown": "Show each `subject` and `term` with its average score rounded to 1 decimal, called `average`.",
           "starterCode": "",
@@ -1708,7 +1708,7 @@
           }
         },
         {
-          "id": "group_several_ch3",
+          "id": "group_several-category-takings-per-store",
           "title": "Medium: Category takings per store",
           "promptMarkdown": "Show each `store`, `category` and its takings rounded to 2 decimals, called `revenue`. Sort by store, then highest revenue first.",
           "starterCode": "",
@@ -1720,7 +1720,7 @@
           }
         },
         {
-          "id": "group_several_ch4",
+          "id": "group_several-each-student-each-term",
           "title": "Medium: Each student, each term",
           "promptMarkdown": "Show each `student` and `term` with the student's average that term, rounded to 1 decimal, called `average`. Sort by student, then term.",
           "starterCode": "",
@@ -1732,7 +1732,7 @@
           }
         },
         {
-          "id": "group_several_ch5",
+          "id": "group_several-products-per-store",
           "title": "Medium: Products per store",
           "promptMarkdown": "Show each `store` and `product` with the number of items sold, called `items`. Sort by store, then most items first, then product.",
           "starterCode": "",
@@ -1744,7 +1744,7 @@
           }
         },
         {
-          "id": "group_several_ch6",
+          "id": "group_several-best-result-per-subject",
           "title": "Hard: Best result per subject",
           "promptMarkdown": "Show each `student` and `subject` with the student's best score in it (from either term), called `best`.",
           "starterCode": "",
@@ -1756,7 +1756,7 @@
           }
         },
         {
-          "id": "group_several_ch7",
+          "id": "group_several-coffee-per-store-per-day",
           "title": "Hard: Coffee per store per day",
           "promptMarkdown": "For `Coffee` only, show each `sale_date` and `store` with the number of coffees sold, called `coffees`. Sort by date, then store.",
           "starterCode": "",
@@ -1768,7 +1768,7 @@
           }
         },
         {
-          "id": "group_several_ch8",
+          "id": "group_several-weekends-per-store",
           "title": "Expert: Weekends per store",
           "promptMarkdown": "Show each `store`, a `part` column (`weekend` or `weekday`) and the number of sales, called `sales`. Sort by store, then part.",
           "starterCode": "",
@@ -1780,7 +1780,7 @@
           }
         },
         {
-          "id": "group_several_ch9",
+          "id": "group_several-top-three-pairs",
           "title": "Expert: Top three pairs",
           "promptMarkdown": "Show the three `store` and `category` combinations with the highest takings (rounded to 2 decimals, called `revenue`), highest first.",
           "starterCode": "",
@@ -1796,7 +1796,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "group_several_q1",
+            "id": "group_several-q-v716cb",
             "type": "mcq",
             "prompt": "With `GROUP BY store, category`, what is a group?",
             "choices": [
@@ -1821,7 +1821,7 @@
             "explanation": "Rows that share both values form one group."
           },
           {
-            "id": "group_several_q2",
+            "id": "group_several-q-byxn1v",
             "type": "mcq",
             "prompt": "If a store sold no tea, is there a (store, Tea) row?",
             "choices": [
@@ -1846,7 +1846,7 @@
             "explanation": "Groups come from the rows that exist."
           },
           {
-            "id": "group_several_q3",
+            "id": "group_several-q-1iy3z4w",
             "type": "mcq",
             "prompt": "Does the order of columns in GROUP BY change the groups?",
             "choices": [
@@ -1871,7 +1871,7 @@
             "explanation": "`GROUP BY a, b` and `GROUP BY b, a` make the same groups."
           },
           {
-            "id": "group_several_q4",
+            "id": "group_several-q-wtdbf",
             "type": "shortText",
             "prompt": "3 stores each sold 4 categories. How many rows does `GROUP BY store, category` give?",
             "validation": {
@@ -1881,7 +1881,7 @@
             "explanation": "One row for each of the 3 × 4 combinations."
           },
           {
-            "id": "group_several_q5",
+            "id": "group_several-q-1xdpavb",
             "type": "mcq",
             "prompt": "Which columns may SELECT show with `GROUP BY store, category`?",
             "choices": [
@@ -1906,7 +1906,7 @@
             "explanation": "Grouped columns and aggregates; anything else is ambiguous."
           },
           {
-            "id": "group_several_q6",
+            "id": "group_several-q-1bvblak",
             "type": "mcq",
             "prompt": "Which sorts by store, then by each store's best category first?",
             "choices": [
@@ -1931,7 +1931,7 @@
             "explanation": "The outer column first, then the total inside each store."
           },
           {
-            "id": "group_several_q7",
+            "id": "group_several-q-1oqhtjp",
             "type": "mcq",
             "prompt": "`MAX(score)` with `GROUP BY student, subject` gives…",
             "choices": [
@@ -1956,7 +1956,7 @@
             "explanation": "One group per student and subject, and MAX takes the higher of the two terms."
           },
           {
-            "id": "group_several_q8",
+            "id": "group_several-q-13kc0ye",
             "type": "mcq",
             "prompt": "Can you group by a column and a CASE together?",
             "choices": [
@@ -1981,7 +1981,7 @@
             "explanation": "Each grouping item can be a column or a calculation."
           },
           {
-            "id": "group_several_q9",
+            "id": "group_several-q-l53kth",
             "type": "mcq",
             "prompt": "Which gives the top three store/category pairs by revenue?",
             "choices": [
@@ -2006,7 +2006,7 @@
             "explanation": "Group, sort the groups by revenue, then keep three."
           },
           {
-            "id": "group_several_q10",
+            "id": "group_several-q-cx26vd",
             "type": "mcq",
             "prompt": "Does WHERE still work with several grouping columns?",
             "choices": [
@@ -2100,7 +2100,7 @@
       },
       "challenges": [
         {
-          "id": "having_ch1",
+          "id": "having-popular-products",
           "title": "Easy: Popular products",
           "promptMarkdown": "Show each `product` and its items sold (`items`), only for the products with 10 or more items sold.",
           "starterCode": "",
@@ -2112,7 +2112,7 @@
           }
         },
         {
-          "id": "having_ch2",
+          "id": "having-top-students",
           "title": "Easy: Top students",
           "promptMarkdown": "Show each `student` and their average score rounded to 1 decimal (`average`), only for students whose average is above 80.",
           "starterCode": "",
@@ -2124,7 +2124,7 @@
           }
         },
         {
-          "id": "having_ch3",
+          "id": "having-busy-days",
           "title": "Easy: Busy days",
           "promptMarkdown": "Show each `sale_date` with 3 or more sales, and its number of sales (`sales`).",
           "starterCode": "",
@@ -2136,7 +2136,7 @@
           }
         },
         {
-          "id": "having_ch4",
+          "id": "having-categories-over-50",
           "title": "Medium: Categories over 50",
           "promptMarkdown": "Show each `category` whose takings are over 50, with its takings rounded to 2 decimals (`revenue`).",
           "starterCode": "",
@@ -2148,7 +2148,7 @@
           }
         },
         {
-          "id": "having_ch5",
+          "id": "having-card-heavy-stores",
           "title": "Medium: Card-heavy stores",
           "promptMarkdown": "Show each `store` with at least 4 sales paid by `card`, and that number (`card_sales`).",
           "starterCode": "",
@@ -2160,7 +2160,7 @@
           }
         },
         {
-          "id": "having_ch6",
+          "id": "having-subjects-with-absences",
           "title": "Medium: Subjects with absences",
           "promptMarkdown": "Show each `subject` that has at least one missing score, and how many (`absent`).",
           "starterCode": "",
@@ -2172,7 +2172,7 @@
           }
         },
         {
-          "id": "having_ch7",
+          "id": "having-regulars",
           "title": "Hard: Regulars",
           "promptMarkdown": "Show each `product` that was sold 3 or more times (rows), with its number of sales (`sales`). Most sales first, then product order.",
           "starterCode": "",
@@ -2184,7 +2184,7 @@
           }
         },
         {
-          "id": "having_ch8",
+          "id": "having-never-below-60",
           "title": "Hard: Never below 60",
           "promptMarkdown": "Show each `student` whose lowest score is 60 or more, with that lowest score (`lowest`).",
           "starterCode": "",
@@ -2196,7 +2196,7 @@
           }
         },
         {
-          "id": "having_ch9",
+          "id": "having-fix-the-misuse",
           "title": "Expert: Fix the misuse",
           "promptMarkdown": "This query should show the stores that sold more than 25 items, but it gives `misuse of aggregate`. Fix it.",
           "starterCode": "SELECT store, SUM(quantity) AS items FROM sales\nWHERE SUM(quantity) > 25\nGROUP BY store;",
@@ -2208,7 +2208,7 @@
           }
         },
         {
-          "id": "having_ch10",
+          "id": "having-big-store-category-pairs",
           "title": "Expert: Big store/category pairs",
           "promptMarkdown": "Show each `store` and `category` combination with 8 or more items sold, and that number (`items`). Most items first, then by store and category.",
           "starterCode": "",
@@ -2224,7 +2224,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "having_q1",
+            "id": "having-q-rhu9ri",
             "type": "mcq",
             "prompt": "What does HAVING filter?",
             "choices": [
@@ -2249,7 +2249,7 @@
             "explanation": "HAVING keeps or drops whole groups, using their totals."
           },
           {
-            "id": "having_q2",
+            "id": "having-q-18c0vey",
             "type": "mcq",
             "prompt": "Why can't WHERE use `SUM(quantity)`?",
             "choices": [
@@ -2274,7 +2274,7 @@
             "explanation": "Totals only exist after grouping; that is HAVING's job."
           },
           {
-            "id": "having_q3",
+            "id": "having-q-1vkp6t",
             "type": "mcq",
             "prompt": "Which error means an aggregate is in the wrong place?",
             "choices": [
@@ -2299,7 +2299,7 @@
             "explanation": "SQLite says misuse of aggregate when, for example, SUM appears in WHERE."
           },
           {
-            "id": "having_q4",
+            "id": "having-q-dbnwt3",
             "type": "shortText",
             "prompt": "Which clause comes right after GROUP BY?",
             "validation": {
@@ -2309,7 +2309,7 @@
             "explanation": "SELECT … FROM … WHERE … GROUP BY … HAVING … ORDER BY … LIMIT."
           },
           {
-            "id": "having_q5",
+            "id": "having-q-15wlecc",
             "type": "mcq",
             "prompt": "Where does `store = 'North'` belong in a grouped query?",
             "choices": [
@@ -2334,7 +2334,7 @@
             "explanation": "It doesn't need a total, so filter the rows early with WHERE."
           },
           {
-            "id": "having_q6",
+            "id": "having-q-nakel0",
             "type": "mcq",
             "prompt": "In `WHERE payment = 'card' GROUP BY store HAVING COUNT(*) >= 4`, what does COUNT(*) count?",
             "choices": [
@@ -2359,7 +2359,7 @@
             "explanation": "WHERE has already removed the other payments, so each group only holds card sales."
           },
           {
-            "id": "having_q7",
+            "id": "having-q-1mzf67o",
             "type": "mcq",
             "prompt": "Which keeps students averaging above 80?",
             "choices": [
@@ -2384,7 +2384,7 @@
             "explanation": "The average is a group total, so it is tested in HAVING."
           },
           {
-            "id": "having_q8",
+            "id": "having-q-ns1vtt",
             "type": "mcq",
             "prompt": "`WHERE score > 80 GROUP BY student` gives…",
             "choices": [
@@ -2409,7 +2409,7 @@
             "explanation": "WHERE drops the low scores first, which is a different question."
           },
           {
-            "id": "having_q9",
+            "id": "having-q-j21jhe",
             "type": "mcq",
             "prompt": "Is `HAVING items >= 10` (using the AS name) portable to other databases?",
             "choices": [
@@ -2434,7 +2434,7 @@
             "explanation": "SQLite and MySQL accept it; standard SQL expects `HAVING SUM(quantity) >= 10`."
           },
           {
-            "id": "having_q10",
+            "id": "having-q-1br5pkr",
             "type": "mcq",
             "prompt": "Can a query have both WHERE and HAVING?",
             "choices": [
@@ -2528,7 +2528,7 @@
       },
       "challenges": [
         {
-          "id": "distinct_concat_ch1",
+          "id": "distinct_concat-different-products",
           "title": "Easy: Different products",
           "promptMarkdown": "Count the different products sold, in a column called `products`.",
           "starterCode": "",
@@ -2540,7 +2540,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch2",
+          "id": "distinct_concat-stores-per-product",
           "title": "Easy: Stores per product",
           "promptMarkdown": "Show each `product` and the number of different stores that sold it, called `stores`.",
           "starterCode": "",
@@ -2552,7 +2552,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch3",
+          "id": "distinct_concat-range-per-store",
           "title": "Medium: Range per store",
           "promptMarkdown": "Show each `store` and the number of different products it sold, called `products`.",
           "starterCode": "",
@@ -2564,7 +2564,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch4",
+          "id": "distinct_concat-sold-everywhere",
           "title": "Medium: Sold everywhere",
           "promptMarkdown": "Show the `product`s that were sold in all three stores.",
           "starterCode": "",
@@ -2576,7 +2576,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch5",
+          "id": "distinct_concat-trading-days",
           "title": "Medium: Trading days",
           "promptMarkdown": "Show each `store` and the number of different days it made a sale, called `days`.",
           "starterCode": "",
@@ -2588,7 +2588,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch6",
+          "id": "distinct_concat-what-each-category-sells",
           "title": "Hard: What each category sells",
           "promptMarkdown": "Show each `category` and a list of its different products, called `products` (use `GROUP_CONCAT(DISTINCT product)`).",
           "starterCode": "",
@@ -2600,7 +2600,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch7",
+          "id": "distinct_concat-when-each-product-sold",
           "title": "Expert: When each product sold",
           "promptMarkdown": "Show each `product` and the dates it was sold on, joined with a comma and a space (`2026-10-01, 2026-10-03`), called `dates`.",
           "starterCode": "",
@@ -2612,7 +2612,7 @@
           }
         },
         {
-          "id": "distinct_concat_ch8",
+          "id": "distinct_concat-sales-per-trading-day",
           "title": "Expert: Sales per trading day",
           "promptMarkdown": "Show each `store` and its average number of sales per day it traded (sales divided by different days), rounded to 2 decimals, called `per_day`.",
           "starterCode": "",
@@ -2628,7 +2628,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "distinct_concat_q1",
+            "id": "distinct_concat-q-1xh4j3d",
             "type": "mcq",
             "prompt": "What does `COUNT(DISTINCT product)` count?",
             "choices": [
@@ -2653,7 +2653,7 @@
             "explanation": "Each different value is counted once."
           },
           {
-            "id": "distinct_concat_q2",
+            "id": "distinct_concat-q-13rrfub",
             "type": "mcq",
             "prompt": "Does `COUNT(DISTINCT payment)` count NULL as a method?",
             "choices": [
@@ -2678,7 +2678,7 @@
             "explanation": "Like COUNT(column), it ignores NULL."
           },
           {
-            "id": "distinct_concat_q3",
+            "id": "distinct_concat-q-1jyw2we",
             "type": "mcq",
             "prompt": "Which finds products sold in all 3 stores?",
             "choices": [
@@ -2703,7 +2703,7 @@
             "explanation": "Three different stores, whatever the number of sales."
           },
           {
-            "id": "distinct_concat_q4",
+            "id": "distinct_concat-q-1pnal8r",
             "type": "shortText",
             "prompt": "Which function joins the values of a group into one text?",
             "validation": {
@@ -2713,7 +2713,7 @@
             "explanation": "`GROUP_CONCAT(column, ', ')` joins them with a separator."
           },
           {
-            "id": "distinct_concat_q5",
+            "id": "distinct_concat-q-zz8r8k",
             "type": "mcq",
             "prompt": "Is the order of the values in GROUP_CONCAT guaranteed?",
             "choices": [
@@ -2738,7 +2738,7 @@
             "explanation": "SQLite usually follows the order it reads the rows in, but it doesn't promise any order."
           },
           {
-            "id": "distinct_concat_q6",
+            "id": "distinct_concat-q-19v3yfu",
             "type": "mcq",
             "prompt": "What is the separator for `GROUP_CONCAT(DISTINCT product)` in SQLite?",
             "choices": [
@@ -2763,7 +2763,7 @@
             "explanation": "With DISTINCT, SQLite uses a comma and takes no separator argument."
           },
           {
-            "id": "distinct_concat_q7",
+            "id": "distinct_concat-q-13698iy",
             "type": "mcq",
             "prompt": "30 sales of 10 different products. What is `COUNT(*) - COUNT(DISTINCT product)`?",
             "choices": [
@@ -2788,7 +2788,7 @@
             "explanation": "30 rows minus 10 different products."
           },
           {
-            "id": "distinct_concat_q8",
+            "id": "distinct_concat-q-1v23jk6",
             "type": "mcq",
             "prompt": "How do you average the sales per trading day?",
             "choices": [
@@ -2813,7 +2813,7 @@
             "explanation": "Sales divided by the number of different days (times 1.0 to keep decimals)."
           },
           {
-            "id": "distinct_concat_q9",
+            "id": "distinct_concat-q-vrthx2",
             "type": "mcq",
             "prompt": "Can COUNT(DISTINCT …) be used in HAVING?",
             "choices": [
@@ -2907,7 +2907,7 @@
       },
       "challenges": [
         {
-          "id": "conditional_totals_ch1",
+          "id": "conditional_totals-card-sales-per-store",
           "title": "Easy: Card sales per store",
           "promptMarkdown": "Show each `store` and its number of card sales, called `card_sales`, using `SUM(CASE ...)` so that every store is listed.",
           "starterCode": "",
@@ -2919,7 +2919,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch2",
+          "id": "conditional_totals-coffees-per-store",
           "title": "Easy: Coffees per store",
           "promptMarkdown": "Show each `store` and the number of coffee items it sold (`quantity` of `Coffee` sales), called `coffee_items`.",
           "starterCode": "",
@@ -2931,7 +2931,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch3",
+          "id": "conditional_totals-passes-per-subject",
           "title": "Easy: Passes per subject",
           "promptMarkdown": "Show each `subject` and its number of scores of 60 or more, called `passes`, using `COUNT(CASE ...)`.",
           "starterCode": "",
@@ -2943,7 +2943,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch4",
+          "id": "conditional_totals-categories-as-columns",
           "title": "Medium: Categories as columns",
           "promptMarkdown": "Show each `store` with the number of sales in three columns: `coffee`, `tea` and `bakery`.",
           "starterCode": "",
@@ -2955,7 +2955,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch5",
+          "id": "conditional_totals-autumn-and-spring",
           "title": "Medium: Autumn and spring",
           "promptMarkdown": "Show each `student` with their average score in each term, rounded to 1 decimal, in columns called `autumn` and `spring`.",
           "starterCode": "",
@@ -2967,7 +2967,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch6",
+          "id": "conditional_totals-card-share",
           "title": "Medium: Card share",
           "promptMarkdown": "Show each `store` and the percentage of its sales paid by card, rounded to 1 decimal, called `card_percent`.",
           "starterCode": "",
@@ -2979,7 +2979,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch7",
+          "id": "conditional_totals-improvers",
           "title": "Hard: Improvers",
           "promptMarkdown": "Show the `student`s whose spring average is higher than their autumn average.",
           "starterCode": "",
@@ -2991,7 +2991,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch8",
+          "id": "conditional_totals-weekend-takings",
           "title": "Hard: Weekend takings",
           "promptMarkdown": "Show each `store` and its takings on Saturdays and Sundays only, rounded to 2 decimals, called `weekend_revenue`.",
           "starterCode": "",
@@ -3003,7 +3003,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch9",
+          "id": "conditional_totals-pass-rates",
           "title": "Expert: Pass rates",
           "promptMarkdown": "Show each `subject` and the percentage of exams taken that scored 60 or more, rounded to 1 decimal, called `pass_rate`. Absences don't count. Highest first, then by subject.",
           "starterCode": "",
@@ -3015,7 +3015,7 @@
           }
         },
         {
-          "id": "conditional_totals_ch10",
+          "id": "conditional_totals-big-and-small-takings",
           "title": "Expert: Big and small takings",
           "promptMarkdown": "Show each `store` with its takings from big sales (5 or more items) and small sales in two columns, `big` and `small`, each rounded to 2 decimals.",
           "starterCode": "",
@@ -3031,7 +3031,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "conditional_totals_q1",
+            "id": "conditional_totals-q-ph1c49",
             "type": "mcq",
             "prompt": "What does `SUM(CASE WHEN payment = 'card' THEN 1 ELSE 0 END)` give per group?",
             "choices": [
@@ -3056,7 +3056,7 @@
             "explanation": "Each card sale adds 1 and every other sale adds 0."
           },
           {
-            "id": "conditional_totals_q2",
+            "id": "conditional_totals-q-12jbg71",
             "type": "mcq",
             "prompt": "Why use SUM(CASE …) instead of WHERE?",
             "choices": [
@@ -3081,7 +3081,7 @@
             "explanation": "WHERE would remove the other rows, so you couldn't show both counts or list stores with none."
           },
           {
-            "id": "conditional_totals_q3",
+            "id": "conditional_totals-q-ue2jmb",
             "type": "mcq",
             "prompt": "Why does `COUNT(CASE WHEN score >= 60 THEN 1 END)` count only passes?",
             "choices": [
@@ -3106,7 +3106,7 @@
             "explanation": "COUNT(value) ignores NULLs."
           },
           {
-            "id": "conditional_totals_q4",
+            "id": "conditional_totals-q-1df5vk3",
             "type": "shortText",
             "prompt": "In SQLite, what does `('card' = 'card')` give as a number?",
             "validation": {
@@ -3116,7 +3116,7 @@
             "explanation": "A true comparison is 1 and a false one is 0."
           },
           {
-            "id": "conditional_totals_q5",
+            "id": "conditional_totals-q-12zesir",
             "type": "mcq",
             "prompt": "What is a pivot?",
             "choices": [
@@ -3141,7 +3141,7 @@
             "explanation": "Conditional totals side by side make one column per value."
           },
           {
-            "id": "conditional_totals_q6",
+            "id": "conditional_totals-q-jfnbho",
             "type": "mcq",
             "prompt": "What does `AVG(CASE WHEN term = 'Autumn' THEN score END)` average?",
             "choices": [
@@ -3166,7 +3166,7 @@
             "explanation": "Other terms give NULL, which AVG skips."
           },
           {
-            "id": "conditional_totals_q7",
+            "id": "conditional_totals-q-qmtc86",
             "type": "mcq",
             "prompt": "Which gives the card percentage?",
             "choices": [
@@ -3191,7 +3191,7 @@
             "explanation": "Card sales divided by all sales, times 100.0 to keep decimals."
           },
           {
-            "id": "conditional_totals_q8",
+            "id": "conditional_totals-q-1n2orgn",
             "type": "mcq",
             "prompt": "Can conditional totals be compared in HAVING?",
             "choices": [
@@ -3216,7 +3216,7 @@
             "explanation": "For example HAVING one conditional average > another."
           },
           {
-            "id": "conditional_totals_q9",
+            "id": "conditional_totals-q-1qshqow",
             "type": "mcq",
             "prompt": "Is `SUM(payment = 'card')` standard SQL?",
             "choices": [
@@ -3241,7 +3241,7 @@
             "explanation": "The CASE form works in every database."
           },
           {
-            "id": "conditional_totals_q10",
+            "id": "conditional_totals-q-ap9mgi",
             "type": "mcq",
             "prompt": "What does `SUM(CASE WHEN category = 'Tea' THEN quantity END)` give for a store with no tea?",
             "choices": [
@@ -3335,7 +3335,7 @@
       },
       "challenges": [
         {
-          "id": "careful_totals_ch1",
+          "id": "careful_totals-juice-at-north",
           "title": "Easy: Juice at North",
           "promptMarkdown": "Show the number of `Juice` items sold at the `North` store, called `items`, as 0 if there were none.",
           "starterCode": "",
@@ -3347,7 +3347,7 @@
           }
         },
         {
-          "id": "careful_totals_ch2",
+          "id": "careful_totals-paid-per-item",
           "title": "Easy: Paid per item",
           "promptMarkdown": "Show the average price paid per item across all sales (takings divided by items), rounded to 2 decimals, called `price_per_item`.",
           "starterCode": "",
@@ -3359,7 +3359,7 @@
           }
         },
         {
-          "id": "careful_totals_ch3",
+          "id": "careful_totals-two-kinds-of-average-price",
           "title": "Medium: Two kinds of average price",
           "promptMarkdown": "In one row, show the plain average of `unit_price` (`average_listed_price`) and the price paid per item (`paid_per_item`), both rounded to 2 decimals.",
           "starterCode": "",
@@ -3371,7 +3371,7 @@
           }
         },
         {
-          "id": "careful_totals_ch4",
+          "id": "careful_totals-fix-the-average",
           "title": "Medium: Fix the average",
           "promptMarkdown": "This query should show each student's average score with 1 decimal, but it drops the decimals. Fix it, keeping the name `average`.",
           "starterCode": "SELECT student, SUM(score) / COUNT(score) AS average FROM results GROUP BY student;",
@@ -3383,7 +3383,7 @@
           }
         },
         {
-          "id": "careful_totals_ch5",
+          "id": "careful_totals-items-per-sale",
           "title": "Medium: Items per sale",
           "promptMarkdown": "Show each `category` and the average number of items per sale, rounded to 2 decimals, called `avg_items`.",
           "starterCode": "",
@@ -3395,7 +3395,7 @@
           }
         },
         {
-          "id": "careful_totals_ch6",
+          "id": "careful_totals-takings-per-trading-day",
           "title": "Hard: Takings per trading day",
           "promptMarkdown": "Show each `store` and its takings per day it traded (takings divided by the number of different sale dates), rounded to 2 decimals, called `per_day`.",
           "starterCode": "",
@@ -3407,7 +3407,7 @@
           }
         },
         {
-          "id": "careful_totals_ch7",
+          "id": "careful_totals-first-last-and-count",
           "title": "Hard: First, last and count",
           "promptMarkdown": "Show each `store` with its first sale date (`first_sale`), last sale date (`last_sale`) and number of sales (`sales`).",
           "starterCode": "",
@@ -3419,7 +3419,7 @@
           }
         },
         {
-          "id": "careful_totals_ch8",
+          "id": "careful_totals-biggest-gaps",
           "title": "Expert: Biggest gaps",
           "promptMarkdown": "Show each `student` and the gap between their best and worst score, called `gap`. Biggest gap first, then by name.",
           "starterCode": "",
@@ -3431,7 +3431,7 @@
           }
         },
         {
-          "id": "careful_totals_ch9",
+          "id": "careful_totals-tea-or-zero",
           "title": "Expert: Tea, or zero",
           "promptMarkdown": "Show each `store` and the number of `Tea` items it sold, called `tea_items`, with 0 for a store that sold none.",
           "starterCode": "",
@@ -3447,7 +3447,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "careful_totals_q1",
+            "id": "careful_totals-q-2zimu0",
             "type": "mcq",
             "prompt": "What does `SUM(quantity)` give when no rows match?",
             "choices": [
@@ -3472,7 +3472,7 @@
             "explanation": "SUM, AVG, MIN and MAX of no values are NULL; only COUNT gives 0."
           },
           {
-            "id": "careful_totals_q2",
+            "id": "careful_totals-q-1m475v",
             "type": "mcq",
             "prompt": "What does `COUNT(*)` give when no rows match?",
             "choices": [
@@ -3497,7 +3497,7 @@
             "explanation": "COUNT gives 0 for an empty set."
           },
           {
-            "id": "careful_totals_q3",
+            "id": "careful_totals-q-3nbcyi",
             "type": "mcq",
             "prompt": "How do you show 0 instead of a NULL total?",
             "choices": [
@@ -3522,7 +3522,7 @@
             "explanation": "COALESCE replaces the NULL with 0."
           },
           {
-            "id": "careful_totals_q4",
+            "id": "careful_totals-q-1yc4ifb",
             "type": "mcq",
             "prompt": "What is `SUM(score) / COUNT(score)` for scores 80 and 85?",
             "choices": [
@@ -3547,7 +3547,7 @@
             "explanation": "Both are whole numbers, so the division drops the .5."
           },
           {
-            "id": "careful_totals_q5",
+            "id": "careful_totals-q-1onvizo",
             "type": "shortText",
             "prompt": "Which function averages numbers and keeps decimals, even for whole numbers?",
             "validation": {
@@ -3557,7 +3557,7 @@
             "explanation": "AVG always gives a decimal result."
           },
           {
-            "id": "careful_totals_q6",
+            "id": "careful_totals-q-ja6yna",
             "type": "mcq",
             "prompt": "1 latte at 4.00 and 9 cookies at 2.00. What is the price paid per item?",
             "choices": [
@@ -3582,7 +3582,7 @@
             "explanation": "Takings 22.00 divided by 10 items is 2.20; AVG(unit_price) would say 3.00."
           },
           {
-            "id": "careful_totals_q7",
+            "id": "careful_totals-q-1cuzpcm",
             "type": "mcq",
             "prompt": "Which is the plain average of the listed prices?",
             "choices": [
@@ -3607,7 +3607,7 @@
             "explanation": "AVG(unit_price) gives every sale the same weight, whatever its quantity."
           },
           {
-            "id": "careful_totals_q8",
+            "id": "careful_totals-q-134teg4",
             "type": "mcq",
             "prompt": "Which averages takings per trading day?",
             "choices": [
@@ -3632,7 +3632,7 @@
             "explanation": "Divide by the number of different days, not the number of sales."
           },
           {
-            "id": "careful_totals_q9",
+            "id": "careful_totals-q-5oz7fa",
             "type": "mcq",
             "prompt": "Why can `SUM(CASE WHEN category = 'Tea' THEN quantity END)` be NULL?",
             "choices": [
@@ -3657,7 +3657,7 @@
             "explanation": "Without ELSE, non-tea rows are NULL; if all are, the sum is NULL."
           },
           {
-            "id": "careful_totals_q10",
+            "id": "careful_totals-q-x0it2d",
             "type": "mcq",
             "prompt": "What should you do before writing a total?",
             "choices": [
@@ -3746,7 +3746,7 @@
       },
       "challenges": [
         {
-          "id": "summary_reports_ch1",
+          "id": "summary_reports-the-top-store",
           "title": "Easy: The top store",
           "promptMarkdown": "Show the `store` with the highest takings and its takings rounded to 2 decimals (`revenue`). One row.",
           "starterCode": "",
@@ -3758,7 +3758,7 @@
           }
         },
         {
-          "id": "summary_reports_ch2",
+          "id": "summary_reports-the-two-best-students",
           "title": "Easy: The two best students",
           "promptMarkdown": "Show the two `student`s with the highest average score, with the average rounded to 1 decimal (`average`), best first.",
           "starterCode": "",
@@ -3770,7 +3770,7 @@
           }
         },
         {
-          "id": "summary_reports_ch3",
+          "id": "summary_reports-big-categories",
           "title": "Easy: Big categories",
           "promptMarkdown": "Show each `category` with 15 or more items sold and its items (`items`), most first, then by category.",
           "starterCode": "",
@@ -3782,7 +3782,7 @@
           }
         },
         {
-          "id": "summary_reports_ch4",
+          "id": "summary_reports-card-coffee",
           "title": "Medium: Card coffee",
           "promptMarkdown": "For coffee sales paid by card, show each `store` with at least 2 of them and that number (`sales`), most first, then by store.",
           "starterCode": "",
@@ -3794,7 +3794,7 @@
           }
         },
         {
-          "id": "summary_reports_ch5",
+          "id": "summary_reports-first-week-daily-report",
           "title": "Medium: First-week daily report",
           "promptMarkdown": "For 2026-10-01 to 2026-10-07, show each `sale_date` with its number of sales (`sales`), items (`items`) and takings rounded to 2 decimals (`revenue`), in date order.",
           "starterCode": "",
@@ -3806,7 +3806,7 @@
           }
         },
         {
-          "id": "summary_reports_ch6",
+          "id": "summary_reports-subject-report",
           "title": "Medium: Subject report",
           "promptMarkdown": "For each `subject`, show the exams taken (`taken`), the absences (`absent`), the average rounded to 1 decimal (`average`), the best (`best`) and the worst (`worst`) score. Best average first.",
           "starterCode": "",
@@ -3818,7 +3818,7 @@
           }
         },
         {
-          "id": "summary_reports_ch7",
+          "id": "summary_reports-top-products",
           "title": "Hard: Top products",
           "promptMarkdown": "Show the five products with the highest takings, only counting products with more than 20 in takings: `product`, `category`, `items` and `revenue` (2 decimals). Highest first.",
           "starterCode": "",
@@ -3830,7 +3830,7 @@
           }
         },
         {
-          "id": "summary_reports_ch8",
+          "id": "summary_reports-weekends-by-store",
           "title": "Hard: Weekends by store",
           "promptMarkdown": "Show each `store` with its number of weekend sales (`weekend_sales`) and weekday sales (`weekday_sales`), in store order.",
           "starterCode": "",
@@ -3842,7 +3842,7 @@
           }
         },
         {
-          "id": "summary_reports_ch9",
+          "id": "summary_reports-report-cards",
           "title": "Expert: Report cards",
           "promptMarkdown": "Show each `student` with their autumn and spring averages (`autumn`, `spring`, 1 decimal) and the change from autumn to spring (`change`, 1 decimal). Biggest improvement first.",
           "starterCode": "",
@@ -3854,7 +3854,7 @@
           }
         },
         {
-          "id": "summary_reports_ch10",
+          "id": "summary_reports-best-days-of-the-week",
           "title": "Expert: Best days of the week",
           "promptMarkdown": "Show the three days of the week with the highest takings: the day's name (`Sunday` to `Saturday`, called `day`), the number of sales (`sales`) and the takings (`revenue`, 2 decimals). Highest first.",
           "starterCode": "",
@@ -3870,7 +3870,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "summary_reports_q1",
+            "id": "summary_reports-q-1xyxdk7",
             "type": "mcq",
             "prompt": "Which runs first?",
             "choices": [
@@ -3895,7 +3895,7 @@
             "explanation": "After FROM comes WHERE; SELECT is worked out after grouping and HAVING."
           },
           {
-            "id": "summary_reports_q2",
+            "id": "summary_reports-q-jzzv1z",
             "type": "mcq",
             "prompt": "Which comes right after GROUP BY when a query runs?",
             "choices": [
@@ -3920,7 +3920,7 @@
             "explanation": "FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT."
           },
           {
-            "id": "summary_reports_q3",
+            "id": "summary_reports-q-9ichex",
             "type": "mcq",
             "prompt": "In standard SQL, why can ORDER BY use an AS name, but WHERE can't?",
             "choices": [
@@ -3945,7 +3945,7 @@
             "explanation": "Names are given in SELECT, so only later steps can use them. (SQLite also allows them in WHERE, but most databases don't.)"
           },
           {
-            "id": "summary_reports_q4",
+            "id": "summary_reports-q-1sy7baa",
             "type": "shortText",
             "prompt": "Which clause runs last?",
             "validation": {
@@ -3955,7 +3955,7 @@
             "explanation": "LIMIT keeps the first rows after everything else is done."
           },
           {
-            "id": "summary_reports_q5",
+            "id": "summary_reports-q-5dadb9",
             "type": "mcq",
             "prompt": "Why can't WHERE use COUNT(*)?",
             "choices": [
@@ -3980,7 +3980,7 @@
             "explanation": "There are no group totals yet when WHERE runs."
           },
           {
-            "id": "summary_reports_q6",
+            "id": "summary_reports-q-9rxj67",
             "type": "mcq",
             "prompt": "What is a good way to build a long report?",
             "choices": [
@@ -4005,7 +4005,7 @@
             "explanation": "Checking each step in the sandbox makes mistakes easy to spot."
           },
           {
-            "id": "summary_reports_q7",
+            "id": "summary_reports-q-wnmx0c",
             "type": "mcq",
             "prompt": "In the report example, which products can appear?",
             "choices": [
@@ -4030,7 +4030,7 @@
             "explanation": "WHERE, HAVING and LIMIT each narrow the result."
           },
           {
-            "id": "summary_reports_q8",
+            "id": "summary_reports-q-kyp9hk",
             "type": "mcq",
             "prompt": "Why group by both product and category for a product report?",
             "choices": [
@@ -4055,7 +4055,7 @@
             "explanation": "Each product has one category, so adding it doesn't split the groups, but lets you show it."
           },
           {
-            "id": "summary_reports_q9",
+            "id": "summary_reports-q-sgok67",
             "type": "mcq",
             "prompt": "Where do you test \"more than 20 in takings\"?",
             "choices": [
@@ -4080,7 +4080,7 @@
             "explanation": "It is a group total."
           },
           {
-            "id": "summary_reports_q10",
+            "id": "summary_reports-q-c9lku1",
             "type": "mcq",
             "prompt": "Where do you test \"payment is recorded\"?",
             "choices": [
@@ -4170,7 +4170,7 @@
       },
       "challenges": [
         {
-          "id": "proj_cafe_report_ch1",
+          "id": "proj_cafe_report-store-totals",
           "title": "Easy: Store totals",
           "promptMarkdown": "Show each `store` with its number of sales (`sales`), items (`items`) and takings (`revenue`, 2 decimals). Highest takings first.",
           "starterCode": "",
@@ -4182,7 +4182,7 @@
           }
         },
         {
-          "id": "proj_cafe_report_ch2",
+          "id": "proj_cafe_report-category-totals",
           "title": "Easy: Category totals",
           "promptMarkdown": "Show each `category` with its items (`items`) and takings (`revenue`, 2 decimals). Highest takings first.",
           "starterCode": "",
@@ -4194,7 +4194,7 @@
           }
         },
         {
-          "id": "proj_cafe_report_ch3",
+          "id": "proj_cafe_report-top-five-products",
           "title": "Medium: Top five products",
           "promptMarkdown": "Show the five products with the highest takings: `product`, `items` and `revenue` (2 decimals). Highest first; equal takings in product order.",
           "starterCode": "",
@@ -4206,7 +4206,7 @@
           }
         },
         {
-          "id": "proj_cafe_report_ch4",
+          "id": "proj_cafe_report-good-days",
           "title": "Medium: Good days",
           "promptMarkdown": "Show each `sale_date` on which takings were over 15, with the takings (`revenue`, 2 decimals), in date order.",
           "starterCode": "",
@@ -4218,7 +4218,7 @@
           }
         },
         {
-          "id": "proj_cafe_report_ch5",
+          "id": "proj_cafe_report-how-people-pay",
           "title": "Hard: How people pay",
           "promptMarkdown": "Show each `store` with its number of sales paid by `card`, `cash` and `app`, and with no payment recorded, in columns called `card`, `cash`, `app` and `unknown`. In store order.",
           "starterCode": "",
@@ -4230,7 +4230,7 @@
           }
         },
         {
-          "id": "proj_cafe_report_ch6",
+          "id": "proj_cafe_report-week-by-week",
           "title": "Hard: Week by week",
           "promptMarkdown": "Show each week (`strftime('%W', sale_date)`, called `week`) with its number of sales (`sales`), takings (`revenue`, 2 decimals) and average sale value (`average_sale`, 2 decimals). In week order.",
           "starterCode": "",
@@ -4246,7 +4246,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_cafe_report_q1",
+            "id": "proj_cafe_report-q-1bxnenj",
             "type": "mcq",
             "prompt": "Which gives one row per store?",
             "choices": [
@@ -4271,7 +4271,7 @@
             "explanation": "GROUP BY makes one row per value."
           },
           {
-            "id": "proj_cafe_report_q2",
+            "id": "proj_cafe_report-q-x7qq3t",
             "type": "mcq",
             "prompt": "Where does \"takings over 15\" go?",
             "choices": [
@@ -4296,7 +4296,7 @@
             "explanation": "It tests a group total."
           },
           {
-            "id": "proj_cafe_report_q3",
+            "id": "proj_cafe_report-q-117g5ty",
             "type": "mcq",
             "prompt": "Which counts the cash sales in each store while keeping every store?",
             "choices": [
@@ -4321,7 +4321,7 @@
             "explanation": "A conditional sum counts some rows without removing the others."
           },
           {
-            "id": "proj_cafe_report_q4",
+            "id": "proj_cafe_report-q-jc4dbr",
             "type": "shortText",
             "prompt": "Which `strftime` code gives the week of the year? (Capitals matter.)",
             "validation": {
@@ -4332,7 +4332,7 @@
             "explanation": "%W is the week number, with weeks starting on Monday."
           },
           {
-            "id": "proj_cafe_report_q5",
+            "id": "proj_cafe_report-q-1xp3oyx",
             "type": "mcq",
             "prompt": "Why add `product` after `revenue DESC` in ORDER BY?",
             "choices": [
@@ -4357,7 +4357,7 @@
             "explanation": "A tie-breaker makes the order the same every time."
           },
           {
-            "id": "proj_cafe_report_q6",
+            "id": "proj_cafe_report-q-1fsbb0c",
             "type": "mcq",
             "prompt": "What is `AVG(quantity * unit_price)`?",
             "choices": [
@@ -4447,7 +4447,7 @@
       },
       "challenges": [
         {
-          "id": "proj_exam_board_ch1",
+          "id": "proj_exam_board-terms-side-by-side",
           "title": "Easy: Terms side by side",
           "promptMarkdown": "Show each `subject` with its autumn and spring averages, rounded to 1 decimal, in columns called `autumn` and `spring`.",
           "starterCode": "",
@@ -4459,7 +4459,7 @@
           }
         },
         {
-          "id": "proj_exam_board_ch2",
+          "id": "proj_exam_board-absences",
           "title": "Easy: Absences",
           "promptMarkdown": "Show each `student` and their number of absences (`absent`). Most absences first, then by name.",
           "starterCode": "",
@@ -4471,7 +4471,7 @@
           }
         },
         {
-          "id": "proj_exam_board_ch3",
+          "id": "proj_exam_board-grades-per-subject",
           "title": "Medium: Grades per subject",
           "promptMarkdown": "Show each `subject` with the number of `A`, `B`, `C` and `D` grades, in columns called `a`, `b`, `c` and `d`. Absences don't count.",
           "starterCode": "",
@@ -4483,7 +4483,7 @@
           }
         },
         {
-          "id": "proj_exam_board_ch4",
+          "id": "proj_exam_board-steady-students",
           "title": "Medium: Steady students",
           "promptMarkdown": "Show the `student`s whose lowest score is at least 70, with that score (`lowest`), in name order.",
           "starterCode": "",
@@ -4495,7 +4495,7 @@
           }
         },
         {
-          "id": "proj_exam_board_ch5",
+          "id": "proj_exam_board-most-improved-subjects",
           "title": "Hard: Most improved subjects",
           "promptMarkdown": "Show each `subject` and the change from its autumn average to its spring average, rounded to 1 decimal, called `change`. Biggest improvement first.",
           "starterCode": "",
@@ -4507,7 +4507,7 @@
           }
         },
         {
-          "id": "proj_exam_board_ch6",
+          "id": "proj_exam_board-honour-roll",
           "title": "Hard: Honour roll",
           "promptMarkdown": "Show the students who took every exam (no absences) and averaged 80 or more: `student`, `average` (1 decimal) and `taken`. Best average first.",
           "starterCode": "",
@@ -4523,7 +4523,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_exam_board_q1",
+            "id": "proj_exam_board-q-vaumy7",
             "type": "mcq",
             "prompt": "Which counts absences per student?",
             "choices": [
@@ -4548,7 +4548,7 @@
             "explanation": "All rows minus the rows with a score."
           },
           {
-            "id": "proj_exam_board_q2",
+            "id": "proj_exam_board-q-j22dkt",
             "type": "mcq",
             "prompt": "Why does a NULL score not count as a D in `SUM(CASE WHEN score < 60 THEN 1 ELSE 0 END)`?",
             "choices": [
@@ -4573,7 +4573,7 @@
             "explanation": "Comparisons with NULL are not true."
           },
           {
-            "id": "proj_exam_board_q3",
+            "id": "proj_exam_board-q-7357g2",
             "type": "mcq",
             "prompt": "Which keeps students with no absences?",
             "choices": [
@@ -4598,7 +4598,7 @@
             "explanation": "Every row has a score when the two counts are equal."
           },
           {
-            "id": "proj_exam_board_q4",
+            "id": "proj_exam_board-q-17cbu29",
             "type": "shortText",
             "prompt": "A subject averaged 74.0 in autumn and 79.5 in spring. What is the change?",
             "validation": {
@@ -4608,7 +4608,7 @@
             "explanation": "Spring minus autumn."
           },
           {
-            "id": "proj_exam_board_q5",
+            "id": "proj_exam_board-q-2napaf",
             "type": "mcq",
             "prompt": "Why can't WHERE do the honour roll's \"averaged 80 or more\"?",
             "choices": [
@@ -4633,7 +4633,7 @@
             "explanation": "WHERE runs before grouping."
           },
           {
-            "id": "proj_exam_board_q6",
+            "id": "proj_exam_board-q-fp5qlz",
             "type": "mcq",
             "prompt": "Can HAVING combine two conditions with AND?",
             "choices": [
@@ -4723,7 +4723,7 @@
       },
       "challenges": [
         {
-          "id": "proj_product_review_ch1",
+          "id": "proj_product_review-product-totals",
           "title": "Easy: Product totals",
           "promptMarkdown": "Show each `product` with its items (`items`) and takings (`revenue`, 2 decimals). Highest takings first, then product.",
           "starterCode": "",
@@ -4735,7 +4735,7 @@
           }
         },
         {
-          "id": "proj_product_review_ch2",
+          "id": "proj_product_review-where-it-sells",
           "title": "Medium: Where it sells",
           "promptMarkdown": "Show each `product`, the number of different stores selling it (`store_count`) and the list of those stores (`stores`, with `GROUP_CONCAT(DISTINCT store)`).",
           "starterCode": "",
@@ -4747,7 +4747,7 @@
           }
         },
         {
-          "id": "proj_product_review_ch3",
+          "id": "proj_product_review-slow-sellers",
           "title": "Medium: Slow sellers",
           "promptMarkdown": "Show the products with fewer than 8 items sold, with their items (`items`). Fewest first, then by product.",
           "starterCode": "",
@@ -4759,7 +4759,7 @@
           }
         },
         {
-          "id": "proj_product_review_ch4",
+          "id": "proj_product_review-price-paid-per-category",
           "title": "Hard: Price paid per category",
           "promptMarkdown": "Show each `category` with the plain average of its `unit_price` (`listed`) and the price paid per item (`paid`), both rounded to 2 decimals.",
           "starterCode": "",
@@ -4771,7 +4771,7 @@
           }
         },
         {
-          "id": "proj_product_review_ch5",
+          "id": "proj_product_review-paid-by-card",
           "title": "Hard: Paid by card",
           "promptMarkdown": "Show each `category` and the percentage of its sales paid by card, rounded to 1 decimal (`card_percent`). Highest first, then by category.",
           "starterCode": "",
@@ -4783,7 +4783,7 @@
           }
         },
         {
-          "id": "proj_product_review_ch6",
+          "id": "proj_product_review-the-decision",
           "title": "Hard: The decision",
           "promptMarkdown": "Show each `product` with `items`, `revenue` (2 decimals), `stores` (how many different stores sold it) and a `decision`: `keep` if 10 or more items sold, otherwise `review` if only one store sold it, otherwise `watch`. Highest takings first, then product.",
           "starterCode": "",
@@ -4799,7 +4799,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_product_review_q1",
+            "id": "proj_product_review-q-1pkxetk",
             "type": "mcq",
             "prompt": "Can an aggregate go inside CASE?",
             "choices": [
@@ -4824,7 +4824,7 @@
             "explanation": "In a grouped query, CASE can test group totals."
           },
           {
-            "id": "proj_product_review_q2",
+            "id": "proj_product_review-q-1be31ww",
             "type": "mcq",
             "prompt": "Which lists the stores that sold a product?",
             "choices": [
@@ -4849,7 +4849,7 @@
             "explanation": "GROUP_CONCAT joins them into one text; COUNT(DISTINCT) only counts them."
           },
           {
-            "id": "proj_product_review_q3",
+            "id": "proj_product_review-q-1i8gne7",
             "type": "mcq",
             "prompt": "Why might `listed` and `paid` differ?",
             "choices": [
@@ -4874,7 +4874,7 @@
             "explanation": "The price paid per item weights each price by how many were sold."
           },
           {
-            "id": "proj_product_review_q4",
+            "id": "proj_product_review-q-mpoe0b",
             "type": "shortText",
             "prompt": "Which clause keeps only the slow sellers (fewer than 8 items)?",
             "validation": {
@@ -4884,7 +4884,7 @@
             "explanation": "It tests a group total."
           },
           {
-            "id": "proj_product_review_q5",
+            "id": "proj_product_review-q-154iqjr",
             "type": "mcq",
             "prompt": "In the decision, a product with 12 items in one store gets…",
             "choices": [
@@ -4909,7 +4909,7 @@
             "explanation": "The first WHEN (10 or more items) is already true."
           },
           {
-            "id": "proj_product_review_q6",
+            "id": "proj_product_review-q-1ibpeck",
             "type": "mcq",
             "prompt": "Which percentage is right for \"card sales out of all sales\"?",
             "choices": [

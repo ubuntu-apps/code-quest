@@ -30,7 +30,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'A product list', {
       prompt: 'Create a view called `product_list` with each product\'s `name` and `price`.',
-      hint: '`CREATE VIEW product_list AS SELECT name, price FROM products;`',
+      hint: '`CREATE VIEW name AS` followed by the query the view should save.',
       solution: 'CREATE VIEW product_list AS\nSELECT name, price FROM products;',
       checks: [viewColumns('product_list'), viewRows('product_list', 'name')],
     }),

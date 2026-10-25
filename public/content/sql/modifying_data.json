@@ -40,11 +40,11 @@
       },
       "challenges": [
         {
-          "id": "insert_rows_ch1",
+          "id": "insert_rows-a-new-member",
           "title": "Easy: A new member",
           "promptMarkdown": "Add a member called `Hana Sato` with the email `hana.sato@example.com`, who joined on `2026-10-24`.",
           "starterCode": "",
-          "hint": "`INSERT INTO members (name, email, joined) VALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');`",
+          "hint": "`INSERT INTO members (columns…) VALUES (values…);` with the values in the same order as the columns. Leave out `id`: SQLite fills it in.",
           "solution": "INSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');",
           "validation": {
             "mode": "sql_tests",
@@ -59,7 +59,7 @@
           }
         },
         {
-          "id": "insert_rows_ch2",
+          "id": "insert_rows-no-email",
           "title": "Easy: No email",
           "promptMarkdown": "Add a member called `Ivo Petrov` who joined on `2026-10-24` and has no email. Leave the email column out.",
           "starterCode": "",
@@ -78,11 +78,11 @@
           }
         },
         {
-          "id": "insert_rows_ch3",
+          "id": "insert_rows-a-new-loan",
           "title": "Medium: A new loan",
           "promptMarkdown": "Member 7 borrows book 4 today (`2026-10-24`), due back on `2026-11-07`. Add the loan (it hasn't been returned, so leave `returned` out).",
           "starterCode": "",
-          "hint": "`INSERT INTO loans (member_id, book_id, borrowed, due) VALUES (7, 4, '2026-10-24', '2026-11-07');`",
+          "hint": "List the four columns you fill (`member_id`, `book_id`, `borrowed`, `due`), then their values in the same order.",
           "solution": "INSERT INTO loans (member_id, book_id, borrowed, due)\nVALUES (7, 4, '2026-10-24', '2026-11-07');",
           "validation": {
             "mode": "sql_tests",
@@ -97,7 +97,7 @@
           }
         },
         {
-          "id": "insert_rows_ch4",
+          "id": "insert_rows-fix-the-missing-columns",
           "title": "Medium: Fix the missing columns",
           "promptMarkdown": "This should add the member `Jun Park` (`jun.park@example.com`, joined `2026-10-24`), but gives the error **table members has 5 columns but 3 values were supplied**. Fix it.",
           "starterCode": "INSERT INTO members VALUES ('Jun Park', 'jun.park@example.com', '2026-10-24');",
@@ -116,7 +116,7 @@
           }
         },
         {
-          "id": "insert_rows_ch5",
+          "id": "insert_rows-trial-member",
           "title": "Medium: Trial member",
           "promptMarkdown": "Add `Kofi Asante` (`kofi.asante@example.com`, joined `2026-10-24`) with the status `trial` instead of the default.",
           "starterCode": "",
@@ -135,7 +135,7 @@
           }
         },
         {
-          "id": "insert_rows_ch6",
+          "id": "insert_rows-fix-the-quote",
           "title": "Hard: Fix the quote",
           "promptMarkdown": "This should add the book `The Baker's Map` by `E. Lund` (1 copy, 1 available), but gives a syntax error. Fix it.",
           "starterCode": "INSERT INTO books (title, author, copies, available)\nVALUES ('The Baker's Map', 'E. Lund', 1, 1);",
@@ -154,7 +154,7 @@
           }
         },
         {
-          "id": "insert_rows_ch7",
+          "id": "insert_rows-due-in-two-weeks",
           "title": "Hard: Due in two weeks",
           "promptMarkdown": "Member 2 borrows book 7 today. Add the loan with `borrowed` = `2026-10-24` and `due` worked out with `date()` as 14 days later.",
           "starterCode": "",
@@ -173,7 +173,7 @@
           }
         },
         {
-          "id": "insert_rows_ch8",
+          "id": "insert_rows-choosing-the-id",
           "title": "Expert: Choosing the id",
           "promptMarkdown": "Add `Lena Ortiz` (joined `2026-10-24`, no email) with the id `20`, then add `Mo Yilmaz` (joined `2026-10-24`, no email) without giving an id. Look at the id Mo gets.",
           "starterCode": "",
@@ -192,7 +192,7 @@
           }
         },
         {
-          "id": "insert_rows_ch9",
+          "id": "insert_rows-fix-the-duplicate-email",
           "title": "Expert: Fix the duplicate email",
           "promptMarkdown": "This should add `Ama Boateng`, who shares a family email with Ama Mensah, but gives **UNIQUE constraint failed: members.email** because emails must be different. Add her without an email instead.",
           "starterCode": "INSERT INTO members (name, email, joined)\nVALUES ('Ama Boateng', 'ama.mensah@example.com', '2026-10-24');",
@@ -215,7 +215,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "insert_rows_q1",
+            "id": "insert_rows-q-14dhvbg",
             "type": "mcq",
             "prompt": "What does `INSERT INTO members (name, joined) VALUES (…)` do?",
             "choices": [
@@ -240,7 +240,7 @@
             "explanation": "INSERT always adds rows."
           },
           {
-            "id": "insert_rows_q2",
+            "id": "insert_rows-q-18n35l4",
             "type": "mcq",
             "prompt": "What does a column you leave out get?",
             "choices": [
@@ -265,7 +265,7 @@
             "explanation": "In members, status defaults to active and email to NULL."
           },
           {
-            "id": "insert_rows_q3",
+            "id": "insert_rows-q-o480mq",
             "type": "mcq",
             "prompt": "What happens to `id` (an INTEGER PRIMARY KEY) if you leave it out?",
             "choices": [
@@ -290,7 +290,7 @@
             "explanation": "SQLite numbers the rows by itself."
           },
           {
-            "id": "insert_rows_q4",
+            "id": "insert_rows-q-1nnkh2",
             "type": "mcq",
             "prompt": "How do you write the text `The Baker's Map` in SQL?",
             "choices": [
@@ -315,7 +315,7 @@
             "explanation": "A quote inside single-quoted text is doubled."
           },
           {
-            "id": "insert_rows_q5",
+            "id": "insert_rows-q-ms979x",
             "type": "shortText",
             "prompt": "Which keyword comes before the list of values in an INSERT?",
             "validation": {
@@ -325,7 +325,7 @@
             "explanation": "`INSERT INTO t (a, b) VALUES (1, 2);`"
           },
           {
-            "id": "insert_rows_q6",
+            "id": "insert_rows-q-rfpo6k",
             "type": "mcq",
             "prompt": "Why name the columns in an INSERT?",
             "choices": [
@@ -350,7 +350,7 @@
             "explanation": "Without names, values are matched to columns by position."
           },
           {
-            "id": "insert_rows_q7",
+            "id": "insert_rows-q-cq9zh7",
             "type": "mcq",
             "prompt": "What does the result **Done: 1 row changed.** mean?",
             "choices": [
@@ -375,7 +375,7 @@
             "explanation": "Statements that change data report how many rows they changed."
           },
           {
-            "id": "insert_rows_q8",
+            "id": "insert_rows-q-17juqj0",
             "type": "mcq",
             "prompt": "How do you see the table after an INSERT?",
             "choices": [
@@ -400,7 +400,7 @@
             "explanation": "Statements run in order, so a later SELECT sees the change."
           },
           {
-            "id": "insert_rows_q9",
+            "id": "insert_rows-q-y3phxc",
             "type": "mcq",
             "prompt": "What does **UNIQUE constraint failed: members.email** mean?",
             "choices": [
@@ -425,7 +425,7 @@
             "explanation": "A UNIQUE column can't hold the same value twice."
           },
           {
-            "id": "insert_rows_q10",
+            "id": "insert_rows-q-k06l0",
             "type": "mcq",
             "prompt": "How do you write a missing value in VALUES?",
             "choices": [
@@ -537,7 +537,7 @@
       },
       "challenges": [
         {
-          "id": "insert_many_ch1",
+          "id": "insert_many-three-members",
           "title": "Easy: Three members",
           "promptMarkdown": "In one statement, add three members who joined on `2026-10-24`: `Hana Sato` (`hana.sato@example.com`), `Ivo Petrov` (no email) and `Jun Park` (`jun.park@example.com`).",
           "starterCode": "",
@@ -556,11 +556,11 @@
           }
         },
         {
-          "id": "insert_many_ch2",
+          "id": "insert_many-shelve-the-arrivals",
           "title": "Easy: Shelve the arrivals",
           "promptMarkdown": "Copy every row of `arrivals` into `books`, with all copies available.",
           "starterCode": "",
-          "hint": "`INSERT INTO books (title, author, copies, available) SELECT title, author, copies, copies FROM arrivals;`",
+          "hint": "`INSERT INTO books (…) SELECT … FROM arrivals;` adds every row the SELECT returns. All copies available means `available` gets the same value as `copies`.",
           "solution": "INSERT INTO books (title, author, copies, available)\nSELECT title, author, copies, copies\nFROM arrivals;",
           "validation": {
             "mode": "sql_tests",
@@ -575,7 +575,7 @@
           }
         },
         {
-          "id": "insert_many_ch3",
+          "id": "insert_many-only-new-titles",
           "title": "Medium: Only new titles",
           "promptMarkdown": "Copy into `books` only the arrivals whose title isn't in `books` yet, with all copies available.",
           "starterCode": "",
@@ -594,11 +594,11 @@
           }
         },
         {
-          "id": "insert_many_ch4",
+          "id": "insert_many-overdue-fines",
           "title": "Medium: Overdue fines",
           "promptMarkdown": "Give every member with an overdue loan (not returned, due before `2026-10-24`) a fine of `1.0`, one row per member. None of them has a fine yet.",
           "starterCode": "",
-          "hint": "`INSERT INTO fines (member_id, amount) SELECT DISTINCT member_id, 1.0 FROM loans WHERE returned IS NULL AND due < '2026-10-24';`",
+          "hint": "Use `INSERT INTO … SELECT`. Select each overdue `member_id` once (DISTINCT), with `1.0` as a fixed value for the amount.",
           "solution": "INSERT INTO fines (member_id, amount)\nSELECT DISTINCT member_id, 1.0\nFROM loans\nWHERE returned IS NULL AND due < '2026-10-24';",
           "validation": {
             "mode": "sql_tests",
@@ -613,11 +613,11 @@
           }
         },
         {
-          "id": "insert_many_ch5",
+          "id": "insert_many-borrow-the-whole-author",
           "title": "Medium: Borrow the whole author",
           "promptMarkdown": "Member 7 borrows every book by `S. Laine` today. Add one loan per book, borrowed `2026-10-24` and due `2026-11-07`.",
           "starterCode": "",
-          "hint": "`INSERT INTO loans (member_id, book_id, borrowed, due) SELECT 7, id, '2026-10-24', '2026-11-07' FROM books WHERE author = 'S. Laine';`",
+          "hint": "`INSERT INTO loans (…) SELECT …` with fixed values for the member and the dates, and `id` from the books by that author.",
           "solution": "INSERT INTO loans (member_id, book_id, borrowed, due)\nSELECT 7, id, '2026-10-24', '2026-11-07'\nFROM books\nWHERE author = 'S. Laine';",
           "validation": {
             "mode": "sql_tests",
@@ -632,7 +632,7 @@
           }
         },
         {
-          "id": "insert_many_ch6",
+          "id": "insert_many-fines-by-the-day",
           "title": "Hard: Fines by the day",
           "promptMarkdown": "Give each member with overdue loans a fine of 0.25 for every day overdue on `2026-10-24`, added up over their overdue loans and rounded to 2 decimals.",
           "starterCode": "",
@@ -651,7 +651,7 @@
           }
         },
         {
-          "id": "insert_many_ch7",
+          "id": "insert_many-fix-the-column-count",
           "title": "Hard: Fix the column count",
           "promptMarkdown": "This should copy the arrivals into `books` with all copies available, but gives the error **3 values for 4 columns**. Fix it.",
           "starterCode": "INSERT INTO books (title, author, copies, available)\nSELECT title, author, copies\nFROM arrivals;",
@@ -670,7 +670,7 @@
           }
         },
         {
-          "id": "insert_many_ch8",
+          "id": "insert_many-welcome-loans",
           "title": "Expert: Welcome loans",
           "promptMarkdown": "Every active member who has never borrowed anything gets `Paper Comets` today (`2026-10-24`, due `2026-11-07`). Add those loans without typing the book's id.",
           "starterCode": "",
@@ -689,7 +689,7 @@
           }
         },
         {
-          "id": "insert_many_ch9",
+          "id": "insert_many-careful-shelving",
           "title": "Expert: Careful shelving",
           "promptMarkdown": "Copy the arrivals whose title isn't in `books` yet. When the number of copies is missing, use 1. All copies are available.",
           "starterCode": "",
@@ -712,7 +712,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "insert_many_q1",
+            "id": "insert_many-q-se28uj",
             "type": "mcq",
             "prompt": "How do you add three rows with one INSERT?",
             "choices": [
@@ -737,7 +737,7 @@
             "explanation": "`VALUES (…), (…), (…)`."
           },
           {
-            "id": "insert_many_q2",
+            "id": "insert_many-q-17wde4e",
             "type": "mcq",
             "prompt": "What does `INSERT INTO books (…) SELECT … FROM arrivals` add?",
             "choices": [
@@ -762,7 +762,7 @@
             "explanation": "Each result row becomes a new row."
           },
           {
-            "id": "insert_many_q3",
+            "id": "insert_many-q-1n714jg",
             "type": "mcq",
             "prompt": "How are the SELECT's columns matched to the INSERT's columns?",
             "choices": [
@@ -787,7 +787,7 @@
             "explanation": "The first column fills the first listed column, and so on."
           },
           {
-            "id": "insert_many_q4",
+            "id": "insert_many-q-ec6gwx",
             "type": "mcq",
             "prompt": "Why select `copies` twice when shelving arrivals?",
             "choices": [
@@ -812,7 +812,7 @@
             "explanation": "All the new copies start available."
           },
           {
-            "id": "insert_many_q5",
+            "id": "insert_many-q-qacwd4",
             "type": "shortText",
             "prompt": "Which function gives 1 when `copies` is missing, as in `___(copies, 1)`?",
             "validation": {
@@ -822,7 +822,7 @@
             "explanation": "COALESCE returns its first value that is not NULL."
           },
           {
-            "id": "insert_many_q6",
+            "id": "insert_many-q-16i0gsd",
             "type": "mcq",
             "prompt": "What is a good way to write an INSERT … SELECT?",
             "choices": [
@@ -847,7 +847,7 @@
             "explanation": "Check the rows before adding them."
           },
           {
-            "id": "insert_many_q7",
+            "id": "insert_many-q-z4pyc0",
             "type": "mcq",
             "prompt": "Can the SELECT in INSERT … SELECT use fixed values like `7` or `'2026-10-24'`?",
             "choices": [
@@ -872,7 +872,7 @@
             "explanation": "Every row then gets the same value in that column."
           },
           {
-            "id": "insert_many_q8",
+            "id": "insert_many-q-17etber",
             "type": "mcq",
             "prompt": "What does **3 values for 4 columns** mean?",
             "choices": [
@@ -897,7 +897,7 @@
             "explanation": "The two lists must have the same number of columns."
           },
           {
-            "id": "insert_many_q9",
+            "id": "insert_many-q-1w8by57",
             "type": "mcq",
             "prompt": "Why DISTINCT in the overdue-fines INSERT?",
             "choices": [
@@ -922,7 +922,7 @@
             "explanation": "fines has one row per member."
           },
           {
-            "id": "insert_many_q10",
+            "id": "insert_many-q-mwxmr6",
             "type": "mcq",
             "prompt": "Can INSERT … SELECT use GROUP BY?",
             "choices": [
@@ -1039,11 +1039,11 @@
       },
       "challenges": [
         {
-          "id": "update_rows_ch1",
+          "id": "update_rows-returned-today",
           "title": "Easy: Returned today",
           "promptMarkdown": "Loan 6 came back today. Set its `returned` date to `2026-10-24`.",
           "starterCode": "",
-          "hint": "`UPDATE loans SET returned = '2026-10-24' WHERE id = 6;`",
+          "hint": "`UPDATE loans SET column = value WHERE …;` Without the WHERE, every loan would change.",
           "solution": "UPDATE loans\nSET returned = '2026-10-24'\nWHERE id = 6;",
           "validation": {
             "mode": "sql_tests",
@@ -1058,11 +1058,11 @@
           }
         },
         {
-          "id": "update_rows_ch2",
+          "id": "update_rows-new-email",
           "title": "Easy: New email",
           "promptMarkdown": "Member 1 has a new email: `ama.m@example.com`. Update it.",
           "starterCode": "",
-          "hint": "`UPDATE members SET email = 'ama.m@example.com' WHERE id = 1;`",
+          "hint": "`UPDATE members SET … WHERE id = 1;` Text goes in single quotes.",
           "solution": "UPDATE members\nSET email = 'ama.m@example.com'\nWHERE id = 1;",
           "validation": {
             "mode": "sql_tests",
@@ -1077,7 +1077,7 @@
           }
         },
         {
-          "id": "update_rows_ch3",
+          "id": "update_rows-old-memberships",
           "title": "Medium: Old memberships",
           "promptMarkdown": "Set the status of every member who joined before `2023-01-01` to `inactive`.",
           "starterCode": "",
@@ -1096,7 +1096,7 @@
           }
         },
         {
-          "id": "update_rows_ch4",
+          "id": "update_rows-fix-the-missing-where",
           "title": "Medium: Fix the missing WHERE",
           "promptMarkdown": "This should mark only book 3 as having no copies available, but it changes every book. Fix it.",
           "starterCode": "UPDATE books\nSET available = 0;",
@@ -1115,7 +1115,7 @@
           }
         },
         {
-          "id": "update_rows_ch5",
+          "id": "update_rows-more-copies",
           "title": "Medium: More copies",
           "promptMarkdown": "Book 4 now has 3 copies, all 3 available. Change both columns in one statement.",
           "starterCode": "",
@@ -1134,7 +1134,7 @@
           }
         },
         {
-          "id": "update_rows_ch6",
+          "id": "update_rows-everything-back",
           "title": "Hard: Everything back",
           "promptMarkdown": "Member 2 returned all their books today. Set `returned` to `2026-10-24` on all of member 2's loans that are still out, and no others.",
           "starterCode": "",
@@ -1153,7 +1153,7 @@
           }
         },
         {
-          "id": "update_rows_ch7",
+          "id": "update_rows-fix-the-skipped-member",
           "title": "Hard: Fix the skipped member",
           "promptMarkdown": "This should set the status of every member who isn't suspended to `reviewed`, but members with a missing status are skipped. Fix it.",
           "starterCode": "UPDATE members\nSET status = 'reviewed'\nWHERE status <> 'suspended';",
@@ -1172,7 +1172,7 @@
           }
         },
         {
-          "id": "update_rows_ch8",
+          "id": "update_rows-a-week-longer",
           "title": "Expert: A week longer",
           "promptMarkdown": "Every loan that is still out and was due before `2026-10-24` gets one more week: move its `due` date 7 days later.",
           "starterCode": "",
@@ -1191,7 +1191,7 @@
           }
         },
         {
-          "id": "update_rows_ch9",
+          "id": "update_rows-tidy-emails",
           "title": "Expert: Tidy emails",
           "promptMarkdown": "Some emails have capital letters. Change every email to lower case, but only update the rows that actually change.",
           "starterCode": "",
@@ -1214,7 +1214,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "update_rows_q1",
+            "id": "update_rows-q-1ltu71n",
             "type": "mcq",
             "prompt": "What does UPDATE do?",
             "choices": [
@@ -1239,7 +1239,7 @@
             "explanation": "SET says what changes; WHERE says which rows."
           },
           {
-            "id": "update_rows_q2",
+            "id": "update_rows-q-33n06h",
             "type": "mcq",
             "prompt": "What does `UPDATE loans SET returned = '2026-10-24';` change?",
             "choices": [
@@ -1264,7 +1264,7 @@
             "explanation": "Without WHERE, every row is updated."
           },
           {
-            "id": "update_rows_q3",
+            "id": "update_rows-q-1tm4mih",
             "type": "mcq",
             "prompt": "What is a good habit before an UPDATE?",
             "choices": [
@@ -1289,7 +1289,7 @@
             "explanation": "Seeing the rows first shows exactly what will change."
           },
           {
-            "id": "update_rows_q4",
+            "id": "update_rows-q-1x6qb1n",
             "type": "mcq",
             "prompt": "How do you change two columns in one UPDATE?",
             "choices": [
@@ -1314,7 +1314,7 @@
             "explanation": "Each assignment is separated by a comma."
           },
           {
-            "id": "update_rows_q5",
+            "id": "update_rows-q-1xdrzrl",
             "type": "shortText",
             "prompt": "Which keyword, after UPDATE and the table name, says what to change?",
             "validation": {
@@ -1324,7 +1324,7 @@
             "explanation": "`UPDATE t SET column = value WHERE …`."
           },
           {
-            "id": "update_rows_q6",
+            "id": "update_rows-q-idpqqw",
             "type": "mcq",
             "prompt": "Why does `WHERE status <> 'suspended'` skip a member whose status is NULL?",
             "choices": [
@@ -1349,7 +1349,7 @@
             "explanation": "Add `OR status IS NULL`, or use `IS NOT`."
           },
           {
-            "id": "update_rows_q7",
+            "id": "update_rows-q-14vxy2h",
             "type": "mcq",
             "prompt": "What does `status IS NOT 'suspended'` give for a NULL status?",
             "choices": [
@@ -1374,7 +1374,7 @@
             "explanation": "In SQLite, IS and IS NOT treat NULL as a normal value."
           },
           {
-            "id": "update_rows_q8",
+            "id": "update_rows-q-tpu5tx",
             "type": "mcq",
             "prompt": "What does **Done: 3 rows changed.** tell you after an UPDATE?",
             "choices": [
@@ -1399,7 +1399,7 @@
             "explanation": "A quick check that the WHERE did what you expected."
           },
           {
-            "id": "update_rows_q9",
+            "id": "update_rows-q-1x9q5sz",
             "type": "mcq",
             "prompt": "What does `SET due = date(due, '+7 days')` do?",
             "choices": [
@@ -1424,7 +1424,7 @@
             "explanation": "The right-hand side uses the row's current value."
           },
           {
-            "id": "update_rows_q10",
+            "id": "update_rows-q-1r81lk3",
             "type": "mcq",
             "prompt": "Can WHERE in an UPDATE use AND, OR and IS NULL?",
             "choices": [
@@ -1536,7 +1536,7 @@
       },
       "challenges": [
         {
-          "id": "update_expressions_ch1",
+          "id": "update_expressions-one-more-copy",
           "title": "Easy: One more copy",
           "promptMarkdown": "Every book gets one more copy, available straight away: add 1 to both `copies` and `available` of every book.",
           "starterCode": "",
@@ -1555,11 +1555,11 @@
           }
         },
         {
-          "id": "update_expressions_ch2",
+          "id": "update_expressions-fines-go-up",
           "title": "Easy: Fines go up",
           "promptMarkdown": "Add `0.5` to every fine.",
           "starterCode": "",
-          "hint": "`UPDATE fines SET amount = amount + 0.5;`",
+          "hint": "SET can use the column's current value: `amount = amount + …`.",
           "solution": "UPDATE fines\nSET amount = amount + 0.5;",
           "validation": {
             "mode": "sql_tests",
@@ -1574,7 +1574,7 @@
           }
         },
         {
-          "id": "update_expressions_ch3",
+          "id": "update_expressions-ten-percent",
           "title": "Medium: Ten percent",
           "promptMarkdown": "Raise every fine by 10%, rounded to 2 decimals.",
           "starterCode": "",
@@ -1593,7 +1593,7 @@
           }
         },
         {
-          "id": "update_expressions_ch4",
+          "id": "update_expressions-out-of-stock-label",
           "title": "Medium: Out of stock label",
           "promptMarkdown": "Put `[out] ` (with the space) in front of the title of every book with no copies available.",
           "starterCode": "",
@@ -1612,7 +1612,7 @@
           }
         },
         {
-          "id": "update_expressions_ch5",
+          "id": "update_expressions-long-time-or-new",
           "title": "Medium: Long-time or new",
           "promptMarkdown": "For every member who isn't suspended (members with no status included), set the status to `long-time` if they joined before `2024-01-01`, and `new` otherwise.",
           "starterCode": "",
@@ -1631,7 +1631,7 @@
           }
         },
         {
-          "id": "update_expressions_ch6",
+          "id": "update_expressions-swapped-by-mistake",
           "title": "Hard: Swapped by mistake",
           "promptMarkdown": "For book 6, the `copies` and `available` numbers were typed the wrong way round. Swap them with one UPDATE.",
           "starterCode": "",
@@ -1650,7 +1650,7 @@
           }
         },
         {
-          "id": "update_expressions_ch7",
+          "id": "update_expressions-longer-loan-period",
           "title": "Hard: Longer loan period",
           "promptMarkdown": "Member 3 is allowed 28 days. For member 3's loans that are still out, set `due` to 28 days after `borrowed`.",
           "starterCode": "",
@@ -1669,7 +1669,7 @@
           }
         },
         {
-          "id": "update_expressions_ch8",
+          "id": "update_expressions-new-status-names",
           "title": "Expert: New status names",
           "promptMarkdown": "The library renames its statuses: `inactive` becomes `closed` and `suspended` becomes `blocked`. Other statuses, including missing ones, stay as they are. Use one UPDATE with CASE.",
           "starterCode": "",
@@ -1688,7 +1688,7 @@
           }
         },
         {
-          "id": "update_expressions_ch9",
+          "id": "update_expressions-round-up-to-50-cents",
           "title": "Expert: Round up to 50 cents",
           "promptMarkdown": "Round every fine up to the next 0.50 (so 2.10 becomes 2.50 and 3.00 stays 3.00).",
           "starterCode": "",
@@ -1711,7 +1711,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "update_expressions_q1",
+            "id": "update_expressions-q-8jwzaf",
             "type": "mcq",
             "prompt": "In `SET copies = copies + 1`, which value does `copies` on the right mean?",
             "choices": [
@@ -1736,7 +1736,7 @@
             "explanation": "It reads the old value and stores one more."
           },
           {
-            "id": "update_expressions_q2",
+            "id": "update_expressions-q-a8nv9i",
             "type": "mcq",
             "prompt": "What does `SET copies = available, available = copies` do?",
             "choices": [
@@ -1761,7 +1761,7 @@
             "explanation": "Both assignments use the old values."
           },
           {
-            "id": "update_expressions_q3",
+            "id": "update_expressions-q-16u256r",
             "type": "mcq",
             "prompt": "Can SET use CASE?",
             "choices": [
@@ -1786,7 +1786,7 @@
             "explanation": "CASE gives a value, so it works anywhere a value can go."
           },
           {
-            "id": "update_expressions_q4",
+            "id": "update_expressions-q-15hbn6f",
             "type": "mcq",
             "prompt": "What happens if you run `UPDATE books SET copies = copies + 1;` twice on the same data?",
             "choices": [
@@ -1811,7 +1811,7 @@
             "explanation": "Each run adds one again."
           },
           {
-            "id": "update_expressions_q5",
+            "id": "update_expressions-q-1kypgut",
             "type": "shortText",
             "prompt": "Which operator joins text, as in `'[out] ' ___ title`?",
             "validation": {
@@ -1821,7 +1821,7 @@
             "explanation": "Two vertical bars join text."
           },
           {
-            "id": "update_expressions_q6",
+            "id": "update_expressions-q-2fdi0x",
             "type": "mcq",
             "prompt": "What does `CASE status WHEN 'inactive' THEN 'closed' ELSE status END` give for a NULL status?",
             "choices": [
@@ -1846,7 +1846,7 @@
             "explanation": "ELSE keeps the old value, which is NULL."
           },
           {
-            "id": "update_expressions_q7",
+            "id": "update_expressions-q-57b0m9",
             "type": "mcq",
             "prompt": "Why is `ELSE status` needed in the renaming CASE?",
             "choices": [
@@ -1871,7 +1871,7 @@
             "explanation": "A CASE with no matching WHEN and no ELSE gives NULL."
           },
           {
-            "id": "update_expressions_q8",
+            "id": "update_expressions-q-1f7yf2e",
             "type": "mcq",
             "prompt": "What does `CEIL(2.1 * 2) / 2.0` give?",
             "choices": [
@@ -1896,7 +1896,7 @@
             "explanation": "4.2 rounds up to 5, and 5 / 2.0 is 2.5."
           },
           {
-            "id": "update_expressions_q9",
+            "id": "update_expressions-q-gtb9bq",
             "type": "mcq",
             "prompt": "Which moves member 3's open loans to 28 days after borrowing?",
             "choices": [
@@ -1921,7 +1921,7 @@
             "explanation": "date() with a modifier, starting from the borrowed date."
           },
           {
-            "id": "update_expressions_q10",
+            "id": "update_expressions-q-14yme57",
             "type": "mcq",
             "prompt": "Do all the assignments in one SET see the same old values?",
             "choices": [
@@ -2033,7 +2033,7 @@
       },
       "challenges": [
         {
-          "id": "update_other_tables_ch1",
+          "id": "update_other_tables-suspend-late-members",
           "title": "Easy: Suspend late members",
           "promptMarkdown": "Set the status of every member with an overdue loan (not returned, due before `2026-10-24`) to `suspended`.",
           "starterCode": "",
@@ -2052,7 +2052,7 @@
           }
         },
         {
-          "id": "update_other_tables_ch2",
+          "id": "update_other_tables-closing-accounts",
           "title": "Easy: Closing accounts",
           "promptMarkdown": "The library is closing the accounts of `suspended` members. Mark every loan of theirs that is still out as returned today (`2026-10-24`).",
           "starterCode": "",
@@ -2071,11 +2071,11 @@
           }
         },
         {
-          "id": "update_other_tables_ch3",
+          "id": "update_other_tables-forgiven",
           "title": "Easy: Forgiven",
           "promptMarkdown": "Set the fines of all `inactive` members to `0`.",
           "starterCode": "",
-          "hint": "`UPDATE fines SET amount = 0 WHERE member_id IN (SELECT id FROM members WHERE status = 'inactive');`",
+          "hint": "Find the inactive members' ids with a subquery on `members`, and use `WHERE member_id IN (…)`.",
           "solution": "UPDATE fines\nSET amount = 0\nWHERE member_id IN (SELECT id FROM members WHERE status = 'inactive');",
           "validation": {
             "mode": "sql_tests",
@@ -2090,7 +2090,7 @@
           }
         },
         {
-          "id": "update_other_tables_ch4",
+          "id": "update_other_tables-recount",
           "title": "Medium: Recount",
           "promptMarkdown": "Set every book's `available` to its copies minus its loans that are still out.",
           "starterCode": "",
@@ -2109,7 +2109,7 @@
           }
         },
         {
-          "id": "update_other_tables_ch5",
+          "id": "update_other_tables-busy-borrowers",
           "title": "Medium: Busy borrowers",
           "promptMarkdown": "Add `1` to the fine of every member who has 2 or more loans (returned or not).",
           "starterCode": "",
@@ -2128,11 +2128,11 @@
           }
         },
         {
-          "id": "update_other_tables_ch6",
+          "id": "update_other_tables-single-copies-longer-loans",
           "title": "Medium: Single copies, longer loans",
           "promptMarkdown": "Loans of books with only one copy now last 21 days. Using `UPDATE … FROM books`, set `due` to 21 days after `borrowed` for the loans still out of such books.",
           "starterCode": "",
-          "hint": "`UPDATE loans SET due = date(loans.borrowed, '+21 days') FROM books WHERE books.id = loans.book_id AND books.copies = 1 AND loans.returned IS NULL;`",
+          "hint": "With `UPDATE loans SET … FROM books`, join the tables in the WHERE (`books.id = loans.book_id`), then add the conditions on copies and returned. `date(loans.borrowed, '+21 days')` gives the new date.",
           "solution": "UPDATE loans\nSET due = date(loans.borrowed, '+21 days')\nFROM books\nWHERE books.id = loans.book_id\n  AND books.copies = 1\n  AND loans.returned IS NULL;",
           "validation": {
             "mode": "sql_tests",
@@ -2147,7 +2147,7 @@
           }
         },
         {
-          "id": "update_other_tables_ch7",
+          "id": "update_other_tables-merge-the-arrivals",
           "title": "Hard: Merge the arrivals",
           "promptMarkdown": "For books that are already in `books`, add the arriving copies to both `copies` and `available`, using `UPDATE … FROM arrivals`.",
           "starterCode": "",
@@ -2166,7 +2166,7 @@
           }
         },
         {
-          "id": "update_other_tables_ch8",
+          "id": "update_other_tables-fix-the-recount",
           "title": "Hard: Fix the recount",
           "promptMarkdown": "This recount gives every book the same `available` number. Fix it so each book only counts its own loans.",
           "starterCode": "UPDATE books\nSET available = copies - (\n  SELECT COUNT(*) FROM loans\n  WHERE returned IS NULL\n);",
@@ -2185,7 +2185,7 @@
           }
         },
         {
-          "id": "update_other_tables_ch9",
+          "id": "update_other_tables-active-or-not",
           "title": "Expert: Active or not",
           "promptMarkdown": "For every member who isn't suspended (missing statuses included), set the status to `active` if they borrowed something on or after `2026-08-25`, and `inactive` otherwise.",
           "starterCode": "",
@@ -2204,7 +2204,7 @@
           }
         },
         {
-          "id": "update_other_tables_ch10",
+          "id": "update_other_tables-someone-is-waiting",
           "title": "Expert: Someone is waiting",
           "promptMarkdown": "For loans still out of books with no copies available, bring the due date forward to `2026-10-27` if it is later than that. Earlier due dates stay as they are.",
           "starterCode": "",
@@ -2227,7 +2227,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "update_other_tables_q1",
+            "id": "update_other_tables-q-aoyeqz",
             "type": "mcq",
             "prompt": "Can an UPDATE's WHERE use a subquery?",
             "choices": [
@@ -2252,7 +2252,7 @@
             "explanation": "IN, EXISTS and value subqueries all work."
           },
           {
-            "id": "update_other_tables_q2",
+            "id": "update_other_tables-q-1aila18",
             "type": "mcq",
             "prompt": "In the recount, what does `books.id` inside the subquery refer to?",
             "choices": [
@@ -2277,7 +2277,7 @@
             "explanation": "The subquery runs once per updated row."
           },
           {
-            "id": "update_other_tables_q3",
+            "id": "update_other_tables-q-vql8z4",
             "type": "mcq",
             "prompt": "What happens if the recount's subquery has no link to `books.id`?",
             "choices": [
@@ -2302,7 +2302,7 @@
             "explanation": "The subquery then counts the whole library's open loans."
           },
           {
-            "id": "update_other_tables_q4",
+            "id": "update_other_tables-q-144sp89",
             "type": "mcq",
             "prompt": "What does `UPDATE … FROM` add?",
             "choices": [
@@ -2327,7 +2327,7 @@
             "explanation": "Only the table after UPDATE is changed."
           },
           {
-            "id": "update_other_tables_q5",
+            "id": "update_other_tables-q-17a9nuw",
             "type": "shortText",
             "prompt": "Which keyword, after SET, lets an UPDATE join in another table?",
             "validation": {
@@ -2337,7 +2337,7 @@
             "explanation": "`UPDATE t SET … FROM other WHERE …`."
           },
           {
-            "id": "update_other_tables_q6",
+            "id": "update_other_tables-q-zkuqs9",
             "type": "mcq",
             "prompt": "In `UPDATE books … FROM arrivals AS a`, which table changes?",
             "choices": [
@@ -2362,7 +2362,7 @@
             "explanation": "The table named after UPDATE is the one changed."
           },
           {
-            "id": "update_other_tables_q7",
+            "id": "update_other_tables-q-161c3s3",
             "type": "mcq",
             "prompt": "What does `MIN(due, '2026-10-27')` give?",
             "choices": [
@@ -2387,7 +2387,7 @@
             "explanation": "With two arguments, MIN compares them; with one, it is an aggregate."
           },
           {
-            "id": "update_other_tables_q8",
+            "id": "update_other_tables-q-5zt0ff",
             "type": "mcq",
             "prompt": "Why use `IS NOT 'suspended'` instead of `<> 'suspended'`?",
             "choices": [
@@ -2412,7 +2412,7 @@
             "explanation": "<> skips NULLs; IS NOT does not."
           },
           {
-            "id": "update_other_tables_q9",
+            "id": "update_other_tables-q-1f3y1e4",
             "type": "mcq",
             "prompt": "Can SET use EXISTS inside a CASE?",
             "choices": [
@@ -2437,7 +2437,7 @@
             "explanation": "EXISTS gives true or false, which CASE can test."
           },
           {
-            "id": "update_other_tables_q10",
+            "id": "update_other_tables-q-10k0ff",
             "type": "mcq",
             "prompt": "Which picks members with 2 or more loans?",
             "choices": [
@@ -2549,11 +2549,11 @@
       },
       "challenges": [
         {
-          "id": "delete_rows_ch1",
+          "id": "delete_rows-one-loan",
           "title": "Easy: One loan",
           "promptMarkdown": "Delete loan 10.",
           "starterCode": "",
-          "hint": "`DELETE FROM loans WHERE id = 10;`",
+          "hint": "`DELETE FROM table WHERE …;` Pick the row by its `id`.",
           "solution": "DELETE FROM loans\nWHERE id = 10;",
           "validation": {
             "mode": "sql_tests",
@@ -2568,11 +2568,11 @@
           }
         },
         {
-          "id": "delete_rows_ch2",
+          "id": "delete_rows-all-shelved",
           "title": "Easy: All shelved",
           "promptMarkdown": "Every arrival has been dealt with. Remove all rows from `arrivals`.",
           "starterCode": "",
-          "hint": "`DELETE FROM arrivals;` with no WHERE.",
+          "hint": "A DELETE with no WHERE removes every row (and keeps the table).",
           "solution": "DELETE FROM arrivals;",
           "validation": {
             "mode": "sql_tests",
@@ -2587,11 +2587,11 @@
           }
         },
         {
-          "id": "delete_rows_ch3",
+          "id": "delete_rows-nothing-owed",
           "title": "Easy: Nothing owed",
           "promptMarkdown": "Delete the fines whose amount is `0` or less.",
           "starterCode": "",
-          "hint": "`DELETE FROM fines WHERE amount <= 0;`",
+          "hint": "`DELETE FROM fines WHERE …` with a condition on `amount` (`<=`).",
           "solution": "DELETE FROM fines\nWHERE amount <= 0;",
           "validation": {
             "mode": "sql_tests",
@@ -2606,7 +2606,7 @@
           }
         },
         {
-          "id": "delete_rows_ch4",
+          "id": "delete_rows-old-history",
           "title": "Medium: Old history",
           "promptMarkdown": "Delete the loans that were returned before `2026-09-01`. Loans still out must stay.",
           "starterCode": "",
@@ -2625,7 +2625,7 @@
           }
         },
         {
-          "id": "delete_rows_ch5",
+          "id": "delete_rows-fix-the-missing-where",
           "title": "Medium: Fix the missing WHERE",
           "promptMarkdown": "This should delete only the `inactive` members, but it deletes everyone. Fix it.",
           "starterCode": "DELETE FROM members;",
@@ -2644,7 +2644,7 @@
           }
         },
         {
-          "id": "delete_rows_ch6",
+          "id": "delete_rows-already-on-the-shelf",
           "title": "Medium: Already on the shelf",
           "promptMarkdown": "Delete the arrivals whose title is already in `books`.",
           "starterCode": "",
@@ -2663,7 +2663,7 @@
           }
         },
         {
-          "id": "delete_rows_ch7",
+          "id": "delete_rows-never-borrowed",
           "title": "Hard: Never borrowed",
           "promptMarkdown": "Delete the members who joined before `2026-01-01` and have never borrowed anything.",
           "starterCode": "",
@@ -2682,7 +2682,7 @@
           }
         },
         {
-          "id": "delete_rows_ch8",
+          "id": "delete_rows-orphaned-fines",
           "title": "Hard: Orphaned fines",
           "promptMarkdown": "Delete the fines that belong to no member.",
           "starterCode": "",
@@ -2701,7 +2701,7 @@
           }
         },
         {
-          "id": "delete_rows_ch9",
+          "id": "delete_rows-duplicate-loans",
           "title": "Expert: Duplicate loans",
           "promptMarkdown": "Some loans were entered twice: same member, book and `borrowed` date. Keep the one with the lowest id of each group and delete the others.",
           "starterCode": "",
@@ -2720,7 +2720,7 @@
           }
         },
         {
-          "id": "delete_rows_ch10",
+          "id": "delete_rows-all-returned-all-forgiven",
           "title": "Expert: All returned, all forgiven",
           "promptMarkdown": "Delete the fines of members who have no loans still out.",
           "starterCode": "",
@@ -2743,7 +2743,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "delete_rows_q1",
+            "id": "delete_rows-q-15qwvof",
             "type": "mcq",
             "prompt": "What does `DELETE FROM loans WHERE id = 10;` do?",
             "choices": [
@@ -2768,7 +2768,7 @@
             "explanation": "DELETE removes whole rows that match the WHERE."
           },
           {
-            "id": "delete_rows_q2",
+            "id": "delete_rows-q-17juu2n",
             "type": "mcq",
             "prompt": "What does `DELETE FROM loans;` do?",
             "choices": [
@@ -2793,7 +2793,7 @@
             "explanation": "Without WHERE, every row goes. The table stays."
           },
           {
-            "id": "delete_rows_q3",
+            "id": "delete_rows-q-1crz7yd",
             "type": "mcq",
             "prompt": "What is a safe way to write a DELETE?",
             "choices": [
@@ -2818,7 +2818,7 @@
             "explanation": "Seeing exactly which rows match prevents surprises."
           },
           {
-            "id": "delete_rows_q4",
+            "id": "delete_rows-q-em1v1w",
             "type": "mcq",
             "prompt": "Does `WHERE returned < '2026-09-01'` delete loans that are still out?",
             "choices": [
@@ -2843,7 +2843,7 @@
             "explanation": "Comparisons with NULL never match."
           },
           {
-            "id": "delete_rows_q5",
+            "id": "delete_rows-q-1wyj0d6",
             "type": "shortText",
             "prompt": "Which two keywords start a statement that removes rows? (two words)",
             "validation": {
@@ -2853,7 +2853,7 @@
             "explanation": "`DELETE FROM table WHERE …`."
           },
           {
-            "id": "delete_rows_q6",
+            "id": "delete_rows-q-1fzo8nv",
             "type": "mcq",
             "prompt": "Does deleting a member also delete their loans?",
             "choices": [
@@ -2878,7 +2878,7 @@
             "explanation": "Their loans now point to a missing member, unless you delete or change them too."
           },
           {
-            "id": "delete_rows_q7",
+            "id": "delete_rows-q-1smjend",
             "type": "mcq",
             "prompt": "Which keeps one of each group of duplicates?",
             "choices": [
@@ -2903,7 +2903,7 @@
             "explanation": "Keep the lowest id of each group; delete every other id."
           },
           {
-            "id": "delete_rows_q8",
+            "id": "delete_rows-q-13as4o0",
             "type": "mcq",
             "prompt": "Which deletes fines that belong to no member?",
             "choices": [
@@ -2928,7 +2928,7 @@
             "explanation": "Their member_id is not among the member ids."
           },
           {
-            "id": "delete_rows_q9",
+            "id": "delete_rows-q-1eb2vnn",
             "type": "mcq",
             "prompt": "Can DELETE use NOT EXISTS?",
             "choices": [
@@ -2953,7 +2953,7 @@
             "explanation": "For example, members with no loans."
           },
           {
-            "id": "delete_rows_q10",
+            "id": "delete_rows-q-1k72h5w",
             "type": "mcq",
             "prompt": "In this app, what happens to the data after a Run with DELETE?",
             "choices": [
@@ -3065,7 +3065,7 @@
       },
       "challenges": [
         {
-          "id": "transactions_ch1",
+          "id": "transactions-lend-a-book",
           "title": "Easy: Lend a book",
           "promptMarkdown": "In one transaction, lend book 4 to member 7: add the loan (borrowed `2026-10-24`, due `2026-11-07`) and lower book 4's `available` by 1.",
           "starterCode": "",
@@ -3089,7 +3089,7 @@
           }
         },
         {
-          "id": "transactions_ch2",
+          "id": "transactions-take-a-book-back",
           "title": "Easy: Take a book back",
           "promptMarkdown": "In one transaction, take back loan 6 (book 6): set its `returned` to `2026-10-24` and raise book 6's `available` by 1.",
           "starterCode": "",
@@ -3113,7 +3113,7 @@
           }
         },
         {
-          "id": "transactions_ch3",
+          "id": "transactions-try-and-undo",
           "title": "Easy: Try and undo",
           "promptMarkdown": "Start a transaction, delete every loan, then roll back. Finish with `SELECT COUNT(*) AS loans FROM loans;` to show they are all still there.",
           "starterCode": "",
@@ -3132,7 +3132,7 @@
           }
         },
         {
-          "id": "transactions_ch4",
+          "id": "transactions-paying-a-fine",
           "title": "Medium: Paying a fine",
           "promptMarkdown": "Member 2 pays `2.3`. In one transaction, take 2.3 off their fine, then delete their fine row if it is now 0 or less.",
           "starterCode": "",
@@ -3151,7 +3151,7 @@
           }
         },
         {
-          "id": "transactions_ch5",
+          "id": "transactions-renewing",
           "title": "Medium: Renewing",
           "promptMarkdown": "Renew loan 7 (member 5, book 1): in one transaction, mark it returned on `2026-10-24` and add a new loan of the same book for the same member, borrowed `2026-10-24` and due `2026-11-07`.",
           "starterCode": "",
@@ -3170,7 +3170,7 @@
           }
         },
         {
-          "id": "transactions_ch6",
+          "id": "transactions-fix-the-undo",
           "title": "Medium: Fix the undo",
           "promptMarkdown": "This should delete member 7's fine, then undo it, and show the number of fines. It gives the error **cannot rollback - no transaction is active**, and the fine is gone for good. Fix it.",
           "starterCode": "BEGIN;\nDELETE FROM fines WHERE member_id = 7;\nCOMMIT;\nROLLBACK;\nSELECT COUNT(*) AS fines FROM fines;",
@@ -3189,7 +3189,7 @@
           }
         },
         {
-          "id": "transactions_ch7",
+          "id": "transactions-only-if-it-is-there",
           "title": "Hard: Only if it is there",
           "promptMarkdown": "Member 7 asks for books 2 and 4. In one transaction, add a loan (borrowed `2026-10-24`, due `2026-11-07`) for each of those books that has a copy available, and lower `available` for exactly those books.",
           "starterCode": "",
@@ -3213,7 +3213,7 @@
           }
         },
         {
-          "id": "transactions_ch8",
+          "id": "transactions-everything-back-from-member-1",
           "title": "Hard: Everything back from member 1",
           "promptMarkdown": "Member 1 returns everything today. In one transaction, raise `available` for each book they still have out, then mark those loans returned on `2026-10-24`.",
           "starterCode": "",
@@ -3237,7 +3237,7 @@
           }
         },
         {
-          "id": "transactions_ch9",
+          "id": "transactions-join-and-borrow",
           "title": "Expert: Join and borrow",
           "promptMarkdown": "In one transaction: add the member `Hana Sato` (`hana.sato@example.com`, joined `2026-10-24`), lend her book 4 (borrowed `2026-10-24`, due `2026-11-07`) using her new id without typing it, and lower book 4's `available`.",
           "starterCode": "",
@@ -3266,7 +3266,7 @@
           }
         },
         {
-          "id": "transactions_ch10",
+          "id": "transactions-half-undone",
           "title": "Expert: Half undone",
           "promptMarkdown": "In one transaction: set every fine to 0, then make a savepoint called `before_delete`, delete all fines, roll back to the savepoint, and commit. The fines end up at 0 but still there.",
           "starterCode": "",
@@ -3289,7 +3289,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "transactions_q1",
+            "id": "transactions-q-1rgu322",
             "type": "mcq",
             "prompt": "What does a transaction guarantee?",
             "choices": [
@@ -3314,7 +3314,7 @@
             "explanation": "Either every change is kept, or none is."
           },
           {
-            "id": "transactions_q2",
+            "id": "transactions-q-1qrhy7j",
             "type": "mcq",
             "prompt": "What does COMMIT do?",
             "choices": [
@@ -3339,7 +3339,7 @@
             "explanation": "Until COMMIT, the changes are provisional."
           },
           {
-            "id": "transactions_q3",
+            "id": "transactions-q-17o6iwm",
             "type": "mcq",
             "prompt": "What does ROLLBACK do?",
             "choices": [
@@ -3364,7 +3364,7 @@
             "explanation": "The data goes back to how it was when the transaction began."
           },
           {
-            "id": "transactions_q4",
+            "id": "transactions-q-1ygdhlq",
             "type": "mcq",
             "prompt": "What happens to a statement run without BEGIN?",
             "choices": [
@@ -3389,7 +3389,7 @@
             "explanation": "SQLite wraps it in a transaction of its own."
           },
           {
-            "id": "transactions_q5",
+            "id": "transactions-q-bsdtka",
             "type": "shortText",
             "prompt": "Which keyword starts a transaction?",
             "validation": {
@@ -3399,7 +3399,7 @@
             "explanation": "`BEGIN; … COMMIT;`"
           },
           {
-            "id": "transactions_q6",
+            "id": "transactions-q-vebbdd",
             "type": "mcq",
             "prompt": "What gives **cannot rollback - no transaction is active**?",
             "choices": [
@@ -3424,7 +3424,7 @@
             "explanation": "After COMMIT, there is nothing left to roll back."
           },
           {
-            "id": "transactions_q7",
+            "id": "transactions-q-1gmgiq2",
             "type": "mcq",
             "prompt": "Why lend a book inside a transaction?",
             "choices": [
@@ -3449,7 +3449,7 @@
             "explanation": "If one statement failed, the other wouldn't be kept either."
           },
           {
-            "id": "transactions_q8",
+            "id": "transactions-q-gpxl4",
             "type": "mcq",
             "prompt": "What does `ROLLBACK TO before_delete` do?",
             "choices": [
@@ -3474,7 +3474,7 @@
             "explanation": "Changes before the savepoint stay; COMMIT is still needed."
           },
           {
-            "id": "transactions_q9",
+            "id": "transactions-q-1o08qbh",
             "type": "mcq",
             "prompt": "What does `last_insert_rowid()` give?",
             "choices": [
@@ -3499,7 +3499,7 @@
             "explanation": "Handy for linking a new row to another one in the same transaction."
           },
           {
-            "id": "transactions_q10",
+            "id": "transactions-q-15bntrb",
             "type": "mcq",
             "prompt": "Why update the books before marking member 1's loans returned?",
             "choices": [
@@ -3616,7 +3616,7 @@
       },
       "challenges": [
         {
-          "id": "upserts_ch1",
+          "id": "upserts-ignore-the-clash",
           "title": "Easy: Ignore the clash",
           "promptMarkdown": "With `INSERT OR IGNORE`, add two members who joined `2026-10-24`: `Ama Boateng` with the email `ama.mensah@example.com`, and `Hana Sato` with `hana.sato@example.com`. Rows whose email is taken are skipped.",
           "starterCode": "",
@@ -3635,11 +3635,11 @@
           }
         },
         {
-          "id": "upserts_ch2",
+          "id": "upserts-only-if-new",
           "title": "Easy: Only if new",
           "promptMarkdown": "Give members 2 and 3 a fine of `5.0`, but leave any existing fine as it is. Use `ON CONFLICT (member_id) DO NOTHING`.",
           "starterCode": "",
-          "hint": "`INSERT INTO fines (member_id, amount) VALUES (2, 5.0), (3, 5.0) ON CONFLICT (member_id) DO NOTHING;`",
+          "hint": "Insert both rows in one `VALUES (…), (…)` list, then add the ON CONFLICT clause at the end.",
           "solution": "INSERT INTO fines (member_id, amount)\nVALUES (2, 5.0), (3, 5.0)\nON CONFLICT (member_id) DO NOTHING;",
           "validation": {
             "mode": "sql_tests",
@@ -3654,7 +3654,7 @@
           }
         },
         {
-          "id": "upserts_ch3",
+          "id": "upserts-add-to-the-fine",
           "title": "Easy: Add to the fine",
           "promptMarkdown": "Add `1.5` to member 2's fine, creating the row if they don't have one. Use one upsert.",
           "starterCode": "",
@@ -3673,7 +3673,7 @@
           }
         },
         {
-          "id": "upserts_ch4",
+          "id": "upserts-two-at-once",
           "title": "Medium: Two at once",
           "promptMarkdown": "Add `1.0` to the fines of members 2 and 3 with one statement, creating rows where needed.",
           "starterCode": "",
@@ -3692,7 +3692,7 @@
           }
         },
         {
-          "id": "upserts_ch5",
+          "id": "upserts-fix-the-clash",
           "title": "Medium: Fix the clash",
           "promptMarkdown": "This should set member 2's fine to `4.0`, whether or not they have one, but gives **UNIQUE constraint failed: fines.member_id**. Fix it.",
           "starterCode": "INSERT INTO fines (member_id, amount)\nVALUES (2, 4.0);",
@@ -3711,7 +3711,7 @@
           }
         },
         {
-          "id": "upserts_ch6",
+          "id": "upserts-known-by-email",
           "title": "Medium: Known by email",
           "promptMarkdown": "Bruno now goes by `Bruno Costa Lima`. Insert a member with that name, the email `bruno.costa@example.com` and joined `2026-10-24`, but if that email exists, only change the name.",
           "starterCode": "",
@@ -3730,7 +3730,7 @@
           }
         },
         {
-          "id": "upserts_ch7",
+          "id": "upserts-fix-the-lost-status",
           "title": "Hard: Fix the lost status",
           "promptMarkdown": "This should change member 4's email to `daniel.kim@example.net`, but `INSERT OR REPLACE` also wipes his join date and status. Rewrite it with `ON CONFLICT (id) DO UPDATE` so only the email changes.",
           "starterCode": "INSERT OR REPLACE INTO members (id, name, email)\nVALUES (4, 'Daniel Kim', 'daniel.kim@example.net');",
@@ -3749,7 +3749,7 @@
           }
         },
         {
-          "id": "upserts_ch8",
+          "id": "upserts-due-date-fines",
           "title": "Hard: Due-date fines",
           "promptMarkdown": "For every loan still out that was due on or before `2026-10-24`, add `1.0` to its member's fine (one per such loan), creating fine rows where needed. Use INSERT … SELECT with GROUP BY and an upsert.",
           "starterCode": "",
@@ -3768,7 +3768,7 @@
           }
         },
         {
-          "id": "upserts_ch9",
+          "id": "upserts-a-cap-of-5",
           "title": "Expert: A cap of 5",
           "promptMarkdown": "Add `3.0` to the fines of members 2, 3 and 6 (creating rows where needed), but no fine may go above `5.0`.",
           "starterCode": "",
@@ -3787,7 +3787,7 @@
           }
         },
         {
-          "id": "upserts_ch10",
+          "id": "upserts-only-if-higher",
           "title": "Expert: Only if higher",
           "promptMarkdown": "Set the fines of members 2, 3 and 6 to `2.0`, `1.0` and `4.0`. New rows are added, but an existing fine only changes if the new amount is higher.",
           "starterCode": "",
@@ -3810,7 +3810,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "upserts_q1",
+            "id": "upserts-q-1elzs8g",
             "type": "mcq",
             "prompt": "What is an upsert?",
             "choices": [
@@ -3835,7 +3835,7 @@
             "explanation": "In SQLite: INSERT … ON CONFLICT … DO UPDATE."
           },
           {
-            "id": "upserts_q2",
+            "id": "upserts-q-17qh6fz",
             "type": "mcq",
             "prompt": "In `DO UPDATE SET amount = amount + excluded.amount`, what is `excluded.amount`?",
             "choices": [
@@ -3860,7 +3860,7 @@
             "explanation": "`amount` alone is the existing row's value."
           },
           {
-            "id": "upserts_q3",
+            "id": "upserts-q-k1wj2c",
             "type": "mcq",
             "prompt": "What does `ON CONFLICT (member_id) DO NOTHING` do with a clashing row?",
             "choices": [
@@ -3885,7 +3885,7 @@
             "explanation": "Rows without a clash are still inserted."
           },
           {
-            "id": "upserts_q4",
+            "id": "upserts-q-huj5nh",
             "type": "mcq",
             "prompt": "What is the danger of `INSERT OR REPLACE`?",
             "choices": [
@@ -3910,7 +3910,7 @@
             "explanation": "Use DO UPDATE to change only some columns."
           },
           {
-            "id": "upserts_q5",
+            "id": "upserts-q-ywm40q",
             "type": "shortText",
             "prompt": "Which word in DO UPDATE stands for the row you tried to insert?",
             "validation": {
@@ -3920,7 +3920,7 @@
             "explanation": "`excluded.column`."
           },
           {
-            "id": "upserts_q6",
+            "id": "upserts-q-swt6ru",
             "type": "mcq",
             "prompt": "Which shorter form means the same as `ON CONFLICT DO NOTHING`?",
             "choices": [
@@ -3945,7 +3945,7 @@
             "explanation": "INSERT OR IGNORE skips rows that would break a constraint."
           },
           {
-            "id": "upserts_q7",
+            "id": "upserts-q-1qribuq",
             "type": "mcq",
             "prompt": "What do you need for ON CONFLICT to work?",
             "choices": [
@@ -3970,7 +3970,7 @@
             "explanation": "Without a constraint, there is never a conflict."
           },
           {
-            "id": "upserts_q8",
+            "id": "upserts-q-199g0om",
             "type": "mcq",
             "prompt": "Why might `INSERT … SELECT … FROM t ON CONFLICT` need `WHERE true`?",
             "choices": [
@@ -3995,7 +3995,7 @@
             "explanation": "A WHERE before ON CONFLICT removes the ambiguity."
           },
           {
-            "id": "upserts_q9",
+            "id": "upserts-q-pkj3un",
             "type": "mcq",
             "prompt": "Can DO UPDATE have its own WHERE?",
             "choices": [
@@ -4020,7 +4020,7 @@
             "explanation": "For example, only when the new value is higher."
           },
           {
-            "id": "upserts_q10",
+            "id": "upserts-q-2mt1ih",
             "type": "mcq",
             "prompt": "What does `MIN(amount + excluded.amount, 5.0)` do?",
             "choices": [
@@ -4132,7 +4132,7 @@
       },
       "challenges": [
         {
-          "id": "returning_ch1",
+          "id": "returning-what-is-her-id",
           "title": "Easy: What is her id?",
           "promptMarkdown": "Add `Hana Sato` (`hana.sato@example.com`, joined `2026-10-24`) and return her `id` and `name`.",
           "starterCode": "",
@@ -4151,11 +4151,11 @@
           }
         },
         {
-          "id": "returning_ch2",
+          "id": "returning-returned-and-shown",
           "title": "Easy: Returned, and shown",
           "promptMarkdown": "Mark loan 6 returned on `2026-10-24`, returning its `id`, `member_id` and `returned`.",
           "starterCode": "",
-          "hint": "`UPDATE loans SET returned = '2026-10-24' WHERE id = 6 RETURNING id, member_id, returned;`",
+          "hint": "Write the UPDATE as usual, then add `RETURNING` and the columns to show.",
           "solution": "UPDATE loans\nSET returned = '2026-10-24'\nWHERE id = 6\nRETURNING id, member_id, returned;",
           "validation": {
             "mode": "sql_tests",
@@ -4170,11 +4170,11 @@
           }
         },
         {
-          "id": "returning_ch3",
+          "id": "returning-which-fines-went",
           "title": "Easy: Which fines went",
           "promptMarkdown": "Delete the fines of 0 or less, returning the `member_id` of each deleted row.",
           "starterCode": "",
-          "hint": "`DELETE FROM fines WHERE amount <= 0 RETURNING member_id;`",
+          "hint": "Write the DELETE as usual, then add `RETURNING member_id`.",
           "solution": "DELETE FROM fines\nWHERE amount <= 0\nRETURNING member_id;",
           "validation": {
             "mode": "sql_tests",
@@ -4189,7 +4189,7 @@
           }
         },
         {
-          "id": "returning_ch4",
+          "id": "returning-new-due-dates",
           "title": "Medium: New due dates",
           "promptMarkdown": "Give every loan still out and due before `2026-10-24` one more week, returning each changed loan's `id` and new `due` date.",
           "starterCode": "",
@@ -4208,7 +4208,7 @@
           }
         },
         {
-          "id": "returning_ch5",
+          "id": "returning-ten-percent-shown",
           "title": "Medium: Ten percent, shown",
           "promptMarkdown": "Raise every fine by 10%, rounded to 2 decimals, returning `member_id` and the new `amount`.",
           "starterCode": "",
@@ -4227,7 +4227,7 @@
           }
         },
         {
-          "id": "returning_ch6",
+          "id": "returning-shelved-with-ids",
           "title": "Medium: Shelved, with ids",
           "promptMarkdown": "Copy the arrivals whose title isn't in `books` yet into `books` (copies missing count as 1, all available), returning the new books' `id` and `title`.",
           "starterCode": "",
@@ -4246,7 +4246,7 @@
           }
         },
         {
-          "id": "returning_ch7",
+          "id": "returning-one-out-how-many-left",
           "title": "Hard: One out, how many left",
           "promptMarkdown": "Lower book 4's `available` by 1, returning its `title`, the new `available` and the number of copies now on loan, called `on_loan`.",
           "starterCode": "",
@@ -4265,11 +4265,11 @@
           }
         },
         {
-          "id": "returning_ch8",
+          "id": "returning-a-record-of-what-went",
           "title": "Hard: A record of what went",
           "promptMarkdown": "Delete the loans returned before `2026-09-01`, returning the `id`, `member_id` and `returned` date of each.",
           "starterCode": "",
-          "hint": "`DELETE FROM loans WHERE returned < '2026-09-01' RETURNING id, member_id, returned;`",
+          "hint": "A DELETE with a WHERE on `returned`, then `RETURNING` with the three columns.",
           "solution": "DELETE FROM loans\nWHERE returned < '2026-09-01'\nRETURNING id, member_id, returned;",
           "validation": {
             "mode": "sql_tests",
@@ -4284,7 +4284,7 @@
           }
         },
         {
-          "id": "returning_ch9",
+          "id": "returning-upsert-shown",
           "title": "Expert: Upsert, shown",
           "promptMarkdown": "Add `1.0` to the fines of members 2 and 3 (creating rows where needed), returning `member_id` and the resulting `amount`.",
           "starterCode": "",
@@ -4303,7 +4303,7 @@
           }
         },
         {
-          "id": "returning_ch10",
+          "id": "returning-lend-them-all",
           "title": "Expert: Lend them all",
           "promptMarkdown": "Member 7 borrows every book by `S. Laine` or `H. Varga` today (borrowed `2026-10-24`, due `2026-11-07`). Add the loans and return the new loans' `id` and `book_id`.",
           "starterCode": "",
@@ -4326,7 +4326,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "returning_q1",
+            "id": "returning-q-1pzi46o",
             "type": "mcq",
             "prompt": "What does RETURNING add to an INSERT, UPDATE or DELETE?",
             "choices": [
@@ -4351,7 +4351,7 @@
             "explanation": "You see exactly which rows changed and how."
           },
           {
-            "id": "returning_q2",
+            "id": "returning-q-vwwziv",
             "type": "mcq",
             "prompt": "After an UPDATE, does RETURNING show the old or new values?",
             "choices": [
@@ -4376,7 +4376,7 @@
             "explanation": "It shows the rows as they are after the change."
           },
           {
-            "id": "returning_q3",
+            "id": "returning-q-10ume4g",
             "type": "mcq",
             "prompt": "After a DELETE, what does RETURNING show?",
             "choices": [
@@ -4401,7 +4401,7 @@
             "explanation": "A record of what went."
           },
           {
-            "id": "returning_q4",
+            "id": "returning-q-ny2pua",
             "type": "mcq",
             "prompt": "Which is the easiest way to get the id of a new row?",
             "choices": [
@@ -4426,7 +4426,7 @@
             "explanation": "It gives exactly the id SQLite assigned."
           },
           {
-            "id": "returning_q5",
+            "id": "returning-q-1vwyiz6",
             "type": "shortText",
             "prompt": "Which keyword, at the end of an INSERT, shows the inserted rows?",
             "validation": {
@@ -4436,7 +4436,7 @@
             "explanation": "`… RETURNING id, name;`"
           },
           {
-            "id": "returning_q6",
+            "id": "returning-q-1vnr5of",
             "type": "mcq",
             "prompt": "Can RETURNING calculate and rename, like `copies - available AS on_loan`?",
             "choices": [
@@ -4461,7 +4461,7 @@
             "explanation": "Expressions and AS work as in SELECT."
           },
           {
-            "id": "returning_q7",
+            "id": "returning-q-gp2j78",
             "type": "mcq",
             "prompt": "Can you use COUNT(*) after RETURNING?",
             "choices": [
@@ -4486,7 +4486,7 @@
             "explanation": "RETURNING gives one row per changed row."
           },
           {
-            "id": "returning_q8",
+            "id": "returning-q-1a6zt6i",
             "type": "mcq",
             "prompt": "In which order do RETURNING rows come?",
             "choices": [
@@ -4511,7 +4511,7 @@
             "explanation": "Don't rely on any order."
           },
           {
-            "id": "returning_q9",
+            "id": "returning-q-dppdxs",
             "type": "mcq",
             "prompt": "Does RETURNING work with an upsert?",
             "choices": [
@@ -4623,7 +4623,7 @@
       },
       "challenges": [
         {
-          "id": "changes_across_tables_ch1",
+          "id": "changes_across_tables-leaving-the-library",
           "title": "Easy: Leaving the library",
           "promptMarkdown": "Member 7 is leaving. In one transaction, delete their fines, their loans and then the member.",
           "starterCode": "",
@@ -4652,11 +4652,11 @@
           }
         },
         {
-          "id": "changes_across_tables_ch2",
+          "id": "changes_across_tables-full-name",
           "title": "Easy: Full name",
           "promptMarkdown": "The author `L. Brandt` should be written `Lea Brandt` on every book.",
           "starterCode": "",
-          "hint": "`UPDATE books SET author = 'Lea Brandt' WHERE author = 'L. Brandt';`",
+          "hint": "One UPDATE on `books` changes every row whose `author` matches.",
           "solution": "UPDATE books\nSET author = 'Lea Brandt'\nWHERE author = 'L. Brandt';",
           "validation": {
             "mode": "sql_tests",
@@ -4671,7 +4671,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch3",
+          "id": "changes_across_tables-cancel-a-loan",
           "title": "Easy: Cancel a loan",
           "promptMarkdown": "Loan 8 was a mistake. In one transaction, put its book back (raise `available` by 1, finding the book from the loan), then delete the loan.",
           "starterCode": "",
@@ -4695,7 +4695,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch4",
+          "id": "changes_across_tables-merge-carla",
           "title": "Medium: Merge Carla",
           "promptMarkdown": "Member 8 is a duplicate of member 3. In one transaction, move member 8's loans to member 3, then delete member 8.",
           "starterCode": "",
@@ -4719,7 +4719,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch5",
+          "id": "changes_across_tables-withdraw-a-book",
           "title": "Medium: Withdraw a book",
           "promptMarkdown": "Book 3 is being withdrawn. In one transaction, delete its loans and then the book.",
           "starterCode": "",
@@ -4743,7 +4743,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch6",
+          "id": "changes_across_tables-suspend-and-fine",
           "title": "Medium: Suspend and fine",
           "promptMarkdown": "In one transaction, set every member with an overdue loan (still out, due before `2026-10-24`) to `suspended`, and add `2.0` to each such member's fine, creating fine rows where needed.",
           "starterCode": "",
@@ -4767,7 +4767,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch7",
+          "id": "changes_across_tables-merge-every-duplicate",
           "title": "Hard: Merge every duplicate",
           "promptMarkdown": "Members with the same name are the same person. Move every loan to the lowest id among the members with that member's name, then delete the members that are no longer the lowest id of their name.",
           "starterCode": "",
@@ -4791,7 +4791,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch8",
+          "id": "changes_across_tables-close-suspended-accounts",
           "title": "Hard: Close suspended accounts",
           "promptMarkdown": "In one transaction, for every `suspended` member: put the books they still have back on the shelf (raise `available`), mark those loans returned on `2026-10-24`, delete their fines, and set their status to `closed`.",
           "starterCode": "",
@@ -4825,7 +4825,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch9",
+          "id": "changes_across_tables-overdue-day",
           "title": "Expert: Overdue day",
           "promptMarkdown": "Every overdue loan (still out, due before `2026-10-24`) comes back today. In one transaction: add 0.25 per day overdue to each member's fine (creating rows where needed), put the books back on the shelf, then mark the loans returned on `2026-10-24`.",
           "starterCode": "",
@@ -4854,7 +4854,7 @@
           }
         },
         {
-          "id": "changes_across_tables_ch10",
+          "id": "changes_across_tables-fines-from-scratch",
           "title": "Expert: Fines from scratch",
           "promptMarkdown": "Work the fines out again. In one transaction, delete all fines, then give each member 0.25 per day late, added up over their loans and rounded to 2 decimals. A loan is late if it was returned after its due date, or is still out and was due before `2026-10-24` (count up to today).",
           "starterCode": "",
@@ -4877,7 +4877,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "changes_across_tables_q1",
+            "id": "changes_across_tables-q-1ahsx2t",
             "type": "mcq",
             "prompt": "Why delete a member's loans and fines before the member?",
             "choices": [
@@ -4902,7 +4902,7 @@
             "explanation": "Children first, then the parent they point to."
           },
           {
-            "id": "changes_across_tables_q2",
+            "id": "changes_across_tables-q-f8olgf",
             "type": "mcq",
             "prompt": "Why put the steps of a task in one transaction?",
             "choices": [
@@ -4927,7 +4927,7 @@
             "explanation": "A half-finished task leaves the data inconsistent."
           },
           {
-            "id": "changes_across_tables_q3",
+            "id": "changes_across_tables-q-1mjyfol",
             "type": "mcq",
             "prompt": "When cancelling loan 8, why update books before deleting the loan?",
             "choices": [
@@ -4952,7 +4952,7 @@
             "explanation": "Read what you need before you change it."
           },
           {
-            "id": "changes_across_tables_q4",
+            "id": "changes_across_tables-q-4y10p7",
             "type": "mcq",
             "prompt": "Why move loans by member id, not by name?",
             "choices": [
@@ -4977,7 +4977,7 @@
             "explanation": "Keys identify exactly one row."
           },
           {
-            "id": "changes_across_tables_q5",
+            "id": "changes_across_tables-q-1k1gxr1",
             "type": "shortText",
             "prompt": "Which keyword makes a transaction's changes permanent?",
             "validation": {
@@ -4987,7 +4987,7 @@
             "explanation": "`BEGIN; … COMMIT;`"
           },
           {
-            "id": "changes_across_tables_q6",
+            "id": "changes_across_tables-q-qbvg9p",
             "type": "mcq",
             "prompt": "Which finds the duplicates to delete after merging by name?",
             "choices": [
@@ -5012,7 +5012,7 @@
             "explanation": "Keep the lowest id of each name; delete the rest."
           },
           {
-            "id": "changes_across_tables_q7",
+            "id": "changes_across_tables-q-qoddbw",
             "type": "mcq",
             "prompt": "In \"Overdue day\", why work out the fines first?",
             "choices": [
@@ -5037,7 +5037,7 @@
             "explanation": "After marking them returned, the WHERE would find no overdue loans."
           },
           {
-            "id": "changes_across_tables_q8",
+            "id": "changes_across_tables-q-1d6s7cb",
             "type": "mcq",
             "prompt": "What does `julianday(COALESCE(returned, '2026-10-24')) - julianday(due)` give?",
             "choices": [
@@ -5062,7 +5062,7 @@
             "explanation": "COALESCE uses today for loans not yet returned."
           },
           {
-            "id": "changes_across_tables_q9",
+            "id": "changes_across_tables-q-o180wc",
             "type": "mcq",
             "prompt": "Why delete all fines before inserting the recalculated ones?",
             "choices": [
@@ -5087,7 +5087,7 @@
             "explanation": "Starting from empty makes the new fines the whole truth."
           },
           {
-            "id": "changes_across_tables_q10",
+            "id": "changes_across_tables-q-18y02fm",
             "type": "mcq",
             "prompt": "What happens to member 8's loans if you delete member 8 without moving them?",
             "choices": [
@@ -5195,7 +5195,7 @@
       },
       "challenges": [
         {
-          "id": "proj_front_desk_ch1",
+          "id": "proj_front_desk-joining",
           "title": "Easy: Joining",
           "promptMarkdown": "`Hana Sato` (`hana.sato@example.com`) joins today. Add her and return her `id` so you can write it on her card.",
           "starterCode": "",
@@ -5214,7 +5214,7 @@
           }
         },
         {
-          "id": "proj_front_desk_ch2",
+          "id": "proj_front_desk-borrowing",
           "title": "Easy: Borrowing",
           "promptMarkdown": "Member 2 borrows book 7, due back on `2026-11-07`. In one transaction, add the loan and lower book 7's `available`.",
           "starterCode": "",
@@ -5238,7 +5238,7 @@
           }
         },
         {
-          "id": "proj_front_desk_ch3",
+          "id": "proj_front_desk-returning",
           "title": "Medium: Returning",
           "promptMarkdown": "Loan 3 comes back. In one transaction, raise the `available` of its book (found from the loan) and mark the loan returned today.",
           "starterCode": "",
@@ -5262,11 +5262,11 @@
           }
         },
         {
-          "id": "proj_front_desk_ch4",
+          "id": "proj_front_desk-renewing",
           "title": "Medium: Renewing",
           "promptMarkdown": "The borrower of loan 8 renews it: if it is still out, its new due date is 14 days from today.",
           "starterCode": "",
-          "hint": "`UPDATE loans SET due = date('2026-10-24', '+14 days') WHERE id = 8 AND returned IS NULL;`",
+          "hint": "`date('2026-10-24', '+14 days')` gives the new due date. Only change the loan if `returned IS NULL`.",
           "solution": "UPDATE loans\nSET due = date('2026-10-24', '+14 days')\nWHERE id = 8 AND returned IS NULL;",
           "validation": {
             "mode": "sql_tests",
@@ -5281,7 +5281,7 @@
           }
         },
         {
-          "id": "proj_front_desk_ch5",
+          "id": "proj_front_desk-paying-up",
           "title": "Hard: Paying up",
           "promptMarkdown": "Member 6 pays `3.0`. In one transaction, take it off their fine and delete their fine row if nothing is left to pay.",
           "starterCode": "",
@@ -5300,7 +5300,7 @@
           }
         },
         {
-          "id": "proj_front_desk_ch6",
+          "id": "proj_front_desk-reminders",
           "title": "Hard: Reminders",
           "promptMarkdown": "At closing time, set the status of every member with an overdue loan (still out, due before today) to `reminded`, and return their `id` and `name` for the reminder letters.",
           "starterCode": "",
@@ -5323,7 +5323,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_front_desk_q1",
+            "id": "proj_front_desk-q-171xl55",
             "type": "mcq",
             "prompt": "Which gives a new member's id straight away?",
             "choices": [
@@ -5348,7 +5348,7 @@
             "explanation": "RETURNING shows the inserted row."
           },
           {
-            "id": "proj_front_desk_q2",
+            "id": "proj_front_desk-q-rpvynf",
             "type": "mcq",
             "prompt": "Why lend a book in a transaction?",
             "choices": [
@@ -5373,7 +5373,7 @@
             "explanation": "Either both changes are kept or neither."
           },
           {
-            "id": "proj_front_desk_q3",
+            "id": "proj_front_desk-q-1ssysfj",
             "type": "mcq",
             "prompt": "When a book comes back, what happens to `available`?",
             "choices": [
@@ -5398,7 +5398,7 @@
             "explanation": "One more copy is on the shelf."
           },
           {
-            "id": "proj_front_desk_q4",
+            "id": "proj_front_desk-q-1n916fj",
             "type": "shortText",
             "prompt": "Which function moves a date, as in `___('2026-10-24', '+14 days')`?",
             "validation": {
@@ -5408,7 +5408,7 @@
             "explanation": "date() with a modifier."
           },
           {
-            "id": "proj_front_desk_q5",
+            "id": "proj_front_desk-q-m18b7k",
             "type": "mcq",
             "prompt": "Why `AND returned IS NULL` when renewing?",
             "choices": [
@@ -5433,7 +5433,7 @@
             "explanation": "Only loans still out can be renewed."
           },
           {
-            "id": "proj_front_desk_q6",
+            "id": "proj_front_desk-q-lekprx",
             "type": "mcq",
             "prompt": "After paying 3.0 of a 3.0 fine, what happens to the row?",
             "choices": [
@@ -5541,7 +5541,7 @@
       },
       "challenges": [
         {
-          "id": "proj_stock_take_ch1",
+          "id": "proj_stock_take-recount",
           "title": "Easy: Recount",
           "promptMarkdown": "Set every book's `available` to its copies minus its loans still out.",
           "starterCode": "",
@@ -5560,7 +5560,7 @@
           }
         },
         {
-          "id": "proj_stock_take_ch2",
+          "id": "proj_stock_take-the-wrong-way-round",
           "title": "Medium: The wrong way round",
           "promptMarkdown": "A book with more copies available than it owns must have its two numbers swapped. Swap `copies` and `available` for every such book.",
           "starterCode": "",
@@ -5579,7 +5579,7 @@
           }
         },
         {
-          "id": "proj_stock_take_ch3",
+          "id": "proj_stock_take-unpack-the-arrivals",
           "title": "Medium: Unpack the arrivals",
           "promptMarkdown": "In one transaction: add the arriving copies to books already on the shelf (same title), insert the other arrivals as new books (1 copy when the number is missing, all available), then empty `arrivals`.",
           "starterCode": "",
@@ -5603,7 +5603,7 @@
           }
         },
         {
-          "id": "proj_stock_take_ch4",
+          "id": "proj_stock_take-lost",
           "title": "Medium: Lost",
           "promptMarkdown": "Member 1 lost book 5 (loan 4). In one transaction: mark loan 4 returned today, take one copy off book 5 (its `available` stays as it is), and add a `10.0` replacement charge to member 1's fine, creating the row if needed.",
           "starterCode": "",
@@ -5632,7 +5632,7 @@
           }
         },
         {
-          "id": "proj_stock_take_ch5",
+          "id": "proj_stock_take-gathering-dust",
           "title": "Hard: Gathering dust",
           "promptMarkdown": "Withdraw the books that have no loan borrowed on or after `2026-09-01` and none still out. In one transaction, delete their loans, then the books.",
           "starterCode": "",
@@ -5656,7 +5656,7 @@
           }
         },
         {
-          "id": "proj_stock_take_ch6",
+          "id": "proj_stock_take-more-copies-of-the-popular-ones",
           "title": "Hard: More copies of the popular ones",
           "promptMarkdown": "In one transaction: recount `available` for every book, then give each book with no copies available one more copy (raise `copies` and `available` by 1), returning the `id`, `title`, `copies` and `available` of those books. Then commit.",
           "starterCode": "",
@@ -5679,7 +5679,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_stock_take_q1",
+            "id": "proj_stock_take-q-1sse5ve",
             "type": "mcq",
             "prompt": "What should `available` always be?",
             "choices": [
@@ -5704,7 +5704,7 @@
             "explanation": "Every copy is either on the shelf or out on loan."
           },
           {
-            "id": "proj_stock_take_q2",
+            "id": "proj_stock_take-q-qo6nlt",
             "type": "mcq",
             "prompt": "Does `SET copies = available, available = copies` really swap them?",
             "choices": [
@@ -5729,7 +5729,7 @@
             "explanation": "SET reads all the old values before changing anything."
           },
           {
-            "id": "proj_stock_take_q3",
+            "id": "proj_stock_take-q-1o9237d",
             "type": "mcq",
             "prompt": "When unpacking arrivals, why update the existing books before inserting the new ones?",
             "choices": [
@@ -5754,7 +5754,7 @@
             "explanation": "After the INSERT, every arrival's title would be in books."
           },
           {
-            "id": "proj_stock_take_q4",
+            "id": "proj_stock_take-q-16m6v6q",
             "type": "mcq",
             "prompt": "Why does a lost book lower `copies` but not `available`?",
             "choices": [
@@ -5779,7 +5779,7 @@
             "explanation": "The shelf has the same number of copies as before."
           },
           {
-            "id": "proj_stock_take_q5",
+            "id": "proj_stock_take-q-1mf1fne",
             "type": "shortText",
             "prompt": "Which keyword, at the end of an UPDATE, shows the changed rows?",
             "validation": {
@@ -5789,7 +5789,7 @@
             "explanation": "`… RETURNING id, title;`"
           },
           {
-            "id": "proj_stock_take_q6",
+            "id": "proj_stock_take-q-1ulpwvv",
             "type": "mcq",
             "prompt": "Why delete the loans before the books when withdrawing books?",
             "choices": [
@@ -5902,7 +5902,7 @@
       },
       "challenges": [
         {
-          "id": "proj_data_clean_up_ch1",
+          "id": "proj_data_clean_up-lower-case-emails",
           "title": "Medium: Lower-case emails",
           "promptMarkdown": "Change every email to lower case, updating only the rows that change.",
           "starterCode": "",
@@ -5921,7 +5921,7 @@
           }
         },
         {
-          "id": "proj_data_clean_up_ch2",
+          "id": "proj_data_clean_up-missing-statuses",
           "title": "Medium: Missing statuses",
           "promptMarkdown": "Set the status of every member whose status is missing to `active`.",
           "starterCode": "",
@@ -5940,7 +5940,7 @@
           }
         },
         {
-          "id": "proj_data_clean_up_ch3",
+          "id": "proj_data_clean_up-one-person-one-record",
           "title": "Hard: One person, one record",
           "promptMarkdown": "Members with the same name are the same person. In one transaction, move all loans to the lowest id for that name, then delete the other members with that name.",
           "starterCode": "",
@@ -5964,7 +5964,7 @@
           }
         },
         {
-          "id": "proj_data_clean_up_ch4",
+          "id": "proj_data_clean_up-typed-twice",
           "title": "Hard: Typed twice",
           "promptMarkdown": "Delete the duplicate loans (same member, book and borrowed date), keeping the lowest id of each.",
           "starterCode": "",
@@ -5983,7 +5983,7 @@
           }
         },
         {
-          "id": "proj_data_clean_up_ch5",
+          "id": "proj_data_clean_up-fines-that-make-sense",
           "title": "Hard: Fines that make sense",
           "promptMarkdown": "Delete the fines that belong to no member, and the fines of 0 or less, in one statement.",
           "starterCode": "",
@@ -6002,7 +6002,7 @@
           }
         },
         {
-          "id": "proj_data_clean_up_ch6",
+          "id": "proj_data_clean_up-counts-that-add-up",
           "title": "Hard: Counts that add up",
           "promptMarkdown": "In one transaction, first swap `copies` and `available` for the books where available is bigger than copies (they were typed the wrong way round), then recount `available` for every book from the loans still out.",
           "starterCode": "",
@@ -6025,7 +6025,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_data_clean_up_q1",
+            "id": "proj_data_clean_up-q-170xpor",
             "type": "mcq",
             "prompt": "Why `WHERE email <> LOWER(email)` when lowering emails?",
             "choices": [
@@ -6050,7 +6050,7 @@
             "explanation": "The rows-changed count then shows how many were fixed."
           },
           {
-            "id": "proj_data_clean_up_q2",
+            "id": "proj_data_clean_up-q-j9sus5",
             "type": "mcq",
             "prompt": "Which finds missing statuses?",
             "choices": [
@@ -6075,7 +6075,7 @@
             "explanation": "= NULL is never true."
           },
           {
-            "id": "proj_data_clean_up_q3",
+            "id": "proj_data_clean_up-q-1a4fwhz",
             "type": "mcq",
             "prompt": "When merging duplicates, why move the loans before deleting the members?",
             "choices": [
@@ -6100,7 +6100,7 @@
             "explanation": "After the DELETE, the duplicate ids would have no name to look up."
           },
           {
-            "id": "proj_data_clean_up_q4",
+            "id": "proj_data_clean_up-q-1bvpppk",
             "type": "mcq",
             "prompt": "Which keeps the first of each group of duplicate loans?",
             "choices": [
@@ -6125,7 +6125,7 @@
             "explanation": "Delete every id that is not the smallest of its group."
           },
           {
-            "id": "proj_data_clean_up_q5",
+            "id": "proj_data_clean_up-q-md3xi3",
             "type": "shortText",
             "prompt": "Which keyword joins two conditions so a row matching either one is deleted?",
             "validation": {
@@ -6135,7 +6135,7 @@
             "explanation": "`WHERE … OR …`."
           },
           {
-            "id": "proj_data_clean_up_q6",
+            "id": "proj_data_clean_up-q-1azypre",
             "type": "mcq",
             "prompt": "Why swap before recounting in \"Counts that add up\"?",
             "choices": [

@@ -7,12 +7,18 @@ import { writeFile, mkdir } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { COURSE } from './data/course.mjs'
+import { assertUnique, challengeId, questionId } from '../curriculum-ids.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const outDir = resolve(here, '../../public/content/sql')
 
+/** The items, after checking that no two share an id. */
+function unique(levelId, what, items) {
+  assertUnique(levelId, items.map((item) => item.id), what)
+  return items
+}
+
 function buildLevel(topic) {
-  const challengeIds = new Set()
   return {
     id: topic.id,
     title: topic.title,
@@ -25,18 +31,25 @@ function buildLevel(topic) {
       sandboxCode: topic.sandboxCode,
       readMore: topic.readMore,
     },
-    // Stable ids (topic + position) so regenerating keeps learners' saved progress.
-    challenges: topic.challenges.map((c, i) => {
-      const id = `${topic.id}_ch${i + 1}`
-      challengeIds.add(id)
-      return { id, ...c }
-    }),
+    // Permanent ids from the title or prompt (see ../curriculum-ids.mjs), so adding or
+    // removing an item doesn't move learners' progress onto another one.
+    challenges: unique(
+      topic.id,
+      'challenges',
+      topic.challenges.map((c) => {
+        return { id: challengeId(topic.id, c.title), ...c }
+      }),
+    ),
     test: {
       passingScorePercent: 70,
-      questions: topic.questions.map((q, i) => {
-        if (!q.explanation) throw new Error(`${topic.id} question ${i + 1} has no explanation`)
-        return { id: `${topic.id}_q${i + 1}`, ...q }
-      }),
+      questions: unique(
+        topic.id,
+        'questions',
+        topic.questions.map((q, i) => {
+          if (!q.explanation) throw new Error(`${topic.id} question ${i + 1} has no explanation`)
+          return { id: questionId(topic.id, q.prompt), ...q }
+        }),
+      ),
     },
     database: topic.database,
   }

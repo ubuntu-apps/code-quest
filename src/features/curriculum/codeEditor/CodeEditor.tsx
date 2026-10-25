@@ -4,6 +4,7 @@ import { CodeKeyBar, type KeyBarTarget } from './CodeKeyBar'
 import { CodeTextareaWithErrorLine } from './CodeTextareaWithErrorLine'
 import type { EditorError } from './CodeMirrorEditor'
 import { hasCoarsePointer } from './pointer'
+import type { SqlTable } from '../types'
 
 /** Downloaded on first use (see preloadCodeEditor), so pages without code stay light. */
 const CodeMirrorEditor = lazy(() => import('./CodeMirrorEditor'))
@@ -42,6 +43,8 @@ export interface CodeEditorProps {
   errorUiEpoch?: number
   /** More names to suggest while typing, such as the ones a challenge's instructions use. */
   suggestNames?: string[]
+  /** SQL lessons: the database's tables, for suggesting a table's columns after `table.` or an alias. */
+  sqlTables?: SqlTable[]
 }
 
 /**
@@ -63,6 +66,7 @@ export function CodeEditor({
   errorSummary = null,
   errorUiEpoch = 0,
   suggestNames,
+  sqlTables,
 }: CodeEditorProps) {
   const hintId = useId()
   const [touch] = useState(hasCoarsePointer)
@@ -159,6 +163,7 @@ export function CodeEditor({
             onFocusChange={onFocusChange}
             onReady={onReady}
             suggestNames={suggestNames}
+            sqlTables={sqlTables}
           />
         </Suspense>
       </EditorLoadBoundary>

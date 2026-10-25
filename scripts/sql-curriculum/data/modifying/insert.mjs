@@ -27,7 +27,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'A new member', {
       prompt: "Add a member called `Hana Sato` with the email `hana.sato@example.com`, who joined on `2026-10-24`.",
-      hint: "`INSERT INTO members (name, email, joined) VALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');`",
+      hint: '`INSERT INTO members (columns…) VALUES (values…);` with the values in the same order as the columns. Leave out `id`: SQLite fills it in.',
       solution: "INSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');",
       checks: [AFTER.members],
     }),
@@ -39,7 +39,7 @@ export default makeTopic({
     }),
     query('medium', 'A new loan', {
       prompt: "Member 7 borrows book 4 today (`2026-10-24`), due back on `2026-11-07`. Add the loan (it hasn't been returned, so leave `returned` out).",
-      hint: "`INSERT INTO loans (member_id, book_id, borrowed, due) VALUES (7, 4, '2026-10-24', '2026-11-07');`",
+      hint: 'List the four columns you fill (`member_id`, `book_id`, `borrowed`, `due`), then their values in the same order.',
       solution: "INSERT INTO loans (member_id, book_id, borrowed, due)\nVALUES (7, 4, '2026-10-24', '2026-11-07');",
       checks: [AFTER.loans],
     }),

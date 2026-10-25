@@ -56,7 +56,7 @@ export default makeTopic({
     }),
     query('hard', 'Water less', {
       prompt: "Change the details of every product whose water need is `low` so that it is `very low` instead. Leave the rest of the JSON as it is.",
-      hint: "`UPDATE products SET details = json_set(details, '$.care.water', 'very low') WHERE json_extract(details, '$.care.water') = 'low';`",
+      hint: "`json_set(details, '$.care.water', …)` changes one value inside the JSON. Use `json_extract` with the same path in the WHERE.",
       solution: "UPDATE products\nSET details = json_set(details, '$.care.water', 'very low')\nWHERE json_extract(details, '$.care.water') = 'low';",
       checks: [DETAILS],
     }),

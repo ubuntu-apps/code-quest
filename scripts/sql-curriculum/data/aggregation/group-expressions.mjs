@@ -26,7 +26,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Sales by weekday', {
       prompt: "Show each day of the week as a number (`strftime('%w', sale_date)`, called `weekday`) and its number of sales, called `sales`.",
-      hint: "`SELECT strftime('%w', sale_date) AS weekday, COUNT(*) AS sales FROM sales GROUP BY weekday;`",
+      hint: 'Give the `strftime` expression the name `weekday`, then group by that name.',
       solution: "SELECT strftime('%w', sale_date) AS weekday, COUNT(*) AS sales FROM sales GROUP BY weekday;",
     }),
     query('easy', 'Big and small', {

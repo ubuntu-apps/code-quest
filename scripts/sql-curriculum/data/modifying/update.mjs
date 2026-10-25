@@ -25,13 +25,13 @@ export default makeTopic({
   challenges: [
     query('easy', 'Returned today', {
       prompt: "Loan 6 came back today. Set its `returned` date to `2026-10-24`.",
-      hint: "`UPDATE loans SET returned = '2026-10-24' WHERE id = 6;`",
+      hint: '`UPDATE loans SET column = value WHERE …;` Without the WHERE, every loan would change.',
       solution: "UPDATE loans\nSET returned = '2026-10-24'\nWHERE id = 6;",
       checks: [AFTER.loans],
     }),
     query('easy', 'New email', {
       prompt: "Member 1 has a new email: `ama.m@example.com`. Update it.",
-      hint: "`UPDATE members SET email = 'ama.m@example.com' WHERE id = 1;`",
+      hint: '`UPDATE members SET … WHERE id = 1;` Text goes in single quotes.',
       solution: "UPDATE members\nSET email = 'ama.m@example.com'\nWHERE id = 1;",
       checks: [AFTER.members],
     }),

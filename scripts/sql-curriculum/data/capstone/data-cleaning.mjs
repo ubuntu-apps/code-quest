@@ -67,7 +67,7 @@ export default makeTopic({
     }),
     query('hard', 'Remove the duplicates', {
       prompt: "Delete the duplicate sign-ups, keeping the row with the lowest id for each cleaned email.",
-      hint: '`DELETE FROM signups WHERE id NOT IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)));` (NOT IN is safe here: MIN(id) is never NULL.)',
+      hint: 'A subquery with `MIN(id)` and `GROUP BY lower(trim(email))` finds the row to keep for each email. Delete the rows whose id is NOT IN that list. (NOT IN is safe here: MIN(id) is never NULL.)',
       solution: 'DELETE FROM signups\nWHERE id NOT IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)));',
       checks: [ROWS],
     }),

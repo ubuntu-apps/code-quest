@@ -145,7 +145,7 @@ export function useChallenges(
       playSound('checkFail')
       const fails = (failedChecks.current[ch.id] ?? 0) + 1
       failedChecks.current[ch.id] = fails
-      if (fails === 3) countEvent(`challenge-stuck/${ch.id}`, `Stuck (3 failed checks): ${ch.title}`)
+      if (fails === 3) countEvent(`challenge-stuck/${languageId}/${ch.id}`, `Stuck (3 failed checks): ${ch.title}`)
       return
     }
 
@@ -163,7 +163,7 @@ export function useChallenges(
     onActivity()
     if (firstSolve) {
       onXp?.(answerSeen ? CHALLENGE_XP_AFTER_ANSWER : CHALLENGE_XP)
-      countEvent(`challenge-solved/${ch.id}`, `Solved: ${ch.title}`)
+      countEvent(`challenge-solved/${languageId}/${ch.id}`, `Solved: ${ch.title}`)
     }
   }
 
@@ -227,6 +227,9 @@ export function useChallenges(
     const viewed = prev.answersViewed ?? []
     if (prev.challengesCompleted.includes(challengeId) || viewed.includes(challengeId)) return
     saveProgress(languageId, level.id, { ...prev, answersViewed: [...viewed, challengeId] })
+    // Opening the answer before solving is the clearest sign a challenge is too hard.
+    const title = level.challenges.find((c) => c.id === challengeId)?.title ?? challengeId
+    countEvent(`challenge-answer-shown/${languageId}/${challengeId}`, `Answer shown before solving: ${title}`)
   }
 
   /** Stops a running check or Run (only Python code can be stopped). */

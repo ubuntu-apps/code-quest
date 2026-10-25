@@ -1,10 +1,11 @@
 import { loadProgress, progressKey, type LevelProgress } from './progressStorage'
 import type { Challenge, LanguageBundle, Level } from './types'
+import { migrateLanguageIds } from './idMigration'
 
 /**
- * Progress is stored by challenge id, and ids follow the challenge's position in its
- * lesson (`topic_ch3`). When a lesson is rewritten, a saved "done" mark or draft would
- * otherwise land on whatever challenge now sits in that position. So each challenge's
+ * Progress is stored by challenge id. Ids are permanent (made from the challenge's title;
+ * see scripts/curriculum-ids.mjs), but a challenge can still be rewritten under the same
+ * title, and a saved "done" mark or draft would then belong to the old version. So each challenge's
  * progress remembers a fingerprint of the challenge (its title and how it is checked),
  * and progress for a challenge whose fingerprint has changed is dropped. A passed quiz
  * is kept, so rewritten content never locks a learner out of later lessons.
@@ -100,7 +101,8 @@ export function reconcileLanguageProgress(languageId: string, bundle: LanguageBu
   } catch {
     return false
   }
-  let dropped = false
+  // Progress saved under the old position-based ids moves to the permanent ids first.
+  let dropped = migrateLanguageIds(languageId, bundle, challengeFingerprint)
   for (const { file } of bundle.sections) {
     for (const level of file.levels) {
       if (reconcileLevelProgress(languageId, level, trustUnstamped)) dropped = true

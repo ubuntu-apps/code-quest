@@ -1,6 +1,7 @@
 /** @typedef {'easy'|'medium'|'hard'|'expert'} Difficulty */
 
 import { existsSync, readFileSync } from 'node:fs'
+import { assertUnique, challengeId, questionId } from '../curriculum-ids.mjs'
 
 /**
  * Extra checks that run a challenge's code again with other starting values, so an answer
@@ -103,6 +104,12 @@ export function challenge(spec) {
  * @param {object} topic
  */
 export function buildLevel(topic) {
+  // Permanent ids from the title or prompt (see ../curriculum-ids.mjs), so adding or
+  // removing an item doesn't move learners' progress onto another one.
+  const challenges = topic.challenges.map((c) => withVariations({ ...c, id: challengeId(topic.id, c.title) }))
+  const questions = topic.questions.map((q) => ({ ...q, id: questionId(topic.id, q.prompt) }))
+  assertUnique(topic.id, challenges.map((c) => c.id), 'challenges')
+  assertUnique(topic.id, questions.map((q) => q.id), 'questions')
   return {
     id: topic.id,
     title: topic.title,
@@ -115,11 +122,10 @@ export function buildLevel(topic) {
       sandboxCode: topic.sandboxCode,
       readMore: topic.readMore,
     },
-    // Stable IDs (topic + position) so regenerating keeps learners' saved progress.
-    challenges: topic.challenges.map((c, i) => withVariations({ ...c, id: `${topic.id}_ch${i + 1}` })),
+    challenges,
     test: {
       passingScorePercent: 70,
-      questions: topic.questions.map((q, i) => ({ ...q, id: `${topic.id}_q${i + 1}` })),
+      questions,
     },
   }
 }

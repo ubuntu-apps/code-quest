@@ -34,7 +34,7 @@ export default makeTopic({
     }),
     query('easy', 'Every species once', {
       prompt: 'Show each `species` in the `pets` table once.',
-      hint: '`SELECT DISTINCT species FROM pets;`',
+      hint: '`DISTINCT` after SELECT shows each value once.',
       solution: 'SELECT DISTINCT species FROM pets;',
     }),
     query('easy', 'The oldest book', {
@@ -44,7 +44,7 @@ export default makeTopic({
     }),
     query('medium', 'Genres A to Z', {
       prompt: 'Show each book `genre` once, in alphabetical order.',
-      hint: '`SELECT DISTINCT genre FROM books ORDER BY genre;`',
+      hint: '`DISTINCT` shows each genre once, and ORDER BY sorts them.',
       solution: 'SELECT DISTINCT genre FROM books ORDER BY genre;',
     }),
     query('medium', 'The two youngest', {
@@ -64,7 +64,7 @@ export default makeTopic({
     }),
     query('hard', 'Who owns what', {
       prompt: 'For the pets that have an owner, show each combination of `owner` and `species` once.',
-      hint: '`SELECT DISTINCT owner, species FROM pets WHERE owner IS NOT NULL;`',
+      hint: '`DISTINCT` with two columns shows each pair once. Leave out pets without an owner with `IS NOT NULL`.',
       solution: 'SELECT DISTINCT owner, species FROM pets WHERE owner IS NOT NULL;',
     }),
     query('expert', 'Cheapest sci-fi or fantasy', {

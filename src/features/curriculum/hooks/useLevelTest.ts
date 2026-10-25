@@ -48,7 +48,7 @@ export function useLevelTest(
     if (answeredIds.length > 0) {
       onActivity()
       countEvent(
-        `quiz-${graded.passed ? 'passed' : 'failed'}/${level.id}`,
+        `quiz-${graded.passed ? 'passed' : 'failed'}/${languageId}/${level.id}`,
         `Quiz ${graded.passed ? 'passed' : 'failed'}: ${level.title}`,
       )
     }

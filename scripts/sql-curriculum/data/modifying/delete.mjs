@@ -25,19 +25,19 @@ export default makeTopic({
   challenges: [
     query('easy', 'One loan', {
       prompt: 'Delete loan 10.',
-      hint: '`DELETE FROM loans WHERE id = 10;`',
+      hint: '`DELETE FROM table WHERE …;` Pick the row by its `id`.',
       solution: 'DELETE FROM loans\nWHERE id = 10;',
       checks: [AFTER.loans],
     }),
     query('easy', 'All shelved', {
       prompt: 'Every arrival has been dealt with. Remove all rows from `arrivals`.',
-      hint: '`DELETE FROM arrivals;` with no WHERE.',
+      hint: 'A DELETE with no WHERE removes every row (and keeps the table).',
       solution: 'DELETE FROM arrivals;',
       checks: [AFTER.arrivals],
     }),
     query('easy', 'Nothing owed', {
       prompt: 'Delete the fines whose amount is `0` or less.',
-      hint: '`DELETE FROM fines WHERE amount <= 0;`',
+      hint: '`DELETE FROM fines WHERE …` with a condition on `amount` (`<=`).',
       solution: 'DELETE FROM fines\nWHERE amount <= 0;',
       checks: [AFTER.fines],
     }),

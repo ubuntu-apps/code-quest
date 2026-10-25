@@ -35,7 +35,7 @@
       },
       "challenges": [
         {
-          "id": "shop_orders_ch1",
+          "id": "shop_orders-sales-so-far",
           "title": "Easy: Sales so far",
           "promptMarkdown": "Show one row: the number of paid orders (`paid_orders`) and their `revenue` (2 decimals).",
           "starterCode": "",
@@ -47,7 +47,7 @@
           }
         },
         {
-          "id": "shop_orders_ch2",
+          "id": "shop_orders-order-totals",
           "title": "Easy: Order totals",
           "promptMarkdown": "For each paid order, show `order_id`, `ordered_on`, the customer's name (`customer`) and the order's `total` (2 decimals). In date order, then by order id.",
           "starterCode": "",
@@ -59,7 +59,7 @@
           }
         },
         {
-          "id": "shop_orders_ch3",
+          "id": "shop_orders-signed-up-never-ordered",
           "title": "Easy: Signed up, never ordered",
           "promptMarkdown": "Show the `name` and `email` of customers who have never placed an order of any kind. Sort by name.",
           "starterCode": "",
@@ -71,7 +71,7 @@
           }
         },
         {
-          "id": "shop_orders_ch4",
+          "id": "shop_orders-month-by-month",
           "title": "Medium: Month by month",
           "promptMarkdown": "For each month with paid orders (`month`, like `2026-05`), show the number of paid `orders` and the `revenue` (2 decimals). In month order.",
           "starterCode": "",
@@ -83,7 +83,7 @@
           }
         },
         {
-          "id": "shop_orders_ch5",
+          "id": "shop_orders-best-seller-in-each-category",
           "title": "Medium: Best seller in each category",
           "promptMarkdown": "For each `category`, show its best-selling product by units in paid orders (`product`, and `units`). Keep ties. Sort by category, then product.",
           "starterCode": "",
@@ -95,7 +95,7 @@
           }
         },
         {
-          "id": "shop_orders_ch6",
+          "id": "shop_orders-average-basket",
           "title": "Medium: Average basket",
           "promptMarkdown": "For each customer with paid orders, show `name`, their number of paid `orders` and their average order value (`average_order`, 2 decimals). Highest average first, then by name.",
           "starterCode": "",
@@ -107,7 +107,7 @@
           }
         },
         {
-          "id": "shop_orders_ch7",
+          "id": "shop_orders-up-or-down",
           "title": "Hard: Up or down",
           "promptMarkdown": "For each month with paid orders, show `month`, `revenue` (2 decimals) and the change from the month before as a percentage (`change_pct`, 1 decimal; empty for the first month). In month order.",
           "starterCode": "",
@@ -119,7 +119,7 @@
           }
         },
         {
-          "id": "shop_orders_ch8",
+          "id": "shop_orders-coming-back",
           "title": "Hard: Coming back",
           "promptMarkdown": "Show the customers with two or more paid orders: `name`, `orders`, their first and last paid order dates (`first_order`, `last_order`) and the whole days between them (`days_between`). Most orders first, then by name.",
           "starterCode": "",
@@ -131,7 +131,7 @@
           }
         },
         {
-          "id": "shop_orders_ch9",
+          "id": "shop_orders-what-the-discounts-cost",
           "title": "Expert: What the discounts cost",
           "promptMarkdown": "For each product sold below its list price in paid orders, show the product's name (`product`), the units sold at a discount (`discounted_units`) and the money given away (`given_away`: list price minus price charged, times quantity; 2 decimals). Most given away first, then by product.",
           "starterCode": "",
@@ -143,7 +143,7 @@
           }
         },
         {
-          "id": "shop_orders_ch10",
+          "id": "shop_orders-customer-summary",
           "title": "Expert: Customer summary",
           "promptMarkdown": "Create a view `customer_summary` with every customer's `name`, `city`, paid `orders` (0 if none), `revenue` (2 decimals, 0 if none), date of their last paid order (`last_order`, empty if none) and `place` (RANK by revenue, highest first).",
           "starterCode": "",
@@ -171,7 +171,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "shop_orders_q1",
+            "id": "shop_orders-q-4bh11r",
             "type": "mcq",
             "prompt": "Why is revenue `quantity * unit_price` and not `quantity * price`?",
             "choices": [
@@ -196,7 +196,7 @@
             "explanation": "The list price can change, and discounts lower the charge."
           },
           {
-            "id": "shop_orders_q2",
+            "id": "shop_orders-q-wxj1xq",
             "type": "mcq",
             "prompt": "Why `COUNT(DISTINCT o.id)` after joining orders to their items?",
             "choices": [
@@ -221,7 +221,7 @@
             "explanation": "Joining to a \"many\" table multiplies the rows."
           },
           {
-            "id": "shop_orders_q3",
+            "id": "shop_orders-q-1ofv2m",
             "type": "mcq",
             "prompt": "Which finds customers with no orders at all?",
             "choices": [
@@ -246,7 +246,7 @@
             "explanation": "NOT EXISTS is safe even if a column has NULLs."
           },
           {
-            "id": "shop_orders_q4",
+            "id": "shop_orders-q-1yphm46",
             "type": "mcq",
             "prompt": "What does `strftime('%Y-%m', ordered_on)` give for '2026-07-30'?",
             "choices": [
@@ -271,7 +271,7 @@
             "explanation": "Good for grouping by month."
           },
           {
-            "id": "shop_orders_q5",
+            "id": "shop_orders-q-180p3zu",
             "type": "shortText",
             "prompt": "Which window function gives the previous month's revenue in a month-by-month list?",
             "validation": {
@@ -281,7 +281,7 @@
             "explanation": "`LAG(revenue) OVER (ORDER BY month)`."
           },
           {
-            "id": "shop_orders_q6",
+            "id": "shop_orders-q-h5d42d",
             "type": "mcq",
             "prompt": "Why RANK for the best seller in each category?",
             "choices": [
@@ -306,7 +306,7 @@
             "explanation": "Kitchen has a tie."
           },
           {
-            "id": "shop_orders_q7",
+            "id": "shop_orders-q-19544gx",
             "type": "mcq",
             "prompt": "Why is change_pct empty for the first month?",
             "choices": [
@@ -331,7 +331,7 @@
             "explanation": "Anything with NULL is NULL."
           },
           {
-            "id": "shop_orders_q8",
+            "id": "shop_orders-q-bh9u2o",
             "type": "mcq",
             "prompt": "Where does the \"two or more paid orders\" filter go?",
             "choices": [
@@ -356,7 +356,7 @@
             "explanation": "Conditions on groups go in HAVING."
           },
           {
-            "id": "shop_orders_q9",
+            "id": "shop_orders-q-5y9mq0",
             "type": "mcq",
             "prompt": "Why does the view LEFT JOIN customers to the paid totals?",
             "choices": [
@@ -381,7 +381,7 @@
             "explanation": "COALESCE turns their NULLs into 0."
           },
           {
-            "id": "shop_orders_q10",
+            "id": "shop_orders-q-1d8pzww",
             "type": "mcq",
             "prompt": "Why build a report from the smallest correct query up?",
             "choices": [
@@ -479,7 +479,7 @@
       },
       "challenges": [
         {
-          "id": "school_grades_ch1",
+          "id": "school_grades-class-lists",
           "title": "Easy: Class lists",
           "promptMarkdown": "Show every enrolment as the course title (`course`) and the student's name (`student`). Sort by course, then student.",
           "starterCode": "",
@@ -491,7 +491,7 @@
           }
         },
         {
-          "id": "school_grades_ch2",
+          "id": "school_grades-class-sizes",
           "title": "Easy: Class sizes",
           "promptMarkdown": "Show every course's `title`, `teacher` and number of `students` (0 if none). Most students first, then by title.",
           "starterCode": "",
@@ -503,7 +503,7 @@
           }
         },
         {
-          "id": "school_grades_ch3",
+          "id": "school_grades-how-each-assessment-went",
           "title": "Easy: How each assessment went",
           "promptMarkdown": "For each assessment, show the course title (`course`), the assessment's title (`assessment`), how many handed it in (`handed_in`) and their average score (`average`, 1 decimal). In course order, then by due date.",
           "starterCode": "",
@@ -515,7 +515,7 @@
           }
         },
         {
-          "id": "school_grades_ch4",
+          "id": "school_grades-missing-work",
           "title": "Medium: Missing work",
           "promptMarkdown": "List the work that wasn't handed in: the student's `name`, the course title (`course`) and the assessment title (`assessment`). Sort by name, course, then assessment.",
           "starterCode": "",
@@ -527,7 +527,7 @@
           }
         },
         {
-          "id": "school_grades_ch5",
+          "id": "school_grades-course-marks",
           "title": "Medium: Course marks",
           "promptMarkdown": "Show each student's mark on each course they take: `course`, `name` and `mark` (weighted, with missing work as 0, 1 decimal). Sort by course, then highest mark, then name.",
           "starterCode": "",
@@ -539,7 +539,7 @@
           }
         },
         {
-          "id": "school_grades_ch6",
+          "id": "school_grades-letter-grades",
           "title": "Medium: Letter grades",
           "promptMarkdown": "The same, with a `grade` beside each mark: `A` from 80, `B` from 65, `C` from 50, `F` below. Columns `course`, `name`, `mark`, `grade`. Sort by course, then highest mark, then name.",
           "starterCode": "",
@@ -551,7 +551,7 @@
           }
         },
         {
-          "id": "school_grades_ch7",
+          "id": "school_grades-class-rank",
           "title": "Hard: Class rank",
           "promptMarkdown": "Show each student's `place` on each course (RANK by mark, highest first; equal marks share a place): `course`, `name`, `mark` (1 decimal), `place`. Sort by course, then place, then name.",
           "starterCode": "",
@@ -563,7 +563,7 @@
           }
         },
         {
-          "id": "school_grades_ch8",
+          "id": "school_grades-grade-table",
           "title": "Hard: Grade table",
           "promptMarkdown": "For each course with students, show `course` and how many students got each grade, as columns `a`, `b`, `c` and `f`. Sort by course.",
           "starterCode": "",
@@ -575,7 +575,7 @@
           }
         },
         {
-          "id": "school_grades_ch9",
+          "id": "school_grades-progress",
           "title": "Expert: Progress",
           "promptMarkdown": "For each student and course with at least two results, show `name`, `course`, the score of their earliest handed-in assessment (`first_score`), of their latest (`last_score`) and the `change`. Biggest rise first, then by name, then course.",
           "starterCode": "",
@@ -587,7 +587,7 @@
           }
         },
         {
-          "id": "school_grades_ch10",
+          "id": "school_grades-report-cards",
           "title": "Expert: Report cards",
           "promptMarkdown": "Show one row per student with courses: `name`, number of `courses`, their `average` course mark (1 decimal), and their best course (`best_course`: highest mark, the first title alphabetically on a tie). Highest average first, then by name.",
           "starterCode": "",
@@ -603,7 +603,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "school_grades_q1",
+            "id": "school_grades-q-24rtnf",
             "type": "mcq",
             "prompt": "Why start the marks from enrolments and assessments, not from results?",
             "choices": [
@@ -628,7 +628,7 @@
             "explanation": "Start from what should exist, then LEFT JOIN what does."
           },
           {
-            "id": "school_grades_q2",
+            "id": "school_grades-q-2f73j5",
             "type": "mcq",
             "prompt": "Why does the LEFT JOIN to results match on both assessment and student?",
             "choices": [
@@ -653,7 +653,7 @@
             "explanation": "Matching on the assessment alone would bring in everyone's scores."
           },
           {
-            "id": "school_grades_q3",
+            "id": "school_grades-q-1g4kmf6",
             "type": "mcq",
             "prompt": "What does `COALESCE(r.score, 0)` do for missing work?",
             "choices": [
@@ -678,7 +678,7 @@
             "explanation": "A missing hand-in is worth nothing."
           },
           {
-            "id": "school_grades_q4",
+            "id": "school_grades-q-5vb00m",
             "type": "mcq",
             "prompt": "Why multiply whole numbers first and divide by 100.0 at the end?",
             "choices": [
@@ -703,7 +703,7 @@
             "explanation": "Decimal steps like 0.3 * 88 can leave tiny rounding differences."
           },
           {
-            "id": "school_grades_q5",
+            "id": "school_grades-q-1n781af",
             "type": "shortText",
             "prompt": "Which aggregate keyword limits COUNT(*) to some rows, as in counting the A grades?",
             "validation": {
@@ -713,7 +713,7 @@
             "explanation": "`COUNT(*) FILTER (WHERE mark >= 80)`."
           },
           {
-            "id": "school_grades_q6",
+            "id": "school_grades-q-tpqloi",
             "type": "mcq",
             "prompt": "Which finds work not handed in?",
             "choices": [
@@ -738,7 +738,7 @@
             "explanation": "There is no row to find a NULL in."
           },
           {
-            "id": "school_grades_q7",
+            "id": "school_grades-q-wrnba5",
             "type": "mcq",
             "prompt": "Two students both have 88.0 on Maths. With RANK, what is the next student's place?",
             "choices": [
@@ -763,7 +763,7 @@
             "explanation": "RANK skips after a tie."
           },
           {
-            "id": "school_grades_q8",
+            "id": "school_grades-q-8vqdrb",
             "type": "mcq",
             "prompt": "Why ORDER BY mark DESC, course for the best course?",
             "choices": [
@@ -788,7 +788,7 @@
             "explanation": "ROW_NUMBER needs an order that doesn't tie."
           },
           {
-            "id": "school_grades_q9",
+            "id": "school_grades-q-1k591kx",
             "type": "mcq",
             "prompt": "Why can't the SELECT list use the alias `last_score` to work out `change`?",
             "choices": [
@@ -813,7 +813,7 @@
             "explanation": "Repeat the expression, or use a CTE."
           },
           {
-            "id": "school_grades_q10",
+            "id": "school_grades-q-1y95rnv",
             "type": "mcq",
             "prompt": "`COUNT(*) OVER (PARTITION BY student_id, course_id)` gives…",
             "choices": [
@@ -915,7 +915,7 @@
       },
       "challenges": [
         {
-          "id": "library_loans_ch1",
+          "id": "library_loans-out-right-now",
           "title": "Easy: Out right now",
           "promptMarkdown": "Show every copy that is out now: the book's `title`, the member's name (`member`) and `due_on`. Sort by due date, then title.",
           "starterCode": "",
@@ -927,7 +927,7 @@
           }
         },
         {
-          "id": "library_loans_ch2",
+          "id": "library_loans-overdue",
           "title": "Easy: Overdue",
           "promptMarkdown": "Show the loans that are overdue today: `title`, `member` and whole days overdue (`days_overdue`). Most overdue first, then by title.",
           "starterCode": "",
@@ -939,7 +939,7 @@
           }
         },
         {
-          "id": "library_loans_ch3",
+          "id": "library_loans-loans-by-genre",
           "title": "Easy: Loans by genre",
           "promptMarkdown": "Show each `genre` and its number of `loans`, ever. Most first, then by genre.",
           "starterCode": "",
@@ -951,7 +951,7 @@
           }
         },
         {
-          "id": "library_loans_ch4",
+          "id": "library_loans-on-the-shelf",
           "title": "Medium: On the shelf",
           "promptMarkdown": "For every book, show `title`, its number of `copies`, how many are out now (`out`) and how many are on the shelf (`available`). Sort by title.",
           "starterCode": "",
@@ -963,7 +963,7 @@
           }
         },
         {
-          "id": "library_loans_ch5",
+          "id": "library_loans-late-returns",
           "title": "Medium: Late returns",
           "promptMarkdown": "Show the loans that came back late: `member`, `title` and whole days late (`days_late`). Latest first, then by member, then title.",
           "starterCode": "",
@@ -975,7 +975,7 @@
           }
         },
         {
-          "id": "library_loans_ch6",
+          "id": "library_loans-fines",
           "title": "Medium: Fines",
           "promptMarkdown": "The fine is 0.25 for each day late: for loans returned late, up to the day they came back; for overdue loans still out, up to today. Show each member who owes something: `name` and `fine` (2 decimals). Highest first, then by name.",
           "starterCode": "",
@@ -987,7 +987,7 @@
           }
         },
         {
-          "id": "library_loans_ch7",
+          "id": "library_loans-most-borrowed-in-each-genre",
           "title": "Hard: Most borrowed in each genre",
           "promptMarkdown": "For each `genre`, show its most borrowed book (`title`, and `loans`). Keep ties. Sort by genre, then title.",
           "starterCode": "",
@@ -999,7 +999,7 @@
           }
         },
         {
-          "id": "library_loans_ch8",
+          "id": "library_loans-how-long-books-stay-out",
           "title": "Hard: How long books stay out",
           "promptMarkdown": "For returned loans, show per `genre`: how many (`returned`), the average days kept (`average_days`, 1 decimal) and the longest (`longest_days`). Sort by genre.",
           "starterCode": "",
@@ -1011,7 +1011,7 @@
           }
         },
         {
-          "id": "library_loans_ch9",
+          "id": "library_loans-every-month",
           "title": "Expert: Every month",
           "promptMarkdown": "Show every month (`month`, like `2026-05`) from the month of the first loan to the month of the last, with the number of loans borrowed in it (`loans`, 0 if none). In order.",
           "starterCode": "",
@@ -1023,7 +1023,7 @@
           }
         },
         {
-          "id": "library_loans_ch10",
+          "id": "library_loans-every-copy-out",
           "title": "Expert: Every copy out",
           "promptMarkdown": "Show the books with no copy on the shelf right now: `title`, `copies`, and the earliest due date among their open loans (`back_by`). Soonest first, then by title.",
           "starterCode": "",
@@ -1039,7 +1039,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "library_loans_q1",
+            "id": "library_loans-q-1p5prd3",
             "type": "mcq",
             "prompt": "How do you know a copy is still out?",
             "choices": [
@@ -1064,7 +1064,7 @@
             "explanation": "returned_on is filled in when it comes back."
           },
           {
-            "id": "library_loans_q2",
+            "id": "library_loans-q-89ddw6",
             "type": "mcq",
             "prompt": "How does a loan reach its book's title?",
             "choices": [
@@ -1089,7 +1089,7 @@
             "explanation": "A loan is of a copy, and a copy is of a book."
           },
           {
-            "id": "library_loans_q3",
+            "id": "library_loans-q-uhx5jx",
             "type": "mcq",
             "prompt": "Why can dates like '2026-10-06' be compared with `<`?",
             "choices": [
@@ -1114,7 +1114,7 @@
             "explanation": "Year first, then month, then day, all with leading zeros."
           },
           {
-            "id": "library_loans_q4",
+            "id": "library_loans-q-8zd9i0",
             "type": "mcq",
             "prompt": "When is a loan overdue today?",
             "choices": [
@@ -1139,7 +1139,7 @@
             "explanation": "A loan due today isn't overdue yet."
           },
           {
-            "id": "library_loans_q5",
+            "id": "library_loans-q-yffiu5",
             "type": "shortText",
             "prompt": "Which function turns a YYYY-MM-DD date into a day number you can subtract?",
             "validation": {
@@ -1149,7 +1149,7 @@
             "explanation": "`julianday('2026-10-24') - julianday(due_on)`."
           },
           {
-            "id": "library_loans_q6",
+            "id": "library_loans-q-wxq7mq",
             "type": "mcq",
             "prompt": "Why count copies and open loans in separate subqueries?",
             "choices": [
@@ -1174,7 +1174,7 @@
             "explanation": "Each one-to-many join multiplies the rows of the other."
           },
           {
-            "id": "library_loans_q7",
+            "id": "library_loans-q-128ndd1",
             "type": "mcq",
             "prompt": "What does `COALESCE(returned_on, '2026-10-24')` do in the fines?",
             "choices": [
@@ -1199,7 +1199,7 @@
             "explanation": "It doesn't change the data, only the calculation."
           },
           {
-            "id": "library_loans_q8",
+            "id": "library_loans-q-aiujer",
             "type": "mcq",
             "prompt": "Why does the month list need a recursive CTE?",
             "choices": [
@@ -1224,7 +1224,7 @@
             "explanation": "A calendar of months fills the gap."
           },
           {
-            "id": "library_loans_q9",
+            "id": "library_loans-q-1yzp1bu",
             "type": "mcq",
             "prompt": "What does `date('2026-05-18', 'start of month')` give?",
             "choices": [
@@ -1249,7 +1249,7 @@
             "explanation": "Then +1 month steps from one month start to the next."
           },
           {
-            "id": "library_loans_q10",
+            "id": "library_loans-q-15vqpyx",
             "type": "mcq",
             "prompt": "In \"Every copy out\", what does the HAVING compare?",
             "choices": [
@@ -1350,7 +1350,7 @@
       },
       "challenges": [
         {
-          "id": "data_cleaning_ch1",
+          "id": "data_cleaning-look-first",
           "title": "Easy: Look first",
           "promptMarkdown": "Show each `plan` exactly as it was typed, with how many sign-ups have it (`signups`). Sort by plan.",
           "starterCode": "",
@@ -1362,7 +1362,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch2",
+          "id": "data_cleaning-tidy-plans",
           "title": "Easy: Tidy plans",
           "promptMarkdown": "Now show each plan cleaned up (lower case, no spaces at either end) as `plan`, with its number of `signups`. Sort by plan.",
           "starterCode": "",
@@ -1374,7 +1374,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch3",
+          "id": "data_cleaning-blank-is-not-null",
           "title": "Easy: Blank is not NULL",
           "promptMarkdown": "Show one row counting `referred_by`: real NULLs (`missing`), blank text such as `''` or spaces (`blank`) and actual codes (`codes`).",
           "starterCode": "",
@@ -1386,7 +1386,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch4",
+          "id": "data_cleaning-signed-up-twice",
           "title": "Medium: Signed up twice",
           "promptMarkdown": "Show each cleaned email (`email`: lower case, trimmed) that appears more than once, with how many times (`signups`). Sort by email.",
           "starterCode": "",
@@ -1398,7 +1398,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch5",
+          "id": "data_cleaning-one-date-format",
           "title": "Medium: One date format",
           "promptMarkdown": "Show each sign-up's `id`, `signed_up` as typed, and the date as `YYYY-MM-DD` (`iso`). Dates like `05/03/2026` are day/month/year. In id order.",
           "starterCode": "",
@@ -1410,7 +1410,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch6",
+          "id": "data_cleaning-clean-in-place",
           "title": "Medium: Clean in place",
           "promptMarkdown": "Clean every row with one UPDATE: trim `full_name`; trim and lower-case `email`; trim `city` and give it a capital first letter and lower case after (`Leeds`); lower-case and trim `plan`; turn blank `referred_by` into NULL (and trim the codes); and rewrite day/month/year dates as `YYYY-MM-DD`.",
           "starterCode": "",
@@ -1429,7 +1429,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch7",
+          "id": "data_cleaning-which-ones-go",
           "title": "Hard: Which ones go",
           "promptMarkdown": "List the duplicate sign-ups to remove: every row whose cleaned email already appeared with a lower id. Show `id`, the cleaned `email` and the id that is kept (`keep_id`). In id order.",
           "starterCode": "",
@@ -1441,11 +1441,11 @@
           }
         },
         {
-          "id": "data_cleaning_ch8",
+          "id": "data_cleaning-remove-the-duplicates",
           "title": "Hard: Remove the duplicates",
           "promptMarkdown": "Delete the duplicate sign-ups, keeping the row with the lowest id for each cleaned email.",
           "starterCode": "",
-          "hint": "`DELETE FROM signups WHERE id NOT IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)));` (NOT IN is safe here: MIN(id) is never NULL.)",
+          "hint": "A subquery with `MIN(id)` and `GROUP BY lower(trim(email))` finds the row to keep for each email. Delete the rows whose id is NOT IN that list. (NOT IN is safe here: MIN(id) is never NULL.)",
           "solution": "DELETE FROM signups\nWHERE id NOT IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)));",
           "validation": {
             "mode": "sql_tests",
@@ -1460,7 +1460,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch9",
+          "id": "data_cleaning-phone-numbers",
           "title": "Expert: Phone numbers",
           "promptMarkdown": "Show each sign-up's `id`, its phone with only the digits kept (`digits`: no spaces, dashes or brackets; empty stays empty, NULL stays NULL) and `valid`: 1 if the digits are 11 long and start with `07`, otherwise 0. In id order.",
           "starterCode": "",
@@ -1472,7 +1472,7 @@
           }
         },
         {
-          "id": "data_cleaning_ch10",
+          "id": "data_cleaning-a-clean-table",
           "title": "Expert: A clean table",
           "promptMarkdown": "Create `customers` with `id` (INTEGER PRIMARY KEY), `name` (TEXT NOT NULL), `email` (TEXT NOT NULL UNIQUE), `city` (TEXT), `phone` (TEXT), `signed_up` (TEXT NOT NULL), `plan` (TEXT NOT NULL, one of `basic`, `pro`, `team`) and `referred_by` (TEXT). Fill it from signups with one cleaned row per email: keep the lowest id's row and its id, clean every column as in Clean in place, and store phones as digits, with NULL instead of an invalid one.",
           "starterCode": "",
@@ -1500,7 +1500,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "data_cleaning_q1",
+            "id": "data_cleaning-q-u36d4a",
             "type": "mcq",
             "prompt": "What is the safe order for cleaning data?",
             "choices": [
@@ -1525,7 +1525,7 @@
             "explanation": "Nothing changes until the cleaned version looks right."
           },
           {
-            "id": "data_cleaning_q2",
+            "id": "data_cleaning-q-16oj58y",
             "type": "mcq",
             "prompt": "Why does `GROUP BY plan` show 'Basic' and 'basic ' separately?",
             "choices": [
@@ -1550,7 +1550,7 @@
             "explanation": "lower(trim(plan)) evens them out."
           },
           {
-            "id": "data_cleaning_q3",
+            "id": "data_cleaning-q-1mn5bo",
             "type": "mcq",
             "prompt": "What does `NULLIF(trim(referred_by), '')` give for '  '?",
             "choices": [
@@ -1575,7 +1575,7 @@
             "explanation": "Trimmed to an empty string, which NULLIF turns into NULL."
           },
           {
-            "id": "data_cleaning_q4",
+            "id": "data_cleaning-q-17q64hv",
             "type": "mcq",
             "prompt": "What does `LIKE '__/__/____'` match?",
             "choices": [
@@ -1600,7 +1600,7 @@
             "explanation": "_ matches any single character."
           },
           {
-            "id": "data_cleaning_q5",
+            "id": "data_cleaning-q-1m6g2k9",
             "type": "shortText",
             "prompt": "Which function removes spaces from both ends of a text?",
             "validation": {
@@ -1610,7 +1610,7 @@
             "explanation": "`trim(email)`."
           },
           {
-            "id": "data_cleaning_q6",
+            "id": "data_cleaning-q-ea4mu7",
             "type": "mcq",
             "prompt": "How do you find people who signed up twice?",
             "choices": [
@@ -1635,7 +1635,7 @@
             "explanation": "The raw emails differ in case and spaces."
           },
           {
-            "id": "data_cleaning_q7",
+            "id": "data_cleaning-q-raro92",
             "type": "mcq",
             "prompt": "Why is `id NOT IN (SELECT MIN(id) …)` safe in the DELETE?",
             "choices": [
@@ -1660,7 +1660,7 @@
             "explanation": "NOT IN goes wrong only when the list contains a NULL."
           },
           {
-            "id": "data_cleaning_q8",
+            "id": "data_cleaning-q-px0k94",
             "type": "mcq",
             "prompt": "What does `replace(phone, '-', '')` do?",
             "choices": [
@@ -1685,7 +1685,7 @@
             "explanation": "Nest replace() once for each character to remove."
           },
           {
-            "id": "data_cleaning_q9",
+            "id": "data_cleaning-q-104i7w0",
             "type": "mcq",
             "prompt": "Why copy the cleaned rows into a new table with constraints?",
             "choices": [
@@ -1710,7 +1710,7 @@
             "explanation": "Cleaning once is good; preventing new mess is better."
           },
           {
-            "id": "data_cleaning_q10",
+            "id": "data_cleaning-q-12trdjq",
             "type": "mcq",
             "prompt": "Which number marks the row to keep in `ROW_NUMBER() OVER (PARTITION BY lower(trim(email)) ORDER BY id)`?",
             "choices": [
@@ -1789,7 +1789,7 @@
       },
       "challenges": [
         {
-          "id": "booking_system_ch1",
+          "id": "booking_system-cottages",
           "title": "Easy: Cottages",
           "promptMarkdown": "Create `cottages` with `id` (INTEGER PRIMARY KEY), `name` (TEXT, NOT NULL, UNIQUE), `sleeps` (INTEGER, NOT NULL, more than 0) and `nightly_rate` (REAL, NOT NULL). Fill it from `cottage_sheet`, in name order.",
           "starterCode": "",
@@ -1818,7 +1818,7 @@
           }
         },
         {
-          "id": "booking_system_ch2",
+          "id": "booking_system-guests",
           "title": "Easy: Guests",
           "promptMarkdown": "Keep step 1, then create `guests` with `id` (INTEGER PRIMARY KEY), `name` (TEXT, NOT NULL) and `email` (TEXT, NOT NULL, UNIQUE). Fill it with one row per email in `requests`, in email order.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\n",
@@ -1842,7 +1842,7 @@
           }
         },
         {
-          "id": "booking_system_ch3",
+          "id": "booking_system-bookings",
           "title": "Easy: Bookings",
           "promptMarkdown": "Keep steps 1 and 2, then create `bookings`: `id` (INTEGER PRIMARY KEY), `guest_id` (INTEGER, NOT NULL, references guests), `cottage_id` (INTEGER, NOT NULL, references cottages), `arrive` and `depart` (TEXT, NOT NULL), `party` (INTEGER, NOT NULL, more than 0), and a table CHECK that `depart > arrive`.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\n",
@@ -1871,7 +1871,7 @@
           }
         },
         {
-          "id": "booking_system_ch4",
+          "id": "booking_system-move-the-requests-across",
           "title": "Medium: Move the requests across",
           "promptMarkdown": "Keep steps 1 to 3, then fill `bookings` from `requests`, in request id order. Leave out requests for more people than the cottage sleeps.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\n",
@@ -1890,7 +1890,7 @@
           }
         },
         {
-          "id": "booking_system_ch5",
+          "id": "booking_system-stays-and-prices",
           "title": "Medium: Stays and prices",
           "promptMarkdown": "Keep steps 1 to 4, then show every booking: the guest's name (`guest`), the `cottage` name, `arrive`, the number of `nights` and the `cost` (nights times the nightly rate). Sort by arrival, then cottage.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\n",
@@ -1902,7 +1902,7 @@
           }
         },
         {
-          "id": "booking_system_ch6",
+          "id": "booking_system-double-bookings",
           "title": "Medium: Double bookings",
           "promptMarkdown": "Keep steps 1 to 4, then find the clashes: pairs of bookings for the same cottage whose stays overlap. Show the `cottage`, the earlier booking's id (`first_booking`) and the later one's (`second_booking`). Sort by first_booking, then second_booking.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\n",
@@ -1914,7 +1914,7 @@
           }
         },
         {
-          "id": "booking_system_ch7",
+          "id": "booking_system-cancel-the-clashes",
           "title": "Hard: Cancel the clashes",
           "promptMarkdown": "Keep steps 1 to 4, then delete every booking that clashes with an earlier one (a lower id) for the same cottage. The first request wins.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\n",
@@ -1933,7 +1933,7 @@
           }
         },
         {
-          "id": "booking_system_ch8",
+          "id": "booking_system-fast-lookups",
           "title": "Hard: Fast lookups",
           "promptMarkdown": "Keep steps 1 to 4 and the DELETE, then create an index called `bookings_cottage_arrive` so that looking up one cottage's bookings from a date, like `SELECT * FROM bookings WHERE cottage_id = 1 AND arrive >= '2026-10-10'`, is a SEARCH.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\n",
@@ -1957,7 +1957,7 @@
           }
         },
         {
-          "id": "booking_system_ch9",
+          "id": "booking_system-cottage-summary",
           "title": "Expert: Cottage summary",
           "promptMarkdown": "Keep everything so far, then create a view `cottage_summary` with every cottage (`cottage`), its number of `bookings`, the `nights` booked and the `revenue` (2 decimals), all 0 for a cottage with no bookings.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\nCREATE INDEX bookings_cottage_arrive ON bookings (cottage_id, arrive);\n\n",
@@ -1981,7 +1981,7 @@
           }
         },
         {
-          "id": "booking_system_ch10",
+          "id": "booking_system-october-calendar",
           "title": "Expert: October calendar",
           "promptMarkdown": "Keep everything so far, then show every night of October 2026 (`night`) for the first cottage by name, with the name of the guest staying that night (`guest`; empty when it is free). In date order.",
           "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\nCREATE INDEX bookings_cottage_arrive ON bookings (cottage_id, arrive);\n\nCREATE VIEW cottage_summary AS\nSELECT c.name AS cottage,\n       COUNT(b.id) AS bookings,\n       COALESCE(SUM(julianday(b.depart) - julianday(b.arrive)), 0) AS nights,\n       ROUND(COALESCE(SUM((julianday(b.depart) - julianday(b.arrive)) * c.nightly_rate), 0), 2) AS revenue\nFROM cottages c\nLEFT JOIN bookings b ON b.cottage_id = c.id\nGROUP BY c.id, c.name;\n\n",
@@ -1997,7 +1997,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "booking_system_q1",
+            "id": "booking_system-q-m9mdu7",
             "type": "mcq",
             "prompt": "Why do guests get their own table instead of a name and email on every booking?",
             "choices": [
@@ -2022,7 +2022,7 @@
             "explanation": "That is normalisation."
           },
           {
-            "id": "booking_system_q2",
+            "id": "booking_system-q-13u0stf",
             "type": "mcq",
             "prompt": "Why fill guests with `GROUP BY guest_email`?",
             "choices": [
@@ -2047,7 +2047,7 @@
             "explanation": "UNIQUE on email would refuse the repeats otherwise."
           },
           {
-            "id": "booking_system_q3",
+            "id": "booking_system-q-apzv9o",
             "type": "mcq",
             "prompt": "Arriving on the 2nd and leaving on the 5th is how many nights?",
             "choices": [
@@ -2072,7 +2072,7 @@
             "explanation": "The nights of the 2nd, 3rd and 4th."
           },
           {
-            "id": "booking_system_q4",
+            "id": "booking_system-q-1iddpv",
             "type": "mcq",
             "prompt": "When do two stays at the same cottage clash?",
             "choices": [
@@ -2097,7 +2097,7 @@
             "explanation": "`a.arrive < b.depart AND b.arrive < a.depart`."
           },
           {
-            "id": "booking_system_q5",
+            "id": "booking_system-q-18kxek5",
             "type": "shortText",
             "prompt": "Which keyword, in the bookings table, makes guest_id point to a row of guests?",
             "validation": {
@@ -2107,7 +2107,7 @@
             "explanation": "`guest_id INTEGER NOT NULL REFERENCES guests (id)`."
           },
           {
-            "id": "booking_system_q6",
+            "id": "booking_system-q-w8viq8",
             "type": "mcq",
             "prompt": "Why `a.id < b.id` in the clash join?",
             "choices": [
@@ -2132,7 +2132,7 @@
             "explanation": "Without it, every clash shows twice and every booking clashes with itself."
           },
           {
-            "id": "booking_system_q7",
+            "id": "booking_system-q-1t6ci1s",
             "type": "mcq",
             "prompt": "Why does the request id order matter when filling bookings?",
             "choices": [
@@ -2157,7 +2157,7 @@
             "explanation": "ids are given in the order rows are inserted."
           },
           {
-            "id": "booking_system_q8",
+            "id": "booking_system-q-z1suwm",
             "type": "mcq",
             "prompt": "Which index serves `WHERE cottage_id = 1 AND arrive >= …`?",
             "choices": [
@@ -2182,7 +2182,7 @@
             "explanation": "The equality column first, then the range."
           },
           {
-            "id": "booking_system_q9",
+            "id": "booking_system-q-ve6k8c",
             "type": "mcq",
             "prompt": "Why LEFT JOIN bookings in the cottage summary?",
             "choices": [
@@ -2207,7 +2207,7 @@
             "explanation": "COALESCE turns its NULL sums into 0."
           },
           {
-            "id": "booking_system_q10",
+            "id": "booking_system-q-11qqfgl",
             "type": "mcq",
             "prompt": "In the calendar, why `n.night < b.depart` and not `<=`?",
             "choices": [

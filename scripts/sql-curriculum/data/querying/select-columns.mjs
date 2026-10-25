@@ -28,7 +28,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Title and author', {
       prompt: 'Show the `title` and `author` of every book.',
-      hint: 'List both columns with a comma between them: `SELECT title, author FROM books;`',
+      hint: 'List both columns, with a comma between them.',
       solution: 'SELECT title, author FROM books;',
     }),
     query('easy', 'Name and price', {
@@ -43,7 +43,7 @@ export default makeTopic({
     }),
     query('medium', 'Rename a column', {
       prompt: "Show each pet's name, but call the column `pet`.",
-      hint: 'Write `AS pet` after the column: `SELECT name AS pet FROM pets;`',
+      hint: 'Write `AS pet` after the column.',
       solution: 'SELECT name AS pet FROM pets;',
     }),
     query('medium', 'Fix the commas', {
@@ -54,7 +54,7 @@ export default makeTopic({
     }),
     query('hard', 'Two new names', {
       prompt: 'Show every book\'s title in a column called `book` and its author in a column called `writer`.',
-      hint: 'Each column gets its own `AS`: `SELECT title AS book, author AS writer FROM books;`',
+      hint: 'Each column gets its own `AS`.',
       solution: 'SELECT title AS book, author AS writer FROM books;',
     }),
     query('hard', 'A name with a space', {
@@ -64,12 +64,12 @@ export default makeTopic({
     }),
     query('expert', 'A pet card', {
       prompt: 'For every pet, show three columns: the name called `pet`, the owner called `owner_name`, and the age called `years`.',
-      hint: '`SELECT name AS pet, owner AS owner_name, age AS years FROM pets;`',
+      hint: 'Three columns, each followed by `AS` and its new name, with commas between them.',
       solution: 'SELECT name AS pet, owner AS owner_name, age AS years FROM pets;',
     }),
     query('expert', 'The same column twice', {
       prompt: "Show each product's `name` and `price`, and then the price again in a column called `old_price`.",
-      hint: 'A column can appear more than once: `SELECT name, price, price AS old_price FROM products;`',
+      hint: 'A column can appear more than once in the SELECT list. Give the second one a name with `AS`.',
       solution: 'SELECT name, price, price AS old_price FROM products;',
     }),
   ],

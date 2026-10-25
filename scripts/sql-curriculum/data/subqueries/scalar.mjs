@@ -52,7 +52,7 @@ export default makeTopic({
     }),
     query('medium', 'Premium out of all', {
       prompt: 'In one row, show the number of premium listeners (`premium`) and the number of all listeners (`total`), each from its own subquery.',
-      hint: "`SELECT (SELECT COUNT(*) FROM listeners WHERE plan = 'premium') AS premium, (SELECT COUNT(*) FROM listeners) AS total;`",
+      hint: 'Each column is a subquery in brackets, `(SELECT COUNT(*) FROM …)`, with its name after `AS`. No FROM is needed after them.',
       solution: "SELECT (SELECT COUNT(*) FROM listeners WHERE plan = 'premium') AS premium,\n       (SELECT COUNT(*) FROM listeners) AS total;",
     }),
     query('hard', 'Fix the misuse', {

@@ -37,7 +37,7 @@ const frontDesk = makeProject('easy', {
     }),
     query('medium', 'Renewing', {
       prompt: "The borrower of loan 8 renews it: if it is still out, its new due date is 14 days from today.",
-      hint: "`UPDATE loans SET due = date('2026-10-24', '+14 days') WHERE id = 8 AND returned IS NULL;`",
+      hint: "`date('2026-10-24', '+14 days')` gives the new due date. Only change the loan if `returned IS NULL`.",
       solution: "UPDATE loans\nSET due = date('2026-10-24', '+14 days')\nWHERE id = 8 AND returned IS NULL;",
       checks: [AFTER.loans],
     }),

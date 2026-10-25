@@ -37,7 +37,7 @@ export default makeTopic({
     }),
     query('easy', 'Forgiven', {
       prompt: "Set the fines of all `inactive` members to `0`.",
-      hint: "`UPDATE fines SET amount = 0 WHERE member_id IN (SELECT id FROM members WHERE status = 'inactive');`",
+      hint: "Find the inactive members' ids with a subquery on `members`, and use `WHERE member_id IN (…)`.",
       solution: "UPDATE fines\nSET amount = 0\nWHERE member_id IN (SELECT id FROM members WHERE status = 'inactive');",
       checks: [AFTER.fines],
     }),
@@ -55,7 +55,7 @@ export default makeTopic({
     }),
     query('medium', 'Single copies, longer loans', {
       prompt: "Loans of books with only one copy now last 21 days. Using `UPDATE … FROM books`, set `due` to 21 days after `borrowed` for the loans still out of such books.",
-      hint: "`UPDATE loans SET due = date(loans.borrowed, '+21 days') FROM books WHERE books.id = loans.book_id AND books.copies = 1 AND loans.returned IS NULL;`",
+      hint: "With `UPDATE loans SET … FROM books`, join the tables in the WHERE (`books.id = loans.book_id`), then add the conditions on copies and returned. `date(loans.borrowed, '+21 days')` gives the new date.",
       solution: "UPDATE loans\nSET due = date(loans.borrowed, '+21 days')\nFROM books\nWHERE books.id = loans.book_id\n  AND books.copies = 1\n  AND loans.returned IS NULL;",
       checks: [AFTER.loans],
     }),

@@ -129,7 +129,7 @@ export function countScreen(pathname: string): void {
 }
 
 /**
- * A milestone, such as `quiz-passed/variables`. Names are made from course ids only,
+ * A milestone, such as `quiz-passed/python/variables`. Names are made from course ids only,
  * never from anything a learner typed.
  */
 export function countEvent(name: string, title?: string): void {

@@ -32,7 +32,7 @@ export default makeTopic({
     }),
     query('easy', 'Only if new', {
       prompt: "Give members 2 and 3 a fine of `5.0`, but leave any existing fine as it is. Use `ON CONFLICT (member_id) DO NOTHING`.",
-      hint: '`INSERT INTO fines (member_id, amount) VALUES (2, 5.0), (3, 5.0) ON CONFLICT (member_id) DO NOTHING;`',
+      hint: 'Insert both rows in one `VALUES (…), (…)` list, then add the ON CONFLICT clause at the end.',
       solution: 'INSERT INTO fines (member_id, amount)\nVALUES (2, 5.0), (3, 5.0)\nON CONFLICT (member_id) DO NOTHING;',
       checks: [AFTER.fines],
     }),

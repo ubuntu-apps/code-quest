@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported } from '../sandboxSupport'
@@ -18,6 +18,7 @@ import { PythonErrorPanel } from './PythonErrorPanel'
 import { ValueDiff } from './ValueDiff'
 import { HighlightedCode } from './HighlightedCode'
 import { reportProblemUrl } from '../reportProblem'
+import { countEvent } from '../../../lib/analytics'
 import {
   EditableMarkdown,
   EditableText,
@@ -59,6 +60,13 @@ interface ChallengeCardProps {
   next?: { label: string; go: () => void }
   /** SQL lessons: the tables the answer can use. */
   tables?: SqlTable[]
+  /** SQL lessons: the SQL that makes the database, for peeking at a table's rows. */
+  setupSql?: string
+}
+
+/** The course a challenge belongs to, from how it is checked (for usage counts). */
+function languageOf(mode: Challenge['validation']['mode']): string {
+  return mode === 'sql_tests' ? 'sql' : mode === 'r_tests' ? 'r' : 'python'
 }
 
 export function ChallengeCard({
@@ -87,6 +95,7 @@ export function ChallengeCard({
   onToggleErrorExpanded,
   next,
   tables,
+  setupSql,
 }: ChallengeCardProps) {
   const { isEditingLocal } = useEditorMode()
   // Admin mode (for testing) opens answers straight away, without the XP penalty.
@@ -94,6 +103,8 @@ export function ChallengeCard({
   // Challenges solved before the lesson was opened start folded, so the open ones stand out.
   const [collapsed, setCollapsed] = useState(() => done && !isEditingLocal)
   const [showHint, setShowHint] = useState(false)
+  // Counted once per visit: how many learners needed the hint, not how often it was toggled.
+  const hintCounted = useRef(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const hintText = ch.hint ?? ch.hints?.[0]
   const mode = ch.validation.mode
@@ -220,7 +231,17 @@ export function ChallengeCard({
           </>
         )}
         <div className="cq-challenge-help-row">
-          <button type="button" className="cq-btn cq-btn--sm" onClick={() => setShowHint((v) => !v)}>
+          <button
+            type="button"
+            className="cq-btn cq-btn--sm"
+            onClick={() => {
+              if (!showHint && !hintCounted.current) {
+                hintCounted.current = true
+                countEvent(`challenge-hint/${languageOf(mode)}/${ch.id}`, `Hint opened: ${ch.title}`)
+              }
+              setShowHint((v) => !v)
+            }}
+          >
             {showHint ? 'Hide hint' : 'Hint'}
           </button>
           <button
@@ -248,12 +269,13 @@ export function ChallengeCard({
             {ch.solution ? <HighlightedCode code={ch.solution} /> : 'No answer available for this challenge yet.'}
           </pre>
         ) : null}
-        {isSql && tables ? <SqlTablesNote tables={tables} /> : null}
+        {isSql && tables ? <SqlTablesNote tables={tables} setupSql={setupSql} /> : null}
         <label className="cq-label" id={`code-label-${ch.id}`} htmlFor={`code-${ch.id}`}>
           Your answer
         </label>
         <CodeEditor
           suggestNames={promptNames}
+          sqlTables={isSql ? tables : undefined}
           id={`code-${ch.id}`}
           labelId={`code-label-${ch.id}`}
           language={mode === 'r_tests' ? 'plain' : isSql ? 'sql' : 'python'}

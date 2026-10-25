@@ -27,19 +27,19 @@ export default makeTopic({
   challenges: [
     query('easy', 'An email column', {
       prompt: 'Add an `email` column (TEXT) to `contacts`.',
-      hint: '`ALTER TABLE contacts ADD COLUMN email TEXT;`',
+      hint: '`ALTER TABLE table ADD COLUMN name TYPE;`',
       solution: 'ALTER TABLE contacts ADD COLUMN email TEXT;',
       checks: [columns('contacts')],
     }),
     query('easy', 'Mobile, not phone', {
       prompt: 'Rename the `phone` column of `contacts` to `mobile`.',
-      hint: '`ALTER TABLE contacts RENAME COLUMN phone TO mobile;`',
+      hint: '`ALTER TABLE … RENAME COLUMN old TO new;`',
       solution: 'ALTER TABLE contacts RENAME COLUMN phone TO mobile;',
       checks: [columns('contacts'), rows('contacts', 'id')],
     }),
     query('easy', 'No longer needed', {
       prompt: 'Delete the whole `contacts` table.',
-      hint: '`DROP TABLE contacts;`',
+      hint: '`DROP TABLE` removes a table with all its rows.',
       solution: 'DROP TABLE contacts;',
       checks: [tables],
     }),
@@ -51,13 +51,13 @@ export default makeTopic({
     }),
     query('medium', 'People, not contacts', {
       prompt: 'Rename the table `contacts` to `people`.',
-      hint: '`ALTER TABLE contacts RENAME TO people;`',
+      hint: '`ALTER TABLE old RENAME TO new;`',
       solution: 'ALTER TABLE contacts RENAME TO people;',
       checks: [tables, rows('people', 'id')],
     }),
     query('medium', 'No more notes', {
       prompt: 'Remove the `notes` column from `contacts`.',
-      hint: '`ALTER TABLE contacts DROP COLUMN notes;`',
+      hint: '`ALTER TABLE … DROP COLUMN …;`',
       solution: 'ALTER TABLE contacts DROP COLUMN notes;',
       checks: [columns('contacts'), rows('contacts', 'id')],
     }),

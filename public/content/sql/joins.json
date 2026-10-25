@@ -40,11 +40,11 @@
       },
       "challenges": [
         {
-          "id": "keys_relationships_ch1",
+          "id": "keys_relationships-ana-s-id",
           "title": "Easy: Ana's id",
           "promptMarkdown": "Show the `id` of the customer called `Ana Silva`.",
           "starterCode": "",
-          "hint": "`SELECT id FROM customers WHERE name = 'Ana Silva';`",
+          "hint": "Filter `customers` with WHERE on the `name` column. Text goes in single quotes.",
           "solution": "SELECT id FROM customers WHERE name = 'Ana Silva';",
           "validation": {
             "mode": "sql_tests",
@@ -52,7 +52,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch2",
+          "id": "keys_relationships-orders-of-customer-1",
           "title": "Easy: Orders of customer 1",
           "promptMarkdown": "Show the `id` and `order_date` of the orders placed by the customer whose id is 1.",
           "starterCode": "",
@@ -64,11 +64,11 @@
           }
         },
         {
-          "id": "keys_relationships_ch3",
+          "id": "keys_relationships-lines-of-order-5",
           "title": "Easy: Lines of order 5",
           "promptMarkdown": "Show the `product_id` and `quantity` of each line of order 5 (from `order_items`).",
           "starterCode": "",
-          "hint": "`SELECT product_id, quantity FROM order_items WHERE order_id = 5;`",
+          "hint": "Each row of `order_items` has an `order_id`. Keep the rows where it is 5.",
           "solution": "SELECT product_id, quantity FROM order_items WHERE order_id = 5;",
           "validation": {
             "mode": "sql_tests",
@@ -76,7 +76,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch4",
+          "id": "keys_relationships-tom-s-team",
           "title": "Medium: Tom's team",
           "promptMarkdown": "Show the `name` of the employees whose manager is employee 2.",
           "starterCode": "",
@@ -88,7 +88,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch5",
+          "id": "keys_relationships-orders-per-customer-id",
           "title": "Medium: Orders per customer id",
           "promptMarkdown": "Show each `customer_id` in `orders` and how many orders it has, called `orders`.",
           "starterCode": "",
@@ -100,7 +100,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch6",
+          "id": "keys_relationships-most-ordered-product-id",
           "title": "Hard: Most ordered product id",
           "promptMarkdown": "Show the `product_id` with the most items ordered (sum of `quantity` in `order_items`) and that number, called `items`. One row.",
           "starterCode": "",
@@ -112,7 +112,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch7",
+          "id": "keys_relationships-the-top-boss",
           "title": "Hard: The top boss",
           "promptMarkdown": "Show the `name` of the employee who has no manager.",
           "starterCode": "",
@@ -124,11 +124,11 @@
           }
         },
         {
-          "id": "keys_relationships_ch8",
+          "id": "keys_relationships-customers-who-ordered",
           "title": "Expert: Customers who ordered",
           "promptMarkdown": "Show each `customer_id` that appears in `orders`, once each, in order.",
           "starterCode": "",
-          "hint": "`SELECT DISTINCT customer_id FROM orders ORDER BY customer_id;`",
+          "hint": "`DISTINCT` shows each value once, and ORDER BY puts them in order.",
           "solution": "SELECT DISTINCT customer_id FROM orders ORDER BY customer_id;",
           "validation": {
             "mode": "sql_tests",
@@ -136,7 +136,7 @@
           }
         },
         {
-          "id": "keys_relationships_ch9",
+          "id": "keys_relationships-busy-orders",
           "title": "Expert: Busy orders",
           "promptMarkdown": "Show each `order_id` with three or more lines in `order_items`, and its number of lines, called `lines`.",
           "starterCode": "",
@@ -152,7 +152,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "keys_relationships_q1",
+            "id": "keys_relationships-q-1308w8",
             "type": "mcq",
             "prompt": "What is a primary key?",
             "choices": [
@@ -177,7 +177,7 @@
             "explanation": "Each row has its own key value, such as its id."
           },
           {
-            "id": "keys_relationships_q2",
+            "id": "keys_relationships-q-xm76cq",
             "type": "mcq",
             "prompt": "In `orders`, what is `customer_id`?",
             "choices": [
@@ -202,7 +202,7 @@
             "explanation": "It holds the id of the customer who placed the order."
           },
           {
-            "id": "keys_relationships_q3",
+            "id": "keys_relationships-q-tlvd2x",
             "type": "mcq",
             "prompt": "Why split data into several tables?",
             "choices": [
@@ -227,7 +227,7 @@
             "explanation": "A customer's city is stored once in customers, not on every order."
           },
           {
-            "id": "keys_relationships_q4",
+            "id": "keys_relationships-q-tkh9oh",
             "type": "shortText",
             "prompt": "What do we call a column that refers to the primary key of another table?",
             "validation": {
@@ -237,7 +237,7 @@
             "explanation": "A foreign key points to a row in another (or the same) table."
           },
           {
-            "id": "keys_relationships_q5",
+            "id": "keys_relationships-q-36f41z",
             "type": "mcq",
             "prompt": "Order 4 has `customer_id` 3. Who placed it?",
             "choices": [
@@ -262,7 +262,7 @@
             "explanation": "customer_id refers to customers.id."
           },
           {
-            "id": "keys_relationships_q6",
+            "id": "keys_relationships-q-cxjo1k",
             "type": "mcq",
             "prompt": "Which table links orders to products?",
             "choices": [
@@ -287,7 +287,7 @@
             "explanation": "Each order_items row says which product, in which order, and how many."
           },
           {
-            "id": "keys_relationships_q7",
+            "id": "keys_relationships-q-1ghtk9h",
             "type": "mcq",
             "prompt": "What does `manager_id` in `employees` point to?",
             "choices": [
@@ -312,7 +312,7 @@
             "explanation": "A table can refer to itself: a manager is also an employee."
           },
           {
-            "id": "keys_relationships_q8",
+            "id": "keys_relationships-q-1crjemj",
             "type": "mcq",
             "prompt": "Without joins, how do you find Ana's orders?",
             "choices": [
@@ -337,7 +337,7 @@
             "explanation": "orders only knows customer ids, not names."
           },
           {
-            "id": "keys_relationships_q9",
+            "id": "keys_relationships-q-1nb9deh",
             "type": "mcq",
             "prompt": "Can two customers have the same id?",
             "choices": [
@@ -362,7 +362,7 @@
             "explanation": "That is what makes it a reliable way to point at one row."
           },
           {
-            "id": "keys_relationships_q10",
+            "id": "keys_relationships-q-1dfmcfr",
             "type": "mcq",
             "prompt": "Why is a customer who moved easy to update in this design?",
             "choices": [
@@ -479,11 +479,11 @@
       },
       "challenges": [
         {
-          "id": "inner_join_ch1",
+          "id": "inner_join-who-placed-each-order",
           "title": "Easy: Who placed each order?",
           "promptMarkdown": "Show each order's `id` and the `name` of the customer who placed it.",
           "starterCode": "",
-          "hint": "`SELECT orders.id, customers.name FROM orders JOIN customers ON orders.customer_id = customers.id;`",
+          "hint": "Join `customers` to `orders` where the order's `customer_id` matches the customer's `id`. Write `table.column` for columns both tables have.",
           "solution": "SELECT orders.id, customers.name\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;",
           "validation": {
             "mode": "sql_tests",
@@ -491,7 +491,7 @@
           }
         },
         {
-          "id": "inner_join_ch2",
+          "id": "inner_join-what-was-ordered",
           "title": "Easy: What was ordered",
           "promptMarkdown": "For every order line, show the `order_id`, the product `name` and the `quantity`.",
           "starterCode": "",
@@ -503,7 +503,7 @@
           }
         },
         {
-          "id": "inner_join_ch3",
+          "id": "inner_join-who-handled-it",
           "title": "Medium: Who handled it",
           "promptMarkdown": "Show each order's `id` and the name of the employee who handled it, in a column called `employee`.",
           "starterCode": "",
@@ -515,7 +515,7 @@
           }
         },
         {
-          "id": "inner_join_ch4",
+          "id": "inner_join-prices-on-the-lines",
           "title": "Medium: Prices on the lines",
           "promptMarkdown": "For every order line, show the product `name`, its `price` and the `quantity`.",
           "starterCode": "",
@@ -527,7 +527,7 @@
           }
         },
         {
-          "id": "inner_join_ch5",
+          "id": "inner_join-line-totals",
           "title": "Medium: Line totals",
           "promptMarkdown": "For every order line, show the `order_id`, the product `name` and the line total (quantity times price, rounded to 2 decimals), called `line_total`.",
           "starterCode": "",
@@ -539,7 +539,7 @@
           }
         },
         {
-          "id": "inner_join_ch6",
+          "id": "inner_join-fix-the-on",
           "title": "Hard: Fix the ON",
           "promptMarkdown": "This query should show each order with its customer's name, but it pairs the wrong rows (order 4 shows Dev Patel, who didn't place it). Fix it.",
           "starterCode": "SELECT orders.id, customers.name\nFROM orders\nJOIN customers ON orders.id = customers.id;",
@@ -551,7 +551,7 @@
           }
         },
         {
-          "id": "inner_join_ch7",
+          "id": "inner_join-where-orders-go",
           "title": "Hard: Where orders go",
           "promptMarkdown": "Show each order's `id` and the customer's `city`.",
           "starterCode": "",
@@ -563,7 +563,7 @@
           }
         },
         {
-          "id": "inner_join_ch8",
+          "id": "inner_join-categories-ordered",
           "title": "Expert: Categories ordered",
           "promptMarkdown": "For every order line, show the `order_id` and the `category` of its product.",
           "starterCode": "",
@@ -575,7 +575,7 @@
           }
         },
         {
-          "id": "inner_join_ch9",
+          "id": "inner_join-from-the-employee-side",
           "title": "Expert: From the employee side",
           "promptMarkdown": "Start from `employees` this time: show each employee's `name` with the `order_date` and `status` of every order they handled.",
           "starterCode": "",
@@ -591,7 +591,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "inner_join_q1",
+            "id": "inner_join-q-fh6l69",
             "type": "mcq",
             "prompt": "What does `ON` do in a join?",
             "choices": [
@@ -616,7 +616,7 @@
             "explanation": "ON is the condition that pairs rows, usually a foreign key = primary key."
           },
           {
-            "id": "inner_join_q2",
+            "id": "inner_join-q-snsgwh",
             "type": "mcq",
             "prompt": "Which ON pairs orders with their customers?",
             "choices": [
@@ -641,7 +641,7 @@
             "explanation": "The order's customer_id holds the customer's id."
           },
           {
-            "id": "inner_join_q3",
+            "id": "inner_join-q-gpzl3l",
             "type": "mcq",
             "prompt": "Why write `customers.name` instead of `name`?",
             "choices": [
@@ -666,7 +666,7 @@
             "explanation": "table.column says exactly which column you mean."
           },
           {
-            "id": "inner_join_q4",
+            "id": "inner_join-q-hteh9a",
             "type": "mcq",
             "prompt": "Does an INNER JOIN show customers with no orders?",
             "choices": [
@@ -691,7 +691,7 @@
             "explanation": "Inner joins keep matching pairs only."
           },
           {
-            "id": "inner_join_q5",
+            "id": "inner_join-q-1gx7pft",
             "type": "shortText",
             "prompt": "`JOIN` on its own is short for which kind of join? (one word)",
             "validation": {
@@ -701,7 +701,7 @@
             "explanation": "`JOIN` means `INNER JOIN`."
           },
           {
-            "id": "inner_join_q6",
+            "id": "inner_join-q-1aol2dn",
             "type": "mcq",
             "prompt": "`ON orders.id = customers.id` gives…",
             "choices": [
@@ -726,7 +726,7 @@
             "explanation": "It runs, but matching an order number to a customer number means nothing."
           },
           {
-            "id": "inner_join_q7",
+            "id": "inner_join-q-1ke5nzu",
             "type": "mcq",
             "prompt": "Does `FROM customers JOIN orders` give different rows from `FROM orders JOIN customers` (same ON)?",
             "choices": [
@@ -751,7 +751,7 @@
             "explanation": "For inner joins, the order of the tables only changes the default column order."
           },
           {
-            "id": "inner_join_q8",
+            "id": "inner_join-q-a7851s",
             "type": "mcq",
             "prompt": "An order points to a customer. How many rows does the join give per order?",
             "choices": [
@@ -776,7 +776,7 @@
             "explanation": "Each order has exactly one matching customer."
           },
           {
-            "id": "inner_join_q9",
+            "id": "inner_join-q-ke4wbw",
             "type": "mcq",
             "prompt": "Ana has 3 orders. How many rows does she get in orders JOIN customers?",
             "choices": [
@@ -801,7 +801,7 @@
             "explanation": "One row per matching pair: one per order."
           },
           {
-            "id": "inner_join_q10",
+            "id": "inner_join-q-sxbiz4",
             "type": "mcq",
             "prompt": "Can you calculate with columns from both tables?",
             "choices": [
@@ -918,7 +918,7 @@
       },
       "challenges": [
         {
-          "id": "table_aliases_ch1",
+          "id": "table_aliases-short-names",
           "title": "Easy: Short names",
           "promptMarkdown": "Using the aliases `o` and `c`, show each order's `id`, the customer's `name` and the order's `status`.",
           "starterCode": "",
@@ -930,7 +930,7 @@
           }
         },
         {
-          "id": "table_aliases_ch2",
+          "id": "table_aliases-fix-the-ambiguous-name",
           "title": "Easy: Fix the ambiguous name",
           "promptMarkdown": "This query should show each order's id and its customer's name, but gives the error **ambiguous column name: id**. Fix it.",
           "starterCode": "SELECT id, name\nFROM orders o\nJOIN customers c ON o.customer_id = c.id;",
@@ -942,7 +942,7 @@
           }
         },
         {
-          "id": "table_aliases_ch3",
+          "id": "table_aliases-two-ids",
           "title": "Medium: Two ids",
           "promptMarkdown": "Show each order's id as `order_id`, its customer's id as `customer_id`, and the customer's name as `customer`.",
           "starterCode": "",
@@ -954,7 +954,7 @@
           }
         },
         {
-          "id": "table_aliases_ch4",
+          "id": "table_aliases-fix-the-old-name",
           "title": "Medium: Fix the old name",
           "promptMarkdown": "This query should show the shipped orders with their customer's name, but gives the error **no such column: orders.status**. Fix it.",
           "starterCode": "SELECT o.id, c.name\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE orders.status = 'shipped';",
@@ -966,7 +966,7 @@
           }
         },
         {
-          "id": "table_aliases_ch5",
+          "id": "table_aliases-who-handled-it-shorter",
           "title": "Hard: Who handled it, shorter",
           "promptMarkdown": "Using the aliases `o` and `e`, show each order's id as `order_id` and the employee's name and role as `employee` and `role`.",
           "starterCode": "",
@@ -978,7 +978,7 @@
           }
         },
         {
-          "id": "table_aliases_ch6",
+          "id": "table_aliases-fix-two-problems",
           "title": "Hard: Fix two problems",
           "promptMarkdown": "This query should show each order line's id, its product's id and name. It has an ambiguous name, and both ids would be called `id`. Show them as `line_id`, `product_id` and `name`.",
           "starterCode": "SELECT id, id, name\nFROM order_items i\nJOIN products p ON i.product_id = p.id;",
@@ -990,7 +990,7 @@
           }
         },
         {
-          "id": "table_aliases_ch7",
+          "id": "table_aliases-lines-with-their-dates",
           "title": "Expert: Lines with their dates",
           "promptMarkdown": "Join `order_items` (alias `i`) to `orders` (alias `o`) and show each line's `order_id`, the `order_date`, the `product_id` and the `quantity`.",
           "starterCode": "",
@@ -1002,7 +1002,7 @@
           }
         },
         {
-          "id": "table_aliases_ch8",
+          "id": "table_aliases-a-tidy-order-list",
           "title": "Expert: A tidy order list",
           "promptMarkdown": "Show each order as `order_id`, its `status`, the customer's name as `customer` and the customer's `city`, in order id order.",
           "starterCode": "",
@@ -1018,7 +1018,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "table_aliases_q1",
+            "id": "table_aliases-q-10zbr8u",
             "type": "mcq",
             "prompt": "What does `FROM orders o` do?",
             "choices": [
@@ -1043,7 +1043,7 @@
             "explanation": "An alias only lasts for the query it is written in."
           },
           {
-            "id": "table_aliases_q2",
+            "id": "table_aliases-q-r14tid",
             "type": "mcq",
             "prompt": "Is `AS` needed for a table alias?",
             "choices": [
@@ -1068,7 +1068,7 @@
             "explanation": "For tables, AS is optional."
           },
           {
-            "id": "table_aliases_q3",
+            "id": "table_aliases-q-13xinjz",
             "type": "mcq",
             "prompt": "`SELECT id FROM orders o JOIN customers c ON …` gives…",
             "choices": [
@@ -1093,7 +1093,7 @@
             "explanation": "Both tables have an id column, so SQLite does not know which you mean."
           },
           {
-            "id": "table_aliases_q4",
+            "id": "table_aliases-q-1iyz1ks",
             "type": "mcq",
             "prompt": "After `FROM orders o`, what does `WHERE orders.status = 'shipped'` give?",
             "choices": [
@@ -1118,7 +1118,7 @@
             "explanation": "Once aliased, the table is called o in that query."
           },
           {
-            "id": "table_aliases_q5",
+            "id": "table_aliases-q-10ns1sh",
             "type": "shortText",
             "prompt": "What keyword gives an output column a new name?",
             "validation": {
@@ -1128,7 +1128,7 @@
             "explanation": "For example `c.id AS customer_id`."
           },
           {
-            "id": "table_aliases_q6",
+            "id": "table_aliases-q-1nrp0w0",
             "type": "mcq",
             "prompt": "Why rename `o.id` and `c.id` in the output?",
             "choices": [
@@ -1153,7 +1153,7 @@
             "explanation": "Two columns both called id are confusing to read."
           },
           {
-            "id": "table_aliases_q7",
+            "id": "table_aliases-q-zfslzr",
             "type": "mcq",
             "prompt": "Does `SELECT city FROM orders o JOIN customers c ON …` need `c.city`?",
             "choices": [
@@ -1178,7 +1178,7 @@
             "explanation": "A prefix is only required for clashing names, though it is a good habit."
           },
           {
-            "id": "table_aliases_q8",
+            "id": "table_aliases-q-169e6hj",
             "type": "mcq",
             "prompt": "Which is a good alias for order_items?",
             "choices": [
@@ -1203,7 +1203,7 @@
             "explanation": "Short and easy to connect to the table name."
           },
           {
-            "id": "table_aliases_q9",
+            "id": "table_aliases-q-15abyzm",
             "type": "mcq",
             "prompt": "Do aliases change the result rows?",
             "choices": [
@@ -1228,7 +1228,7 @@
             "explanation": "The join is the same; only the names are shorter."
           },
           {
-            "id": "table_aliases_q10",
+            "id": "table_aliases-q-ntjuo1",
             "type": "mcq",
             "prompt": "Which query is correct?",
             "choices": [
@@ -1345,7 +1345,7 @@
       },
       "challenges": [
         {
-          "id": "join_filter_sort_ch1",
+          "id": "join_filter_sort-ana-s-orders",
           "title": "Easy: Ana's orders",
           "promptMarkdown": "Show the `id` and `order_date` of the orders placed by `Ana Silva`, found by her name.",
           "starterCode": "",
@@ -1357,7 +1357,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch2",
+          "id": "join_filter_sort-shipped-by-date",
           "title": "Easy: Shipped, by date",
           "promptMarkdown": "Show the customer `name` and `order_date` of every shipped order, oldest first.",
           "starterCode": "",
@@ -1369,7 +1369,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch3",
+          "id": "join_filter_sort-electronics-lines",
           "title": "Easy: Electronics lines",
           "promptMarkdown": "Show the `order_id`, product `name` and `quantity` of every order line for an `electronics` product.",
           "starterCode": "",
@@ -1381,7 +1381,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch4",
+          "id": "join_filter_sort-by-customer-then-date",
           "title": "Medium: By customer, then date",
           "promptMarkdown": "Show the customer `name` and `order_date` of every order, sorted by name and then by date.",
           "starterCode": "",
@@ -1393,7 +1393,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch5",
+          "id": "join_filter_sort-handled-by-sales-staff",
           "title": "Medium: Handled by sales staff",
           "promptMarkdown": "Show the `id` and `order_date` of the orders handled by an employee whose role is `Sales`, in date order.",
           "starterCode": "",
@@ -1405,7 +1405,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch6",
+          "id": "join_filter_sort-big-lines",
           "title": "Medium: Big lines",
           "promptMarkdown": "Show the order lines worth more than 20 (quantity times price): `order_id`, product `name` and `line_total` (2 decimals). Biggest first, then by order id.",
           "starterCode": "",
@@ -1417,7 +1417,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch7",
+          "id": "join_filter_sort-waiting-orders",
           "title": "Hard: Waiting orders",
           "promptMarkdown": "Show the pending orders with the customer's `name` and `city` and the `order_date`, oldest first.",
           "starterCode": "",
@@ -1429,7 +1429,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch8",
+          "id": "join_filter_sort-latest-three-shipped",
           "title": "Hard: Latest three shipped",
           "promptMarkdown": "Show the three most recent shipped orders: the order `id`, the customer `name` and the `order_date`, newest first.",
           "starterCode": "",
@@ -1441,7 +1441,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch9",
+          "id": "join_filter_sort-loyal-customers",
           "title": "Expert: Loyal customers",
           "promptMarkdown": "Show the orders placed by customers who joined before 2024: the customer `name`, when they `joined`, and the `order_date`. Sort by order date.",
           "starterCode": "",
@@ -1453,7 +1453,7 @@
           }
         },
         {
-          "id": "join_filter_sort_ch10",
+          "id": "join_filter_sort-kitchen-and-bags",
           "title": "Expert: Kitchen and bags",
           "promptMarkdown": "Show the order lines for `kitchen` or `bags` products: the product `name`, `category`, `order_id` and `quantity`. Sort by product name, then order id.",
           "starterCode": "",
@@ -1469,7 +1469,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "join_filter_sort_q1",
+            "id": "join_filter_sort-q-u0y2qk",
             "type": "mcq",
             "prompt": "Can `WHERE` test a column from the joined table?",
             "choices": [
@@ -1494,7 +1494,7 @@
             "explanation": "After the join, every column of both rows is available."
           },
           {
-            "id": "join_filter_sort_q2",
+            "id": "join_filter_sort-q-9fmsta",
             "type": "mcq",
             "prompt": "In which order are these written?",
             "choices": [
@@ -1519,7 +1519,7 @@
             "explanation": "The join is part of FROM, so it comes before WHERE."
           },
           {
-            "id": "join_filter_sort_q3",
+            "id": "join_filter_sort-q-9nm85t",
             "type": "mcq",
             "prompt": "How do you find Ana's orders by name in one query?",
             "choices": [
@@ -1544,7 +1544,7 @@
             "explanation": "The join brings the name next to each order."
           },
           {
-            "id": "join_filter_sort_q4",
+            "id": "join_filter_sort-q-1tu1fdl",
             "type": "mcq",
             "prompt": "`ORDER BY c.name, o.order_date` sorts…",
             "choices": [
@@ -1569,7 +1569,7 @@
             "explanation": "The second column breaks ties in the first."
           },
           {
-            "id": "join_filter_sort_q5",
+            "id": "join_filter_sort-q-ekd2uc",
             "type": "shortText",
             "prompt": "Which keyword keeps only the first few rows of the sorted result?",
             "validation": {
@@ -1579,7 +1579,7 @@
             "explanation": "It comes last, as usual."
           },
           {
-            "id": "join_filter_sort_q6",
+            "id": "join_filter_sort-q-vs7ye9",
             "type": "mcq",
             "prompt": "Can you sort by a calculation using both tables, like `quantity * price`?",
             "choices": [
@@ -1604,7 +1604,7 @@
             "explanation": "Any expression over the joined columns works."
           },
           {
-            "id": "join_filter_sort_q7",
+            "id": "join_filter_sort-q-dthz06",
             "type": "mcq",
             "prompt": "Why add `i.order_id` after `line_total DESC`?",
             "choices": [
@@ -1629,7 +1629,7 @@
             "explanation": "Equal totals would otherwise come in any order."
           },
           {
-            "id": "join_filter_sort_q8",
+            "id": "join_filter_sort-q-1eo31r4",
             "type": "mcq",
             "prompt": "`WHERE c.joined < '2024-01-01'` keeps…",
             "choices": [
@@ -1654,7 +1654,7 @@
             "explanation": "joined belongs to the customer, not the order."
           },
           {
-            "id": "join_filter_sort_q9",
+            "id": "join_filter_sort-q-pqzdi4",
             "type": "mcq",
             "prompt": "Which finds lines for electronics products?",
             "choices": [
@@ -1679,7 +1679,7 @@
             "explanation": "The category is stored in products."
           },
           {
-            "id": "join_filter_sort_q10",
+            "id": "join_filter_sort-q-ln36ye",
             "type": "mcq",
             "prompt": "Does WHERE run before or after the join?",
             "choices": [
@@ -1791,7 +1791,7 @@
       },
       "challenges": [
         {
-          "id": "join_aggregate_ch1",
+          "id": "join_aggregate-orders-per-customer",
           "title": "Easy: Orders per customer",
           "promptMarkdown": "Show each customer's `name` and their number of orders, called `orders`.",
           "starterCode": "",
@@ -1803,7 +1803,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch2",
+          "id": "join_aggregate-items-per-product",
           "title": "Easy: Items per product",
           "promptMarkdown": "Show each ordered product's `name` and the total quantity ordered, called `items`.",
           "starterCode": "",
@@ -1815,7 +1815,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch3",
+          "id": "join_aggregate-order-totals",
           "title": "Medium: Order totals",
           "promptMarkdown": "Show each `order_id` and its total (sum of quantity times price, 2 decimals), called `total`.",
           "starterCode": "",
@@ -1827,7 +1827,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch4",
+          "id": "join_aggregate-items-per-category",
           "title": "Medium: Items per category",
           "promptMarkdown": "Show each product `category` and the total quantity ordered, called `items`. Most first, then by category.",
           "starterCode": "",
@@ -1839,7 +1839,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch5",
+          "id": "join_aggregate-shipped-per-customer",
           "title": "Medium: Shipped per customer",
           "promptMarkdown": "Show each customer's `name` and their number of shipped orders (`shipped`). Most first, then by name.",
           "starterCode": "",
@@ -1851,7 +1851,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch6",
+          "id": "join_aggregate-repeat-customers",
           "title": "Hard: Repeat customers",
           "promptMarkdown": "Show the `name` of each customer with two or more orders, and their number of orders (`orders`).",
           "starterCode": "",
@@ -1863,7 +1863,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch7",
+          "id": "join_aggregate-top-three-products",
           "title": "Hard: Top three products",
           "promptMarkdown": "Show the three products with the highest takings: `name` and `revenue` (sum of quantity times price, 2 decimals). Highest first.",
           "starterCode": "",
@@ -1875,7 +1875,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch8",
+          "id": "join_aggregate-last-order",
           "title": "Expert: Last order",
           "promptMarkdown": "Show each customer's `name` and the date of their latest order (`last_order`). Most recent first.",
           "starterCode": "",
@@ -1887,7 +1887,7 @@
           }
         },
         {
-          "id": "join_aggregate_ch9",
+          "id": "join_aggregate-big-orders",
           "title": "Expert: Big orders",
           "promptMarkdown": "Show the orders worth more than 50: `order_id`, number of lines (`lines`) and `total` (2 decimals). Biggest first.",
           "starterCode": "",
@@ -1903,7 +1903,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "join_aggregate_q1",
+            "id": "join_aggregate-q-1fjr4l7",
             "type": "mcq",
             "prompt": "Why `GROUP BY c.id, c.name` instead of only `c.name`?",
             "choices": [
@@ -1928,7 +1928,7 @@
             "explanation": "The id keeps each customer separate; the name is there to show."
           },
           {
-            "id": "join_aggregate_q2",
+            "id": "join_aggregate-q-32m3rb",
             "type": "mcq",
             "prompt": "Which comes first when the query runs?",
             "choices": [
@@ -1953,7 +1953,7 @@
             "explanation": "FROM and JOIN build the rows before anything is grouped."
           },
           {
-            "id": "join_aggregate_q3",
+            "id": "join_aggregate-q-1k7wwwr",
             "type": "mcq",
             "prompt": "How do you total an order?",
             "choices": [
@@ -1978,7 +1978,7 @@
             "explanation": "Each line is worth quantity times price."
           },
           {
-            "id": "join_aggregate_q4",
+            "id": "join_aggregate-q-12fx7jm",
             "type": "mcq",
             "prompt": "Does a customer with no orders appear in an inner join count?",
             "choices": [
@@ -2003,7 +2003,7 @@
             "explanation": "They have no matching row, so there is nothing to count."
           },
           {
-            "id": "join_aggregate_q5",
+            "id": "join_aggregate-q-1lpsa9x",
             "type": "shortText",
             "prompt": "Which clause filters groups by their totals?",
             "validation": {
@@ -2013,7 +2013,7 @@
             "explanation": "WHERE filters rows before grouping; HAVING filters groups after."
           },
           {
-            "id": "join_aggregate_q6",
+            "id": "join_aggregate-q-28qoz2",
             "type": "mcq",
             "prompt": "Where do you test `o.status = 'shipped'` when counting shipped orders per customer?",
             "choices": [
@@ -2038,7 +2038,7 @@
             "explanation": "It is about single rows, so filter before grouping."
           },
           {
-            "id": "join_aggregate_q7",
+            "id": "join_aggregate-q-1xlmh5j",
             "type": "mcq",
             "prompt": "`MAX(o.order_date)` per customer gives…",
             "choices": [
@@ -2063,7 +2063,7 @@
             "explanation": "Dates in YYYY-MM-DD form sort in time order."
           },
           {
-            "id": "join_aggregate_q8",
+            "id": "join_aggregate-q-1porrkf",
             "type": "mcq",
             "prompt": "Where does `HAVING SUM(i.quantity * p.price) > 50` go?",
             "choices": [
@@ -2088,7 +2088,7 @@
             "explanation": "HAVING follows GROUP BY."
           },
           {
-            "id": "join_aggregate_q9",
+            "id": "join_aggregate-q-194eua5",
             "type": "mcq",
             "prompt": "Why are kitchen and electronics sorted by name in \"Items per category\"?",
             "choices": [
@@ -2113,7 +2113,7 @@
             "explanation": "A tie-breaker gives a fixed order."
           },
           {
-            "id": "join_aggregate_q10",
+            "id": "join_aggregate-q-1ij3p9y",
             "type": "mcq",
             "prompt": "Can you group by a column from the joined table?",
             "choices": [
@@ -2235,7 +2235,7 @@
       },
       "challenges": [
         {
-          "id": "left_join_ch1",
+          "id": "left_join-every-customer",
           "title": "Easy: Every customer",
           "promptMarkdown": "Show every customer's `name` with the `id` of each of their orders, called `order_id`. Customers with no orders must still appear.",
           "starterCode": "",
@@ -2247,7 +2247,7 @@
           }
         },
         {
-          "id": "left_join_ch2",
+          "id": "left_join-counts-with-zeros",
           "title": "Easy: Counts with zeros",
           "promptMarkdown": "Show every customer's `name` and their number of orders (`orders`), with 0 for customers who never ordered.",
           "starterCode": "",
@@ -2259,7 +2259,7 @@
           }
         },
         {
-          "id": "left_join_ch3",
+          "id": "left_join-every-product",
           "title": "Easy: Every product",
           "promptMarkdown": "Show every product's `name` with the `quantity` of each order line for it. Products never ordered must still appear.",
           "starterCode": "",
@@ -2271,7 +2271,7 @@
           }
         },
         {
-          "id": "left_join_ch4",
+          "id": "left_join-fix-the-count",
           "title": "Medium: Fix the count",
           "promptMarkdown": "This query says Finn Murphy has 1 order, but he has none. Fix it.",
           "starterCode": "SELECT c.name, COUNT(*) AS orders\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nGROUP BY c.id, c.name;",
@@ -2283,7 +2283,7 @@
           }
         },
         {
-          "id": "left_join_ch5",
+          "id": "left_join-items-per-product-with-zeros",
           "title": "Medium: Items per product, with zeros",
           "promptMarkdown": "Show every product's `name` and its total quantity ordered (`items`), with 0 for products never ordered. Most first, then by name.",
           "starterCode": "",
@@ -2295,7 +2295,7 @@
           }
         },
         {
-          "id": "left_join_ch6",
+          "id": "left_join-shipped-with-zeros",
           "title": "Hard: Shipped, with zeros",
           "promptMarkdown": "Show every customer's `name` and their number of shipped orders (`shipped`), with 0 for customers who have none.",
           "starterCode": "",
@@ -2307,7 +2307,7 @@
           }
         },
         {
-          "id": "left_join_ch7",
+          "id": "left_join-fix-the-lost-customers",
           "title": "Hard: Fix the lost customers",
           "promptMarkdown": "This query should show every customer's number of pending orders (`pending`), including 0, but most customers are missing. Fix it.",
           "starterCode": "SELECT c.name, COUNT(o.id) AS pending\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'pending'\nGROUP BY c.id, c.name;",
@@ -2319,7 +2319,7 @@
           }
         },
         {
-          "id": "left_join_ch8",
+          "id": "left_join-takings-per-product",
           "title": "Expert: Takings per product",
           "promptMarkdown": "Show every product's `name` and its takings (`revenue`: sum of quantity times price, 2 decimals), with 0 for products never ordered. Highest first, then by name.",
           "starterCode": "",
@@ -2331,7 +2331,7 @@
           }
         },
         {
-          "id": "left_join_ch9",
+          "id": "left_join-last-order-or-never",
           "title": "Expert: Last order, or never",
           "promptMarkdown": "Show every customer's `name` and the date of their latest order (`last_order`), or the text `never` if they haven't ordered. In name order.",
           "starterCode": "",
@@ -2347,7 +2347,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "left_join_q1",
+            "id": "left_join-q-1j5j4g",
             "type": "mcq",
             "prompt": "What does `LEFT JOIN` keep that `JOIN` drops?",
             "choices": [
@@ -2372,7 +2372,7 @@
             "explanation": "Every row of the FROM table stays."
           },
           {
-            "id": "left_join_q2",
+            "id": "left_join-q-jq82lp",
             "type": "mcq",
             "prompt": "Finn has no orders. In `customers LEFT JOIN orders`, what is his `o.id`?",
             "choices": [
@@ -2397,7 +2397,7 @@
             "explanation": "Columns from the unmatched side are filled with NULL."
           },
           {
-            "id": "left_join_q3",
+            "id": "left_join-q-17ict23",
             "type": "mcq",
             "prompt": "Which counts orders correctly with a LEFT JOIN?",
             "choices": [
@@ -2422,7 +2422,7 @@
             "explanation": "COUNT of a column skips NULLs, so Finn gets 0."
           },
           {
-            "id": "left_join_q4",
+            "id": "left_join-q-w39r34",
             "type": "mcq",
             "prompt": "What does `SUM(i.quantity)` give for a product never ordered?",
             "choices": [
@@ -2447,7 +2447,7 @@
             "explanation": "Wrap it in COALESCE(…, 0) to show 0."
           },
           {
-            "id": "left_join_q5",
+            "id": "left_join-q-o6aqro",
             "type": "shortText",
             "prompt": "Which function turns NULL into 0, as in `…(SUM(x), 0)`?",
             "validation": {
@@ -2457,7 +2457,7 @@
             "explanation": "COALESCE returns its first value that is not NULL."
           },
           {
-            "id": "left_join_q6",
+            "id": "left_join-q-19z6luw",
             "type": "mcq",
             "prompt": "Where should `o.status = 'shipped'` go to keep every customer?",
             "choices": [
@@ -2482,7 +2482,7 @@
             "explanation": "In ON it only limits which orders match; the customers stay."
           },
           {
-            "id": "left_join_q7",
+            "id": "left_join-q-5yzg29",
             "type": "mcq",
             "prompt": "What happens if you put `o.status = 'shipped'` in WHERE after a LEFT JOIN?",
             "choices": [
@@ -2507,7 +2507,7 @@
             "explanation": "WHERE throws away the NULL rows, so it acts like an inner join."
           },
           {
-            "id": "left_join_q8",
+            "id": "left_join-q-5vv520",
             "type": "mcq",
             "prompt": "In `FROM products p LEFT JOIN order_items i`, which table is kept whole?",
             "choices": [
@@ -2532,7 +2532,7 @@
             "explanation": "The table in FROM is the left one."
           },
           {
-            "id": "left_join_q9",
+            "id": "left_join-q-qx0n14",
             "type": "mcq",
             "prompt": "How can you get the effect of a RIGHT JOIN with LEFT JOIN?",
             "choices": [
@@ -2557,7 +2557,7 @@
             "explanation": "A RIGHT JOIN B is the same as B LEFT JOIN A."
           },
           {
-            "id": "left_join_q10",
+            "id": "left_join-q-wqa5d7",
             "type": "mcq",
             "prompt": "Ana has 3 orders. How many rows does she get in `customers LEFT JOIN orders`?",
             "choices": [
@@ -2669,7 +2669,7 @@
       },
       "challenges": [
         {
-          "id": "unmatched_rows_ch1",
+          "id": "unmatched_rows-never-ordered",
           "title": "Easy: Never ordered",
           "promptMarkdown": "Show the `name` of every customer who has never placed an order.",
           "starterCode": "",
@@ -2681,7 +2681,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch2",
+          "id": "unmatched_rows-never-sold",
           "title": "Easy: Never sold",
           "promptMarkdown": "Show the `name` of every product that is in no order line.",
           "starterCode": "",
@@ -2693,7 +2693,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch3",
+          "id": "unmatched_rows-unsold-stock",
           "title": "Medium: Unsold stock",
           "promptMarkdown": "Show the `name`, `category` and `price` of every product never ordered, most expensive first.",
           "starterCode": "",
@@ -2705,7 +2705,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch4",
+          "id": "unmatched_rows-how-many-never-ordered",
           "title": "Medium: How many never ordered?",
           "promptMarkdown": "Show how many customers have never ordered, in a column called `customers`.",
           "starterCode": "",
@@ -2717,7 +2717,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch5",
+          "id": "unmatched_rows-no-shipped-order",
           "title": "Medium: No shipped order",
           "promptMarkdown": "Show the `name` of every customer with no shipped order (they may have other orders, or none).",
           "starterCode": "",
@@ -2729,7 +2729,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch6",
+          "id": "unmatched_rows-cancelled-or-not",
           "title": "Hard: Cancelled, or not",
           "promptMarkdown": "This query should show every customer with the date of their cancelled order (`cancelled_on`), or NULL if they have none. It only shows one customer. Fix it.",
           "starterCode": "SELECT c.name, o.order_date AS cancelled_on\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'cancelled';",
@@ -2741,7 +2741,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch7",
+          "id": "unmatched_rows-quiet-sales-staff",
           "title": "Hard: Quiet sales staff",
           "promptMarkdown": "Show the `name` of each employee with the role `Sales` who handled no orders.",
           "starterCode": "",
@@ -2753,7 +2753,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch8",
+          "id": "unmatched_rows-empty-categories",
           "title": "Expert: Empty categories",
           "promptMarkdown": "Show each product `category` in which no product was ever ordered.",
           "starterCode": "",
@@ -2765,7 +2765,7 @@
           }
         },
         {
-          "id": "unmatched_rows_ch9",
+          "id": "unmatched_rows-ordered-but-nothing-shipped",
           "title": "Expert: Ordered, but nothing shipped",
           "promptMarkdown": "Show the `name` of every customer who has placed at least one order, but none of whose orders shipped.",
           "starterCode": "",
@@ -2781,7 +2781,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "unmatched_rows_q1",
+            "id": "unmatched_rows-q-16ivtz1",
             "type": "mcq",
             "prompt": "Which finds customers who never ordered?",
             "choices": [
@@ -2806,7 +2806,7 @@
             "explanation": "Only unmatched rows have NULL in the right table's id."
           },
           {
-            "id": "unmatched_rows_q2",
+            "id": "unmatched_rows-q-17txgmr",
             "type": "mcq",
             "prompt": "Why test `o.id` rather than, say, `o.status`?",
             "choices": [
@@ -2831,7 +2831,7 @@
             "explanation": "A matched order could have other columns that are NULL."
           },
           {
-            "id": "unmatched_rows_q3",
+            "id": "unmatched_rows-q-1bkrjvm",
             "type": "mcq",
             "prompt": "Would an inner join find customers with no orders?",
             "choices": [
@@ -2856,7 +2856,7 @@
             "explanation": "Inner joins only keep matches."
           },
           {
-            "id": "unmatched_rows_q4",
+            "id": "unmatched_rows-q-wfqj7q",
             "type": "mcq",
             "prompt": "What does `WHERE o.id = NULL` return?",
             "choices": [
@@ -2881,7 +2881,7 @@
             "explanation": "Comparing with = NULL is never true. Use IS NULL."
           },
           {
-            "id": "unmatched_rows_q5",
+            "id": "unmatched_rows-q-6v5xvh",
             "type": "shortText",
             "prompt": "Fill in: `WHERE o.id ___ NULL` (one word)",
             "validation": {
@@ -2891,7 +2891,7 @@
             "explanation": "IS NULL tests for a missing value."
           },
           {
-            "id": "unmatched_rows_q6",
+            "id": "unmatched_rows-q-1vu1u9u",
             "type": "mcq",
             "prompt": "Customers with no shipped order: where does the status test go?",
             "choices": [
@@ -2916,7 +2916,7 @@
             "explanation": "In ON, only shipped orders can match; IS NULL then finds those with none."
           },
           {
-            "id": "unmatched_rows_q7",
+            "id": "unmatched_rows-q-bwwepa",
             "type": "mcq",
             "prompt": "Which counts the categories with no orders?",
             "choices": [
@@ -2941,7 +2941,7 @@
             "explanation": "COUNT(*) is never 0 for a group, because the group has at least one row."
           },
           {
-            "id": "unmatched_rows_q8",
+            "id": "unmatched_rows-q-qiiqtr",
             "type": "mcq",
             "prompt": "Why is `WHERE o.id IS NULL` fine after a LEFT JOIN, but `WHERE o.status = …` is not?",
             "choices": [
@@ -2966,7 +2966,7 @@
             "explanation": "The difference is whether the NULL rows pass the test."
           },
           {
-            "id": "unmatched_rows_q9",
+            "id": "unmatched_rows-q-19iv75y",
             "type": "mcq",
             "prompt": "Which finds employees who handled no orders?",
             "choices": [
@@ -2991,7 +2991,7 @@
             "explanation": "Keep every employee, then keep those with no order attached."
           },
           {
-            "id": "unmatched_rows_q10",
+            "id": "unmatched_rows-q-1ntgu2d",
             "type": "mcq",
             "prompt": "Which table goes in FROM to find products never ordered?",
             "choices": [
@@ -3108,7 +3108,7 @@
       },
       "challenges": [
         {
-          "id": "three_tables_ch1",
+          "id": "three_tables-both-names",
           "title": "Easy: Both names",
           "promptMarkdown": "Show each order's `id`, the customer's name as `customer` and the employee's name as `employee`.",
           "starterCode": "",
@@ -3120,7 +3120,7 @@
           }
         },
         {
-          "id": "three_tables_ch2",
+          "id": "three_tables-lines-with-dates-and-names",
           "title": "Easy: Lines with dates and names",
           "promptMarkdown": "For every order line, show the `order_id`, the `order_date` and the product `name`.",
           "starterCode": "",
@@ -3132,7 +3132,7 @@
           }
         },
         {
-          "id": "three_tables_ch3",
+          "id": "three_tables-shipped-with-both-names",
           "title": "Easy: Shipped, with both names",
           "promptMarkdown": "Show the shipped orders' `order_date`, the customer's name (`customer`) and the employee's name (`employee`), oldest first.",
           "starterCode": "",
@@ -3144,7 +3144,7 @@
           }
         },
         {
-          "id": "three_tables_ch4",
+          "id": "three_tables-who-bought-what",
           "title": "Medium: Who bought what",
           "promptMarkdown": "Show every order line as the customer's name (`customer`), the product's name (`product`) and the `quantity`.",
           "starterCode": "",
@@ -3156,7 +3156,7 @@
           }
         },
         {
-          "id": "three_tables_ch5",
+          "id": "three_tables-spend-per-customer",
           "title": "Medium: Spend per customer",
           "promptMarkdown": "Show each customer's `name` and how much they spent (`spent`: sum of quantity times price, 2 decimals). Highest first.",
           "starterCode": "",
@@ -3168,7 +3168,7 @@
           }
         },
         {
-          "id": "three_tables_ch6",
+          "id": "three_tables-sales-per-employee",
           "title": "Medium: Sales per employee",
           "promptMarkdown": "Show the `name` of each employee who handled orders and the value of those orders (`sales`, 2 decimals). Highest first.",
           "starterCode": "",
@@ -3180,7 +3180,7 @@
           }
         },
         {
-          "id": "three_tables_ch7",
+          "id": "three_tables-order-summary",
           "title": "Hard: Order summary",
           "promptMarkdown": "Show each order as `order_id`, the customer's name (`customer`), its number of lines (`lines`) and its `total` (2 decimals). Biggest total first.",
           "starterCode": "",
@@ -3192,7 +3192,7 @@
           }
         },
         {
-          "id": "three_tables_ch8",
+          "id": "three_tables-who-sells-electronics",
           "title": "Hard: Who sells electronics",
           "promptMarkdown": "Show the `name` of each employee who sold `electronics` products and how many items of them (`items`). Most first, then by name.",
           "starterCode": "",
@@ -3204,7 +3204,7 @@
           }
         },
         {
-          "id": "three_tables_ch9",
+          "id": "three_tables-ana-s-shopping-list",
           "title": "Expert: Ana's shopping list",
           "promptMarkdown": "Show each product `Ana Silva` has bought (`name`) and how many in total (`items`). Most first, then by name.",
           "starterCode": "",
@@ -3216,7 +3216,7 @@
           }
         },
         {
-          "id": "three_tables_ch10",
+          "id": "three_tables-everyone-s-spend",
           "title": "Expert: Everyone's spend",
           "promptMarkdown": "Show every customer's `name` and how much they spent (`spent`, 2 decimals), with 0 for customers who never ordered. Highest first, then by name.",
           "starterCode": "",
@@ -3232,7 +3232,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "three_tables_q1",
+            "id": "three_tables-q-6drgxp",
             "type": "mcq",
             "prompt": "How many joins does a query over four tables need?",
             "choices": [
@@ -3257,7 +3257,7 @@
             "explanation": "Each JOIN adds one table to the first."
           },
           {
-            "id": "three_tables_q2",
+            "id": "three_tables-q-1e77lzw",
             "type": "mcq",
             "prompt": "How do you get from a customer to the products they bought?",
             "choices": [
@@ -3282,7 +3282,7 @@
             "explanation": "Follow the foreign keys one step at a time."
           },
           {
-            "id": "three_tables_q3",
+            "id": "three_tables-q-50faq5",
             "type": "mcq",
             "prompt": "Does each JOIN need its own ON?",
             "choices": [
@@ -3307,7 +3307,7 @@
             "explanation": "Each ON says how the new table matches the rows so far."
           },
           {
-            "id": "three_tables_q4",
+            "id": "three_tables-q-jzxb48",
             "type": "mcq",
             "prompt": "Why must the joins after a LEFT JOIN also be LEFT?",
             "choices": [
@@ -3332,7 +3332,7 @@
             "explanation": "The NULL rows have nothing to match in the next table."
           },
           {
-            "id": "three_tables_q5",
+            "id": "three_tables-q-dn946v",
             "type": "shortText",
             "prompt": "Which function turns a NULL total into 0?",
             "validation": {
@@ -3342,7 +3342,7 @@
             "explanation": "COALESCE(SUM(…), 0)."
           },
           {
-            "id": "three_tables_q6",
+            "id": "three_tables-q-tsm578",
             "type": "mcq",
             "prompt": "Which ON joins order_items to orders?",
             "choices": [
@@ -3367,7 +3367,7 @@
             "explanation": "order_items.order_id points to orders.id."
           },
           {
-            "id": "three_tables_q7",
+            "id": "three_tables-q-eahcka",
             "type": "mcq",
             "prompt": "To total an employee's sales, which tables do you need?",
             "choices": [
@@ -3392,7 +3392,7 @@
             "explanation": "Prices are in products, quantities in order_items, and the employee is on the order."
           },
           {
-            "id": "three_tables_q8",
+            "id": "three_tables-q-1waiepz",
             "type": "mcq",
             "prompt": "Can WHERE test a column from the third or fourth table?",
             "choices": [
@@ -3417,7 +3417,7 @@
             "explanation": "After the joins, all columns are available."
           },
           {
-            "id": "three_tables_q9",
+            "id": "three_tables-q-1plg7zo",
             "type": "mcq",
             "prompt": "What is a good way to write a long join?",
             "choices": [
@@ -3442,7 +3442,7 @@
             "explanation": "Each step is easy to check in the sandbox."
           },
           {
-            "id": "three_tables_q10",
+            "id": "three_tables-q-akemu1",
             "type": "mcq",
             "prompt": "A customer bought 2 Notebooks in one order and 1 in another. What does `SUM(i.quantity)` per product show for Notebook?",
             "choices": [
@@ -3559,7 +3559,7 @@
       },
       "challenges": [
         {
-          "id": "self_join_ch1",
+          "id": "self_join-employee-and-manager",
           "title": "Easy: Employee and manager",
           "promptMarkdown": "Show each employee's name as `employee` and their manager's name as `manager`. Employees with no manager can be left out.",
           "starterCode": "",
@@ -3571,7 +3571,7 @@
           }
         },
         {
-          "id": "self_join_ch2",
+          "id": "self_join-the-manager-s-team",
           "title": "Easy: The manager's team",
           "promptMarkdown": "Show the `name` of each employee whose manager has the role `Manager`.",
           "starterCode": "",
@@ -3583,7 +3583,7 @@
           }
         },
         {
-          "id": "self_join_ch3",
+          "id": "self_join-keep-the-boss",
           "title": "Easy: Keep the boss",
           "promptMarkdown": "Show every employee as `employee` with their manager's name as `manager` (NULL for the employee with no manager).",
           "starterCode": "",
@@ -3595,7 +3595,7 @@
           }
         },
         {
-          "id": "self_join_ch4",
+          "id": "self_join-team-sizes",
           "title": "Medium: Team sizes",
           "promptMarkdown": "Show each manager's name as `manager` and how many employees report to them (`reports`). Most first, then by name.",
           "starterCode": "",
@@ -3607,7 +3607,7 @@
           }
         },
         {
-          "id": "self_join_ch5",
+          "id": "self_join-nobody-above",
           "title": "Medium: Nobody above",
           "promptMarkdown": "Show every employee as `employee` with their manager's name as `manager`, or the text `(none)` if they have no manager.",
           "starterCode": "",
@@ -3619,7 +3619,7 @@
           }
         },
         {
-          "id": "self_join_ch6",
+          "id": "self_join-roles-up-the-line",
           "title": "Medium: Roles up the line",
           "promptMarkdown": "Show each employee's `name` and `role`, with their manager's role as `manager_role`. Employees with no manager can be left out.",
           "starterCode": "",
@@ -3631,7 +3631,7 @@
           }
         },
         {
-          "id": "self_join_ch7",
+          "id": "self_join-manager-s-manager",
           "title": "Hard: Manager's manager",
           "promptMarkdown": "Show each employee as `employee`, their manager as `manager`, and their manager's manager as `grand_manager`. Only employees who have all three.",
           "starterCode": "",
@@ -3643,7 +3643,7 @@
           }
         },
         {
-          "id": "self_join_ch8",
+          "id": "self_join-teammates",
           "title": "Hard: Teammates",
           "promptMarkdown": "Show each pair of employees who have the same manager, as `employee_1` and `employee_2`, once per pair. Sort by the ids of the first and then the second employee.",
           "starterCode": "",
@@ -3655,7 +3655,7 @@
           }
         },
         {
-          "id": "self_join_ch9",
+          "id": "self_join-team-orders",
           "title": "Expert: Team orders",
           "promptMarkdown": "For each manager, show their name as `manager` and the number of orders handled by the people who report to them (`team_orders`). Most first.",
           "starterCode": "",
@@ -3667,7 +3667,7 @@
           }
         },
         {
-          "id": "self_join_ch10",
+          "id": "self_join-same-category",
           "title": "Expert: Same category",
           "promptMarkdown": "Show each pair of products in the same category, as `product_1`, `product_2` and `category`, once per pair. Sort by category, then product_1, then product_2.",
           "starterCode": "",
@@ -3683,7 +3683,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "self_join_q1",
+            "id": "self_join-q-kctjs",
             "type": "mcq",
             "prompt": "What is a self-join?",
             "choices": [
@@ -3708,7 +3708,7 @@
             "explanation": "The two aliases act like two copies of the table."
           },
           {
-            "id": "self_join_q2",
+            "id": "self_join-q-fkne6q",
             "type": "mcq",
             "prompt": "Why are aliases required in a self-join?",
             "choices": [
@@ -3733,7 +3733,7 @@
             "explanation": "Without aliases, employees.name would be ambiguous."
           },
           {
-            "id": "self_join_q3",
+            "id": "self_join-q-1an6p63",
             "type": "mcq",
             "prompt": "Which ON pairs an employee with their manager?",
             "choices": [
@@ -3758,7 +3758,7 @@
             "explanation": "The employee's manager_id holds the manager's id."
           },
           {
-            "id": "self_join_q4",
+            "id": "self_join-q-1xjz9qs",
             "type": "mcq",
             "prompt": "Why does Maria Lopez vanish from the inner self-join?",
             "choices": [
@@ -3783,7 +3783,7 @@
             "explanation": "Use LEFT JOIN to keep her."
           },
           {
-            "id": "self_join_q5",
+            "id": "self_join-q-i8pwmn",
             "type": "shortText",
             "prompt": "Which kind of join keeps the employee with no manager? (one word, before JOIN)",
             "validation": {
@@ -3793,7 +3793,7 @@
             "explanation": "LEFT JOIN keeps every row of the first copy."
           },
           {
-            "id": "self_join_q6",
+            "id": "self_join-q-jfeatz",
             "type": "mcq",
             "prompt": "Why add `a.id < b.id` when pairing rows?",
             "choices": [
@@ -3818,7 +3818,7 @@
             "explanation": "Without it you get A–B, B–A and A–A."
           },
           {
-            "id": "self_join_q7",
+            "id": "self_join-q-mdd8lg",
             "type": "mcq",
             "prompt": "To count team sizes, group by…",
             "choices": [
@@ -3843,7 +3843,7 @@
             "explanation": "Each manager gets one group, with one row per report."
           },
           {
-            "id": "self_join_q8",
+            "id": "self_join-q-2s55ta",
             "type": "mcq",
             "prompt": "How many times is employees joined to find the manager's manager?",
             "choices": [
@@ -3868,7 +3868,7 @@
             "explanation": "e → m → g."
           },
           {
-            "id": "self_join_q9",
+            "id": "self_join-q-mqoubk",
             "type": "mcq",
             "prompt": "Can a self-join pair products in the same category?",
             "choices": [
@@ -3893,7 +3893,7 @@
             "explanation": "Any time rows pair with rows of the same table."
           },
           {
-            "id": "self_join_q10",
+            "id": "self_join-q-jz57f7",
             "type": "mcq",
             "prompt": "What does `COALESCE(m.name, '(none)')` show for the top boss?",
             "choices": [
@@ -4005,7 +4005,7 @@
       },
       "challenges": [
         {
-          "id": "many_to_many_ch1",
+          "id": "many_to_many-inside-order-5",
           "title": "Easy: Inside order 5",
           "promptMarkdown": "Show the product `name` and `quantity` of every line of order 5.",
           "starterCode": "",
@@ -4017,7 +4017,7 @@
           }
         },
         {
-          "id": "many_to_many_ch2",
+          "id": "many_to_many-kitchen-orders",
           "title": "Easy: Kitchen orders",
           "promptMarkdown": "Show the id of each order containing a `kitchen` product, as `order_id`, once each, in order.",
           "starterCode": "",
@@ -4029,7 +4029,7 @@
           }
         },
         {
-          "id": "many_to_many_ch3",
+          "id": "many_to_many-orders-per-product",
           "title": "Easy: Orders per product",
           "promptMarkdown": "Show each ordered product's `name` and the number of orders it appears in (`orders`).",
           "starterCode": "",
@@ -4041,7 +4041,7 @@
           }
         },
         {
-          "id": "many_to_many_ch4",
+          "id": "many_to_many-electronics-buyers",
           "title": "Medium: Electronics buyers",
           "promptMarkdown": "Show the `name` of every customer who bought an `electronics` product, once each, in name order.",
           "starterCode": "",
@@ -4053,7 +4053,7 @@
           }
         },
         {
-          "id": "many_to_many_ch5",
+          "id": "many_to_many-pairs-in-an-order",
           "title": "Medium: Pairs in an order",
           "promptMarkdown": "Show every pair of products in the same order: `order_id`, `product_1` and `product_2` (product ids, the smaller first). Sort by order id, then product_1, then product_2.",
           "starterCode": "",
@@ -4065,7 +4065,7 @@
           }
         },
         {
-          "id": "many_to_many_ch6",
+          "id": "many_to_many-customers-per-product",
           "title": "Medium: Customers per product",
           "promptMarkdown": "Show each ordered product's `name` and how many different customers bought it (`customers`). Most first, then by name.",
           "starterCode": "",
@@ -4077,7 +4077,7 @@
           }
         },
         {
-          "id": "many_to_many_ch7",
+          "id": "many_to_many-bought-together",
           "title": "Hard: Bought together",
           "promptMarkdown": "Show each pair of products bought in the same order, by name (`product_1`, `product_2`, where product_1 has the smaller id), and how many orders had both (`times`). Most first, then by product_1, then product_2.",
           "starterCode": "",
@@ -4089,7 +4089,7 @@
           }
         },
         {
-          "id": "many_to_many_ch8",
+          "id": "many_to_many-varied-shoppers",
           "title": "Hard: Varied shoppers",
           "promptMarkdown": "Show each customer who bought from two or more categories: `name` and the number of categories (`categories`). Most first, then by name.",
           "starterCode": "",
@@ -4101,7 +4101,7 @@
           }
         },
         {
-          "id": "many_to_many_ch9",
+          "id": "many_to_many-with-a-notebook",
           "title": "Expert: With a Notebook",
           "promptMarkdown": "Show the `name` of every other product that was in an order with a `Notebook`, once each, in name order.",
           "starterCode": "",
@@ -4113,7 +4113,7 @@
           }
         },
         {
-          "id": "many_to_many_ch10",
+          "id": "many_to_many-bought-again",
           "title": "Expert: Bought again",
           "promptMarkdown": "Show each customer and product where the customer bought that product in two or more different orders: the customer's name (`customer`), the product's name (`product`) and the number of orders (`orders`). In customer order, then product order.",
           "starterCode": "",
@@ -4129,7 +4129,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "many_to_many_q1",
+            "id": "many_to_many-q-p01970",
             "type": "mcq",
             "prompt": "Customers and orders are…",
             "choices": [
@@ -4154,7 +4154,7 @@
             "explanation": "A customer has many orders; each order has one customer."
           },
           {
-            "id": "many_to_many_q2",
+            "id": "many_to_many-q-1o75uc1",
             "type": "mcq",
             "prompt": "Orders and products are…",
             "choices": [
@@ -4179,7 +4179,7 @@
             "explanation": "An order has many products, and a product is in many orders."
           },
           {
-            "id": "many_to_many_q3",
+            "id": "many_to_many-q-1k8ovp5",
             "type": "mcq",
             "prompt": "How is a many-to-many relationship stored?",
             "choices": [
@@ -4204,7 +4204,7 @@
             "explanation": "order_items holds one row per order and product."
           },
           {
-            "id": "many_to_many_q4",
+            "id": "many_to_many-q-1cw6515",
             "type": "mcq",
             "prompt": "What else can a junction table hold?",
             "choices": [
@@ -4229,7 +4229,7 @@
             "explanation": "The quantity belongs to the pair, not to the order or the product alone."
           },
           {
-            "id": "many_to_many_q5",
+            "id": "many_to_many-q-nritw6",
             "type": "shortText",
             "prompt": "What is a table like order_items called? (two words)",
             "validation": {
@@ -4239,7 +4239,7 @@
             "explanation": "Also called a link, bridge or associative table."
           },
           {
-            "id": "many_to_many_q6",
+            "id": "many_to_many-q-1idniow",
             "type": "mcq",
             "prompt": "Why use `COUNT(DISTINCT o.customer_id)` for customers per product?",
             "choices": [
@@ -4264,7 +4264,7 @@
             "explanation": "DISTINCT counts each customer once."
           },
           {
-            "id": "many_to_many_q7",
+            "id": "many_to_many-q-1kcdcc8",
             "type": "mcq",
             "prompt": "How do you find products bought together?",
             "choices": [
@@ -4289,7 +4289,7 @@
             "explanation": "Two lines of the same order are two products bought together."
           },
           {
-            "id": "many_to_many_q8",
+            "id": "many_to_many-q-ecq6gi",
             "type": "mcq",
             "prompt": "Why `i1.product_id < i2.product_id` in the pairs query?",
             "choices": [
@@ -4314,7 +4314,7 @@
             "explanation": "The same trick as in the self-join lesson."
           },
           {
-            "id": "many_to_many_q9",
+            "id": "many_to_many-q-p9cadl",
             "type": "mcq",
             "prompt": "To go from orders to products you pass through…",
             "choices": [
@@ -4339,7 +4339,7 @@
             "explanation": "The junction table links the two."
           },
           {
-            "id": "many_to_many_q10",
+            "id": "many_to_many-q-zioyk2",
             "type": "mcq",
             "prompt": "If order 5 has 3 lines, how many pairs does the pairs query give for it?",
             "choices": [
@@ -4452,7 +4452,7 @@
       },
       "challenges": [
         {
-          "id": "proj_order_lookup_ch1",
+          "id": "proj_order_lookup-order-7",
           "title": "Easy: Order 7",
           "promptMarkdown": "A caller asks about order 7. Show its `id`, `order_date`, `status` and the customer's name as `customer`.",
           "starterCode": "",
@@ -4464,7 +4464,7 @@
           }
         },
         {
-          "id": "proj_order_lookup_ch2",
+          "id": "proj_order_lookup-what-s-in-it",
           "title": "Easy: What's in it",
           "promptMarkdown": "Show the lines of order 7: product `name`, `quantity`, `price` and `line_total` (2 decimals).",
           "starterCode": "",
@@ -4476,7 +4476,7 @@
           }
         },
         {
-          "id": "proj_order_lookup_ch3",
+          "id": "proj_order_lookup-the-bill",
           "title": "Medium: The bill",
           "promptMarkdown": "Show the total of order 7 (2 decimals), called `total`.",
           "starterCode": "",
@@ -4488,7 +4488,7 @@
           }
         },
         {
-          "id": "proj_order_lookup_ch4",
+          "id": "proj_order_lookup-still-waiting",
           "title": "Medium: Still waiting",
           "promptMarkdown": "Show every pending order: its `id`, `order_date`, the customer's name (`customer`) and the employee handling it (`employee`). Oldest first.",
           "starterCode": "",
@@ -4500,7 +4500,7 @@
           }
         },
         {
-          "id": "proj_order_lookup_ch5",
+          "id": "proj_order_lookup-customer-history",
           "title": "Hard: Customer history",
           "promptMarkdown": "Customer 2 calls about all their orders. Show each order's `id`, `order_date`, `status` and `total` (2 decimals), oldest first.",
           "starterCode": "",
@@ -4512,7 +4512,7 @@
           }
         },
         {
-          "id": "proj_order_lookup_ch6",
+          "id": "proj_order_lookup-call-them-back",
           "title": "Hard: Call them back",
           "promptMarkdown": "Make a call-back list of pending orders placed before 2026-09-01: the customer's `name` and `city`, the order `id`, and the whole days it has waited until today (`days_waiting`). Longest wait first.",
           "starterCode": "",
@@ -4528,7 +4528,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_order_lookup_q1",
+            "id": "proj_order_lookup-q-1afhqsj",
             "type": "mcq",
             "prompt": "Where is the price of a product stored?",
             "choices": [
@@ -4553,7 +4553,7 @@
             "explanation": "Each fact is stored once, in the table it belongs to."
           },
           {
-            "id": "proj_order_lookup_q2",
+            "id": "proj_order_lookup-q-1l8aml6",
             "type": "mcq",
             "prompt": "Which tables do you need for an order's total?",
             "choices": [
@@ -4578,7 +4578,7 @@
             "explanation": "Quantities are in order_items, prices in products."
           },
           {
-            "id": "proj_order_lookup_q3",
+            "id": "proj_order_lookup-q-12qar7c",
             "type": "mcq",
             "prompt": "Which query finds who is handling a pending order?",
             "choices": [
@@ -4603,7 +4603,7 @@
             "explanation": "orders.employee_id points to the employee."
           },
           {
-            "id": "proj_order_lookup_q4",
+            "id": "proj_order_lookup-q-1i69y0e",
             "type": "shortText",
             "prompt": "Which function turns a date into a number of days?",
             "validation": {
@@ -4613,7 +4613,7 @@
             "explanation": "Subtracting two julianday values gives the days between them."
           },
           {
-            "id": "proj_order_lookup_q5",
+            "id": "proj_order_lookup-q-1opy96r",
             "type": "mcq",
             "prompt": "Why group by `o.order_date` and `o.status` too in Customer history?",
             "choices": [
@@ -4638,7 +4638,7 @@
             "explanation": "Columns you show next to a total must be grouped or aggregated."
           },
           {
-            "id": "proj_order_lookup_q6",
+            "id": "proj_order_lookup-q-ih8qhe",
             "type": "mcq",
             "prompt": "Which keeps only old pending orders?",
             "choices": [
@@ -4751,7 +4751,7 @@
       },
       "challenges": [
         {
-          "id": "proj_customer_insights_ch1",
+          "id": "proj_customer_insights-order-counts",
           "title": "Easy: Order counts",
           "promptMarkdown": "Show every customer's `name` and number of orders (`orders`), including 0. Most first, then by name.",
           "starterCode": "",
@@ -4763,7 +4763,7 @@
           }
         },
         {
-          "id": "proj_customer_insights_ch2",
+          "id": "proj_customer_insights-gone-quiet",
           "title": "Medium: Gone quiet",
           "promptMarkdown": "The team wants to email customers who never ordered. Show their `name`, `city` and `joined` date, earliest joined first.",
           "starterCode": "",
@@ -4775,7 +4775,7 @@
           }
         },
         {
-          "id": "proj_customer_insights_ch3",
+          "id": "proj_customer_insights-average-order",
           "title": "Medium: Average order",
           "promptMarkdown": "For each customer who ordered, show their `name`, number of orders (`orders`) and average order value (`average_order`: total spent divided by orders, 2 decimals). Highest average first.",
           "starterCode": "",
@@ -4787,7 +4787,7 @@
           }
         },
         {
-          "id": "proj_customer_insights_ch4",
+          "id": "proj_customer_insights-category-reach",
           "title": "Medium: Category reach",
           "promptMarkdown": "For each category that was ordered, show the `category`, how many different customers bought from it (`customers`) and the items sold (`items`). Most customers first, then by category.",
           "starterCode": "",
@@ -4799,7 +4799,7 @@
           }
         },
         {
-          "id": "proj_customer_insights_ch5",
+          "id": "proj_customer_insights-shipped-and-not",
           "title": "Hard: Shipped and not",
           "promptMarkdown": "Show every customer's `name` with their number of shipped orders (`shipped`) and other orders (`not_shipped`), including customers with none (0 and 0). In name order.",
           "starterCode": "",
@@ -4811,7 +4811,7 @@
           }
         },
         {
-          "id": "proj_customer_insights_ch6",
+          "id": "proj_customer_insights-best-customers",
           "title": "Hard: Best customers",
           "promptMarkdown": "Show the customers who spent more than 100 on shipped orders: `name` and `spent` (2 decimals). Highest first.",
           "starterCode": "",
@@ -4827,7 +4827,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_customer_insights_q1",
+            "id": "proj_customer_insights-q-1txa677",
             "type": "mcq",
             "prompt": "Which keeps customers with no orders in a count?",
             "choices": [
@@ -4852,7 +4852,7 @@
             "explanation": "LEFT JOIN keeps them; COUNT(o.id) gives them 0."
           },
           {
-            "id": "proj_customer_insights_q2",
+            "id": "proj_customer_insights-q-18mqiar",
             "type": "mcq",
             "prompt": "Why `COUNT(DISTINCT o.id)` for orders after joining order_items?",
             "choices": [
@@ -4877,7 +4877,7 @@
             "explanation": "Joining order_items repeats each order once per line."
           },
           {
-            "id": "proj_customer_insights_q3",
+            "id": "proj_customer_insights-q-n8ogd3",
             "type": "mcq",
             "prompt": "In Shipped and not, what does Finn (no orders) get?",
             "choices": [
@@ -4902,7 +4902,7 @@
             "explanation": "His status is NULL, so both CASEs give 0."
           },
           {
-            "id": "proj_customer_insights_q4",
+            "id": "proj_customer_insights-q-1u5qqgs",
             "type": "shortText",
             "prompt": "Which clause keeps only customers who spent more than 100?",
             "validation": {
@@ -4912,7 +4912,7 @@
             "explanation": "It tests a group total."
           },
           {
-            "id": "proj_customer_insights_q5",
+            "id": "proj_customer_insights-q-3rarpu",
             "type": "mcq",
             "prompt": "Where does the shipped test go in Best customers?",
             "choices": [
@@ -4937,7 +4937,7 @@
             "explanation": "It is about single orders."
           },
           {
-            "id": "proj_customer_insights_q6",
+            "id": "proj_customer_insights-q-cq5ko6",
             "type": "mcq",
             "prompt": "Why count customers with DISTINCT in Category reach?",
             "choices": [
@@ -5045,7 +5045,7 @@
       },
       "challenges": [
         {
-          "id": "proj_sales_team_review_ch1",
+          "id": "proj_sales_team_review-staff-list",
           "title": "Easy: Staff list",
           "promptMarkdown": "Show every employee's `name`, `role` and their manager's name as `manager` (`(none)` for the top boss), in employee id order.",
           "starterCode": "",
@@ -5057,7 +5057,7 @@
           }
         },
         {
-          "id": "proj_sales_team_review_ch2",
+          "id": "proj_sales_team_review-everyone-s-numbers",
           "title": "Medium: Everyone's numbers",
           "promptMarkdown": "Show every employee's `name`, the orders they handled (`orders`) and the value of those orders (`sales`, 2 decimals), with 0 for both if they handled none. Highest sales first, then by name.",
           "starterCode": "",
@@ -5069,7 +5069,7 @@
           }
         },
         {
-          "id": "proj_sales_team_review_ch3",
+          "id": "proj_sales_team_review-shipped-by-sales-staff",
           "title": "Medium: Shipped by sales staff",
           "promptMarkdown": "For employees with the role `Sales`, show each `name` and the value of their shipped orders (`shipped_sales`, 2 decimals). Only those with shipped orders, highest first.",
           "starterCode": "",
@@ -5081,7 +5081,7 @@
           }
         },
         {
-          "id": "proj_sales_team_review_ch4",
+          "id": "proj_sales_team_review-team-totals",
           "title": "Hard: Team totals",
           "promptMarkdown": "For each manager, show their name as `manager` and the value of the orders handled by the people who report directly to them (`team_sales`, 2 decimals). Highest first.",
           "starterCode": "",
@@ -5093,7 +5093,7 @@
           }
         },
         {
-          "id": "proj_sales_team_review_ch5",
+          "id": "proj_sales_team_review-shipped-or-waiting",
           "title": "Hard: Shipped or waiting",
           "promptMarkdown": "For each employee who handled orders, show `name`, the value of their shipped orders (`shipped`) and of their other orders (`not_shipped`), both 2 decimals. In name order.",
           "starterCode": "",
@@ -5105,7 +5105,7 @@
           }
         },
         {
-          "id": "proj_sales_team_review_ch6",
+          "id": "proj_sales_team_review-shared-customers",
           "title": "Hard: Shared customers",
           "promptMarkdown": "Show each customer who was served by two or more different employees: `name` and the number of employees (`employees`). Most first, then by name.",
           "starterCode": "",
@@ -5121,7 +5121,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_sales_team_review_q1",
+            "id": "proj_sales_team_review-q-1mtm334",
             "type": "mcq",
             "prompt": "Which shows the top boss in a staff list?",
             "choices": [
@@ -5146,7 +5146,7 @@
             "explanation": "Her manager_id is NULL, so only a LEFT JOIN keeps her."
           },
           {
-            "id": "proj_sales_team_review_q2",
+            "id": "proj_sales_team_review-q-m5sh1c",
             "type": "mcq",
             "prompt": "In Team totals, which alias is grouped?",
             "choices": [
@@ -5171,7 +5171,7 @@
             "explanation": "One group per manager, adding up their team's orders."
           },
           {
-            "id": "proj_sales_team_review_q3",
+            "id": "proj_sales_team_review-q-1mt4pdy",
             "type": "mcq",
             "prompt": "Why must every join be LEFT in Everyone's numbers?",
             "choices": [
@@ -5196,7 +5196,7 @@
             "explanation": "The NULL rows have nothing to match in the next table."
           },
           {
-            "id": "proj_sales_team_review_q4",
+            "id": "proj_sales_team_review-q-iythtx",
             "type": "mcq",
             "prompt": "Which counts orders, not lines, after joining order_items?",
             "choices": [
@@ -5221,7 +5221,7 @@
             "explanation": "Each order appears once per line, so count distinct ids."
           },
           {
-            "id": "proj_sales_team_review_q5",
+            "id": "proj_sales_team_review-q-1hzzidk",
             "type": "shortText",
             "prompt": "What value does a CASE give with `ELSE 0` when the condition is false?",
             "validation": {
@@ -5231,7 +5231,7 @@
             "explanation": "So the SUM only adds the matching values."
           },
           {
-            "id": "proj_sales_team_review_q6",
+            "id": "proj_sales_team_review-q-b6hhew",
             "type": "mcq",
             "prompt": "Why does Omar Haddad not appear in Shipped or waiting?",
             "choices": [

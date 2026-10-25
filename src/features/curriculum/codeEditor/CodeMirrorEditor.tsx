@@ -35,7 +35,8 @@ import { localCompletionSource, python } from '@codemirror/lang-python'
 import { tags as t } from '@lezer/highlight'
 import type { KeyBarTarget } from './CodeKeyBar'
 import { sqlLanguage } from './sqlLanguage'
-import { SQL_FUNCTIONS, SQL_KEYWORDS } from '../sqlWords'
+import { isSqlKeyword, SQL_FUNCTIONS, SQL_KEYWORDS, sqlTableFor, sqlTablesInQuery } from '../sqlWords'
+import type { SqlTable } from '../types'
 
 /** The error from the last Run or Check, shown on its line. */
 export interface EditorError {
@@ -68,6 +69,8 @@ export interface CodeMirrorEditorProps {
   onReady?: (target: KeyBarTarget, view: EditorView) => void
   /** More names to suggest while typing, such as the ones a challenge's instructions use. */
   suggestNames?: string[]
+  /** SQL lessons: the database's tables, for suggesting a table's columns after `table.` or an alias. */
+  sqlTables?: SqlTable[]
 }
 
 /**
@@ -113,35 +116,61 @@ const SQL_WORDS: Completion[] = [
   ...SQL_KEYWORDS.map((label) => ({ label, type: 'keyword' })),
   ...SQL_FUNCTIONS.map((label) => ({ label, type: 'function' })),
 ]
-const SQL_KEYWORD_SET = new Set(SQL_KEYWORDS.map((w) => w.toLowerCase()))
 
 /**
- * SQL suggestions: the lesson's table and column names first (and other names already
- * typed), then SQL's keywords and functions. Like Python's, they start from the second letter.
+ * SQL suggestions, depending on where the cursor is:
+ * - after `books.` or an alias such as `b.`: that table's columns;
+ * - right after FROM, JOIN, INTO, UPDATE or TABLE: the lesson's tables first;
+ * - anywhere else: the columns of the tables the query already uses first, then the
+ *   other table and column names, names already typed, and SQL's keywords and functions.
+ * Like Python's, they start from the second letter of a word (or straight after a dot).
  */
-function sqlSuggestions(extraNames: () => string[]): CompletionSource {
+function sqlSuggestions(extraNames: () => string[], lessonTables: () => SqlTable[]): CompletionSource {
   const sqlWords = completeFromList(SQL_WORDS)
   return async (context: CompletionContext) => {
+    const doc = context.state.doc.toString()
+    const tables = lessonTables()
+
+    const dotted = context.matchBefore(/[A-Za-z_]\w*\.\w*/)
+    if (dotted) {
+      const text = context.state.sliceDoc(dotted.from, dotted.to)
+      const qualifier = text.slice(0, text.indexOf('.'))
+      const table = sqlTableFor(qualifier, doc, tables)
+      if (!table) return null
+      return {
+        from: dotted.from + qualifier.length + 1,
+        options: table.columns.map((label) => ({ label, type: 'property', detail: table.name })),
+        validFor: /^\w*$/,
+      }
+    }
+
     const word = context.matchBefore(/\w+/)
-    if (!context.explicit && (!word || word.to - word.from < 2)) return null
     const from = word ? word.from : context.pos
+    const wantsTable = /\b(from|join|into|update|table)\s+$/i.test(context.state.sliceDoc(0, from))
+    if (!context.explicit && !wantsTable && (!word || word.to - word.from < 2)) return null
+    if (!context.explicit && wantsTable && !word) return null
+
     const byLabel = new Map<string, Completion>()
     const add = (options: readonly Completion[] | undefined, boost: number) => {
       for (const option of options ?? []) {
         if (!byLabel.has(option.label.toLowerCase())) byLabel.set(option.label.toLowerCase(), { ...option, boost })
       }
     }
+    if (wantsTable) add(tables.map((t) => ({ label: t.name, type: 'class', detail: 'table' })), 4)
+    for (const table of sqlTablesInQuery(doc, tables)) {
+      add(table.columns.map((label) => ({ label, type: 'property', detail: table.name })), 3)
+    }
     add(extraNames().map((label) => ({ label, type: 'variable' })), 2)
-    const typed = context.state.doc.toString().match(/[A-Za-z_]\w+/g) ?? []
+    const typed = doc.match(/[A-Za-z_]\w+/g) ?? []
     const current = word ? context.state.sliceDoc(word.from, word.to) : ''
     add(
       [...new Set(typed)]
-        .filter((name) => name !== current && !SQL_KEYWORD_SET.has(name.toLowerCase()))
+        .filter((name) => name !== current && !isSqlKeyword(name))
         .map((label) => ({ label, type: 'variable' })),
       1,
     )
     add((await sqlWords(context))?.options, 0)
-    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w{2,}$/ } : null
+    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w*$/ } : null
   }
 }
 
@@ -270,14 +299,15 @@ export default function CodeMirrorEditor({
   onFocusChange,
   onReady,
   suggestNames,
+  sqlTables,
 }: CodeMirrorEditorProps) {
   const hostRef = useRef<HTMLDivElement>(null)
   const viewRef = useRef<EditorView | null>(null)
   // The latest props for the editor's own callbacks, which are set up once.
-  const latest = useRef({ value, onChange, onFocusChange, onReady, suggestNames })
+  const latest = useRef({ value, onChange, onFocusChange, onReady, suggestNames, sqlTables })
 
   useEffect(() => {
-    latest.current = { value, onChange, onFocusChange, onReady, suggestNames }
+    latest.current = { value, onChange, onFocusChange, onReady, suggestNames, sqlTables }
   })
 
   // Create the editor once per language; later `value` changes are applied below.
@@ -312,7 +342,12 @@ export default function CodeMirrorEditor({
           language !== 'plain'
             ? autocompletion({
                 override: [
-                  (language === 'sql' ? sqlSuggestions : suggestions)(() => latest.current.suggestNames ?? []),
+                  language === 'sql'
+                    ? sqlSuggestions(
+                        () => latest.current.suggestNames ?? [],
+                        () => latest.current.sqlTables ?? [],
+                      )
+                    : suggestions(() => latest.current.suggestNames ?? []),
                 ],
                 filterStrict: true,
                 icons: false,

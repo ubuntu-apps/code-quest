@@ -224,6 +224,7 @@ export function LearnLevel({
                   key={ch.id}
                   challenge={ch}
                   tables={level.database?.tables}
+                  setupSql={level.database?.setupSql}
                   chIndex={chIndex}
                   totalChallenges={level.challenges.length}
                   draft={challengeDrafts[ch.id] ?? ''}

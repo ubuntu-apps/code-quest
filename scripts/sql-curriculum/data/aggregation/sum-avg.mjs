@@ -27,7 +27,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Items sold', {
       prompt: 'Show the total number of items sold (the sum of `quantity`), in a column called `items`.',
-      hint: '`SELECT SUM(quantity) AS items FROM sales;`',
+      hint: '`SUM(column)` adds up a column. Name the result with `AS`.',
       solution: 'SELECT SUM(quantity) AS items FROM sales;',
     }),
     query('easy', 'Average score', {
