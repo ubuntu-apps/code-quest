@@ -26,19 +26,19 @@ export default makeTopic({
   challenges: [
     query('easy', 'A backup', {
       prompt: 'Make a backup of `contacts` called `contacts_backup`, with all its rows.',
-      hint: '`CREATE TABLE contacts_backup AS SELECT * FROM contacts;`',
+      hint: '`CREATE TABLE new_name AS` followed by a query that selects every row.',
       solution: 'CREATE TABLE contacts_backup AS\nSELECT * FROM contacts;',
       checks: [rows('contacts_backup', 'id')],
     }),
     query('easy', 'Takings per event', {
       prompt: "Make a table `event_totals` with each `event_title` from `ticket_sheet`, its number of tickets (`tickets`) and its takings (`takings`, the sum of `price`).",
-      hint: '`CREATE TABLE event_totals AS SELECT event_title, COUNT(*) AS tickets, SUM(price) AS takings FROM ticket_sheet GROUP BY event_title;`',
+      hint: '`CREATE TABLE event_totals AS` followed by a query that groups `ticket_sheet` by `event_title`, with `COUNT(*)` and `SUM(price)`.',
       solution: 'CREATE TABLE event_totals AS\nSELECT event_title, COUNT(*) AS tickets, SUM(price) AS takings\nFROM ticket_sheet\nGROUP BY event_title;',
       checks: [rows('event_totals', 'event_title')],
     }),
     query('easy', 'Same columns, no rows', {
       prompt: 'Make an empty table `contacts_empty` with the same columns as `contacts`.',
-      hint: '`CREATE TABLE contacts_empty AS SELECT * FROM contacts WHERE 0;`',
+      hint: '`CREATE TABLE … AS SELECT * FROM contacts` with a WHERE that is never true, such as `WHERE 0`.',
       solution: 'CREATE TABLE contacts_empty AS\nSELECT * FROM contacts WHERE 0;',
       checks: [columns('contacts_empty'), tryIt('It has no rows', 'SELECT COUNT(*) FROM contacts_empty')],
     }),
@@ -69,7 +69,7 @@ export default makeTopic({
     }),
     query('hard', 'Room sizes', {
       prompt: "Make a table `room_sizes` with each room's `id`, `name`, `seats` and a `size`: `large` for 100 seats or more, `small` otherwise.",
-      hint: "`CREATE TABLE room_sizes AS SELECT id, name, seats, CASE WHEN seats >= 100 THEN 'large' ELSE 'small' END AS size FROM rooms;`",
+      hint: '`CREATE TABLE room_sizes AS SELECT …`, with a `CASE WHEN seats >= 100 THEN … ELSE … END` column called `size`.',
       solution: "CREATE TABLE room_sizes AS\nSELECT id, name, seats,\n       CASE WHEN seats >= 100 THEN 'large' ELSE 'small' END AS size\nFROM rooms;",
       checks: [rows('room_sizes', 'id')],
     }),

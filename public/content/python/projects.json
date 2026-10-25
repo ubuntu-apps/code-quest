@@ -30,7 +30,7 @@
       },
       "challenges": [
         {
-          "id": "hangman_ch1",
+          "id": "hangman-show-the-blanks",
           "title": "Easy: Show the blanks",
           "promptMarkdown": "Define `masked(word, guessed)` that shows the word with `_` for each letter not yet guessed, with spaces between, like `_ y _ _ o _`.",
           "starterCode": "import json\nimport random\n\n",
@@ -59,7 +59,7 @@
           }
         },
         {
-          "id": "hangman_ch2",
+          "id": "hangman-solved",
           "title": "Easy: Solved?",
           "promptMarkdown": "Define `is_solved(word, guessed)`: `True` when every letter of the word has been guessed.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n",
@@ -83,7 +83,7 @@
           }
         },
         {
-          "id": "hangman_ch3",
+          "id": "hangman-check-the-input",
           "title": "Easy: Check the input",
           "promptMarkdown": "Define `check_guess(text)` that returns the guess as one lowercase letter, after trimming spaces. Raise `ValueError(\"Type one letter\")` for anything that isn't exactly one character, and `ValueError(\"Letters only\")` for a single character that isn't a letter.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n",
@@ -112,7 +112,7 @@
           }
         },
         {
-          "id": "hangman_ch4",
+          "id": "hangman-apply-a-guess",
           "title": "Medium: Apply a guess",
           "promptMarkdown": "Define `apply_guess(word, guessed, letter)`: if the letter was already guessed, return `You already tried <letter>`; otherwise add it to the `guessed` set and return `Good guess!` or `No <letter> in the word`.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n\n\ndef check_guess(text):\n    letter = text.strip().lower()\n    if len(letter) != 1:\n        raise ValueError(\"Type one letter\")\n    if not letter.isalpha():\n        raise ValueError(\"Letters only\")\n    return letter\n",
@@ -131,7 +131,7 @@
           }
         },
         {
-          "id": "hangman_ch5",
+          "id": "hangman-the-state-of-play",
           "title": "Medium: The state of play",
           "promptMarkdown": "Define `wrong_letters(word, guessed)` (sorted), `lives_left(word, guessed, max_wrong=6)`, and `status(word, guessed, max_wrong=6)`, which returns a line like `p _ _ _ o _   Lives: 4   Wrong: a, e` (three spaces between the parts; `none` when nothing is wrong).",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n\n\ndef check_guess(text):\n    letter = text.strip().lower()\n    if len(letter) != 1:\n        raise ValueError(\"Type one letter\")\n    if not letter.isalpha():\n        raise ValueError(\"Letters only\")\n    return letter\n\n\ndef apply_guess(word, guessed, letter):\n    if letter in guessed:\n        return f\"You already tried {letter}\"\n    guessed.add(letter)\n    if letter in word:\n        return \"Good guess!\"\n    return f\"No {letter} in the word\"\n",
@@ -160,7 +160,7 @@
           }
         },
         {
-          "id": "hangman_ch6",
+          "id": "hangman-pick-a-word",
           "title": "Medium: Pick a word",
           "promptMarkdown": "Define `pick_word(words, seed=None)` that picks a word with `random.Random(seed).choice(words)`, so the same seed always picks the same word.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n\n\ndef check_guess(text):\n    letter = text.strip().lower()\n    if len(letter) != 1:\n        raise ValueError(\"Type one letter\")\n    if not letter.isalpha():\n        raise ValueError(\"Letters only\")\n    return letter\n\n\ndef apply_guess(word, guessed, letter):\n    if letter in guessed:\n        return f\"You already tried {letter}\"\n    guessed.add(letter)\n    if letter in word:\n        return \"Good guess!\"\n    return f\"No {letter} in the word\"\n\n\ndef wrong_letters(word, guessed):\n    return sorted(letter for letter in guessed if letter not in word)\n\n\ndef lives_left(word, guessed, max_wrong=6):\n    return max_wrong - len(wrong_letters(word, guessed))\n\n\ndef status(word, guessed, max_wrong=6):\n    wrong = \", \".join(wrong_letters(word, guessed)) or \"none\"\n    return f\"{masked(word, guessed)}   Lives: {lives_left(word, guessed, max_wrong)}   Wrong: {wrong}\"\n",
@@ -184,7 +184,7 @@
           }
         },
         {
-          "id": "hangman_ch7",
+          "id": "hangman-play-it-automatically",
           "title": "Hard: Play it automatically",
           "promptMarkdown": "Define `play(word, guesses, max_wrong=6)` that plays a game from a list of typed guesses and returns the lines it would show: each guess's message (or the input error), then `You win! The word was <word>` or `Out of lives! The word was <word>` as soon as the game ends. If the guesses run out first, finish with `Game not finished`.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n\n\ndef check_guess(text):\n    letter = text.strip().lower()\n    if len(letter) != 1:\n        raise ValueError(\"Type one letter\")\n    if not letter.isalpha():\n        raise ValueError(\"Letters only\")\n    return letter\n\n\ndef apply_guess(word, guessed, letter):\n    if letter in guessed:\n        return f\"You already tried {letter}\"\n    guessed.add(letter)\n    if letter in word:\n        return \"Good guess!\"\n    return f\"No {letter} in the word\"\n\n\ndef wrong_letters(word, guessed):\n    return sorted(letter for letter in guessed if letter not in word)\n\n\ndef lives_left(word, guessed, max_wrong=6):\n    return max_wrong - len(wrong_letters(word, guessed))\n\n\ndef status(word, guessed, max_wrong=6):\n    wrong = \", \".join(wrong_letters(word, guessed)) or \"none\"\n    return f\"{masked(word, guessed)}   Lives: {lives_left(word, guessed, max_wrong)}   Wrong: {wrong}\"\n\n\ndef pick_word(words, seed=None):\n    return random.Random(seed).choice(words)\n",
@@ -213,7 +213,7 @@
           }
         },
         {
-          "id": "hangman_ch8",
+          "id": "hangman-keep-score",
           "title": "Hard: Keep score",
           "promptMarkdown": "Define `score(word, guessed, max_wrong=6)`: 0 for an unsolved word; otherwise 10 points for each different letter in the word plus 5 for each life left.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n\n\ndef check_guess(text):\n    letter = text.strip().lower()\n    if len(letter) != 1:\n        raise ValueError(\"Type one letter\")\n    if not letter.isalpha():\n        raise ValueError(\"Letters only\")\n    return letter\n\n\ndef apply_guess(word, guessed, letter):\n    if letter in guessed:\n        return f\"You already tried {letter}\"\n    guessed.add(letter)\n    if letter in word:\n        return \"Good guess!\"\n    return f\"No {letter} in the word\"\n\n\ndef wrong_letters(word, guessed):\n    return sorted(letter for letter in guessed if letter not in word)\n\n\ndef lives_left(word, guessed, max_wrong=6):\n    return max_wrong - len(wrong_letters(word, guessed))\n\n\ndef status(word, guessed, max_wrong=6):\n    wrong = \", \".join(wrong_letters(word, guessed)) or \"none\"\n    return f\"{masked(word, guessed)}   Lives: {lives_left(word, guessed, max_wrong)}   Wrong: {wrong}\"\n\n\ndef pick_word(words, seed=None):\n    return random.Random(seed).choice(words)\n\n\ndef play(word, guesses, max_wrong=6):\n    guessed = set()\n    lines = []\n    for raw in guesses:\n        try:\n            letter = check_guess(raw)\n        except ValueError as e:\n            lines.append(str(e))\n            continue\n        lines.append(apply_guess(word, guessed, letter))\n        if is_solved(word, guessed):\n            lines.append(f\"You win! The word was {word}\")\n            return lines\n        if lives_left(word, guessed, max_wrong) <= 0:\n            lines.append(f\"Out of lives! The word was {word}\")\n            return lines\n    lines.append(\"Game not finished\")\n    return lines\n",
@@ -242,7 +242,7 @@
           }
         },
         {
-          "id": "hangman_ch9",
+          "id": "hangman-the-game",
           "title": "Expert: The game",
           "promptMarkdown": "Define `main(words, seed=None, max_wrong=6)`: pick a word, print `I'm thinking of a word with <n> letters.`, then until the game ends, print the status, ask `Guess a letter: `, and print the message (or the input error). Finish with `You win! The word was <word>. Score: <points>` or `Out of lives! The word was <word>`.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n\n\ndef check_guess(text):\n    letter = text.strip().lower()\n    if len(letter) != 1:\n        raise ValueError(\"Type one letter\")\n    if not letter.isalpha():\n        raise ValueError(\"Letters only\")\n    return letter\n\n\ndef apply_guess(word, guessed, letter):\n    if letter in guessed:\n        return f\"You already tried {letter}\"\n    guessed.add(letter)\n    if letter in word:\n        return \"Good guess!\"\n    return f\"No {letter} in the word\"\n\n\ndef wrong_letters(word, guessed):\n    return sorted(letter for letter in guessed if letter not in word)\n\n\ndef lives_left(word, guessed, max_wrong=6):\n    return max_wrong - len(wrong_letters(word, guessed))\n\n\ndef status(word, guessed, max_wrong=6):\n    wrong = \", \".join(wrong_letters(word, guessed)) or \"none\"\n    return f\"{masked(word, guessed)}   Lives: {lives_left(word, guessed, max_wrong)}   Wrong: {wrong}\"\n\n\ndef pick_word(words, seed=None):\n    return random.Random(seed).choice(words)\n\n\ndef play(word, guesses, max_wrong=6):\n    guessed = set()\n    lines = []\n    for raw in guesses:\n        try:\n            letter = check_guess(raw)\n        except ValueError as e:\n            lines.append(str(e))\n            continue\n        lines.append(apply_guess(word, guessed, letter))\n        if is_solved(word, guessed):\n            lines.append(f\"You win! The word was {word}\")\n            return lines\n        if lives_left(word, guessed, max_wrong) <= 0:\n            lines.append(f\"Out of lives! The word was {word}\")\n            return lines\n    lines.append(\"Game not finished\")\n    return lines\n\n\ndef score(word, guessed, max_wrong=6):\n    if not is_solved(word, guessed):\n        return 0\n    return 10 * len(set(word)) + 5 * lives_left(word, guessed, max_wrong)\n",
@@ -261,7 +261,7 @@
           }
         },
         {
-          "id": "hangman_ch10",
+          "id": "hangman-words-and-high-scores",
           "title": "Expert: Words and high scores",
           "promptMarkdown": "Add `load_words(path)`, which reads one word per line (lowercased; skipping blank lines, `#` comments and anything that isn't only letters), and `save_score(path, name, points, keep=5)`, which adds a score to a JSON list of `{\"name\", \"score\"}` dicts (an empty list if the file doesn't exist), keeps the best `keep`, highest first, saves it and returns it.",
           "starterCode": "import json\nimport random\n\ndef masked(word, guessed):\n    return \" \".join(letter if letter in guessed else \"_\" for letter in word)\n\n\ndef is_solved(word, guessed):\n    return all(letter in guessed for letter in word)\n\n\ndef check_guess(text):\n    letter = text.strip().lower()\n    if len(letter) != 1:\n        raise ValueError(\"Type one letter\")\n    if not letter.isalpha():\n        raise ValueError(\"Letters only\")\n    return letter\n\n\ndef apply_guess(word, guessed, letter):\n    if letter in guessed:\n        return f\"You already tried {letter}\"\n    guessed.add(letter)\n    if letter in word:\n        return \"Good guess!\"\n    return f\"No {letter} in the word\"\n\n\ndef wrong_letters(word, guessed):\n    return sorted(letter for letter in guessed if letter not in word)\n\n\ndef lives_left(word, guessed, max_wrong=6):\n    return max_wrong - len(wrong_letters(word, guessed))\n\n\ndef status(word, guessed, max_wrong=6):\n    wrong = \", \".join(wrong_letters(word, guessed)) or \"none\"\n    return f\"{masked(word, guessed)}   Lives: {lives_left(word, guessed, max_wrong)}   Wrong: {wrong}\"\n\n\ndef pick_word(words, seed=None):\n    return random.Random(seed).choice(words)\n\n\ndef play(word, guesses, max_wrong=6):\n    guessed = set()\n    lines = []\n    for raw in guesses:\n        try:\n            letter = check_guess(raw)\n        except ValueError as e:\n            lines.append(str(e))\n            continue\n        lines.append(apply_guess(word, guessed, letter))\n        if is_solved(word, guessed):\n            lines.append(f\"You win! The word was {word}\")\n            return lines\n        if lives_left(word, guessed, max_wrong) <= 0:\n            lines.append(f\"Out of lives! The word was {word}\")\n            return lines\n    lines.append(\"Game not finished\")\n    return lines\n\n\ndef score(word, guessed, max_wrong=6):\n    if not is_solved(word, guessed):\n        return 0\n    return 10 * len(set(word)) + 5 * lives_left(word, guessed, max_wrong)\n\n\ndef main(words, seed=None, max_wrong=6):\n    word = pick_word(words, seed)\n    guessed = set()\n    print(f\"I'm thinking of a word with {len(word)} letters.\")\n    while not is_solved(word, guessed) and lives_left(word, guessed, max_wrong) > 0:\n        print(status(word, guessed, max_wrong))\n        try:\n            letter = check_guess(input(\"Guess a letter: \"))\n        except ValueError as e:\n            print(e)\n            continue\n        print(apply_guess(word, guessed, letter))\n    if is_solved(word, guessed):\n        print(f\"You win! The word was {word}. Score: {score(word, guessed, max_wrong)}\")\n    else:\n        print(f\"Out of lives! The word was {word}\")\n",
@@ -289,7 +289,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "hangman_q1",
+            "id": "hangman-q-1atoxwp",
             "type": "mcq",
             "prompt": "Why keep the guessed letters in a set?",
             "choices": [
@@ -314,7 +314,7 @@
             "explanation": "A set ignores repeats and checks `in` quickly, and the order of guesses doesn't matter."
           },
           {
-            "id": "hangman_q2",
+            "id": "hangman-q-1ge9xr1",
             "type": "mcq",
             "prompt": "Why do most of the functions return values instead of printing?",
             "choices": [
@@ -339,7 +339,7 @@
             "explanation": "Functions that return values can each be tested, and a test can play the whole game without typing."
           },
           {
-            "id": "hangman_q3",
+            "id": "hangman-q-10v4wo",
             "type": "mcq",
             "prompt": "Why does `pick_word` use `random.Random(seed)`?",
             "choices": [
@@ -364,7 +364,7 @@
             "explanation": "A `Random` object with a fixed seed makes the same choices every time."
           },
           {
-            "id": "hangman_q4",
+            "id": "hangman-q-180ew1b",
             "type": "mcq",
             "prompt": "What does `masked(\"banana\", {\"a\"})` return?",
             "choices": [
@@ -389,7 +389,7 @@
             "explanation": "Letters that were guessed are shown and the rest stay hidden as `_`."
           },
           {
-            "id": "hangman_q5",
+            "id": "hangman-q-1kqkn8f",
             "type": "shortText",
             "prompt": "How many points is `cat` worth, solved with all 6 lives left? (a number)",
             "validation": {
@@ -399,7 +399,7 @@
             "explanation": "Each different letter is worth 10 and each life left 5: 3 × 10 + 6 × 5 is 60."
           },
           {
-            "id": "hangman_q6",
+            "id": "hangman-q-1oqlhfd",
             "type": "mcq",
             "prompt": "What should happen when the player types `ab`?",
             "choices": [
@@ -424,7 +424,7 @@
             "explanation": "`check_guess` raises a `ValueError`, and `main` catches it and shows the message."
           },
           {
-            "id": "hangman_q7",
+            "id": "hangman-q-6logpq",
             "type": "mcq",
             "prompt": "`apply_guess` gets a letter already in `guessed`. What does it do?",
             "choices": [
@@ -449,7 +449,7 @@
             "explanation": "A repeated guess is a slip, not a wrong answer, so it gets a reply and costs no life."
           },
           {
-            "id": "hangman_q8",
+            "id": "hangman-q-14017mv",
             "type": "mcq",
             "prompt": "Where does `input` appear in the finished game?",
             "choices": [
@@ -504,7 +504,7 @@
       },
       "challenges": [
         {
-          "id": "expense_tracker_ch1",
+          "id": "expense_tracker-a-transaction",
           "title": "Easy: A transaction",
           "promptMarkdown": "Define a data class `Transaction` with `date` (str), `description` (str), `amount` (float) and `category` (str, default `\"other\"`).",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n",
@@ -528,7 +528,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch2",
+          "id": "expense_tracker-read-an-amount",
           "title": "Easy: Read an amount",
           "promptMarkdown": "Define `parse_amount(text)` that turns text like `12.50`, `-3` or `1,234.50` into a float rounded to 2 places, and raises `ValueError(\"Bad amount: <text>\")` for anything else.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n",
@@ -552,7 +552,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch3",
+          "id": "expense_tracker-the-budget",
           "title": "Easy: The budget",
           "promptMarkdown": "Define `Budget`, holding a list `transactions` and a dict `limits` (both empty to start), with `add(transaction)` and `balance()`, the sum of all amounts rounded to 2 places.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n",
@@ -576,7 +576,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch4",
+          "id": "expense_tracker-spending-by-category",
           "title": "Medium: Spending by category",
           "promptMarkdown": "Add `spending_by_category(month=None)`: a dict from category to the total spent (as a positive number, rounded to 2 places), biggest first, counting only spending (negative amounts) and, when `month` is given like `2025-03`, only that month.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n\n\nclass Budget:\n    def __init__(self):\n        self.transactions = []\n        self.limits = {}\n\n    def add(self, transaction):\n        self.transactions.append(transaction)\n\n    def balance(self):\n        return round(sum(t.amount for t in self.transactions), 2)\n",
@@ -605,7 +605,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch5",
+          "id": "expense_tracker-a-month-in-numbers",
           "title": "Medium: A month in numbers",
           "promptMarkdown": "Add `month_summary(month)`, returning `{\"income\": ..., \"spending\": ..., \"net\": ...}` for that month, each rounded to 2 places, with spending as a positive number.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n\n\nclass Budget:\n    def __init__(self):\n        self.transactions = []\n        self.limits = {}\n\n    def add(self, transaction):\n        self.transactions.append(transaction)\n\n    def balance(self):\n        return round(sum(t.amount for t in self.transactions), 2)\n\n    def spending_by_category(self, month=None):\n        totals = {}\n        for t in self.transactions:\n            if t.amount < 0 and (month is None or t.date.startswith(month)):\n                totals[t.category] = totals.get(t.category, 0) - t.amount\n        ranked = sorted(totals.items(), key=lambda item: (-item[1], item[0]))\n        return {category: round(total, 2) for category, total in ranked}\n",
@@ -629,7 +629,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch6",
+          "id": "expense_tracker-limits",
           "title": "Medium: Limits",
           "promptMarkdown": "Add `set_limit(category, amount)` and `over_limits(month)`, which returns a message for each category over its limit that month, in alphabetical order, like `food: 312.40 of 300.00 (over by 12.40)`.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n\n\nclass Budget:\n    def __init__(self):\n        self.transactions = []\n        self.limits = {}\n\n    def add(self, transaction):\n        self.transactions.append(transaction)\n\n    def balance(self):\n        return round(sum(t.amount for t in self.transactions), 2)\n\n    def spending_by_category(self, month=None):\n        totals = {}\n        for t in self.transactions:\n            if t.amount < 0 and (month is None or t.date.startswith(month)):\n                totals[t.category] = totals.get(t.category, 0) - t.amount\n        ranked = sorted(totals.items(), key=lambda item: (-item[1], item[0]))\n        return {category: round(total, 2) for category, total in ranked}\n\n    def month_summary(self, month):\n        items = [t for t in self.transactions if t.date.startswith(month)]\n        income = round(sum(t.amount for t in items if t.amount > 0), 2)\n        spending = round(-sum(t.amount for t in items if t.amount < 0), 2)\n        return {\"income\": income, \"spending\": spending, \"net\": round(income - spending, 2)}\n",
@@ -653,7 +653,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch7",
+          "id": "expense_tracker-save-and-load",
           "title": "Hard: Save and load",
           "promptMarkdown": "Add `save(path)`, which writes the transactions (as dicts, with `asdict`) and the limits to a JSON file, and a class method `load(path)` that builds a `Budget` from such a file, or returns an empty one if the file doesn't exist.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n\n\nclass Budget:\n    def __init__(self):\n        self.transactions = []\n        self.limits = {}\n\n    def add(self, transaction):\n        self.transactions.append(transaction)\n\n    def balance(self):\n        return round(sum(t.amount for t in self.transactions), 2)\n\n    def spending_by_category(self, month=None):\n        totals = {}\n        for t in self.transactions:\n            if t.amount < 0 and (month is None or t.date.startswith(month)):\n                totals[t.category] = totals.get(t.category, 0) - t.amount\n        ranked = sorted(totals.items(), key=lambda item: (-item[1], item[0]))\n        return {category: round(total, 2) for category, total in ranked}\n\n    def month_summary(self, month):\n        items = [t for t in self.transactions if t.date.startswith(month)]\n        income = round(sum(t.amount for t in items if t.amount > 0), 2)\n        spending = round(-sum(t.amount for t in items if t.amount < 0), 2)\n        return {\"income\": income, \"spending\": spending, \"net\": round(income - spending, 2)}\n\n    def set_limit(self, category, amount):\n        self.limits[category] = amount\n\n    def over_limits(self, month):\n        spent = self.spending_by_category(month)\n        messages = []\n        for category in sorted(self.limits):\n            limit = self.limits[category]\n            total = spent.get(category, 0)\n            if total > limit:\n                messages.append(f\"{category}: {total:.2f} of {limit:.2f} (over by {total - limit:.2f})\")\n        return messages\n",
@@ -682,7 +682,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch8",
+          "id": "expense_tracker-export-to-csv",
           "title": "Hard: Export to CSV",
           "promptMarkdown": "Add `export_csv(path)`, which writes the transactions as CSV with the header `date,description,category,amount` and amounts with 2 decimal places.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n\n\nclass Budget:\n    def __init__(self):\n        self.transactions = []\n        self.limits = {}\n\n    def add(self, transaction):\n        self.transactions.append(transaction)\n\n    def balance(self):\n        return round(sum(t.amount for t in self.transactions), 2)\n\n    def spending_by_category(self, month=None):\n        totals = {}\n        for t in self.transactions:\n            if t.amount < 0 and (month is None or t.date.startswith(month)):\n                totals[t.category] = totals.get(t.category, 0) - t.amount\n        ranked = sorted(totals.items(), key=lambda item: (-item[1], item[0]))\n        return {category: round(total, 2) for category, total in ranked}\n\n    def month_summary(self, month):\n        items = [t for t in self.transactions if t.date.startswith(month)]\n        income = round(sum(t.amount for t in items if t.amount > 0), 2)\n        spending = round(-sum(t.amount for t in items if t.amount < 0), 2)\n        return {\"income\": income, \"spending\": spending, \"net\": round(income - spending, 2)}\n\n    def set_limit(self, category, amount):\n        self.limits[category] = amount\n\n    def over_limits(self, month):\n        spent = self.spending_by_category(month)\n        messages = []\n        for category in sorted(self.limits):\n            limit = self.limits[category]\n            total = spent.get(category, 0)\n            if total > limit:\n                messages.append(f\"{category}: {total:.2f} of {limit:.2f} (over by {total - limit:.2f})\")\n        return messages\n\n    def save(self, path):\n        data = {\"transactions\": [asdict(t) for t in self.transactions], \"limits\": self.limits}\n        with open(path, \"w\", encoding=\"utf-8\") as f:\n            json.dump(data, f, indent=2)\n\n    @classmethod\n    def load(cls, path):\n        budget = cls()\n        try:\n            with open(path, encoding=\"utf-8\") as f:\n                data = json.load(f)\n        except FileNotFoundError:\n            return budget\n        for item in data[\"transactions\"]:\n            budget.add(Transaction(**item))\n        budget.limits = data[\"limits\"]\n        return budget\n",
@@ -706,7 +706,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch9",
+          "id": "expense_tracker-the-monthly-report",
           "title": "Expert: The monthly report",
           "promptMarkdown": "Add `report(month)`, returning the lines shown in the lesson: a heading, the income, spending and net, a line per category with a bar of `#` (20 for the biggest, the rest in proportion, rounded half up) padded to 20 characters, and an `Over budget: ` line for each limit broken.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n\n\nclass Budget:\n    def __init__(self):\n        self.transactions = []\n        self.limits = {}\n\n    def add(self, transaction):\n        self.transactions.append(transaction)\n\n    def balance(self):\n        return round(sum(t.amount for t in self.transactions), 2)\n\n    def spending_by_category(self, month=None):\n        totals = {}\n        for t in self.transactions:\n            if t.amount < 0 and (month is None or t.date.startswith(month)):\n                totals[t.category] = totals.get(t.category, 0) - t.amount\n        ranked = sorted(totals.items(), key=lambda item: (-item[1], item[0]))\n        return {category: round(total, 2) for category, total in ranked}\n\n    def month_summary(self, month):\n        items = [t for t in self.transactions if t.date.startswith(month)]\n        income = round(sum(t.amount for t in items if t.amount > 0), 2)\n        spending = round(-sum(t.amount for t in items if t.amount < 0), 2)\n        return {\"income\": income, \"spending\": spending, \"net\": round(income - spending, 2)}\n\n    def set_limit(self, category, amount):\n        self.limits[category] = amount\n\n    def over_limits(self, month):\n        spent = self.spending_by_category(month)\n        messages = []\n        for category in sorted(self.limits):\n            limit = self.limits[category]\n            total = spent.get(category, 0)\n            if total > limit:\n                messages.append(f\"{category}: {total:.2f} of {limit:.2f} (over by {total - limit:.2f})\")\n        return messages\n\n    def save(self, path):\n        data = {\"transactions\": [asdict(t) for t in self.transactions], \"limits\": self.limits}\n        with open(path, \"w\", encoding=\"utf-8\") as f:\n            json.dump(data, f, indent=2)\n\n    @classmethod\n    def load(cls, path):\n        budget = cls()\n        try:\n            with open(path, encoding=\"utf-8\") as f:\n                data = json.load(f)\n        except FileNotFoundError:\n            return budget\n        for item in data[\"transactions\"]:\n            budget.add(Transaction(**item))\n        budget.limits = data[\"limits\"]\n        return budget\n\n    def export_csv(self, path):\n        with open(path, \"w\", newline=\"\", encoding=\"utf-8\") as f:\n            writer = csv.DictWriter(f, fieldnames=[\"date\", \"description\", \"category\", \"amount\"])\n            writer.writeheader()\n            for t in self.transactions:\n                writer.writerow({\"date\": t.date, \"description\": t.description, \"category\": t.category, \"amount\": f\"{t.amount:.2f}\"})\n",
@@ -730,7 +730,7 @@
           }
         },
         {
-          "id": "expense_tracker_ch10",
+          "id": "expense_tracker-commands",
           "title": "Expert: Commands",
           "promptMarkdown": "Define `run(budget, commands)` that carries out typed commands and returns the replies: `add DATE AMOUNT CATEGORY DESCRIPTION...` (`Added: <description> (<amount>)`, with `Bad date: <date>` or `Bad amount: <text>` for bad values), `limit CATEGORY AMOUNT` (`Limit for <category>: <amount>`), `balance` (`Balance: <amount>`) and `report YYYY-MM` (the report lines). Anything else replies `Commands: add DATE AMOUNT CATEGORY TEXT, limit CATEGORY AMOUNT, balance, report YYYY-MM`.",
           "starterCode": "import csv\nimport json\nfrom dataclasses import dataclass, asdict\nfrom datetime import date\n\n@dataclass\nclass Transaction:\n    date: str\n    description: str\n    amount: float\n    category: str = \"other\"\n\n\ndef parse_amount(text):\n    try:\n        return round(float(text.replace(\",\", \"\")), 2)\n    except ValueError:\n        raise ValueError(f\"Bad amount: {text}\")\n\n\nclass Budget:\n    def __init__(self):\n        self.transactions = []\n        self.limits = {}\n\n    def add(self, transaction):\n        self.transactions.append(transaction)\n\n    def balance(self):\n        return round(sum(t.amount for t in self.transactions), 2)\n\n    def spending_by_category(self, month=None):\n        totals = {}\n        for t in self.transactions:\n            if t.amount < 0 and (month is None or t.date.startswith(month)):\n                totals[t.category] = totals.get(t.category, 0) - t.amount\n        ranked = sorted(totals.items(), key=lambda item: (-item[1], item[0]))\n        return {category: round(total, 2) for category, total in ranked}\n\n    def month_summary(self, month):\n        items = [t for t in self.transactions if t.date.startswith(month)]\n        income = round(sum(t.amount for t in items if t.amount > 0), 2)\n        spending = round(-sum(t.amount for t in items if t.amount < 0), 2)\n        return {\"income\": income, \"spending\": spending, \"net\": round(income - spending, 2)}\n\n    def set_limit(self, category, amount):\n        self.limits[category] = amount\n\n    def over_limits(self, month):\n        spent = self.spending_by_category(month)\n        messages = []\n        for category in sorted(self.limits):\n            limit = self.limits[category]\n            total = spent.get(category, 0)\n            if total > limit:\n                messages.append(f\"{category}: {total:.2f} of {limit:.2f} (over by {total - limit:.2f})\")\n        return messages\n\n    def save(self, path):\n        data = {\"transactions\": [asdict(t) for t in self.transactions], \"limits\": self.limits}\n        with open(path, \"w\", encoding=\"utf-8\") as f:\n            json.dump(data, f, indent=2)\n\n    @classmethod\n    def load(cls, path):\n        budget = cls()\n        try:\n            with open(path, encoding=\"utf-8\") as f:\n                data = json.load(f)\n        except FileNotFoundError:\n            return budget\n        for item in data[\"transactions\"]:\n            budget.add(Transaction(**item))\n        budget.limits = data[\"limits\"]\n        return budget\n\n    def export_csv(self, path):\n        with open(path, \"w\", newline=\"\", encoding=\"utf-8\") as f:\n            writer = csv.DictWriter(f, fieldnames=[\"date\", \"description\", \"category\", \"amount\"])\n            writer.writeheader()\n            for t in self.transactions:\n                writer.writerow({\"date\": t.date, \"description\": t.description, \"category\": t.category, \"amount\": f\"{t.amount:.2f}\"})\n\n    def report(self, month):\n        summary = self.month_summary(month)\n        lines = [\n            f\"Report for {month}\",\n            f\"Income {summary['income']:.2f}, spending {summary['spending']:.2f}, net {summary['net']:.2f}\",\n        ]\n        spending = self.spending_by_category(month)\n        biggest = max(spending.values(), default=0)\n        for category, total in spending.items():\n            bar = \"#\" * int(20 * total / biggest + 0.5)\n            lines.append(f\"{category:<10}{bar:<20} {total:.2f}\")\n        for message in self.over_limits(month):\n            lines.append(\"Over budget: \" + message)\n        return lines\n",
@@ -758,7 +758,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "expense_tracker_q1",
+            "id": "expense_tracker-q-r4ox29",
             "type": "mcq",
             "prompt": "Why are amounts negative for spending and positive for income?",
             "choices": [
@@ -783,7 +783,7 @@
             "explanation": "With signed amounts, the balance is simply the sum of every amount."
           },
           {
-            "id": "expense_tracker_q2",
+            "id": "expense_tracker-q-1yazbzs",
             "type": "mcq",
             "prompt": "Why store dates as ISO text like `2025-03-09`?",
             "choices": [
@@ -808,7 +808,7 @@
             "explanation": "ISO text sorts in date order, and a month is just a prefix."
           },
           {
-            "id": "expense_tracker_q3",
+            "id": "expense_tracker-q-14fgh9z",
             "type": "mcq",
             "prompt": "What does `asdict(transaction)` give?",
             "choices": [
@@ -833,7 +833,7 @@
             "explanation": "`asdict` turns a data class into a dict that `json` can write."
           },
           {
-            "id": "expense_tracker_q4",
+            "id": "expense_tracker-q-1pnyyow",
             "type": "mcq",
             "prompt": "Why is `load` a class method?",
             "choices": [
@@ -858,7 +858,7 @@
             "explanation": "A class method builds and returns a new object, so it is called on the class."
           },
           {
-            "id": "expense_tracker_q5",
+            "id": "expense_tracker-q-gg4bwg",
             "type": "shortText",
             "prompt": "What is the biggest category's bar length in the report? (a number)",
             "validation": {
@@ -868,7 +868,7 @@
             "explanation": "The bars are scaled so the largest category gets the full width of 20."
           },
           {
-            "id": "expense_tracker_q6",
+            "id": "expense_tracker-q-1gv6rdo",
             "type": "mcq",
             "prompt": "Why open the CSV file with `newline=\"\"`?",
             "choices": [
@@ -893,7 +893,7 @@
             "explanation": "`newline=\"\"` lets the csv module write its own line endings, so no blank rows appear."
           },
           {
-            "id": "expense_tracker_q7",
+            "id": "expense_tracker-q-1ig2yuu",
             "type": "mcq",
             "prompt": "What should `run` reply to `add 2025-02-30 -5 food Snack`?",
             "choices": [
@@ -918,7 +918,7 @@
             "explanation": "`date.fromisoformat` rejects 30 February, and `run` turns the error into a message."
           },
           {
-            "id": "expense_tracker_q8",
+            "id": "expense_tracker-q-m7lofi",
             "type": "mcq",
             "prompt": "Which part of the program handles what the user types?",
             "choices": [
@@ -978,7 +978,7 @@
       },
       "challenges": [
         {
-          "id": "tic_tac_toe_ch1",
+          "id": "tic_tac_toe-the-board",
           "title": "Easy: The board",
           "promptMarkdown": "Define `new_board()`, returning a list of nine `\" \"` strings, and `show(board)`, which returns the board as text: each row like ` X | O |  ` (a space, then the three cells joined with ` | `), with `---+---+---` lines between the rows.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n",
@@ -1002,7 +1002,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch2",
+          "id": "tic_tac_toe-place-a-mark",
           "title": "Easy: Place a mark",
           "promptMarkdown": "Define `place(board, cell, mark)`, which puts the mark in cell 1 to 9, raising `ValueError(\"Pick a cell from 1 to 9\")` for other numbers and `ValueError(\"That cell is taken\")` for a used cell, and `free_cells(board)`, the numbers of the empty cells.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n",
@@ -1031,7 +1031,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch3",
+          "id": "tic_tac_toe-three-in-a-row",
           "title": "Easy: Three in a row",
           "promptMarkdown": "Define `winner(board)`, returning `\"X\"` or `\"O\"` if that mark fills any line in `LINES`, or `None`; and `game_over(board)`, which is `True` when someone has won or the board is full.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n",
@@ -1055,7 +1055,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch4",
+          "id": "tic_tac_toe-read-a-move",
           "title": "Medium: Read a move",
           "promptMarkdown": "Define `parse_move(text)` that turns typed text into a cell number from 1 to 9, raising `ValueError(\"Type a number from 1 to 9\")` for anything else.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n\n\ndef winner(board):\n    for a, b, c in LINES:\n        if board[a] != \" \" and board[a] == board[b] == board[c]:\n            return board[a]\n    return None\n\n\ndef game_over(board):\n    return winner(board) is not None or not free_cells(board)\n",
@@ -1079,7 +1079,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch5",
+          "id": "tic_tac_toe-a-simple-opponent",
           "title": "Medium: A simple opponent",
           "promptMarkdown": "Define `other(mark)` (the opposite mark) and `simple_move(board, mark)`: take a winning cell if there is one, otherwise block the opponent's winning cell, otherwise take the centre, then the first free corner (1, 3, 7, 9), then the first free edge.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n\n\ndef winner(board):\n    for a, b, c in LINES:\n        if board[a] != \" \" and board[a] == board[b] == board[c]:\n            return board[a]\n    return None\n\n\ndef game_over(board):\n    return winner(board) is not None or not free_cells(board)\n\n\ndef parse_move(text):\n    try:\n        cell = int(text.strip())\n    except ValueError:\n        raise ValueError(\"Type a number from 1 to 9\")\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Type a number from 1 to 9\")\n    return cell\n",
@@ -1113,7 +1113,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch6",
+          "id": "tic_tac_toe-threats",
           "title": "Medium: Threats",
           "promptMarkdown": "Define `threats(board, mark)`: the numbers of the free cells where `mark` would complete a line straight away, in order. (Two threats at once is a **fork**, which the other player can't block both of.)",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n\n\ndef winner(board):\n    for a, b, c in LINES:\n        if board[a] != \" \" and board[a] == board[b] == board[c]:\n            return board[a]\n    return None\n\n\ndef game_over(board):\n    return winner(board) is not None or not free_cells(board)\n\n\ndef parse_move(text):\n    try:\n        cell = int(text.strip())\n    except ValueError:\n        raise ValueError(\"Type a number from 1 to 9\")\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Type a number from 1 to 9\")\n    return cell\n\n\ndef other(mark):\n    return \"O\" if mark == \"X\" else \"X\"\n\n\ndef simple_move(board, mark):\n    for target in (mark, other(mark)):          # first win, then block\n        for cell in free_cells(board):\n            board[cell - 1] = target\n            found = winner(board) == target\n            board[cell - 1] = \" \"\n            if found:\n                return cell\n    for cell in (5, 1, 3, 7, 9, 2, 4, 6, 8):     # centre, corners, edges\n        if board[cell - 1] == \" \":\n            return cell\n    return None\n",
@@ -1142,7 +1142,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch7",
+          "id": "tic_tac_toe-look-ahead",
           "title": "Hard: Look ahead",
           "promptMarkdown": "Define `score(board, turn, me)`: the result for `me` with perfect play from here (1 win, 0 draw, -1 loss), where `turn` is whose move it is. Try each free cell, score the position after it recursively, and take the best on `me`'s turn and the worst on the opponent's. Remember each answer in a dict, keyed by `(tuple(board), turn, me)`. Then `best_move(board, mark)` returns the first cell with the highest score.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n\n\ndef winner(board):\n    for a, b, c in LINES:\n        if board[a] != \" \" and board[a] == board[b] == board[c]:\n            return board[a]\n    return None\n\n\ndef game_over(board):\n    return winner(board) is not None or not free_cells(board)\n\n\ndef parse_move(text):\n    try:\n        cell = int(text.strip())\n    except ValueError:\n        raise ValueError(\"Type a number from 1 to 9\")\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Type a number from 1 to 9\")\n    return cell\n\n\ndef other(mark):\n    return \"O\" if mark == \"X\" else \"X\"\n\n\ndef simple_move(board, mark):\n    for target in (mark, other(mark)):          # first win, then block\n        for cell in free_cells(board):\n            board[cell - 1] = target\n            found = winner(board) == target\n            board[cell - 1] = \" \"\n            if found:\n                return cell\n    for cell in (5, 1, 3, 7, 9, 2, 4, 6, 8):     # centre, corners, edges\n        if board[cell - 1] == \" \":\n            return cell\n    return None\n\n\ndef threats(board, mark):\n    cells = []\n    for cell in free_cells(board):\n        board[cell - 1] = mark\n        if winner(board) == mark:\n            cells.append(cell)\n        board[cell - 1] = \" \"\n    return cells\n",
@@ -1176,7 +1176,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch8",
+          "id": "tic_tac_toe-play-a-game",
           "title": "Hard: Play a game",
           "promptMarkdown": "Define `play(moves)`: you are X and move first, using the typed `moves` in order, and the computer answers with `best_move`. Return the lines: `You: <cell>` and `Computer: <cell>` for each move, the error message for a bad move (which uses no turn), and at the end `You win!`, `Computer wins!` or `It's a draw!`. If the moves run out first, finish with `Your move?`.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n\n\ndef winner(board):\n    for a, b, c in LINES:\n        if board[a] != \" \" and board[a] == board[b] == board[c]:\n            return board[a]\n    return None\n\n\ndef game_over(board):\n    return winner(board) is not None or not free_cells(board)\n\n\ndef parse_move(text):\n    try:\n        cell = int(text.strip())\n    except ValueError:\n        raise ValueError(\"Type a number from 1 to 9\")\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Type a number from 1 to 9\")\n    return cell\n\n\ndef other(mark):\n    return \"O\" if mark == \"X\" else \"X\"\n\n\ndef simple_move(board, mark):\n    for target in (mark, other(mark)):          # first win, then block\n        for cell in free_cells(board):\n            board[cell - 1] = target\n            found = winner(board) == target\n            board[cell - 1] = \" \"\n            if found:\n                return cell\n    for cell in (5, 1, 3, 7, 9, 2, 4, 6, 8):     # centre, corners, edges\n        if board[cell - 1] == \" \":\n            return cell\n    return None\n\n\ndef threats(board, mark):\n    cells = []\n    for cell in free_cells(board):\n        board[cell - 1] = mark\n        if winner(board) == mark:\n            cells.append(cell)\n        board[cell - 1] = \" \"\n    return cells\n\n\n_scores = {}\n\n\ndef score(board, turn, me):\n    \"\"\"How the game ends for `me` with perfect play: 1 win, 0 draw, -1 loss.\"\"\"\n    key = (tuple(board), turn, me)\n    if key in _scores:\n        return _scores[key]\n    won = winner(board)\n    if won is not None:\n        result = 1 if won == me else -1\n    elif not free_cells(board):\n        result = 0\n    else:\n        results = []\n        for cell in free_cells(board):\n            board[cell - 1] = turn\n            results.append(score(board, other(turn), me))\n            board[cell - 1] = \" \"\n        result = max(results) if turn == me else min(results)\n    _scores[key] = result\n    return result\n\n\ndef best_move(board, mark):\n    best_cell, best_score = None, -2\n    for cell in free_cells(board):\n        board[cell - 1] = mark\n        result = score(board, other(mark), mark)\n        board[cell - 1] = \" \"\n        if result > best_score:\n            best_cell, best_score = cell, result\n    return best_cell\n",
@@ -1205,7 +1205,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch9",
+          "id": "tic_tac_toe-unbeatable",
           "title": "Expert: Unbeatable?",
           "promptMarkdown": "Define `all_results(board=None)`, which plays every possible game against the computer, trying every move for X at each turn while O answers with `best_move`, and returns how many games end in each way: `{\"X\": ..., \"O\": ..., \"draw\": ...}`.",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n\n\ndef winner(board):\n    for a, b, c in LINES:\n        if board[a] != \" \" and board[a] == board[b] == board[c]:\n            return board[a]\n    return None\n\n\ndef game_over(board):\n    return winner(board) is not None or not free_cells(board)\n\n\ndef parse_move(text):\n    try:\n        cell = int(text.strip())\n    except ValueError:\n        raise ValueError(\"Type a number from 1 to 9\")\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Type a number from 1 to 9\")\n    return cell\n\n\ndef other(mark):\n    return \"O\" if mark == \"X\" else \"X\"\n\n\ndef simple_move(board, mark):\n    for target in (mark, other(mark)):          # first win, then block\n        for cell in free_cells(board):\n            board[cell - 1] = target\n            found = winner(board) == target\n            board[cell - 1] = \" \"\n            if found:\n                return cell\n    for cell in (5, 1, 3, 7, 9, 2, 4, 6, 8):     # centre, corners, edges\n        if board[cell - 1] == \" \":\n            return cell\n    return None\n\n\ndef threats(board, mark):\n    cells = []\n    for cell in free_cells(board):\n        board[cell - 1] = mark\n        if winner(board) == mark:\n            cells.append(cell)\n        board[cell - 1] = \" \"\n    return cells\n\n\n_scores = {}\n\n\ndef score(board, turn, me):\n    \"\"\"How the game ends for `me` with perfect play: 1 win, 0 draw, -1 loss.\"\"\"\n    key = (tuple(board), turn, me)\n    if key in _scores:\n        return _scores[key]\n    won = winner(board)\n    if won is not None:\n        result = 1 if won == me else -1\n    elif not free_cells(board):\n        result = 0\n    else:\n        results = []\n        for cell in free_cells(board):\n            board[cell - 1] = turn\n            results.append(score(board, other(turn), me))\n            board[cell - 1] = \" \"\n        result = max(results) if turn == me else min(results)\n    _scores[key] = result\n    return result\n\n\ndef best_move(board, mark):\n    best_cell, best_score = None, -2\n    for cell in free_cells(board):\n        board[cell - 1] = mark\n        result = score(board, other(mark), mark)\n        board[cell - 1] = \" \"\n        if result > best_score:\n            best_cell, best_score = cell, result\n    return best_cell\n\n\ndef play(moves):\n    board = new_board()\n    lines = []\n    moves = list(moves)\n    while not game_over(board):\n        if not moves:\n            lines.append(\"Your move?\")\n            return lines\n        try:\n            cell = parse_move(moves.pop(0))\n            place(board, cell, \"X\")\n        except ValueError as e:\n            lines.append(str(e))\n            continue\n        lines.append(f\"You: {cell}\")\n        if not game_over(board):\n            reply = best_move(board, \"O\")\n            place(board, reply, \"O\")\n            lines.append(f\"Computer: {reply}\")\n    won = winner(board)\n    lines.append(\"You win!\" if won == \"X\" else \"Computer wins!\" if won == \"O\" else \"It's a draw!\")\n    return lines\n",
@@ -1229,7 +1229,7 @@
           }
         },
         {
-          "id": "tic_tac_toe_ch10",
+          "id": "tic_tac_toe-play-it-yourself",
           "title": "Expert: Play it yourself",
           "promptMarkdown": "Define `main()`: show the board, ask `Your move (1-9): ` until the game is over, letting the computer reply after each good move, and print the final board and result. (Use `show`, `parse_move`, `place` and `best_move`.)",
           "starterCode": "LINES = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]\n\n\ndef new_board():\n    return [\" \"] * 9\n\n\ndef show(board):\n    rows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\n    return \"\\n---+---+---\\n\".join(rows)\n\n\ndef place(board, cell, mark):\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Pick a cell from 1 to 9\")\n    if board[cell - 1] != \" \":\n        raise ValueError(\"That cell is taken\")\n    board[cell - 1] = mark\n\n\ndef free_cells(board):\n    return [i + 1 for i, value in enumerate(board) if value == \" \"]\n\n\ndef winner(board):\n    for a, b, c in LINES:\n        if board[a] != \" \" and board[a] == board[b] == board[c]:\n            return board[a]\n    return None\n\n\ndef game_over(board):\n    return winner(board) is not None or not free_cells(board)\n\n\ndef parse_move(text):\n    try:\n        cell = int(text.strip())\n    except ValueError:\n        raise ValueError(\"Type a number from 1 to 9\")\n    if not 1 <= cell <= 9:\n        raise ValueError(\"Type a number from 1 to 9\")\n    return cell\n\n\ndef other(mark):\n    return \"O\" if mark == \"X\" else \"X\"\n\n\ndef simple_move(board, mark):\n    for target in (mark, other(mark)):          # first win, then block\n        for cell in free_cells(board):\n            board[cell - 1] = target\n            found = winner(board) == target\n            board[cell - 1] = \" \"\n            if found:\n                return cell\n    for cell in (5, 1, 3, 7, 9, 2, 4, 6, 8):     # centre, corners, edges\n        if board[cell - 1] == \" \":\n            return cell\n    return None\n\n\ndef threats(board, mark):\n    cells = []\n    for cell in free_cells(board):\n        board[cell - 1] = mark\n        if winner(board) == mark:\n            cells.append(cell)\n        board[cell - 1] = \" \"\n    return cells\n\n\n_scores = {}\n\n\ndef score(board, turn, me):\n    \"\"\"How the game ends for `me` with perfect play: 1 win, 0 draw, -1 loss.\"\"\"\n    key = (tuple(board), turn, me)\n    if key in _scores:\n        return _scores[key]\n    won = winner(board)\n    if won is not None:\n        result = 1 if won == me else -1\n    elif not free_cells(board):\n        result = 0\n    else:\n        results = []\n        for cell in free_cells(board):\n            board[cell - 1] = turn\n            results.append(score(board, other(turn), me))\n            board[cell - 1] = \" \"\n        result = max(results) if turn == me else min(results)\n    _scores[key] = result\n    return result\n\n\ndef best_move(board, mark):\n    best_cell, best_score = None, -2\n    for cell in free_cells(board):\n        board[cell - 1] = mark\n        result = score(board, other(mark), mark)\n        board[cell - 1] = \" \"\n        if result > best_score:\n            best_cell, best_score = cell, result\n    return best_cell\n\n\ndef play(moves):\n    board = new_board()\n    lines = []\n    moves = list(moves)\n    while not game_over(board):\n        if not moves:\n            lines.append(\"Your move?\")\n            return lines\n        try:\n            cell = parse_move(moves.pop(0))\n            place(board, cell, \"X\")\n        except ValueError as e:\n            lines.append(str(e))\n            continue\n        lines.append(f\"You: {cell}\")\n        if not game_over(board):\n            reply = best_move(board, \"O\")\n            place(board, reply, \"O\")\n            lines.append(f\"Computer: {reply}\")\n    won = winner(board)\n    lines.append(\"You win!\" if won == \"X\" else \"Computer wins!\" if won == \"O\" else \"It's a draw!\")\n    return lines\n\n\ndef all_results(board=None):\n    \"\"\"Plays every possible game against the computer and counts how each one ends.\"\"\"\n    if board is None:\n        board = new_board()\n    counts = {\"X\": 0, \"O\": 0, \"draw\": 0}\n    if game_over(board):\n        counts[winner(board) or \"draw\"] += 1\n        return counts\n    for cell in free_cells(board):\n        board[cell - 1] = \"X\"\n        reply = None\n        if not game_over(board):\n            reply = best_move(board, \"O\")\n            board[reply - 1] = \"O\"\n        for key, n in all_results(board).items():\n            counts[key] += n\n        if reply is not None:\n            board[reply - 1] = \" \"\n        board[cell - 1] = \" \"\n    return counts\n",
@@ -1252,7 +1252,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "tic_tac_toe_q1",
+            "id": "tic_tac_toe-q-10ym8co",
             "type": "mcq",
             "prompt": "How is cell 7 stored in the board list?",
             "choices": [
@@ -1277,7 +1277,7 @@
             "explanation": "Cells are numbered 1 to 9 for the player, and lists count from 0."
           },
           {
-            "id": "tic_tac_toe_q2",
+            "id": "tic_tac_toe-q-hzfuos",
             "type": "mcq",
             "prompt": "Why write the eight lines out once as `LINES`?",
             "choices": [
@@ -1302,7 +1302,7 @@
             "explanation": "With all eight lines in one list, a loop can check each line the same way."
           },
           {
-            "id": "tic_tac_toe_q3",
+            "id": "tic_tac_toe-q-4yeus3",
             "type": "mcq",
             "prompt": "What is the order of the simple opponent's rules?",
             "choices": [
@@ -1327,7 +1327,7 @@
             "explanation": "Win if you can, otherwise stop the opponent winning, then prefer the strongest squares."
           },
           {
-            "id": "tic_tac_toe_q4",
+            "id": "tic_tac_toe-q-2n69mw",
             "type": "mcq",
             "prompt": "What does minimax assume?",
             "choices": [
@@ -1352,7 +1352,7 @@
             "explanation": "Minimax assumes each player chooses the move that is best for them."
           },
           {
-            "id": "tic_tac_toe_q5",
+            "id": "tic_tac_toe-q-1w9rcov",
             "type": "shortText",
             "prompt": "With perfect play from both sides, what is the score of the empty board? (a number)",
             "validation": {
@@ -1362,7 +1362,7 @@
             "explanation": "Tic-tac-toe is a draw with perfect play from both sides, and a draw scores 0."
           },
           {
-            "id": "tic_tac_toe_q6",
+            "id": "tic_tac_toe-q-1ngxsmk",
             "type": "mcq",
             "prompt": "Why remember scores in a dict?",
             "choices": [
@@ -1387,7 +1387,7 @@
             "explanation": "Caching each position's score avoids working it out again (memoisation)."
           },
           {
-            "id": "tic_tac_toe_q7",
+            "id": "tic_tac_toe-q-1bv8ggu",
             "type": "mcq",
             "prompt": "Why is `score` recursive?",
             "choices": [
@@ -1412,7 +1412,7 @@
             "explanation": "A position's value depends on the positions it leads to, which is a recursive definition."
           },
           {
-            "id": "tic_tac_toe_q8",
+            "id": "tic_tac_toe-q-kj2y6x",
             "type": "mcq",
             "prompt": "What does `all_results()[\"X\"] == 0` show?",
             "choices": [
@@ -1472,7 +1472,7 @@
       },
       "challenges": [
         {
-          "id": "markdown_converter_ch1",
+          "id": "markdown_converter-escape-the-text",
           "title": "Easy: Escape the text",
           "promptMarkdown": "Define `escape(text)` that replaces `&` with `&amp;`, `<` with `&lt;` and `>` with `&gt;`.",
           "starterCode": "import re\n\n",
@@ -1501,7 +1501,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch2",
+          "id": "markdown_converter-bold-italics-and-code",
           "title": "Easy: Bold, italics and code",
           "promptMarkdown": "Define `inline(text)`: escape the text, then turn `` `code` `` into `<code>code</code>`, `**bold**` into `<strong>bold</strong>`, and `*italic*` into `<em>italic</em>` (in that order).",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n",
@@ -1530,7 +1530,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch3",
+          "id": "markdown_converter-links",
           "title": "Easy: Links",
           "promptMarkdown": "Add links to `inline`: `[text](url)` becomes `<a href=\"url\">text</a>`. Handle links before the other formatting.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n",
@@ -1554,7 +1554,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch4",
+          "id": "markdown_converter-headings",
           "title": "Medium: Headings",
           "promptMarkdown": "Define `heading(line)`: a line of 1 to 6 `#` characters, a space and some text becomes `<h1>` to `<h6>` with the text formatted by `inline`; any other line gives `None`.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"\\[([^\\]]+)\\]\\(([^)\\s]+)\\)\", r'<a href=\"\\2\">\\1</a>', text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n",
@@ -1578,7 +1578,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch5",
+          "id": "markdown_converter-blocks",
           "title": "Medium: Blocks",
           "promptMarkdown": "Define `blocks(text)` that splits the text into blocks, a list of lists of lines: blank lines separate blocks, and a heading line is always a block of its own.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"\\[([^\\]]+)\\]\\(([^)\\s]+)\\)\", r'<a href=\"\\2\">\\1</a>', text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n\n\ndef heading(line):\n    m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n    if m is None:\n        return None\n    level = len(m.group(1))\n    return f\"<h{level}>{inline(m.group(2).strip())}</h{level}>\"\n",
@@ -1602,7 +1602,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch6",
+          "id": "markdown_converter-lists",
           "title": "Medium: Lists",
           "promptMarkdown": "Define `list_html(lines)`: if every line starts with `- `, return a `<ul>` with an `<li>` for each item (formatted with `inline`), one tag per line as shown in the lesson; otherwise `None`.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"\\[([^\\]]+)\\]\\(([^)\\s]+)\\)\", r'<a href=\"\\2\">\\1</a>', text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n\n\ndef heading(line):\n    m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n    if m is None:\n        return None\n    level = len(m.group(1))\n    return f\"<h{level}>{inline(m.group(2).strip())}</h{level}>\"\n\n\ndef blocks(text):\n    result = []\n    current = []\n    for line in text.splitlines():\n        if not line.strip():\n            if current:\n                result.append(current)\n                current = []\n        elif heading(line):\n            if current:\n                result.append(current)\n                current = []\n            result.append([line])\n        else:\n            current.append(line.rstrip())\n    if current:\n        result.append(current)\n    return result\n",
@@ -1626,7 +1626,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch7",
+          "id": "markdown_converter-convert-a-document",
           "title": "Hard: Convert a document",
           "promptMarkdown": "Define `convert(text)`: turn each block into a heading, a list, or a paragraph (`<p>` around the block's lines, stripped and joined with spaces, formatted with `inline`), and join the results with line breaks.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"\\[([^\\]]+)\\]\\(([^)\\s]+)\\)\", r'<a href=\"\\2\">\\1</a>', text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n\n\ndef heading(line):\n    m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n    if m is None:\n        return None\n    level = len(m.group(1))\n    return f\"<h{level}>{inline(m.group(2).strip())}</h{level}>\"\n\n\ndef blocks(text):\n    result = []\n    current = []\n    for line in text.splitlines():\n        if not line.strip():\n            if current:\n                result.append(current)\n                current = []\n        elif heading(line):\n            if current:\n                result.append(current)\n                current = []\n            result.append([line])\n        else:\n            current.append(line.rstrip())\n    if current:\n        result.append(current)\n    return result\n\n\ndef list_html(lines):\n    if not all(line.startswith(\"- \") for line in lines):\n        return None\n    items = [f\"<li>{inline(line[2:].strip())}</li>\" for line in lines]\n    return \"<ul>\\n\" + \"\\n\".join(items) + \"\\n</ul>\"\n",
@@ -1650,7 +1650,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch8",
+          "id": "markdown_converter-code-blocks",
           "title": "Hard: Code blocks",
           "promptMarkdown": "Add fenced code blocks: lines between two lines starting with ```` ``` ```` are kept exactly as they are, escaped, inside `<pre><code>...</code></pre>`, with no other formatting. Rename your old `convert` to `convert_text`, and write a new `convert` that splits out the code blocks and uses `convert_text` for the rest.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"\\[([^\\]]+)\\]\\(([^)\\s]+)\\)\", r'<a href=\"\\2\">\\1</a>', text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n\n\ndef heading(line):\n    m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n    if m is None:\n        return None\n    level = len(m.group(1))\n    return f\"<h{level}>{inline(m.group(2).strip())}</h{level}>\"\n\n\ndef blocks(text):\n    result = []\n    current = []\n    for line in text.splitlines():\n        if not line.strip():\n            if current:\n                result.append(current)\n                current = []\n        elif heading(line):\n            if current:\n                result.append(current)\n                current = []\n            result.append([line])\n        else:\n            current.append(line.rstrip())\n    if current:\n        result.append(current)\n    return result\n\n\ndef list_html(lines):\n    if not all(line.startswith(\"- \") for line in lines):\n        return None\n    items = [f\"<li>{inline(line[2:].strip())}</li>\" for line in lines]\n    return \"<ul>\\n\" + \"\\n\".join(items) + \"\\n</ul>\"\n\n\ndef convert(text):\n    parts = []\n    for block in blocks(text):\n        if len(block) == 1 and heading(block[0]):\n            parts.append(heading(block[0]))\n        elif list_html(block):\n            parts.append(list_html(block))\n        else:\n            parts.append(\"<p>\" + inline(\" \".join(line.strip() for line in block)) + \"</p>\")\n    return \"\\n\".join(parts)\n",
@@ -1674,7 +1674,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch9",
+          "id": "markdown_converter-table-of-contents",
           "title": "Expert: Table of contents",
           "promptMarkdown": "Give headings an `id` made by `slug(title)` (lowercase, every run of characters other than a-z and 0-9 turned into one `-`, no `-` at the ends), like `<h2 id=\"getting-started\">Getting started</h2>`, and add `toc(text)`, which lists `(level, title, slug)` for each heading, skipping lines inside code blocks.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"\\[([^\\]]+)\\]\\(([^)\\s]+)\\)\", r'<a href=\"\\2\">\\1</a>', text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n\n\ndef heading(line):\n    m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n    if m is None:\n        return None\n    level = len(m.group(1))\n    return f\"<h{level}>{inline(m.group(2).strip())}</h{level}>\"\n\n\ndef blocks(text):\n    result = []\n    current = []\n    for line in text.splitlines():\n        if not line.strip():\n            if current:\n                result.append(current)\n                current = []\n        elif heading(line):\n            if current:\n                result.append(current)\n                current = []\n            result.append([line])\n        else:\n            current.append(line.rstrip())\n    if current:\n        result.append(current)\n    return result\n\n\ndef list_html(lines):\n    if not all(line.startswith(\"- \") for line in lines):\n        return None\n    items = [f\"<li>{inline(line[2:].strip())}</li>\" for line in lines]\n    return \"<ul>\\n\" + \"\\n\".join(items) + \"\\n</ul>\"\n\n\ndef convert_text(text):\n    parts = []\n    for block in blocks(text):\n        if len(block) == 1 and heading(block[0]):\n            parts.append(heading(block[0]))\n        elif list_html(block):\n            parts.append(list_html(block))\n        else:\n            parts.append(\"<p>\" + inline(\" \".join(line.strip() for line in block)) + \"</p>\")\n    return \"\\n\".join(parts)\n\n\ndef convert(text):\n    parts = []\n    normal = []\n    code = None\n    for line in text.splitlines():\n        if line.strip().startswith(\"```\"):\n            if code is None:\n                parts.append(convert_text(\"\\n\".join(normal)))\n                normal = []\n                code = []\n            else:\n                parts.append(\"<pre><code>\" + escape(\"\\n\".join(code)) + \"</code></pre>\")\n                code = None\n        elif code is not None:\n            code.append(line)\n        else:\n            normal.append(line)\n    if code is not None:\n        normal = [\"```\"] + code + normal\n    parts.append(convert_text(\"\\n\".join(normal)))\n    return \"\\n\".join(part for part in parts if part)\n",
@@ -1708,7 +1708,7 @@
           }
         },
         {
-          "id": "markdown_converter_ch10",
+          "id": "markdown_converter-a-web-page",
           "title": "Expert: A web page",
           "promptMarkdown": "Define `convert_file(source, target, title)`: read the Markdown file, and write a complete page to `target`: `<!DOCTYPE html>`, `<html>`, a `<head>` with `<meta charset=\"utf-8\">` and the escaped `<title>`, then a `<body>` starting with a `<nav>` of links to the level-2 headings (only if there are any), followed by the converted text. Return the number of links in the `<nav>`.",
           "starterCode": "import re\n\ndef escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\")\n\n\ndef inline(text):\n    text = escape(text)\n    text = re.sub(r\"\\[([^\\]]+)\\]\\(([^)\\s]+)\\)\", r'<a href=\"\\2\">\\1</a>', text)\n    text = re.sub(r\"`([^`]+)`\", r\"<code>\\1</code>\", text)\n    text = re.sub(r\"\\*\\*(.+?)\\*\\*\", r\"<strong>\\1</strong>\", text)\n    text = re.sub(r\"\\*(.+?)\\*\", r\"<em>\\1</em>\", text)\n    return text\n\n\ndef heading(line):\n    m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n    if m is None:\n        return None\n    level = len(m.group(1))\n    return f\"<h{level}>{inline(m.group(2).strip())}</h{level}>\"\n\n\ndef blocks(text):\n    result = []\n    current = []\n    for line in text.splitlines():\n        if not line.strip():\n            if current:\n                result.append(current)\n                current = []\n        elif heading(line):\n            if current:\n                result.append(current)\n                current = []\n            result.append([line])\n        else:\n            current.append(line.rstrip())\n    if current:\n        result.append(current)\n    return result\n\n\ndef list_html(lines):\n    if not all(line.startswith(\"- \") for line in lines):\n        return None\n    items = [f\"<li>{inline(line[2:].strip())}</li>\" for line in lines]\n    return \"<ul>\\n\" + \"\\n\".join(items) + \"\\n</ul>\"\n\n\ndef convert_text(text):\n    parts = []\n    for block in blocks(text):\n        if len(block) == 1 and heading(block[0]):\n            parts.append(heading(block[0]))\n        elif list_html(block):\n            parts.append(list_html(block))\n        else:\n            parts.append(\"<p>\" + inline(\" \".join(line.strip() for line in block)) + \"</p>\")\n    return \"\\n\".join(parts)\n\n\ndef convert(text):\n    parts = []\n    normal = []\n    code = None\n    for line in text.splitlines():\n        if line.strip().startswith(\"```\"):\n            if code is None:\n                parts.append(convert_text(\"\\n\".join(normal)))\n                normal = []\n                code = []\n            else:\n                parts.append(\"<pre><code>\" + escape(\"\\n\".join(code)) + \"</code></pre>\")\n                code = None\n        elif code is not None:\n            code.append(line)\n        else:\n            normal.append(line)\n    if code is not None:\n        normal = [\"```\"] + code + normal\n    parts.append(convert_text(\"\\n\".join(normal)))\n    return \"\\n\".join(part for part in parts if part)\n\n\ndef slug(title):\n    return re.sub(r\"[^a-z0-9]+\", \"-\", title.lower()).strip(\"-\")\n\n\ndef heading(line):\n    m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n    if m is None:\n        return None\n    level = len(m.group(1))\n    title = m.group(2).strip()\n    return f'<h{level} id=\"{slug(title)}\">{inline(title)}</h{level}>'\n\n\ndef toc(text):\n    entries = []\n    in_code = False\n    for line in text.splitlines():\n        if line.strip().startswith(\"```\"):\n            in_code = not in_code\n            continue\n        m = re.fullmatch(r\"(#{1,6}) +(.+)\", line.strip())\n        if m and not in_code:\n            title = m.group(2).strip()\n            entries.append((len(m.group(1)), title, slug(title)))\n    return entries\n",
@@ -1741,7 +1741,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "markdown_converter_q1",
+            "id": "markdown_converter-q-ng3cd3",
             "type": "mcq",
             "prompt": "What does `escape(\"a < b\")` give?",
             "choices": [
@@ -1766,7 +1766,7 @@
             "explanation": "`<` is escaped as `&lt;` so the browser shows it as text instead of reading a tag."
           },
           {
-            "id": "markdown_converter_q2",
+            "id": "markdown_converter-q-1srf6gr",
             "type": "mcq",
             "prompt": "Why escape `&` before `<` and `>`?",
             "choices": [
@@ -1791,7 +1791,7 @@
             "explanation": "The other escapes add `&` characters, so escaping `&` first stops them being escaped twice."
           },
           {
-            "id": "markdown_converter_q3",
+            "id": "markdown_converter-q-ewwybk",
             "type": "mcq",
             "prompt": "What does the `?` in `\\*\\*(.+?)\\*\\*` do?",
             "choices": [
@@ -1816,7 +1816,7 @@
             "explanation": "`+?` is lazy: it matches as little as possible, so each pair of stars is handled separately."
           },
           {
-            "id": "markdown_converter_q4",
+            "id": "markdown_converter-q-j7ywls",
             "type": "mcq",
             "prompt": "Why handle `**bold**` before `*italic*`?",
             "choices": [
@@ -1841,7 +1841,7 @@
             "explanation": "Doing `**` first stops its stars being read as two single-star italics."
           },
           {
-            "id": "markdown_converter_q5",
+            "id": "markdown_converter-q-14qn9k1",
             "type": "shortText",
             "prompt": "Which HTML tag wraps a whole bulleted list? (the letters inside < >)",
             "validation": {
@@ -1851,7 +1851,7 @@
             "explanation": "`<ul>` is an unordered list, and each item goes in `<li>`."
           },
           {
-            "id": "markdown_converter_q6",
+            "id": "markdown_converter-q-zvf5pw",
             "type": "mcq",
             "prompt": "Why split the text into blocks first?",
             "choices": [
@@ -1876,7 +1876,7 @@
             "explanation": "Groups of lines decide what each block is, so split into blocks before formatting."
           },
           {
-            "id": "markdown_converter_q7",
+            "id": "markdown_converter-q-dvmfme",
             "type": "mcq",
             "prompt": "What happens to `**hi**` inside a code block?",
             "choices": [
@@ -1901,7 +1901,7 @@
             "explanation": "Code blocks are shown as they are, without formatting."
           },
           {
-            "id": "markdown_converter_q8",
+            "id": "markdown_converter-q-11ytkoa",
             "type": "mcq",
             "prompt": "What is `slug(\"Q & A\")`?",
             "choices": [
@@ -1961,7 +1961,7 @@
       },
       "challenges": [
         {
-          "id": "text_adventure_ch1",
+          "id": "text_adventure-items-and-rooms",
           "title": "Easy: Items and rooms",
           "promptMarkdown": "Define a data class `Item` (`name`, `description`) and a class `Room(name, description)` with an `exits` dict and an `items` list, both empty to start. Its `describe()` returns the lines: the name, the description, `Exits: ` and the exit directions in alphabetical order (or `none`), and, only if there are items, `You see: ` and their names, joined with line breaks.",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n",
@@ -1985,7 +1985,7 @@
           }
         },
         {
-          "id": "text_adventure_ch2",
+          "id": "text_adventure-two-way-doors",
           "title": "Easy: Two-way doors",
           "promptMarkdown": "Add `connect(other, direction)` to `Room`, which links this room to `other` in that direction and `other` back to this room in the opposite direction (use `OPPOSITE`).",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n",
@@ -2004,7 +2004,7 @@
           }
         },
         {
-          "id": "text_adventure_ch3",
+          "id": "text_adventure-a-player-who-moves",
           "title": "Easy: A player who moves",
           "promptMarkdown": "Define `find(items, name)` (the item with that name, ignoring case, or `None`) and `Player(room)`, with an `inventory` list and `move(direction)`, which moves to the room in that direction and returns it, or raises `ValueError(\"You can't go that way.\")`.",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n",
@@ -2033,7 +2033,7 @@
           }
         },
         {
-          "id": "text_adventure_ch4",
+          "id": "text_adventure-take-and-drop",
           "title": "Medium: Take and drop",
           "promptMarkdown": "Add `take(name)` and `drop(name)` to `Player`. `take` moves an item from the room to the inventory and replies `You take the <name>.`, or `There is no <name> here.`; `drop` does the opposite: `You drop the <name>.` or `You don't have a <name>.`",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n\n\ndef find(items, name):\n    for item in items:\n        if item.name.lower() == name.lower():\n            return item\n    return None\n\n\nclass Player:\n    def __init__(self, room):\n        self.room = room\n        self.inventory = []\n\n    def move(self, direction):\n        if direction not in self.room.exits:\n            raise ValueError(\"You can't go that way.\")\n        self.room = self.room.exits[direction]\n        return self.room\n",
@@ -2062,7 +2062,7 @@
           }
         },
         {
-          "id": "text_adventure_ch5",
+          "id": "text_adventure-understand-commands",
           "title": "Medium: Understand commands",
           "promptMarkdown": "Define `parse(command)`, returning `(verb, noun)`: lowercase the words and leave out `the`, `a` and `an`. A direction on its own (`north`, or the short `n`, `s`, `e`, `w`) means `(\"go\", direction)`, and `go n` means `(\"go\", \"north\")` too. Translate the verbs in `VERBS` (like `get` to `take`). The noun is the remaining words joined with spaces; an empty command gives `(\"\", \"\")`.",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n\n\ndef find(items, name):\n    for item in items:\n        if item.name.lower() == name.lower():\n            return item\n    return None\n\n\nclass Player:\n    def __init__(self, room):\n        self.room = room\n        self.inventory = []\n\n    def move(self, direction):\n        if direction not in self.room.exits:\n            raise ValueError(\"You can't go that way.\")\n        self.room = self.room.exits[direction]\n        return self.room\n\n    def take(self, name):\n        item = find(self.room.items, name)\n        if item is None:\n            return f\"There is no {name} here.\"\n        self.room.items.remove(item)\n        self.inventory.append(item)\n        return f\"You take the {item.name}.\"\n\n    def drop(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        self.inventory.remove(item)\n        self.room.items.append(item)\n        return f\"You drop the {item.name}.\"\n\nSHORT_DIRECTIONS = {\"n\": \"north\", \"s\": \"south\", \"e\": \"east\", \"w\": \"west\"}\nVERBS = {\"get\": \"take\", \"grab\": \"take\", \"l\": \"look\", \"i\": \"inventory\", \"inv\": \"inventory\", \"walk\": \"go\", \"q\": \"quit\", \"x\": \"examine\"}\n",
@@ -2091,7 +2091,7 @@
           }
         },
         {
-          "id": "text_adventure_ch6",
+          "id": "text_adventure-locked-doors",
           "title": "Medium: Locked doors",
           "promptMarkdown": "Give `Room` a `locked` dict (direction to the name of the key that opens it). `move` now raises `ValueError(\"The door is locked.\")` for a locked exit, and a new `Player.use(name)` unlocks a door in the current room that the item is the key for: `You unlock the door to the <direction> with the <name>.`, or `Nothing happens.`, or `You don't have a <name>.`",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n\n\ndef find(items, name):\n    for item in items:\n        if item.name.lower() == name.lower():\n            return item\n    return None\n\n\nclass Player:\n    def __init__(self, room):\n        self.room = room\n        self.inventory = []\n\n    def move(self, direction):\n        if direction not in self.room.exits:\n            raise ValueError(\"You can't go that way.\")\n        self.room = self.room.exits[direction]\n        return self.room\n\n    def take(self, name):\n        item = find(self.room.items, name)\n        if item is None:\n            return f\"There is no {name} here.\"\n        self.room.items.remove(item)\n        self.inventory.append(item)\n        return f\"You take the {item.name}.\"\n\n    def drop(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        self.inventory.remove(item)\n        self.room.items.append(item)\n        return f\"You drop the {item.name}.\"\n\n\nSHORT_DIRECTIONS = {\"n\": \"north\", \"s\": \"south\", \"e\": \"east\", \"w\": \"west\"}\nVERBS = {\"get\": \"take\", \"grab\": \"take\", \"l\": \"look\", \"i\": \"inventory\", \"inv\": \"inventory\", \"walk\": \"go\", \"q\": \"quit\", \"x\": \"examine\"}\n\n\ndef parse(command):\n    words = [w for w in command.lower().split() if w not in (\"the\", \"a\", \"an\")]\n    if not words:\n        return (\"\", \"\")\n    verb, noun = words[0], \" \".join(words[1:])\n    if verb in SHORT_DIRECTIONS:\n        return (\"go\", SHORT_DIRECTIONS[verb])\n    if verb in OPPOSITE:\n        return (\"go\", verb)\n    verb = VERBS.get(verb, verb)\n    if verb == \"go\":\n        noun = SHORT_DIRECTIONS.get(noun, noun)\n    return (verb, noun)\n",
@@ -2120,7 +2120,7 @@
           }
         },
         {
-          "id": "text_adventure_ch7",
+          "id": "text_adventure-the-game",
           "title": "Hard: The game",
           "promptMarkdown": "The world is built for you by `build_world()`. Define `Game`, which builds it, starts a `Player` in the `Hall`, has `over` set to `False`, and has `handle(command)`, returning the reply: `look` (describe the room), `go` (move and describe, or the error message), `take` (and when the treasure is taken, add a line `You found the treasure! You win!` and set `over`), `drop`, `use`, `inventory` (`You carry: ` and the names, or `nothing`), `examine` (the item's description, from the inventory or the room, or `You see no <noun> here.`), `quit` (`Goodbye!`, and `over`) and anything else `I don't understand that.`",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n        self.locked = {}\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n\n\ndef find(items, name):\n    for item in items:\n        if item.name.lower() == name.lower():\n            return item\n    return None\n\n\nclass Player:\n    def __init__(self, room):\n        self.room = room\n        self.inventory = []\n\n    def move(self, direction):\n        if direction not in self.room.exits:\n            raise ValueError(\"You can't go that way.\")\n        if direction in self.room.locked:\n            raise ValueError(\"The door is locked.\")\n        self.room = self.room.exits[direction]\n        return self.room\n\n    def take(self, name):\n        item = find(self.room.items, name)\n        if item is None:\n            return f\"There is no {name} here.\"\n        self.room.items.remove(item)\n        self.inventory.append(item)\n        return f\"You take the {item.name}.\"\n\n    def drop(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        self.inventory.remove(item)\n        self.room.items.append(item)\n        return f\"You drop the {item.name}.\"\n\n    def use(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        for direction, key in self.room.locked.items():\n            if key == item.name:\n                del self.room.locked[direction]\n                return f\"You unlock the door to the {direction} with the {item.name}.\"\n        return \"Nothing happens.\"\n\n\nSHORT_DIRECTIONS = {\"n\": \"north\", \"s\": \"south\", \"e\": \"east\", \"w\": \"west\"}\nVERBS = {\"get\": \"take\", \"grab\": \"take\", \"l\": \"look\", \"i\": \"inventory\", \"inv\": \"inventory\", \"walk\": \"go\", \"q\": \"quit\", \"x\": \"examine\"}\n\n\ndef parse(command):\n    words = [w for w in command.lower().split() if w not in (\"the\", \"a\", \"an\")]\n    if not words:\n        return (\"\", \"\")\n    verb, noun = words[0], \" \".join(words[1:])\n    if verb in SHORT_DIRECTIONS:\n        return (\"go\", SHORT_DIRECTIONS[verb])\n    if verb in OPPOSITE:\n        return (\"go\", verb)\n    verb = VERBS.get(verb, verb)\n    if verb == \"go\":\n        noun = SHORT_DIRECTIONS.get(noun, noun)\n    return (verb, noun)\n\n\ndef build_world():\n    hall = Room(\"Hall\", \"A dusty entrance hall.\")\n    kitchen = Room(\"Kitchen\", \"Pots and pans everywhere.\")\n    library = Room(\"Library\", \"Shelves of old books.\")\n    garden = Room(\"Garden\", \"Sunlight at last! A fountain bubbles.\")\n    hall.connect(library, \"north\")\n    hall.connect(kitchen, \"east\")\n    library.connect(garden, \"north\")\n    library.locked[\"north\"] = \"key\"\n    kitchen.items.append(Item(\"lamp\", \"A brass lamp, still working.\"))\n    library.items.append(Item(\"key\", \"A small iron key.\"))\n    garden.items.append(Item(\"treasure\", \"A chest of gold coins.\"))\n    return {room.name: room for room in (hall, kitchen, library, garden)}\n",
@@ -2149,7 +2149,7 @@
           }
         },
         {
-          "id": "text_adventure_ch8",
+          "id": "text_adventure-play-it-through",
           "title": "Hard: Play it through",
           "promptMarkdown": "Define `play(commands)`, which starts a new `Game`, handles each command in turn, and returns the replies, stopping as soon as the game is over.",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n        self.locked = {}\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n\n\ndef find(items, name):\n    for item in items:\n        if item.name.lower() == name.lower():\n            return item\n    return None\n\n\nclass Player:\n    def __init__(self, room):\n        self.room = room\n        self.inventory = []\n\n    def move(self, direction):\n        if direction not in self.room.exits:\n            raise ValueError(\"You can't go that way.\")\n        if direction in self.room.locked:\n            raise ValueError(\"The door is locked.\")\n        self.room = self.room.exits[direction]\n        return self.room\n\n    def take(self, name):\n        item = find(self.room.items, name)\n        if item is None:\n            return f\"There is no {name} here.\"\n        self.room.items.remove(item)\n        self.inventory.append(item)\n        return f\"You take the {item.name}.\"\n\n    def drop(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        self.inventory.remove(item)\n        self.room.items.append(item)\n        return f\"You drop the {item.name}.\"\n\n    def use(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        for direction, key in self.room.locked.items():\n            if key == item.name:\n                del self.room.locked[direction]\n                return f\"You unlock the door to the {direction} with the {item.name}.\"\n        return \"Nothing happens.\"\n\n\nSHORT_DIRECTIONS = {\"n\": \"north\", \"s\": \"south\", \"e\": \"east\", \"w\": \"west\"}\nVERBS = {\"get\": \"take\", \"grab\": \"take\", \"l\": \"look\", \"i\": \"inventory\", \"inv\": \"inventory\", \"walk\": \"go\", \"q\": \"quit\", \"x\": \"examine\"}\n\n\ndef parse(command):\n    words = [w for w in command.lower().split() if w not in (\"the\", \"a\", \"an\")]\n    if not words:\n        return (\"\", \"\")\n    verb, noun = words[0], \" \".join(words[1:])\n    if verb in SHORT_DIRECTIONS:\n        return (\"go\", SHORT_DIRECTIONS[verb])\n    if verb in OPPOSITE:\n        return (\"go\", verb)\n    verb = VERBS.get(verb, verb)\n    if verb == \"go\":\n        noun = SHORT_DIRECTIONS.get(noun, noun)\n    return (verb, noun)\n\n\ndef build_world():\n    hall = Room(\"Hall\", \"A dusty entrance hall.\")\n    kitchen = Room(\"Kitchen\", \"Pots and pans everywhere.\")\n    library = Room(\"Library\", \"Shelves of old books.\")\n    garden = Room(\"Garden\", \"Sunlight at last! A fountain bubbles.\")\n    hall.connect(library, \"north\")\n    hall.connect(kitchen, \"east\")\n    library.connect(garden, \"north\")\n    library.locked[\"north\"] = \"key\"\n    kitchen.items.append(Item(\"lamp\", \"A brass lamp, still working.\"))\n    library.items.append(Item(\"key\", \"A small iron key.\"))\n    garden.items.append(Item(\"treasure\", \"A chest of gold coins.\"))\n    return {room.name: room for room in (hall, kitchen, library, garden)}\n\n\nclass Game:\n    def __init__(self):\n        self.rooms = build_world()\n        self.player = Player(self.rooms[\"Hall\"])\n        self.over = False\n\n    def handle(self, command):\n        verb, noun = parse(command)\n        player = self.player\n        if verb == \"look\":\n            return player.room.describe()\n        if verb == \"go\":\n            try:\n                return player.move(noun).describe()\n            except ValueError as e:\n                return str(e)\n        if verb == \"take\":\n            reply = player.take(noun)\n            if find(player.inventory, \"treasure\"):\n                self.over = True\n                reply += \"\\nYou found the treasure! You win!\"\n            return reply\n        if verb == \"drop\":\n            return player.drop(noun)\n        if verb == \"use\":\n            return player.use(noun)\n        if verb == \"inventory\":\n            return \"You carry: \" + (\", \".join(item.name for item in player.inventory) or \"nothing\")\n        if verb == \"examine\":\n            item = find(player.inventory + player.room.items, noun)\n            return item.description if item else f\"You see no {noun} here.\"\n        if verb == \"quit\":\n            self.over = True\n            return \"Goodbye!\"\n        return \"I don't understand that.\"\n",
@@ -2173,7 +2173,7 @@
           }
         },
         {
-          "id": "text_adventure_ch9",
+          "id": "text_adventure-a-dark-library",
           "title": "Expert: A dark library",
           "promptMarkdown": "Give `Room` a `dark` flag (`False` by default) and make the library dark in `build_world`. In a dark room, unless the player carries the lamp, `look` and arriving there reply `It is too dark to see. Exits: ` and the exits (alphabetical), and `take` replies `It is too dark to find anything.`",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n        self.locked = {}\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n\n\ndef find(items, name):\n    for item in items:\n        if item.name.lower() == name.lower():\n            return item\n    return None\n\n\nclass Player:\n    def __init__(self, room):\n        self.room = room\n        self.inventory = []\n\n    def move(self, direction):\n        if direction not in self.room.exits:\n            raise ValueError(\"You can't go that way.\")\n        if direction in self.room.locked:\n            raise ValueError(\"The door is locked.\")\n        self.room = self.room.exits[direction]\n        return self.room\n\n    def take(self, name):\n        item = find(self.room.items, name)\n        if item is None:\n            return f\"There is no {name} here.\"\n        self.room.items.remove(item)\n        self.inventory.append(item)\n        return f\"You take the {item.name}.\"\n\n    def drop(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        self.inventory.remove(item)\n        self.room.items.append(item)\n        return f\"You drop the {item.name}.\"\n\n    def use(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        for direction, key in self.room.locked.items():\n            if key == item.name:\n                del self.room.locked[direction]\n                return f\"You unlock the door to the {direction} with the {item.name}.\"\n        return \"Nothing happens.\"\n\n\nSHORT_DIRECTIONS = {\"n\": \"north\", \"s\": \"south\", \"e\": \"east\", \"w\": \"west\"}\nVERBS = {\"get\": \"take\", \"grab\": \"take\", \"l\": \"look\", \"i\": \"inventory\", \"inv\": \"inventory\", \"walk\": \"go\", \"q\": \"quit\", \"x\": \"examine\"}\n\n\ndef parse(command):\n    words = [w for w in command.lower().split() if w not in (\"the\", \"a\", \"an\")]\n    if not words:\n        return (\"\", \"\")\n    verb, noun = words[0], \" \".join(words[1:])\n    if verb in SHORT_DIRECTIONS:\n        return (\"go\", SHORT_DIRECTIONS[verb])\n    if verb in OPPOSITE:\n        return (\"go\", verb)\n    verb = VERBS.get(verb, verb)\n    if verb == \"go\":\n        noun = SHORT_DIRECTIONS.get(noun, noun)\n    return (verb, noun)\n\n\ndef build_world():\n    hall = Room(\"Hall\", \"A dusty entrance hall.\")\n    kitchen = Room(\"Kitchen\", \"Pots and pans everywhere.\")\n    library = Room(\"Library\", \"Shelves of old books.\")\n    garden = Room(\"Garden\", \"Sunlight at last! A fountain bubbles.\")\n    hall.connect(library, \"north\")\n    hall.connect(kitchen, \"east\")\n    library.connect(garden, \"north\")\n    library.locked[\"north\"] = \"key\"\n    kitchen.items.append(Item(\"lamp\", \"A brass lamp, still working.\"))\n    library.items.append(Item(\"key\", \"A small iron key.\"))\n    garden.items.append(Item(\"treasure\", \"A chest of gold coins.\"))\n    return {room.name: room for room in (hall, kitchen, library, garden)}\n\n\nclass Game:\n    def __init__(self):\n        self.rooms = build_world()\n        self.player = Player(self.rooms[\"Hall\"])\n        self.over = False\n\n    def handle(self, command):\n        verb, noun = parse(command)\n        player = self.player\n        if verb == \"look\":\n            return player.room.describe()\n        if verb == \"go\":\n            try:\n                return player.move(noun).describe()\n            except ValueError as e:\n                return str(e)\n        if verb == \"take\":\n            reply = player.take(noun)\n            if find(player.inventory, \"treasure\"):\n                self.over = True\n                reply += \"\\nYou found the treasure! You win!\"\n            return reply\n        if verb == \"drop\":\n            return player.drop(noun)\n        if verb == \"use\":\n            return player.use(noun)\n        if verb == \"inventory\":\n            return \"You carry: \" + (\", \".join(item.name for item in player.inventory) or \"nothing\")\n        if verb == \"examine\":\n            item = find(player.inventory + player.room.items, noun)\n            return item.description if item else f\"You see no {noun} here.\"\n        if verb == \"quit\":\n            self.over = True\n            return \"Goodbye!\"\n        return \"I don't understand that.\"\n\n\ndef play(commands):\n    game = Game()\n    replies = []\n    for command in commands:\n        replies.append(game.handle(command))\n        if game.over:\n            break\n    return replies\n",
@@ -2202,7 +2202,7 @@
           }
         },
         {
-          "id": "text_adventure_ch10",
+          "id": "text_adventure-save-and-load",
           "title": "Expert: Save and load",
           "promptMarkdown": "Add `save(path)` to `Game`, writing JSON with the player's room name, the names of the items carried, the item names in each room and each room's locked doors; and a class method `load(path)` that builds a fresh game and puts it into the saved state.",
           "starterCode": "import json\nfrom dataclasses import dataclass\n\nOPPOSITE = {\"north\": \"south\", \"south\": \"north\", \"east\": \"west\", \"west\": \"east\"}\n\n\n@dataclass\nclass Item:\n    name: str\n    description: str\n\n\nclass Room:\n    def __init__(self, name, description):\n        self.name = name\n        self.description = description\n        self.exits = {}\n        self.items = []\n        self.locked = {}\n        self.dark = False\n\n    def describe(self):\n        lines = [self.name, self.description, \"Exits: \" + (\", \".join(sorted(self.exits)) or \"none\")]\n        if self.items:\n            lines.append(\"You see: \" + \", \".join(item.name for item in self.items))\n        return \"\\n\".join(lines)\n\n    def connect(self, other, direction):\n        self.exits[direction] = other\n        other.exits[OPPOSITE[direction]] = self\n\n\ndef find(items, name):\n    for item in items:\n        if item.name.lower() == name.lower():\n            return item\n    return None\n\n\nclass Player:\n    def __init__(self, room):\n        self.room = room\n        self.inventory = []\n\n    def move(self, direction):\n        if direction not in self.room.exits:\n            raise ValueError(\"You can't go that way.\")\n        if direction in self.room.locked:\n            raise ValueError(\"The door is locked.\")\n        self.room = self.room.exits[direction]\n        return self.room\n\n    def take(self, name):\n        item = find(self.room.items, name)\n        if item is None:\n            return f\"There is no {name} here.\"\n        self.room.items.remove(item)\n        self.inventory.append(item)\n        return f\"You take the {item.name}.\"\n\n    def drop(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        self.inventory.remove(item)\n        self.room.items.append(item)\n        return f\"You drop the {item.name}.\"\n\n    def use(self, name):\n        item = find(self.inventory, name)\n        if item is None:\n            return f\"You don't have a {name}.\"\n        for direction, key in self.room.locked.items():\n            if key == item.name:\n                del self.room.locked[direction]\n                return f\"You unlock the door to the {direction} with the {item.name}.\"\n        return \"Nothing happens.\"\n\n\nSHORT_DIRECTIONS = {\"n\": \"north\", \"s\": \"south\", \"e\": \"east\", \"w\": \"west\"}\nVERBS = {\"get\": \"take\", \"grab\": \"take\", \"l\": \"look\", \"i\": \"inventory\", \"inv\": \"inventory\", \"walk\": \"go\", \"q\": \"quit\", \"x\": \"examine\"}\n\n\ndef parse(command):\n    words = [w for w in command.lower().split() if w not in (\"the\", \"a\", \"an\")]\n    if not words:\n        return (\"\", \"\")\n    verb, noun = words[0], \" \".join(words[1:])\n    if verb in SHORT_DIRECTIONS:\n        return (\"go\", SHORT_DIRECTIONS[verb])\n    if verb in OPPOSITE:\n        return (\"go\", verb)\n    verb = VERBS.get(verb, verb)\n    if verb == \"go\":\n        noun = SHORT_DIRECTIONS.get(noun, noun)\n    return (verb, noun)\n\n\ndef build_world():\n    hall = Room(\"Hall\", \"A dusty entrance hall.\")\n    kitchen = Room(\"Kitchen\", \"Pots and pans everywhere.\")\n    library = Room(\"Library\", \"Shelves of old books.\")\n    garden = Room(\"Garden\", \"Sunlight at last! A fountain bubbles.\")\n    hall.connect(library, \"north\")\n    hall.connect(kitchen, \"east\")\n    library.connect(garden, \"north\")\n    library.locked[\"north\"] = \"key\"\n    library.dark = True\n    kitchen.items.append(Item(\"lamp\", \"A brass lamp, still working.\"))\n    library.items.append(Item(\"key\", \"A small iron key.\"))\n    garden.items.append(Item(\"treasure\", \"A chest of gold coins.\"))\n    return {room.name: room for room in (hall, kitchen, library, garden)}\n\n\nclass Game:\n    def __init__(self):\n        self.rooms = build_world()\n        self.player = Player(self.rooms[\"Hall\"])\n        self.over = False\n\n    def can_see(self):\n        return not self.player.room.dark or find(self.player.inventory, \"lamp\") is not None\n\n    def view(self):\n        if not self.can_see():\n            return \"It is too dark to see. Exits: \" + \", \".join(sorted(self.player.room.exits))\n        return self.player.room.describe()\n\n    def handle(self, command):\n        verb, noun = parse(command)\n        player = self.player\n        if verb == \"look\":\n            return self.view()\n        if verb == \"go\":\n            try:\n                player.move(noun)\n            except ValueError as e:\n                return str(e)\n            return self.view()\n        if verb == \"take\":\n            if not self.can_see():\n                return \"It is too dark to find anything.\"\n            reply = player.take(noun)\n            if find(player.inventory, \"treasure\"):\n                self.over = True\n                reply += \"\\nYou found the treasure! You win!\"\n            return reply\n        if verb == \"drop\":\n            return player.drop(noun)\n        if verb == \"use\":\n            return player.use(noun)\n        if verb == \"inventory\":\n            return \"You carry: \" + (\", \".join(item.name for item in player.inventory) or \"nothing\")\n        if verb == \"examine\":\n            item = find(player.inventory + player.room.items, noun)\n            return item.description if item else f\"You see no {noun} here.\"\n        if verb == \"quit\":\n            self.over = True\n            return \"Goodbye!\"\n        return \"I don't understand that.\"\n\n\ndef play(commands):\n    game = Game()\n    replies = []\n    for command in commands:\n        replies.append(game.handle(command))\n        if game.over:\n            break\n    return replies\n",
@@ -2230,7 +2230,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "text_adventure_q1",
+            "id": "text_adventure-q-146tabq",
             "type": "mcq",
             "prompt": "Why is `Item` a data class?",
             "choices": [
@@ -2255,7 +2255,7 @@
             "explanation": "A data class suits a simple record with a few fields."
           },
           {
-            "id": "text_adventure_q2",
+            "id": "text_adventure-q-1p19f5",
             "type": "mcq",
             "prompt": "How are rooms linked?",
             "choices": [
@@ -2280,7 +2280,7 @@
             "explanation": "Each room maps directions to its neighbouring rooms."
           },
           {
-            "id": "text_adventure_q3",
+            "id": "text_adventure-q-1oigvlh",
             "type": "mcq",
             "prompt": "What does `connect(other, \"north\")` also do?",
             "choices": [
@@ -2305,7 +2305,7 @@
             "explanation": "`connect` adds the exit both ways, so the rooms join up in both directions."
           },
           {
-            "id": "text_adventure_q4",
+            "id": "text_adventure-q-104obum",
             "type": "mcq",
             "prompt": "Why does `parse` drop words like \"the\"?",
             "choices": [
@@ -2330,7 +2330,7 @@
             "explanation": "Dropping filler words makes the parser accept natural phrasing."
           },
           {
-            "id": "text_adventure_q5",
+            "id": "text_adventure-q-i7jg2b",
             "type": "mcq",
             "prompt": "What does `parse(\"n\")` return?",
             "choices": [
@@ -2355,7 +2355,7 @@
             "explanation": "Short directions like `n` expand to a full `go` command."
           },
           {
-            "id": "text_adventure_q6",
+            "id": "text_adventure-q-1hw6rc4",
             "type": "mcq",
             "prompt": "Why do the methods return replies instead of printing them?",
             "choices": [
@@ -2380,7 +2380,7 @@
             "explanation": "Returned replies can be checked by a test that plays a list of commands."
           },
           {
-            "id": "text_adventure_q7",
+            "id": "text_adventure-q-109p9lw",
             "type": "mcq",
             "prompt": "Why save item names to JSON rather than the `Item` objects?",
             "choices": [
@@ -2405,7 +2405,7 @@
             "explanation": "JSON stores text, numbers, lists and dicts, so objects are saved by name."
           },
           {
-            "id": "text_adventure_q8",
+            "id": "text_adventure-q-oxnrv2",
             "type": "mcq",
             "prompt": "Which relationship is \"a room has exits\"?",
             "choices": [
@@ -2465,7 +2465,7 @@
       },
       "challenges": [
         {
-          "id": "capstone_planning_ch1",
+          "id": "capstone_planning-sketch-the-data",
           "title": "Easy: Sketch the data",
           "promptMarkdown": "Define a data class `Book` with `title`, `author`, `pages` and `pages_read` (default 0), and a `finished` property that's `True` once `pages_read` reaches `pages`.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n",
@@ -2489,7 +2489,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch2",
+          "id": "capstone_planning-a-documented-function",
           "title": "Easy: A documented function",
           "promptMarkdown": "Define `progress(pages_read: int, pages: int) -> int` with a docstring, returning how far through a book you are as a whole percentage (rounded down), never more than 100, and 0 when `pages` is 0 or less.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n",
@@ -2513,7 +2513,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch3",
+          "id": "capstone_planning-write-the-tests",
           "title": "Easy: Write the tests",
           "promptMarkdown": "Write `test_progress()`, a test function with `assert` lines checking `progress` at least for: the start (0 pages read), part way, past the end, and a book with 0 pages.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n",
@@ -2547,7 +2547,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch4",
+          "id": "capstone_planning-the-first-feature",
           "title": "Medium: The first feature",
           "promptMarkdown": "Define `add_book(log, title, author, pages)` that adds a `Book` to the list `log` and returns it, trimming the title and author. Raise `ValueError` with `A book needs a title and an author`, `Pages must be more than 0`, or `<title> is already in your log` (ignoring case).",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n\n\ndef test_progress():\n    assert progress(0, 400) == 0\n    assert progress(100, 400) == 25\n    assert progress(399, 400) == 99\n    assert progress(500, 400) == 100\n    assert progress(10, 0) == 0\n",
@@ -2571,7 +2571,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch5",
+          "id": "capstone_planning-read-commands",
           "title": "Medium: Read commands",
           "promptMarkdown": "Define `parse_command(text)` that splits a command with `shlex.split`, so quoted words stay together, and returns `(command, arguments)` with the command lowercased. Raise `ValueError(\"Type a command\")` for an empty one and `ValueError(\"Check your quotes\")` when `shlex` can't split it.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n\n\ndef test_progress():\n    assert progress(0, 400) == 0\n    assert progress(100, 400) == 25\n    assert progress(399, 400) == 99\n    assert progress(500, 400) == 100\n    assert progress(10, 0) == 0\n\n\ndef add_book(log, title, author, pages):\n    title, author = title.strip(), author.strip()\n    if not title or not author:\n        raise ValueError(\"A book needs a title and an author\")\n    if pages <= 0:\n        raise ValueError(\"Pages must be more than 0\")\n    if any(book.title.lower() == title.lower() for book in log):\n        raise ValueError(f\"{title} is already in your log\")\n    book = Book(title, author, pages)\n    log.append(book)\n    return book\n",
@@ -2595,7 +2595,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch6",
+          "id": "capstone_planning-save-your-work",
           "title": "Medium: Save your work",
           "promptMarkdown": "Define `save_log(log, path)`, which writes the books as a JSON list of dicts, and `load_log(path)`, which reads them back as `Book`s, or returns `[]` if the file doesn't exist yet.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n\n\ndef test_progress():\n    assert progress(0, 400) == 0\n    assert progress(100, 400) == 25\n    assert progress(399, 400) == 99\n    assert progress(500, 400) == 100\n    assert progress(10, 0) == 0\n\n\ndef add_book(log, title, author, pages):\n    title, author = title.strip(), author.strip()\n    if not title or not author:\n        raise ValueError(\"A book needs a title and an author\")\n    if pages <= 0:\n        raise ValueError(\"Pages must be more than 0\")\n    if any(book.title.lower() == title.lower() for book in log):\n        raise ValueError(f\"{title} is already in your log\")\n    book = Book(title, author, pages)\n    log.append(book)\n    return book\n\n\ndef parse_command(text):\n    try:\n        words = shlex.split(text)\n    except ValueError:\n        raise ValueError(\"Check your quotes\")\n    if not words:\n        raise ValueError(\"Type a command\")\n    return words[0].lower(), words[1:]\n",
@@ -2619,7 +2619,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch7",
+          "id": "capstone_planning-lay-out-the-project",
           "title": "Hard: Lay out the project",
           "promptMarkdown": "Define `create_project(root, files)` that creates every file in the dict `files` (path inside `root` to text), making folders as needed, and returns the sorted list of the paths it created, written with `/`.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n\n\ndef test_progress():\n    assert progress(0, 400) == 0\n    assert progress(100, 400) == 25\n    assert progress(399, 400) == 99\n    assert progress(500, 400) == 100\n    assert progress(10, 0) == 0\n\n\ndef add_book(log, title, author, pages):\n    title, author = title.strip(), author.strip()\n    if not title or not author:\n        raise ValueError(\"A book needs a title and an author\")\n    if pages <= 0:\n        raise ValueError(\"Pages must be more than 0\")\n    if any(book.title.lower() == title.lower() for book in log):\n        raise ValueError(f\"{title} is already in your log\")\n    book = Book(title, author, pages)\n    log.append(book)\n    return book\n\n\ndef parse_command(text):\n    try:\n        words = shlex.split(text)\n    except ValueError:\n        raise ValueError(\"Check your quotes\")\n    if not words:\n        raise ValueError(\"Type a command\")\n    return words[0].lower(), words[1:]\n\n\ndef save_log(log, path):\n    with open(path, \"w\", encoding=\"utf-8\") as f:\n        json.dump([asdict(book) for book in log], f, indent=2)\n\n\ndef load_log(path):\n    try:\n        with open(path, encoding=\"utf-8\") as f:\n            return [Book(**data) for data in json.load(f)]\n    except FileNotFoundError:\n        return []\n",
@@ -2643,7 +2643,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch8",
+          "id": "capstone_planning-a-readme",
           "title": "Hard: A README",
           "promptMarkdown": "Define `make_readme(name, description, features, command)` that returns Markdown text: a `# <name>` heading, the description, a `## Features` heading with a `- ` line per feature, and a `## How to run it` heading with the command in a fenced code block. Put a blank line between parts and end with a line break.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n\n\ndef test_progress():\n    assert progress(0, 400) == 0\n    assert progress(100, 400) == 25\n    assert progress(399, 400) == 99\n    assert progress(500, 400) == 100\n    assert progress(10, 0) == 0\n\n\ndef add_book(log, title, author, pages):\n    title, author = title.strip(), author.strip()\n    if not title or not author:\n        raise ValueError(\"A book needs a title and an author\")\n    if pages <= 0:\n        raise ValueError(\"Pages must be more than 0\")\n    if any(book.title.lower() == title.lower() for book in log):\n        raise ValueError(f\"{title} is already in your log\")\n    book = Book(title, author, pages)\n    log.append(book)\n    return book\n\n\ndef parse_command(text):\n    try:\n        words = shlex.split(text)\n    except ValueError:\n        raise ValueError(\"Check your quotes\")\n    if not words:\n        raise ValueError(\"Type a command\")\n    return words[0].lower(), words[1:]\n\n\ndef save_log(log, path):\n    with open(path, \"w\", encoding=\"utf-8\") as f:\n        json.dump([asdict(book) for book in log], f, indent=2)\n\n\ndef load_log(path):\n    try:\n        with open(path, encoding=\"utf-8\") as f:\n            return [Book(**data) for data in json.load(f)]\n    except FileNotFoundError:\n        return []\n\n\ndef create_project(root, files):\n    created = []\n    for name, text in files.items():\n        path = Path(root) / name\n        path.parent.mkdir(parents=True, exist_ok=True)\n        path.write_text(text, encoding=\"utf-8\")\n        created.append(path.as_posix())\n    return sorted(created)\n",
@@ -2662,7 +2662,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch9",
+          "id": "capstone_planning-your-own-test-runner",
           "title": "Expert: Your own test runner",
           "promptMarkdown": "Tools like pytest find and run every function whose name starts with `test_`. Write a tiny one: `run_tests(namespace)` takes a dict of names (like `globals()`), runs each callable starting with `test_` in alphabetical order, and returns `(passed, failed)`, two lists of names, where a test fails if it raises `AssertionError`.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n\n\ndef test_progress():\n    assert progress(0, 400) == 0\n    assert progress(100, 400) == 25\n    assert progress(399, 400) == 99\n    assert progress(500, 400) == 100\n    assert progress(10, 0) == 0\n\n\ndef add_book(log, title, author, pages):\n    title, author = title.strip(), author.strip()\n    if not title or not author:\n        raise ValueError(\"A book needs a title and an author\")\n    if pages <= 0:\n        raise ValueError(\"Pages must be more than 0\")\n    if any(book.title.lower() == title.lower() for book in log):\n        raise ValueError(f\"{title} is already in your log\")\n    book = Book(title, author, pages)\n    log.append(book)\n    return book\n\n\ndef parse_command(text):\n    try:\n        words = shlex.split(text)\n    except ValueError:\n        raise ValueError(\"Check your quotes\")\n    if not words:\n        raise ValueError(\"Type a command\")\n    return words[0].lower(), words[1:]\n\n\ndef save_log(log, path):\n    with open(path, \"w\", encoding=\"utf-8\") as f:\n        json.dump([asdict(book) for book in log], f, indent=2)\n\n\ndef load_log(path):\n    try:\n        with open(path, encoding=\"utf-8\") as f:\n            return [Book(**data) for data in json.load(f)]\n    except FileNotFoundError:\n        return []\n\n\ndef create_project(root, files):\n    created = []\n    for name, text in files.items():\n        path = Path(root) / name\n        path.parent.mkdir(parents=True, exist_ok=True)\n        path.write_text(text, encoding=\"utf-8\")\n        created.append(path.as_posix())\n    return sorted(created)\n\n\ndef make_readme(name, description, features, command):\n    lines = [f\"# {name}\", \"\", description, \"\", \"## Features\", \"\"]\n    lines += [f\"- {feature}\" for feature in features]\n    lines += [\"\", \"## How to run it\", \"\", \"```\", command, \"```\", \"\"]\n    return \"\\n\".join(lines)\n",
@@ -2686,7 +2686,7 @@
           }
         },
         {
-          "id": "capstone_planning_ch10",
+          "id": "capstone_planning-ship-it",
           "title": "Expert: Ship it",
           "promptMarkdown": "Define `main(args, path=\"books.json\")`, the command-line entry point, where `args` is a list like `sys.argv[1:]`: `add TITLE AUTHOR PAGES` prints `Added <title>`; `read TITLE PAGES` adds pages read (never past the end) and prints `<title>: <percent>%`; `list` prints `<title> by <author> (<percent>% or done)`. Any `ValueError`, or a wrong command, prints the message (`Commands: add TITLE AUTHOR PAGES, read TITLE PAGES, list` for a wrong command) and returns 1; otherwise save the log and return 0.",
           "starterCode": "import json\nimport shlex\nfrom dataclasses import dataclass, asdict\nfrom pathlib import Path\n\n\n@dataclass\nclass Book:\n    title: str\n    author: str\n    pages: int\n    pages_read: int = 0\n\n    @property\n    def finished(self):\n        return self.pages_read >= self.pages\n\n\ndef progress(pages_read: int, pages: int) -> int:\n    \"\"\"Return how far through a book you are, as a whole percentage from 0 to 100.\"\"\"\n    if pages <= 0:\n        return 0\n    return min(100, pages_read * 100 // pages)\n\n\ndef test_progress():\n    assert progress(0, 400) == 0\n    assert progress(100, 400) == 25\n    assert progress(399, 400) == 99\n    assert progress(500, 400) == 100\n    assert progress(10, 0) == 0\n\n\ndef add_book(log, title, author, pages):\n    title, author = title.strip(), author.strip()\n    if not title or not author:\n        raise ValueError(\"A book needs a title and an author\")\n    if pages <= 0:\n        raise ValueError(\"Pages must be more than 0\")\n    if any(book.title.lower() == title.lower() for book in log):\n        raise ValueError(f\"{title} is already in your log\")\n    book = Book(title, author, pages)\n    log.append(book)\n    return book\n\n\ndef parse_command(text):\n    try:\n        words = shlex.split(text)\n    except ValueError:\n        raise ValueError(\"Check your quotes\")\n    if not words:\n        raise ValueError(\"Type a command\")\n    return words[0].lower(), words[1:]\n\n\ndef save_log(log, path):\n    with open(path, \"w\", encoding=\"utf-8\") as f:\n        json.dump([asdict(book) for book in log], f, indent=2)\n\n\ndef load_log(path):\n    try:\n        with open(path, encoding=\"utf-8\") as f:\n            return [Book(**data) for data in json.load(f)]\n    except FileNotFoundError:\n        return []\n\n\ndef create_project(root, files):\n    created = []\n    for name, text in files.items():\n        path = Path(root) / name\n        path.parent.mkdir(parents=True, exist_ok=True)\n        path.write_text(text, encoding=\"utf-8\")\n        created.append(path.as_posix())\n    return sorted(created)\n\n\ndef make_readme(name, description, features, command):\n    lines = [f\"# {name}\", \"\", description, \"\", \"## Features\", \"\"]\n    lines += [f\"- {feature}\" for feature in features]\n    lines += [\"\", \"## How to run it\", \"\", \"```\", command, \"```\", \"\"]\n    return \"\\n\".join(lines)\n\n\ndef run_tests(namespace):\n    passed, failed = [], []\n    for name in sorted(namespace):\n        test = namespace[name]\n        if name.startswith(\"test_\") and callable(test):\n            try:\n                test()\n            except AssertionError:\n                failed.append(name)\n            else:\n                passed.append(name)\n    return passed, failed\n",
@@ -2719,7 +2719,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "capstone_planning_q1",
+            "id": "capstone_planning-q-10skdtt",
             "type": "mcq",
             "prompt": "What is a minimum viable product?",
             "choices": [
@@ -2744,7 +2744,7 @@
             "explanation": "An MVP is the smallest version that is actually useful; the rest comes after."
           },
           {
-            "id": "capstone_planning_q2",
+            "id": "capstone_planning-q-fhgjy9",
             "type": "mcq",
             "prompt": "Where should `input`, `print` and file handling go?",
             "choices": [
@@ -2769,7 +2769,7 @@
             "explanation": "Keeping input and output at the edges leaves the core logic easy to test."
           },
           {
-            "id": "capstone_planning_q3",
+            "id": "capstone_planning-q-1qxixyx",
             "type": "mcq",
             "prompt": "Why write tests as you go?",
             "choices": [
@@ -2794,7 +2794,7 @@
             "explanation": "Tests run straight after each change show exactly what broke."
           },
           {
-            "id": "capstone_planning_q4",
+            "id": "capstone_planning-q-ma7zsp",
             "type": "mcq",
             "prompt": "What does `shlex.split('add \"The Hobbit\" 310')` give?",
             "choices": [
@@ -2819,7 +2819,7 @@
             "explanation": "`shlex.split` respects quotes, so a title with spaces stays one argument."
           },
           {
-            "id": "capstone_planning_q5",
+            "id": "capstone_planning-q-o7d70i",
             "type": "mcq",
             "prompt": "Where do a project's test files usually go?",
             "choices": [
@@ -2844,7 +2844,7 @@
             "explanation": "Projects usually keep their test files together in a `tests/` folder."
           },
           {
-            "id": "capstone_planning_q6",
+            "id": "capstone_planning-q-103wvhs",
             "type": "mcq",
             "prompt": "How should a project grow after its first version?",
             "choices": [
@@ -2869,7 +2869,7 @@
             "explanation": "Small, tested steps keep the project working all the time."
           },
           {
-            "id": "capstone_planning_q7",
+            "id": "capstone_planning-q-1l6idd2",
             "type": "mcq",
             "prompt": "How does pytest find tests?",
             "choices": [
@@ -2894,7 +2894,7 @@
             "explanation": "pytest collects functions named `test_...` from test files."
           },
           {
-            "id": "capstone_planning_q8",
+            "id": "capstone_planning-q-e10nyo",
             "type": "mcq",
             "prompt": "When does `main` save the log?",
             "choices": [

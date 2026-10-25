@@ -45,7 +45,7 @@
       },
       "challenges": [
         {
-          "id": "json_basics_ch1",
+          "id": "json_basics-dict-to-json",
           "title": "Easy: Dict to JSON",
           "promptMarkdown": "Use `json.dumps` to turn the `book` dictionary into a JSON string. Store the result in `text`.",
           "starterCode": "import json\n\nbook = {\"title\": \"Dune\", \"year\": 1965}\ntext = ___",
@@ -69,7 +69,7 @@
           }
         },
         {
-          "id": "json_basics_ch2",
+          "id": "json_basics-json-to-dict",
           "title": "Easy: JSON to dict",
           "promptMarkdown": "Parse the JSON string `raw` with `json.loads`, store the result in `player`, then print the player's name.",
           "starterCode": "import json\n\nraw = '{\"name\": \"Ana\", \"score\": 92}'\nplayer = ___\nprint(___)",
@@ -93,7 +93,7 @@
           }
         },
         {
-          "id": "json_basics_ch3",
+          "id": "json_basics-keep-accents-readable",
           "title": "Easy: Keep accents readable",
           "promptMarkdown": "By default `json.dumps` escapes non-ASCII letters (`ü` becomes `\\u00fc`). Dump `place` so the accents stay as they are. Store it in `text`.",
           "starterCode": "import json\n\nplace = {\"city\": \"Zürich\", \"café\": \"Grüezi\"}\ntext = json.dumps(place)",
@@ -132,7 +132,7 @@
           }
         },
         {
-          "id": "json_basics_ch4",
+          "id": "json_basics-pretty-print-settings",
           "title": "Medium: Pretty-print settings",
           "promptMarkdown": "Make a readable JSON string from `config`: indent it by 2 spaces and sort the keys alphabetically. Store it in `pretty` and print it.",
           "starterCode": "import json\n\nconfig = {\"theme\": \"dark\", \"font_size\": 14, \"autosave\": True}\npretty = json.dumps(config, ___)\nprint(pretty)",
@@ -161,7 +161,7 @@
           }
         },
         {
-          "id": "json_basics_ch5",
+          "id": "json_basics-round-trip",
           "title": "Medium: Round trip",
           "promptMarkdown": "Convert the list `scores` to a JSON string `text`, then convert `text` back into a Python list called `back`.",
           "starterCode": "import json\n\nscores = [88, 92, 79]\ntext = ___\nback = ___",
@@ -190,7 +190,7 @@
           }
         },
         {
-          "id": "json_basics_ch6",
+          "id": "json_basics-save-and-load-a-file",
           "title": "Medium: Save and load a file",
           "promptMarkdown": "Save `settings` to the file `settings.json` with `json.dump`, then open the file again and read it back into `loaded` with `json.load`.",
           "starterCode": "import json\n\nsettings = {\"theme\": \"dark\", \"volume\": 7, \"tips\": False}\n",
@@ -214,7 +214,7 @@
           }
         },
         {
-          "id": "json_basics_ch7",
+          "id": "json_basics-filter-records-from-an-api",
           "title": "Medium: Filter records from an API",
           "promptMarkdown": "`raw` is a JSON list of users from an API. Build `active_names`: the names of active users, sorted alphabetically.",
           "starterCode": "import json\n\nraw = '[{\"name\": \"Zoe\", \"active\": true}, {\"name\": \"Ben\", \"active\": false}, {\"name\": \"Amir\", \"active\": true}, {\"name\": \"Kai\", \"active\": true}]'\nusers = json.loads(raw)\nactive_names = ___",
@@ -233,7 +233,7 @@
           }
         },
         {
-          "id": "json_basics_ch8",
+          "id": "json_basics-dig-into-nested-json",
           "title": "Hard: Dig into nested JSON",
           "promptMarkdown": "Parse the order in `raw`. Set `email` to the customer's email and `total_qty` to the sum of `qty` over all items.",
           "starterCode": "import json\n\nraw = '''\n{\"id\": 7,\n \"customer\": {\"name\": \"Lee\", \"email\": \"lee@example.com\"},\n \"items\": [{\"sku\": \"A1\", \"qty\": 2}, {\"sku\": \"B4\", \"qty\": 1}, {\"sku\": \"C9\", \"qty\": 5}]}\n'''\norder = json.loads(raw)\nemail = ___\ntotal_qty = ___",
@@ -257,7 +257,7 @@
           }
         },
         {
-          "id": "json_basics_ch9",
+          "id": "json_basics-survive-bad-json",
           "title": "Hard: Survive bad JSON",
           "promptMarkdown": "Write `safe_parse(text)`. It returns the parsed value, or `None` if `text` is not valid JSON (catch `json.JSONDecodeError`).",
           "starterCode": "import json\n\ndef safe_parse(text):\n    ___",
@@ -291,7 +291,7 @@
           }
         },
         {
-          "id": "json_basics_ch10",
+          "id": "json_basics-dates-in-json",
           "title": "Expert: Dates in JSON",
           "promptMarkdown": "JSON has no date type, so `json.dumps` fails on a `date`. Write `to_json(event)` that dumps the dict, turning any `date` into an ISO string like `\"2026-10-16\"`. Use the `default=` argument.",
           "starterCode": "import json\nfrom datetime import date\n\ndef to_json(event):\n    ___\n\nprint(to_json({\"name\": \"Launch\", \"on\": date(2026, 10, 16)}))",
@@ -320,7 +320,7 @@
           }
         },
         {
-          "id": "json_basics_ch11",
+          "id": "json_basics-merge-settings",
           "title": "Expert: Merge settings",
           "promptMarkdown": "Write `merge_settings(defaults_json, user_json)`. Parse both JSON strings and return a dict where the user's values win. The nested `\"colors\"` dict must be merged too, not replaced.",
           "starterCode": "import json\n\ndef merge_settings(defaults_json, user_json):\n    ___",
@@ -353,7 +353,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "json_basics_q1",
+            "id": "json_basics-q-18cxd0d",
             "type": "mcq",
             "prompt": "What type does `json.dumps(...)` return?",
             "choices": [
@@ -378,7 +378,7 @@
             "explanation": "`dumps` (dump string) turns Python data into JSON text."
           },
           {
-            "id": "json_basics_q2",
+            "id": "json_basics-q-6staff",
             "type": "shortText",
             "prompt": "Which `json` function turns a JSON string into Python objects? (name only)",
             "validation": {
@@ -388,7 +388,7 @@
             "explanation": "`loads` (load string) parses JSON text into dicts, lists, strings and numbers."
           },
           {
-            "id": "json_basics_q3",
+            "id": "json_basics-q-wiefjf",
             "type": "mcq",
             "prompt": "Python `None` becomes what in JSON?",
             "choices": [
@@ -413,7 +413,7 @@
             "explanation": "JSON's \"no value\" is `null`, which Python reads back as `None`."
           },
           {
-            "id": "json_basics_q4",
+            "id": "json_basics-q-kjm27g",
             "type": "mcq",
             "prompt": "In a JSON object, keys must be…",
             "choices": [
@@ -438,7 +438,7 @@
             "explanation": "JSON object keys are always strings in double quotes."
           },
           {
-            "id": "json_basics_q5",
+            "id": "json_basics-q-n9x22r",
             "type": "mcq",
             "prompt": "What does `json.dumps({1: \"a\"})` produce?",
             "choices": [
@@ -463,7 +463,7 @@
             "explanation": "JSON keys must be strings, so the int key 1 is written as `\"1\"`."
           },
           {
-            "id": "json_basics_q6",
+            "id": "json_basics-q-1g4hb5v",
             "type": "shortText",
             "prompt": "Which exception does `json.loads` raise for invalid text? (class name)",
             "validation": {
@@ -473,7 +473,7 @@
             "explanation": "`json.JSONDecodeError` (a kind of `ValueError`) reports where the text stopped being valid JSON."
           },
           {
-            "id": "json_basics_q7",
+            "id": "json_basics-q-15prve5",
             "type": "mcq",
             "prompt": "What does `indent=2` do in `json.dumps`?",
             "choices": [
@@ -498,7 +498,7 @@
             "explanation": "`indent` adds new lines and that many spaces per nesting level."
           },
           {
-            "id": "json_basics_q8",
+            "id": "json_basics-q-18mgr1v",
             "type": "mcq",
             "prompt": "How is `json.dump` (no s) different from `json.dumps`?",
             "choices": [
@@ -523,7 +523,7 @@
             "explanation": "`dump` writes to a file object; `dumps` returns a string."
           },
           {
-            "id": "json_basics_q9",
+            "id": "json_basics-q-xbkdqc",
             "type": "mcq",
             "prompt": "The tuple `(1, 2)` comes back from a JSON round trip as…",
             "choices": [
@@ -548,7 +548,7 @@
             "explanation": "JSON has arrays but no tuples, so a tuple comes back as a list."
           },
           {
-            "id": "json_basics_q10",
+            "id": "json_basics-q-pdfaih",
             "type": "mcq",
             "prompt": "Why does `json.dumps` fail on a `datetime`?",
             "choices": [
@@ -618,7 +618,7 @@
       },
       "challenges": [
         {
-          "id": "csv_data_ch1",
+          "id": "csv_data-read-rows",
           "title": "Easy: Read rows",
           "promptMarkdown": "Read `data` with `csv.reader` and store every row in the list `rows`. (`StringIO` lets the csv module read a string as if it were a file.)",
           "starterCode": "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\n\"\nrows = ___",
@@ -637,7 +637,7 @@
           }
         },
         {
-          "id": "csv_data_ch2",
+          "id": "csv_data-rows-as-dictionaries",
           "title": "Easy: Rows as dictionaries",
           "promptMarkdown": "Use `csv.DictReader` so each row is a dict keyed by the header. Store the rows in `people` and set `first_city` to the first person's city.",
           "starterCode": "import csv\nfrom io import StringIO\n\ndata = \"name,city\\nAna,Oslo\\nBob,Lima\\n\"\npeople = ___\nfirst_city = ___",
@@ -661,7 +661,7 @@
           }
         },
         {
-          "id": "csv_data_ch3",
+          "id": "csv_data-commas-inside-values",
           "title": "Easy: Commas inside values",
           "promptMarkdown": "Write the row `[\"Lee, Jr.\", \"NYC\"]` with `csv.writer` and store the text in `out`. Look at how csv protects the comma inside the name.",
           "starterCode": "import csv\nfrom io import StringIO\n\nbuf = StringIO()\n___\nout = buf.getvalue()\nprint(out)",
@@ -685,7 +685,7 @@
           }
         },
         {
-          "id": "csv_data_ch4",
+          "id": "csv_data-sum-a-column",
           "title": "Medium: Sum a column",
           "promptMarkdown": "Add up the `score` column into `total`. Remember: everything csv reads is a string.",
           "starterCode": "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\nCleo,80\\n\"\ntotal = ___",
@@ -709,7 +709,7 @@
           }
         },
         {
-          "id": "csv_data_ch5",
+          "id": "csv_data-write-csv",
           "title": "Medium: Write CSV",
           "promptMarkdown": "Use `csv.writer` to write a header row `name,score` and the two rows in `scores` into `buf`. Then store the text in `out`.",
           "starterCode": "import csv\nfrom io import StringIO\n\nscores = [[\"Ana\", 90], [\"Bob\", 85]]\nbuf = StringIO()\nwriter = csv.writer(buf)\n# write the header and the rows here\n\nout = buf.getvalue()",
@@ -738,7 +738,7 @@
           }
         },
         {
-          "id": "csv_data_ch6",
+          "id": "csv_data-totals-per-group",
           "title": "Medium: Totals per group",
           "promptMarkdown": "Total the `amount` column for each `region`. Store the result in the dict `totals`, e.g. `{\"north\": 30, ...}`.",
           "starterCode": "import csv\nfrom io import StringIO\n\ndata = \"region,amount\\nnorth,10\\nsouth,25\\nnorth,20\\neast,5\\n\"\ntotals = {}\n___",
@@ -757,7 +757,7 @@
           }
         },
         {
-          "id": "csv_data_ch7",
+          "id": "csv_data-write-dictionaries",
           "title": "Hard: Write dictionaries",
           "promptMarkdown": "Write `people` (a list of dicts) as CSV with `csv.DictWriter`, including a header row. Store the text in `out`.",
           "starterCode": "import csv\nfrom io import StringIO\n\npeople = [{\"name\": \"Ana\", \"city\": \"Oslo\"}, {\"name\": \"Bob\", \"city\": \"Lima\"}]\nbuf = StringIO()\nwriter = csv.DictWriter(buf, fieldnames=___)\n___\nout = buf.getvalue()",
@@ -776,7 +776,7 @@
           }
         },
         {
-          "id": "csv_data_ch8",
+          "id": "csv_data-save-and-reload-a-file",
           "title": "Hard: Save and reload a file",
           "promptMarkdown": "Write `rows` to a real file named `people.csv`, then read it back into `loaded`. Open the file with `newline=\"\"` and `encoding=\"utf-8\"`, as the csv docs recommend.",
           "starterCode": "import csv\n\nrows = [[\"name\", \"age\"], [\"Ana\", \"30\"], [\"Zoë\", \"27\"]]\n\nwith open(\"people.csv\", \"w\", newline=\"\", encoding=\"utf-8\") as f:\n    ___\n\nwith open(\"people.csv\", newline=\"\", encoding=\"utf-8\") as f:\n    loaded = ___",
@@ -800,7 +800,7 @@
           }
         },
         {
-          "id": "csv_data_ch9",
+          "id": "csv_data-european-style-csv",
           "title": "Expert: European-style CSV",
           "promptMarkdown": "Many European exports use `;` between fields and a comma as the decimal point. Parse `data` into `prices`, a list of floats: `[1.5, 2.25]`.",
           "starterCode": "import csv\nfrom io import StringIO\n\ndata = \"item;price\\napple;1,5\\npear;2,25\\n\"\nprices = ___",
@@ -819,7 +819,7 @@
           }
         },
         {
-          "id": "csv_data_ch10",
+          "id": "csv_data-skip-bad-rows",
           "title": "Expert: Skip bad rows",
           "promptMarkdown": "Write `parse_scores(text)`. It reads CSV with a `name,score` header and returns a list of `(name, score)` tuples with `score` as an int. Skip rows whose score is missing or not a number.",
           "starterCode": "import csv\nfrom io import StringIO\n\ndef parse_scores(text):\n    ___",
@@ -852,7 +852,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "csv_data_q1",
+            "id": "csv_data-q-1l7i6hc",
             "type": "mcq",
             "prompt": "What does CSV stand for?",
             "choices": [
@@ -877,7 +877,7 @@
             "explanation": "CSV is plain text with one record per line and commas between the fields."
           },
           {
-            "id": "csv_data_q2",
+            "id": "csv_data-q-c0plgp",
             "type": "mcq",
             "prompt": "What type is every value that `csv.reader` gives you?",
             "choices": [
@@ -902,7 +902,7 @@
             "explanation": "csv doesn't guess types: every field is a string until you convert it."
           },
           {
-            "id": "csv_data_q3",
+            "id": "csv_data-q-1werr24",
             "type": "shortText",
             "prompt": "Which csv class gives you each row as a dict? (class name)",
             "validation": {
@@ -912,7 +912,7 @@
             "explanation": "`DictReader` uses the header row as the keys of each row dict."
           },
           {
-            "id": "csv_data_q4",
+            "id": "csv_data-q-1x6code",
             "type": "mcq",
             "prompt": "Which method writes a single row with `csv.writer`?",
             "choices": [
@@ -937,7 +937,7 @@
             "explanation": "`writerow` writes one sequence as one line, adding commas and quotes as needed."
           },
           {
-            "id": "csv_data_q5",
+            "id": "csv_data-q-nqd42i",
             "type": "mcq",
             "prompt": "Why open CSV files with `newline=\"\"`?",
             "choices": [
@@ -962,7 +962,7 @@
             "explanation": "Without `newline=\"\"`, line endings can be doubled, which shows up as blank rows on Windows."
           },
           {
-            "id": "csv_data_q6",
+            "id": "csv_data-q-lj35ck",
             "type": "mcq",
             "prompt": "How does csv store the value `Lee, Jr.`?",
             "choices": [
@@ -987,7 +987,7 @@
             "explanation": "A field that contains the delimiter is quoted so it stays one value."
           },
           {
-            "id": "csv_data_q7",
+            "id": "csv_data-q-uryv3t",
             "type": "shortText",
             "prompt": "Which argument tells csv to split on `;` instead of `,`? (argument name)",
             "validation": {
@@ -997,7 +997,7 @@
             "explanation": "`delimiter` sets the character that separates fields."
           },
           {
-            "id": "csv_data_q8",
+            "id": "csv_data-q-1uiwdro",
             "type": "mcq",
             "prompt": "Which `DictWriter` method writes the column names?",
             "choices": [
@@ -1022,7 +1022,7 @@
             "explanation": "`writeheader` writes the `fieldnames` as the first row."
           },
           {
-            "id": "csv_data_q9",
+            "id": "csv_data-q-qpic0n",
             "type": "mcq",
             "prompt": "`sum(row[\"n\"] for row in rows)` fails with a csv file. Why?",
             "choices": [
@@ -1047,7 +1047,7 @@
             "explanation": "csv values are text, so convert them with `int()` before adding."
           },
           {
-            "id": "csv_data_q10",
+            "id": "csv_data-q-2gbkcb",
             "type": "mcq",
             "prompt": "When is pandas a better choice than the csv module?",
             "choices": [
@@ -1112,7 +1112,7 @@
       },
       "challenges": [
         {
-          "id": "datetime_data_ch1",
+          "id": "datetime_data-a-moment-in-utc",
           "title": "Easy: A moment in UTC",
           "promptMarkdown": "Set `launch` to 14 March 2025 at 12:30 UTC (an aware datetime), and `text` to its ISO form.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\n",
@@ -1136,7 +1136,7 @@
           }
         },
         {
-          "id": "datetime_data_ch2",
+          "id": "datetime_data-from-a-timestamp",
           "title": "Easy: From a timestamp",
           "promptMarkdown": "Set `when` to the UTC datetime for the Unix timestamp `ts`.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\nts = 1700000000\n",
@@ -1160,7 +1160,7 @@
           }
         },
         {
-          "id": "datetime_data_ch3",
+          "id": "datetime_data-back-to-a-timestamp",
           "title": "Easy: Back to a timestamp",
           "promptMarkdown": "Set `ts` to the Unix timestamp (a whole number) of midnight UTC on 1 January 2025.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\n",
@@ -1179,7 +1179,7 @@
           }
         },
         {
-          "id": "datetime_data_ch4",
+          "id": "datetime_data-read-an-api-time",
           "title": "Medium: Read an API time",
           "promptMarkdown": "Define `parse_time(text)` that reads ISO text like `2025-03-14T12:00:00Z` or `2025-03-14T14:00:00+02:00` into an aware datetime. It must work for the `Z` form on any Python version.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\n",
@@ -1208,7 +1208,7 @@
           }
         },
         {
-          "id": "datetime_data_ch5",
+          "id": "datetime_data-another-zone",
           "title": "Medium: Another zone",
           "promptMarkdown": "Show `meeting` (12:00 UTC) in the zone two hours ahead of UTC: set `local` to the converted datetime and `shown` to its time as `HH:MM`.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\nmeeting = datetime(2025, 3, 14, 12, 0, tzinfo=timezone.utc)\n",
@@ -1232,7 +1232,7 @@
           }
         },
         {
-          "id": "datetime_data_ch6",
+          "id": "datetime_data-naive-or-aware",
           "title": "Medium: Naive or aware?",
           "promptMarkdown": "Define `is_aware(dt)` that returns `True` if the datetime knows its time zone.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\n",
@@ -1256,7 +1256,7 @@
           }
         },
         {
-          "id": "datetime_data_ch7",
+          "id": "datetime_data-which-came-first",
           "title": "Hard: Which came first?",
           "promptMarkdown": "Define `in_order(texts)` that returns the ISO time strings sorted by the moment they describe (not alphabetically), keeping each string as it was. Use your `parse_time`.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\ndef parse_time(text):\n    if text.endswith(\"Z\"):\n        text = text[:-1] + \"+00:00\"\n    return datetime.fromisoformat(text)\n",
@@ -1275,7 +1275,7 @@
           }
         },
         {
-          "id": "datetime_data_ch8",
+          "id": "datetime_data-minutes-between",
           "title": "Hard: Minutes between",
           "promptMarkdown": "Define `minutes_between(start, end)` for two ISO time strings (any offsets) that returns the whole minutes from `start` to `end`.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\ndef parse_time(text):\n    if text.endswith(\"Z\"):\n        text = text[:-1] + \"+00:00\"\n    return datetime.fromisoformat(text)\n",
@@ -1299,7 +1299,7 @@
           }
         },
         {
-          "id": "datetime_data_ch9",
+          "id": "datetime_data-events-per-day",
           "title": "Expert: Events per day",
           "promptMarkdown": "Define `per_day(texts)` that counts ISO timestamps by their **UTC** date, returning a dict like `{\"2025-03-14\": 2}` with the dates in order.",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\ndef parse_time(text):\n    if text.endswith(\"Z\"):\n        text = text[:-1] + \"+00:00\"\n    return datetime.fromisoformat(text)\n",
@@ -1323,7 +1323,7 @@
           }
         },
         {
-          "id": "datetime_data_ch10",
+          "id": "datetime_data-show-it-locally",
           "title": "Expert: Show it locally",
           "promptMarkdown": "Define `show_local(text, hours)` that shows an ISO time in the zone `hours` from UTC as `14/03/2025 14:00 (UTC+2)` (or `UTC-5`, or `UTC+0`).",
           "starterCode": "from datetime import datetime, timedelta, timezone\n\ndef parse_time(text):\n    if text.endswith(\"Z\"):\n        text = text[:-1] + \"+00:00\"\n    return datetime.fromisoformat(text)\n",
@@ -1356,7 +1356,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "datetime_data_q1",
+            "id": "datetime_data-q-3z9bhx",
             "type": "mcq",
             "prompt": "What is a naive datetime?",
             "choices": [
@@ -1381,7 +1381,7 @@
             "explanation": "A naive datetime has no `tzinfo`, so it doesn't say which time zone it is in."
           },
           {
-            "id": "datetime_data_q2",
+            "id": "datetime_data-q-yryxuj",
             "type": "mcq",
             "prompt": "What does `Z` at the end of an ISO time mean?",
             "choices": [
@@ -1406,7 +1406,7 @@
             "explanation": "`Z` (\"Zulu\") marks UTC, the same as `+00:00`."
           },
           {
-            "id": "datetime_data_q3",
+            "id": "datetime_data-q-180xzjd",
             "type": "mcq",
             "prompt": "What is a Unix timestamp?",
             "choices": [
@@ -1431,7 +1431,7 @@
             "explanation": "Unix time counts seconds from the epoch, 1970-01-01 00:00 UTC."
           },
           {
-            "id": "datetime_data_q4",
+            "id": "datetime_data-q-1jrzzaq",
             "type": "mcq",
             "prompt": "Why pass `tz=timezone.utc` to `fromtimestamp`?",
             "choices": [
@@ -1456,7 +1456,7 @@
             "explanation": "Without a time zone, `fromtimestamp` uses the computer's local time."
           },
           {
-            "id": "datetime_data_q5",
+            "id": "datetime_data-q-olbwor",
             "type": "mcq",
             "prompt": "Is 14:00 at `+02:00` equal to 12:00 UTC?",
             "choices": [
@@ -1481,7 +1481,7 @@
             "explanation": "14:00 at +02:00 minus 2 hours is 12:00 UTC."
           },
           {
-            "id": "datetime_data_q6",
+            "id": "datetime_data-q-ok1lg",
             "type": "mcq",
             "prompt": "What happens when you compare a naive and an aware datetime?",
             "choices": [
@@ -1506,7 +1506,7 @@
             "explanation": "Python refuses to order a naive and an aware datetime, because the naive one's zone is unknown."
           },
           {
-            "id": "datetime_data_q7",
+            "id": "datetime_data-q-939uv3",
             "type": "shortText",
             "prompt": "Which datetime method shows the same moment in another time zone? (name only)",
             "validation": {
@@ -1516,7 +1516,7 @@
             "explanation": "`astimezone` converts an aware datetime to another zone; the moment stays the same."
           },
           {
-            "id": "datetime_data_q8",
+            "id": "datetime_data-q-mr7jph",
             "type": "mcq",
             "prompt": "What is the safe habit for times in a program?",
             "choices": [
@@ -1541,7 +1541,7 @@
             "explanation": "Store and calculate in UTC; local time is only for display."
           },
           {
-            "id": "datetime_data_q9",
+            "id": "datetime_data-q-34tfi5",
             "type": "mcq",
             "prompt": "Which module knows the summer-time rules of real places?",
             "choices": [
@@ -1566,7 +1566,7 @@
             "explanation": "`zoneinfo` uses the time zone database, which includes summer-time changes."
           },
           {
-            "id": "datetime_data_q10",
+            "id": "datetime_data-q-1eavoy7",
             "type": "mcq",
             "prompt": "How can older Pythons read `2025-03-14T12:00:00Z`?",
             "choices": [
@@ -1631,7 +1631,7 @@
       },
       "challenges": [
         {
-          "id": "regex_basics_ch1",
+          "id": "regex_basics-all-the-numbers",
           "title": "Easy: All the numbers",
           "promptMarkdown": "Set `numbers` to the whole numbers in `text`, as ints, in order.",
           "starterCode": "import re\n\ntext = \"Rooms 12, 7 and 103 are free\"\n",
@@ -1660,7 +1660,7 @@
           }
         },
         {
-          "id": "regex_basics_ch2",
+          "id": "regex_basics-five-digits",
           "title": "Easy: Five digits",
           "promptMarkdown": "Define `is_zip(text)` that returns `True` only if `text` is exactly five digits.",
           "starterCode": "import re\n",
@@ -1684,7 +1684,7 @@
           }
         },
         {
-          "id": "regex_basics_ch3",
+          "id": "regex_basics-tidy-the-spaces",
           "title": "Easy: Tidy the spaces",
           "promptMarkdown": "Define `tidy(text)` that turns every run of spaces, tabs or line breaks into a single space and strips the ends.",
           "starterCode": "import re\n",
@@ -1708,7 +1708,7 @@
           }
         },
         {
-          "id": "regex_basics_ch4",
+          "id": "regex_basics-find-the-dates",
           "title": "Medium: Find the dates",
           "promptMarkdown": "Set `dates` to every date written like `2025-03-14` in `text`.",
           "starterCode": "import re\n\ntext = \"Joined 2024-11-02, renewed 2025-03-14, ID 12345-67-89\"\n",
@@ -1737,7 +1737,7 @@
           }
         },
         {
-          "id": "regex_basics_ch5",
+          "id": "regex_basics-split-on-anything",
           "title": "Medium: Split on anything",
           "promptMarkdown": "Define `words(text)` that splits `text` on any mix of commas, semicolons and spaces, leaving out empty pieces.",
           "starterCode": "import re\n",
@@ -1761,7 +1761,7 @@
           }
         },
         {
-          "id": "regex_basics_ch6",
+          "id": "regex_basics-hashtags",
           "title": "Medium: Hashtags",
           "promptMarkdown": "Define `hashtags(text)` that returns the hashtags in `text` (the word after each `#`), lowercased, each once, in the order they first appear.",
           "starterCode": "import re\n",
@@ -1785,7 +1785,7 @@
           }
         },
         {
-          "id": "regex_basics_ch7",
+          "id": "regex_basics-read-a-log-line",
           "title": "Hard: Read a log line",
           "promptMarkdown": "Define `parse_line(line)` that turns `2025-03-14 12:00:01 ERROR Disk full` into a dict with keys `date`, `time`, `level` and `message`, or returns `None` if the line doesn't fit that shape (date, time, an uppercase level, then the message).",
           "starterCode": "import re\n",
@@ -1809,7 +1809,7 @@
           }
         },
         {
-          "id": "regex_basics_ch8",
+          "id": "regex_basics-hide-card-numbers",
           "title": "Hard: Hide card numbers",
           "promptMarkdown": "Define `mask(text)` that replaces every 16-digit number in `text` with twelve `*` and its last four digits, like `************1234`.",
           "starterCode": "import re\n",
@@ -1833,7 +1833,7 @@
           }
         },
         {
-          "id": "regex_basics_ch9",
+          "id": "regex_basics-phone-numbers",
           "title": "Expert: Phone numbers",
           "promptMarkdown": "Define `normalise(phone)` that accepts `555-123-4567`, `(555) 123-4567`, `555.123.4567` or `555 123 4567` and returns `555-123-4567`, or `None` for anything else.",
           "starterCode": "import re\n",
@@ -1857,7 +1857,7 @@
           }
         },
         {
-          "id": "regex_basics_ch10",
+          "id": "regex_basics-prices-by-currency",
           "title": "Expert: Prices by currency",
           "promptMarkdown": "Define `totals(text)` that finds prices written with `€`, `$` or `£` before the amount (like `€12.50` or `$3`) and returns a dict from symbol to total, rounded to 2 places.",
           "starterCode": "import re\n",
@@ -1885,7 +1885,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "regex_basics_q1",
+            "id": "regex_basics-q-1mwdlm7",
             "type": "mcq",
             "prompt": "What does `\\d+` match?",
             "choices": [
@@ -1910,7 +1910,7 @@
             "explanation": "`\\d` is a digit and `+` means one or more of it."
           },
           {
-            "id": "regex_basics_q2",
+            "id": "regex_basics-q-9ydywg",
             "type": "mcq",
             "prompt": "Why write patterns as raw strings, `r\"...\"`?",
             "choices": [
@@ -1935,7 +1935,7 @@
             "explanation": "In a raw string, backslashes aren't escapes, so `\\d` reaches `re` as written."
           },
           {
-            "id": "regex_basics_q3",
+            "id": "regex_basics-q-n8zypp",
             "type": "mcq",
             "prompt": "Which function checks that the whole text fits a pattern?",
             "choices": [
@@ -1960,7 +1960,7 @@
             "explanation": "`fullmatch` succeeds only if the pattern covers the whole string."
           },
           {
-            "id": "regex_basics_q4",
+            "id": "regex_basics-q-enob0m",
             "type": "mcq",
             "prompt": "What does `re.search` return when nothing matches?",
             "choices": [
@@ -1985,7 +1985,7 @@
             "explanation": "Without a match, `search` returns `None`, so check before calling `.group()`."
           },
           {
-            "id": "regex_basics_q5",
+            "id": "regex_basics-q-v0er7m",
             "type": "mcq",
             "prompt": "What does `re.findall(r\"#(\\w+)\", \"#a #b\")` return?",
             "choices": [
@@ -2010,7 +2010,7 @@
             "explanation": "With a group in the pattern, `findall` returns only the captured part of each match."
           },
           {
-            "id": "regex_basics_q6",
+            "id": "regex_basics-q-12d2wcs",
             "type": "mcq",
             "prompt": "What do brackets `(...)` do in a pattern?",
             "choices": [
@@ -2035,7 +2035,7 @@
             "explanation": "A group captures part of the match, which you can read with `.group(1)` or get from `findall`."
           },
           {
-            "id": "regex_basics_q7",
+            "id": "regex_basics-q-hge39p",
             "type": "shortText",
             "prompt": "Which `re` function replaces every match? (name only)",
             "validation": {
@@ -2045,7 +2045,7 @@
             "explanation": "`re.sub` replaces each match with the text you give."
           },
           {
-            "id": "regex_basics_q8",
+            "id": "regex_basics-q-17b9sgv",
             "type": "mcq",
             "prompt": "What does `?` after something mean?",
             "choices": [
@@ -2070,7 +2070,7 @@
             "explanation": "`?` makes the item before it optional."
           },
           {
-            "id": "regex_basics_q9",
+            "id": "regex_basics-q-wrxm2e",
             "type": "mcq",
             "prompt": "Which flag ignores upper and lower case?",
             "choices": [
@@ -2095,7 +2095,7 @@
             "explanation": "`re.IGNORECASE` (or `re.I`) makes letters match in either case."
           },
           {
-            "id": "regex_basics_q10",
+            "id": "regex_basics-q-1fq2o4s",
             "type": "mcq",
             "prompt": "When is a string method better than a regex?",
             "choices": [
@@ -2165,7 +2165,7 @@
       },
       "challenges": [
         {
-          "id": "data_validation_ch1",
+          "id": "data_validation-required-fields",
           "title": "Easy: Required fields",
           "promptMarkdown": "Write `missing_fields(record, required)` that returns the names in `required` that are not keys of `record`, in the same order.",
           "starterCode": "def missing_fields(record, required):\n    ___",
@@ -2189,7 +2189,7 @@
           }
         },
         {
-          "id": "data_validation_ch2",
+          "id": "data_validation-check-type-and-range",
           "title": "Easy: Check type and range",
           "promptMarkdown": "Write `is_valid_age(value)`: `True` only for an `int` from 0 to 150. Watch out: `True` and `False` are ints in Python, but they are not ages.",
           "starterCode": "def is_valid_age(value):\n    ___",
@@ -2223,7 +2223,7 @@
           }
         },
         {
-          "id": "data_validation_ch3",
+          "id": "data_validation-ranges-and-allowed-values",
           "title": "Easy: Ranges and allowed values",
           "promptMarkdown": "Write `validate_order(order)` returning a list of errors. `qty` must be an int from 1 to 100 (`\"qty must be 1-100\"`), and `size` must be one of `S`, `M`, `L` (`\"size must be S, M or L\"`).",
           "starterCode": "ALLOWED_SIZES = {\"S\", \"M\", \"L\"}\n\ndef validate_order(order):\n    ___",
@@ -2257,7 +2257,7 @@
           }
         },
         {
-          "id": "data_validation_ch4",
+          "id": "data_validation-simple-email-check",
           "title": "Medium: Simple email check",
           "promptMarkdown": "Write `looks_like_email(text)` using a regular expression: some characters without spaces or `@`, then `@`, then a domain that contains a dot.",
           "starterCode": "import re\n\ndef looks_like_email(text):\n    ___",
@@ -2286,7 +2286,7 @@
           }
         },
         {
-          "id": "data_validation_ch5",
+          "id": "data_validation-collect-every-error",
           "title": "Medium: Collect every error",
           "promptMarkdown": "Write `validate_user(data)` that returns a list of error messages instead of stopping at the first one. Use exactly: `\"name is required\"` (missing or blank) and `\"age must be a non-negative integer\"`.",
           "starterCode": "def validate_user(data):\n    errors = []\n    ___\n    return errors",
@@ -2315,7 +2315,7 @@
           }
         },
         {
-          "id": "data_validation_ch6",
+          "id": "data_validation-clean-form-input",
           "title": "Medium: Clean form input",
           "promptMarkdown": "Web forms send everything as text. Write `clean_form(form)` that returns a new dict: strip spaces from `name`, convert `age` to an int, and turn `newsletter` (`\"yes\"`/`\"no\"`, any case) into `True`/`False`.",
           "starterCode": "def clean_form(form):\n    ___",
@@ -2344,7 +2344,7 @@
           }
         },
         {
-          "id": "data_validation_ch7",
+          "id": "data_validation-fail-with-a-clear-message",
           "title": "Hard: Fail with a clear message",
           "promptMarkdown": "Write `parse_age(text)` that returns the age as an int. For anything that isn't a whole number from 0 to 150, raise `ValueError` with the message `invalid age: <text>` (use `repr`, e.g. `invalid age: 'abc'`).",
           "starterCode": "def parse_age(text):\n    ___",
@@ -2373,7 +2373,7 @@
           }
         },
         {
-          "id": "data_validation_ch8",
+          "id": "data_validation-validate-in-a-dataclass",
           "title": "Hard: Validate in a dataclass",
           "promptMarkdown": "Make `User` a dataclass with `name: str` and `age: int`. In `__post_init__`, raise `ValueError` if `name` is blank or `age` is negative, so an invalid `User` can never exist.",
           "starterCode": "from dataclasses import dataclass\n\n@dataclass\nclass User:\n    name: str\n    age: int\n\n    def __post_init__(self):\n        ___",
@@ -2402,7 +2402,7 @@
           }
         },
         {
-          "id": "data_validation_ch9",
+          "id": "data_validation-a-tiny-schema-checker",
           "title": "Expert: A tiny schema checker",
           "promptMarkdown": "Write `check(data, schema)`. `schema` maps each field to its required type, like `{\"name\": str, \"age\": int}`. Return a list of errors: `\"<field>: missing\"` or `\"<field>: expected <type name>\"`, in schema order.",
           "starterCode": "def check(data, schema):\n    ___",
@@ -2426,7 +2426,7 @@
           }
         },
         {
-          "id": "data_validation_ch10",
+          "id": "data_validation-validate-a-whole-batch",
           "title": "Expert: Validate a whole batch",
           "promptMarkdown": "Write `split_valid(rows)`. Each row needs a non-blank `name` and a numeric `score` from 0 to 100. Return `(valid, errors)`: the valid rows, and `(index, message)` pairs for the rest. Use `\"bad name\"` or `\"bad score\"` as the message, checking name first.",
           "starterCode": "def split_valid(rows):\n    valid, errors = [], []\n    ___\n    return valid, errors",
@@ -2454,7 +2454,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "data_validation_q1",
+            "id": "data_validation-q-1o8yrm4",
             "type": "mcq",
             "prompt": "When should you validate input?",
             "choices": [
@@ -2479,7 +2479,7 @@
             "explanation": "Checking at the boundary stops bad data before it spreads."
           },
           {
-            "id": "data_validation_q2",
+            "id": "data_validation-q-1e70kux",
             "type": "mcq",
             "prompt": "Why is `isinstance(True, int)` a trap when checking numbers?",
             "choices": [
@@ -2504,7 +2504,7 @@
             "explanation": "`True` passes an `int` check, so exclude bools explicitly."
           },
           {
-            "id": "data_validation_q3",
+            "id": "data_validation-q-chvjgq",
             "type": "shortText",
             "prompt": "Which exception is the usual choice for a value with the right type but a bad value? (class name)",
             "validation": {
@@ -2514,7 +2514,7 @@
             "explanation": "`ValueError` is for a value of the right type that is out of range or malformed."
           },
           {
-            "id": "data_validation_q4",
+            "id": "data_validation-q-1m5ceuc",
             "type": "mcq",
             "prompt": "What is the advantage of collecting all errors instead of stopping at the first?",
             "choices": [
@@ -2539,7 +2539,7 @@
             "explanation": "Reporting every problem at once saves round trips."
           },
           {
-            "id": "data_validation_q5",
+            "id": "data_validation-q-g3c37s",
             "type": "mcq",
             "prompt": "Why convert form values like `\"30\"` explicitly?",
             "choices": [
@@ -2564,7 +2564,7 @@
             "explanation": "Form fields, query strings and environment variables are always strings."
           },
           {
-            "id": "data_validation_q6",
+            "id": "data_validation-q-hk6a6w",
             "type": "mcq",
             "prompt": "What does `re.fullmatch` check?",
             "choices": [
@@ -2589,7 +2589,7 @@
             "explanation": "`fullmatch` rejects text with extra characters before or after the pattern."
           },
           {
-            "id": "data_validation_q7",
+            "id": "data_validation-q-yomjvk",
             "type": "shortText",
             "prompt": "Which dataclass method runs right after `__init__`, useful for validation? (name only)",
             "validation": {
@@ -2599,7 +2599,7 @@
             "explanation": "`__post_init__` runs after the dataclass's generated `__init__`."
           },
           {
-            "id": "data_validation_q8",
+            "id": "data_validation-q-bpx9kz",
             "type": "mcq",
             "prompt": "Which library is widely used to validate data with type-annotated models?",
             "choices": [
@@ -2624,7 +2624,7 @@
             "explanation": "pydantic checks data against classes with type hints and reports every problem."
           },
           {
-            "id": "data_validation_q9",
+            "id": "data_validation-q-f0a5p5",
             "type": "mcq",
             "prompt": "A good validation error message…",
             "choices": [
@@ -2649,7 +2649,7 @@
             "explanation": "Say which field failed and what was expected, so it can be fixed."
           },
           {
-            "id": "data_validation_q10",
+            "id": "data_validation-q-13yq0g7",
             "type": "mcq",
             "prompt": "`raise ValueError(...) from None` does what?",
             "choices": [
@@ -2719,7 +2719,7 @@
       },
       "challenges": [
         {
-          "id": "sqlite_basics_ch1",
+          "id": "sqlite_basics-create-a-table",
           "title": "Easy: Create a table",
           "promptMarkdown": "Open an in-memory database as `conn` and create a table `tasks` with columns `id INTEGER PRIMARY KEY`, `title TEXT` and `done INTEGER`.",
           "starterCode": "import sqlite3\n\nconn = sqlite3.connect(\":memory:\")\nconn.execute(___)",
@@ -2743,7 +2743,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch2",
+          "id": "sqlite_basics-insert-and-select",
           "title": "Easy: Insert and select",
           "promptMarkdown": "A database is ready in `conn` with a `books` table: `id, title, author, genre, pages, year`.\n\nInsert the book `(\"Kindred\", \"Butler\", \"sci-fi\", 264, 1979)`, then set `titles` to every title written after 1980, oldest first.",
           "starterCode": "conn.execute(\n    \"INSERT INTO books (title, author, genre, pages, year) VALUES (?, ?, ?, ?, ?)\",\n    ___,\n)\ntitles = [row[0] for row in conn.execute(___)]",
@@ -2767,7 +2767,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch3",
+          "id": "sqlite_basics-insert-many-rows",
           "title": "Easy: Insert many rows",
           "promptMarkdown": "Insert every row of `new_books` into the `books` table with one `executemany` call, then set `count` to the total number of books.",
           "starterCode": "new_books = [\n    (\"Beloved\", \"Morrison\", \"classic\", 324, 1987),\n    (\"Foundation\", \"Asimov\", \"sci-fi\", 255, 1951),\n    (\"Middlemarch\", \"Eliot\", \"classic\", 880, 1871),\n]\n___\ncount = ___",
@@ -2791,7 +2791,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch4",
+          "id": "sqlite_basics-safe-parameters",
           "title": "Medium: Safe parameters",
           "promptMarkdown": "A database is ready in `conn` with a `books` table: `id, title, author, genre, pages, year`.\n\nWrite `books_by(author)` that returns that author's titles sorted A–Z. Use a `?` placeholder, never string formatting, so input can't change the SQL.",
           "starterCode": "def books_by(author):\n    ___",
@@ -2820,7 +2820,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch5",
+          "id": "sqlite_basics-update-and-delete",
           "title": "Medium: Update and delete",
           "promptMarkdown": "A database is ready in `conn` with a `books` table: `id, title, author, genre, pages, year`.\n\nAdd 10 pages to every classic, then delete every book published before 1900. Commit your changes.",
           "starterCode": "conn.execute(___)\nconn.execute(___)\nconn.commit()",
@@ -2849,7 +2849,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch6",
+          "id": "sqlite_basics-rows-as-dictionaries",
           "title": "Medium: Rows as dictionaries",
           "promptMarkdown": "A database is ready in `conn` with a `books` table: `id, title, author, genre, pages, year`.\n\nWrite `fetch_dicts(sql, params=())` that runs a query and returns a list of dicts keyed by column name. Use `sqlite3.Row`.",
           "starterCode": "import sqlite3\n\ndef fetch_dicts(sql, params=()):\n    ___",
@@ -2873,7 +2873,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch7",
+          "id": "sqlite_basics-group-and-aggregate",
           "title": "Hard: Group and aggregate",
           "promptMarkdown": "A database is ready in `conn` with a `books` table: `id, title, author, genre, pages, year`.\n\nFor each genre, get the number of books and the average page count, rounded to a whole number. Store a dict like `{\"sci-fi\": (3, 388), ...}` in `stats`.",
           "starterCode": "rows = conn.execute(___).fetchall()\nstats = ___",
@@ -2892,7 +2892,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch8",
+          "id": "sqlite_basics-join-two-tables",
           "title": "Hard: Join two tables",
           "promptMarkdown": "There are two tables: `authors(id, name)` and `novels(title, author_id)`. Set `pairs` to `(author name, title)` tuples for every novel, sorted by author then title.",
           "starterCode": "pairs = conn.execute(___).fetchall()",
@@ -2911,7 +2911,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch9",
+          "id": "sqlite_basics-all-or-nothing",
           "title": "Expert: All or nothing",
           "promptMarkdown": "Write `transfer(from_id, to_id, amount)` for the `accounts(id, balance)` table. Take the money from one account and add it to the other inside `with conn:` so both changes happen together. If the sender doesn't have enough, raise `ValueError` and change nothing.",
           "starterCode": "def transfer(from_id, to_id, amount):\n    with conn:\n        ___",
@@ -2940,7 +2940,7 @@
           }
         },
         {
-          "id": "sqlite_basics_ch10",
+          "id": "sqlite_basics-insert-or-update",
           "title": "Expert: Insert or update",
           "promptMarkdown": "Count words with an \"upsert\": for each word in `text`, insert it into `word_counts(word PRIMARY KEY, n)` with `n = 1`, or add 1 if it is already there. Use `ON CONFLICT ... DO UPDATE`.",
           "starterCode": "text = \"to be or not to be\"\nfor word in text.split():\n    conn.execute(___, (word,))",
@@ -2963,7 +2963,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "sqlite_basics_q1",
+            "id": "sqlite_basics-q-m2d0uc",
             "type": "mcq",
             "prompt": "Where does `sqlite3.connect(\":memory:\")` keep the database?",
             "choices": [
@@ -2988,7 +2988,7 @@
             "explanation": "`:memory:` creates a temporary database in RAM."
           },
           {
-            "id": "sqlite_basics_q2",
+            "id": "sqlite_basics-q-ayhvqk",
             "type": "shortText",
             "prompt": "Which character is the sqlite3 placeholder for a value? (one character)",
             "validation": {
@@ -2998,7 +2998,7 @@
             "explanation": "sqlite3 uses `?` for positional placeholders (and `:name` for named ones)."
           },
           {
-            "id": "sqlite_basics_q3",
+            "id": "sqlite_basics-q-1lscgwj",
             "type": "mcq",
             "prompt": "Why use placeholders instead of building SQL with f-strings?",
             "choices": [
@@ -3023,7 +3023,7 @@
             "explanation": "With placeholders the values are sent separately and never read as SQL."
           },
           {
-            "id": "sqlite_basics_q4",
+            "id": "sqlite_basics-q-r2p9zt",
             "type": "mcq",
             "prompt": "`conn.execute(...).fetchone()` returns…",
             "choices": [
@@ -3048,7 +3048,7 @@
             "explanation": "`fetchone` returns one row as a tuple, or `None` when there are none left."
           },
           {
-            "id": "sqlite_basics_q5",
+            "id": "sqlite_basics-q-17d85ru",
             "type": "mcq",
             "prompt": "Which method inserts many rows with one call?",
             "choices": [
@@ -3073,7 +3073,7 @@
             "explanation": "`executemany` runs the statement once for each item in the sequence."
           },
           {
-            "id": "sqlite_basics_q6",
+            "id": "sqlite_basics-q-4pvwpa",
             "type": "mcq",
             "prompt": "What does `with conn:` do?",
             "choices": [
@@ -3098,7 +3098,7 @@
             "explanation": "The connection as a context manager commits on success and rolls back on an error."
           },
           {
-            "id": "sqlite_basics_q7",
+            "id": "sqlite_basics-q-6fxpj8",
             "type": "shortText",
             "prompt": "Which SQL keyword groups rows so you can COUNT or AVG per group? (two words)",
             "validation": {
@@ -3108,7 +3108,7 @@
             "explanation": "`GROUP BY` makes one group per value, and aggregates like `COUNT` work per group."
           },
           {
-            "id": "sqlite_basics_q8",
+            "id": "sqlite_basics-q-1dkuzt0",
             "type": "mcq",
             "prompt": "`(\"Ana\")` vs `(\"Ana\",)` as query parameters:",
             "choices": [
@@ -3133,7 +3133,7 @@
             "explanation": "A one-item tuple needs a comma; `(\"Ana\")` is just a string."
           },
           {
-            "id": "sqlite_basics_q9",
+            "id": "sqlite_basics-q-s5c830",
             "type": "mcq",
             "prompt": "What does `conn.row_factory = sqlite3.Row` give you?",
             "choices": [
@@ -3158,7 +3158,7 @@
             "explanation": "`sqlite3.Row` lets you read a column by name as well as by position."
           },
           {
-            "id": "sqlite_basics_q10",
+            "id": "sqlite_basics-q-1r6te6k",
             "type": "mcq",
             "prompt": "Which clause turns an INSERT into an \"upsert\"?",
             "choices": [
@@ -3228,7 +3228,7 @@
       },
       "challenges": [
         {
-          "id": "pandas_intro_ch1",
+          "id": "pandas_intro-make-a-dataframe",
           "title": "Easy: Make a DataFrame",
           "promptMarkdown": "Build a DataFrame `df` from the `data` dict. Each key becomes a column.",
           "starterCode": "import pandas as pd\n\ndata = {\"name\": [\"Ana\", \"Ben\", \"Cy\"], \"score\": [91, 78, 85]}\ndf = ___\nprint(df)",
@@ -3257,7 +3257,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch2",
+          "id": "pandas_intro-column-average",
           "title": "Easy: Column average",
           "promptMarkdown": "Set `avg` to the mean of the `score` column.",
           "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Ben\", \"Cy\"], \"score\": [91, 78, 85]})\navg = ___",
@@ -3276,7 +3276,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch3",
+          "id": "pandas_intro-count-categories",
           "title": "Easy: Count categories",
           "promptMarkdown": "Count how many tickets have each `status` with `value_counts`. Store the counts as a dict in `by_status`.",
           "starterCode": "import pandas as pd\n\ntickets = pd.DataFrame({\"id\": range(1, 8), \"status\": [\"open\", \"closed\", \"open\", \"pending\", \"closed\", \"open\", \"closed\"]})\nby_status = ___",
@@ -3295,7 +3295,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch4",
+          "id": "pandas_intro-filter-rows",
           "title": "Medium: Filter rows",
           "promptMarkdown": "Keep the rows where `score` is at least 80. Store the matching names as a plain list in `passed`.",
           "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Ben\", \"Cy\", \"Dee\"], \"score\": [91, 78, 85, 80]})\npassed = ___",
@@ -3314,7 +3314,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch5",
+          "id": "pandas_intro-sort-and-take-the-top",
           "title": "Medium: Sort and take the top",
           "promptMarkdown": "Sort `df` by score, highest first, and store the names of the top 2 in `top2`.",
           "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\"name\": [\"Ana\", \"Ben\", \"Cy\", \"Dee\"], \"score\": [91, 78, 95, 80]})\ntop2 = ___",
@@ -3333,7 +3333,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch6",
+          "id": "pandas_intro-read-csv-data",
           "title": "Medium: Read CSV data",
           "promptMarkdown": "Load `data` with `pd.read_csv` into `df`. Then set `total_qty` to the sum of the `qty` column as an int.",
           "starterCode": "import pandas as pd\nfrom io import StringIO\n\ndata = \"item,qty,price\\npen,10,1.5\\nbook,2,12.0\\ncup,4,4.25\\n\"\ndf = ___\ntotal_qty = ___",
@@ -3362,7 +3362,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch7",
+          "id": "pandas_intro-add-a-computed-column",
           "title": "Hard: Add a computed column",
           "promptMarkdown": "Add a column `revenue` equal to `price * qty` for each row. Then set `total_revenue` to its sum.",
           "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\"item\": [\"pen\", \"book\", \"cup\"], \"qty\": [10, 2, 4], \"price\": [1.5, 12.0, 4.25]})\ndf[\"revenue\"] = ___\ntotal_revenue = ___",
@@ -3386,7 +3386,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch8",
+          "id": "pandas_intro-group-and-sum",
           "title": "Hard: Group and sum",
           "promptMarkdown": "Total `amount` per `region` with `groupby`. Store the result as a plain dict in `totals`.",
           "starterCode": "import pandas as pd\n\nsales = pd.DataFrame({\"region\": [\"north\", \"south\", \"north\", \"east\", \"south\"], \"amount\": [10, 25, 20, 5, 15]})\ntotals = ___",
@@ -3405,7 +3405,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch9",
+          "id": "pandas_intro-missing-values",
           "title": "Expert: Missing values",
           "promptMarkdown": "Some temperatures are missing (`None`). Set `missing` to how many are missing, `filled` to the column with gaps replaced by the column mean, and `complete` to the number of rows with no gaps at all.",
           "starterCode": "import pandas as pd\n\ndf = pd.DataFrame({\"city\": [\"Oslo\", \"Lima\", \"Rome\", \"Pune\"], \"temp\": [4.0, None, 18.0, None]})\nmissing = ___\nfilled = ___\ncomplete = ___",
@@ -3434,7 +3434,7 @@
           }
         },
         {
-          "id": "pandas_intro_ch10",
+          "id": "pandas_intro-merge-two-tables",
           "title": "Expert: Merge two tables",
           "promptMarkdown": "Join `orders` with `customers` on `customer_id`. Store `(name, total)` pairs for every order, in order-id order, in `pairs`.",
           "starterCode": "import pandas as pd\n\ncustomers = pd.DataFrame({\"customer_id\": [1, 2], \"name\": [\"Ana\", \"Ben\"]})\norders = pd.DataFrame({\"order_id\": [10, 11, 12], \"customer_id\": [2, 1, 2], \"total\": [30, 12, 8]})\nmerged = ___\npairs = ___",
@@ -3457,7 +3457,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "pandas_intro_q1",
+            "id": "pandas_intro-q-1xopgpv",
             "type": "mcq",
             "prompt": "What is a pandas DataFrame?",
             "choices": [
@@ -3482,7 +3482,7 @@
             "explanation": "A DataFrame is a table: rows and named columns, each column a Series."
           },
           {
-            "id": "pandas_intro_q2",
+            "id": "pandas_intro-q-1m1j06e",
             "type": "shortText",
             "prompt": "Which pandas function loads a CSV file? (name only)",
             "validation": {
@@ -3492,7 +3492,7 @@
             "explanation": "`pd.read_csv` reads a CSV file into a DataFrame."
           },
           {
-            "id": "pandas_intro_q3",
+            "id": "pandas_intro-q-iphad8",
             "type": "mcq",
             "prompt": "`df[\"score\"]` returns…",
             "choices": [
@@ -3517,7 +3517,7 @@
             "explanation": "Selecting one column gives a Series."
           },
           {
-            "id": "pandas_intro_q4",
+            "id": "pandas_intro-q-7nuh9k",
             "type": "mcq",
             "prompt": "What does `df.head(3)` show?",
             "choices": [
@@ -3542,7 +3542,7 @@
             "explanation": "`head(n)` returns the first `n` rows."
           },
           {
-            "id": "pandas_intro_q5",
+            "id": "pandas_intro-q-kuxzuf",
             "type": "mcq",
             "prompt": "How do you keep only rows where `score` is over 80?",
             "choices": [
@@ -3567,7 +3567,7 @@
             "explanation": "The comparison gives True/False per row, and indexing with it keeps the True rows."
           },
           {
-            "id": "pandas_intro_q6",
+            "id": "pandas_intro-q-164efp7",
             "type": "mcq",
             "prompt": "What does `groupby(\"region\")[\"amount\"].sum()` do?",
             "choices": [
@@ -3592,7 +3592,7 @@
             "explanation": "`groupby` splits the rows by region and `sum` totals each group."
           },
           {
-            "id": "pandas_intro_q7",
+            "id": "pandas_intro-q-1c0gkdz",
             "type": "shortText",
             "prompt": "Which DataFrame method drops rows that have missing values? (name only)",
             "validation": {
@@ -3602,7 +3602,7 @@
             "explanation": "`dropna` removes rows with missing values (NaN)."
           },
           {
-            "id": "pandas_intro_q8",
+            "id": "pandas_intro-q-1q4k71o",
             "type": "mcq",
             "prompt": "`fillna(0)` does what?",
             "choices": [
@@ -3627,7 +3627,7 @@
             "explanation": "`fillna` replaces missing values with the value you give."
           },
           {
-            "id": "pandas_intro_q9",
+            "id": "pandas_intro-q-ltscpa",
             "type": "mcq",
             "prompt": "Which method joins two DataFrames on a shared column?",
             "choices": [
@@ -3652,7 +3652,7 @@
             "explanation": "`merge` joins rows that share a value in the key column, like a SQL join."
           },
           {
-            "id": "pandas_intro_q10",
+            "id": "pandas_intro-q-11fauys",
             "type": "mcq",
             "prompt": "What does `value_counts()` return?",
             "choices": [
@@ -3722,7 +3722,7 @@
       },
       "challenges": [
         {
-          "id": "urllib_requests_ch1",
+          "id": "urllib_requests-build-a-query-string",
           "title": "Easy: Build a query string",
           "promptMarkdown": "Turn `params` into a URL query string with `urlencode` and store it in `query`.",
           "starterCode": "from urllib.parse import urlencode\n\nparams = {\"q\": \"python csv\", \"page\": 2}\nquery = ___\nprint(query)",
@@ -3741,7 +3741,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch2",
+          "id": "urllib_requests-take-a-url-apart",
           "title": "Easy: Take a URL apart",
           "promptMarkdown": "Use `urlparse` to split `url`. Set `host` to the domain and `path` to the path.",
           "starterCode": "from urllib.parse import urlparse\n\nurl = \"https://api.example.com/v1/users?limit=10\"\nparts = urlparse(url)\nhost = ___\npath = ___",
@@ -3765,7 +3765,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch3",
+          "id": "urllib_requests-add-request-headers",
           "title": "Easy: Add request headers",
           "promptMarkdown": "Create a `Request` for `url` that sends the headers `User-Agent: CodeQuest/1.0` and `Accept: application/json`. Store it in `req` (don't open it).",
           "starterCode": "from urllib.request import Request\n\nurl = \"https://api.example.com/v1/users\"\nreq = ___",
@@ -3799,7 +3799,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch4",
+          "id": "urllib_requests-read-query-parameters",
           "title": "Medium: Read query parameters",
           "promptMarkdown": "Read the parameters from `url` with `parse_qs`. Set `limit` to the limit as an int, and `tags` to the list of every `tag` value.",
           "starterCode": "from urllib.parse import urlparse, parse_qs\n\nurl = \"https://api.example.com/posts?limit=10&tag=python&tag=csv\"\nparams = ___\nlimit = ___\ntags = ___",
@@ -3823,7 +3823,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch5",
+          "id": "urllib_requests-safe-url-paths",
           "title": "Medium: Safe URL paths",
           "promptMarkdown": "Write `user_url(name)` that returns `https://api.example.com/users/<name>` with `name` percent-encoded, so spaces and slashes can't break the path.",
           "starterCode": "from urllib.parse import quote\n\ndef user_url(name):\n    ___",
@@ -3852,7 +3852,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch6",
+          "id": "urllib_requests-decode-a-response",
           "title": "Medium: Decode a response",
           "promptMarkdown": "`raw` is what `response.read()` returns: bytes. Decode it as UTF-8 into `body`, parse the JSON into `data`, and set `count` to the number of items.",
           "starterCode": "import json\n\nraw = b'{\"ok\": true, \"items\": [\"caf\\xc3\\xa9\", \"tea\", \"juice\"]}'\nbody = ___\ndata = ___\ncount = ___",
@@ -3881,7 +3881,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch7",
+          "id": "urllib_requests-prepare-a-post",
           "title": "Hard: Prepare a POST",
           "promptMarkdown": "Build a POST `Request` to `url` whose body is the form-encoded `form` dict (as bytes). Store it in `req`.",
           "starterCode": "from urllib.parse import urlencode\nfrom urllib.request import Request\n\nurl = \"https://api.example.com/signup\"\nform = {\"name\": \"Ana\", \"age\": 30}\nbody = ___\nreq = ___",
@@ -3905,7 +3905,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch8",
+          "id": "urllib_requests-page-through-results",
           "title": "Hard: Page through results",
           "promptMarkdown": "An API returns `per_page` items per page. Write `page_urls(base, total_items, per_page)` that returns the URL of every page, like `base?page=1&per_page=20`.",
           "starterCode": "import math\nfrom urllib.parse import urlencode\n\ndef page_urls(base, total_items, per_page):\n    ___",
@@ -3934,7 +3934,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch9",
+          "id": "urllib_requests-handle-http-errors",
           "title": "Expert: Handle HTTP errors",
           "promptMarkdown": "Write `safe_get(fetch, url)`. Call `fetch(url)` and return its result. If it raises an `HTTPError` with code 404, return `None` instead. Let every other error propagate.",
           "starterCode": "from urllib.error import HTTPError\n\ndef safe_get(fetch, url):\n    ___",
@@ -3963,7 +3963,7 @@
           }
         },
         {
-          "id": "urllib_requests_ch10",
+          "id": "urllib_requests-retry-flaky-requests",
           "title": "Expert: Retry flaky requests",
           "promptMarkdown": "Write `fetch_with_retry(fetch, url, attempts=3)`. Call `fetch(url)`; if it raises `URLError`, try again, up to `attempts` calls in total. Return the first success, or re-raise the last error.",
           "starterCode": "from urllib.error import URLError\n\ndef fetch_with_retry(fetch, url, attempts=3):\n    ___",
@@ -3996,7 +3996,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "urllib_requests_q1",
+            "id": "urllib_requests-q-f3goyn",
             "type": "mcq",
             "prompt": "What does `response.read()` return?",
             "choices": [
@@ -4021,7 +4021,7 @@
             "explanation": "The response body arrives as bytes; decode it before treating it as text."
           },
           {
-            "id": "urllib_requests_q2",
+            "id": "urllib_requests-q-1vth4p7",
             "type": "shortText",
             "prompt": "Which `urllib.parse` function turns a dict into `a=1&b=2`? (name only)",
             "validation": {
@@ -4031,7 +4031,7 @@
             "explanation": "`urlencode` builds a query string and escapes special characters."
           },
           {
-            "id": "urllib_requests_q3",
+            "id": "urllib_requests-q-pgtqxj",
             "type": "mcq",
             "prompt": "Why pass `timeout=` to `urlopen`?",
             "choices": [
@@ -4056,7 +4056,7 @@
             "explanation": "Without a timeout, a request to a server that never answers can wait forever."
           },
           {
-            "id": "urllib_requests_q4",
+            "id": "urllib_requests-q-8n7ojo",
             "type": "mcq",
             "prompt": "What does HTTP status 404 mean?",
             "choices": [
@@ -4081,7 +4081,7 @@
             "explanation": "404 means the server has no resource at that URL."
           },
           {
-            "id": "urllib_requests_q5",
+            "id": "urllib_requests-q-c6mwpj",
             "type": "mcq",
             "prompt": "Which exception does urllib raise for a 500 response?",
             "choices": [
@@ -4106,7 +4106,7 @@
             "explanation": "`urlopen` raises `HTTPError` for 4xx and 5xx responses."
           },
           {
-            "id": "urllib_requests_q6",
+            "id": "urllib_requests-q-fho3qn",
             "type": "mcq",
             "prompt": "A `Request` body (`data=`) must be…",
             "choices": [
@@ -4131,7 +4131,7 @@
             "explanation": "Request bodies are bytes, so encode text or JSON first."
           },
           {
-            "id": "urllib_requests_q7",
+            "id": "urllib_requests-q-7h0kmy",
             "type": "shortText",
             "prompt": "Which `urlparse` attribute holds the domain, like `api.example.com`? (attribute name)",
             "validation": {
@@ -4141,7 +4141,7 @@
             "explanation": "`netloc` is the network location: the host name (and port)."
           },
           {
-            "id": "urllib_requests_q8",
+            "id": "urllib_requests-q-1ekrn4f",
             "type": "mcq",
             "prompt": "Why encode user input with `quote()` before putting it in a URL path?",
             "choices": [
@@ -4166,7 +4166,7 @@
             "explanation": "`quote` percent-encodes characters that have special meaning in URLs."
           },
           {
-            "id": "urllib_requests_q9",
+            "id": "urllib_requests-q-mx0xix",
             "type": "mcq",
             "prompt": "Which errors are usually worth retrying?",
             "choices": [
@@ -4191,7 +4191,7 @@
             "explanation": "Network glitches and \"try again later\" responses can work on a retry; 4xx errors won't."
           },
           {
-            "id": "urllib_requests_q10",
+            "id": "urllib_requests-q-yyaj1d",
             "type": "mcq",
             "prompt": "What does adding `method=\"POST\"` to a `Request` change?",
             "choices": [
@@ -4261,7 +4261,7 @@
       },
       "challenges": [
         {
-          "id": "rest_apis_ch1",
+          "id": "rest_apis-get-a-collection",
           "title": "Easy: GET a collection",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCall `GET /todos`. Store the status code in `status`, the parsed list in `todos`, and how many there are in `count`.",
           "starterCode": "import json\n\nstatus, text = api(\"GET\", \"/todos\")\ntodos = ___\ncount = ___",
@@ -4290,7 +4290,7 @@
           }
         },
         {
-          "id": "rest_apis_ch2",
+          "id": "rest_apis-get-one-resource",
           "title": "Easy: GET one resource",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nFetch the todo with id 2 and store its title in `title`.",
           "starterCode": "import json\n\nstatus, text = api(\"GET\", ___)\ntitle = ___",
@@ -4314,7 +4314,7 @@
           }
         },
         {
-          "id": "rest_apis_ch3",
+          "id": "rest_apis-classify-status-codes",
           "title": "Easy: Classify status codes",
           "promptMarkdown": "Write `classify(status)` that returns `\"success\"` for 2xx codes, `\"redirect\"` for 3xx, `\"client error\"` for 4xx and `\"server error\"` for 5xx.",
           "starterCode": "def classify(status):\n    ___",
@@ -4348,7 +4348,7 @@
           }
         },
         {
-          "id": "rest_apis_ch4",
+          "id": "rest_apis-check-the-status-code",
           "title": "Medium: Check the status code",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `get_title(todo_id)`: return the todo's title, or `None` when the API answers 404.",
           "starterCode": "import json\n\ndef get_title(todo_id):\n    status, text = api(\"GET\", f\"/todos/{todo_id}\")\n    ___",
@@ -4377,7 +4377,7 @@
           }
         },
         {
-          "id": "rest_apis_ch5",
+          "id": "rest_apis-create-with-post",
           "title": "Medium: Create with POST",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCreate a todo titled `Read book` by POSTing JSON to `/todos`. Store the status in `status` and the new todo's id in `new_id`.",
           "starterCode": "import json\n\nstatus, text = api(\"POST\", \"/todos\", ___)\nnew_id = ___",
@@ -4406,7 +4406,7 @@
           }
         },
         {
-          "id": "rest_apis_ch6",
+          "id": "rest_apis-delete-a-resource",
           "title": "Medium: Delete a resource",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nDelete todo 3. Store the status in `status`, then confirm it is gone: set `gone` to `True` if fetching it now returns 404.",
           "starterCode": "status, text = api(___, ___)\ngone = ___",
@@ -4435,7 +4435,7 @@
           }
         },
         {
-          "id": "rest_apis_ch7",
+          "id": "rest_apis-update-with-put",
           "title": "Hard: Update with PUT",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nMark todo 1 as done. PUT replaces the whole resource, so send both `title` and `done`. Store the status in `status`.",
           "starterCode": "import json\n\ncurrent = json.loads(api(\"GET\", \"/todos/1\")[1])\nstatus, text = api(\"PUT\", \"/todos/1\", ___)",
@@ -4464,7 +4464,7 @@
           }
         },
         {
-          "id": "rest_apis_ch8",
+          "id": "rest_apis-filter-on-the-server",
           "title": "Hard: Filter on the server",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nAsk the API for unfinished todos only, using the query string `?done=false`. Store their titles in `open_titles`.",
           "starterCode": "import json\n\nstatus, text = api(\"GET\", ___)\nopen_titles = ___",
@@ -4488,7 +4488,7 @@
           }
         },
         {
-          "id": "rest_apis_ch9",
+          "id": "rest_apis-turn-api-errors-into-exceptions",
           "title": "Expert: Turn API errors into exceptions",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `create_todo(title)` that POSTs a new todo and returns its id. If the API answers 400, raise `ValueError` with the API's `error` message.",
           "starterCode": "import json\n\ndef create_todo(title):\n    ___",
@@ -4512,7 +4512,7 @@
           }
         },
         {
-          "id": "rest_apis_ch10",
+          "id": "rest_apis-follow-pagination",
           "title": "Expert: Follow pagination",
           "promptMarkdown": "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWith `?page=N&per_page=2` the API returns `{\"items\": [...], \"next_page\": N + 1 or null}`. Write `fetch_all()` that follows `next_page` from page 1 and returns every todo.",
           "starterCode": "import json\n\ndef fetch_all():\n    ___",
@@ -4545,7 +4545,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "rest_apis_q1",
+            "id": "rest_apis-q-1s8mcrn",
             "type": "mcq",
             "prompt": "Which HTTP method should read data without changing it?",
             "choices": [
@@ -4570,7 +4570,7 @@
             "explanation": "`GET` only reads, so it is safe to repeat."
           },
           {
-            "id": "rest_apis_q2",
+            "id": "rest_apis-q-139eg6o",
             "type": "shortText",
             "prompt": "Which status code means \"Created\"? (number)",
             "validation": {
@@ -4580,7 +4580,7 @@
             "explanation": "201 Created confirms that a new resource was made."
           },
           {
-            "id": "rest_apis_q3",
+            "id": "rest_apis-q-anlqb4",
             "type": "mcq",
             "prompt": "In REST, what identifies a resource?",
             "choices": [
@@ -4605,7 +4605,7 @@
             "explanation": "Each resource has its own URL, such as `/books/42`."
           },
           {
-            "id": "rest_apis_q4",
+            "id": "rest_apis-q-gsvrd1",
             "type": "mcq",
             "prompt": "What does status 204 tell you?",
             "choices": [
@@ -4630,7 +4630,7 @@
             "explanation": "204 No Content means it worked and there is nothing to send back."
           },
           {
-            "id": "rest_apis_q5",
+            "id": "rest_apis-q-aw5kx9",
             "type": "mcq",
             "prompt": "Which method replaces a whole resource?",
             "choices": [
@@ -4655,7 +4655,7 @@
             "explanation": "`PUT` sends the full new version; `PATCH` changes only some fields."
           },
           {
-            "id": "rest_apis_q6",
+            "id": "rest_apis-q-1go8xdu",
             "type": "mcq",
             "prompt": "A 4xx status means the problem is…",
             "choices": [
@@ -4680,7 +4680,7 @@
             "explanation": "4xx codes mean the client sent something wrong; 5xx codes mean the server failed."
           },
           {
-            "id": "rest_apis_q7",
+            "id": "rest_apis-q-q6wfkn",
             "type": "shortText",
             "prompt": "Which status code means \"Not Found\"? (number)",
             "validation": {
@@ -4690,7 +4690,7 @@
             "explanation": "404 means the resource doesn't exist."
           },
           {
-            "id": "rest_apis_q8",
+            "id": "rest_apis-q-15zjs13",
             "type": "mcq",
             "prompt": "Why are PUT and DELETE called idempotent?",
             "choices": [
@@ -4715,7 +4715,7 @@
             "explanation": "Doing the same PUT or DELETE again leaves the resource in the same state."
           },
           {
-            "id": "rest_apis_q9",
+            "id": "rest_apis-q-mnqr8m",
             "type": "mcq",
             "prompt": "An API returns 20 items and a `next_page` field. What is this called?",
             "choices": [
@@ -4740,7 +4740,7 @@
             "explanation": "Pagination splits a long list into pages, each pointing to the next."
           },
           {
-            "id": "rest_apis_q10",
+            "id": "rest_apis-q-1jfrcjt",
             "type": "mcq",
             "prompt": "Why put a version like `/v1/` in API paths?",
             "choices": [
@@ -4805,7 +4805,7 @@
       },
       "challenges": [
         {
-          "id": "config_secrets_ch1",
+          "id": "config_secrets-mode-with-a-default",
           "title": "Easy: Mode with a default",
           "promptMarkdown": "Define `get_mode()` that returns the `APP_MODE` environment variable, or `\"development\"` if it isn't set.",
           "starterCode": "import os\n",
@@ -4829,7 +4829,7 @@
           }
         },
         {
-          "id": "config_secrets_ch2",
+          "id": "config_secrets-a-port-number",
           "title": "Easy: A port number",
           "promptMarkdown": "Define `get_port()` that returns the `PORT` environment variable as an int, or 8000 if it isn't set.",
           "starterCode": "import os\n",
@@ -4853,7 +4853,7 @@
           }
         },
         {
-          "id": "config_secrets_ch3",
+          "id": "config_secrets-read-a-section",
           "title": "Easy: Read a section",
           "promptMarkdown": "Read `settings.ini` with `configparser` and set `host` to the `host` in its `[database]` section and `name` to the `name` in `[app]`.",
           "starterCode": "import configparser\n",
@@ -4877,7 +4877,7 @@
           }
         },
         {
-          "id": "config_secrets_ch4",
+          "id": "config_secrets-on-or-off",
           "title": "Medium: On or off",
           "promptMarkdown": "Define `env_flag(name, default=False)` that reads an environment variable as `True` (`1`, `true`, `yes`, `on`, any case) or `False` (`0`, `false`, `no`, `off`), returns `default` if it isn't set, and raises `ValueError(\"Bad value for <name>: <value>\")` for anything else.",
           "starterCode": "import os\n",
@@ -4911,7 +4911,7 @@
           }
         },
         {
-          "id": "config_secrets_ch5",
+          "id": "config_secrets-typed-settings",
           "title": "Medium: Typed settings",
           "promptMarkdown": "Define `load_settings(path)` that reads the `[app]` section of an INI file and returns a dict with `name` (text, default `\"app\"`), `port` (int, default 8000) and `debug` (bool, default `False`), using the defaults for anything missing.",
           "starterCode": "import configparser\n",
@@ -4940,7 +4940,7 @@
           }
         },
         {
-          "id": "config_secrets_ch6",
+          "id": "config_secrets-show-a-secret-safely",
           "title": "Medium: Show a secret safely",
           "promptMarkdown": "Define `masked(secret)` that shows only the first 3 and last 4 characters, like `sk-...6789`, or `****` for anything shorter than 10 characters.",
           "starterCode": "",
@@ -4964,7 +4964,7 @@
           }
         },
         {
-          "id": "config_secrets_ch7",
+          "id": "config_secrets-required-settings",
           "title": "Hard: Required settings",
           "promptMarkdown": "Define `require(names)` that returns a dict of the named environment variables, or, if any are missing, raises `RuntimeError(\"Missing settings: A, B\")` listing every missing one in the order given.",
           "starterCode": "import os\n",
@@ -4988,7 +4988,7 @@
           }
         },
         {
-          "id": "config_secrets_ch8",
+          "id": "config_secrets-write-a-settings-file",
           "title": "Hard: Write a settings file",
           "promptMarkdown": "Use `configparser` to write `settings.ini` with an `[app]` section (`name = CodeQuest`, `debug = no`) and a `[database]` section (`host = localhost`, `port = 5432`).",
           "starterCode": "import configparser\n",
@@ -5007,7 +5007,7 @@
           }
         },
         {
-          "id": "config_secrets_ch9",
+          "id": "config_secrets-layered-settings",
           "title": "Expert: Layered settings",
           "promptMarkdown": "Define `settings(path)` that starts from the defaults `{\"host\": \"localhost\", \"port\": 8000, \"debug\": False}`, overrides them with the `[app]` section of the INI file (if there is one), and then with the environment variables `APP_HOST`, `APP_PORT` and `APP_DEBUG`. Ports are ints, and debug values are read like `env_flag` (which is given).",
           "starterCode": "import configparser\nimport os\n\ndef env_flag(name, default=False):\n    value = os.environ.get(name)\n    if value is None:\n        return default\n    text = value.strip().lower()\n    if text in (\"1\", \"true\", \"yes\", \"on\"):\n        return True\n    if text in (\"0\", \"false\", \"no\", \"off\"):\n        return False\n    raise ValueError(f\"Bad value for {name}: {value}\")\n",
@@ -5036,7 +5036,7 @@
           }
         },
         {
-          "id": "config_secrets_ch10",
+          "id": "config_secrets-read-a-env-file",
           "title": "Expert: Read a .env file",
           "promptMarkdown": "Define `parse_env(text)` that reads `.env` text into a dict: `KEY=value` lines, ignoring blank lines and `#` comments, allowing an optional `export ` in front, trimming spaces, and removing matching quotes around the value. A line without `=` raises `ValueError(\"Line <n>: <line>\")` (counting from 1).",
           "starterCode": "",
@@ -5064,7 +5064,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "config_secrets_q1",
+            "id": "config_secrets-q-nfv6ck",
             "type": "mcq",
             "prompt": "Why not write an API key into the code?",
             "choices": [
@@ -5089,7 +5089,7 @@
             "explanation": "Anything in the code is shared wherever the code goes, including public repositories."
           },
           {
-            "id": "config_secrets_q2",
+            "id": "config_secrets-q-ygs5dm",
             "type": "mcq",
             "prompt": "What does `os.environ.get(\"PORT\", \"8000\")` return when `PORT` isn't set?",
             "choices": [
@@ -5114,7 +5114,7 @@
             "explanation": "`get` returns the default when the variable isn't set, and environment values are strings."
           },
           {
-            "id": "config_secrets_q3",
+            "id": "config_secrets-q-raszmp",
             "type": "mcq",
             "prompt": "What type are environment variable values?",
             "choices": [
@@ -5139,7 +5139,7 @@
             "explanation": "Environment variables are always strings, so convert numbers yourself."
           },
           {
-            "id": "config_secrets_q4",
+            "id": "config_secrets-q-1vzw0nl",
             "type": "mcq",
             "prompt": "What does `os.environ[\"MISSING\"]` do when it isn't set?",
             "choices": [
@@ -5164,7 +5164,7 @@
             "explanation": "`os.environ` acts like a dict, and square brackets raise `KeyError` for a missing name."
           },
           {
-            "id": "config_secrets_q5",
+            "id": "config_secrets-q-1bt9655",
             "type": "mcq",
             "prompt": "Which standard module reads INI settings files?",
             "choices": [
@@ -5189,7 +5189,7 @@
             "explanation": "`configparser` reads and writes INI-style files with `[sections]`."
           },
           {
-            "id": "config_secrets_q6",
+            "id": "config_secrets-q-1t2ra6z",
             "type": "mcq",
             "prompt": "A setting can come from an environment variable, a config file or a default in the code. Which usually wins?",
             "choices": [
@@ -5214,7 +5214,7 @@
             "explanation": "The most specific source wins: environment, then file, then defaults."
           },
           {
-            "id": "config_secrets_q7",
+            "id": "config_secrets-q-lp6tkz",
             "type": "shortText",
             "prompt": "Which file lists files that git should never commit, such as `.env`? (the file name)",
             "validation": {
@@ -5224,7 +5224,7 @@
             "explanation": "`.gitignore` lists patterns of files git should leave out."
           },
           {
-            "id": "config_secrets_q8",
+            "id": "config_secrets-q-1v1kuwo",
             "type": "mcq",
             "prompt": "How should a program show which secret key it uses?",
             "choices": [
@@ -5249,7 +5249,7 @@
             "explanation": "Showing a few characters confirms which key is in use without revealing it."
           },
           {
-            "id": "config_secrets_q9",
+            "id": "config_secrets-q-qo2ni5",
             "type": "mcq",
             "prompt": "What does `getboolean` accept as true?",
             "choices": [
@@ -5274,7 +5274,7 @@
             "explanation": "`getboolean` understands the usual yes/no words: yes/no, on/off, true/false, 1/0."
           },
           {
-            "id": "config_secrets_q10",
+            "id": "config_secrets-q-ffxwgy",
             "type": "mcq",
             "prompt": "Where do environment variables come from?",
             "choices": [
@@ -5330,7 +5330,7 @@
       },
       "challenges": [
         {
-          "id": "proj_movie_ratings_ch1",
+          "id": "proj_movie_ratings-load-the-ratings",
           "title": "Easy: Load the ratings",
           "promptMarkdown": "Define `load_ratings(path)` that reads the CSV file into a list of dicts with keys `movie`, `user` and `stars`, with `stars` as an int. (This file has no bad rows.)",
           "starterCode": "import csv\nimport json\n\n",
@@ -5354,7 +5354,7 @@
           }
         },
         {
-          "id": "proj_movie_ratings_ch2",
+          "id": "proj_movie_ratings-averages",
           "title": "Medium: Averages",
           "promptMarkdown": "Define `averages(ratings)` that returns a dict from movie to its average stars, rounded to 1 place.",
           "starterCode": "import csv\nimport json\n\n",
@@ -5378,7 +5378,7 @@
           }
         },
         {
-          "id": "proj_movie_ratings_ch3",
+          "id": "proj_movie_ratings-top-picks",
           "title": "Medium: Top picks",
           "promptMarkdown": "Define `top_movies(avgs, n=3)` that returns the names of the `n` best movies, highest average first, with ties in alphabetical order.",
           "starterCode": "import csv\nimport json\n\n",
@@ -5402,7 +5402,7 @@
           }
         },
         {
-          "id": "proj_movie_ratings_ch4",
+          "id": "proj_movie_ratings-skip-the-bad-rows",
           "title": "Hard: Skip the bad rows",
           "promptMarkdown": "Change `load_ratings` to return `(ratings, problems)`: skip rows whose stars aren't a whole number (`line 8: bad stars 'two'`) or aren't 1 to 5 (`line 11: stars out of range 6`), counting the header as line 1.",
           "starterCode": "import csv\nimport json\n\ndef load_ratings(path):\n    with open(path, newline=\"\", encoding=\"utf-8\") as f:\n        return [{\"movie\": r[\"movie\"], \"user\": r[\"user\"], \"stars\": int(r[\"stars\"])} for r in csv.DictReader(f)]\n",
@@ -5426,7 +5426,7 @@
           }
         },
         {
-          "id": "proj_movie_ratings_ch5",
+          "id": "proj_movie_ratings-a-json-report",
           "title": "Hard: A JSON report",
           "promptMarkdown": "Define `save_report(avgs, path)` that writes the averages to a JSON file, indented by 2 with the keys sorted.",
           "starterCode": "import csv\nimport json\n\n",
@@ -5450,7 +5450,7 @@
           }
         },
         {
-          "id": "proj_movie_ratings_ch6",
+          "id": "proj_movie_ratings-the-summary",
           "title": "Expert: The summary",
           "promptMarkdown": "Define `summary(path)` returning the lines shown in the lesson: a count line, then every movie, best first, as its name padded to 8 characters, five stars (`★` for each star of the average rounded half up, `☆` for the rest) and the average.",
           "starterCode": "import csv\nimport json\n\ndef load_ratings(path):\n    ratings = []\n    problems = []\n    with open(path, newline=\"\", encoding=\"utf-8\") as f:\n        for line, row in enumerate(csv.DictReader(f), start=2):\n            try:\n                stars = int(row[\"stars\"])\n            except ValueError:\n                problems.append(f\"line {line}: bad stars {row['stars']!r}\")\n                continue\n            if not 1 <= stars <= 5:\n                problems.append(f\"line {line}: stars out of range {stars}\")\n                continue\n            ratings.append({\"movie\": row[\"movie\"], \"user\": row[\"user\"], \"stars\": stars})\n    return ratings, problems\n\ndef averages(ratings):\n    totals = {}\n    for r in ratings:\n        totals.setdefault(r[\"movie\"], []).append(r[\"stars\"])\n    return {movie: round(sum(s) / len(s), 1) for movie, s in totals.items()}\n\ndef top_movies(avgs, n=3):\n    ranked = sorted(avgs.items(), key=lambda item: (-item[1], item[0]))\n    return [movie for movie, avg in ranked[:n]]\n\n",
@@ -5473,7 +5473,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_movie_ratings_q1",
+            "id": "proj_movie_ratings-q-2q4fuf",
             "type": "mcq",
             "prompt": "Why does `load_ratings` note skipped rows instead of ignoring them?",
             "choices": [
@@ -5498,7 +5498,7 @@
             "explanation": "Reporting skipped rows means bad data is noticed, not silently dropped."
           },
           {
-            "id": "proj_movie_ratings_q2",
+            "id": "proj_movie_ratings-q-1q8jpf1",
             "type": "mcq",
             "prompt": "Why start the line count at 2 with `enumerate(..., start=2)`?",
             "choices": [
@@ -5523,7 +5523,7 @@
             "explanation": "The header is line 1, so the first data row is line 2."
           },
           {
-            "id": "proj_movie_ratings_q3",
+            "id": "proj_movie_ratings-q-4cpgrb",
             "type": "mcq",
             "prompt": "What does `sort_keys=True` do in `json.dump`?",
             "choices": [
@@ -5548,7 +5548,7 @@
             "explanation": "`sort_keys=True` writes dict keys in sorted order, so the output is the same every time."
           },
           {
-            "id": "proj_movie_ratings_q4",
+            "id": "proj_movie_ratings-q-12jlpwv",
             "type": "mcq",
             "prompt": "How does sorting by `(-average, name)` order movies?",
             "choices": [
@@ -5573,7 +5573,7 @@
             "explanation": "The minus sign puts high averages first, and the name breaks ties."
           },
           {
-            "id": "proj_movie_ratings_q5",
+            "id": "proj_movie_ratings-q-ot1oqz",
             "type": "shortText",
             "prompt": "What is the average of 5 and 4, rounded to 1 place?",
             "validation": {
@@ -5583,7 +5583,7 @@
             "explanation": "(5 + 4) / 2 is 4.5."
           },
           {
-            "id": "proj_movie_ratings_q6",
+            "id": "proj_movie_ratings-q-bsumni",
             "type": "mcq",
             "prompt": "Why is `\"two\"` skipped?",
             "choices": [
@@ -5639,7 +5639,7 @@
       },
       "challenges": [
         {
-          "id": "proj_bookshop_client_ch1",
+          "id": "proj_bookshop_client-an-error-with-a-status",
           "title": "Easy: An error with a status",
           "promptMarkdown": "Define `ApiError`, an exception that takes a `status` and a `message`, keeps the status as `.status`, and shows as `404: not found`.",
           "starterCode": "",
@@ -5663,7 +5663,7 @@
           }
         },
         {
-          "id": "proj_bookshop_client_ch2",
+          "id": "proj_bookshop_client-get-one-book",
           "title": "Medium: Get one book",
           "promptMarkdown": "Define `BookClient(api)` with a private `_call(method, path, data=None)` (send `data` as JSON, decode the reply, and raise `ApiError(status, error message)` for codes from 400 up) and `get_book(book_id)`.",
           "starterCode": "import json\nfrom urllib.parse import urlencode\n\nclass ApiError(Exception):\n    def __init__(self, status, message):\n        super().__init__(f\"{status}: {message}\")\n        self.status = status\n",
@@ -5687,7 +5687,7 @@
           }
         },
         {
-          "id": "proj_bookshop_client_ch3",
+          "id": "proj_bookshop_client-add-a-book",
           "title": "Medium: Add a book",
           "promptMarkdown": "Add `add_book(title, author, price)`, which posts the book and returns the new book from the reply (with its `id`).",
           "starterCode": "import json\nfrom urllib.parse import urlencode\n\nclass ApiError(Exception):\n    def __init__(self, status, message):\n        super().__init__(f\"{status}: {message}\")\n        self.status = status\n\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n\n    def _call(self, method, path, data=None):\n        body = json.dumps(data) if data is not None else None\n        status, text = self.api(method, path, body)\n        result = json.loads(text) if text else None\n        if status >= 400:\n            message = result.get(\"error\", \"unknown error\") if result else \"unknown error\"\n            raise ApiError(status, message)\n        return result\n\n    def get_book(self, book_id):\n        return self._call(\"GET\", f\"/books/{book_id}\")\n",
@@ -5716,7 +5716,7 @@
           }
         },
         {
-          "id": "proj_bookshop_client_ch4",
+          "id": "proj_bookshop_client-every-page",
           "title": "Hard: Every page",
           "promptMarkdown": "Add `all_books()`, which fetches `/books?page=1`, then each `next_page` in turn until it is `None`, and returns all the books in one list.",
           "starterCode": "import json\nfrom urllib.parse import urlencode\n\nclass ApiError(Exception):\n    def __init__(self, status, message):\n        super().__init__(f\"{status}: {message}\")\n        self.status = status\n\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n\n    def _call(self, method, path, data=None):\n        body = json.dumps(data) if data is not None else None\n        status, text = self.api(method, path, body)\n        result = json.loads(text) if text else None\n        if status >= 400:\n            message = result.get(\"error\", \"unknown error\") if result else \"unknown error\"\n            raise ApiError(status, message)\n        return result\n\n    def get_book(self, book_id):\n        return self._call(\"GET\", f\"/books/{book_id}\")\n\n    def add_book(self, title, author, price):\n        return self._call(\"POST\", \"/books\", {\"title\": title, \"author\": author, \"price\": price})\n",
@@ -5740,7 +5740,7 @@
           }
         },
         {
-          "id": "proj_bookshop_client_ch5",
+          "id": "proj_bookshop_client-search-by-author",
           "title": "Hard: Search by author",
           "promptMarkdown": "Change `all_books` to take an optional `author`, sent as a query parameter (built with `urlencode`), so the server only returns that author's books.",
           "starterCode": "import json\nfrom urllib.parse import urlencode\n\nclass ApiError(Exception):\n    def __init__(self, status, message):\n        super().__init__(f\"{status}: {message}\")\n        self.status = status\n\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n\n    def _call(self, method, path, data=None):\n        body = json.dumps(data) if data is not None else None\n        status, text = self.api(method, path, body)\n        result = json.loads(text) if text else None\n        if status >= 400:\n            message = result.get(\"error\", \"unknown error\") if result else \"unknown error\"\n            raise ApiError(status, message)\n        return result\n\n    def get_book(self, book_id):\n        return self._call(\"GET\", f\"/books/{book_id}\")\n\n    def add_book(self, title, author, price):\n        return self._call(\"POST\", \"/books\", {\"title\": title, \"author\": author, \"price\": price})\n\n    def all_books(self):\n        books = []\n        page = 1\n        while page is not None:\n            result = self._call(\"GET\", f\"/books?page={page}\")\n            books.extend(result[\"items\"])\n            page = result[\"next_page\"]\n        return books\n",
@@ -5769,7 +5769,7 @@
           }
         },
         {
-          "id": "proj_bookshop_client_ch6",
+          "id": "proj_bookshop_client-price-report",
           "title": "Expert: Price report",
           "promptMarkdown": "Add `price_report()`, returning a line per author, in alphabetical order, like `Jane Austen: 2 books, average 6.88` (`1 book` for one), with the average to 2 places.",
           "starterCode": "import json\nfrom urllib.parse import urlencode\n\nclass ApiError(Exception):\n    def __init__(self, status, message):\n        super().__init__(f\"{status}: {message}\")\n        self.status = status\n\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n\n    def _call(self, method, path, data=None):\n        body = json.dumps(data) if data is not None else None\n        status, text = self.api(method, path, body)\n        result = json.loads(text) if text else None\n        if status >= 400:\n            message = result.get(\"error\", \"unknown error\") if result else \"unknown error\"\n            raise ApiError(status, message)\n        return result\n\n    def get_book(self, book_id):\n        return self._call(\"GET\", f\"/books/{book_id}\")\n\n    def add_book(self, title, author, price):\n        return self._call(\"POST\", \"/books\", {\"title\": title, \"author\": author, \"price\": price})\n\n    def all_books(self, author=None):\n        books = []\n        page = 1\n        while page is not None:\n            params = {\"page\": page}\n            if author:\n                params[\"author\"] = author\n            result = self._call(\"GET\", \"/books?\" + urlencode(params))\n            books.extend(result[\"items\"])\n            page = result[\"next_page\"]\n        return books\n",
@@ -5797,7 +5797,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_bookshop_client_q1",
+            "id": "proj_bookshop_client-q-mbbl65",
             "type": "mcq",
             "prompt": "Why does `BookClient` take the `api` function as a parameter?",
             "choices": [
@@ -5822,7 +5822,7 @@
             "explanation": "Passing the `api` function in lets tests use a fake instead of real HTTP."
           },
           {
-            "id": "proj_bookshop_client_q2",
+            "id": "proj_bookshop_client-q-126opdc",
             "type": "mcq",
             "prompt": "Why do all requests go through `_call`?",
             "choices": [
@@ -5847,7 +5847,7 @@
             "explanation": "One helper keeps the status checks and decoding in one place."
           },
           {
-            "id": "proj_bookshop_client_q3",
+            "id": "proj_bookshop_client-q-teap7l",
             "type": "mcq",
             "prompt": "Which status codes does `_call` turn into an `ApiError`?",
             "choices": [
@@ -5872,7 +5872,7 @@
             "explanation": "4xx and 5xx statuses are errors, so `_call` raises for anything 400 or above."
           },
           {
-            "id": "proj_bookshop_client_q4",
+            "id": "proj_bookshop_client-q-bakc27",
             "type": "mcq",
             "prompt": "How does `all_books` know when to stop?",
             "choices": [
@@ -5897,7 +5897,7 @@
             "explanation": "The API sets `next_page` to `None` on the last page."
           },
           {
-            "id": "proj_bookshop_client_q5",
+            "id": "proj_bookshop_client-q-wzz890",
             "type": "shortText",
             "prompt": "Which HTTP method does `add_book` use? (one word)",
             "validation": {
@@ -5907,7 +5907,7 @@
             "explanation": "`POST` creates a new resource."
           },
           {
-            "id": "proj_bookshop_client_q6",
+            "id": "proj_bookshop_client-q-14pacmg",
             "type": "mcq",
             "prompt": "Why build the query with `urlencode`?",
             "choices": [
@@ -5963,7 +5963,7 @@
       },
       "challenges": [
         {
-          "id": "proj_sales_pipeline_ch1",
+          "id": "proj_sales_pipeline-a-real-date",
           "title": "Easy: A real date",
           "promptMarkdown": "Define `check_date(text)` that returns `True` only for a real date written as `YYYY-MM-DD`: check the shape with a regex, then let `date.fromisoformat` reject impossible dates.",
           "starterCode": "import csv\nimport json\nimport re\nimport sqlite3\nfrom datetime import date\nfrom io import StringIO\n\n",
@@ -5992,7 +5992,7 @@
           }
         },
         {
-          "id": "proj_sales_pipeline_ch2",
+          "id": "proj_sales_pipeline-clean-a-row",
           "title": "Medium: Clean a row",
           "promptMarkdown": "Define `clean_row(row)` for a CSV row dict. Return a new dict with the date, the region stripped and lowercased, the product stripped, and the amount as a float rounded to 2 places. Raise `ValueError` with `bad date '<date>'`, `missing region` or `bad amount '<amount>'` (for amounts that aren't numbers or aren't above 0).",
           "starterCode": "import csv\nimport json\nimport re\nimport sqlite3\nfrom datetime import date\nfrom io import StringIO\n\ndef check_date(text):\n    if not re.fullmatch(r\"\\d{4}-\\d{2}-\\d{2}\", text):\n        return False\n    try:\n        date.fromisoformat(text)\n    except ValueError:\n        return False\n    return True\n",
@@ -6026,7 +6026,7 @@
           }
         },
         {
-          "id": "proj_sales_pipeline_ch3",
+          "id": "proj_sales_pipeline-read-the-file",
           "title": "Medium: Read the file",
           "promptMarkdown": "Define `read_sales(text)` that reads the CSV text and returns `(rows, errors)`: the cleaned rows, and messages like `line 5: bad date '05/02/2025'` (the header is line 1).",
           "starterCode": "import csv\nimport json\nimport re\nimport sqlite3\nfrom datetime import date\nfrom io import StringIO\n\ndef check_date(text):\n    if not re.fullmatch(r\"\\d{4}-\\d{2}-\\d{2}\", text):\n        return False\n    try:\n        date.fromisoformat(text)\n    except ValueError:\n        return False\n    return True\n\n\ndef clean_row(row):\n    day = row[\"date\"].strip()\n    if not check_date(day):\n        raise ValueError(f\"bad date {day!r}\")\n    region = row[\"region\"].strip().lower()\n    if not region:\n        raise ValueError(\"missing region\")\n    try:\n        amount = float(row[\"amount\"])\n    except ValueError:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    if amount <= 0:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    return {\"date\": day, \"region\": region, \"product\": row[\"product\"].strip(), \"amount\": round(amount, 2)}\n",
@@ -6050,7 +6050,7 @@
           }
         },
         {
-          "id": "proj_sales_pipeline_ch4",
+          "id": "proj_sales_pipeline-into-the-database",
           "title": "Hard: Into the database",
           "promptMarkdown": "Define `load_db(rows)`, which creates an in-memory database with a table `sales (date TEXT, region TEXT, product TEXT, amount REAL)`, inserts the rows with one `executemany` and returns the connection; and `region_totals(conn)`, which returns `(region, total)` pairs from SQL, biggest total first, totals rounded to 2 places.",
           "starterCode": "import csv\nimport json\nimport re\nimport sqlite3\nfrom datetime import date\nfrom io import StringIO\n\ndef check_date(text):\n    if not re.fullmatch(r\"\\d{4}-\\d{2}-\\d{2}\", text):\n        return False\n    try:\n        date.fromisoformat(text)\n    except ValueError:\n        return False\n    return True\n\n\ndef clean_row(row):\n    day = row[\"date\"].strip()\n    if not check_date(day):\n        raise ValueError(f\"bad date {day!r}\")\n    region = row[\"region\"].strip().lower()\n    if not region:\n        raise ValueError(\"missing region\")\n    try:\n        amount = float(row[\"amount\"])\n    except ValueError:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    if amount <= 0:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    return {\"date\": day, \"region\": region, \"product\": row[\"product\"].strip(), \"amount\": round(amount, 2)}\n\n\ndef read_sales(text):\n    rows = []\n    errors = []\n    for line, row in enumerate(csv.DictReader(StringIO(text)), start=2):\n        try:\n            rows.append(clean_row(row))\n        except ValueError as e:\n            errors.append(f\"line {line}: {e}\")\n    return rows, errors\n",
@@ -6079,7 +6079,7 @@
           }
         },
         {
-          "id": "proj_sales_pipeline_ch5",
+          "id": "proj_sales_pipeline-by-month",
           "title": "Hard: By month",
           "promptMarkdown": "Define `monthly_totals(conn)` that returns a dict from month (`2025-01`) to that month's total, in month order, worked out by SQL with `substr(date, 1, 7)`.",
           "starterCode": "import csv\nimport json\nimport re\nimport sqlite3\nfrom datetime import date\nfrom io import StringIO\n\ndef check_date(text):\n    if not re.fullmatch(r\"\\d{4}-\\d{2}-\\d{2}\", text):\n        return False\n    try:\n        date.fromisoformat(text)\n    except ValueError:\n        return False\n    return True\n\n\ndef clean_row(row):\n    day = row[\"date\"].strip()\n    if not check_date(day):\n        raise ValueError(f\"bad date {day!r}\")\n    region = row[\"region\"].strip().lower()\n    if not region:\n        raise ValueError(\"missing region\")\n    try:\n        amount = float(row[\"amount\"])\n    except ValueError:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    if amount <= 0:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    return {\"date\": day, \"region\": region, \"product\": row[\"product\"].strip(), \"amount\": round(amount, 2)}\n\n\ndef read_sales(text):\n    rows = []\n    errors = []\n    for line, row in enumerate(csv.DictReader(StringIO(text)), start=2):\n        try:\n            rows.append(clean_row(row))\n        except ValueError as e:\n            errors.append(f\"line {line}: {e}\")\n    return rows, errors\n\n\ndef load_db(rows):\n    conn = sqlite3.connect(\":memory:\")\n    conn.execute(\"CREATE TABLE sales (date TEXT, region TEXT, product TEXT, amount REAL)\")\n    conn.executemany(\n        \"INSERT INTO sales VALUES (:date, :region, :product, :amount)\",\n        rows,\n    )\n    return conn\n\n\ndef region_totals(conn):\n    query = \"SELECT region, ROUND(SUM(amount), 2) AS total FROM sales GROUP BY region ORDER BY total DESC, region\"\n    return conn.execute(query).fetchall()\n",
@@ -6103,7 +6103,7 @@
           }
         },
         {
-          "id": "proj_sales_pipeline_ch6",
+          "id": "proj_sales_pipeline-the-whole-pipeline",
           "title": "Expert: The whole pipeline",
           "promptMarkdown": "Define `run_pipeline(text)` that returns the JSON report from the lesson: `rows` (how many were loaded), `errors`, `regions` (from `region_totals`), `months`, and `best_product` (the product with the biggest total, found with SQL; ties go alphabetically).",
           "starterCode": "import csv\nimport json\nimport re\nimport sqlite3\nfrom datetime import date\nfrom io import StringIO\n\ndef check_date(text):\n    if not re.fullmatch(r\"\\d{4}-\\d{2}-\\d{2}\", text):\n        return False\n    try:\n        date.fromisoformat(text)\n    except ValueError:\n        return False\n    return True\n\n\ndef clean_row(row):\n    day = row[\"date\"].strip()\n    if not check_date(day):\n        raise ValueError(f\"bad date {day!r}\")\n    region = row[\"region\"].strip().lower()\n    if not region:\n        raise ValueError(\"missing region\")\n    try:\n        amount = float(row[\"amount\"])\n    except ValueError:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    if amount <= 0:\n        raise ValueError(f\"bad amount {row['amount']!r}\")\n    return {\"date\": day, \"region\": region, \"product\": row[\"product\"].strip(), \"amount\": round(amount, 2)}\n\n\ndef read_sales(text):\n    rows = []\n    errors = []\n    for line, row in enumerate(csv.DictReader(StringIO(text)), start=2):\n        try:\n            rows.append(clean_row(row))\n        except ValueError as e:\n            errors.append(f\"line {line}: {e}\")\n    return rows, errors\n\n\ndef load_db(rows):\n    conn = sqlite3.connect(\":memory:\")\n    conn.execute(\"CREATE TABLE sales (date TEXT, region TEXT, product TEXT, amount REAL)\")\n    conn.executemany(\n        \"INSERT INTO sales VALUES (:date, :region, :product, :amount)\",\n        rows,\n    )\n    return conn\n\n\ndef region_totals(conn):\n    query = \"SELECT region, ROUND(SUM(amount), 2) AS total FROM sales GROUP BY region ORDER BY total DESC, region\"\n    return conn.execute(query).fetchall()\n\n\ndef monthly_totals(conn):\n    query = \"SELECT substr(date, 1, 7) AS month, ROUND(SUM(amount), 2) FROM sales GROUP BY month ORDER BY month\"\n    return dict(conn.execute(query).fetchall())\n",
@@ -6136,7 +6136,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_sales_pipeline_q1",
+            "id": "proj_sales_pipeline-q-1g1sy2b",
             "type": "mcq",
             "prompt": "Why check dates with both a regex and `date.fromisoformat`?",
             "choices": [
@@ -6161,7 +6161,7 @@
             "explanation": "A pattern can check the format but not the calendar, so use both."
           },
           {
-            "id": "proj_sales_pipeline_q2",
+            "id": "proj_sales_pipeline-q-daelb1",
             "type": "mcq",
             "prompt": "Why lowercase and strip the region?",
             "choices": [
@@ -6186,7 +6186,7 @@
             "explanation": "Normalising first means one region isn't counted twice under different spellings."
           },
           {
-            "id": "proj_sales_pipeline_q3",
+            "id": "proj_sales_pipeline-q-1ktpa3w",
             "type": "mcq",
             "prompt": "Why keep a list of rejected rows?",
             "choices": [
@@ -6211,7 +6211,7 @@
             "explanation": "Rejected rows are listed so problems are visible and can be fixed."
           },
           {
-            "id": "proj_sales_pipeline_q4",
+            "id": "proj_sales_pipeline-q-9x77kf",
             "type": "mcq",
             "prompt": "What does `:date` in an SQL statement do?",
             "choices": [
@@ -6236,7 +6236,7 @@
             "explanation": "`:date` is a named placeholder filled from the dict's `date` key."
           },
           {
-            "id": "proj_sales_pipeline_q5",
+            "id": "proj_sales_pipeline-q-zyguvn",
             "type": "shortText",
             "prompt": "Which SQL clause combines rows that share a value, like a region? (two words)",
             "validation": {
@@ -6246,7 +6246,7 @@
             "explanation": "`GROUP BY` puts rows with the same value together for `SUM` or `COUNT`."
           },
           {
-            "id": "proj_sales_pipeline_q6",
+            "id": "proj_sales_pipeline-q-1g5x9ta",
             "type": "mcq",
             "prompt": "What does `substr(date, 1, 7)` give for `2025-03-14`?",
             "choices": [

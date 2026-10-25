@@ -30,7 +30,7 @@ export default makeTopic({
     }),
     query('easy', 'Full name', {
       prompt: "The author `L. Brandt` should be written `Lea Brandt` on every book.",
-      hint: "`UPDATE books SET author = 'Lea Brandt' WHERE author = 'L. Brandt';`",
+      hint: 'One UPDATE on `books` changes every row whose `author` matches.',
       solution: "UPDATE books\nSET author = 'Lea Brandt'\nWHERE author = 'L. Brandt';",
       checks: [AFTER.books],
     }),

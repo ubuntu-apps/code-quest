@@ -4,7 +4,9 @@ import { applyAnswers, type ReviewItem } from './reviewSchedule'
 
 /** One key per course: `codequest:review:python`. Included in progress backups. */
 export const REVIEW_PREFIX = 'codequest:review:'
-const CHANGED_EVENT = 'codequest:review-changed'
+/** Fired when the saved review state changes, so open panels re-read it. */
+export const REVIEW_CHANGED_EVENT = 'codequest:review-changed'
+const CHANGED_EVENT = REVIEW_CHANGED_EVENT
 
 /** Today's review: which questions, and how it went once checked. */
 export interface ReviewSession {

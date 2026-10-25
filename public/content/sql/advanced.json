@@ -35,11 +35,11 @@
       },
       "challenges": [
         {
-          "id": "views_ch1",
+          "id": "views-a-product-list",
           "title": "Easy: A product list",
           "promptMarkdown": "Create a view called `product_list` with each product's `name` and `price`.",
           "starterCode": "",
-          "hint": "`CREATE VIEW product_list AS SELECT name, price FROM products;`",
+          "hint": "`CREATE VIEW name AS` followed by the query the view should save.",
           "solution": "CREATE VIEW product_list AS\nSELECT name, price FROM products;",
           "validation": {
             "mode": "sql_tests",
@@ -59,7 +59,7 @@
           }
         },
         {
-          "id": "views_ch2",
+          "id": "views-use-the-view",
           "title": "Easy: Use the view",
           "promptMarkdown": "Create a view `cheap_products` with the `name` and `price` of products under 10. Then select everything from it, cheapest first, then by name.",
           "starterCode": "",
@@ -83,7 +83,7 @@
           }
         },
         {
-          "id": "views_ch3",
+          "id": "views-sale-lines",
           "title": "Easy: Sale lines",
           "promptMarkdown": "Create the lesson's view `sale_lines`: each sale's id (`sale_id`), `sold_on`, the product's name (`product`) and `quantity`.",
           "starterCode": "",
@@ -107,7 +107,7 @@
           }
         },
         {
-          "id": "views_ch4",
+          "id": "views-line-totals",
           "title": "Medium: Line totals",
           "promptMarkdown": "Create a view `sale_totals` with each sale's id (`sale_id`), `sold_on`, product name (`product`), `quantity`, `price` and `line_total` (quantity times price, 2 decimals).",
           "starterCode": "",
@@ -131,7 +131,7 @@
           }
         },
         {
-          "id": "views_ch5",
+          "id": "views-daily-takings",
           "title": "Medium: Daily takings",
           "promptMarkdown": "Create a view `daily_takings` with each day's `sold_on` and its `takings` (the sum of quantity times price, 2 decimals).",
           "starterCode": "",
@@ -155,7 +155,7 @@
           }
         },
         {
-          "id": "views_ch6",
+          "id": "views-better-days",
           "title": "Medium: Better days",
           "promptMarkdown": "Create the `daily_takings` view from the last challenge. Then use it to show the days whose takings beat the average day: `sold_on` and `takings`, in date order.",
           "starterCode": "",
@@ -174,7 +174,7 @@
           }
         },
         {
-          "id": "views_ch7",
+          "id": "views-change-a-view",
           "title": "Hard: Change a view",
           "promptMarkdown": "The starter makes `product_list` with name and price. Keep that line, then change the view so it also has `category_id` as a third column. SQLite has no CREATE OR REPLACE VIEW.",
           "starterCode": "CREATE VIEW product_list AS SELECT name, price FROM products;\n",
@@ -198,7 +198,7 @@
           }
         },
         {
-          "id": "views_ch8",
+          "id": "views-who-reports-to-whom",
           "title": "Hard: Who reports to whom",
           "promptMarkdown": "Create a view `staff_view` with each staff member's `name`, `role` and their manager's name (`manager`, empty for the person at the top).",
           "starterCode": "",
@@ -222,7 +222,7 @@
           }
         },
         {
-          "id": "views_ch9",
+          "id": "views-category-sales",
           "title": "Expert: Category sales",
           "promptMarkdown": "Create a view `category_sales` with each category name that has sales (`category`; `No category` for products without one), the items sold (`items`) and the `takings` (2 decimals).",
           "starterCode": "",
@@ -246,7 +246,7 @@
           }
         },
         {
-          "id": "views_ch10",
+          "id": "views-name-the-columns",
           "title": "Expert: Name the columns",
           "promptMarkdown": "Create a view `top_sellers` whose columns are named in the CREATE VIEW line, `(product, sold)`: each product's name and the items sold. Then show the products in it that sold 4 or more, most first, then by name.",
           "starterCode": "",
@@ -274,7 +274,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "views_q1",
+            "id": "views-q-1dpf7i",
             "type": "mcq",
             "prompt": "What does a view store?",
             "choices": [
@@ -299,7 +299,7 @@
             "explanation": "So a view always shows the data as it is now."
           },
           {
-            "id": "views_q2",
+            "id": "views-q-148il2e",
             "type": "mcq",
             "prompt": "A row is added to sales after a view on sales was made. Does the view show it?",
             "choices": [
@@ -324,7 +324,7 @@
             "explanation": "The view's query runs again each time."
           },
           {
-            "id": "views_q3",
+            "id": "views-q-17e3j3x",
             "type": "mcq",
             "prompt": "How do you change a view in SQLite?",
             "choices": [
@@ -349,7 +349,7 @@
             "explanation": "SQLite has no CREATE OR REPLACE."
           },
           {
-            "id": "views_q4",
+            "id": "views-q-yk5o98",
             "type": "mcq",
             "prompt": "What happens to the tables when you drop a view?",
             "choices": [
@@ -374,7 +374,7 @@
             "explanation": "A view is just a saved query."
           },
           {
-            "id": "views_q5",
+            "id": "views-q-qb7pf0",
             "type": "shortText",
             "prompt": "Which two words start the statement that makes a view? (two words)",
             "validation": {
@@ -384,7 +384,7 @@
             "explanation": "`CREATE VIEW name AS SELECT …`."
           },
           {
-            "id": "views_q6",
+            "id": "views-q-kxscq1",
             "type": "mcq",
             "prompt": "Can you UPDATE a view in SQLite?",
             "choices": [
@@ -409,7 +409,7 @@
             "explanation": "SQLite views are read-only."
           },
           {
-            "id": "views_q7",
+            "id": "views-q-92zk0a",
             "type": "mcq",
             "prompt": "`CREATE VIEW top_sellers (product, sold) AS …` does what with `(product, sold)`?",
             "choices": [
@@ -434,7 +434,7 @@
             "explanation": "Handy when the query has calculated columns."
           },
           {
-            "id": "views_q8",
+            "id": "views-q-9weagq",
             "type": "mcq",
             "prompt": "Can a view be used in a join or a subquery?",
             "choices": [
@@ -459,7 +459,7 @@
             "explanation": "You can even build views on other views."
           },
           {
-            "id": "views_q9",
+            "id": "views-q-1lpauyj",
             "type": "mcq",
             "prompt": "What does `CREATE VIEW IF NOT EXISTS v AS …` do when v already exists?",
             "choices": [
@@ -484,7 +484,7 @@
             "explanation": "Useful in setup scripts."
           },
           {
-            "id": "views_q10",
+            "id": "views-q-tlhbl8",
             "type": "mcq",
             "prompt": "Why give a calculated column a name with AS inside a view?",
             "choices": [
@@ -598,7 +598,7 @@
       },
       "challenges": [
         {
-          "id": "recursive_with_ch1",
+          "id": "recursive_with-count-to-the-products",
           "title": "Easy: Count to the products",
           "promptMarkdown": "Show the numbers (`x`) from 1 up to the number of products, in order.",
           "starterCode": "",
@@ -610,7 +610,7 @@
           }
         },
         {
-          "id": "recursive_with_ch2",
+          "id": "recursive_with-every-sales-day",
           "title": "Easy: Every sales day",
           "promptMarkdown": "Show every date (`day`) from the first sale to the last, sales or not, in order.",
           "starterCode": "",
@@ -622,7 +622,7 @@
           }
         },
         {
-          "id": "recursive_with_ch3",
+          "id": "recursive_with-every-other-day",
           "title": "Easy: Every other day",
           "promptMarkdown": "Show every second date (`day`) starting at the first sale, up to the last sale, in order.",
           "starterCode": "",
@@ -634,7 +634,7 @@
           }
         },
         {
-          "id": "recursive_with_ch4",
+          "id": "recursive_with-price-ladder",
           "title": "Medium: Price ladder",
           "promptMarkdown": "For the cheapest product, show what 1 to 5 of it cost: `quantity` and `cost` (2 decimals). In order of quantity.",
           "starterCode": "",
@@ -646,7 +646,7 @@
           }
         },
         {
-          "id": "recursive_with_ch5",
+          "id": "recursive_with-the-next-five-days",
           "title": "Medium: The next five days",
           "promptMarkdown": "Show the five dates (`day`) after the last sale, using `LIMIT` to stop the recursion instead of a WHERE.",
           "starterCode": "",
@@ -658,7 +658,7 @@
           }
         },
         {
-          "id": "recursive_with_ch6",
+          "id": "recursive_with-weeks",
           "title": "Medium: Weeks",
           "promptMarkdown": "Split the sales period into weeks starting on the first sale's date: `week_start` and `week_end` (6 days later), for every week that starts on or before the last sale. In order.",
           "starterCode": "",
@@ -670,7 +670,7 @@
           }
         },
         {
-          "id": "recursive_with_ch7",
+          "id": "recursive_with-doubling",
           "title": "Hard: Doubling",
           "promptMarkdown": "Start at the cheapest product's price and keep doubling it. Show each `step` (0 for the start) and `amount`, for as long as the amount is 100 or less. In order of step.",
           "starterCode": "",
@@ -682,7 +682,7 @@
           }
         },
         {
-          "id": "recursive_with_ch8",
+          "id": "recursive_with-letter-by-letter",
           "title": "Hard: Letter by letter",
           "promptMarkdown": "Split the name of the person at the top (no manager) into its characters: `n` (1 for the first) and `letter`, spaces included. In order of n.",
           "starterCode": "",
@@ -694,7 +694,7 @@
           }
         },
         {
-          "id": "recursive_with_ch9",
+          "id": "recursive_with-fibonacci",
           "title": "Expert: Fibonacci",
           "promptMarkdown": "Show the Fibonacci numbers 1, 1, 2, 3, 5, … that are no bigger than the number of sales: `n` (1 for the first) and `fib`. In order of n.",
           "starterCode": "",
@@ -706,7 +706,7 @@
           }
         },
         {
-          "id": "recursive_with_ch10",
+          "id": "recursive_with-growing-target",
           "title": "Expert: Growing target",
           "promptMarkdown": "Staff member 2's Q4 target grows by 10% a year. Show the `year` (2026 for today's target, up to 2030) and the `target`, rounded to a whole number. In order of year.",
           "starterCode": "",
@@ -722,7 +722,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "recursive_with_q1",
+            "id": "recursive_with-q-hsvmne",
             "type": "mcq",
             "prompt": "What does RECURSIVE let a CTE do?",
             "choices": [
@@ -747,7 +747,7 @@
             "explanation": "That is how it makes rows that are in no table."
           },
           {
-            "id": "recursive_with_q2",
+            "id": "recursive_with-q-jb60js",
             "type": "mcq",
             "prompt": "What is the anchor?",
             "choices": [
@@ -772,7 +772,7 @@
             "explanation": "It runs once."
           },
           {
-            "id": "recursive_with_q3",
+            "id": "recursive_with-q-1nqrxgu",
             "type": "mcq",
             "prompt": "What joins the anchor and the recursive part?",
             "choices": [
@@ -797,7 +797,7 @@
             "explanation": "(UNION also works, and drops repeats.)"
           },
           {
-            "id": "recursive_with_q4",
+            "id": "recursive_with-q-1hu3uu3",
             "type": "mcq",
             "prompt": "What happens without a stop condition?",
             "choices": [
@@ -822,7 +822,7 @@
             "explanation": "Write the WHERE first."
           },
           {
-            "id": "recursive_with_q5",
+            "id": "recursive_with-q-laeicr",
             "type": "shortText",
             "prompt": "Which keyword after WITH lets a CTE refer to itself?",
             "validation": {
@@ -832,7 +832,7 @@
             "explanation": "`WITH RECURSIVE n(x) AS (…)`."
           },
           {
-            "id": "recursive_with_q6",
+            "id": "recursive_with-q-51wcwr",
             "type": "mcq",
             "prompt": "What does `date(day, '+1 day')` give for '2026-10-31'?",
             "choices": [
@@ -857,7 +857,7 @@
             "explanation": "date() handles month and year ends."
           },
           {
-            "id": "recursive_with_q7",
+            "id": "recursive_with-q-1iay8ak",
             "type": "mcq",
             "prompt": "When does the recursion stop?",
             "choices": [
@@ -882,7 +882,7 @@
             "explanation": "The WHERE makes that happen."
           },
           {
-            "id": "recursive_with_q8",
+            "id": "recursive_with-q-93za1p",
             "type": "mcq",
             "prompt": "In `WITH RECURSIVE d(step, amount) AS …`, what is `(step, amount)`?",
             "choices": [
@@ -907,7 +907,7 @@
             "explanation": "The anchor and recursive part give values in that order."
           },
           {
-            "id": "recursive_with_q9",
+            "id": "recursive_with-q-1bz5vbj",
             "type": "mcq",
             "prompt": "Can the anchor read from real tables?",
             "choices": [
@@ -932,7 +932,7 @@
             "explanation": "And so can the stop condition."
           },
           {
-            "id": "recursive_with_q10",
+            "id": "recursive_with-q-j39v06",
             "type": "mcq",
             "prompt": "Why add ORDER BY to the final SELECT?",
             "choices": [
@@ -1046,7 +1046,7 @@
       },
       "challenges": [
         {
-          "id": "recursive_trees_ch1",
+          "id": "recursive_trees-levels",
           "title": "Easy: Levels",
           "promptMarkdown": "Show each staff member's `name` and `level` (1 for the person at the top). Sort by level, then name.",
           "starterCode": "",
@@ -1058,7 +1058,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch2",
+          "id": "recursive_trees-category-depth",
           "title": "Easy: Category depth",
           "promptMarkdown": "Show each category's `name` and `depth` (1 for a category with no parent). Sort by depth, then name.",
           "starterCode": "",
@@ -1070,7 +1070,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch3",
+          "id": "recursive_trees-below-staff-member-2",
           "title": "Easy: Below staff member 2",
           "promptMarkdown": "Show everyone below staff member 2 (directly or further down): `name` and `steps` (1 for those who report straight to them). Sort by steps, then name.",
           "starterCode": "",
@@ -1082,7 +1082,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch4",
+          "id": "recursive_trees-category-paths",
           "title": "Medium: Category paths",
           "promptMarkdown": "Show each category's full `path`, like `Plants > Outdoor plants > Shrubs`. Sort by path.",
           "starterCode": "",
@@ -1094,7 +1094,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch5",
+          "id": "recursive_trees-chain-of-command",
           "title": "Medium: Chain of command",
           "promptMarkdown": "Start from the most recently hired staff member and walk up to the top: `name` and `steps` (0 for the new person, 1 for their manager, …). Sort by steps.",
           "starterCode": "",
@@ -1106,7 +1106,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch6",
+          "id": "recursive_trees-everything-in-category-1",
           "title": "Medium: Everything in category 1",
           "promptMarkdown": "Show the `name` of every product in category 1 or in any category inside it, however deep. Sort by name.",
           "starterCode": "",
@@ -1118,7 +1118,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch7",
+          "id": "recursive_trees-org-chart",
           "title": "Hard: Org chart",
           "promptMarkdown": "Show the staff in tree order: `name`, `level` and `path`, where the path is the names from the top down joined with `/` (like `Rosa Lindqvist/Tomas Ferreira`). Sort by path.",
           "starterCode": "",
@@ -1130,7 +1130,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch8",
+          "id": "recursive_trees-team-sizes",
           "title": "Hard: Team sizes",
           "promptMarkdown": "For every staff member, show `name` and how many people are below them, directly or further down (`below`, 0 for those with nobody). Sort by below (most first), then name.",
           "starterCode": "",
@@ -1142,7 +1142,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch9",
+          "id": "recursive_trees-team-sales",
           "title": "Expert: Team sales",
           "promptMarkdown": "For each staff member with someone below them, show `name` and the items sold by them and everyone below them together (`team_items`). Sort by team_items (most first), then name.",
           "starterCode": "",
@@ -1154,7 +1154,7 @@
           }
         },
         {
-          "id": "recursive_trees_ch10",
+          "id": "recursive_trees-rolled-up-takings",
           "title": "Expert: Rolled-up takings",
           "promptMarkdown": "For every category, show `category` (its name) and the takings of all products in it or in any category inside it (`takings`, 2 decimals, 0 when none). Sort by category.",
           "starterCode": "",
@@ -1170,7 +1170,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "recursive_trees_q1",
+            "id": "recursive_trees-q-1ambtps",
             "type": "mcq",
             "prompt": "What makes `staff` a tree?",
             "choices": [
@@ -1195,7 +1195,7 @@
             "explanation": "manager_id refers to another staff row."
           },
           {
-            "id": "recursive_trees_q2",
+            "id": "recursive_trees-q-15rm557",
             "type": "mcq",
             "prompt": "In the levels query, what is the anchor?",
             "choices": [
@@ -1220,7 +1220,7 @@
             "explanation": "The walk starts at the top."
           },
           {
-            "id": "recursive_trees_q3",
+            "id": "recursive_trees-q-mcytbn",
             "type": "mcq",
             "prompt": "What does the recursive part join on to go down one level?",
             "choices": [
@@ -1245,7 +1245,7 @@
             "explanation": "People whose manager has just been found."
           },
           {
-            "id": "recursive_trees_q4",
+            "id": "recursive_trees-q-1ws7gr8",
             "type": "mcq",
             "prompt": "Which join walks up, from a person to their manager?",
             "choices": [
@@ -1270,7 +1270,7 @@
             "explanation": "The next row is the manager of the row found last."
           },
           {
-            "id": "recursive_trees_q5",
+            "id": "recursive_trees-q-skvpyg",
             "type": "shortText",
             "prompt": "Which operator joins pieces of text, as in building a path?",
             "validation": {
@@ -1280,7 +1280,7 @@
             "explanation": "`t.path || ' > ' || c.name`."
           },
           {
-            "id": "recursive_trees_q6",
+            "id": "recursive_trees-q-z6g3hd",
             "type": "mcq",
             "prompt": "Why does sorting by the path give tree order?",
             "choices": [
@@ -1305,7 +1305,7 @@
             "explanation": "Text sorts letter by letter, so a path sorts just after its beginning."
           },
           {
-            "id": "recursive_trees_q7",
+            "id": "recursive_trees-q-19iarhd",
             "type": "mcq",
             "prompt": "How do you count everyone below each person?",
             "choices": [
@@ -1330,7 +1330,7 @@
             "explanation": "Each person is the top of their own branch."
           },
           {
-            "id": "recursive_trees_q8",
+            "id": "recursive_trees-q-62dq31",
             "type": "mcq",
             "prompt": "When does a tree walk stop?",
             "choices": [
@@ -1355,7 +1355,7 @@
             "explanation": "The leaves have nobody below them."
           },
           {
-            "id": "recursive_trees_q9",
+            "id": "recursive_trees-q-gnunlj",
             "type": "mcq",
             "prompt": "What would happen if a manager_id loop existed (A manages B, B manages A)?",
             "choices": [
@@ -1380,7 +1380,7 @@
             "explanation": "Real trees have no loops; UNION instead of UNION ALL stops repeats of identical rows."
           },
           {
-            "id": "recursive_trees_q10",
+            "id": "recursive_trees-q-15qke0w",
             "type": "mcq",
             "prompt": "How do you find every product inside category 1, however deep?",
             "choices": [
@@ -1494,7 +1494,7 @@
       },
       "challenges": [
         {
-          "id": "fill_gaps_ch1",
+          "id": "fill_gaps-with-the-gaps",
           "title": "Easy: With the gaps",
           "promptMarkdown": "Without a calendar, show each `sold_on` that has sales and how many sales it had (`sales`). In date order. (Look for the missing days.)",
           "starterCode": "",
@@ -1506,7 +1506,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch2",
+          "id": "fill_gaps-every-day",
           "title": "Easy: Every day",
           "promptMarkdown": "Show every `day` from the first sale to the last with its number of `sales` (0 on days with none). In date order.",
           "starterCode": "",
@@ -1518,7 +1518,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch3",
+          "id": "fill_gaps-empty-days",
           "title": "Medium: Empty days",
           "promptMarkdown": "Show the days (`day`) between the first and last sale that had no sales at all. In date order.",
           "starterCode": "",
@@ -1530,7 +1530,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch4",
+          "id": "fill_gaps-takings-every-day",
           "title": "Medium: Takings every day",
           "promptMarkdown": "Show every `day` with its `takings` (quantity times price, 2 decimals, 0 on days with none). In date order.",
           "starterCode": "",
@@ -1542,7 +1542,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch5",
+          "id": "fill_gaps-named-weekdays",
           "title": "Medium: Named weekdays",
           "promptMarkdown": "Show every `day`, its weekday name (`weekday`: `Sun`, `Mon`, `Tue`, `Wed`, `Thu`, `Fri` or `Sat`) and its number of `sales`. In date order.",
           "starterCode": "",
@@ -1554,7 +1554,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch6",
+          "id": "fill_gaps-running-items",
           "title": "Hard: Running items",
           "promptMarkdown": "Show every `day`, its `items` (0 if none) and the running total of items so far (`items_so_far`). In date order.",
           "starterCode": "",
@@ -1566,7 +1566,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch7",
+          "id": "fill_gaps-three-day-items",
           "title": "Hard: Three-day items",
           "promptMarkdown": "Show every `day`, its `items` (0 if none) and the items of that day and the two days before it (`three_days`). Because every day is a row, two rows back really is two days back. In date order.",
           "starterCode": "",
@@ -1578,7 +1578,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch8",
+          "id": "fill_gaps-quiet-spells",
           "title": "Expert: Quiet spells",
           "promptMarkdown": "List each run of days in a row with no sales: `started`, `ended` and `days`. In date order.",
           "starterCode": "",
@@ -1590,7 +1590,7 @@
           }
         },
         {
-          "id": "fill_gaps_ch9",
+          "id": "fill_gaps-days-since-a-sale",
           "title": "Expert: Days since a sale",
           "promptMarkdown": "Show every `day` and how many days it had been since the last day with sales (`days_since`: 0 on a day with sales). In date order.",
           "starterCode": "",
@@ -1606,7 +1606,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "fill_gaps_q1",
+            "id": "fill_gaps-q-1aco623",
             "type": "mcq",
             "prompt": "Why are some days missing from `GROUP BY sold_on`?",
             "choices": [
@@ -1631,7 +1631,7 @@
             "explanation": "Grouping can only show values that are in the rows."
           },
           {
-            "id": "fill_gaps_q2",
+            "id": "fill_gaps-q-6v6tjm",
             "type": "mcq",
             "prompt": "What is a calendar CTE for?",
             "choices": [
@@ -1656,7 +1656,7 @@
             "explanation": "Every day gets a row, with or without data."
           },
           {
-            "id": "fill_gaps_q3",
+            "id": "fill_gaps-q-98ckex",
             "type": "mcq",
             "prompt": "Why LEFT JOIN, not JOIN, from the calendar?",
             "choices": [
@@ -1681,7 +1681,7 @@
             "explanation": "An inner join would drop the empty days again."
           },
           {
-            "id": "fill_gaps_q4",
+            "id": "fill_gaps-q-x5tddb",
             "type": "mcq",
             "prompt": "On an empty day, what is `SUM(s.quantity)`?",
             "choices": [
@@ -1706,7 +1706,7 @@
             "explanation": "Wrap it in COALESCE to show 0."
           },
           {
-            "id": "fill_gaps_q5",
+            "id": "fill_gaps-q-174tmo2",
             "type": "shortText",
             "prompt": "Which function turns a NULL sum into 0?",
             "validation": {
@@ -1716,7 +1716,7 @@
             "explanation": "`COALESCE(SUM(s.quantity), 0)`."
           },
           {
-            "id": "fill_gaps_q6",
+            "id": "fill_gaps-q-w5ci6p",
             "type": "mcq",
             "prompt": "What does `strftime('%w', day)` give for a Sunday?",
             "choices": [
@@ -1741,7 +1741,7 @@
             "explanation": "Sunday is 0 and Saturday is 6, as text."
           },
           {
-            "id": "fill_gaps_q7",
+            "id": "fill_gaps-q-1gslrhy",
             "type": "mcq",
             "prompt": "Why does a moving window need the calendar to cover days?",
             "choices": [
@@ -1766,7 +1766,7 @@
             "explanation": "Missing days would make the frame stretch further back."
           },
           {
-            "id": "fill_gaps_q8",
+            "id": "fill_gaps-q-16cga76",
             "type": "mcq",
             "prompt": "How do you find the days with no sales?",
             "choices": [
@@ -1791,7 +1791,7 @@
             "explanation": "No matching sale means the joined columns are NULL."
           },
           {
-            "id": "fill_gaps_q9",
+            "id": "fill_gaps-q-mces86",
             "type": "mcq",
             "prompt": "`COUNT(s.id)` on an empty calendar day gives…",
             "choices": [
@@ -1816,7 +1816,7 @@
             "explanation": "COUNT of a column skips NULLs."
           },
           {
-            "id": "fill_gaps_q10",
+            "id": "fill_gaps-q-1x9235v",
             "type": "mcq",
             "prompt": "Can the same trick fill gaps in numbers or months?",
             "choices": [
@@ -1930,7 +1930,7 @@
       },
       "challenges": [
         {
-          "id": "pivot_ch1",
+          "id": "pivot-two-weeks-side-by-side",
           "title": "Easy: Two weeks side by side",
           "promptMarkdown": "For each product with sales, show `name`, the items sold before 2026-10-08 (`week1`) and from 2026-10-08 on (`week2`), with 0 where none. Sort by name.",
           "starterCode": "",
@@ -1942,7 +1942,7 @@
           }
         },
         {
-          "id": "pivot_ch2",
+          "id": "pivot-roles-in-one-row",
           "title": "Easy: Roles in one row",
           "promptMarkdown": "Show one row with the number of staff in each role: `managers`, `supervisors`, `assistants` and `trainees`.",
           "starterCode": "",
@@ -1954,7 +1954,7 @@
           }
         },
         {
-          "id": "pivot_ch3",
+          "id": "pivot-staffed-or-self-checkout",
           "title": "Easy: Staffed or self-checkout",
           "promptMarkdown": "For each `sold_on`, show the sales served by staff (`staffed`) and those at the self-checkout, which have no staff_id (`self_checkout`). In date order.",
           "starterCode": "",
@@ -1966,7 +1966,7 @@
           }
         },
         {
-          "id": "pivot_ch4",
+          "id": "pivot-weekdays-and-weekends",
           "title": "Medium: Weekdays and weekends",
           "promptMarkdown": "For each product with sales, show `name`, the items sold on weekdays (`weekday_items`) and at weekends (`weekend_items`). Sort by name.",
           "starterCode": "",
@@ -1978,7 +1978,7 @@
           }
         },
         {
-          "id": "pivot_ch5",
+          "id": "pivot-staff-by-week",
           "title": "Medium: Staff by week",
           "promptMarkdown": "For each staff member with sales, show `name`, items sold before 2026-10-08 (`week1`), from then on (`week2`) and in all (`total`). Sort by name.",
           "starterCode": "",
@@ -1990,7 +1990,7 @@
           }
         },
         {
-          "id": "pivot_ch6",
+          "id": "pivot-price-bands",
           "title": "Medium: Price bands",
           "promptMarkdown": "For each category with products, show its `category` name and how many of its products cost under 10 (`under_10`), 10 to 20 (`from_10_to_20`) and over 20 (`over_20`). Products without a price count in none. Sort by category.",
           "starterCode": "",
@@ -2002,7 +2002,7 @@
           }
         },
         {
-          "id": "pivot_ch7",
+          "id": "pivot-items-by-role",
           "title": "Hard: Items by role",
           "promptMarkdown": "For each `sold_on`, show the items sold by assistants (`assistants`), by supervisors and the manager together (`seniors`), by trainees (`trainees`) and at the self-checkout (`self_checkout`). In date order.",
           "starterCode": "",
@@ -2014,7 +2014,7 @@
           }
         },
         {
-          "id": "pivot_ch8",
+          "id": "pivot-with-a-total-line",
           "title": "Hard: With a total line",
           "promptMarkdown": "Show Two weeks side by side, then one more row at the end named `All products` with the totals of each column. Keep the products in name order, with the total last.",
           "starterCode": "",
@@ -2026,7 +2026,7 @@
           }
         },
         {
-          "id": "pivot_ch9",
+          "id": "pivot-category-weekend-table",
           "title": "Expert: Category weekend table",
           "promptMarkdown": "For each category name with sales (`category`; `No category` for products without one), show `weekday_items`, `weekend_items` and `place` (RANK by all items, most first). Sort by place, then category.",
           "starterCode": "",
@@ -2038,7 +2038,7 @@
           }
         },
         {
-          "id": "pivot_ch10",
+          "id": "pivot-the-first-three-days",
           "title": "Expert: The first three days",
           "promptMarkdown": "For each product sold on 2026-10-01, 10-02 or 10-03, show `name` and its items on each of those days as `oct1`, `oct2` and `oct3` (0 where none). Sort by name.",
           "starterCode": "",
@@ -2054,7 +2054,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "pivot_q1",
+            "id": "pivot-q-12zesir",
             "type": "mcq",
             "prompt": "What is a pivot?",
             "choices": [
@@ -2079,7 +2079,7 @@
             "explanation": "Weeks become columns instead of rows."
           },
           {
-            "id": "pivot_q2",
+            "id": "pivot-q-14j910f",
             "type": "mcq",
             "prompt": "Does SQLite have a PIVOT keyword?",
             "choices": [
@@ -2104,7 +2104,7 @@
             "explanation": "Each column picks out its own rows."
           },
           {
-            "id": "pivot_q3",
+            "id": "pivot-q-kk5ql2",
             "type": "mcq",
             "prompt": "What does `ELSE 0` do in `SUM(CASE WHEN … THEN quantity ELSE 0 END)`?",
             "choices": [
@@ -2129,7 +2129,7 @@
             "explanation": "Without ELSE, a group with no matches sums only NULLs."
           },
           {
-            "id": "pivot_q4",
+            "id": "pivot-q-xx3raz",
             "type": "mcq",
             "prompt": "Which counts the trainees?",
             "choices": [
@@ -2154,7 +2154,7 @@
             "explanation": "FILTER goes after the aggregate."
           },
           {
-            "id": "pivot_q5",
+            "id": "pivot-q-1x7e2co",
             "type": "shortText",
             "prompt": "Which keyword follows an aggregate to limit its rows, as in `COUNT(*) … (WHERE role = 'manager')`?",
             "validation": {
@@ -2164,7 +2164,7 @@
             "explanation": "A shorter way to write the CASE."
           },
           {
-            "id": "pivot_q6",
+            "id": "pivot-q-1nb0nm3",
             "type": "mcq",
             "prompt": "What must you know to write a pivot in SQL?",
             "choices": [
@@ -2189,7 +2189,7 @@
             "explanation": "Each column is written out by hand."
           },
           {
-            "id": "pivot_q7",
+            "id": "pivot-q-cbfhbf",
             "type": "mcq",
             "prompt": "Why does `COUNT(CASE WHEN x THEN 1 END)` count only matching rows?",
             "choices": [
@@ -2214,7 +2214,7 @@
             "explanation": "That is the CASE version of FILTER."
           },
           {
-            "id": "pivot_q8",
+            "id": "pivot-q-1m18y3z",
             "type": "mcq",
             "prompt": "A pivot with no GROUP BY gives…",
             "choices": [
@@ -2239,7 +2239,7 @@
             "explanation": "Like any aggregate without GROUP BY."
           },
           {
-            "id": "pivot_q9",
+            "id": "pivot-q-10ebups",
             "type": "mcq",
             "prompt": "How do you keep a total row last after UNION ALL?",
             "choices": [
@@ -2264,7 +2264,7 @@
             "explanation": "Only ORDER BY decides the order."
           },
           {
-            "id": "pivot_q10",
+            "id": "pivot-q-33t17z",
             "type": "mcq",
             "prompt": "Can a pivot column use any aggregate, such as AVG or MAX?",
             "choices": [
@@ -2378,7 +2378,7 @@
       },
       "challenges": [
         {
-          "id": "unpivot_ch1",
+          "id": "unpivot-quarter-rows",
           "title": "Easy: Quarter rows",
           "promptMarkdown": "Turn targets into rows with UNION ALL: `staff_id`, `quarter` (`q1` to `q4`) and `target`, empty quarters included. Sort by staff_id, then quarter.",
           "starterCode": "",
@@ -2390,7 +2390,7 @@
           }
         },
         {
-          "id": "unpivot_ch2",
+          "id": "unpivot-without-the-gaps",
           "title": "Easy: Without the gaps",
           "promptMarkdown": "The same rows, but leave out quarters with no target. Sort by staff_id, then quarter.",
           "starterCode": "",
@@ -2402,7 +2402,7 @@
           }
         },
         {
-          "id": "unpivot_ch3",
+          "id": "unpivot-with-values",
           "title": "Easy: With VALUES",
           "promptMarkdown": "Make the rows with a VALUES list of quarters 1 to 4 and CROSS JOIN: `staff_id`, `quarter` (a number) and `target`, leaving out empty quarters. Sort by staff_id, then quarter.",
           "starterCode": "",
@@ -2414,7 +2414,7 @@
           }
         },
         {
-          "id": "unpivot_ch4",
+          "id": "unpivot-yearly-totals",
           "title": "Medium: Yearly totals",
           "promptMarkdown": "Show each staff member's `name` with targets and the sum of their quarter targets (`year_target`). Sort by name.",
           "starterCode": "",
@@ -2426,7 +2426,7 @@
           }
         },
         {
-          "id": "unpivot_ch5",
+          "id": "unpivot-empty-quarters",
           "title": "Medium: Empty quarters",
           "promptMarkdown": "Show the `name` and `quarter` (a number) of every quarter with no target. Sort by name, then quarter.",
           "starterCode": "",
@@ -2438,7 +2438,7 @@
           }
         },
         {
-          "id": "unpivot_ch6",
+          "id": "unpivot-quarter-totals",
           "title": "Medium: Quarter totals",
           "promptMarkdown": "For each `quarter` (a number), show the sum of the targets (`total`) and how many people have one (`people`). In order of quarter.",
           "starterCode": "",
@@ -2450,7 +2450,7 @@
           }
         },
         {
-          "id": "unpivot_ch7",
+          "id": "unpivot-best-quarter",
           "title": "Hard: Best quarter",
           "promptMarkdown": "Show each staff member's highest quarter target: `name`, `quarter` (a number; the earlier one on a tie) and `target`. Sort by name.",
           "starterCode": "",
@@ -2462,7 +2462,7 @@
           }
         },
         {
-          "id": "unpivot_ch8",
+          "id": "unpivot-quarter-on-quarter",
           "title": "Hard: Quarter on quarter",
           "promptMarkdown": "For each quarter with a target, show `staff_id`, `quarter`, `target` and the rise since that person's previous quarter with a target (`rise`; empty for their first). Sort by staff_id, then quarter.",
           "starterCode": "",
@@ -2474,7 +2474,7 @@
           }
         },
         {
-          "id": "unpivot_ch9",
+          "id": "unpivot-halves",
           "title": "Expert: Halves",
           "promptMarkdown": "Go long and back again: for each `staff_id`, show the targets of the first half-year (`first_half`, Q1 and Q2) and second half (`second_half`), treating empty quarters as 0. Sort by staff_id.",
           "starterCode": "",
@@ -2486,7 +2486,7 @@
           }
         },
         {
-          "id": "unpivot_ch10",
+          "id": "unpivot-when-targets-start",
           "title": "Expert: When targets start",
           "promptMarkdown": "For each staff member with targets, show `name`, their first quarter with a target (`first_quarter`) and how many quarters have one (`quarters`). Sort by first_quarter, then name.",
           "starterCode": "",
@@ -2502,7 +2502,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "unpivot_q1",
+            "id": "unpivot-q-19pc1qc",
             "type": "mcq",
             "prompt": "Why turn the quarter columns into rows?",
             "choices": [
@@ -2527,7 +2527,7 @@
             "explanation": "Long data is easier to query."
           },
           {
-            "id": "unpivot_q2",
+            "id": "unpivot-q-1rztb45",
             "type": "mcq",
             "prompt": "How many SELECTs does the UNION ALL way need for four quarter columns?",
             "choices": [
@@ -2552,7 +2552,7 @@
             "explanation": "Each SELECT turns one column into rows."
           },
           {
-            "id": "unpivot_q3",
+            "id": "unpivot-q-hcwwmk",
             "type": "mcq",
             "prompt": "What does `WITH quarters(quarter) AS (VALUES (1), (2), (3), (4))` make?",
             "choices": [
@@ -2577,7 +2577,7 @@
             "explanation": "VALUES makes rows without a table."
           },
           {
-            "id": "unpivot_q4",
+            "id": "unpivot-q-bwxsni",
             "type": "mcq",
             "prompt": "What does CROSS JOIN do here?",
             "choices": [
@@ -2602,7 +2602,7 @@
             "explanation": "Four rows per person, one per quarter."
           },
           {
-            "id": "unpivot_q5",
+            "id": "unpivot-q-vhzwbh",
             "type": "shortText",
             "prompt": "Which keyword makes rows from a list, as in `… (1), (2), (3)`?",
             "validation": {
@@ -2612,7 +2612,7 @@
             "explanation": "It can stand in for a table."
           },
           {
-            "id": "unpivot_q6",
+            "id": "unpivot-q-11blux3",
             "type": "mcq",
             "prompt": "Why UNION ALL and not UNION?",
             "choices": [
@@ -2637,7 +2637,7 @@
             "explanation": "Two people with the same target in the same quarter must both stay."
           },
           {
-            "id": "unpivot_q7",
+            "id": "unpivot-q-1qxa84z",
             "type": "mcq",
             "prompt": "What does SUM do with the NULL targets?",
             "choices": [
@@ -2662,7 +2662,7 @@
             "explanation": "Aggregates skip NULLs (but COUNT(*) counts the rows)."
           },
           {
-            "id": "unpivot_q8",
+            "id": "unpivot-q-39640a",
             "type": "mcq",
             "prompt": "Which column picks the right target in the VALUES way?",
             "choices": [
@@ -2687,7 +2687,7 @@
             "explanation": "`CASE q.quarter WHEN 1 THEN t.q1 …`."
           },
           {
-            "id": "unpivot_q9",
+            "id": "unpivot-q-1l2dmr4",
             "type": "mcq",
             "prompt": "Is a wide table ever the better shape?",
             "choices": [
@@ -2712,7 +2712,7 @@
             "explanation": "Wide for people, long for queries."
           },
           {
-            "id": "unpivot_q10",
+            "id": "unpivot-q-1yt501k",
             "type": "mcq",
             "prompt": "After making long rows in a CTE, can you pivot them back?",
             "choices": [
@@ -2826,7 +2826,7 @@
       },
       "challenges": [
         {
-          "id": "json_values_ch1",
+          "id": "json_values-colours",
           "title": "Easy: Colours",
           "promptMarkdown": "Show the `name` and `colour` of every product that has a colour in its details. Sort by name.",
           "starterCode": "",
@@ -2838,7 +2838,7 @@
           }
         },
         {
-          "id": "json_values_ch2",
+          "id": "json_values-watering",
           "title": "Easy: Watering",
           "promptMarkdown": "Show the `name` and `water` need (inside `care`) of every product that has one. Sort by name.",
           "starterCode": "",
@@ -2850,7 +2850,7 @@
           }
         },
         {
-          "id": "json_values_ch3",
+          "id": "json_values-first-tags",
           "title": "Medium: First tags",
           "promptMarkdown": "Show the `name` and first tag (`first_tag`) of every product with at least one tag. Sort by name.",
           "starterCode": "",
@@ -2862,7 +2862,7 @@
           }
         },
         {
-          "id": "json_values_ch4",
+          "id": "json_values-out-of-the-sun",
           "title": "Medium: Out of the sun",
           "promptMarkdown": "Show the `name` and `light` need of the products whose light is `shade` or `part shade`. Sort by name.",
           "starterCode": "",
@@ -2874,7 +2874,7 @@
           }
         },
         {
-          "id": "json_values_ch5",
+          "id": "json_values-by-colour",
           "title": "Medium: By colour",
           "promptMarkdown": "For each colour, show `colour`, how many products have it (`products`) and their average price (`average_price`, 2 decimals). Leave out products without a colour. Sort by colour.",
           "starterCode": "",
@@ -2886,7 +2886,7 @@
           }
         },
         {
-          "id": "json_values_ch6",
+          "id": "json_values-build-objects",
           "title": "Hard: Build objects",
           "promptMarkdown": "For each product with a price, show `item`: a JSON object with its `name` and `price`, like `{\"name\":\"Hosta\",\"price\":8.0}`. Sort by name.",
           "starterCode": "",
@@ -2898,11 +2898,11 @@
           }
         },
         {
-          "id": "json_values_ch7",
+          "id": "json_values-water-less",
           "title": "Hard: Water less",
           "promptMarkdown": "Change the details of every product whose water need is `low` so that it is `very low` instead. Leave the rest of the JSON as it is.",
           "starterCode": "",
-          "hint": "`UPDATE products SET details = json_set(details, '$.care.water', 'very low') WHERE json_extract(details, '$.care.water') = 'low';`",
+          "hint": "`json_set(details, '$.care.water', …)` changes one value inside the JSON. Use `json_extract` with the same path in the WHERE.",
           "solution": "UPDATE products\nSET details = json_set(details, '$.care.water', 'very low')\nWHERE json_extract(details, '$.care.water') = 'low';",
           "validation": {
             "mode": "sql_tests",
@@ -2917,7 +2917,7 @@
           }
         },
         {
-          "id": "json_values_ch8",
+          "id": "json_values-add-a-size",
           "title": "Expert: Add a size",
           "promptMarkdown": "For every product with a `height_cm`, add a `size` key to its details: `small` under 50 cm, `medium` from 50 to 99, `large` from 100.",
           "starterCode": "",
@@ -2936,7 +2936,7 @@
           }
         },
         {
-          "id": "json_values_ch9",
+          "id": "json_values-tidy-empty-tags",
           "title": "Expert: Tidy empty tags",
           "promptMarkdown": "Some products have an empty `tags` array. Remove the `tags` key from their details, and leave the others alone.",
           "starterCode": "",
@@ -2959,7 +2959,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "json_values_q1",
+            "id": "json_values-q-1pds8dh",
             "type": "mcq",
             "prompt": "What does `$` mean at the start of a JSON path?",
             "choices": [
@@ -2984,7 +2984,7 @@
             "explanation": "Keys and array positions follow it."
           },
           {
-            "id": "json_values_q2",
+            "id": "json_values-q-cdj5mm",
             "type": "mcq",
             "prompt": "What does `json_extract(details, '$.care.water')` read?",
             "choices": [
@@ -3009,7 +3009,7 @@
             "explanation": "Each dot goes one level in."
           },
           {
-            "id": "json_values_q3",
+            "id": "json_values-q-1uv4dip",
             "type": "mcq",
             "prompt": "What does `'$.tags[0]'` pick?",
             "choices": [
@@ -3034,7 +3034,7 @@
             "explanation": "Arrays count from 0."
           },
           {
-            "id": "json_values_q4",
+            "id": "json_values-q-1j5f9w1",
             "type": "mcq",
             "prompt": "What does json_extract give for a key that isn't there?",
             "choices": [
@@ -3059,7 +3059,7 @@
             "explanation": "And so it does for NULL details."
           },
           {
-            "id": "json_values_q5",
+            "id": "json_values-q-vvs4k2",
             "type": "shortText",
             "prompt": "Which function returns JSON with one value set, as in `…(details, '$.colour', 'red')`?",
             "validation": {
@@ -3069,7 +3069,7 @@
             "explanation": "Use it in an UPDATE to save the change."
           },
           {
-            "id": "json_values_q6",
+            "id": "json_values-q-a1ot02",
             "type": "mcq",
             "prompt": "What does `json_object('name', name, 'price', price)` make?",
             "choices": [
@@ -3094,7 +3094,7 @@
             "explanation": "Keys and values in pairs."
           },
           {
-            "id": "json_values_q7",
+            "id": "json_values-q-1m9t73",
             "type": "mcq",
             "prompt": "Does `json_set` change the table by itself?",
             "choices": [
@@ -3119,7 +3119,7 @@
             "explanation": "JSON functions work on values."
           },
           {
-            "id": "json_values_q8",
+            "id": "json_values-q-1tjwb6",
             "type": "mcq",
             "prompt": "Can you sort by a number read from JSON?",
             "choices": [
@@ -3144,7 +3144,7 @@
             "explanation": "Text comes back as text, numbers as numbers."
           },
           {
-            "id": "json_values_q9",
+            "id": "json_values-q-1bj7qh8",
             "type": "mcq",
             "prompt": "What does `json_remove(details, '$.tags')` return?",
             "choices": [
@@ -3169,7 +3169,7 @@
             "explanation": "Like json_set, it doesn't change the table on its own."
           },
           {
-            "id": "json_values_q10",
+            "id": "json_values-q-1u64pa6",
             "type": "mcq",
             "prompt": "Why keep extra facts in a JSON column?",
             "choices": [
@@ -3283,7 +3283,7 @@
       },
       "challenges": [
         {
-          "id": "json_arrays_ch1",
+          "id": "json_arrays-how-many-tags",
           "title": "Easy: How many tags",
           "promptMarkdown": "Show each product with details: `name` and its number of tags (`tags`). Sort by name.",
           "starterCode": "",
@@ -3295,7 +3295,7 @@
           }
         },
         {
-          "id": "json_arrays_ch2",
+          "id": "json_arrays-every-tag",
           "title": "Easy: Every tag",
           "promptMarkdown": "Show one row per product and tag: `name` and `tag`. Sort by name, then tag.",
           "starterCode": "",
@@ -3307,7 +3307,7 @@
           }
         },
         {
-          "id": "json_arrays_ch3",
+          "id": "json_arrays-easy-plants",
           "title": "Easy: Easy plants",
           "promptMarkdown": "Show the `name` of every product tagged `easy`. Sort by name.",
           "starterCode": "",
@@ -3319,7 +3319,7 @@
           }
         },
         {
-          "id": "json_arrays_ch4",
+          "id": "json_arrays-products-per-tag",
           "title": "Medium: Products per tag",
           "promptMarkdown": "For each tag, show `tag` and how many products have it (`products`). Most first, then by tag.",
           "starterCode": "",
@@ -3331,7 +3331,7 @@
           }
         },
         {
-          "id": "json_arrays_ch5",
+          "id": "json_arrays-no-tags",
           "title": "Medium: No tags",
           "promptMarkdown": "Show the `name` of every product with no tags at all: an empty array, or no details. Sort by name.",
           "starterCode": "",
@@ -3343,7 +3343,7 @@
           }
         },
         {
-          "id": "json_arrays_ch6",
+          "id": "json_arrays-tag-positions",
           "title": "Medium: Tag positions",
           "promptMarkdown": "Show each product's tags with their position: `name`, `position` (0 for the first, from json_each's `key`) and `tag`. Only products with two or more tags. Sort by name, then position.",
           "starterCode": "",
@@ -3355,11 +3355,11 @@
           }
         },
         {
-          "id": "json_arrays_ch7",
+          "id": "json_arrays-cheap-names-in-one-array",
           "title": "Hard: Cheap names in one array",
           "promptMarkdown": "Show one value, `names`: a JSON array of the names of products under 10, cheapest first (then by name).",
           "starterCode": "",
-          "hint": "`SELECT json_group_array(name) AS names FROM (SELECT name FROM products WHERE price < 10 ORDER BY price, name)`.",
+          "hint": "`json_group_array(name)` collects names into one array. To control their order, collect them from a subquery that already sorts them.",
           "solution": "SELECT json_group_array(name) AS names\nFROM (SELECT name FROM products WHERE price < 10 ORDER BY price, name);",
           "validation": {
             "mode": "sql_tests",
@@ -3367,7 +3367,7 @@
           }
         },
         {
-          "id": "json_arrays_ch8",
+          "id": "json_arrays-a-price-object-per-category",
           "title": "Hard: A price object per category",
           "promptMarkdown": "For each category with priced products, show `category` and `prices`: a JSON object from product name to price, in name order. Sort by category.",
           "starterCode": "",
@@ -3379,7 +3379,7 @@
           }
         },
         {
-          "id": "json_arrays_ch9",
+          "id": "json_arrays-sales-by-tag",
           "title": "Expert: Sales by tag",
           "promptMarkdown": "For each tag, show `tag` and the items sold of products with that tag (`items`). Tags with no sales are left out. Most first, then by tag.",
           "starterCode": "",
@@ -3391,7 +3391,7 @@
           }
         },
         {
-          "id": "json_arrays_ch10",
+          "id": "json_arrays-tags-in-each-category",
           "title": "Expert: Tags in each category",
           "promptMarkdown": "For each category with tagged products, show `category` and how many different tags its products have (`tags`). Most first, then by category.",
           "starterCode": "",
@@ -3407,7 +3407,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "json_arrays_q1",
+            "id": "json_arrays-q-1sc58jh",
             "type": "mcq",
             "prompt": "What does `json_array_length(details, '$.tags')` give for `[\"a\",\"b\"]`?",
             "choices": [
@@ -3432,7 +3432,7 @@
             "explanation": "The number of elements."
           },
           {
-            "id": "json_arrays_q2",
+            "id": "json_arrays-q-tmh4dj",
             "type": "mcq",
             "prompt": "What kind of function is json_each?",
             "choices": [
@@ -3457,7 +3457,7 @@
             "explanation": "One row per element."
           },
           {
-            "id": "json_arrays_q3",
+            "id": "json_arrays-q-5kbg4y",
             "type": "mcq",
             "prompt": "Which column of json_each holds the element itself?",
             "choices": [
@@ -3482,7 +3482,7 @@
             "explanation": "key is its position in an array."
           },
           {
-            "id": "json_arrays_q4",
+            "id": "json_arrays-q-b2pfw3",
             "type": "mcq",
             "prompt": "What rows does json_each give for an empty array?",
             "choices": [
@@ -3507,7 +3507,7 @@
             "explanation": "So a product with no tags drops out of the join."
           },
           {
-            "id": "json_arrays_q5",
+            "id": "json_arrays-q-14z7ula",
             "type": "shortText",
             "prompt": "Which aggregate collects a group's values into one JSON array?",
             "validation": {
@@ -3517,7 +3517,7 @@
             "explanation": "`json_group_array(name)`."
           },
           {
-            "id": "json_arrays_q6",
+            "id": "json_arrays-q-1wurcwy",
             "type": "mcq",
             "prompt": "How do you find products with the tag 'easy'?",
             "choices": [
@@ -3542,7 +3542,7 @@
             "explanation": "LIKE on the whole text could also match \"easy\" inside another word or key."
           },
           {
-            "id": "json_arrays_q7",
+            "id": "json_arrays-q-13sg81g",
             "type": "mcq",
             "prompt": "How do you control the order of values in json_group_array?",
             "choices": [
@@ -3567,7 +3567,7 @@
             "explanation": "Values go in the order the rows arrive."
           },
           {
-            "id": "json_arrays_q8",
+            "id": "json_arrays-q-b0oqde",
             "type": "mcq",
             "prompt": "What does `json_group_object(name, price)` make?",
             "choices": [
@@ -3592,7 +3592,7 @@
             "explanation": "Per group, like any aggregate."
           },
           {
-            "id": "json_arrays_q9",
+            "id": "json_arrays-q-76y4s7",
             "type": "mcq",
             "prompt": "`FROM products p, json_each(p.details, '$.tags') AS t` joins each product to…",
             "choices": [
@@ -3617,7 +3617,7 @@
             "explanation": "json_each reads from the current product row."
           },
           {
-            "id": "json_arrays_q10",
+            "id": "json_arrays-q-1axhlgg",
             "type": "mcq",
             "prompt": "Once tags are rows, can you GROUP BY them?",
             "choices": [
@@ -3736,11 +3736,11 @@
       },
       "challenges": [
         {
-          "id": "query_plans_ch1",
+          "id": "query_plans-search-by-product",
           "title": "Easy: Search by product",
           "promptMarkdown": "`SELECT * FROM sales WHERE product_id = 5` scans the whole table. Create an index called `sales_product` on `sales (product_id)` so it searches instead. (Run EXPLAIN QUERY PLAN to see the difference.)",
           "starterCode": "",
-          "hint": "`CREATE INDEX sales_product ON sales (product_id);`",
+          "hint": "`CREATE INDEX index_name ON table (column);`",
           "solution": "CREATE INDEX sales_product ON sales (product_id);",
           "validation": {
             "mode": "sql_tests",
@@ -3760,11 +3760,11 @@
           }
         },
         {
-          "id": "query_plans_ch2",
+          "id": "query_plans-search-by-name",
           "title": "Easy: Search by name",
           "promptMarkdown": "Create an index called `products_name` so that `SELECT price FROM products WHERE name = 'Hosta'` searches instead of scanning.",
           "starterCode": "",
-          "hint": "`CREATE INDEX products_name ON products (name);`",
+          "hint": "The query searches by `name`, so that's the column to index. Use the index name the challenge gives.",
           "solution": "CREATE INDEX products_name ON products (name);",
           "validation": {
             "mode": "sql_tests",
@@ -3784,7 +3784,7 @@
           }
         },
         {
-          "id": "query_plans_ch3",
+          "id": "query_plans-two-columns",
           "title": "Medium: Two columns",
           "promptMarkdown": "Create one index called `sales_staff_day` that lets `SELECT * FROM sales WHERE staff_id = 4 AND sold_on >= '2026-10-07'` search on both columns: staff_id first, then sold_on.",
           "starterCode": "",
@@ -3808,7 +3808,7 @@
           }
         },
         {
-          "id": "query_plans_ch4",
+          "id": "query_plans-covering-index",
           "title": "Medium: Covering index",
           "promptMarkdown": "Create an index called `sales_day_quantity` on `sales (sold_on, quantity)`, so that `SELECT sold_on, SUM(quantity) FROM sales GROUP BY sold_on` is answered from the index alone (a covering index).",
           "starterCode": "",
@@ -3832,11 +3832,11 @@
           }
         },
         {
-          "id": "query_plans_ch5",
+          "id": "query_plans-already-in-order",
           "title": "Medium: Already in order",
           "promptMarkdown": "`SELECT name, price FROM products WHERE price IS NOT NULL ORDER BY price` sorts with a temporary B-tree. Create an index called `products_price` on price, so the rows come out of the index already in order.",
           "starterCode": "",
-          "hint": "`CREATE INDEX products_price ON products (price);`, then the plan has no USE TEMP B-TREE.",
+          "hint": "Index the column the query sorts by. Afterwards the plan has no USE TEMP B-TREE.",
           "solution": "CREATE INDEX products_price ON products (price);",
           "validation": {
             "mode": "sql_tests",
@@ -3856,11 +3856,11 @@
           }
         },
         {
-          "id": "query_plans_ch6",
+          "id": "query_plans-an-index-on-json",
           "title": "Hard: An index on JSON",
           "promptMarkdown": "Create an index called `products_colour` on the expression `json_extract(details, '$.colour')`, so that `SELECT name FROM products WHERE json_extract(details, '$.colour') = 'green'` searches.",
           "starterCode": "",
-          "hint": "An index can be on an expression: `CREATE INDEX products_colour ON products (json_extract(details, '$.colour'));`. The query must use the same expression.",
+          "hint": "An index can be on an expression: put the whole `json_extract(…)` call in the brackets where a column would go. The query must use the same expression.",
           "solution": "CREATE INDEX products_colour ON products (json_extract(details, '$.colour'));",
           "validation": {
             "mode": "sql_tests",
@@ -3880,7 +3880,7 @@
           }
         },
         {
-          "id": "query_plans_ch7",
+          "id": "query_plans-one-index-too-many",
           "title": "Hard: One index too many",
           "promptMarkdown": "The starter makes two indexes. `sales_product` is not needed: `sales_product_qty` starts with the same column, so it can do the same job. Keep the starter's lines and drop `sales_product`.",
           "starterCode": "CREATE INDEX sales_product ON sales (product_id);\nCREATE INDEX sales_product_qty ON sales (product_id, quantity);\n",
@@ -3904,7 +3904,7 @@
           }
         },
         {
-          "id": "query_plans_ch8",
+          "id": "query_plans-a-join-that-searches",
           "title": "Expert: A join that searches",
           "promptMarkdown": "In `SELECT p.name, s.quantity FROM products p JOIN sales s ON s.product_id = p.id WHERE p.name = 'Hosta'`, SQLite reads every row of sales (`SCAN s`) and looks each product up by id. Create just one index, `sales_product` on `sales (product_id)`, so the sales side of the join is a SEARCH.",
           "starterCode": "",
@@ -3928,7 +3928,7 @@
           }
         },
         {
-          "id": "query_plans_ch9",
+          "id": "query_plans-a-partial-index",
           "title": "Expert: A partial index",
           "promptMarkdown": "Self-checkout sales (no staff_id) are checked by day. Create a partial index called `sales_self_checkout` on `sales (sold_on)` that only holds the rows `WHERE staff_id IS NULL`, so that `SELECT * FROM sales WHERE staff_id IS NULL AND sold_on = '2026-10-10'` searches with it.",
           "starterCode": "",
@@ -3956,7 +3956,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "query_plans_q1",
+            "id": "query_plans-q-ktx0i8",
             "type": "mcq",
             "prompt": "What does EXPLAIN QUERY PLAN show?",
             "choices": [
@@ -3981,7 +3981,7 @@
             "explanation": "Put it in front of any query."
           },
           {
-            "id": "query_plans_q2",
+            "id": "query_plans-q-nvmsod",
             "type": "mcq",
             "prompt": "What does `SCAN sales` mean?",
             "choices": [
@@ -4006,7 +4006,7 @@
             "explanation": "Fine for small tables, slow for big ones."
           },
           {
-            "id": "query_plans_q3",
+            "id": "query_plans-q-1d0so6m",
             "type": "mcq",
             "prompt": "What does `SEARCH sales USING INDEX sales_product (product_id=?)` mean?",
             "choices": [
@@ -4031,7 +4031,7 @@
             "explanation": "That is what an index is for."
           },
           {
-            "id": "query_plans_q4",
+            "id": "query_plans-q-uk2rer",
             "type": "mcq",
             "prompt": "What does USING COVERING INDEX mean?",
             "choices": [
@@ -4056,7 +4056,7 @@
             "explanation": "The fastest kind of index use."
           },
           {
-            "id": "query_plans_q5",
+            "id": "query_plans-q-e1xpav",
             "type": "shortText",
             "prompt": "Which three words go in front of a query to see its plan? (three words)",
             "validation": {
@@ -4066,7 +4066,7 @@
             "explanation": "Each row of the result is one step; read the detail column."
           },
           {
-            "id": "query_plans_q6",
+            "id": "query_plans-q-kqq6p",
             "type": "mcq",
             "prompt": "Why can't `WHERE date(sold_on) = '2026-10-07'` use an index on sold_on?",
             "choices": [
@@ -4091,7 +4091,7 @@
             "explanation": "Compare the column itself: `sold_on = …`."
           },
           {
-            "id": "query_plans_q7",
+            "id": "query_plans-q-r50l8i",
             "type": "mcq",
             "prompt": "What does USE TEMP B-TREE FOR ORDER BY mean?",
             "choices": [
@@ -4116,7 +4116,7 @@
             "explanation": "An index in the right order can avoid it."
           },
           {
-            "id": "query_plans_q8",
+            "id": "query_plans-q-1v5hamq",
             "type": "mcq",
             "prompt": "Which index can serve `WHERE staff_id = 4 AND sold_on >= …`?",
             "choices": [
@@ -4141,7 +4141,7 @@
             "explanation": "Equality column first, then the range."
           },
           {
-            "id": "query_plans_q9",
+            "id": "query_plans-q-kdo8nh",
             "type": "mcq",
             "prompt": "An index on (product_id, quantity) exists. Is a separate index on (product_id) needed?",
             "choices": [
@@ -4166,7 +4166,7 @@
             "explanation": "Extra indexes slow down inserts and updates."
           },
           {
-            "id": "query_plans_q10",
+            "id": "query_plans-q-h7o1hz",
             "type": "mcq",
             "prompt": "What does `CREATE INDEX … ON sales (sold_on) WHERE staff_id IS NULL` make?",
             "choices": [
@@ -4280,7 +4280,7 @@
       },
       "challenges": [
         {
-          "id": "null_traps_ch1",
+          "id": "null_traps-never-sold",
           "title": "Easy: Never sold",
           "promptMarkdown": "This should list the staff who have never made a sale, but it returns nothing. Fix it. Sort by name.",
           "starterCode": "SELECT name FROM staff\nWHERE id NOT IN (SELECT staff_id FROM sales)\nORDER BY name;",
@@ -4292,7 +4292,7 @@
           }
         },
         {
-          "id": "null_traps_ch2",
+          "id": "null_traps-count-it-right",
           "title": "Easy: Count it right",
           "promptMarkdown": "Show one row: the number of sales (`all_sales`), the sales served by staff (`staffed`) and the self-checkout sales (`self_checkout`).",
           "starterCode": "",
@@ -4304,7 +4304,7 @@
           }
         },
         {
-          "id": "null_traps_ch3",
+          "id": "null_traps-price-on-request",
           "title": "Easy: Price on request",
           "promptMarkdown": "This should list the products with no price, but returns nothing. Fix it. Sort by name.",
           "starterCode": "SELECT name FROM products\nWHERE price = NULL\nORDER BY name;",
@@ -4316,7 +4316,7 @@
           }
         },
         {
-          "id": "null_traps_ch4",
+          "id": "null_traps-keep-every-product",
           "title": "Medium: Keep every product",
           "promptMarkdown": "This should show every product with the items sold from 2026-10-08 on (`items`, 0 if none), but products with no such sales vanish. Fix it. Sort by name.",
           "starterCode": "SELECT p.name, COALESCE(SUM(s.quantity), 0) AS items\nFROM products p\nLEFT JOIN sales s ON s.product_id = p.id\nWHERE s.sold_on >= '2026-10-08'\nGROUP BY p.id, p.name\nORDER BY p.name;",
@@ -4328,7 +4328,7 @@
           }
         },
         {
-          "id": "null_traps_ch5",
+          "id": "null_traps-items-per-sale",
           "title": "Medium: Items per sale",
           "promptMarkdown": "This should show each sold product's average items per sale (`per_sale`, 2 decimals), but every answer is a whole number. Fix it. Sort by name.",
           "starterCode": "SELECT p.name, ROUND(SUM(s.quantity) / COUNT(*), 2) AS per_sale\nFROM sales s\nJOIN products p ON p.id = s.product_id\nGROUP BY p.id, p.name\nORDER BY p.name;",
@@ -4340,7 +4340,7 @@
           }
         },
         {
-          "id": "null_traps_ch6",
+          "id": "null_traps-names-with-managers",
           "title": "Medium: Names with managers",
           "promptMarkdown": "This should label everyone as `Name (manager's name)`, but the person at the top gets an empty label. Fix it so they get `Name (no manager)`. Sort by name.",
           "starterCode": "SELECT s.name, s.name || ' (' || m.name || ')' AS label\nFROM staff s\nLEFT JOIN staff m ON m.id = s.manager_id\nORDER BY s.name;",
@@ -4352,7 +4352,7 @@
           }
         },
         {
-          "id": "null_traps_ch7",
+          "id": "null_traps-two-averages",
           "title": "Hard: Two averages",
           "promptMarkdown": "Show one row with the average Q1 target of those who have one (`avg_set`) and the average if empty Q1 targets count as 0 (`avg_all`), both 1 decimal.",
           "starterCode": "",
@@ -4364,7 +4364,7 @@
           }
         },
         {
-          "id": "null_traps_ch8",
+          "id": "null_traps-missing-prices-last",
           "title": "Hard: Missing prices last",
           "promptMarkdown": "Show every product's `name` and `price`, cheapest first, but with products without a price at the end. Then by name.",
           "starterCode": "",
@@ -4376,7 +4376,7 @@
           }
         },
         {
-          "id": "null_traps_ch9",
+          "id": "null_traps-takings-for-everyone",
           "title": "Expert: Takings for everyone",
           "promptMarkdown": "Show every staff member's `name` and `takings` (quantity times price of their sales, 2 decimals), with 0 for anyone with none. Most first, then by name.",
           "starterCode": "",
@@ -4388,7 +4388,7 @@
           }
         },
         {
-          "id": "null_traps_ch10",
+          "id": "null_traps-tills-open",
           "title": "Expert: Tills open",
           "promptMarkdown": "For each `sold_on`, show how many different staff sold something (`staff`) and how many tills were used (`tills`), counting the self-checkout as one till and each staff member as one. In date order.",
           "starterCode": "",
@@ -4404,7 +4404,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "null_traps_q1",
+            "id": "null_traps-q-e2abni",
             "type": "mcq",
             "prompt": "Why does `id NOT IN (SELECT staff_id FROM sales)` return nothing when staff_id has a NULL?",
             "choices": [
@@ -4429,7 +4429,7 @@
             "explanation": "Use NOT EXISTS instead."
           },
           {
-            "id": "null_traps_q2",
+            "id": "null_traps-q-xtztkp",
             "type": "mcq",
             "prompt": "What does `WHERE price = NULL` return?",
             "choices": [
@@ -4454,7 +4454,7 @@
             "explanation": "Use IS NULL."
           },
           {
-            "id": "null_traps_q3",
+            "id": "null_traps-q-1hvndo",
             "type": "mcq",
             "prompt": "`COUNT(staff_id)` against `COUNT(*)`:",
             "choices": [
@@ -4479,7 +4479,7 @@
             "explanation": "COUNT(*) counts rows."
           },
           {
-            "id": "null_traps_q4",
+            "id": "null_traps-q-1bdfkh8",
             "type": "mcq",
             "prompt": "What is `'Hi ' || NULL`?",
             "choices": [
@@ -4504,7 +4504,7 @@
             "explanation": "Anything combined with NULL is NULL."
           },
           {
-            "id": "null_traps_q5",
+            "id": "null_traps-q-u0xtdv",
             "type": "shortText",
             "prompt": "In SQLite, what is `7 / 2`?",
             "validation": {
@@ -4514,7 +4514,7 @@
             "explanation": "Whole numbers give a whole number. `7 / 2.0` is 3.5."
           },
           {
-            "id": "null_traps_q6",
+            "id": "null_traps-q-zcoanz",
             "type": "mcq",
             "prompt": "Why does `WHERE s.sold_on >= …` after a LEFT JOIN drop unmatched rows?",
             "choices": [
@@ -4539,7 +4539,7 @@
             "explanation": "Put conditions on the right-hand table in ON."
           },
           {
-            "id": "null_traps_q7",
+            "id": "null_traps-q-1rwupfv",
             "type": "mcq",
             "prompt": "What is the SUM of no rows?",
             "choices": [
@@ -4564,7 +4564,7 @@
             "explanation": "COALESCE it to 0 when you need a number."
           },
           {
-            "id": "null_traps_q8",
+            "id": "null_traps-q-1h8aggb",
             "type": "mcq",
             "prompt": "Where do NULLs go with ORDER BY price in SQLite?",
             "choices": [
@@ -4589,7 +4589,7 @@
             "explanation": "Sort by `price IS NULL` first to move them last."
           },
           {
-            "id": "null_traps_q9",
+            "id": "null_traps-q-10apulx",
             "type": "mcq",
             "prompt": "Which average counts empty targets as 0?",
             "choices": [
@@ -4614,7 +4614,7 @@
             "explanation": "AVG on its own skips NULLs."
           },
           {
-            "id": "null_traps_q10",
+            "id": "null_traps-q-1g2jikf",
             "type": "mcq",
             "prompt": "Does COUNT(DISTINCT staff_id) count NULL as a value?",
             "choices": [
@@ -4719,7 +4719,7 @@
       },
       "challenges": [
         {
-          "id": "proj_staff_directory_ch1",
+          "id": "proj_staff_directory-directory-view",
           "title": "Easy: Directory view",
           "promptMarkdown": "Create a view `directory` with each staff member's `name`, `role` and their manager's name (`manager`; `none` for the person at the top).",
           "starterCode": "",
@@ -4743,7 +4743,7 @@
           }
         },
         {
-          "id": "proj_staff_directory_ch2",
+          "id": "proj_staff_directory-years-of-service",
           "title": "Easy: Years of service",
           "promptMarkdown": "Show each staff member's `name`, `hired` date and whole years of service up to today (`years`). Longest first, then by name.",
           "starterCode": "",
@@ -4755,7 +4755,7 @@
           }
         },
         {
-          "id": "proj_staff_directory_ch3",
+          "id": "proj_staff_directory-levels",
           "title": "Medium: Levels",
           "promptMarkdown": "Show each staff member's `name`, `role` and `level` in the tree (1 at the top). Sort by level, then name.",
           "starterCode": "",
@@ -4767,7 +4767,7 @@
           }
         },
         {
-          "id": "proj_staff_directory_ch4",
+          "id": "proj_staff_directory-direct-reports",
           "title": "Medium: Direct reports",
           "promptMarkdown": "For each staff member who manages someone, show `name` and how many people report straight to them (`direct_reports`). Most first, then by name.",
           "starterCode": "",
@@ -4779,7 +4779,7 @@
           }
         },
         {
-          "id": "proj_staff_directory_ch5",
+          "id": "proj_staff_directory-whole-teams",
           "title": "Hard: Whole teams",
           "promptMarkdown": "For each staff member who manages someone, show `name` and how many people are in their whole team below them (`team_size`). Most first, then by name.",
           "starterCode": "",
@@ -4791,7 +4791,7 @@
           }
         },
         {
-          "id": "proj_staff_directory_ch6",
+          "id": "proj_staff_directory-org-chart-view",
           "title": "Hard: Org chart view",
           "promptMarkdown": "Create a view `org_chart` with each staff member's `name`, `level` (1 at the top) and `path` (names from the top down joined with `/`). A view can hold a recursive WITH.",
           "starterCode": "",
@@ -4819,7 +4819,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_staff_directory_q1",
+            "id": "proj_staff_directory-q-fbjcqg",
             "type": "mcq",
             "prompt": "Why does a view suit the directory?",
             "choices": [
@@ -4844,7 +4844,7 @@
             "explanation": "Nobody needs to rebuild it when someone joins."
           },
           {
-            "id": "proj_staff_directory_q2",
+            "id": "proj_staff_directory-q-5e62sj",
             "type": "mcq",
             "prompt": "Why LEFT JOIN for the manager's name?",
             "choices": [
@@ -4869,7 +4869,7 @@
             "explanation": "An inner join would drop the top of the tree."
           },
           {
-            "id": "proj_staff_directory_q3",
+            "id": "proj_staff_directory-q-5qn1ku",
             "type": "mcq",
             "prompt": "What does `julianday('2026-10-24') - julianday(hired)` give?",
             "choices": [
@@ -4894,7 +4894,7 @@
             "explanation": "Divide by 365.25 for years."
           },
           {
-            "id": "proj_staff_directory_q4",
+            "id": "proj_staff_directory-q-bpk4mn",
             "type": "mcq",
             "prompt": "How does the levels query find the second level?",
             "choices": [
@@ -4919,7 +4919,7 @@
             "explanation": "Each step goes one level down."
           },
           {
-            "id": "proj_staff_directory_q5",
+            "id": "proj_staff_directory-q-1w0bv67",
             "type": "shortText",
             "prompt": "Which keyword lets a CTE refer to itself?",
             "validation": {
@@ -4929,7 +4929,7 @@
             "explanation": "`WITH RECURSIVE chart(…) AS (…)`."
           },
           {
-            "id": "proj_staff_directory_q6",
+            "id": "proj_staff_directory-q-2dtcgp",
             "type": "mcq",
             "prompt": "Can a view contain a recursive WITH?",
             "choices": [
@@ -5034,7 +5034,7 @@
       },
       "challenges": [
         {
-          "id": "proj_product_catalogue_ch1",
+          "id": "proj_product_catalogue-catalogue",
           "title": "Easy: Catalogue",
           "promptMarkdown": "Show every product's `name`, its category name (`category`; `none` if it has none), `price` and `colour` from the details. Sort by name.",
           "starterCode": "",
@@ -5046,7 +5046,7 @@
           }
         },
         {
-          "id": "proj_product_catalogue_ch2",
+          "id": "proj_product_catalogue-tag-index",
           "title": "Medium: Tag index",
           "promptMarkdown": "For each tag, show `tag`, the number of products with it (`products`) and the cheapest price among them (`from_price`). Sort by tag.",
           "starterCode": "",
@@ -5058,7 +5058,7 @@
           }
         },
         {
-          "id": "proj_product_catalogue_ch3",
+          "id": "proj_product_catalogue-care-table",
           "title": "Medium: Care table",
           "promptMarkdown": "For each light need (`light`), show how many products need `low`, `medium` and `high` water, as columns `low`, `medium` and `high`. Only products with care details. Sort by light.",
           "starterCode": "",
@@ -5070,7 +5070,7 @@
           }
         },
         {
-          "id": "proj_product_catalogue_ch4",
+          "id": "proj_product_catalogue-price-list-as-json",
           "title": "Medium: Price list as JSON",
           "promptMarkdown": "Show one value, `price_list`: a JSON array with an object for each priced product, like `{\"name\":\"Lavender\",\"price\":6.5}`, cheapest first, then by name.",
           "starterCode": "",
@@ -5082,7 +5082,7 @@
           }
         },
         {
-          "id": "proj_product_catalogue_ch5",
+          "id": "proj_product_catalogue-category-paths",
           "title": "Hard: Category paths",
           "promptMarkdown": "Show each category's full `path` (like `Plants > Outdoor plants > Shrubs`) and how many products are in that category itself (`products`, 0 if none). Sort by path.",
           "starterCode": "",
@@ -5094,7 +5094,7 @@
           }
         },
         {
-          "id": "proj_product_catalogue_ch6",
+          "id": "proj_product_catalogue-restock-flags",
           "title": "Hard: Restock flags",
           "promptMarkdown": "Add `\"restock\": true` to the details of every product that sold 4 or more items in all. (Products with no details yet get `{\"restock\":true}`.)",
           "starterCode": "",
@@ -5117,7 +5117,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_product_catalogue_q1",
+            "id": "proj_product_catalogue-q-15yme3f",
             "type": "mcq",
             "prompt": "What does `json_extract(details, '$.colour')` give for a tool?",
             "choices": [
@@ -5142,7 +5142,7 @@
             "explanation": "Missing keys give NULL."
           },
           {
-            "id": "proj_product_catalogue_q2",
+            "id": "proj_product_catalogue-q-170efh",
             "type": "mcq",
             "prompt": "Why does the tag index use json_each?",
             "choices": [
@@ -5167,7 +5167,7 @@
             "explanation": "One row per product and tag."
           },
           {
-            "id": "proj_product_catalogue_q3",
+            "id": "proj_product_catalogue-q-m01e8p",
             "type": "mcq",
             "prompt": "The care table turns water levels into…",
             "choices": [
@@ -5192,7 +5192,7 @@
             "explanation": "A pivot with FILTER."
           },
           {
-            "id": "proj_product_catalogue_q4",
+            "id": "proj_product_catalogue-q-17d1rq1",
             "type": "mcq",
             "prompt": "Why sort in a subquery before json_group_array?",
             "choices": [
@@ -5217,7 +5217,7 @@
             "explanation": "Sorting first sets the order."
           },
           {
-            "id": "proj_product_catalogue_q5",
+            "id": "proj_product_catalogue-q-17fdqxq",
             "type": "shortText",
             "prompt": "What does `json('true')` turn the text 'true' into? (one word)",
             "validation": {
@@ -5227,7 +5227,7 @@
             "explanation": "A JSON true, rather than the text \"true\"."
           },
           {
-            "id": "proj_product_catalogue_q6",
+            "id": "proj_product_catalogue-q-8c43gh",
             "type": "mcq",
             "prompt": "Why `COALESCE(details, '{}')` in Restock flags?",
             "choices": [
@@ -5332,7 +5332,7 @@
       },
       "challenges": [
         {
-          "id": "proj_sales_calendar_ch1",
+          "id": "proj_sales_calendar-every-day",
           "title": "Medium: Every day",
           "promptMarkdown": "Show every `day` with its number of `sales` and `items` (0 on days with none). In date order.",
           "starterCode": "",
@@ -5344,7 +5344,7 @@
           }
         },
         {
-          "id": "proj_sales_calendar_ch2",
+          "id": "proj_sales_calendar-daily-report-view",
           "title": "Hard: Daily report view",
           "promptMarkdown": "Create a view `daily_report` with every `day`, its `takings` (2 decimals, 0 if none) and the running takings so far (`takings_so_far`, 2 decimals).",
           "starterCode": "",
@@ -5368,7 +5368,7 @@
           }
         },
         {
-          "id": "proj_sales_calendar_ch3",
+          "id": "proj_sales_calendar-weekend-table",
           "title": "Hard: Weekend table",
           "promptMarkdown": "Show every staff member's `name`, the items they sold on weekdays (`weekday_items`) and at weekends (`weekend_items`), 0 where none. Most items in all first, then by name.",
           "starterCode": "",
@@ -5380,7 +5380,7 @@
           }
         },
         {
-          "id": "proj_sales_calendar_ch4",
+          "id": "proj_sales_calendar-self-checkout-share",
           "title": "Hard: Self-checkout share",
           "promptMarkdown": "Show every `day`, its `items`, the self-checkout items (`self_items`) and their share (`self_pct`, %, 1 decimal; empty on days with no items). In date order.",
           "starterCode": "",
@@ -5392,11 +5392,11 @@
           }
         },
         {
-          "id": "proj_sales_calendar_ch5",
+          "id": "proj_sales_calendar-keep-the-report-fast",
           "title": "Hard: Keep the report fast",
           "promptMarkdown": "The report groups sales by day and adds up quantities. Create an index called `sales_day_quantity` on `sales (sold_on, quantity)` so that `SELECT sold_on, SUM(quantity) FROM sales GROUP BY sold_on` is answered from the index alone.",
           "starterCode": "",
-          "hint": "A covering index: `CREATE INDEX sales_day_quantity ON sales (sold_on, quantity);`",
+          "hint": "A covering index holds every column the query reads, so list both columns in the index, in the order given.",
           "solution": "CREATE INDEX sales_day_quantity ON sales (sold_on, quantity);",
           "validation": {
             "mode": "sql_tests",
@@ -5416,7 +5416,7 @@
           }
         },
         {
-          "id": "proj_sales_calendar_ch6",
+          "id": "proj_sales_calendar-best-day-of-each-week",
           "title": "Hard: Best day of each week",
           "promptMarkdown": "Split the days into weeks of 7 from the first sale (`week` 1, 2, …). For each week, show its best day or days by items: `week`, `day` and `items`. Sort by week, then day.",
           "starterCode": "",
@@ -5432,7 +5432,7 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_sales_calendar_q1",
+            "id": "proj_sales_calendar-q-1jlk6zp",
             "type": "mcq",
             "prompt": "Why does the report start from a calendar CTE?",
             "choices": [
@@ -5457,7 +5457,7 @@
             "explanation": "GROUP BY on sales alone skips quiet days."
           },
           {
-            "id": "proj_sales_calendar_q2",
+            "id": "proj_sales_calendar-q-16761o8",
             "type": "mcq",
             "prompt": "Can a view hold a recursive CTE and a window function?",
             "choices": [
@@ -5482,7 +5482,7 @@
             "explanation": "The view runs it all each time."
           },
           {
-            "id": "proj_sales_calendar_q3",
+            "id": "proj_sales_calendar-q-1ih6swv",
             "type": "mcq",
             "prompt": "Why LEFT JOIN sales to staff in the weekend table?",
             "choices": [
@@ -5507,7 +5507,7 @@
             "explanation": "Rosa has no sales."
           },
           {
-            "id": "proj_sales_calendar_q4",
+            "id": "proj_sales_calendar-q-mbrv70",
             "type": "mcq",
             "prompt": "What does `NULLIF(items, 0)` do in the share?",
             "choices": [
@@ -5532,7 +5532,7 @@
             "explanation": "An empty day has no share to show."
           },
           {
-            "id": "proj_sales_calendar_q5",
+            "id": "proj_sales_calendar-q-2lwmv",
             "type": "shortText",
             "prompt": "What kind of index holds every column a query needs? (one word)",
             "validation": {
@@ -5542,7 +5542,7 @@
             "explanation": "The plan says USING COVERING INDEX."
           },
           {
-            "id": "proj_sales_calendar_q6",
+            "id": "proj_sales_calendar-q-4ih4je",
             "type": "mcq",
             "prompt": "Why RANK and not ROW_NUMBER for the best day of each week?",
             "choices": [

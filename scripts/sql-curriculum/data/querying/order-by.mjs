@@ -69,7 +69,7 @@ export default makeTopic({
     }),
     query('expert', 'Sort by a new name', {
       prompt: 'Show each book\'s `title` and its price in a column called `cost`, cheapest first. Books with the same price go in title order. Use the name `cost` in ORDER BY.',
-      hint: '`SELECT title, price AS cost FROM books ORDER BY cost, title;`',
+      hint: 'ORDER BY can use a name given with `AS`. Add a second column after a comma for ties.',
       solution: 'SELECT title, price AS cost FROM books ORDER BY cost, title;',
     }),
   ],

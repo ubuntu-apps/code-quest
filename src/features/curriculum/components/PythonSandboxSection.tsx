@@ -34,6 +34,7 @@ interface PythonSandboxSectionProps {
   onReset: () => void
   onErrorClear: () => void
   tables?: SqlTable[]
+  setupSql?: string
 }
 
 function errorSummary(error: FriendlySandboxError | null, languageId: SandboxLanguage): string | null {
@@ -56,6 +57,7 @@ export function PythonSandboxSection({
   onReset,
   onErrorClear,
   tables,
+  setupSql,
 }: PythonSandboxSectionProps) {
   const [expanded, setExpanded] = useState(false)
   const [stdin, setStdin] = useState('')
@@ -107,12 +109,13 @@ export function PythonSandboxSection({
           )
         })}
       </div>
-      {languageId === 'sql' && tables ? <SqlTablesNote tables={tables} /> : null}
+      {languageId === 'sql' && tables ? <SqlTablesNote tables={tables} setupSql={setupSql} /> : null}
       <CodeEditor
         id={`${languageId}-sandbox-input`}
         labelId={`${languageId}-sandbox-label`}
         language={languageId === 'r' ? 'plain' : languageId}
         suggestNames={suggestNames}
+        sqlTables={languageId === 'sql' ? tables : undefined}
         className="cq-sandbox-input"
         rows={6}
         value={code}

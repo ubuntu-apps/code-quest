@@ -58,7 +58,7 @@ export default makeTopic({
     }),
     query('hard', 'Cheap names in one array', {
       prompt: "Show one value, `names`: a JSON array of the names of products under 10, cheapest first (then by name).",
-      hint: '`SELECT json_group_array(name) AS names FROM (SELECT name FROM products WHERE price < 10 ORDER BY price, name)`.',
+      hint: '`json_group_array(name)` collects names into one array. To control their order, collect them from a subquery that already sorts them.',
       solution: 'SELECT json_group_array(name) AS names\nFROM (SELECT name FROM products WHERE price < 10 ORDER BY price, name);',
     }),
     query('hard', 'A price object per category', {

@@ -26,19 +26,19 @@ export default makeTopic({
   challenges: [
     query('easy', 'Find guests fast', {
       prompt: 'Create an index on the `guest_email` column of `ticket_sheet`. Name it as you like.',
-      hint: '`CREATE INDEX sheet_email ON ticket_sheet (guest_email);`',
+      hint: '`CREATE INDEX name ON table (column);`',
       solution: 'CREATE INDEX sheet_email ON ticket_sheet (guest_email);',
       checks: [indexes('ticket_sheet')],
     }),
     query('easy', 'Not needed', {
       prompt: 'Remove the index `sheet_room`.',
-      hint: '`DROP INDEX sheet_room;`',
+      hint: '`DROP INDEX` followed by the index name.',
       solution: 'DROP INDEX sheet_room;',
       checks: [indexes('ticket_sheet')],
     }),
     query('medium', 'Two columns', {
       prompt: 'Create one index on `ticket_sheet` covering `event_title` and then `seat`.',
-      hint: '`CREATE INDEX sheet_event_seat ON ticket_sheet (event_title, seat);`',
+      hint: 'One index can list several columns in its brackets, in order, with a comma between them.',
       solution: 'CREATE INDEX sheet_event_seat ON ticket_sheet (event_title, seat);',
       checks: [indexes('ticket_sheet')],
     }),

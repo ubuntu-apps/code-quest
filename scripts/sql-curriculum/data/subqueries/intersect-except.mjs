@@ -26,22 +26,22 @@ export default makeTopic({
   challenges: [
     query('easy', 'Shared countries', {
       prompt: 'Show each `country` that has both an artist and a listener.',
-      hint: '`SELECT country FROM artists INTERSECT SELECT country FROM listeners;`',
+      hint: '`INTERSECT` keeps the values both SELECTs return.',
       solution: 'SELECT country FROM artists\nINTERSECT\nSELECT country FROM listeners;',
     }),
     query('easy', 'Listener-only countries', {
       prompt: 'Show each `country` that has listeners but no artists.',
-      hint: '`SELECT country FROM listeners EXCEPT SELECT country FROM artists;`',
+      hint: "`EXCEPT` keeps what the first SELECT returns and the second doesn't.",
       solution: 'SELECT country FROM listeners\nEXCEPT\nSELECT country FROM artists;',
     }),
     query('easy', 'Unplayed track ids', {
       prompt: 'Show the `id` of every track that has never been played, using `EXCEPT`.',
-      hint: '`SELECT id FROM tracks EXCEPT SELECT track_id FROM plays;`',
+      hint: 'Every track id, `EXCEPT` the track ids in `plays`.',
       solution: 'SELECT id FROM tracks\nEXCEPT\nSELECT track_id FROM plays;',
     }),
     query('medium', 'Follow and play', {
       prompt: 'Show the `listener_id` of every listener who both follows someone and has played something.',
-      hint: '`SELECT listener_id FROM follows INTERSECT SELECT listener_id FROM plays;`',
+      hint: 'The listener ids in `follows`, `INTERSECT` the listener ids in `plays`.',
       solution: 'SELECT listener_id FROM follows\nINTERSECT\nSELECT listener_id FROM plays;',
     }),
     query('medium', 'Followed, not played', {

@@ -27,7 +27,7 @@ export default makeTopic({
   challenges: [
     query('easy', "Ana's id", {
       prompt: "Show the `id` of the customer called `Ana Silva`.",
-      hint: "`SELECT id FROM customers WHERE name = 'Ana Silva';`",
+      hint: 'Filter `customers` with WHERE on the `name` column. Text goes in single quotes.',
       solution: "SELECT id FROM customers WHERE name = 'Ana Silva';",
     }),
     query('easy', 'Orders of customer 1', {
@@ -37,7 +37,7 @@ export default makeTopic({
     }),
     query('easy', 'Lines of order 5', {
       prompt: 'Show the `product_id` and `quantity` of each line of order 5 (from `order_items`).',
-      hint: '`SELECT product_id, quantity FROM order_items WHERE order_id = 5;`',
+      hint: 'Each row of `order_items` has an `order_id`. Keep the rows where it is 5.',
       solution: 'SELECT product_id, quantity FROM order_items WHERE order_id = 5;',
     }),
     query('medium', "Tom's team", {
@@ -62,7 +62,7 @@ export default makeTopic({
     }),
     query('expert', 'Customers who ordered', {
       prompt: 'Show each `customer_id` that appears in `orders`, once each, in order.',
-      hint: '`SELECT DISTINCT customer_id FROM orders ORDER BY customer_id;`',
+      hint: '`DISTINCT` shows each value once, and ORDER BY puts them in order.',
       solution: 'SELECT DISTINCT customer_id FROM orders ORDER BY customer_id;',
     }),
     query('expert', 'Busy orders', {

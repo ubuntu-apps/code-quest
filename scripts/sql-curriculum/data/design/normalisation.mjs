@@ -31,7 +31,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'How many guests?', {
       prompt: 'Count the different guests in `ticket_sheet` (by email), in a column called `guests`.',
-      hint: '`SELECT COUNT(DISTINCT guest_email) AS guests FROM ticket_sheet;`',
+      hint: '`COUNT(DISTINCT column)` counts the different values.',
       solution: 'SELECT COUNT(DISTINCT guest_email) AS guests FROM ticket_sheet;',
     }),
     query('easy', 'Each event once', {
@@ -53,7 +53,7 @@ export default makeTopic({
     }),
     query('medium', 'Changes in many places', {
       prompt: "Jazz Night moves to `2026-11-07`. In the sheet that means changing every Jazz Night row. Do it with one UPDATE.",
-      hint: "`UPDATE ticket_sheet SET event_date = '2026-11-07' WHERE event_title = 'Jazz Night';`",
+      hint: 'One UPDATE whose WHERE matches every Jazz Night row.',
       solution: "UPDATE ticket_sheet\nSET event_date = '2026-11-07'\nWHERE event_title = 'Jazz Night';",
       checks: [rows('ticket_sheet', 'guest_email, event_title')],
     }),

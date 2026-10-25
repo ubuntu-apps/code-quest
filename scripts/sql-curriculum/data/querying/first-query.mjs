@@ -36,7 +36,7 @@ export default makeTopic({
     }),
     query('easy', 'Just the titles', {
       prompt: 'Show only the `title` column of the `books` table.',
-      hint: 'Put the column name where the `*` would go: `SELECT title FROM books;`',
+      hint: 'Put the column name where the `*` would go.',
       solution: 'SELECT title FROM books;',
     }),
     query('medium', 'Fix the typo', {
@@ -64,7 +64,7 @@ export default makeTopic({
     }),
     query('expert', 'Every species', {
       prompt: 'Show the `species` of every pet (one row per pet, so some species appear more than once).',
-      hint: '`SELECT species FROM pets;` A later lesson shows how to list each species once.',
+      hint: 'Name the `species` column instead of `*`. A later lesson shows how to list each species once.',
       solution: 'SELECT species FROM pets;',
     }),
     query('expert', 'Read the error', {

@@ -30,7 +30,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Stock value', {
       prompt: "Show each product's `name` and its price times its stock, in a column called `stock_value`.",
-      hint: '`SELECT name, price * stock AS stock_value FROM products;`',
+      hint: 'Multiply with `*` between the two columns, and name the result with `AS`.',
       solution: 'SELECT name, price * stock AS stock_value FROM products;',
     }),
     query('easy', 'Next year', {

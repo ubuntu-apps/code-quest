@@ -30,7 +30,7 @@ export default makeTopic({
     }),
     query('easy', 'Shelve the arrivals', {
       prompt: 'Copy every row of `arrivals` into `books`, with all copies available.',
-      hint: '`INSERT INTO books (title, author, copies, available) SELECT title, author, copies, copies FROM arrivals;`',
+      hint: '`INSERT INTO books (…) SELECT … FROM arrivals;` adds every row the SELECT returns. All copies available means `available` gets the same value as `copies`.',
       solution: 'INSERT INTO books (title, author, copies, available)\nSELECT title, author, copies, copies\nFROM arrivals;',
       checks: [AFTER.books],
     }),
@@ -42,13 +42,13 @@ export default makeTopic({
     }),
     query('medium', 'Overdue fines', {
       prompt: "Give every member with an overdue loan (not returned, due before `2026-10-24`) a fine of `1.0`, one row per member. None of them has a fine yet.",
-      hint: "`INSERT INTO fines (member_id, amount) SELECT DISTINCT member_id, 1.0 FROM loans WHERE returned IS NULL AND due < '2026-10-24';`",
+      hint: 'Use `INSERT INTO … SELECT`. Select each overdue `member_id` once (DISTINCT), with `1.0` as a fixed value for the amount.',
       solution: "INSERT INTO fines (member_id, amount)\nSELECT DISTINCT member_id, 1.0\nFROM loans\nWHERE returned IS NULL AND due < '2026-10-24';",
       checks: [AFTER.fines],
     }),
     query('medium', 'Borrow the whole author', {
       prompt: "Member 7 borrows every book by `S. Laine` today. Add one loan per book, borrowed `2026-10-24` and due `2026-11-07`.",
-      hint: "`INSERT INTO loans (member_id, book_id, borrowed, due) SELECT 7, id, '2026-10-24', '2026-11-07' FROM books WHERE author = 'S. Laine';`",
+      hint: '`INSERT INTO loans (…) SELECT …` with fixed values for the member and the dates, and `id` from the books by that author.',
       solution: "INSERT INTO loans (member_id, book_id, borrowed, due)\nSELECT 7, id, '2026-10-24', '2026-11-07'\nFROM books\nWHERE author = 'S. Laine';",
       checks: [AFTER.loans],
     }),

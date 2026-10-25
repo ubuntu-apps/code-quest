@@ -27,7 +27,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'All names', {
       prompt: 'Show one list of the names of all artists and all listeners, in a column called `name`.',
-      hint: '`SELECT name FROM artists UNION SELECT name FROM listeners;`',
+      hint: 'Two SELECTs of one column each, joined with `UNION`.',
       solution: 'SELECT name FROM artists\nUNION\nSELECT name FROM listeners;',
     }),
     query('easy', 'Every country', {
@@ -37,12 +37,12 @@ export default makeTopic({
     }),
     query('easy', 'Who is who', {
       prompt: "Show every artist and listener with a `kind` column (`artist` or `listener`) and their `name`. Sort by kind, then name.",
-      hint: "`SELECT 'artist' AS kind, name FROM artists UNION ALL SELECT 'listener', name FROM listeners ORDER BY kind, name;`",
+      hint: "Each SELECT adds a fixed text, such as `'artist' AS kind`. Join them with `UNION ALL` and put one ORDER BY at the very end.",
       solution: "SELECT 'artist' AS kind, name FROM artists\nUNION ALL\nSELECT 'listener', name FROM listeners\nORDER BY kind, name;",
     }),
     query('medium', 'Short and long', {
       prompt: "Make one list of the tracks under 200 seconds, labelled `short`, and the tracks over 400 seconds, labelled `long`: `title` and `length`. Sort by title.",
-      hint: "`SELECT title, 'short' AS length FROM tracks WHERE duration_s < 200 UNION ALL SELECT title, 'long' FROM tracks WHERE duration_s > 400 ORDER BY title`.",
+      hint: 'Two SELECTs on `tracks`, each with its own WHERE and a fixed label, joined with `UNION ALL`. One ORDER BY goes at the end.',
       solution: "SELECT title, 'short' AS length FROM tracks WHERE duration_s < 200\nUNION ALL\nSELECT title, 'long' FROM tracks WHERE duration_s > 400\nORDER BY title;",
     }),
     query('medium', 'Campaign list', {
@@ -73,7 +73,7 @@ export default makeTopic({
     }),
     query('expert', 'Who to email', {
       prompt: "List the listeners to email: those with no plays (`reason` = `no plays`) and those who joined on or after 2026-08-25 (`reason` = `new`). A listener in both appears twice. Show `name` and `reason`, sorted by name, then reason.",
-      hint: "`SELECT name, 'no plays' AS reason FROM listeners WHERE id NOT IN (SELECT listener_id FROM plays) UNION ALL SELECT name, 'new' FROM listeners WHERE joined >= '2026-08-25' ORDER BY name, reason`.",
+      hint: 'Two SELECTs on `listeners`, each with its own reason as a fixed text. The first uses `NOT IN (SELECT listener_id FROM plays)`. Join them with `UNION ALL` and sort at the end.',
       solution: "SELECT name, 'no plays' AS reason FROM listeners\nWHERE id NOT IN (SELECT listener_id FROM plays)\nUNION ALL\nSELECT name, 'new' FROM listeners\nWHERE joined >= '2026-08-25'\nORDER BY name, reason;",
     }),
   ],

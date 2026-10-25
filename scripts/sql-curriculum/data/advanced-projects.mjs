@@ -173,7 +173,7 @@ const salesCalendar = makeProject('hard', {
     }),
     query('hard', 'Keep the report fast', {
       prompt: "The report groups sales by day and adds up quantities. Create an index called `sales_day_quantity` on `sales (sold_on, quantity)` so that `SELECT sold_on, SUM(quantity) FROM sales GROUP BY sold_on` is answered from the index alone.",
-      hint: 'A covering index: `CREATE INDEX sales_day_quantity ON sales (sold_on, quantity);`',
+      hint: 'A covering index holds every column the query reads, so list both columns in the index, in the order given.',
       solution: 'CREATE INDEX sales_day_quantity ON sales (sold_on, quantity);',
       checks: [indexes('sales'), plan('The report uses the covering index', 'SELECT sold_on, SUM(quantity) FROM sales GROUP BY sold_on')],
     }),

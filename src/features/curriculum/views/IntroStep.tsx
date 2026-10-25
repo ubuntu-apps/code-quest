@@ -137,6 +137,7 @@ export function IntroStep({
         <CodeSandboxSection
           languageId={languageId}
           tables={level.database?.tables}
+          setupSql={level.database?.setupSql}
           snippets={level.sandboxSnippets}
           code={sandboxCode}
           onCodeChange={onSandboxCodeChange}

@@ -30,7 +30,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Only dogs', {
       prompt: 'Show every column for the pets whose `species` is `dog`.',
-      hint: "`SELECT * FROM pets WHERE species = 'dog';` (text in single quotes).",
+      hint: '`WHERE species = …` with the text in single quotes.',
       solution: "SELECT * FROM pets WHERE species = 'dog';",
     }),
     query('easy', 'Old books', {

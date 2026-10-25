@@ -29,7 +29,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Sales per store', {
       prompt: 'Show each `store` and its number of sales, in a column called `sales`.',
-      hint: '`SELECT store, COUNT(*) AS sales FROM sales GROUP BY store;`',
+      hint: '`COUNT(*)` with `GROUP BY store` counts the rows of each store.',
       solution: 'SELECT store, COUNT(*) AS sales FROM sales GROUP BY store;',
     }),
     query('easy', 'Items per category', {

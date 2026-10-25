@@ -20,6 +20,8 @@ interface CodeSandboxSectionProps {
   onErrorClear: () => void
   /** SQL lessons: the tables the sandbox's database has. */
   tables?: SqlTable[]
+  /** SQL lessons: the SQL that makes the sandbox's database, for peeking at a table's rows. */
+  setupSql?: string
 }
 
 export function CodeSandboxSection(props: CodeSandboxSectionProps) {

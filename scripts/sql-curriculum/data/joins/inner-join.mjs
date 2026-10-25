@@ -26,7 +26,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Who placed each order?', {
       prompt: "Show each order's `id` and the `name` of the customer who placed it.",
-      hint: '`SELECT orders.id, customers.name FROM orders JOIN customers ON orders.customer_id = customers.id;`',
+      hint: "Join `customers` to `orders` where the order's `customer_id` matches the customer's `id`. Write `table.column` for columns both tables have.",
       solution: 'SELECT orders.id, customers.name\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;',
     }),
     query('easy', 'What was ordered', {
