@@ -46,6 +46,8 @@ import { designTopics } from './design.mjs'
 import { designProjects } from './design-projects.mjs'
 import { windowsTopics } from './windows.mjs'
 import { windowsProjects } from './windows-projects.mjs'
+import { advancedTopics } from './advanced.mjs'
+import { advancedProjects } from './advanced-projects.mjs'
 
 export const COURSE = [
   { sectionId: 'querying', filename: 'querying.json', title: 'Querying a table', topics: [...queryingTopics, ...queryingProjects] },
@@ -56,6 +58,6 @@ export const COURSE = [
   { sectionId: 'modifying_data', filename: 'modifying_data.json', title: 'Changing data', topics: [...modifyingTopics, ...modifyingProjects] },
   { sectionId: 'schema_design', filename: 'schema_design.json', title: 'Designing tables', topics: [...designTopics, ...designProjects] },
   { sectionId: 'window_functions', filename: 'window_functions.json', title: 'Window functions', topics: [...windowsTopics, ...windowsProjects] },
-  { sectionId: 'advanced', filename: 'advanced.json', title: 'Advanced queries', topics: [] },
+  { sectionId: 'advanced', filename: 'advanced.json', title: 'Advanced queries', topics: [...advancedTopics, ...advancedProjects] },
   { sectionId: 'projects', filename: 'projects.json', title: 'Capstone projects', topics: [] },
 ]
