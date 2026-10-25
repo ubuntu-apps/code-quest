@@ -100,8 +100,6 @@ export default makeTopic({
       'RETURNING gives one row per changed row.'),
     mc('In which order do RETURNING rows come?', ['Alphabetically', 'No particular order', 'Newest first', 'By id'], 1,
       'Don\'t rely on any order.'),
-    mc('Which SQLite version added RETURNING?', ['3.0', '3.24', '3.39', '3.35'], 3,
-      'It arrived in 2021.'),
     mc('Does RETURNING work with an upsert?', ['Yes, it shows the inserted or updated rows', 'No', 'Only for DO NOTHING', 'Only with REPLACE'], 0,
       'It shows each row as it ended up.'),
   ],

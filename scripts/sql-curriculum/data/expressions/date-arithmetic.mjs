@@ -91,8 +91,6 @@ export default makeTopic({
       "Modifiers like '+1 year', '-3 months' and '+7 days' move a date."),
     mc('Why does a day difference show as `2.0`?', ['julianday counts fractions of days too, so the result is a decimal number', 'It is a rounding error', 'Dates are always decimals', 'Because of the time zone'], 0,
       'julianday includes the time of day, so its numbers have decimals.'),
-    mc('Why do the challenges use \'2026-10-24\' instead of date(\'now\')?', ['date(\'now\') is not allowed', 'So the right answer stays the same every day', 'It is faster', 'It is in the future'], 1,
-      'A fixed "today" keeps the expected results from changing.'),
     mc("What does `date('2024-02-28', '+1 day')` give?", ["`'2024-03-01'`", "`'2024-02-30'`", "`'2024-02-28'`", "`'2024-02-29'`"], 3,
       '2024 is a leap year, and SQLite knows it.'),
     mc('How do you turn a number of days into whole years?', ['Divide by 365.25 and round down', 'Divide by 12', 'Multiply by 365', 'Use `%Y`'], 0,

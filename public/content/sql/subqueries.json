@@ -948,18 +948,6 @@
         },
         {
           "id": "correlated_subqueries_ch2",
-          "title": "Easy: Plays per track",
-          "promptMarkdown": "Show every track's `title` and its number of plays (`plays`), including 0.",
-          "starterCode": "",
-          "hint": "`(SELECT COUNT(*) FROM plays p WHERE p.track_id = t.id) AS plays`, with `FROM tracks t`.",
-          "solution": "SELECT title,\n       (SELECT COUNT(*) FROM plays p WHERE p.track_id = t.id) AS plays\nFROM tracks t;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "correlated_subqueries_ch3",
           "title": "Easy: The artist's name",
           "promptMarkdown": "Show every track's `title` and its artist's name (`artist`), using a correlated subquery instead of a join.",
           "starterCode": "",
@@ -971,7 +959,7 @@
           }
         },
         {
-          "id": "correlated_subqueries_ch4",
+          "id": "correlated_subqueries_ch3",
           "title": "Medium: Above the artist's average",
           "promptMarkdown": "Show the `title` and `duration_s` of every track longer than the average of its own artist's tracks.",
           "starterCode": "",
@@ -983,7 +971,7 @@
           }
         },
         {
-          "id": "correlated_subqueries_ch5",
+          "id": "correlated_subqueries_ch4",
           "title": "Medium: Last played",
           "promptMarkdown": "Show every listener's `name` and the date of their latest play (`last_played`), NULL if they never played.",
           "starterCode": "",
@@ -995,7 +983,7 @@
           }
         },
         {
-          "id": "correlated_subqueries_ch6",
+          "id": "correlated_subqueries_ch5",
           "title": "Medium: Tracks per artist",
           "promptMarkdown": "Show every artist's `name` and number of tracks (`tracks`), using a correlated subquery. Most first, then by name.",
           "starterCode": "",
@@ -1007,7 +995,7 @@
           }
         },
         {
-          "id": "correlated_subqueries_ch7",
+          "id": "correlated_subqueries_ch6",
           "title": "Hard: First play, or never",
           "promptMarkdown": "Show every track's `title` and the date it was first played (`first_play`), or the text `never`.",
           "starterCode": "",
@@ -1019,7 +1007,7 @@
           }
         },
         {
-          "id": "correlated_subqueries_ch8",
+          "id": "correlated_subqueries_ch7",
           "title": "Hard: Heavy listeners",
           "promptMarkdown": "Show the `name` of every listener with more than 5 plays, using a correlated subquery in `WHERE`.",
           "starterCode": "",
@@ -1031,7 +1019,7 @@
           }
         },
         {
-          "id": "correlated_subqueries_ch9",
+          "id": "correlated_subqueries_ch8",
           "title": "Expert: Each artist's longest",
           "promptMarkdown": "Show the `title` and `duration_s` of each artist's longest track (if two tie, show both). In title order.",
           "starterCode": "",
@@ -1043,7 +1031,7 @@
           }
         },
         {
-          "id": "correlated_subqueries_ch10",
+          "id": "correlated_subqueries_ch9",
           "title": "Expert: Plays and followers",
           "promptMarkdown": "Show every artist's `name`, the plays of their tracks (`plays`) and their number of followers (`followers`). Use two correlated subqueries so the counts don't multiply. Most plays first, then by name.",
           "starterCode": "",
@@ -1405,18 +1393,6 @@
         },
         {
           "id": "exists_subqueries_ch3",
-          "title": "Easy: Unplayed tracks",
-          "promptMarkdown": "Show the `title` of every track that has never been played, using `NOT EXISTS`.",
-          "starterCode": "",
-          "hint": "`FROM tracks t WHERE NOT EXISTS (SELECT 1 FROM plays p WHERE p.track_id = t.id)`.",
-          "solution": "SELECT title\nFROM tracks t\nWHERE NOT EXISTS (SELECT 1 FROM plays p WHERE p.track_id = t.id);",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false
-          }
-        },
-        {
-          "id": "exists_subqueries_ch4",
           "title": "Medium: Premium followers",
           "promptMarkdown": "Show the `name` of every artist followed by at least one premium listener.",
           "starterCode": "",
@@ -1428,7 +1404,7 @@
           }
         },
         {
-          "id": "exists_subqueries_ch5",
+          "id": "exists_subqueries_ch4",
           "title": "Medium: Silent artists",
           "promptMarkdown": "Show the `name` of every artist none of whose tracks has ever been played.",
           "starterCode": "",
@@ -1440,7 +1416,7 @@
           }
         },
         {
-          "id": "exists_subqueries_ch6",
+          "id": "exists_subqueries_ch5",
           "title": "Medium: Up to date",
           "promptMarkdown": "Show the `name` of every listener who played a track released in 2026.",
           "starterCode": "",
@@ -1452,7 +1428,7 @@
           }
         },
         {
-          "id": "exists_subqueries_ch7",
+          "id": "exists_subqueries_ch6",
           "title": "Hard: Followed, never played",
           "promptMarkdown": "Show each listener's name (`listener`) and each artist they follow but have never played (`artist`). Sort by listener, then artist.",
           "starterCode": "",
@@ -1464,7 +1440,7 @@
           }
         },
         {
-          "id": "exists_subqueries_ch8",
+          "id": "exists_subqueries_ch7",
           "title": "Hard: No jazz for premium",
           "promptMarkdown": "Show the `name` of every premium listener who has never played a `jazz` track.",
           "starterCode": "",
@@ -1476,7 +1452,7 @@
           }
         },
         {
-          "id": "exists_subqueries_ch9",
+          "id": "exists_subqueries_ch8",
           "title": "Expert: Every track played",
           "promptMarkdown": "Show the `name` of every artist all of whose tracks have been played at least once.",
           "starterCode": "",
@@ -1488,7 +1464,7 @@
           }
         },
         {
-          "id": "exists_subqueries_ch10",
+          "id": "exists_subqueries_ch9",
           "title": "Expert: Beyond their follows",
           "promptMarkdown": "Show the `name` of every listener who played at least one artist they don't follow.",
           "starterCode": "",
@@ -3846,31 +3822,6 @@
           {
             "id": "several_ctes_q6",
             "type": "mcq",
-            "prompt": "How many times do you write the word WITH for three CTEs?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Twice"
-              },
-              {
-                "id": "b",
-                "label": "None"
-              },
-              {
-                "id": "c",
-                "label": "Once"
-              },
-              {
-                "id": "d",
-                "label": "Three times"
-              }
-            ],
-            "correctChoiceId": "c",
-            "explanation": "One WITH starts the list."
-          },
-          {
-            "id": "several_ctes_q7",
-            "type": "mcq",
             "prompt": "Why LEFT JOIN the CTEs to artists?",
             "choices": [
               {
@@ -3894,7 +3845,7 @@
             "explanation": "An inner join would drop them."
           },
           {
-            "id": "several_ctes_q8",
+            "id": "several_ctes_q7",
             "type": "mcq",
             "prompt": "What is the advantage of a chain of CTEs?",
             "choices": [
@@ -3919,7 +3870,7 @@
             "explanation": "You can `SELECT * FROM step` to look at any step."
           },
           {
-            "id": "several_ctes_q9",
+            "id": "several_ctes_q8",
             "type": "mcq",
             "prompt": "`WHERE played_on LIKE '2026-09%'` keeps…",
             "choices": [
@@ -3944,7 +3895,7 @@
             "explanation": "The text starts with '2026-09'."
           },
           {
-            "id": "several_ctes_q10",
+            "id": "several_ctes_q9",
             "type": "mcq",
             "prompt": "Can the main query join two CTEs to each other?",
             "choices": [
@@ -4097,18 +4048,6 @@
         },
         {
           "id": "top_per_group_ch4",
-          "title": "Medium: Shortest per genre",
-          "promptMarkdown": "For each `genre`, show the `title` and `duration_s` of its shortest track. In genre order.",
-          "starterCode": "",
-          "hint": "Join tracks to artists; the subquery finds the MIN duration of tracks whose artist has the same genre.",
-          "solution": "SELECT a.genre, t.title, t.duration_s\nFROM tracks t\nJOIN artists a ON a.id = t.artist_id\nWHERE t.duration_s = (\n  SELECT MIN(t2.duration_s)\n  FROM tracks t2\n  JOIN artists a2 ON a2.id = t2.artist_id\n  WHERE a2.genre = a.genre\n)\nORDER BY a.genre;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "top_per_group_ch5",
           "title": "Medium: Latest play",
           "promptMarkdown": "For each listener who played, show their `name`, the date of their latest play (`played_on`) and the `title` of the track they played then. In name order.",
           "starterCode": "",
@@ -4120,7 +4059,7 @@
           }
         },
         {
-          "id": "top_per_group_ch6",
+          "id": "top_per_group_ch5",
           "title": "Medium: Hits, with ties",
           "promptMarkdown": "For every artist, show their name (`artist`), and the `title` and `plays` of their most played track. Count plays of all tracks (so unplayed tracks have 0). Show all tracks that tie. Sort by artist, then title.",
           "starterCode": "",
@@ -4132,7 +4071,7 @@
           }
         },
         {
-          "id": "top_per_group_ch7",
+          "id": "top_per_group_ch6",
           "title": "Hard: One hit each",
           "promptMarkdown": "Now exactly one track per artist: show `artist`, `title` and `plays` of each artist's most played track. If tracks tie, take the one released first, then the lower id. In artist order.",
           "starterCode": "",
@@ -4144,7 +4083,7 @@
           }
         },
         {
-          "id": "top_per_group_ch8",
+          "id": "top_per_group_ch7",
           "title": "Hard: Favourite artists",
           "promptMarkdown": "For each listener who played, show their `name`, their favourite artist (most plays, called `artist`) and those `plays`. If artists tie, take the one whose name comes first alphabetically. In name order.",
           "starterCode": "",
@@ -4156,7 +4095,7 @@
           }
         },
         {
-          "id": "top_per_group_ch9",
+          "id": "top_per_group_ch8",
           "title": "Expert: Top two per artist",
           "promptMarkdown": "Show each artist's two most played tracks: `artist`, `title` and `plays` (unplayed tracks count as 0, so an artist with one track shows one row). Ties are broken by title. Sort by artist, then most plays, then title.",
           "starterCode": "",
@@ -4168,7 +4107,7 @@
           }
         },
         {
-          "id": "top_per_group_ch10",
+          "id": "top_per_group_ch9",
           "title": "Expert: Most followed per genre",
           "promptMarkdown": "For each `genre`, show the most followed artist (`artist`) and their `followers`. Show every artist that ties. Sort by genre, then artist.",
           "starterCode": "",

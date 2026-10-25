@@ -33,11 +33,6 @@ export default makeTopic({
       hint: '`ROUND(AVG(score), 1) AS average ... GROUP BY subject, term`.',
       solution: 'SELECT subject, term, ROUND(AVG(score), 1) AS average FROM results GROUP BY subject, term;',
     }),
-    query('easy', 'Store and payment', {
-      prompt: 'Show each `store` and `payment` combination (missing payments included) and its number of sales, called `sales`.',
-      hint: '`GROUP BY store, payment`.',
-      solution: 'SELECT store, payment, COUNT(*) AS sales FROM sales GROUP BY store, payment;',
-    }),
     query('medium', 'Category takings per store', {
       prompt: 'Show each `store`, `category` and its takings rounded to 2 decimals, called `revenue`. Sort by store, then highest revenue first.',
       hint: '`GROUP BY store, category ORDER BY store, revenue DESC`.',

@@ -34,11 +34,6 @@ export default makeTopic({
       hint: '`ROUND(AVG(points) OVER (), 1) AS average`.',
       solution: 'SELECT id, points, ROUND(AVG(points) OVER (), 1) AS average\nFROM games\nORDER BY id;',
     }),
-    query('easy', 'How many games', {
-      prompt: "Show each game's `id` and `played_on`, with the number of games in the table beside it (`games`). In id order.",
-      hint: '`COUNT(*) OVER () AS games`.',
-      solution: 'SELECT id, played_on, COUNT(*) OVER () AS games\nFROM games\nORDER BY id;',
-    }),
     query('medium', 'Above or below', {
       prompt: "Show each game's `id` and `points`, and how far it is from the average game (`diff`, 1 decimal; negative means below). In id order.",
       hint: '`ROUND(points - AVG(points) OVER (), 1) AS diff`.',

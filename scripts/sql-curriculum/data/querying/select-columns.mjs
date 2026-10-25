@@ -31,11 +31,6 @@ export default makeTopic({
       hint: 'List both columns with a comma between them: `SELECT title, author FROM books;`',
       solution: 'SELECT title, author FROM books;',
     }),
-    query('easy', 'Name and species', {
-      prompt: 'Show the `name` and `species` of every pet.',
-      hint: '`SELECT name, species FROM pets;`',
-      solution: 'SELECT name, species FROM pets;',
-    }),
     query('easy', 'Name and price', {
       prompt: 'Show the `name` and `price` of every product.',
       hint: 'The table is `products`.',
@@ -83,8 +78,6 @@ export default makeTopic({
       'Columns are listed with commas between them.'),
     mc('In which order do the columns of `SELECT year, title FROM books` appear?', ['title, then year', 'The order in the table', 'year, then title', 'Alphabetical order'], 2,
       'The result has the columns in the order they are listed in the query.'),
-    mc('What does `AS` do in `SELECT name AS pet FROM pets`?', ['Renames the column in the result', 'Renames the column in the table', 'Filters the rows', 'Creates a new table'], 0,
-      '`AS` only changes the heading in the result; the table is not changed.'),
     mc('What does `SELECT title author FROM books` show?', ['A syntax error', 'Two columns', 'Nothing', 'The titles, in a column called `author`'], 3,
       'Without a comma, `author` becomes the new name of the title column, which is easy to miss.'),
     mc('Which gives `near "FROM": syntax error`?', ['`SELECT title, author FROM books;`', '`SELECT title, author, FROM books;`', '`SELECT title FROM books;`', '`SELECT * FROM books;`'], 1,

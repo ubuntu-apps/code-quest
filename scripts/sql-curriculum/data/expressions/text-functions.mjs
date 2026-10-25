@@ -72,11 +72,6 @@ export default makeTopic({
       hint: '`WHERE LENGTH(email) > 20 ORDER BY chars DESC, email`.',
       solution: 'SELECT email, LENGTH(email) AS chars FROM customers\nWHERE LENGTH(email) > 20\nORDER BY chars DESC, email;',
     }),
-    query('expert', 'Shortest names first', {
-      prompt: "Show each employee's `name`, shortest name first. Names of the same length go in alphabetical order.",
-      hint: 'You can sort by a function you don\'t show: `ORDER BY LENGTH(name), name`.',
-      solution: 'SELECT name FROM employees ORDER BY LENGTH(name), name;',
-    }),
   ],
   questions: [
     mc("What does `UPPER('Lisbon')` give?", ["`'lisbon'`", "`'LISBON'`", "`'Lisbon'`", '`6`'], 1,

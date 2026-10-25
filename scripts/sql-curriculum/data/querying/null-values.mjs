@@ -31,11 +31,6 @@ export default makeTopic({
       hint: '`WHERE rating IS NULL`.',
       solution: 'SELECT title FROM books WHERE rating IS NULL;',
     }),
-    query('easy', 'No owner', {
-      prompt: 'Show the `name` of every pet with no owner on record.',
-      hint: '`WHERE owner IS NULL`.',
-      solution: 'SELECT name FROM pets WHERE owner IS NULL;',
-    }),
     query('easy', 'Known breeds', {
       prompt: 'Show the `name` and `breed` of the pets whose breed is known.',
       hint: '`WHERE breed IS NOT NULL`.',
@@ -97,7 +92,5 @@ export default makeTopic({
       'For a NULL rating the comparison is unknown, so the row is not kept.'),
     mc('How does CodeQuest show a missing value in a result?', ['As 0', 'As `NULL`', 'As an empty space', 'It hides the row'], 1,
       'Results show missing values as NULL.'),
-    mc('Which keeps pets whose breed is known?', ['`breed = NOT NULL`', '`breed <> NULL`', '`breed IS NOT NULL`', '`NOT breed`'], 2,
-      '`IS NOT NULL` is the way to test that a value is present.'),
   ],
 })

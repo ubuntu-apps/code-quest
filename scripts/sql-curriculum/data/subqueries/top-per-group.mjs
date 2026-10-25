@@ -39,11 +39,6 @@ export default makeTopic({
       hint: '`WHERE joined = (SELECT MIN(joined) FROM listeners l2 WHERE l2.plan = l.plan)`.',
       solution: 'SELECT plan, name, joined\nFROM listeners l\nWHERE joined = (SELECT MIN(joined) FROM listeners l2 WHERE l2.plan = l.plan)\nORDER BY plan;',
     }),
-    query('medium', 'Shortest per genre', {
-      prompt: "For each `genre`, show the `title` and `duration_s` of its shortest track. In genre order.",
-      hint: 'Join tracks to artists; the subquery finds the MIN duration of tracks whose artist has the same genre.',
-      solution: 'SELECT a.genre, t.title, t.duration_s\nFROM tracks t\nJOIN artists a ON a.id = t.artist_id\nWHERE t.duration_s = (\n  SELECT MIN(t2.duration_s)\n  FROM tracks t2\n  JOIN artists a2 ON a2.id = t2.artist_id\n  WHERE a2.genre = a.genre\n)\nORDER BY a.genre;',
-    }),
     query('medium', 'Latest play', {
       prompt: "For each listener who played, show their `name`, the date of their latest play (`played_on`) and the `title` of the track they played then. In name order.",
       hint: 'Join plays to listeners and tracks, and keep `p.played_on = (SELECT MAX(played_on) FROM plays WHERE listener_id = p.listener_id)`.',

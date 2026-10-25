@@ -29,11 +29,6 @@ export default makeTopic({
       hint: '`(SELECT COUNT(*) FROM plays p WHERE p.listener_id = l.id) AS plays`, with `FROM listeners l`.',
       solution: 'SELECT name,\n       (SELECT COUNT(*) FROM plays p WHERE p.listener_id = l.id) AS plays\nFROM listeners l;',
     }),
-    query('easy', 'Plays per track', {
-      prompt: "Show every track's `title` and its number of plays (`plays`), including 0.",
-      hint: '`(SELECT COUNT(*) FROM plays p WHERE p.track_id = t.id) AS plays`, with `FROM tracks t`.',
-      solution: 'SELECT title,\n       (SELECT COUNT(*) FROM plays p WHERE p.track_id = t.id) AS plays\nFROM tracks t;',
-    }),
     query('easy', "The artist's name", {
       prompt: "Show every track's `title` and its artist's name (`artist`), using a correlated subquery instead of a join.",
       hint: '`(SELECT name FROM artists a WHERE a.id = t.artist_id) AS artist`.',

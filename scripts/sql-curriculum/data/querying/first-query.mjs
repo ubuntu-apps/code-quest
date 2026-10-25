@@ -34,20 +34,10 @@ export default makeTopic({
       hint: '`SELECT * FROM` followed by the table name.',
       solution: 'SELECT * FROM books;',
     }),
-    query('easy', 'Every pet', {
-      prompt: 'Show the whole `pets` table.',
-      hint: 'Same as for books, with a different table name: `SELECT * FROM pets;`',
-      solution: 'SELECT * FROM pets;',
-    }),
     query('easy', 'Just the titles', {
       prompt: 'Show only the `title` column of the `books` table.',
       hint: 'Put the column name where the `*` would go: `SELECT title FROM books;`',
       solution: 'SELECT title FROM books;',
-    }),
-    query('medium', 'Pet names', {
-      prompt: 'Show the name of every pet.',
-      hint: 'Open **Tables** to find the column that holds the names in `pets`.',
-      solution: 'SELECT name FROM pets;',
     }),
     query('medium', 'Fix the typo', {
       prompt: 'This query should show every product, but it has a typo. Fix it.',

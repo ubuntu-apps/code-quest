@@ -42,11 +42,6 @@ export default makeTopic({
       hint: '`ORDER BY name`.',
       solution: 'SELECT name FROM pets ORDER BY name;',
     }),
-    query('medium', 'Heaviest pets', {
-      prompt: 'Show the `name` and `weight_kg` of every pet, heaviest first.',
-      hint: '`ORDER BY weight_kg DESC`.',
-      solution: 'SELECT name, weight_kg FROM pets ORDER BY weight_kg DESC;',
-    }),
     query('medium', 'Dogs by age', {
       prompt: 'Show the `name` and `age` of the dogs, youngest first.',
       hint: "`WHERE species = 'dog'`, then `ORDER BY age`.",

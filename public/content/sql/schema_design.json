@@ -60,25 +60,6 @@
         },
         {
           "id": "create_table_ch2",
-          "title": "Easy: An events table",
-          "promptMarkdown": "Create a table `events` with `title` (TEXT), `event_date` (TEXT) and `price` (REAL).",
-          "starterCode": "",
-          "hint": "Dates are TEXT; prices with decimals are REAL.",
-          "solution": "CREATE TABLE events (\n  title TEXT,\n  event_date TEXT,\n  price REAL\n);",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The events table has the right columns",
-                "assertion": "SELECT name, UPPER(type) AS type, CASE WHEN pk > 0 THEN 0 ELSE \"notnull\" END AS not_null,\n       dflt_value AS default_value, pk\nFROM pragma_table_info('events')\nORDER BY cid"
-              }
-            ]
-          }
-        },
-        {
-          "id": "create_table_ch3",
           "title": "Easy: Create and fill",
           "promptMarkdown": "Create a table `notes` with `body` (TEXT) and `written` (TEXT), then add one note: `Book the piano tuner`, written `2026-10-24`.",
           "starterCode": "",
@@ -102,7 +83,7 @@
           }
         },
         {
-          "id": "create_table_ch4",
+          "id": "create_table_ch3",
           "title": "Medium: Safe to run twice",
           "promptMarkdown": "Write a CREATE TABLE for `waitlist` (`guest` TEXT, `event` TEXT) that does nothing if the table already exists, and run it twice in a row without an error.",
           "starterCode": "",
@@ -121,7 +102,7 @@
           }
         },
         {
-          "id": "create_table_ch5",
+          "id": "create_table_ch4",
           "title": "Medium: Fix the comma",
           "promptMarkdown": "This should create `tickets` with `seat` (TEXT) and `price` (REAL), but gives a syntax error. Fix it.",
           "starterCode": "CREATE TABLE tickets (\n  seat TEXT,\n  price REAL,\n);",
@@ -140,7 +121,7 @@
           }
         },
         {
-          "id": "create_table_ch6",
+          "id": "create_table_ch5",
           "title": "Medium: Strict scores",
           "promptMarkdown": "Create a STRICT table `scores` with `player` (TEXT) and `points` (INTEGER), so that text in `points` is refused.",
           "starterCode": "",
@@ -164,7 +145,7 @@
           }
         },
         {
-          "id": "create_table_ch7",
+          "id": "create_table_ch6",
           "title": "Hard: Bookings",
           "promptMarkdown": "Create `bookings` for overnight stays with: `guest` (text), `nights` (a whole number), `rate` (a price with decimals), `arrival` (a date) and `paid` (true or false), in that order. Pick the types.",
           "starterCode": "",
@@ -183,7 +164,7 @@
           }
         },
         {
-          "id": "create_table_ch8",
+          "id": "create_table_ch7",
           "title": "Hard: Fix the type",
           "promptMarkdown": "Amounts in this table sort as text (`'100.0'` comes before `'9.5'`). Fix the table so `amount` holds numbers with decimals.",
           "starterCode": "CREATE TABLE prices (\n  item TEXT,\n  amount TEXT\n);",
@@ -202,7 +183,7 @@
           }
         },
         {
-          "id": "create_table_ch9",
+          "id": "create_table_ch8",
           "title": "Expert: Real numbers only",
           "promptMarkdown": "Create a STRICT table `measurements` with `label` (TEXT) and `value` (REAL), then insert the row `('width', 3)`. Even though 3 has no decimals, it is stored as a real number.",
           "starterCode": "",
@@ -226,7 +207,7 @@
           }
         },
         {
-          "id": "create_table_ch10",
+          "id": "create_table_ch9",
           "title": "Expert: A log",
           "promptMarkdown": "Create `event_log` with `happened` (TEXT) and `detail` (TEXT), then add two rows in one INSERT: `2026-10-24`, `Doors opened` and `2026-10-24`, `Sound check`.",
           "starterCode": "",
@@ -690,30 +671,6 @@
         },
         {
           "id": "primary_keys_ch6",
-          "title": "Medium: Guests from the sheet",
-          "promptMarkdown": "Create `guests` (`id` INTEGER PRIMARY KEY, `name` TEXT, `email` TEXT) and fill it with each different guest name and email from `ticket_sheet`, in name order, letting SQLite number them.",
-          "starterCode": "",
-          "hint": "`INSERT INTO guests (name, email) SELECT DISTINCT guest_name, guest_email FROM ticket_sheet ORDER BY guest_name;`",
-          "solution": "CREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  email TEXT\n);\nINSERT INTO guests (name, email)\nSELECT DISTINCT guest_name, guest_email\nFROM ticket_sheet\nORDER BY guest_name;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The guests table has the right columns",
-                "assertion": "SELECT name, UPPER(type) AS type, CASE WHEN pk > 0 THEN 0 ELSE \"notnull\" END AS not_null,\n       dflt_value AS default_value, pk\nFROM pragma_table_info('guests')\nORDER BY cid"
-              },
-              {
-                "id": "t2",
-                "label": "The guests table has the right rows",
-                "assertion": "SELECT * FROM guests ORDER BY id"
-              }
-            ]
-          }
-        },
-        {
-          "id": "primary_keys_ch7",
           "title": "Hard: Never again",
           "promptMarkdown": "Create `invoices` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` REAL). Add invoices of 10, 20 and 30, delete the one with id 3, then add one of 40. The new invoice must get id 4, not 3.",
           "starterCode": "",
@@ -732,7 +689,7 @@
           }
         },
         {
-          "id": "primary_keys_ch8",
+          "id": "primary_keys_ch7",
           "title": "Hard: One ticket each",
           "promptMarkdown": "Create `entries` with `event_id` (INTEGER) and `guest_id` (INTEGER), where a guest can have at most one entry per event: make the pair the primary key.",
           "starterCode": "",
@@ -756,7 +713,7 @@
           }
         },
         {
-          "id": "primary_keys_ch9",
+          "id": "primary_keys_ch8",
           "title": "Expert: Room codes",
           "promptMarkdown": "Create `room_codes` with `code` (TEXT, NOT NULL, primary key), `room_id` (INTEGER), then fill it with each room's `id` and a code made of the first 3 letters of its name in capitals (Hall A → `HAL`).",
           "starterCode": "",
@@ -780,7 +737,7 @@
           }
         },
         {
-          "id": "primary_keys_ch10",
+          "id": "primary_keys_ch9",
           "title": "Expert: Events from the sheet",
           "promptMarkdown": "Create `events` (`id` INTEGER PRIMARY KEY, `title` TEXT, `event_date` TEXT, `room` TEXT, `price` REAL) and fill it with each different event from `ticket_sheet`, ordered by date and then title, letting SQLite number them.",
           "starterCode": "",
@@ -1138,30 +1095,6 @@
         },
         {
           "id": "not_null_default_ch2",
-          "title": "Easy: Booked by default",
-          "promptMarkdown": "Create `tickets` with `id` (INTEGER PRIMARY KEY), `seat` (TEXT) and `status` (TEXT, default `'booked'`), then add a ticket for seat `A1` without giving a status.",
-          "starterCode": "",
-          "hint": "`status TEXT DEFAULT 'booked'`, then `INSERT INTO tickets (seat) VALUES ('A1');`",
-          "solution": "CREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  seat TEXT,\n  status TEXT DEFAULT 'booked'\n);\nINSERT INTO tickets (seat) VALUES ('A1');",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The tickets table has the right columns",
-                "assertion": "SELECT name, UPPER(type) AS type, CASE WHEN pk > 0 THEN 0 ELSE \"notnull\" END AS not_null,\n       dflt_value AS default_value, pk\nFROM pragma_table_info('tickets')\nORDER BY cid"
-              },
-              {
-                "id": "t2",
-                "label": "The tickets table has the right rows",
-                "assertion": "SELECT * FROM tickets ORDER BY id"
-              }
-            ]
-          }
-        },
-        {
-          "id": "not_null_default_ch3",
           "title": "Easy: Free unless priced",
           "promptMarkdown": "Create `events` with `id` (INTEGER PRIMARY KEY), `title` (TEXT, NOT NULL) and `price` (REAL, NOT NULL, default 0).",
           "starterCode": "",
@@ -1185,7 +1118,7 @@
           }
         },
         {
-          "id": "not_null_default_ch4",
+          "id": "not_null_default_ch3",
           "title": "Medium: Fix the missing rule",
           "promptMarkdown": "This table should refuse guests without a name, but accepts them. Fix it.",
           "starterCode": "CREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  email TEXT\n);",
@@ -1209,7 +1142,7 @@
           }
         },
         {
-          "id": "not_null_default_ch5",
+          "id": "not_null_default_ch4",
           "title": "Medium: Settings",
           "promptMarkdown": "Create `settings` with `name` (TEXT, NOT NULL), `enabled` (INTEGER, NOT NULL, default 1) and `level` (INTEGER, default 3), then add a setting called `dark_mode` with only its name.",
           "starterCode": "",
@@ -1233,7 +1166,7 @@
           }
         },
         {
-          "id": "not_null_default_ch6",
+          "id": "not_null_default_ch5",
           "title": "Medium: All defaults",
           "promptMarkdown": "Create `counters` with `id` (INTEGER PRIMARY KEY) and `total` (INTEGER, NOT NULL, default 0), then add two rows that use only the defaults, with `INSERT INTO counters DEFAULT VALUES;` twice.",
           "starterCode": "",
@@ -1257,7 +1190,7 @@
           }
         },
         {
-          "id": "not_null_default_ch7",
+          "id": "not_null_default_ch6",
           "title": "Hard: Default, not NULL",
           "promptMarkdown": "Create `tickets` with `seat` (TEXT, NOT NULL) and `status` (TEXT, NOT NULL, default `'booked'`). Leaving the status out should give `booked`, but writing NULL for it should be refused.",
           "starterCode": "",
@@ -1286,7 +1219,7 @@
           }
         },
         {
-          "id": "not_null_default_ch8",
+          "id": "not_null_default_ch7",
           "title": "Hard: Fix the import",
           "promptMarkdown": "This copies the ticket sheet into `tickets`, but stops with **NOT NULL constraint failed: tickets.seat** because some tickets have no seat. Store those as `standing` instead.",
           "starterCode": "CREATE TABLE tickets (\n  guest TEXT NOT NULL,\n  seat TEXT NOT NULL,\n  price REAL NOT NULL\n);\nINSERT INTO tickets (guest, seat, price)\nSELECT guest_name, seat, price FROM ticket_sheet;",
@@ -1310,7 +1243,7 @@
           }
         },
         {
-          "id": "not_null_default_ch9",
+          "id": "not_null_default_ch8",
           "title": "Expert: Volunteers",
           "promptMarkdown": "Create `staff` with `id` (INTEGER PRIMARY KEY), `name` (TEXT, NOT NULL), `role` (TEXT, NOT NULL, default `'volunteer'`) and `hours` (REAL, NOT NULL, default 0). Then add `Mara Venn` with only her name, and `Tomas Ek` as `manager` with 12.5 hours.",
           "starterCode": "",
@@ -1334,7 +1267,7 @@
           }
         },
         {
-          "id": "not_null_default_ch10",
+          "id": "not_null_default_ch9",
           "title": "Expert: Complete events",
           "promptMarkdown": "Create `events` so that an event can't be added without a `title` or an `event_date` (both TEXT), and its `price` (REAL) is 0 unless given. Give it an `id` (INTEGER PRIMARY KEY) first.",
           "starterCode": "",
@@ -4471,25 +4404,6 @@
         },
         {
           "id": "indexes_ch2",
-          "title": "Easy: By date",
-          "promptMarkdown": "Create an index on `ticket_sheet (event_date)`.",
-          "starterCode": "",
-          "hint": "`CREATE INDEX sheet_date ON ticket_sheet (event_date);`",
-          "solution": "CREATE INDEX sheet_date ON ticket_sheet (event_date);",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": false,
-            "tests": [
-              {
-                "id": "t1",
-                "label": "The ticket_sheet table has the right indexes",
-                "assertion": "SELECT (SELECT group_concat(COALESCE(ii.name, '(expression)'), ', ') FROM pragma_index_info(il.name) ii) AS columns,\n       il.\"unique\", il.partial\nFROM pragma_index_list('ticket_sheet') il\nWHERE il.origin = 'c'\nORDER BY columns, il.\"unique\""
-              }
-            ]
-          }
-        },
-        {
-          "id": "indexes_ch3",
           "title": "Easy: Not needed",
           "promptMarkdown": "Remove the index `sheet_room`.",
           "starterCode": "",
@@ -4508,7 +4422,7 @@
           }
         },
         {
-          "id": "indexes_ch4",
+          "id": "indexes_ch3",
           "title": "Medium: Two columns",
           "promptMarkdown": "Create one index on `ticket_sheet` covering `event_title` and then `seat`.",
           "starterCode": "",
@@ -4527,7 +4441,7 @@
           }
         },
         {
-          "id": "indexes_ch5",
+          "id": "indexes_ch4",
           "title": "Medium: No seat sold twice",
           "promptMarkdown": "Create a unique index on `ticket_sheet (event_title, seat)`, so the same seat can't be sold twice for one event.",
           "starterCode": "",
@@ -4551,7 +4465,7 @@
           }
         },
         {
-          "id": "indexes_ch6",
+          "id": "indexes_ch5",
           "title": "Medium: Fix the missing name",
           "promptMarkdown": "This should create an index on `ticket_sheet (guest_email)`, but gives a syntax error. Fix it.",
           "starterCode": "CREATE INDEX ON ticket_sheet (guest_email);",
@@ -4570,7 +4484,7 @@
           }
         },
         {
-          "id": "indexes_ch7",
+          "id": "indexes_ch6",
           "title": "Hard: Rooms by name",
           "promptMarkdown": "Queries often find a room by its name, as in `JOIN rooms r ON r.name = s.room`. Create an index that helps them search `rooms`.",
           "starterCode": "",
@@ -4589,7 +4503,7 @@
           }
         },
         {
-          "id": "indexes_ch8",
+          "id": "indexes_ch7",
           "title": "Hard: Only paid tickets",
           "promptMarkdown": "Create a partial index on `ticket_sheet (event_title)` that only covers rows with a `price` above 0.",
           "starterCode": "",
@@ -4608,7 +4522,7 @@
           }
         },
         {
-          "id": "indexes_ch9",
+          "id": "indexes_ch8",
           "title": "Expert: Everything the query needs",
           "promptMarkdown": "A report often runs `SELECT event_title, price FROM ticket_sheet WHERE event_title = …`. Create an index on `event_title` and then `price`, so SQLite can answer it from the index alone.",
           "starterCode": "",
@@ -4627,7 +4541,7 @@
           }
         },
         {
-          "id": "indexes_ch10",
+          "id": "indexes_ch9",
           "title": "Expert: Replace the room index",
           "promptMarkdown": "Replace `sheet_room` with one index on `ticket_sheet` covering `room` and then `event_date`.",
           "starterCode": "",
@@ -5452,31 +5366,6 @@
             ],
             "correctChoiceId": "a",
             "explanation": "Each position once per event."
-          },
-          {
-            "id": "design_choices_q10",
-            "type": "mcq",
-            "prompt": "Many-to-many needs…",
-            "choices": [
-              {
-                "id": "a",
-                "label": "A list column"
-              },
-              {
-                "id": "b",
-                "label": "Two foreign keys in one of the tables"
-              },
-              {
-                "id": "c",
-                "label": "Nothing special"
-              },
-              {
-                "id": "d",
-                "label": "A junction table with a key for each side"
-              }
-            ],
-            "correctChoiceId": "d",
-            "explanation": "Like event_performers."
           }
         ]
       },

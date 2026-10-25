@@ -52,11 +52,6 @@ export default makeTopic({
       hint: '`COALESCE(SUM(i.quantity), 0) AS items … ORDER BY items DESC, p.name`.',
       solution: 'SELECT p.name, COALESCE(SUM(i.quantity), 0) AS items\nFROM products p\nLEFT JOIN order_items i ON i.product_id = p.id\nGROUP BY p.id, p.name\nORDER BY items DESC, p.name;',
     }),
-    query('medium', 'Every employee', {
-      prompt: "Show every employee's `name` and how many orders they handled (`orders`), including 0. Most first, then by name.",
-      hint: '`FROM employees e LEFT JOIN orders o ON o.employee_id = e.id`, `COUNT(o.id)`.',
-      solution: 'SELECT e.name, COUNT(o.id) AS orders\nFROM employees e\nLEFT JOIN orders o ON o.employee_id = e.id\nGROUP BY e.id, e.name\nORDER BY orders DESC, e.name;',
-    }),
     query('hard', 'Shipped, with zeros', {
       prompt: "Show every customer's `name` and their number of shipped orders (`shipped`), with 0 for customers who have none.",
       hint: "Put the status test in ON: `LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'shipped'`.",

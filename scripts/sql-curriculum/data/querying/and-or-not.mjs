@@ -82,8 +82,6 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc('When does `WHERE a AND b` keep a row?', ['When either condition is true', 'When both conditions are true', 'When neither is true', 'Always'], 1,
-      '`AND` needs both conditions to be true.'),
     mc('When does `WHERE a OR b` keep a row?', ['When at least one condition is true', 'Only when both are true', 'Only when exactly one is true', 'Never'], 0,
       '`OR` keeps the row if either condition (or both) is true.'),
     mc('Which part is worked out first in `a OR b AND c`?', ['`a OR b`', 'Left to right', '`b AND c`', 'They are the same'], 2,

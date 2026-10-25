@@ -45,11 +45,6 @@ export default makeTopic({
       hint: "`WHERE CAST(strftime('%m', order_date) AS INTEGER) >= 7`.",
       solution: "SELECT id, order_date FROM orders WHERE CAST(strftime('%m', order_date) AS INTEGER) >= 7;",
     }),
-    query('medium', 'Months in number order', {
-      prompt: "Show each customer's `first_name` and the month they joined as a number, called `month`, sorted by month and then by name.",
-      hint: "`CAST(SUBSTR(joined, 6, 2) AS INTEGER) AS month ... ORDER BY month, first_name`.",
-      solution: 'SELECT first_name, CAST(SUBSTR(joined, 6, 2) AS INTEGER) AS month FROM customers\nORDER BY month, first_name;',
-    }),
     query('medium', 'Years since hiring', {
       prompt: "Show each employee's `name` and 2026 minus the year they were hired (as a number), called `years`.",
       hint: "`2026 - CAST(SUBSTR(hire_date, 1, 4) AS INTEGER) AS years`.",

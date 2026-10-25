@@ -33,11 +33,6 @@ export default makeTopic({
       hint: 'Join order_items to products, `SUM(i.quantity)`, `GROUP BY p.id, p.name`.',
       solution: 'SELECT p.name, SUM(i.quantity) AS items\nFROM order_items i\nJOIN products p ON i.product_id = p.id\nGROUP BY p.id, p.name;',
     }),
-    query('easy', 'Orders per employee', {
-      prompt: "Show the `name` of each employee who handled orders and how many, called `orders`.",
-      hint: 'Join orders to employees and group by the employee.',
-      solution: 'SELECT e.name, COUNT(*) AS orders\nFROM orders o\nJOIN employees e ON o.employee_id = e.id\nGROUP BY e.id, e.name;',
-    }),
     query('medium', 'Order totals', {
       prompt: 'Show each `order_id` and its total (sum of quantity times price, 2 decimals), called `total`.',
       hint: '`ROUND(SUM(i.quantity * p.price), 2) AS total … GROUP BY i.order_id`.',

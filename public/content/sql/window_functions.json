@@ -65,18 +65,6 @@
         },
         {
           "id": "window_basics_ch3",
-          "title": "Easy: How many games",
-          "promptMarkdown": "Show each game's `id` and `played_on`, with the number of games in the table beside it (`games`). In id order.",
-          "starterCode": "",
-          "hint": "`COUNT(*) OVER () AS games`.",
-          "solution": "SELECT id, played_on, COUNT(*) OVER () AS games\nFROM games\nORDER BY id;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "window_basics_ch4",
           "title": "Medium: Above or below",
           "promptMarkdown": "Show each game's `id` and `points`, and how far it is from the average game (`diff`, 1 decimal; negative means below). In id order.",
           "starterCode": "",
@@ -88,7 +76,7 @@
           }
         },
         {
-          "id": "window_basics_ch5",
+          "id": "window_basics_ch4",
           "title": "Medium: Share of the first night",
           "promptMarkdown": "For the first quiz night only (the earliest `played_on`), show each `player_id`, their `points` and their share of that night's points (`share`, %, 2 decimals). Highest first, then by player id.",
           "starterCode": "",
@@ -100,7 +88,7 @@
           }
         },
         {
-          "id": "window_basics_ch6",
+          "id": "window_basics_ch5",
           "title": "Medium: Behind the best",
           "promptMarkdown": "For the last quiz night, show each `player_id`, their `points`, the night's best score (`best`) and how many points behind it they were (`behind`). Best first, then by player id.",
           "starterCode": "",
@@ -112,7 +100,7 @@
           }
         },
         {
-          "id": "window_basics_ch7",
+          "id": "window_basics_ch6",
           "title": "Hard: Better than average",
           "promptMarkdown": "Show the `id` and `points` of the games above the average game, using a window function in a subquery. In id order.",
           "starterCode": "",
@@ -124,7 +112,7 @@
           }
         },
         {
-          "id": "window_basics_ch8",
+          "id": "window_basics_ch7",
           "title": "Hard: Share of the season",
           "promptMarkdown": "Show each `player_id`, their season total (`total`) and their share of all the points (`share`, %, 1 decimal). Highest total first, then by player id.",
           "starterCode": "",
@@ -136,7 +124,7 @@
           }
         },
         {
-          "id": "window_basics_ch9",
+          "id": "window_basics_ch8",
           "title": "Expert: Fix the misuse",
           "promptMarkdown": "This should list the games with more points than average, but gives **misuse of window function AVG()**. Fix it, keeping the window function. In id order.",
           "starterCode": "SELECT id, points\nFROM games\nWHERE points > AVG(points) OVER ()\nORDER BY id;",
@@ -148,7 +136,7 @@
           }
         },
         {
-          "id": "window_basics_ch10",
+          "id": "window_basics_ch9",
           "title": "Expert: Team shares",
           "promptMarkdown": "Show each `team`, its season points (`points`) and its share of the league's points (`share`, %, 1 decimal). Highest first.",
           "starterCode": "",
@@ -483,18 +471,6 @@
         },
         {
           "id": "partition_by_ch3",
-          "title": "Easy: Games played",
-          "promptMarkdown": "Show each game's `player_id` and `played_on`, with how many games that player played in the season (`games`). Sort by player id, then date.",
-          "starterCode": "",
-          "hint": "`COUNT(*) OVER (PARTITION BY player_id)`.",
-          "solution": "SELECT player_id, played_on, COUNT(*) OVER (PARTITION BY player_id) AS games\nFROM games\nORDER BY player_id, played_on;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "partition_by_ch4",
           "title": "Medium: Against the night",
           "promptMarkdown": "Show each game's `played_on`, `player_id` and `points`, and how far it was from that night's average (`diff`, 1 decimal). Sort by date, then player id.",
           "starterCode": "",
@@ -506,7 +482,7 @@
           }
         },
         {
-          "id": "partition_by_ch5",
+          "id": "partition_by_ch4",
           "title": "Medium: Share of the night",
           "promptMarkdown": "Show each game's `played_on`, `player_id` and its share of that night's points (`share`, %, 1 decimal). Sort by date, then highest share, then player id.",
           "starterCode": "",
@@ -518,7 +494,7 @@
           }
         },
         {
-          "id": "partition_by_ch6",
+          "id": "partition_by_ch5",
           "title": "Medium: Personal best?",
           "promptMarkdown": "Show each game's `player_id`, `played_on` and `points`, the player's best score (`best`), and `is_best`: 1 if this game equals it, otherwise 0. Sort by player id, then date.",
           "starterCode": "",
@@ -530,7 +506,7 @@
           }
         },
         {
-          "id": "partition_by_ch7",
+          "id": "partition_by_ch6",
           "title": "Hard: Team nights",
           "promptMarkdown": "Show each game's `played_on`, the player's `team`, `name` and `points`, with their team's total that night (`team_night`). Sort by date, then team, then name.",
           "starterCode": "",
@@ -542,7 +518,7 @@
           }
         },
         {
-          "id": "partition_by_ch8",
+          "id": "partition_by_ch7",
           "title": "Hard: Above their own average",
           "promptMarkdown": "Show the `player_id`, `played_on` and `points` of the games in which a player scored above their own season average. Sort by player id, then date.",
           "starterCode": "",
@@ -554,7 +530,7 @@
           }
         },
         {
-          "id": "partition_by_ch9",
+          "id": "partition_by_ch8",
           "title": "Expert: Share of the team",
           "promptMarkdown": "Show each player's `team`, `name`, season total (`total`) and share of their team's total (`team_share`, %, 1 decimal). Sort by team, then highest total, then name.",
           "starterCode": "",
@@ -566,7 +542,7 @@
           }
         },
         {
-          "id": "partition_by_ch10",
+          "id": "partition_by_ch9",
           "title": "Expert: Above the bottom",
           "promptMarkdown": "Show each game's `played_on`, `player_id` and `points`, how many points above that night's lowest score it was (`above_last`), and how many played that night (`players`). Sort by date, then highest points, then player id.",
           "starterCode": "",
@@ -889,18 +865,6 @@
         },
         {
           "id": "row_number_ch2",
-          "title": "Easy: Number the players",
-          "promptMarkdown": "Show each player's `name`, numbered in alphabetical order (`n`). Sort by `n`.",
-          "starterCode": "",
-          "hint": "`ROW_NUMBER() OVER (ORDER BY name) AS n`.",
-          "solution": "SELECT name, ROW_NUMBER() OVER (ORDER BY name) AS n\nFROM players\nORDER BY n;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "row_number_ch3",
           "title": "Easy: Game numbers",
           "promptMarkdown": "Show each game's `player_id` and `played_on`, with its number among that player's games in date order (`game_no`). Sort by player id, then `game_no`.",
           "starterCode": "",
@@ -912,7 +876,7 @@
           }
         },
         {
-          "id": "row_number_ch4",
+          "id": "row_number_ch3",
           "title": "Medium: Places on the night",
           "promptMarkdown": "Show each game's `played_on`, `player_id` and `points`, numbered within its night from the highest points down, with ties in player id order (`place`). Sort by date, then `place`.",
           "starterCode": "",
@@ -924,7 +888,7 @@
           }
         },
         {
-          "id": "row_number_ch5",
+          "id": "row_number_ch4",
           "title": "Medium: Page two",
           "promptMarkdown": "Numbering the games by id, show the `id`, `player_id` and `points` of games 11 to 20 (the second page of 10). Sort by id.",
           "starterCode": "",
@@ -936,7 +900,7 @@
           }
         },
         {
-          "id": "row_number_ch6",
+          "id": "row_number_ch5",
           "title": "Medium: Debuts",
           "promptMarkdown": "Show each player's first game: `player_id`, `played_on` and `points`. Sort by player id.",
           "starterCode": "",
@@ -948,7 +912,7 @@
           }
         },
         {
-          "id": "row_number_ch7",
+          "id": "row_number_ch6",
           "title": "Hard: Latest games",
           "promptMarkdown": "Show each player's most recent game: `player_id`, `played_on` and `points`. Sort by player id.",
           "starterCode": "",
@@ -960,7 +924,7 @@
           }
         },
         {
-          "id": "row_number_ch8",
+          "id": "row_number_ch7",
           "title": "Hard: Numbering nights",
           "promptMarkdown": "Show each quiz night's date (`played_on`), its number in the season (`night`, 1 for the first) and how many played (`players`). Sort by date.",
           "starterCode": "",
@@ -972,7 +936,7 @@
           }
         },
         {
-          "id": "row_number_ch9",
+          "id": "row_number_ch8",
           "title": "Expert: The second game",
           "promptMarkdown": "Show each player's second game (players with only one game are left out): `player_id`, `played_on` and `points`. Sort by player id.",
           "starterCode": "",
@@ -984,7 +948,7 @@
           }
         },
         {
-          "id": "row_number_ch10",
+          "id": "row_number_ch9",
           "title": "Expert: Debut or game n",
           "promptMarkdown": "Show each game's `player_id` and `played_on`, with a `label`: `debut` for the player's first game, otherwise `game 2`, `game 3` and so on. Sort by player id, then date.",
           "starterCode": "",
@@ -1708,18 +1672,6 @@
       "challenges": [
         {
           "id": "top_rows_per_group_ch1",
-          "title": "Easy: Night winners",
-          "promptMarkdown": "Show each night's winner or winners: `played_on`, `player_id` and `points`. Use RANK in a CTE. Sort by date, then player id.",
-          "starterCode": "",
-          "hint": "`WITH ranked AS (… RANK() OVER (PARTITION BY played_on ORDER BY points DESC) AS place …) … WHERE place = 1`.",
-          "solution": "WITH ranked AS (\n  SELECT played_on, player_id, points,\n         RANK() OVER (PARTITION BY played_on ORDER BY points DESC) AS place\n  FROM games\n)\nSELECT played_on, player_id, points\nFROM ranked\nWHERE place = 1\nORDER BY played_on, player_id;",
-          "validation": {
-            "mode": "sql_tests",
-            "ordered": true
-          }
-        },
-        {
-          "id": "top_rows_per_group_ch2",
           "title": "Easy: Best game each",
           "promptMarkdown": "Show each player's best game (if two tie, the earlier one): `player_id`, `played_on` and `points`. Sort by player id.",
           "starterCode": "",
@@ -1731,7 +1683,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch3",
+          "id": "top_rows_per_group_ch2",
           "title": "Easy: Top three, ties kept",
           "promptMarkdown": "Show the games in the top three places by points, keeping ties: `id`, `points` and `place` (RANK). Sort by place, then id.",
           "starterCode": "",
@@ -1743,7 +1695,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch4",
+          "id": "top_rows_per_group_ch3",
           "title": "Medium: Top two of each team",
           "promptMarkdown": "Show the two players with the highest season totals in each team (ties broken by name): `team`, `name`, `total`. Sort by team, then highest total, then name.",
           "starterCode": "",
@@ -1755,7 +1707,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch5",
+          "id": "top_rows_per_group_ch4",
           "title": "Medium: Last two games",
           "promptMarkdown": "Show each player's two most recent games: `player_id`, `played_on` and `points`. Sort by player id, then date.",
           "starterCode": "",
@@ -1767,7 +1719,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch6",
+          "id": "top_rows_per_group_ch5",
           "title": "Medium: Bottom of the night",
           "promptMarkdown": "Show each night's lowest scorer or scorers: `played_on`, `player_id`, `points`. Sort by date, then player id.",
           "starterCode": "",
@@ -1779,7 +1731,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch7",
+          "id": "top_rows_per_group_ch6",
           "title": "Hard: Each team's best night",
           "promptMarkdown": "Show each team's best night (highest team total; if two tie, the earlier night): `team`, `played_on`, `team_points`. Sort by team.",
           "starterCode": "",
@@ -1791,7 +1743,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch8",
+          "id": "top_rows_per_group_ch7",
           "title": "Hard: Second best",
           "promptMarkdown": "Show each player's second-best score (the next score below their best, whatever how many games share the best): `player_id` and `points`, once per player. Players with only one distinct score are left out. Sort by player id.",
           "starterCode": "",
@@ -1803,7 +1755,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch9",
+          "id": "top_rows_per_group_ch8",
           "title": "Expert: Finished on a high",
           "promptMarkdown": "Show the players whose latest game was also their best score (their latest points equal their season maximum): `player_id`, `played_on`, `points`. Sort by player id.",
           "starterCode": "",
@@ -1815,7 +1767,7 @@
           }
         },
         {
-          "id": "top_rows_per_group_ch10",
+          "id": "top_rows_per_group_ch9",
           "title": "Expert: Winning margin",
           "promptMarkdown": "For each night, show the winning score (`first`), the runner-up score (`second`, the second row when sorted by points, so a tie gives 0 margin) and the `margin` between them. Sort by date.",
           "starterCode": "",

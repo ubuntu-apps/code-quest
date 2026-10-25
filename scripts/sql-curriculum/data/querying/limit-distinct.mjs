@@ -97,7 +97,5 @@ export default makeTopic({
       'Each different genre appears once.'),
     mc('How do you show the 2nd row only, after sorting?', ['`LIMIT 2`', '`OFFSET 2`', '`LIMIT 2 OFFSET 1`', '`LIMIT 1 OFFSET 1`'], 3,
       'Skip one row, then keep one.'),
-    mc('Where does DISTINCT go?', ['Right after SELECT', 'After FROM', 'At the end', 'After WHERE'], 0,
-      'It is written straight after SELECT: `SELECT DISTINCT …`.'),
   ],
 })

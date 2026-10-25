@@ -32,11 +32,6 @@ export default makeTopic({
       hint: '`ROUND(AVG(points) OVER (PARTITION BY player_id), 1)`.',
       solution: 'SELECT player_id, played_on, points,\n       ROUND(AVG(points) OVER (PARTITION BY player_id), 1) AS season_average\nFROM games\nORDER BY player_id, played_on;',
     }),
-    query('easy', 'Games played', {
-      prompt: "Show each game's `player_id` and `played_on`, with how many games that player played in the season (`games`). Sort by player id, then date.",
-      hint: '`COUNT(*) OVER (PARTITION BY player_id)`.',
-      solution: 'SELECT player_id, played_on, COUNT(*) OVER (PARTITION BY player_id) AS games\nFROM games\nORDER BY player_id, played_on;',
-    }),
     query('medium', 'Against the night', {
       prompt: "Show each game's `played_on`, `player_id` and `points`, and how far it was from that night's average (`diff`, 1 decimal). Sort by date, then player id.",
       hint: '`ROUND(points - AVG(points) OVER (PARTITION BY played_on), 1)`.',

@@ -20,11 +20,6 @@ export default makeTopic({
   ],
   readMore: { label: 'SQLite: window functions', url: 'https://www.sqlite.org/windowfunctions.html', source: 'SQLite documentation' },
   challenges: [
-    query('easy', 'Night winners', {
-      prompt: "Show each night's winner or winners: `played_on`, `player_id` and `points`. Use RANK in a CTE. Sort by date, then player id.",
-      hint: '`WITH ranked AS (… RANK() OVER (PARTITION BY played_on ORDER BY points DESC) AS place …) … WHERE place = 1`.',
-      solution: 'WITH ranked AS (\n  SELECT played_on, player_id, points,\n         RANK() OVER (PARTITION BY played_on ORDER BY points DESC) AS place\n  FROM games\n)\nSELECT played_on, player_id, points\nFROM ranked\nWHERE place = 1\nORDER BY played_on, player_id;',
-    }),
     query('easy', 'Best game each', {
       prompt: "Show each player's best game (if two tie, the earlier one): `player_id`, `played_on` and `points`. Sort by player id.",
       hint: '`ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY points DESC, played_on)`, keep n = 1.',

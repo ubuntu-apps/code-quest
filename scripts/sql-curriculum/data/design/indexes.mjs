@@ -30,12 +30,6 @@ export default makeTopic({
       solution: 'CREATE INDEX sheet_email ON ticket_sheet (guest_email);',
       checks: [indexes('ticket_sheet')],
     }),
-    query('easy', 'By date', {
-      prompt: 'Create an index on `ticket_sheet (event_date)`.',
-      hint: '`CREATE INDEX sheet_date ON ticket_sheet (event_date);`',
-      solution: 'CREATE INDEX sheet_date ON ticket_sheet (event_date);',
-      checks: [indexes('ticket_sheet')],
-    }),
     query('easy', 'Not needed', {
       prompt: 'Remove the index `sheet_room`.',
       hint: '`DROP INDEX sheet_room;`',

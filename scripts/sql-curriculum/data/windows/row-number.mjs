@@ -28,11 +28,6 @@ export default makeTopic({
       hint: '`ROW_NUMBER() OVER (ORDER BY played_on, id) AS n … ORDER BY n`.',
       solution: 'SELECT id, played_on, player_id,\n       ROW_NUMBER() OVER (ORDER BY played_on, id) AS n\nFROM games\nORDER BY n;',
     }),
-    query('easy', 'Number the players', {
-      prompt: "Show each player's `name`, numbered in alphabetical order (`n`). Sort by `n`.",
-      hint: '`ROW_NUMBER() OVER (ORDER BY name) AS n`.',
-      solution: 'SELECT name, ROW_NUMBER() OVER (ORDER BY name) AS n\nFROM players\nORDER BY n;',
-    }),
     query('easy', 'Game numbers', {
       prompt: "Show each game's `player_id` and `played_on`, with its number among that player's games in date order (`game_no`). Sort by player id, then `game_no`.",
       hint: '`ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on)`.',

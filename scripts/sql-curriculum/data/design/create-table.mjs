@@ -33,12 +33,6 @@ export default makeTopic({
       solution: 'CREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);',
       checks: [columns('guests')],
     }),
-    query('easy', 'An events table', {
-      prompt: "Create a table `events` with `title` (TEXT), `event_date` (TEXT) and `price` (REAL).",
-      hint: 'Dates are TEXT; prices with decimals are REAL.',
-      solution: 'CREATE TABLE events (\n  title TEXT,\n  event_date TEXT,\n  price REAL\n);',
-      checks: [columns('events')],
-    }),
     query('easy', 'Create and fill', {
       prompt: "Create a table `notes` with `body` (TEXT) and `written` (TEXT), then add one note: `Book the piano tuner`, written `2026-10-24`.",
       hint: 'A CREATE TABLE, then an INSERT.',

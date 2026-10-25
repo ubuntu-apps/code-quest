@@ -33,11 +33,6 @@ export default makeTopic({
       hint: '`FROM products p LEFT JOIN order_items i ON i.product_id = p.id WHERE i.id IS NULL`.',
       solution: 'SELECT p.name\nFROM products p\nLEFT JOIN order_items i ON i.product_id = p.id\nWHERE i.id IS NULL;',
     }),
-    query('easy', 'No orders handled', {
-      prompt: 'Show the `name` and `role` of every employee who handled no orders.',
-      hint: '`FROM employees e LEFT JOIN orders o ON o.employee_id = e.id WHERE o.id IS NULL`.',
-      solution: 'SELECT e.name, e.role\nFROM employees e\nLEFT JOIN orders o ON o.employee_id = e.id\nWHERE o.id IS NULL;',
-    }),
     query('medium', 'Unsold stock', {
       prompt: 'Show the `name`, `category` and `price` of every product never ordered, most expensive first.',
       hint: 'The same query as Never sold, with more columns and `ORDER BY p.price DESC`.',

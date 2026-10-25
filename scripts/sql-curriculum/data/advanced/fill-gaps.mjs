@@ -35,11 +35,6 @@ export default makeTopic({
       hint: 'The lesson\'s example: a calendar CTE, LEFT JOIN sales, `COUNT(s.id)`.',
       solution: EVERY_DAY,
     }),
-    query('easy', 'Items every day', {
-      prompt: 'Show every `day` from the first sale to the last with the items sold (`items`, 0 on days with none). In date order.',
-      hint: '`COALESCE(SUM(s.quantity), 0)`.',
-      solution: CAL + 'SELECT d.day, COALESCE(SUM(s.quantity), 0) AS items\nFROM days d\nLEFT JOIN sales s ON s.sold_on = d.day\nGROUP BY d.day\nORDER BY d.day;',
-    }),
     query('medium', 'Empty days', {
       prompt: 'Show the days (`day`) between the first and last sale that had no sales at all. In date order.',
       hint: 'LEFT JOIN, then `WHERE s.id IS NULL`.',

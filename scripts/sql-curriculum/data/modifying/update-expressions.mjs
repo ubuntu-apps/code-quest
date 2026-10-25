@@ -34,12 +34,6 @@ export default makeTopic({
       solution: 'UPDATE fines\nSET amount = amount + 0.5;',
       checks: [AFTER.fines],
     }),
-    query('easy', 'Two more of book 2', {
-      prompt: 'Book 2 gets 2 new copies, both available. Add 2 to its `copies` and `available`.',
-      hint: '`SET copies = copies + 2, available = available + 2 WHERE id = 2`.',
-      solution: 'UPDATE books\nSET copies = copies + 2,\n    available = available + 2\nWHERE id = 2;',
-      checks: [AFTER.books],
-    }),
     query('medium', 'Ten percent', {
       prompt: 'Raise every fine by 10%, rounded to 2 decimals.',
       hint: '`SET amount = ROUND(amount * 1.1, 2)`.',

@@ -31,12 +31,6 @@ export default makeTopic({
       solution: "INSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');",
       checks: [AFTER.members],
     }),
-    query('easy', 'A new book', {
-      prompt: "Add the book `The Tin Garden` by `A. Moreau`, with 2 copies, both available.",
-      hint: "`INSERT INTO books (title, author, copies, available) VALUES (…);`",
-      solution: "INSERT INTO books (title, author, copies, available)\nVALUES ('The Tin Garden', 'A. Moreau', 2, 2);",
-      checks: [AFTER.books],
-    }),
     query('easy', 'No email', {
       prompt: "Add a member called `Ivo Petrov` who joined on `2026-10-24` and has no email. Leave the email column out.",
       hint: "List only `name` and `joined`; the email becomes NULL and the status its default.",
