@@ -1,0 +1,2265 @@
+{
+  "sectionId": "projects",
+  "title": "Capstone projects",
+  "levels": [
+    {
+      "id": "shop_orders",
+      "title": "An online shop's orders",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "paid_order_totals",
+          "label": "Paid order totals",
+          "code": "SELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;"
+        },
+        {
+          "id": "months",
+          "label": "Months",
+          "code": "SELECT strftime('%Y-%m', o.ordered_on) AS month,\n       COUNT(DISTINCT o.id) AS orders,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS revenue\nFROM orders o\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY month\nORDER BY month;"
+        },
+        {
+          "id": "the_tables",
+          "label": "The tables",
+          "code": "SELECT * FROM orders ORDER BY id;"
+        }
+      ],
+      "intro": {
+        "title": "An online shop's orders",
+        "bodyMarkdown": "Welcome to the capstone projects. Each one is a full piece of work on a database of its own, using skills from across the course: you'll choose which tables to join, how to group, when a window or a CTE is the right tool, and which NULLs to watch out for. The challenges say what the result should look like, not how to get it, so there is usually more than one good answer.\n\nThe first is a small online shop selling tea, coffee and kitchen things. The owner wants a report on the last six months: what sold, who bought it, how the months compare and how much the discounts cost.\n\nThe tables are `customers`, `products`, `orders` (with a `status`: only `paid` orders count as sales) and `order_items`, one row for each product in an order, with the `quantity` and the `unit_price` actually charged. That can be lower than the product's list `price` when there was a discount, so revenue is always `quantity * unit_price`.\n\nA good habit for a report like this: start from the smallest correct query, check its rows by eye, then build on it. Here, most answers start from paid orders joined to their items:\n\n```\nSELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;\n```",
+        "sandboxCode": "SELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;",
+        "readMore": {
+          "label": "SQLite: SELECT",
+          "url": "https://www.sqlite.org/lang_select.html",
+          "source": "SQLite documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "shop_orders_ch1",
+          "title": "Easy: Sales so far",
+          "promptMarkdown": "Show one row: the number of paid orders (`paid_orders`) and their `revenue` (2 decimals).",
+          "starterCode": "",
+          "hint": "Join orders to order_items, keep `status = 'paid'`, and count the orders with `COUNT(DISTINCT o.id)`: each order has several item rows.",
+          "solution": "SELECT COUNT(DISTINCT o.id) AS paid_orders,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS revenue\nFROM orders o\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid';",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": false
+          }
+        },
+        {
+          "id": "shop_orders_ch2",
+          "title": "Easy: Order totals",
+          "promptMarkdown": "For each paid order, show `order_id`, `ordered_on`, the customer's name (`customer`) and the order's `total` (2 decimals). In date order, then by order id.",
+          "starterCode": "",
+          "hint": "The lesson's example.",
+          "solution": "SELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch3",
+          "title": "Easy: Signed up, never ordered",
+          "promptMarkdown": "Show the `name` and `email` of customers who have never placed an order of any kind. Sort by name.",
+          "starterCode": "",
+          "hint": "`NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id)`.",
+          "solution": "SELECT name, email\nFROM customers c\nWHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id)\nORDER BY name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch4",
+          "title": "Medium: Month by month",
+          "promptMarkdown": "For each month with paid orders (`month`, like `2026-05`), show the number of paid `orders` and the `revenue` (2 decimals). In month order.",
+          "starterCode": "",
+          "hint": "`strftime('%Y-%m', o.ordered_on) AS month`, grouped by it.",
+          "solution": "SELECT strftime('%Y-%m', o.ordered_on) AS month,\n       COUNT(DISTINCT o.id) AS orders,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS revenue\nFROM orders o\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY month\nORDER BY month;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch5",
+          "title": "Medium: Best seller in each category",
+          "promptMarkdown": "For each `category`, show its best-selling product by units in paid orders (`product`, and `units`). Keep ties. Sort by category, then product.",
+          "starterCode": "",
+          "hint": "Units per product in a CTE with `RANK() OVER (PARTITION BY p.category ORDER BY SUM(i.quantity) DESC)`, then keep rank 1.",
+          "solution": "WITH units AS (\n  SELECT p.category, p.name AS product, SUM(i.quantity) AS units,\n         RANK() OVER (PARTITION BY p.category ORDER BY SUM(i.quantity) DESC) AS place\n  FROM order_items i\n  JOIN orders o ON o.id = i.order_id\n  JOIN products p ON p.id = i.product_id\n  WHERE o.status = 'paid'\n  GROUP BY p.id, p.category, p.name\n)\nSELECT category, product, units\nFROM units\nWHERE place = 1\nORDER BY category, product;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch6",
+          "title": "Medium: Average basket",
+          "promptMarkdown": "For each customer with paid orders, show `name`, their number of paid `orders` and their average order value (`average_order`, 2 decimals). Highest average first, then by name.",
+          "starterCode": "",
+          "hint": "Revenue divided by `COUNT(DISTINCT o.id)`.",
+          "solution": "SELECT c.name, COUNT(DISTINCT o.id) AS orders,\n       ROUND(SUM(i.quantity * i.unit_price) / COUNT(DISTINCT o.id), 2) AS average_order\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY c.id, c.name\nORDER BY average_order DESC, c.name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch7",
+          "title": "Hard: Up or down",
+          "promptMarkdown": "For each month with paid orders, show `month`, `revenue` (2 decimals) and the change from the month before as a percentage (`change_pct`, 1 decimal; empty for the first month). In month order.",
+          "starterCode": "",
+          "hint": "Monthly revenue in a CTE, then `100.0 * (revenue - LAG(revenue) OVER (ORDER BY month)) / LAG(revenue) OVER (ORDER BY month)`.",
+          "solution": "WITH monthly AS (\n  SELECT strftime('%Y-%m', o.ordered_on) AS month, SUM(i.quantity * i.unit_price) AS revenue\n  FROM orders o\n  JOIN order_items i ON i.order_id = o.id\n  WHERE o.status = 'paid'\n  GROUP BY month\n)\nSELECT month, ROUND(revenue, 2) AS revenue,\n       ROUND(100.0 * (revenue - LAG(revenue) OVER (ORDER BY month)) / LAG(revenue) OVER (ORDER BY month), 1) AS change_pct\nFROM monthly\nORDER BY month;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch8",
+          "title": "Hard: Coming back",
+          "promptMarkdown": "Show the customers with two or more paid orders: `name`, `orders`, their first and last paid order dates (`first_order`, `last_order`) and the whole days between them (`days_between`). Most orders first, then by name.",
+          "starterCode": "",
+          "hint": "Group paid orders by customer with `HAVING COUNT(*) >= 2`; `CAST(julianday(MAX(…)) - julianday(MIN(…)) AS INTEGER)`.",
+          "solution": "SELECT c.name, COUNT(*) AS orders,\n       MIN(o.ordered_on) AS first_order, MAX(o.ordered_on) AS last_order,\n       CAST(julianday(MAX(o.ordered_on)) - julianday(MIN(o.ordered_on)) AS INTEGER) AS days_between\nFROM customers c\nJOIN orders o ON o.customer_id = c.id\nWHERE o.status = 'paid'\nGROUP BY c.id, c.name\nHAVING COUNT(*) >= 2\nORDER BY orders DESC, c.name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch9",
+          "title": "Expert: What the discounts cost",
+          "promptMarkdown": "For each product sold below its list price in paid orders, show the product's name (`product`), the units sold at a discount (`discounted_units`) and the money given away (`given_away`: list price minus price charged, times quantity; 2 decimals). Most given away first, then by product.",
+          "starterCode": "",
+          "hint": "Join items to products and orders; `WHERE i.unit_price < p.price AND o.status = 'paid'`.",
+          "solution": "SELECT p.name AS product, SUM(i.quantity) AS discounted_units,\n       ROUND(SUM((p.price - i.unit_price) * i.quantity), 2) AS given_away\nFROM order_items i\nJOIN products p ON p.id = i.product_id\nJOIN orders o ON o.id = i.order_id\nWHERE o.status = 'paid' AND i.unit_price < p.price\nGROUP BY p.id, p.name\nORDER BY given_away DESC, product;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "shop_orders_ch10",
+          "title": "Expert: Customer summary",
+          "promptMarkdown": "Create a view `customer_summary` with every customer's `name`, `city`, paid `orders` (0 if none), `revenue` (2 decimals, 0 if none), date of their last paid order (`last_order`, empty if none) and `place` (RANK by revenue, highest first).",
+          "starterCode": "",
+          "hint": "Inside the view: a CTE of paid totals per customer, LEFT JOINed to customers, with COALESCE and `RANK() OVER (ORDER BY …)`.",
+          "solution": "CREATE VIEW customer_summary AS\nWITH paid AS (\n  SELECT o.customer_id, COUNT(DISTINCT o.id) AS orders,\n         SUM(i.quantity * i.unit_price) AS revenue, MAX(o.ordered_on) AS last_order\n  FROM orders o\n  JOIN order_items i ON i.order_id = o.id\n  WHERE o.status = 'paid'\n  GROUP BY o.customer_id\n)\nSELECT c.name, c.city,\n       COALESCE(p.orders, 0) AS orders,\n       ROUND(COALESCE(p.revenue, 0), 2) AS revenue,\n       p.last_order,\n       RANK() OVER (ORDER BY COALESCE(p.revenue, 0) DESC) AS place\nFROM customers c\nLEFT JOIN paid p ON p.customer_id = c.id;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The customer_summary view has the right columns",
+                "assertion": "SELECT name FROM pragma_table_info('customer_summary') ORDER BY cid"
+              },
+              {
+                "id": "t2",
+                "label": "The customer_summary view gives the right rows",
+                "assertion": "SELECT * FROM customer_summary ORDER BY name"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "shop_orders_q1",
+            "type": "mcq",
+            "prompt": "Why is revenue `quantity * unit_price` and not `quantity * price`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "unit_price is what was actually charged, after any discount"
+              },
+              {
+                "id": "b",
+                "label": "price can be NULL"
+              },
+              {
+                "id": "c",
+                "label": "unit_price is faster"
+              },
+              {
+                "id": "d",
+                "label": "They are always the same"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The list price can change, and discounts lower the charge."
+          },
+          {
+            "id": "shop_orders_q2",
+            "type": "mcq",
+            "prompt": "Why `COUNT(DISTINCT o.id)` after joining orders to their items?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is needed by GROUP BY"
+              },
+              {
+                "id": "b",
+                "label": "To skip NULLs"
+              },
+              {
+                "id": "c",
+                "label": "Each order has one row per item, so COUNT(*) would count items"
+              },
+              {
+                "id": "d",
+                "label": "DISTINCT sorts the ids"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Joining to a \"many\" table multiplies the rows."
+          },
+          {
+            "id": "shop_orders_q3",
+            "type": "mcq",
+            "prompt": "Which finds customers with no orders at all?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id)"
+              },
+              {
+                "id": "b",
+                "label": "GROUP BY customer_id"
+              },
+              {
+                "id": "c",
+                "label": "WHERE orders = 0"
+              },
+              {
+                "id": "d",
+                "label": "INNER JOIN orders"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "NOT EXISTS is safe even if a column has NULLs."
+          },
+          {
+            "id": "shop_orders_q4",
+            "type": "mcq",
+            "prompt": "What does `strftime('%Y-%m', ordered_on)` give for '2026-07-30'?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "'2026-07'"
+              },
+              {
+                "id": "b",
+                "label": "'2026-07-30'"
+              },
+              {
+                "id": "c",
+                "label": "'07'"
+              },
+              {
+                "id": "d",
+                "label": "'July'"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Good for grouping by month."
+          },
+          {
+            "id": "shop_orders_q5",
+            "type": "shortText",
+            "prompt": "Which window function gives the previous month's revenue in a month-by-month list?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "LAG"
+            },
+            "explanation": "`LAG(revenue) OVER (ORDER BY month)`."
+          },
+          {
+            "id": "shop_orders_q6",
+            "type": "mcq",
+            "prompt": "Why RANK for the best seller in each category?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "ROW_NUMBER can't partition"
+              },
+              {
+                "id": "b",
+                "label": "RANK skips NULLs"
+              },
+              {
+                "id": "c",
+                "label": "Two products with the same units both stay"
+              },
+              {
+                "id": "d",
+                "label": "RANK is faster"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Kitchen has a tie."
+          },
+          {
+            "id": "shop_orders_q7",
+            "type": "mcq",
+            "prompt": "Why is change_pct empty for the first month?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "There is an error"
+              },
+              {
+                "id": "b",
+                "label": "The first month is skipped"
+              },
+              {
+                "id": "c",
+                "label": "It is 0"
+              },
+              {
+                "id": "d",
+                "label": "LAG has no earlier month, so the sum is NULL"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Anything with NULL is NULL."
+          },
+          {
+            "id": "shop_orders_q8",
+            "type": "mcq",
+            "prompt": "Where does the \"two or more paid orders\" filter go?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "In the ORDER BY"
+              },
+              {
+                "id": "b",
+                "label": "HAVING COUNT(*) >= 2"
+              },
+              {
+                "id": "c",
+                "label": "In the JOIN"
+              },
+              {
+                "id": "d",
+                "label": "WHERE COUNT(*) >= 2"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Conditions on groups go in HAVING."
+          },
+          {
+            "id": "shop_orders_q9",
+            "type": "mcq",
+            "prompt": "Why does the view LEFT JOIN customers to the paid totals?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To sort them"
+              },
+              {
+                "id": "b",
+                "label": "Views must"
+              },
+              {
+                "id": "c",
+                "label": "To remove duplicates"
+              },
+              {
+                "id": "d",
+                "label": "So customers with no paid orders still appear, with 0"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "COALESCE turns their NULLs into 0."
+          },
+          {
+            "id": "shop_orders_q10",
+            "type": "mcq",
+            "prompt": "Why build a report from the smallest correct query up?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is faster to run"
+              },
+              {
+                "id": "b",
+                "label": "SQLite needs it"
+              },
+              {
+                "id": "c",
+                "label": "Views need it"
+              },
+              {
+                "id": "d",
+                "label": "Each step can be checked by eye before the next is added"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A wrong join is easy to spot early and hard to find later."
+          }
+        ]
+      },
+      "database": {
+        "setupSql": "CREATE TABLE customers (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  email TEXT,\n  city TEXT,\n  joined TEXT\n);\nCREATE TABLE products (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  category TEXT,\n  price REAL\n);\nCREATE TABLE orders (\n  id INTEGER PRIMARY KEY,\n  customer_id INTEGER,\n  ordered_on TEXT,\n  status TEXT\n);\nCREATE TABLE order_items (\n  order_id INTEGER,\n  product_id INTEGER,\n  quantity INTEGER,\n  unit_price REAL\n);\nINSERT INTO customers (id, name, email, city, joined) VALUES\n  (1, 'Amara Osei', 'amara.osei@example.com', 'Leeds', '2026-01-12'),\n  (2, 'Ben Hartley', 'ben.hartley@example.com', 'York', '2026-02-03'),\n  (3, 'Chloe Dubois', 'chloe.dubois@example.com', 'Leeds', '2026-02-20'),\n  (4, 'Dev Patel', 'dev.patel@example.com', 'Hull', '2026-03-15'),\n  (5, 'Elena Rossi', 'elena.rossi@example.com', 'York', '2026-04-02'),\n  (6, 'Finn Murphy', 'finn.murphy@example.com', 'Leeds', '2026-05-18'),\n  (7, 'Grace Liu', 'grace.liu@example.com', 'Hull', '2026-06-30'),\n  (8, 'Hassan Ali', 'hassan.ali@example.com', 'York', '2026-09-01');\nINSERT INTO products (id, name, category, price) VALUES\n  (1, 'Green tea', 'Tea', 4.5),\n  (2, 'Earl Grey', 'Tea', 5),\n  (3, 'Chai blend', 'Tea', 6),\n  (4, 'House espresso', 'Coffee', 8),\n  (5, 'Decaf beans', 'Coffee', 7.5),\n  (6, 'Cold brew pack', 'Coffee', 9),\n  (7, 'Teapot', 'Kitchen', 22),\n  (8, 'Milk frother', 'Kitchen', 18),\n  (9, 'Mug set', 'Kitchen', 15),\n  (10, 'Tea strainer', 'Kitchen', 3.5);\nINSERT INTO orders (id, customer_id, ordered_on, status) VALUES\n  (1, 1, '2026-05-04', 'paid'),\n  (2, 2, '2026-05-11', 'paid'),\n  (3, 3, '2026-05-20', 'paid'),\n  (4, 1, '2026-06-02', 'paid'),\n  (5, 4, '2026-06-09', 'cancelled'),\n  (6, 5, '2026-06-15', 'paid'),\n  (7, 2, '2026-06-28', 'paid'),\n  (8, 6, '2026-07-05', 'paid'),\n  (9, 3, '2026-07-19', 'paid'),\n  (10, 1, '2026-07-30', 'paid'),\n  (11, 7, '2026-08-08', 'paid'),\n  (12, 4, '2026-08-14', 'paid'),\n  (13, 5, '2026-08-25', 'cancelled'),\n  (14, 2, '2026-09-03', 'paid'),\n  (15, 6, '2026-09-17', 'paid'),\n  (16, 1, '2026-09-29', 'paid'),\n  (17, 3, '2026-10-06', 'paid'),\n  (18, 7, '2026-10-12', 'paid'),\n  (19, 5, '2026-10-20', 'paid');\nINSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES\n  (1, 1, 2, 4.5),\n  (1, 7, 1, 22),\n  (2, 4, 2, 8),\n  (3, 2, 1, 5),\n  (3, 9, 1, 15),\n  (4, 3, 2, 6),\n  (5, 8, 1, 18),\n  (6, 5, 1, 7.5),\n  (6, 1, 1, 4.5),\n  (7, 4, 1, 7.2),\n  (8, 6, 3, 9),\n  (8, 9, 1, 13.5),\n  (9, 2, 2, 5),\n  (9, 3, 1, 6),\n  (10, 7, 1, 19.8),\n  (10, 1, 3, 4.5),\n  (11, 8, 1, 18),\n  (11, 4, 1, 8),\n  (12, 3, 2, 5.4),\n  (13, 6, 2, 9),\n  (14, 4, 3, 8),\n  (15, 2, 1, 5),\n  (15, 5, 2, 7.5),\n  (16, 9, 1, 15),\n  (16, 3, 1, 6),\n  (17, 1, 2, 4.5),\n  (18, 6, 2, 8.1),\n  (18, 8, 1, 18),\n  (19, 2, 1, 5),\n  (19, 7, 1, 22);\n",
+        "altSetupSql": "CREATE TABLE customers (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  email TEXT,\n  city TEXT,\n  joined TEXT\n);\nCREATE TABLE products (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  category TEXT,\n  price REAL\n);\nCREATE TABLE orders (\n  id INTEGER PRIMARY KEY,\n  customer_id INTEGER,\n  ordered_on TEXT,\n  status TEXT\n);\nCREATE TABLE order_items (\n  order_id INTEGER,\n  product_id INTEGER,\n  quantity INTEGER,\n  unit_price REAL\n);\nINSERT INTO customers (id, name, email, city, joined) VALUES\n  (1, 'Ivo Petrov', 'ivo.petrov@example.com', 'Bristol', '2026-03-01'),\n  (2, 'Jade Moss', 'jade.moss@example.com', 'Bath', '2026-04-10'),\n  (3, 'Kenji Sato', 'kenji.sato@example.com', 'Bristol', '2026-05-05'),\n  (4, 'Lara Costa', 'lara.costa@example.com', 'Bath', '2026-06-06'),\n  (5, 'Mo Farouk', 'mo.farouk@example.com', 'Bristol', '2026-07-07');\nINSERT INTO products (id, name, category, price) VALUES\n  (1, 'Oolong', 'Tea', 7),\n  (2, 'Mint tea', 'Tea', 3.8),\n  (3, 'Filter beans', 'Coffee', 6.5),\n  (4, 'Espresso cups', 'Kitchen', 12),\n  (5, 'Kettle', 'Kitchen', 35),\n  (6, 'Coffee grinder', 'Kitchen', 28);\nINSERT INTO orders (id, customer_id, ordered_on, status) VALUES\n  (1, 1, '2026-06-03', 'paid'),\n  (2, 2, '2026-06-20', 'paid'),\n  (3, 1, '2026-07-08', 'paid'),\n  (4, 3, '2026-07-22', 'cancelled'),\n  (5, 3, '2026-08-02', 'paid'),\n  (6, 5, '2026-08-30', 'paid'),\n  (7, 2, '2026-09-12', 'paid'),\n  (8, 1, '2026-10-01', 'paid');\nINSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES\n  (1, 1, 2, 7),\n  (2, 5, 1, 35),\n  (2, 2, 1, 3.8),\n  (3, 3, 2, 6.5),\n  (4, 4, 1, 12),\n  (5, 2, 3, 3.8),\n  (5, 4, 2, 10.8),\n  (6, 3, 1, 6.5),\n  (7, 1, 1, 6.3),\n  (7, 3, 2, 6.5),\n  (8, 5, 1, 31.5);\n",
+        "tables": [
+          {
+            "name": "customers",
+            "columns": [
+              "id",
+              "name",
+              "email",
+              "city",
+              "joined"
+            ]
+          },
+          {
+            "name": "products",
+            "columns": [
+              "id",
+              "name",
+              "category",
+              "price"
+            ]
+          },
+          {
+            "name": "orders",
+            "columns": [
+              "id",
+              "customer_id",
+              "ordered_on",
+              "status"
+            ]
+          },
+          {
+            "name": "order_items",
+            "columns": [
+              "order_id",
+              "product_id",
+              "quantity",
+              "unit_price"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "school_grades",
+      "title": "A school's grades",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "course_marks",
+          "label": "Course marks",
+          "code": "SELECT c.title AS course, s.name,\n       ROUND(SUM(COALESCE(r.score, 0) * a.weight) / 100.0, 1) AS mark\nFROM enrolments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.course_id\nJOIN assessments a ON a.course_id = e.course_id\nLEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\nGROUP BY e.student_id, e.course_id, c.title, s.name\nORDER BY course, mark DESC, s.name;"
+        },
+        {
+          "id": "what_should_exist",
+          "label": "What should exist",
+          "code": "SELECT s.name, a.title\nFROM enrolments e\nJOIN students s ON s.id = e.student_id\nJOIN assessments a ON a.course_id = e.course_id\nORDER BY s.name, a.due_on;"
+        }
+      ],
+      "intro": {
+        "title": "A school's grades",
+        "bodyMarkdown": "A school wants its term's marks worked out. Students are enrolled on `courses`; each course has `assessments`, each with a `weight` (a course's weights add up to 100) and a due date; `results` holds each student's `score` out of 100.\n\nOne rule matters more than any other here: **work that wasn't handed in has no row in results**, and it counts as 0. A plain join from results would quietly skip it and make the student look better. So start from what should exist, every enrolled student with every assessment of their course, and LEFT JOIN the results onto that:\n\n```\nSELECT c.title AS course, s.name,\n       ROUND(SUM(COALESCE(r.score, 0) * a.weight) / 100.0, 1) AS mark\nFROM enrolments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.course_id\nJOIN assessments a ON a.course_id = e.course_id\nLEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\nGROUP BY e.student_id, e.course_id, c.title, s.name\nORDER BY course, mark DESC, s.name;\n```\n\nThe course mark is the weighted sum: each score times its weight, added up, divided by 100. Multiplying whole numbers first and dividing by `100.0` at the end keeps it exact, so two students on the same marks really do tie.\n\nGrades are bands of the mark: A from 80, B from 65, C from 50, F below that.",
+        "sandboxCode": "SELECT c.title AS course, s.name,\n       ROUND(SUM(COALESCE(r.score, 0) * a.weight) / 100.0, 1) AS mark\nFROM enrolments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.course_id\nJOIN assessments a ON a.course_id = e.course_id\nLEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\nGROUP BY e.student_id, e.course_id, c.title, s.name\nORDER BY course, mark DESC, s.name;",
+        "readMore": {
+          "label": "SQLite: SELECT and joins",
+          "url": "https://www.sqlite.org/lang_select.html",
+          "source": "SQLite documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "school_grades_ch1",
+          "title": "Easy: Class lists",
+          "promptMarkdown": "Show every enrolment as the course title (`course`) and the student's name (`student`). Sort by course, then student.",
+          "starterCode": "",
+          "hint": "Join enrolments to courses and students.",
+          "solution": "SELECT c.title AS course, s.name AS student\nFROM enrolments e\nJOIN courses c ON c.id = e.course_id\nJOIN students s ON s.id = e.student_id\nORDER BY course, student;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch2",
+          "title": "Easy: Class sizes",
+          "promptMarkdown": "Show every course's `title`, `teacher` and number of `students` (0 if none). Most students first, then by title.",
+          "starterCode": "",
+          "hint": "LEFT JOIN enrolments and `COUNT(e.student_id)`.",
+          "solution": "SELECT c.title, c.teacher, COUNT(e.student_id) AS students\nFROM courses c\nLEFT JOIN enrolments e ON e.course_id = c.id\nGROUP BY c.id, c.title, c.teacher\nORDER BY students DESC, c.title;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch3",
+          "title": "Easy: How each assessment went",
+          "promptMarkdown": "For each assessment, show the course title (`course`), the assessment's title (`assessment`), how many handed it in (`handed_in`) and their average score (`average`, 1 decimal). In course order, then by due date.",
+          "starterCode": "",
+          "hint": "Join results to assessments and courses; group by assessment. Sorting by `a.due_on` is fine even though it isn't shown.",
+          "solution": "SELECT c.title AS course, a.title AS assessment, COUNT(r.score) AS handed_in,\n       ROUND(AVG(r.score), 1) AS average\nFROM assessments a\nJOIN courses c ON c.id = a.course_id\nJOIN results r ON r.assessment_id = a.id\nGROUP BY a.id, c.title, a.title, a.due_on\nORDER BY course, a.due_on;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch4",
+          "title": "Medium: Missing work",
+          "promptMarkdown": "List the work that wasn't handed in: the student's `name`, the course title (`course`) and the assessment title (`assessment`). Sort by name, course, then assessment.",
+          "starterCode": "",
+          "hint": "Every enrolled student with every assessment of their course, `WHERE NOT EXISTS` a matching result.",
+          "solution": "SELECT s.name, c.title AS course, a.title AS assessment\nFROM enrolments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.course_id\nJOIN assessments a ON a.course_id = e.course_id\nWHERE NOT EXISTS (\n  SELECT 1 FROM results r WHERE r.assessment_id = a.id AND r.student_id = e.student_id\n)\nORDER BY s.name, course, assessment;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch5",
+          "title": "Medium: Course marks",
+          "promptMarkdown": "Show each student's mark on each course they take: `course`, `name` and `mark` (weighted, with missing work as 0, 1 decimal). Sort by course, then highest mark, then name.",
+          "starterCode": "",
+          "hint": "The lesson's example.",
+          "solution": "SELECT c.title AS course, s.name,\n       ROUND(SUM(COALESCE(r.score, 0) * a.weight) / 100.0, 1) AS mark\nFROM enrolments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.course_id\nJOIN assessments a ON a.course_id = e.course_id\nLEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\nGROUP BY e.student_id, e.course_id, c.title, s.name\nORDER BY course, mark DESC, s.name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch6",
+          "title": "Medium: Letter grades",
+          "promptMarkdown": "The same, with a `grade` beside each mark: `A` from 80, `B` from 65, `C` from 50, `F` below. Columns `course`, `name`, `mark`, `grade`. Sort by course, then highest mark, then name.",
+          "starterCode": "",
+          "hint": "Work the marks out in a CTE, then a CASE on the mark.",
+          "solution": "WITH marks AS (\n  SELECT c.title AS course, s.name, e.student_id,\n         SUM(COALESCE(r.score, 0) * a.weight) / 100.0 AS mark\n  FROM enrolments e\n  JOIN students s ON s.id = e.student_id\n  JOIN courses c ON c.id = e.course_id\n  JOIN assessments a ON a.course_id = e.course_id\n  LEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\n  GROUP BY e.student_id, e.course_id, c.title, s.name\n)\nSELECT course, name, ROUND(mark, 1) AS mark,\n       CASE WHEN mark >= 80 THEN 'A' WHEN mark >= 65 THEN 'B' WHEN mark >= 50 THEN 'C' ELSE 'F' END AS grade\nFROM marks\nORDER BY course, mark DESC, name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch7",
+          "title": "Hard: Class rank",
+          "promptMarkdown": "Show each student's `place` on each course (RANK by mark, highest first; equal marks share a place): `course`, `name`, `mark` (1 decimal), `place`. Sort by course, then place, then name.",
+          "starterCode": "",
+          "hint": "`RANK() OVER (PARTITION BY course ORDER BY mark DESC)` on the marks CTE.",
+          "solution": "WITH marks AS (\n  SELECT c.title AS course, s.name, e.student_id,\n         SUM(COALESCE(r.score, 0) * a.weight) / 100.0 AS mark\n  FROM enrolments e\n  JOIN students s ON s.id = e.student_id\n  JOIN courses c ON c.id = e.course_id\n  JOIN assessments a ON a.course_id = e.course_id\n  LEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\n  GROUP BY e.student_id, e.course_id, c.title, s.name\n)\nSELECT course, name, ROUND(mark, 1) AS mark,\n       RANK() OVER (PARTITION BY course ORDER BY mark DESC) AS place\nFROM marks\nORDER BY course, place, name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch8",
+          "title": "Hard: Grade table",
+          "promptMarkdown": "For each course with students, show `course` and how many students got each grade, as columns `a`, `b`, `c` and `f`. Sort by course.",
+          "starterCode": "",
+          "hint": "Marks in a CTE, then `COUNT(*) FILTER (WHERE mark >= 80) AS a` and so on.",
+          "solution": "WITH marks AS (\n  SELECT c.title AS course, s.name, e.student_id,\n         SUM(COALESCE(r.score, 0) * a.weight) / 100.0 AS mark\n  FROM enrolments e\n  JOIN students s ON s.id = e.student_id\n  JOIN courses c ON c.id = e.course_id\n  JOIN assessments a ON a.course_id = e.course_id\n  LEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\n  GROUP BY e.student_id, e.course_id, c.title, s.name\n)\nSELECT course,\n       COUNT(*) FILTER (WHERE mark >= 80) AS a,\n       COUNT(*) FILTER (WHERE mark >= 65 AND mark < 80) AS b,\n       COUNT(*) FILTER (WHERE mark >= 50 AND mark < 65) AS c,\n       COUNT(*) FILTER (WHERE mark < 50) AS f\nFROM marks\nGROUP BY course\nORDER BY course;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch9",
+          "title": "Expert: Progress",
+          "promptMarkdown": "For each student and course with at least two results, show `name`, `course`, the score of their earliest handed-in assessment (`first_score`), of their latest (`last_score`) and the `change`. Biggest rise first, then by name, then course.",
+          "starterCode": "",
+          "hint": "Number each student's results on a course both ways by due date (ROW_NUMBER), count them with `COUNT(*) OVER (…)`, then pick the first and last with `MAX(CASE WHEN … THEN score END)`.",
+          "solution": "WITH r AS (\n  SELECT s.name, c.title AS course, res.score,\n         ROW_NUMBER() OVER (PARTITION BY res.student_id, a.course_id ORDER BY a.due_on) AS first_no,\n         ROW_NUMBER() OVER (PARTITION BY res.student_id, a.course_id ORDER BY a.due_on DESC) AS last_no,\n         COUNT(*) OVER (PARTITION BY res.student_id, a.course_id) AS handed_in\n  FROM results res\n  JOIN assessments a ON a.id = res.assessment_id\n  JOIN students s ON s.id = res.student_id\n  JOIN courses c ON c.id = a.course_id\n)\nSELECT name, course,\n       MAX(CASE WHEN first_no = 1 THEN score END) AS first_score,\n       MAX(CASE WHEN last_no = 1 THEN score END) AS last_score,\n       MAX(CASE WHEN last_no = 1 THEN score END) - MAX(CASE WHEN first_no = 1 THEN score END) AS change\nFROM r\nWHERE handed_in >= 2\nGROUP BY name, course\nORDER BY change DESC, name, course;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "school_grades_ch10",
+          "title": "Expert: Report cards",
+          "promptMarkdown": "Show one row per student with courses: `name`, number of `courses`, their `average` course mark (1 decimal), and their best course (`best_course`: highest mark, the first title alphabetically on a tie). Highest average first, then by name.",
+          "starterCode": "",
+          "hint": "Marks CTE, then ROW_NUMBER per student by mark DESC, course; group by student and pick the best with `MAX(CASE WHEN n = 1 THEN course END)`.",
+          "solution": "WITH marks AS (\n  SELECT c.title AS course, s.name, e.student_id,\n         SUM(COALESCE(r.score, 0) * a.weight) / 100.0 AS mark\n  FROM enrolments e\n  JOIN students s ON s.id = e.student_id\n  JOIN courses c ON c.id = e.course_id\n  JOIN assessments a ON a.course_id = e.course_id\n  LEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\n  GROUP BY e.student_id, e.course_id, c.title, s.name\n)\n, ranked AS (\n  SELECT student_id, name, course, mark,\n         ROW_NUMBER() OVER (PARTITION BY student_id ORDER BY mark DESC, course) AS n\n  FROM marks\n)\nSELECT name, COUNT(*) AS courses, ROUND(AVG(mark), 1) AS average,\n       MAX(CASE WHEN n = 1 THEN course END) AS best_course\nFROM ranked\nGROUP BY student_id, name\nORDER BY average DESC, name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "school_grades_q1",
+            "type": "mcq",
+            "prompt": "Why start the marks from enrolments and assessments, not from results?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Work not handed in has no result row, and must still count as 0"
+              },
+              {
+                "id": "b",
+                "label": "results has no scores"
+              },
+              {
+                "id": "c",
+                "label": "It is faster"
+              },
+              {
+                "id": "d",
+                "label": "results can't be joined"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Start from what should exist, then LEFT JOIN what does."
+          },
+          {
+            "id": "school_grades_q2",
+            "type": "mcq",
+            "prompt": "Why does the LEFT JOIN to results match on both assessment and student?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It doesn't need to"
+              },
+              {
+                "id": "b",
+                "label": "To sort the rows"
+              },
+              {
+                "id": "c",
+                "label": "So each enrolled student gets only their own result for each assessment"
+              },
+              {
+                "id": "d",
+                "label": "Because results has no id"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Matching on the assessment alone would bring in everyone's scores."
+          },
+          {
+            "id": "school_grades_q3",
+            "type": "mcq",
+            "prompt": "What does `COALESCE(r.score, 0)` do for missing work?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Skips it in SUM"
+              },
+              {
+                "id": "b",
+                "label": "Counts it as a score of 0"
+              },
+              {
+                "id": "c",
+                "label": "Gives an error"
+              },
+              {
+                "id": "d",
+                "label": "Removes the row"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A missing hand-in is worth nothing."
+          },
+          {
+            "id": "school_grades_q4",
+            "type": "mcq",
+            "prompt": "Why multiply whole numbers first and divide by 100.0 at the end?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Whole-number sums are exact, so equal marks really tie"
+              },
+              {
+                "id": "b",
+                "label": "It is shorter"
+              },
+              {
+                "id": "c",
+                "label": "100.0 is required"
+              },
+              {
+                "id": "d",
+                "label": "To round the mark"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Decimal steps like 0.3 * 88 can leave tiny rounding differences."
+          },
+          {
+            "id": "school_grades_q5",
+            "type": "shortText",
+            "prompt": "Which aggregate keyword limits COUNT(*) to some rows, as in counting the A grades?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "FILTER"
+            },
+            "explanation": "`COUNT(*) FILTER (WHERE mark >= 80)`."
+          },
+          {
+            "id": "school_grades_q6",
+            "type": "mcq",
+            "prompt": "Which finds work not handed in?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "WHERE score IS NULL in results"
+              },
+              {
+                "id": "b",
+                "label": "COUNT(score) = 0"
+              },
+              {
+                "id": "c",
+                "label": "NOT EXISTS a result for that student and assessment"
+              },
+              {
+                "id": "d",
+                "label": "WHERE score = 0"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "There is no row to find a NULL in."
+          },
+          {
+            "id": "school_grades_q7",
+            "type": "mcq",
+            "prompt": "Two students both have 88.0 on Maths. With RANK, what is the next student's place?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "1"
+              },
+              {
+                "id": "b",
+                "label": "4"
+              },
+              {
+                "id": "c",
+                "label": "2"
+              },
+              {
+                "id": "d",
+                "label": "3"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "RANK skips after a tie."
+          },
+          {
+            "id": "school_grades_q8",
+            "type": "mcq",
+            "prompt": "Why ORDER BY mark DESC, course for the best course?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "ROW_NUMBER needs two columns"
+              },
+              {
+                "id": "b",
+                "label": "So a tie between two courses always picks the same one"
+              },
+              {
+                "id": "c",
+                "label": "To skip NULLs"
+              },
+              {
+                "id": "d",
+                "label": "To sort the result"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "ROW_NUMBER needs an order that doesn't tie."
+          },
+          {
+            "id": "school_grades_q9",
+            "type": "mcq",
+            "prompt": "Why can't the SELECT list use the alias `last_score` to work out `change`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An alias can't be used elsewhere in the same SELECT list"
+              },
+              {
+                "id": "b",
+                "label": "Aliases are case-sensitive"
+              },
+              {
+                "id": "c",
+                "label": "change is a keyword"
+              },
+              {
+                "id": "d",
+                "label": "MAX can't be subtracted"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Repeat the expression, or use a CTE."
+          },
+          {
+            "id": "school_grades_q10",
+            "type": "mcq",
+            "prompt": "`COUNT(*) OVER (PARTITION BY student_id, course_id)` gives…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The number of students"
+              },
+              {
+                "id": "b",
+                "label": "A running count"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "How many results that student has on that course, on each of their rows"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A window keeps every row."
+          }
+        ]
+      },
+      "database": {
+        "setupSql": "CREATE TABLE students (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  year_group INTEGER\n);\nCREATE TABLE courses (\n  id INTEGER PRIMARY KEY,\n  title TEXT,\n  teacher TEXT\n);\nCREATE TABLE enrolments (\n  student_id INTEGER,\n  course_id INTEGER\n);\nCREATE TABLE assessments (\n  id INTEGER PRIMARY KEY,\n  course_id INTEGER,\n  title TEXT,\n  weight INTEGER,\n  due_on TEXT\n);\nCREATE TABLE results (\n  assessment_id INTEGER,\n  student_id INTEGER,\n  score INTEGER\n);\nINSERT INTO students (id, name, year_group) VALUES\n  (1, 'Aisha Khan', 11),\n  (2, 'Bruno Silva', 11),\n  (3, 'Cara Nolan', 11),\n  (4, 'Dmitri Ivanov', 10),\n  (5, 'Esme Clarke', 10),\n  (6, 'Felix Wong', 10),\n  (7, 'Gemma Hart', 11);\nINSERT INTO courses (id, title, teacher) VALUES\n  (1, 'Maths', 'Ms Adeyemi'),\n  (2, 'Biology', 'Mr Lindgren'),\n  (3, 'History', 'Ms Torres'),\n  (4, 'Art', 'Mr Okoro');\nINSERT INTO enrolments (student_id, course_id) VALUES\n  (1, 1),\n  (2, 1),\n  (3, 1),\n  (4, 1),\n  (5, 1),\n  (6, 1),\n  (1, 2),\n  (3, 2),\n  (5, 2),\n  (6, 2),\n  (7, 2),\n  (2, 3),\n  (4, 3),\n  (7, 3);\nINSERT INTO assessments (id, course_id, title, weight, due_on) VALUES\n  (1, 1, 'Algebra test', 30, '2026-09-18'),\n  (2, 1, 'Geometry project', 30, '2026-10-02'),\n  (3, 1, 'Mid-term exam', 40, '2026-10-16'),\n  (4, 2, 'Cells quiz', 20, '2026-09-15'),\n  (5, 2, 'Lab report', 40, '2026-09-29'),\n  (6, 2, 'Ecology essay', 40, '2026-10-13'),\n  (7, 3, 'Source analysis', 50, '2026-09-24'),\n  (8, 3, 'Essay', 50, '2026-10-08');\nINSERT INTO results (assessment_id, student_id, score) VALUES\n  (1, 1, 88),\n  (1, 2, 72),\n  (1, 3, 65),\n  (1, 4, 91),\n  (1, 5, 58),\n  (1, 6, 77),\n  (2, 1, 92),\n  (2, 2, 68),\n  (2, 3, 70),\n  (2, 4, 85),\n  (2, 6, 80),\n  (3, 1, 85),\n  (3, 2, 75),\n  (3, 3, 61),\n  (3, 4, 88),\n  (3, 5, 62),\n  (3, 6, 74),\n  (4, 1, 90),\n  (4, 3, 55),\n  (4, 5, 70),\n  (4, 6, 60),\n  (4, 7, 82),\n  (5, 1, 84),\n  (5, 3, 66),\n  (5, 5, 72),\n  (5, 7, 79),\n  (6, 1, 79),\n  (6, 3, 71),\n  (6, 5, 68),\n  (6, 6, 65),\n  (6, 7, 88),\n  (7, 2, 64),\n  (7, 4, 77),\n  (7, 7, 91),\n  (8, 2, 70),\n  (8, 7, 86);\n",
+        "altSetupSql": "CREATE TABLE students (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  year_group INTEGER\n);\nCREATE TABLE courses (\n  id INTEGER PRIMARY KEY,\n  title TEXT,\n  teacher TEXT\n);\nCREATE TABLE enrolments (\n  student_id INTEGER,\n  course_id INTEGER\n);\nCREATE TABLE assessments (\n  id INTEGER PRIMARY KEY,\n  course_id INTEGER,\n  title TEXT,\n  weight INTEGER,\n  due_on TEXT\n);\nCREATE TABLE results (\n  assessment_id INTEGER,\n  student_id INTEGER,\n  score INTEGER\n);\nINSERT INTO students (id, name, year_group) VALUES\n  (1, 'Hana Mori', 10),\n  (2, 'Ian Burke', 10),\n  (3, 'Jasmin Roy', 11),\n  (4, 'Kofi Asante', 11);\nINSERT INTO courses (id, title, teacher) VALUES\n  (1, 'Physics', 'Dr Bell'),\n  (2, 'Music', 'Ms Ray'),\n  (3, 'Drama', 'Mr Finch');\nINSERT INTO enrolments (student_id, course_id) VALUES\n  (1, 1),\n  (2, 1),\n  (3, 1),\n  (4, 1),\n  (2, 2),\n  (4, 2);\nINSERT INTO assessments (id, course_id, title, weight, due_on) VALUES\n  (1, 1, 'Forces test', 50, '2026-09-20'),\n  (2, 1, 'Circuits lab', 50, '2026-10-04'),\n  (3, 2, 'Performance', 60, '2026-09-27'),\n  (4, 2, 'Composition', 40, '2026-10-11');\nINSERT INTO results (assessment_id, student_id, score) VALUES\n  (1, 1, 74),\n  (1, 2, 58),\n  (1, 3, 90),\n  (1, 4, 66),\n  (2, 1, 80),\n  (2, 3, 85),\n  (2, 4, 70),\n  (3, 2, 88),\n  (3, 4, 61),\n  (4, 2, 76),\n  (4, 4, 59);\n",
+        "tables": [
+          {
+            "name": "students",
+            "columns": [
+              "id",
+              "name",
+              "year_group"
+            ]
+          },
+          {
+            "name": "courses",
+            "columns": [
+              "id",
+              "title",
+              "teacher"
+            ]
+          },
+          {
+            "name": "enrolments",
+            "columns": [
+              "student_id",
+              "course_id"
+            ]
+          },
+          {
+            "name": "assessments",
+            "columns": [
+              "id",
+              "course_id",
+              "title",
+              "weight",
+              "due_on"
+            ]
+          },
+          {
+            "name": "results",
+            "columns": [
+              "assessment_id",
+              "student_id",
+              "score"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "library_loans",
+      "title": "A library's loans",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "out_right_now",
+          "label": "Out right now",
+          "code": "SELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;"
+        },
+        {
+          "id": "days_between_dates",
+          "label": "Days between dates",
+          "code": "SELECT julianday('2026-10-24') - julianday('2026-10-06') AS days;"
+        }
+      ],
+      "intro": {
+        "title": "A library's loans",
+        "bodyMarkdown": "A small library wants to know where its books are. The library owns `books`, and of some books it has more than one physical `copies`. `members` borrow copies: each row of `loans` has the copy, the member, the date it was borrowed, the date it is due back (three weeks later) and the date it came back, `returned_on`, which is **NULL while the copy is still out**.\n\nSo a loan joins to its book through its copy: `loans → copies → books`. Today is 2026-10-24.\n\n```\nSELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;\n```\n\nDates are text in the form `YYYY-MM-DD`, so comparing them with `<` and `>` works, and `julianday()` turns them into day numbers to subtract. A loan is overdue when it is still out and its due date is before today.\n\nWatch the counts in this project: a book with two copies, each with several loans, makes many rows when joined, so count with care, or count in subqueries.",
+        "sandboxCode": "SELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;",
+        "readMore": {
+          "label": "SQLite: date and time functions",
+          "url": "https://www.sqlite.org/lang_datefunc.html",
+          "source": "SQLite documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "library_loans_ch1",
+          "title": "Easy: Out right now",
+          "promptMarkdown": "Show every copy that is out now: the book's `title`, the member's name (`member`) and `due_on`. Sort by due date, then title.",
+          "starterCode": "",
+          "hint": "The lesson's example: `WHERE l.returned_on IS NULL`.",
+          "solution": "SELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch2",
+          "title": "Easy: Overdue",
+          "promptMarkdown": "Show the loans that are overdue today: `title`, `member` and whole days overdue (`days_overdue`). Most overdue first, then by title.",
+          "starterCode": "",
+          "hint": "Still out and `l.due_on < '2026-10-24'`; `CAST(julianday('2026-10-24') - julianday(l.due_on) AS INTEGER)`.",
+          "solution": "SELECT b.title, m.name AS member,\n       CAST(julianday('2026-10-24') - julianday(l.due_on) AS INTEGER) AS days_overdue\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL AND l.due_on < '2026-10-24'\nORDER BY days_overdue DESC, b.title;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch3",
+          "title": "Easy: Loans by genre",
+          "promptMarkdown": "Show each `genre` and its number of `loans`, ever. Most first, then by genre.",
+          "starterCode": "",
+          "hint": "Join loans to copies and books; group by genre.",
+          "solution": "SELECT b.genre, COUNT(*) AS loans\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nGROUP BY b.genre\nORDER BY loans DESC, b.genre;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch4",
+          "title": "Medium: On the shelf",
+          "promptMarkdown": "For every book, show `title`, its number of `copies`, how many are out now (`out`) and how many are on the shelf (`available`). Sort by title.",
+          "starterCode": "",
+          "hint": "Count copies and open loans in two subqueries in the SELECT list, so the counts don't multiply each other.",
+          "solution": "SELECT b.title,\n       (SELECT COUNT(*) FROM copies c WHERE c.book_id = b.id) AS copies,\n       (SELECT COUNT(*) FROM loans l JOIN copies c ON c.id = l.copy_id\n        WHERE c.book_id = b.id AND l.returned_on IS NULL) AS out,\n       (SELECT COUNT(*) FROM copies c WHERE c.book_id = b.id)\n         - (SELECT COUNT(*) FROM loans l JOIN copies c ON c.id = l.copy_id\n            WHERE c.book_id = b.id AND l.returned_on IS NULL) AS available\nFROM books b\nORDER BY b.title;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch5",
+          "title": "Medium: Late returns",
+          "promptMarkdown": "Show the loans that came back late: `member`, `title` and whole days late (`days_late`). Latest first, then by member, then title.",
+          "starterCode": "",
+          "hint": "`WHERE l.returned_on > l.due_on`.",
+          "solution": "SELECT m.name AS member, b.title,\n       CAST(julianday(l.returned_on) - julianday(l.due_on) AS INTEGER) AS days_late\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on > l.due_on\nORDER BY days_late DESC, member, b.title;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch6",
+          "title": "Medium: Fines",
+          "promptMarkdown": "The fine is 0.25 for each day late: for loans returned late, up to the day they came back; for overdue loans still out, up to today. Show each member who owes something: `name` and `fine` (2 decimals). Highest first, then by name.",
+          "starterCode": "",
+          "hint": "Days late is `julianday(COALESCE(l.returned_on, '2026-10-24')) - julianday(l.due_on)`; keep loans where it is more than 0.",
+          "solution": "SELECT m.name,\n       ROUND(SUM(0.25 * (julianday(COALESCE(l.returned_on, '2026-10-24')) - julianday(l.due_on))), 2) AS fine\nFROM loans l\nJOIN members m ON m.id = l.member_id\nWHERE julianday(COALESCE(l.returned_on, '2026-10-24')) > julianday(l.due_on)\nGROUP BY m.id, m.name\nORDER BY fine DESC, m.name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch7",
+          "title": "Hard: Most borrowed in each genre",
+          "promptMarkdown": "For each `genre`, show its most borrowed book (`title`, and `loans`). Keep ties. Sort by genre, then title.",
+          "starterCode": "",
+          "hint": "Loans per book in a CTE with `RANK() OVER (PARTITION BY b.genre ORDER BY COUNT(*) DESC)`; keep 1.",
+          "solution": "WITH counts AS (\n  SELECT b.genre, b.title, COUNT(*) AS loans,\n         RANK() OVER (PARTITION BY b.genre ORDER BY COUNT(*) DESC) AS place\n  FROM loans l\n  JOIN copies c ON c.id = l.copy_id\n  JOIN books b ON b.id = c.book_id\n  GROUP BY b.id, b.genre, b.title\n)\nSELECT genre, title, loans\nFROM counts\nWHERE place = 1\nORDER BY genre, title;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch8",
+          "title": "Hard: How long books stay out",
+          "promptMarkdown": "For returned loans, show per `genre`: how many (`returned`), the average days kept (`average_days`, 1 decimal) and the longest (`longest_days`). Sort by genre.",
+          "starterCode": "",
+          "hint": "`julianday(l.returned_on) - julianday(l.borrowed_on)`, only `WHERE l.returned_on IS NOT NULL`.",
+          "solution": "SELECT b.genre, COUNT(*) AS returned,\n       ROUND(AVG(julianday(l.returned_on) - julianday(l.borrowed_on)), 1) AS average_days,\n       CAST(MAX(julianday(l.returned_on) - julianday(l.borrowed_on)) AS INTEGER) AS longest_days\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nWHERE l.returned_on IS NOT NULL\nGROUP BY b.genre\nORDER BY b.genre;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch9",
+          "title": "Expert: Every month",
+          "promptMarkdown": "Show every month (`month`, like `2026-05`) from the month of the first loan to the month of the last, with the number of loans borrowed in it (`loans`, 0 if none). In order.",
+          "starterCode": "",
+          "hint": "A recursive CTE of month starts: begin at `date(MIN(borrowed_on), 'start of month')`, add `'+1 month'`. LEFT JOIN loans on `strftime('%Y-%m', …)`.",
+          "solution": "WITH RECURSIVE months(start) AS (\n  SELECT date(MIN(borrowed_on), 'start of month') FROM loans\n  UNION ALL\n  SELECT date(start, '+1 month') FROM months\n  WHERE date(start, '+1 month') <= (SELECT MAX(borrowed_on) FROM loans)\n)\nSELECT strftime('%Y-%m', m.start) AS month, COUNT(l.id) AS loans\nFROM months m\nLEFT JOIN loans l ON strftime('%Y-%m', l.borrowed_on) = strftime('%Y-%m', m.start)\nGROUP BY m.start\nORDER BY month;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "library_loans_ch10",
+          "title": "Expert: Every copy out",
+          "promptMarkdown": "Show the books with no copy on the shelf right now: `title`, `copies`, and the earliest due date among their open loans (`back_by`). Soonest first, then by title.",
+          "starterCode": "",
+          "hint": "Group open loans by book, and compare their count with the number of copies in HAVING.",
+          "solution": "SELECT b.title, COUNT(*) AS copies, MIN(l.due_on) AS back_by\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nWHERE l.returned_on IS NULL\nGROUP BY b.id, b.title\nHAVING COUNT(*) = (SELECT COUNT(*) FROM copies c2 WHERE c2.book_id = b.id)\nORDER BY back_by, b.title;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "library_loans_q1",
+            "type": "mcq",
+            "prompt": "How do you know a copy is still out?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Its loan has no returned_on (NULL)"
+              },
+              {
+                "id": "b",
+                "label": "Its due_on is in the past"
+              },
+              {
+                "id": "c",
+                "label": "It has no loans"
+              },
+              {
+                "id": "d",
+                "label": "Its book has one copy"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "returned_on is filled in when it comes back."
+          },
+          {
+            "id": "library_loans_q2",
+            "type": "mcq",
+            "prompt": "How does a loan reach its book's title?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Through the genre"
+              },
+              {
+                "id": "b",
+                "label": "loans → books directly"
+              },
+              {
+                "id": "c",
+                "label": "loans → copies → books"
+              },
+              {
+                "id": "d",
+                "label": "loans → members → books"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "A loan is of a copy, and a copy is of a book."
+          },
+          {
+            "id": "library_loans_q3",
+            "type": "mcq",
+            "prompt": "Why can dates like '2026-10-06' be compared with `<`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "In YYYY-MM-DD form, text order is date order"
+              },
+              {
+                "id": "b",
+                "label": "They can't"
+              },
+              {
+                "id": "c",
+                "label": "SQLite has a date type"
+              },
+              {
+                "id": "d",
+                "label": "They are numbers"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Year first, then month, then day, all with leading zeros."
+          },
+          {
+            "id": "library_loans_q4",
+            "type": "mcq",
+            "prompt": "When is a loan overdue today?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "When it is still out and due_on < '2026-10-24'"
+              },
+              {
+                "id": "b",
+                "label": "When returned_on > due_on"
+              },
+              {
+                "id": "c",
+                "label": "When due_on is today"
+              },
+              {
+                "id": "d",
+                "label": "When it was borrowed over 21 days ago, returned or not"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A loan due today isn't overdue yet."
+          },
+          {
+            "id": "library_loans_q5",
+            "type": "shortText",
+            "prompt": "Which function turns a YYYY-MM-DD date into a day number you can subtract?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "julianday"
+            },
+            "explanation": "`julianday('2026-10-24') - julianday(due_on)`."
+          },
+          {
+            "id": "library_loans_q6",
+            "type": "mcq",
+            "prompt": "Why count copies and open loans in separate subqueries?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Subqueries are faster"
+              },
+              {
+                "id": "b",
+                "label": "COUNT only works once per query"
+              },
+              {
+                "id": "c",
+                "label": "To sort them"
+              },
+              {
+                "id": "d",
+                "label": "Joining both to books would multiply the rows and inflate the counts"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Each one-to-many join multiplies the rows of the other."
+          },
+          {
+            "id": "library_loans_q7",
+            "type": "mcq",
+            "prompt": "What does `COALESCE(returned_on, '2026-10-24')` do in the fines?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Counts an open loan up to today"
+              },
+              {
+                "id": "b",
+                "label": "Sets a return date in the table"
+              },
+              {
+                "id": "c",
+                "label": "Rounds the date"
+              },
+              {
+                "id": "d",
+                "label": "Skips open loans"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "It doesn't change the data, only the calculation."
+          },
+          {
+            "id": "library_loans_q8",
+            "type": "mcq",
+            "prompt": "Why does the month list need a recursive CTE?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "GROUP BY can't use dates"
+              },
+              {
+                "id": "b",
+                "label": "To sort months"
+              },
+              {
+                "id": "c",
+                "label": "strftime needs it"
+              },
+              {
+                "id": "d",
+                "label": "Months with no loans have no rows to group"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A calendar of months fills the gap."
+          },
+          {
+            "id": "library_loans_q9",
+            "type": "mcq",
+            "prompt": "What does `date('2026-05-18', 'start of month')` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "'2026-05'"
+              },
+              {
+                "id": "b",
+                "label": "'2026-05-01'"
+              },
+              {
+                "id": "c",
+                "label": "'2026-05-31'"
+              },
+              {
+                "id": "d",
+                "label": "'2026-06-01'"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Then +1 month steps from one month start to the next."
+          },
+          {
+            "id": "library_loans_q10",
+            "type": "mcq",
+            "prompt": "In \"Every copy out\", what does the HAVING compare?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Loans with members"
+              },
+              {
+                "id": "b",
+                "label": "Copies with genres"
+              },
+              {
+                "id": "c",
+                "label": "The number of open loans of a book with its number of copies"
+              },
+              {
+                "id": "d",
+                "label": "The due dates"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "When they are equal, nothing is on the shelf."
+          }
+        ]
+      },
+      "database": {
+        "setupSql": "CREATE TABLE members (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  joined TEXT\n);\nCREATE TABLE books (\n  id INTEGER PRIMARY KEY,\n  title TEXT,\n  author TEXT,\n  genre TEXT\n);\nCREATE TABLE copies (\n  id INTEGER PRIMARY KEY,\n  book_id INTEGER\n);\nCREATE TABLE loans (\n  id INTEGER PRIMARY KEY,\n  copy_id INTEGER,\n  member_id INTEGER,\n  borrowed_on TEXT,\n  due_on TEXT,\n  returned_on TEXT\n);\nINSERT INTO members (id, name, joined) VALUES\n  (1, 'Iris Bloom', '2024-02-10'),\n  (2, 'Jonah Reyes', '2024-09-01'),\n  (3, 'Kemi Adebayo', '2025-01-15'),\n  (4, 'Luca Ferri', '2025-06-20'),\n  (5, 'Maya Singh', '2026-03-03'),\n  (6, 'Noah Fischer', '2026-08-12');\nINSERT INTO books (id, title, author, genre) VALUES\n  (1, 'Orchard of Glass Bells', 'Rhea Monroe', 'Fiction'),\n  (2, 'Ember and Saltwater', 'Tomas Varga', 'Fiction'),\n  (3, 'Quiet Engines of Spring', 'Lena Okafor', 'Science'),\n  (4, 'A Map for Low Tide', 'Ines Calder', 'Fiction'),\n  (5, 'Small Wonders of Soil', 'Dara Quinn', 'Science'),\n  (6, 'The Copper Crown Years', 'Victor Hale', 'History'),\n  (7, 'Harbour Walls of Vell', 'Moira Banks', 'History');\nINSERT INTO copies (id, book_id) VALUES\n  (1, 1),\n  (2, 1),\n  (3, 2),\n  (4, 3),\n  (5, 4),\n  (6, 4),\n  (7, 5),\n  (8, 6),\n  (9, 7);\nINSERT INTO loans (id, copy_id, member_id, borrowed_on, due_on, returned_on) VALUES\n  (1, 8, 3, '2026-05-18', '2026-06-08', '2026-06-05'),\n  (2, 1, 1, '2026-07-02', '2026-07-23', '2026-07-20'),\n  (3, 3, 2, '2026-07-05', '2026-07-26', '2026-07-30'),\n  (4, 4, 3, '2026-07-14', '2026-08-04', '2026-08-01'),\n  (5, 5, 1, '2026-07-28', '2026-08-18', '2026-08-25'),\n  (6, 8, 4, '2026-08-03', '2026-08-24', '2026-08-24'),\n  (7, 2, 5, '2026-08-10', '2026-08-31', '2026-09-02'),\n  (8, 9, 2, '2026-08-19', '2026-09-09', '2026-09-05'),\n  (9, 6, 3, '2026-09-01', '2026-09-22', '2026-09-20'),\n  (10, 1, 4, '2026-09-06', '2026-09-27', '2026-10-04'),\n  (11, 3, 1, '2026-09-15', '2026-10-06', NULL),\n  (12, 7, 2, '2026-09-22', '2026-10-13', '2026-10-10'),\n  (13, 5, 5, '2026-09-28', '2026-10-19', NULL),\n  (14, 2, 3, '2026-10-03', '2026-10-24', NULL),\n  (15, 4, 4, '2026-10-08', '2026-10-29', NULL),\n  (16, 1, 2, '2026-10-12', '2026-11-02', NULL),\n  (17, 6, 1, '2026-10-15', '2026-11-05', NULL);\n",
+        "altSetupSql": "CREATE TABLE members (\n  id INTEGER PRIMARY KEY,\n  name TEXT,\n  joined TEXT\n);\nCREATE TABLE books (\n  id INTEGER PRIMARY KEY,\n  title TEXT,\n  author TEXT,\n  genre TEXT\n);\nCREATE TABLE copies (\n  id INTEGER PRIMARY KEY,\n  book_id INTEGER\n);\nCREATE TABLE loans (\n  id INTEGER PRIMARY KEY,\n  copy_id INTEGER,\n  member_id INTEGER,\n  borrowed_on TEXT,\n  due_on TEXT,\n  returned_on TEXT\n);\nINSERT INTO members (id, name, joined) VALUES\n  (1, 'Ola Berg', '2025-01-01'),\n  (2, 'Pia Lund', '2025-05-05'),\n  (3, 'Rami Haddad', '2026-02-02'),\n  (4, 'Sofia Marin', '2026-07-07');\nINSERT INTO books (id, title, author, genre) VALUES\n  (1, 'Lanterns Over Clay', 'Ana Ruiz', 'Poetry'),\n  (2, 'Paper Rivers Running', 'Bo Lind', 'Poetry'),\n  (3, 'Iron and Orchid Gates', 'Cal West', 'History');\nINSERT INTO copies (id, book_id) VALUES\n  (1, 1),\n  (2, 2),\n  (3, 3),\n  (4, 3);\nINSERT INTO loans (id, copy_id, member_id, borrowed_on, due_on, returned_on) VALUES\n  (1, 1, 1, '2026-06-01', '2026-06-22', '2026-06-25'),\n  (2, 3, 2, '2026-06-10', '2026-07-01', '2026-06-28'),\n  (3, 2, 3, '2026-08-04', '2026-08-25', '2026-08-24'),\n  (4, 4, 1, '2026-08-20', '2026-09-10', '2026-09-15'),\n  (5, 1, 2, '2026-09-25', '2026-10-16', NULL),\n  (6, 3, 3, '2026-10-05', '2026-10-26', NULL);\n",
+        "tables": [
+          {
+            "name": "members",
+            "columns": [
+              "id",
+              "name",
+              "joined"
+            ]
+          },
+          {
+            "name": "books",
+            "columns": [
+              "id",
+              "title",
+              "author",
+              "genre"
+            ]
+          },
+          {
+            "name": "copies",
+            "columns": [
+              "id",
+              "book_id"
+            ]
+          },
+          {
+            "name": "loans",
+            "columns": [
+              "id",
+              "copy_id",
+              "member_id",
+              "borrowed_on",
+              "due_on",
+              "returned_on"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "data_cleaning",
+      "title": "Cleaning a messy import",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "plans_as_typed",
+          "label": "Plans as typed",
+          "code": "SELECT plan, COUNT(*) AS signups FROM signups GROUP BY plan ORDER BY plan;"
+        },
+        {
+          "id": "cleaned_emails",
+          "label": "Cleaned emails",
+          "code": "SELECT id, email, lower(trim(email)) AS clean_email FROM signups ORDER BY clean_email, id;"
+        },
+        {
+          "id": "two_date_formats",
+          "label": "Two date formats",
+          "code": "SELECT id, signed_up,\n       CASE WHEN signed_up LIKE '__/__/____'\n            THEN substr(signed_up, 7, 4) || '-' || substr(signed_up, 4, 2) || '-' || substr(signed_up, 1, 2)\n            ELSE signed_up END AS iso\nFROM signups ORDER BY id;"
+        }
+      ],
+      "intro": {
+        "title": "Cleaning a messy import",
+        "bodyMarkdown": "Real data is rarely tidy. A new app imported its first sign-ups from a web form and a spreadsheet, and `signups` shows it: emails in mixed case with stray spaces, the same person signed up twice, plans written `Basic`, `basic ` and ` PRO`, dates in two formats, phone numbers with brackets and dashes, and empty strings where NULL was meant.\n\nCleaning goes in a safe order: **look** first (what values are really there?), then **query** the cleaned version without changing anything, and only when that looks right, **change** the data or copy it into a clean table.\n\n```\nSELECT plan, COUNT(*) AS signups FROM signups GROUP BY plan ORDER BY plan;\n```\n\nThe tools are ones you know. `trim()` takes spaces off both ends and `lower()` evens out case, so `lower(trim(email))` is the email to compare by. `NULLIF(trim(x), '')` turns blank text into a real NULL. `replace()` strips characters. `substr()` and `||` rebuild `05/03/2026` (day/month/year) as `2026-03-05`, and `LIKE '__/__/____'` spots that format, since `_` matches any one character.\n\nDuplicates are rows whose cleaned email is the same. Keep the first (lowest id) of each and remove the rest: `ROW_NUMBER() OVER (PARTITION BY lower(trim(email)) ORDER BY id)` numbers each person's sign-ups, and number 1 is the one to keep.",
+        "sandboxCode": "SELECT plan, COUNT(*) AS signups FROM signups GROUP BY plan ORDER BY plan;",
+        "readMore": {
+          "label": "SQLite: core functions",
+          "url": "https://www.sqlite.org/lang_corefunc.html",
+          "source": "SQLite documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "data_cleaning_ch1",
+          "title": "Easy: Look first",
+          "promptMarkdown": "Show each `plan` exactly as it was typed, with how many sign-ups have it (`signups`). Sort by plan.",
+          "starterCode": "",
+          "hint": "Group by the raw column. The spaces and capitals make each spelling its own group.",
+          "solution": "SELECT plan, COUNT(*) AS signups\nFROM signups\nGROUP BY plan\nORDER BY plan;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "data_cleaning_ch2",
+          "title": "Easy: Tidy plans",
+          "promptMarkdown": "Now show each plan cleaned up (lower case, no spaces at either end) as `plan`, with its number of `signups`. Sort by plan.",
+          "starterCode": "",
+          "hint": "`lower(trim(plan)) AS plan`, grouped by it.",
+          "solution": "SELECT lower(trim(plan)) AS plan, COUNT(*) AS signups\nFROM signups\nGROUP BY lower(trim(plan))\nORDER BY plan;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "data_cleaning_ch3",
+          "title": "Easy: Blank is not NULL",
+          "promptMarkdown": "Show one row counting `referred_by`: real NULLs (`missing`), blank text such as `''` or spaces (`blank`) and actual codes (`codes`).",
+          "starterCode": "",
+          "hint": "`COUNT(*) FILTER (WHERE referred_by IS NULL)`, `… WHERE trim(referred_by) = ''`, `… WHERE trim(referred_by) <> ''`.",
+          "solution": "SELECT COUNT(*) FILTER (WHERE referred_by IS NULL) AS missing,\n       COUNT(*) FILTER (WHERE trim(referred_by) = '') AS blank,\n       COUNT(*) FILTER (WHERE trim(referred_by) <> '') AS codes\nFROM signups;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": false
+          }
+        },
+        {
+          "id": "data_cleaning_ch4",
+          "title": "Medium: Signed up twice",
+          "promptMarkdown": "Show each cleaned email (`email`: lower case, trimmed) that appears more than once, with how many times (`signups`). Sort by email.",
+          "starterCode": "",
+          "hint": "Group by `lower(trim(email))` with `HAVING COUNT(*) > 1`.",
+          "solution": "SELECT lower(trim(email)) AS email, COUNT(*) AS signups\nFROM signups\nGROUP BY lower(trim(email))\nHAVING COUNT(*) > 1\nORDER BY email;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "data_cleaning_ch5",
+          "title": "Medium: One date format",
+          "promptMarkdown": "Show each sign-up's `id`, `signed_up` as typed, and the date as `YYYY-MM-DD` (`iso`). Dates like `05/03/2026` are day/month/year. In id order.",
+          "starterCode": "",
+          "hint": "`CASE WHEN signed_up LIKE '__/__/____' THEN substr(signed_up, 7, 4) || '-' || substr(signed_up, 4, 2) || '-' || substr(signed_up, 1, 2) ELSE signed_up END`.",
+          "solution": "SELECT id, signed_up,\n       CASE WHEN signed_up LIKE '__/__/____'\n            THEN substr(signed_up, 7, 4) || '-' || substr(signed_up, 4, 2) || '-' || substr(signed_up, 1, 2)\n            ELSE signed_up END AS iso\nFROM signups\nORDER BY id;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "data_cleaning_ch6",
+          "title": "Medium: Clean in place",
+          "promptMarkdown": "Clean every row with one UPDATE: trim `full_name`; trim and lower-case `email`; trim `city` and give it a capital first letter and lower case after (`Leeds`); lower-case and trim `plan`; turn blank `referred_by` into NULL (and trim the codes); and rewrite day/month/year dates as `YYYY-MM-DD`.",
+          "starterCode": "",
+          "hint": "One `UPDATE signups SET full_name = trim(full_name), email = lower(trim(email)), …`. For the city: `upper(substr(trim(city), 1, 1)) || lower(substr(trim(city), 2))`. For referred_by: `NULLIF(trim(referred_by), '')`.",
+          "solution": "UPDATE signups\nSET full_name = trim(full_name),\n    email = lower(trim(email)),\n    city = upper(substr(trim(city), 1, 1)) || lower(substr(trim(city), 2)),\n    plan = lower(trim(plan)),\n    referred_by = NULLIF(trim(referred_by), ''),\n    signed_up = CASE WHEN signed_up LIKE '__/__/____'\n                THEN substr(signed_up, 7, 4) || '-' || substr(signed_up, 4, 2) || '-' || substr(signed_up, 1, 2)\n                ELSE signed_up END;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": false,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The signups table has the right rows",
+                "assertion": "SELECT * FROM signups ORDER BY id"
+              }
+            ]
+          }
+        },
+        {
+          "id": "data_cleaning_ch7",
+          "title": "Hard: Which ones go",
+          "promptMarkdown": "List the duplicate sign-ups to remove: every row whose cleaned email already appeared with a lower id. Show `id`, the cleaned `email` and the id that is kept (`keep_id`). In id order.",
+          "starterCode": "",
+          "hint": "In a CTE: `ROW_NUMBER() OVER (PARTITION BY lower(trim(email)) ORDER BY id) AS n` and `MIN(id) OVER (PARTITION BY lower(trim(email))) AS keep_id`. Keep n > 1.",
+          "solution": "WITH numbered AS (\n  SELECT id, lower(trim(email)) AS email,\n         ROW_NUMBER() OVER (PARTITION BY lower(trim(email)) ORDER BY id) AS n,\n         MIN(id) OVER (PARTITION BY lower(trim(email))) AS keep_id\n  FROM signups\n)\nSELECT id, email, keep_id\nFROM numbered\nWHERE n > 1\nORDER BY id;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "data_cleaning_ch8",
+          "title": "Hard: Remove the duplicates",
+          "promptMarkdown": "Delete the duplicate sign-ups, keeping the row with the lowest id for each cleaned email.",
+          "starterCode": "",
+          "hint": "`DELETE FROM signups WHERE id NOT IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)));` (NOT IN is safe here: MIN(id) is never NULL.)",
+          "solution": "DELETE FROM signups\nWHERE id NOT IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)));",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": false,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The signups table has the right rows",
+                "assertion": "SELECT * FROM signups ORDER BY id"
+              }
+            ]
+          }
+        },
+        {
+          "id": "data_cleaning_ch9",
+          "title": "Expert: Phone numbers",
+          "promptMarkdown": "Show each sign-up's `id`, its phone with only the digits kept (`digits`: no spaces, dashes or brackets; empty stays empty, NULL stays NULL) and `valid`: 1 if the digits are 11 long and start with `07`, otherwise 0. In id order.",
+          "starterCode": "",
+          "hint": "Nest `replace()` four times. For valid: `CASE WHEN length(digits) = 11 AND digits LIKE '07%' THEN 1 ELSE 0 END`, which is 0 for NULL too.",
+          "solution": "WITH p AS (\n  SELECT id, replace(replace(replace(replace(phone, ' ', ''), '-', ''), '(', ''), ')', '') AS digits\n  FROM signups\n)\nSELECT id, digits,\n       CASE WHEN length(digits) = 11 AND digits LIKE '07%' THEN 1 ELSE 0 END AS valid\nFROM p\nORDER BY id;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "data_cleaning_ch10",
+          "title": "Expert: A clean table",
+          "promptMarkdown": "Create `customers` with `id` (INTEGER PRIMARY KEY), `name` (TEXT NOT NULL), `email` (TEXT NOT NULL UNIQUE), `city` (TEXT), `phone` (TEXT), `signed_up` (TEXT NOT NULL), `plan` (TEXT NOT NULL, one of `basic`, `pro`, `team`) and `referred_by` (TEXT). Fill it from signups with one cleaned row per email: keep the lowest id's row and its id, clean every column as in Clean in place, and store phones as digits, with NULL instead of an invalid one.",
+          "starterCode": "",
+          "hint": "CREATE TABLE with `CHECK (plan IN (…))`, then `INSERT INTO customers SELECT …cleaned columns… FROM signups WHERE id IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)))`. For the phone: `CASE WHEN length(d) = 11 AND d LIKE '07%' THEN d END` on the digits.",
+          "solution": "CREATE TABLE customers (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE,\n  city TEXT,\n  phone TEXT,\n  signed_up TEXT NOT NULL,\n  plan TEXT NOT NULL CHECK (plan IN ('basic', 'pro', 'team')),\n  referred_by TEXT\n);\n\nINSERT INTO customers (id, name, email, city, phone, signed_up, plan, referred_by)\nSELECT id, trim(full_name), lower(trim(email)),\n       upper(substr(trim(city), 1, 1)) || lower(substr(trim(city), 2)),\n       CASE WHEN length(replace(replace(replace(replace(phone, ' ', ''), '-', ''), '(', ''), ')', '')) = 11 AND replace(replace(replace(replace(phone, ' ', ''), '-', ''), '(', ''), ')', '') LIKE '07%'\n            THEN replace(replace(replace(replace(phone, ' ', ''), '-', ''), '(', ''), ')', '') END,\n       CASE WHEN signed_up LIKE '__/__/____'\n       THEN substr(signed_up, 7, 4) || '-' || substr(signed_up, 4, 2) || '-' || substr(signed_up, 1, 2)\n       ELSE signed_up END,\n       lower(trim(plan)),\n       NULLIF(trim(referred_by), '')\nFROM signups\nWHERE id IN (SELECT MIN(id) FROM signups GROUP BY lower(trim(email)));",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": false,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The customers table has the right columns",
+                "assertion": "SELECT name, UPPER(type) AS type, CASE WHEN pk > 0 THEN 0 ELSE \"notnull\" END AS not_null,\n       dflt_value AS default_value, pk\nFROM pragma_table_info('customers')\nORDER BY cid"
+              },
+              {
+                "id": "t2",
+                "label": "The customers table has the right rows",
+                "assertion": "SELECT * FROM customers ORDER BY id"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "data_cleaning_q1",
+            "type": "mcq",
+            "prompt": "What is the safe order for cleaning data?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Copy it, then look"
+              },
+              {
+                "id": "b",
+                "label": "Look at the values, query a cleaned version, then change the data"
+              },
+              {
+                "id": "c",
+                "label": "Change it first, then check"
+              },
+              {
+                "id": "d",
+                "label": "Delete the bad rows first"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Nothing changes until the cleaned version looks right."
+          },
+          {
+            "id": "data_cleaning_q2",
+            "type": "mcq",
+            "prompt": "Why does `GROUP BY plan` show 'Basic' and 'basic ' separately?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "GROUP BY is case-insensitive"
+              },
+              {
+                "id": "b",
+                "label": "Text compares exactly, so case and spaces make different values"
+              },
+              {
+                "id": "c",
+                "label": "One of them is NULL"
+              },
+              {
+                "id": "d",
+                "label": "It doesn't"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "lower(trim(plan)) evens them out."
+          },
+          {
+            "id": "data_cleaning_q3",
+            "type": "mcq",
+            "prompt": "What does `NULLIF(trim(referred_by), '')` give for '  '?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "0"
+              },
+              {
+                "id": "b",
+                "label": "'  '"
+              },
+              {
+                "id": "c",
+                "label": "''"
+              },
+              {
+                "id": "d",
+                "label": "NULL"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Trimmed to an empty string, which NULLIF turns into NULL."
+          },
+          {
+            "id": "data_cleaning_q4",
+            "type": "mcq",
+            "prompt": "What does `LIKE '__/__/____'` match?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Text starting with two underscores"
+              },
+              {
+                "id": "b",
+                "label": "Only YYYY-MM-DD dates"
+              },
+              {
+                "id": "c",
+                "label": "Exactly two characters, a slash, two characters, a slash and four characters"
+              },
+              {
+                "id": "d",
+                "label": "Any text with slashes"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "_ matches any single character."
+          },
+          {
+            "id": "data_cleaning_q5",
+            "type": "shortText",
+            "prompt": "Which function removes spaces from both ends of a text?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "trim"
+            },
+            "explanation": "`trim(email)`."
+          },
+          {
+            "id": "data_cleaning_q6",
+            "type": "mcq",
+            "prompt": "How do you find people who signed up twice?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Group by the cleaned email and keep groups with COUNT(*) > 1"
+              },
+              {
+                "id": "b",
+                "label": "GROUP BY id"
+              },
+              {
+                "id": "c",
+                "label": "DISTINCT email"
+              },
+              {
+                "id": "d",
+                "label": "WHERE email = email"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The raw emails differ in case and spaces."
+          },
+          {
+            "id": "data_cleaning_q7",
+            "type": "mcq",
+            "prompt": "Why is `id NOT IN (SELECT MIN(id) …)` safe in the DELETE?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Because of GROUP BY"
+              },
+              {
+                "id": "b",
+                "label": "NOT IN is always safe"
+              },
+              {
+                "id": "c",
+                "label": "MIN(id) is never NULL, so the list has no NULL"
+              },
+              {
+                "id": "d",
+                "label": "DELETE ignores NULLs"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "NOT IN goes wrong only when the list contains a NULL."
+          },
+          {
+            "id": "data_cleaning_q8",
+            "type": "mcq",
+            "prompt": "What does `replace(phone, '-', '')` do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Adds dashes"
+              },
+              {
+                "id": "b",
+                "label": "Removes every dash"
+              },
+              {
+                "id": "c",
+                "label": "Removes the first dash only"
+              },
+              {
+                "id": "d",
+                "label": "Replaces the phone"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Nest replace() once for each character to remove."
+          },
+          {
+            "id": "data_cleaning_q9",
+            "type": "mcq",
+            "prompt": "Why copy the cleaned rows into a new table with constraints?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NOT NULL, UNIQUE and CHECK stop messy values from getting in again"
+              },
+              {
+                "id": "b",
+                "label": "It is faster"
+              },
+              {
+                "id": "c",
+                "label": "Constraints clean the data"
+              },
+              {
+                "id": "d",
+                "label": "Old tables can't be queried"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Cleaning once is good; preventing new mess is better."
+          },
+          {
+            "id": "data_cleaning_q10",
+            "type": "mcq",
+            "prompt": "Which number marks the row to keep in `ROW_NUMBER() OVER (PARTITION BY lower(trim(email)) ORDER BY id)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "1"
+              },
+              {
+                "id": "b",
+                "label": "0"
+              },
+              {
+                "id": "c",
+                "label": "The highest"
+              },
+              {
+                "id": "d",
+                "label": "NULL"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The lowest id of each email gets 1."
+          }
+        ]
+      },
+      "database": {
+        "setupSql": "CREATE TABLE signups (\n  id INTEGER PRIMARY KEY,\n  full_name TEXT,\n  email TEXT,\n  phone TEXT,\n  city TEXT,\n  signed_up TEXT,\n  plan TEXT,\n  referred_by TEXT\n);\nINSERT INTO signups (id, full_name, email, phone, city, signed_up, plan, referred_by) VALUES\n  (1, '  Alice Moreau', 'Alice.Moreau@Example.com', '07700 900123', 'Leeds', '2026-03-04', 'Basic', 'FRIEND10'),\n  (2, 'Bilal Rahman', 'bilal.rahman@example.com', '(07700) 900-456', 'leeds', '05/03/2026', 'pro', ''),\n  (3, 'Alice Moreau', 'alice.moreau@example.com ', '07700900123', 'Leeds', '2026-03-09', 'basic ', NULL),\n  (4, 'Chen Wei', 'chen.wei@example.com', '07700-900-789', 'York ', '12/03/2026', ' PRO', 'FRIEND10'),\n  (5, 'Dana White', 'DANA.WHITE@EXAMPLE.COM', '07700 900 321', 'Hull', '2026-03-15', 'Basic', ''),\n  (6, 'Bilal Rahman', 'Bilal.Rahman@example.com', '07700 900456', 'Leeds', '2026-03-20', 'Pro', 'SPRING'),\n  (7, 'Emeka Obi', 'emeka.obi@example.com', '0770 090 0654', 'york', '22/03/2026', 'basic', NULL),\n  (8, 'Fiona Lake ', 'fiona.lake@example.com', '', 'Hull', '2026-04-01', 'Team', '  '),\n  (9, 'Dana White', 'dana.white@example.com', '07700900321', 'hull', '03/04/2026', 'basic', 'FRIEND10'),\n  (10, 'Gus Navarro', 'gus.navarro@example.com', NULL, 'Leeds', '2026-04-11', 'team ', NULL);\n",
+        "altSetupSql": "CREATE TABLE signups (\n  id INTEGER PRIMARY KEY,\n  full_name TEXT,\n  email TEXT,\n  phone TEXT,\n  city TEXT,\n  signed_up TEXT,\n  plan TEXT,\n  referred_by TEXT\n);\nINSERT INTO signups (id, full_name, email, phone, city, signed_up, plan, referred_by) VALUES\n  (1, 'Hugo Brandt', 'hugo.brandt@example.com', '07700 900111', 'Bath', '2026-05-02', 'basic', NULL),\n  (2, 'Ivy Chen', 'IVY.CHEN@example.com', '07700-900-222', 'bath ', '04/05/2026', 'Team', ''),\n  (3, 'Hugo Brandt', ' hugo.brandt@example.com', '(07700) 900111', 'Bath', '09/05/2026', 'BASIC', 'SUMMER'),\n  (4, 'Jon Reid', 'jon.reid@example.com', '0770090033', 'Bristol', '2026-05-12', 'pro', NULL),\n  (5, ' Kara Lowe', 'kara.lowe@example.com', NULL, 'Bristol', '2026-05-20', ' Pro ', 'SUMMER'),\n  (6, 'Ivy Chen', 'ivy.chen@example.com', '07700900222', 'Bath', '2026-06-01', 'team', NULL),\n  (7, 'Lina Shah', 'lina.shah@example.com', '07700 900 444', 'bristol', '07/06/2026', 'basic', '  ');\n",
+        "tables": [
+          {
+            "name": "signups",
+            "columns": [
+              "id",
+              "full_name",
+              "email",
+              "phone",
+              "city",
+              "signed_up",
+              "plan",
+              "referred_by"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "booking_system",
+      "title": "Building a booking system",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "the_requests",
+          "label": "The requests",
+          "code": "SELECT * FROM requests ORDER BY id;"
+        },
+        {
+          "id": "the_cottages",
+          "label": "The cottages",
+          "code": "SELECT * FROM cottage_sheet ORDER BY name;"
+        },
+        {
+          "id": "nights_in_a_stay",
+          "label": "Nights in a stay",
+          "code": "SELECT julianday('2026-10-05') - julianday('2026-10-02') AS nights;"
+        }
+      ],
+      "intro": {
+        "title": "Building a booking system",
+        "bodyMarkdown": "The last project builds a database instead of only reading one. A family runs a few holiday cottages, and until now every booking request has gone into a spreadsheet. Two sheets have been loaded as they are: `cottage_sheet` (each cottage, how many it sleeps and its nightly rate) and `requests` (who asked for which cottage, when, and for how many people).\n\nOver ten steps you'll design proper tables, move the data across, find and fix double bookings, speed up the lookups and build the reports. **Each step starts from the sheets again**, so the starter code carries all your earlier steps; add the new step after them. If an earlier step was wrong, fix it in the starter.\n\nThe design: `cottages` and `guests` each get an id, and `bookings` points to both, one row per stay. A stay is from `arrive` to `depart`, and the guests sleep the nights in between: arriving on the 2nd and leaving on the 5th is 3 nights, and someone else can arrive on the 5th.\n\n```\ncottages (id, name, sleeps, nightly_rate)\nguests   (id, name, email)\nbookings (id, guest_id → guests, cottage_id → cottages, arrive, depart, party)\n```\n\nTwo stays at the same cottage clash when each starts before the other ends: `a.arrive < b.depart AND b.arrive < a.depart`. That one condition covers every kind of overlap, and stays that only touch (one leaves the day the other arrives) don't count.",
+        "sandboxCode": "SELECT * FROM requests ORDER BY id;",
+        "readMore": {
+          "label": "SQLite: CREATE TABLE",
+          "url": "https://www.sqlite.org/lang_createtable.html",
+          "source": "SQLite documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "booking_system_ch1",
+          "title": "Easy: Cottages",
+          "promptMarkdown": "Create `cottages` with `id` (INTEGER PRIMARY KEY), `name` (TEXT, NOT NULL, UNIQUE), `sleeps` (INTEGER, NOT NULL, more than 0) and `nightly_rate` (REAL, NOT NULL). Fill it from `cottage_sheet`, in name order.",
+          "starterCode": "",
+          "hint": "CREATE TABLE, then `INSERT INTO cottages (name, sleeps, nightly_rate) SELECT … FROM cottage_sheet ORDER BY name;`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The cottages table has the right columns",
+                "assertion": "SELECT name, UPPER(type) AS type, CASE WHEN pk > 0 THEN 0 ELSE \"notnull\" END AS not_null,\n       dflt_value AS default_value, pk\nFROM pragma_table_info('cottages')\nORDER BY cid"
+              },
+              {
+                "id": "t2",
+                "label": "The cottages table has the right rows",
+                "assertion": "SELECT id, name, sleeps, nightly_rate FROM cottages ORDER BY id"
+              },
+              {
+                "id": "t3",
+                "label": "A cottage must sleep someone",
+                "assertion": "INSERT INTO cottages (name, sleeps, nightly_rate) VALUES ('Test Hut', 0, 50)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "booking_system_ch2",
+          "title": "Easy: Guests",
+          "promptMarkdown": "Keep step 1, then create `guests` with `id` (INTEGER PRIMARY KEY), `name` (TEXT, NOT NULL) and `email` (TEXT, NOT NULL, UNIQUE). Fill it with one row per email in `requests`, in email order.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\n",
+          "hint": "Some guests asked more than once. `SELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The guests table has the right columns",
+                "assertion": "SELECT name, UPPER(type) AS type, CASE WHEN pk > 0 THEN 0 ELSE \"notnull\" END AS not_null,\n       dflt_value AS default_value, pk\nFROM pragma_table_info('guests')\nORDER BY cid"
+              },
+              {
+                "id": "t2",
+                "label": "The guests table has the right rows",
+                "assertion": "SELECT id, name, email FROM guests ORDER BY id"
+              }
+            ]
+          }
+        },
+        {
+          "id": "booking_system_ch3",
+          "title": "Easy: Bookings",
+          "promptMarkdown": "Keep steps 1 and 2, then create `bookings`: `id` (INTEGER PRIMARY KEY), `guest_id` (INTEGER, NOT NULL, references guests), `cottage_id` (INTEGER, NOT NULL, references cottages), `arrive` and `depart` (TEXT, NOT NULL), `party` (INTEGER, NOT NULL, more than 0), and a table CHECK that `depart > arrive`.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\n",
+          "hint": "`guest_id INTEGER NOT NULL REFERENCES guests (id)`, … and a last line `CHECK (depart > arrive)`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The bookings table has the right columns",
+                "assertion": "SELECT name, UPPER(type) AS type, CASE WHEN pk > 0 THEN 0 ELSE \"notnull\" END AS not_null,\n       dflt_value AS default_value, pk\nFROM pragma_table_info('bookings')\nORDER BY cid"
+              },
+              {
+                "id": "t2",
+                "label": "The bookings table has the right foreign keys",
+                "assertion": "SELECT fk.\"from\", fk.\"table\",\n       COALESCE(fk.\"to\", (SELECT p.name FROM pragma_table_info(fk.\"table\") p WHERE p.pk = 1)) AS \"to\",\n       fk.on_delete\nFROM pragma_foreign_key_list('bookings') fk\nORDER BY fk.\"from\""
+              },
+              {
+                "id": "t3",
+                "label": "A stay must end after it starts",
+                "assertion": "INSERT INTO bookings (guest_id, cottage_id, arrive, depart, party) VALUES (1, 1, '2026-10-05', '2026-10-05', 2)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "booking_system_ch4",
+          "title": "Medium: Move the requests across",
+          "promptMarkdown": "Keep steps 1 to 3, then fill `bookings` from `requests`, in request id order. Leave out requests for more people than the cottage sleeps.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\n",
+          "hint": "INSERT … SELECT from requests joined to guests (on the email) and cottages (on the name), `WHERE r.party <= c.sleeps ORDER BY r.id`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The bookings table has the right rows",
+                "assertion": "SELECT b.id, g.email, c.name, b.arrive, b.depart, b.party\nFROM bookings b\nJOIN guests g ON g.id = b.guest_id\nJOIN cottages c ON c.id = b.cottage_id\nORDER BY b.id"
+              }
+            ]
+          }
+        },
+        {
+          "id": "booking_system_ch5",
+          "title": "Medium: Stays and prices",
+          "promptMarkdown": "Keep steps 1 to 4, then show every booking: the guest's name (`guest`), the `cottage` name, `arrive`, the number of `nights` and the `cost` (nights times the nightly rate). Sort by arrival, then cottage.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\n",
+          "hint": "`CAST(julianday(b.depart) - julianday(b.arrive) AS INTEGER) AS nights`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nSELECT g.name AS guest, c.name AS cottage, b.arrive,\n       CAST(julianday(b.depart) - julianday(b.arrive) AS INTEGER) AS nights,\n       (julianday(b.depart) - julianday(b.arrive)) * c.nightly_rate AS cost\nFROM bookings b\nJOIN guests g ON g.id = b.guest_id\nJOIN cottages c ON c.id = b.cottage_id\nORDER BY b.arrive, cottage;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "booking_system_ch6",
+          "title": "Medium: Double bookings",
+          "promptMarkdown": "Keep steps 1 to 4, then find the clashes: pairs of bookings for the same cottage whose stays overlap. Show the `cottage`, the earlier booking's id (`first_booking`) and the later one's (`second_booking`). Sort by first_booking, then second_booking.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\n",
+          "hint": "Join bookings to itself: `b.cottage_id = a.cottage_id AND a.id < b.id AND a.arrive < b.depart AND b.arrive < a.depart`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nSELECT c.name AS cottage, a.id AS first_booking, b.id AS second_booking\nFROM bookings a\nJOIN bookings b ON b.cottage_id = a.cottage_id AND a.id < b.id\n                AND a.arrive < b.depart AND b.arrive < a.depart\nJOIN cottages c ON c.id = a.cottage_id\nORDER BY first_booking, second_booking;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        },
+        {
+          "id": "booking_system_ch7",
+          "title": "Hard: Cancel the clashes",
+          "promptMarkdown": "Keep steps 1 to 4, then delete every booking that clashes with an earlier one (a lower id) for the same cottage. The first request wins.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\n",
+          "hint": "`DELETE FROM bookings WHERE EXISTS (SELECT 1 FROM bookings a WHERE a.cottage_id = bookings.cottage_id AND a.id < bookings.id AND …overlap…)`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The bookings table has the right rows",
+                "assertion": "SELECT b.id, g.email, c.name, b.arrive, b.depart, b.party\nFROM bookings b\nJOIN guests g ON g.id = b.guest_id\nJOIN cottages c ON c.id = b.cottage_id\nORDER BY b.id"
+              }
+            ]
+          }
+        },
+        {
+          "id": "booking_system_ch8",
+          "title": "Hard: Fast lookups",
+          "promptMarkdown": "Keep steps 1 to 4 and the DELETE, then create an index called `bookings_cottage_arrive` so that looking up one cottage's bookings from a date, like `SELECT * FROM bookings WHERE cottage_id = 1 AND arrive >= '2026-10-10'`, is a SEARCH.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\n",
+          "hint": "Equality column first, then the range: `bookings (cottage_id, arrive)`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\nCREATE INDEX bookings_cottage_arrive ON bookings (cottage_id, arrive);",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The bookings table has the right indexes",
+                "assertion": "SELECT (SELECT group_concat(COALESCE(ii.name, '(expression)'), ', ') FROM pragma_index_info(il.name) ii) AS columns,\n       il.\"unique\", il.partial\nFROM pragma_index_list('bookings') il\nWHERE il.origin = 'c'\nORDER BY columns"
+              },
+              {
+                "id": "t2",
+                "label": "The lookup searches with the index",
+                "assertion": "EXPLAIN QUERY PLAN SELECT * FROM bookings WHERE cottage_id = 1 AND arrive >= '2026-10-10'"
+              }
+            ]
+          }
+        },
+        {
+          "id": "booking_system_ch9",
+          "title": "Expert: Cottage summary",
+          "promptMarkdown": "Keep everything so far, then create a view `cottage_summary` with every cottage (`cottage`), its number of `bookings`, the `nights` booked and the `revenue` (2 decimals), all 0 for a cottage with no bookings.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\nCREATE INDEX bookings_cottage_arrive ON bookings (cottage_id, arrive);\n\n",
+          "hint": "LEFT JOIN bookings to cottages; `COALESCE(SUM(julianday(b.depart) - julianday(b.arrive)), 0)` for the nights.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\nCREATE INDEX bookings_cottage_arrive ON bookings (cottage_id, arrive);\n\nCREATE VIEW cottage_summary AS\nSELECT c.name AS cottage,\n       COUNT(b.id) AS bookings,\n       COALESCE(SUM(julianday(b.depart) - julianday(b.arrive)), 0) AS nights,\n       ROUND(COALESCE(SUM((julianday(b.depart) - julianday(b.arrive)) * c.nightly_rate), 0), 2) AS revenue\nFROM cottages c\nLEFT JOIN bookings b ON b.cottage_id = c.id\nGROUP BY c.id, c.name;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true,
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The cottage_summary view has the right columns",
+                "assertion": "SELECT name FROM pragma_table_info('cottage_summary') ORDER BY cid"
+              },
+              {
+                "id": "t2",
+                "label": "The cottage_summary view gives the right rows",
+                "assertion": "SELECT * FROM cottage_summary ORDER BY cottage"
+              }
+            ]
+          }
+        },
+        {
+          "id": "booking_system_ch10",
+          "title": "Expert: October calendar",
+          "promptMarkdown": "Keep everything so far, then show every night of October 2026 (`night`) for the first cottage by name, with the name of the guest staying that night (`guest`; empty when it is free). In date order.",
+          "starterCode": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\nCREATE INDEX bookings_cottage_arrive ON bookings (cottage_id, arrive);\n\nCREATE VIEW cottage_summary AS\nSELECT c.name AS cottage,\n       COUNT(b.id) AS bookings,\n       COALESCE(SUM(julianday(b.depart) - julianday(b.arrive)), 0) AS nights,\n       ROUND(COALESCE(SUM((julianday(b.depart) - julianday(b.arrive)) * c.nightly_rate), 0), 2) AS revenue\nFROM cottages c\nLEFT JOIN bookings b ON b.cottage_id = c.id\nGROUP BY c.id, c.name;\n\n",
+          "hint": "A recursive calendar from '2026-10-01' to '2026-10-31'. LEFT JOIN bookings on that cottage and `n.night >= b.arrive AND n.night < b.depart`, then LEFT JOIN guests. The cottage id is `(SELECT id FROM cottages ORDER BY name LIMIT 1)`.",
+          "solution": "CREATE TABLE cottages (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  sleeps INTEGER NOT NULL CHECK (sleeps > 0),\n  nightly_rate REAL NOT NULL\n);\nINSERT INTO cottages (name, sleeps, nightly_rate)\nSELECT name, sleeps, nightly_rate FROM cottage_sheet ORDER BY name;\n\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE\n);\nINSERT INTO guests (name, email)\nSELECT MIN(guest_name), guest_email FROM requests GROUP BY guest_email ORDER BY guest_email;\n\nCREATE TABLE bookings (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  cottage_id INTEGER NOT NULL REFERENCES cottages (id),\n  arrive TEXT NOT NULL,\n  depart TEXT NOT NULL,\n  party INTEGER NOT NULL CHECK (party > 0),\n  CHECK (depart > arrive)\n);\n\nINSERT INTO bookings (guest_id, cottage_id, arrive, depart, party)\nSELECT g.id, c.id, r.arrive, r.depart, r.party\nFROM requests r\nJOIN guests g ON g.email = r.guest_email\nJOIN cottages c ON c.name = r.cottage\nWHERE r.party <= c.sleeps\nORDER BY r.id;\n\nDELETE FROM bookings\nWHERE EXISTS (\n  SELECT 1 FROM bookings a\n  WHERE a.cottage_id = bookings.cottage_id\n    AND a.id < bookings.id\n    AND a.arrive < bookings.depart\n    AND bookings.arrive < a.depart\n);\n\nCREATE INDEX bookings_cottage_arrive ON bookings (cottage_id, arrive);\n\nCREATE VIEW cottage_summary AS\nSELECT c.name AS cottage,\n       COUNT(b.id) AS bookings,\n       COALESCE(SUM(julianday(b.depart) - julianday(b.arrive)), 0) AS nights,\n       ROUND(COALESCE(SUM((julianday(b.depart) - julianday(b.arrive)) * c.nightly_rate), 0), 2) AS revenue\nFROM cottages c\nLEFT JOIN bookings b ON b.cottage_id = c.id\nGROUP BY c.id, c.name;\n\nWITH RECURSIVE nights(night) AS (\n  SELECT '2026-10-01'\n  UNION ALL\n  SELECT date(night, '+1 day') FROM nights WHERE night < '2026-10-31'\n)\nSELECT n.night, g.name AS guest\nFROM nights n\nLEFT JOIN bookings b ON b.cottage_id = (SELECT id FROM cottages ORDER BY name LIMIT 1)\n                    AND n.night >= b.arrive AND n.night < b.depart\nLEFT JOIN guests g ON g.id = b.guest_id\nORDER BY n.night;",
+          "validation": {
+            "mode": "sql_tests",
+            "ordered": true
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "booking_system_q1",
+            "type": "mcq",
+            "prompt": "Why do guests get their own table instead of a name and email on every booking?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "SQLite needs it"
+              },
+              {
+                "id": "b",
+                "label": "A guest who books twice is stored once, so their details can't disagree"
+              },
+              {
+                "id": "c",
+                "label": "Bookings can't hold text"
+              },
+              {
+                "id": "d",
+                "label": "It is faster to type"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "That is normalisation."
+          },
+          {
+            "id": "booking_system_q2",
+            "type": "mcq",
+            "prompt": "Why fill guests with `GROUP BY guest_email`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To find the newest"
+              },
+              {
+                "id": "b",
+                "label": "GROUP BY is needed by INSERT"
+              },
+              {
+                "id": "c",
+                "label": "To sort them"
+              },
+              {
+                "id": "d",
+                "label": "Each email becomes one guest, even if they asked several times"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "UNIQUE on email would refuse the repeats otherwise."
+          },
+          {
+            "id": "booking_system_q3",
+            "type": "mcq",
+            "prompt": "Arriving on the 2nd and leaving on the 5th is how many nights?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "4"
+              },
+              {
+                "id": "b",
+                "label": "3"
+              },
+              {
+                "id": "c",
+                "label": "5"
+              },
+              {
+                "id": "d",
+                "label": "2"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The nights of the 2nd, 3rd and 4th."
+          },
+          {
+            "id": "booking_system_q4",
+            "type": "mcq",
+            "prompt": "When do two stays at the same cottage clash?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "When they arrive the same day"
+              },
+              {
+                "id": "b",
+                "label": "When one leaves the day the other arrives"
+              },
+              {
+                "id": "c",
+                "label": "When they are booked by the same guest"
+              },
+              {
+                "id": "d",
+                "label": "When each starts before the other ends"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`a.arrive < b.depart AND b.arrive < a.depart`."
+          },
+          {
+            "id": "booking_system_q5",
+            "type": "shortText",
+            "prompt": "Which keyword, in the bookings table, makes guest_id point to a row of guests?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "REFERENCES"
+            },
+            "explanation": "`guest_id INTEGER NOT NULL REFERENCES guests (id)`."
+          },
+          {
+            "id": "booking_system_q6",
+            "type": "mcq",
+            "prompt": "Why `a.id < b.id` in the clash join?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To sort by id"
+              },
+              {
+                "id": "b",
+                "label": "Lower ids are cheaper"
+              },
+              {
+                "id": "c",
+                "label": "It is needed by EXISTS"
+              },
+              {
+                "id": "d",
+                "label": "Each pair is listed once, and a booking isn't paired with itself"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Without it, every clash shows twice and every booking clashes with itself."
+          },
+          {
+            "id": "booking_system_q7",
+            "type": "mcq",
+            "prompt": "Why does the request id order matter when filling bookings?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To group the guests"
+              },
+              {
+                "id": "b",
+                "label": "It doesn't"
+              },
+              {
+                "id": "c",
+                "label": "The booking ids follow it, and the clash rule keeps the lower id, so the first request wins"
+              },
+              {
+                "id": "d",
+                "label": "INSERT needs ORDER BY"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "ids are given in the order rows are inserted."
+          },
+          {
+            "id": "booking_system_q8",
+            "type": "mcq",
+            "prompt": "Which index serves `WHERE cottage_id = 1 AND arrive >= …`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "(cottage_id, arrive)"
+              },
+              {
+                "id": "b",
+                "label": "(party)"
+              },
+              {
+                "id": "c",
+                "label": "(arrive)"
+              },
+              {
+                "id": "d",
+                "label": "(arrive, cottage_id)"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The equality column first, then the range."
+          },
+          {
+            "id": "booking_system_q9",
+            "type": "mcq",
+            "prompt": "Why LEFT JOIN bookings in the cottage summary?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Views must"
+              },
+              {
+                "id": "b",
+                "label": "To remove clashes"
+              },
+              {
+                "id": "c",
+                "label": "So a cottage with no bookings still shows, with 0"
+              },
+              {
+                "id": "d",
+                "label": "To sort the cottages"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "COALESCE turns its NULL sums into 0."
+          },
+          {
+            "id": "booking_system_q10",
+            "type": "mcq",
+            "prompt": "In the calendar, why `n.night < b.depart` and not `<=`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is shorter"
+              },
+              {
+                "id": "b",
+                "label": "To skip the first night"
+              },
+              {
+                "id": "c",
+                "label": "Guests don't sleep there on the night they leave"
+              },
+              {
+                "id": "d",
+                "label": "Dates can't be equal"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The departure day is free for the next guests."
+          }
+        ]
+      },
+      "database": {
+        "setupSql": "CREATE TABLE cottage_sheet (\n  name TEXT,\n  sleeps INTEGER,\n  nightly_rate REAL\n);\nCREATE TABLE requests (\n  id INTEGER PRIMARY KEY,\n  guest_name TEXT,\n  guest_email TEXT,\n  cottage TEXT,\n  arrive TEXT,\n  depart TEXT,\n  party INTEGER,\n  received_at TEXT\n);\nINSERT INTO cottage_sheet (name, sleeps, nightly_rate) VALUES\n  ('Bramble Cottage', 4, 120),\n  ('Heron Lodge', 6, 165),\n  ('Mill House', 2, 95),\n  ('Willow Barn', 8, 210);\nINSERT INTO requests (id, guest_name, guest_email, cottage, arrive, depart, party, received_at) VALUES\n  (1, 'Olivia Grant', 'olivia.grant@example.com', 'Bramble Cottage', '2026-10-02', '2026-10-05', 2, '2026-08-01'),\n  (2, 'Tariq Hussain', 'tariq.hussain@example.com', 'Heron Lodge', '2026-10-03', '2026-10-10', 5, '2026-08-04'),\n  (3, 'Megan Price', 'megan.price@example.com', 'Mill House', '2026-10-04', '2026-10-06', 3, '2026-08-09'),\n  (4, 'Yusuf Demir', 'yusuf.demir@example.com', 'Bramble Cottage', '2026-10-04', '2026-10-08', 4, '2026-08-15'),\n  (5, 'Olivia Grant', 'olivia.grant@example.com', 'Willow Barn', '2026-10-16', '2026-10-20', 7, '2026-08-20'),\n  (6, 'Claire Moreau', 'claire.moreau@example.com', 'Mill House', '2026-10-10', '2026-10-14', 2, '2026-08-22'),\n  (7, 'Pedro Alves', 'pedro.alves@example.com', 'Heron Lodge', '2026-10-10', '2026-10-12', 6, '2026-08-30'),\n  (8, 'Megan Price', 'megan.price@example.com', 'Bramble Cottage', '2026-10-12', '2026-10-15', 2, '2026-09-02'),\n  (9, 'Tariq Hussain', 'tariq.hussain@example.com', 'Heron Lodge', '2026-10-11', '2026-10-13', 4, '2026-09-10'),\n  (10, 'Claire Moreau', 'claire.moreau@example.com', 'Bramble Cottage', '2026-10-20', '2026-10-23', 3, '2026-09-15');\n",
+        "altSetupSql": "CREATE TABLE cottage_sheet (\n  name TEXT,\n  sleeps INTEGER,\n  nightly_rate REAL\n);\nCREATE TABLE requests (\n  id INTEGER PRIMARY KEY,\n  guest_name TEXT,\n  guest_email TEXT,\n  cottage TEXT,\n  arrive TEXT,\n  depart TEXT,\n  party INTEGER,\n  received_at TEXT\n);\nINSERT INTO cottage_sheet (name, sleeps, nightly_rate) VALUES\n  ('Fern Hut', 2, 80),\n  ('Lark Rise', 5, 140),\n  ('Old Forge', 3, 110);\nINSERT INTO requests (id, guest_name, guest_email, cottage, arrive, depart, party, received_at) VALUES\n  (1, 'Ana Lima', 'ana.lima@example.com', 'Lark Rise', '2026-10-01', '2026-10-04', 4, '2026-07-10'),\n  (2, 'Bo Jensen', 'bo.jensen@example.com', 'Fern Hut', '2026-10-02', '2026-10-03', 2, '2026-07-15'),\n  (3, 'Cleo Hart', 'cleo.hart@example.com', 'Old Forge', '2026-10-05', '2026-10-09', 4, '2026-07-20'),\n  (4, 'Ana Lima', 'ana.lima@example.com', 'Old Forge', '2026-10-06', '2026-10-08', 2, '2026-08-01'),\n  (5, 'Dan Okoye', 'dan.okoye@example.com', 'Lark Rise', '2026-10-03', '2026-10-06', 5, '2026-08-12'),\n  (6, 'Bo Jensen', 'bo.jensen@example.com', 'Lark Rise', '2026-10-15', '2026-10-18', 3, '2026-09-01');\n",
+        "tables": [
+          {
+            "name": "cottage_sheet",
+            "columns": [
+              "name",
+              "sleeps",
+              "nightly_rate"
+            ]
+          },
+          {
+            "name": "requests",
+            "columns": [
+              "id",
+              "guest_name",
+              "guest_email",
+              "cottage",
+              "arrive",
+              "depart",
+              "party",
+              "received_at"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
