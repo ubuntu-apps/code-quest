@@ -1,5 +1,4 @@
 import { useRef, useState, useSyncExternalStore } from 'react'
-import { useAdminMode } from '../adminMode'
 import { checkForUpdate, isUpdateReady, reloadToUpdate, subscribeUpdateReady } from '../../../pwaUpdate'
 import { APP_VERSION } from '../../../version'
 
@@ -10,14 +9,6 @@ const MESSAGES: Record<Exclude<Status, 'idle' | 'checking'>, string> = {
   offline: 'You are offline. Connect to the internet and try again.',
   unavailable: "Updates can't be checked in this browser. Reload the page to get the latest version.",
   error: "Couldn't reach the server. Try again in a moment.",
-}
-
-/** How this device lays the page out, to help with "the text is too small" reports. */
-function screenInfo(): string {
-  if (typeof window === 'undefined') return ''
-  const root = parseFloat(getComputedStyle(document.documentElement).fontSize)
-  const ratio = Math.round(window.devicePixelRatio * 100) / 100
-  return `Screen ${window.innerWidth} × ${window.innerHeight} · pixel ratio ${ratio} · text ${Math.round(root * 10) / 10}px`
 }
 
 /** Taps on the version heading that reveal the admin panel. */
@@ -32,7 +23,6 @@ interface VersionPanelProps {
 export function VersionPanel({ onRevealAdmin }: VersionPanelProps) {
   const ready = useSyncExternalStore(subscribeUpdateReady, isUpdateReady, isUpdateReady)
   const [status, setStatus] = useState<Status>('idle')
-  const isAdmin = useAdminMode()
   const taps = useRef({ count: 0, last: 0 })
 
   const tapHeading = () => {
@@ -75,7 +65,6 @@ export function VersionPanel({ onRevealAdmin }: VersionPanelProps) {
             ? ''
             : MESSAGES[status]}
       </p>
-      {isAdmin ? <p className="cq-muted cq-screen-info">{screenInfo()}</p> : null}
     </section>
   )
 }

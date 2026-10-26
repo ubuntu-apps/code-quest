@@ -62,6 +62,10 @@
   --badge-color: var(--cq-success);
 }
 
+.cq-badge-tile--rank {
+  --badge-color: var(--cq-hl-builtin);
+}
+
 .cq-badge-tile--streak {
   --badge-color: var(--cq-hl-number);
 }
@@ -161,4 +165,64 @@
 .cq-reminder-note {
   margin: 0.75rem 0 0;
   font-size: var(--cq-text-sm);
+}
+
+/* A course's title with the learner's rank in it (ranks/ranks.ts). */
+.cq-course-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+}
+
+.cq-rank {
+  display: contents;
+  --rank-color: var(--cq-hl-builtin);
+}
+
+.cq-rank--novice {
+  --rank-color: var(--cq-success);
+}
+
+.cq-rank--champion,
+.cq-rank--legend {
+  --rank-color: var(--cq-hl-number);
+}
+
+.cq-rank-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.6rem 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: var(--cq-text-sm);
+  font-weight: 600;
+  color: var(--rank-color);
+  background: color-mix(in srgb, var(--rank-color) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rank-color) 45%, transparent);
+}
+
+.cq-rank-next {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.6rem;
+  font-size: var(--cq-text-sm);
+  color: var(--cq-muted);
+}
+
+.cq-rank-bar {
+  flex: 0 0 6rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: var(--cq-inset);
+  border: 1px solid var(--cq-border);
+  overflow: hidden;
+}
+
+.cq-rank-bar-fill {
+  display: block;
+  height: 100%;
+  background: var(--rank-color);
 }

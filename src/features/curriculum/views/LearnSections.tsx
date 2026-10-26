@@ -7,6 +7,8 @@ import { hasTestedOut } from '../testOut'
 import { courseCompletion } from '../../certificate/courseCompletion'
 import { CertificatePanel } from '../../certificate/CertificatePanel'
 import { SupportNudge } from '../../support/SupportNudge'
+import { courseRank } from '../../ranks/ranks'
+import { CourseRankBadge } from '../../ranks/CourseRankBadge'
 
 interface LearnSectionsProps {
   bundle: LanguageBundle
@@ -36,17 +38,21 @@ export function LearnSections({
   baseUrl,
 }: LearnSectionsProps) {
   const completion = languageId && !isEditMode ? courseCompletion(languageId, bundle) : null
+  const rank = languageId && !isEditMode ? courseRank(languageId, bundle) : null
   // Sections still being written are listed last, without lessons.
   const upcoming = bundle.index.upcoming ?? []
   const sectionCount = bundle.index.sections.length + upcoming.length
   return (
     <div className="cq-stack">
-      <EditableText
-        as="h1"
-        className="cq-title"
-        value={bundle.index.title}
-        onChange={onUpdateLanguageTitle}
-      />
+      <div className="cq-course-head">
+        <EditableText
+          as="h1"
+          className="cq-title"
+          value={bundle.index.title}
+          onChange={onUpdateLanguageTitle}
+        />
+        {rank ? <CourseRankBadge rank={rank} courseTitle={bundle.index.title} /> : null}
+      </div>
       <p className="cq-lead">Sections</p>
       {completion && languageId ? (
         <SupportNudge

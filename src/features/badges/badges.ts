@@ -1,8 +1,9 @@
 import type { LanguageBundle } from '../curriculum/types'
 import { loadProgress } from '../curriculum/progressStorage'
 import { isSectionFinished } from '../certificate/courseCompletion'
+import { RANKS, rankThresholds } from '../ranks/ranks'
 
-export type BadgeKind = 'start' | 'section' | 'course' | 'streak' | 'xp'
+export type BadgeKind = 'start' | 'section' | 'course' | 'rank' | 'streak' | 'xp'
 
 export interface BadgeDef {
   id: string
@@ -26,7 +27,8 @@ export const XP_BADGE_AMOUNTS = [100, 1000, 5000]
 
 /**
  * Every badge the learner can earn now, and whether it is earned: the first quiz, each
- * section and the whole course (for the course being learned), streaks and XP.
+ * section, each rank (ranks/ranks.ts) and the whole course (for the course being
+ * learned), streaks and XP.
  */
 export function badgeDefinitions({
   languageId,
@@ -45,6 +47,8 @@ export function badgeDefinitions({
     title: sectionRef.title,
     finished: isSectionFinished(languageId, sectionRef.id, file.levels),
   }))
+  const finishedCount = sections.filter((sec) => sec.finished).length
+  const thresholds = rankThresholds(sections.length)
   const anyQuizPassed = bundle.sections.some(({ file }) =>
     file.levels.some((lvl) => loadProgress(languageId, lvl.id).testPassed),
   )
@@ -64,6 +68,15 @@ export function badgeDefinitions({
         title: sec.title,
         description: `Pass every quiz in ${sec.title}, or its skip-ahead quiz`,
         earned: sec.finished,
+      }),
+    ),
+    ...RANKS.slice(1).map(
+      (rank, i): BadgeDef => ({
+        id: `rank:${languageId}:${rank.id}`,
+        kind: 'rank',
+        title: `${course} ${rank.title}`,
+        description: `Finish ${thresholds[i + 1]} section${thresholds[i + 1] === 1 ? '' : 's'} of ${course}`,
+        earned: sections.length > 0 && finishedCount >= thresholds[i + 1],
       }),
     ),
     {

@@ -1,5 +1,4 @@
 import { ChevronLeft } from 'lucide-react'
-import { APP_VERSION } from '../../../version'
 import { EditorHeaderButton } from '../../editor'
 
 /** The "Skip to content" link and the bar at the top: Back, the app name and the editor button. */
@@ -34,7 +33,7 @@ export function AppHeader({
           <span className="cq-header-spacer" aria-hidden />
         )}
         <div className="cq-brand">
-          CodeQuest <span className="cq-brand-version">(v. {APP_VERSION})</span>
+          CodeQuest
           {isAdmin ? <span className="cq-admin-badge">Admin</span> : null}
         </div>
         <EditorHeaderButton />
