@@ -5,6 +5,7 @@ import { playSound } from '../../sound/sound'
 import { answeredQuestionIds, recordReviewAnswers } from '../../review/reviewStorage'
 import { countEvent } from '../../../lib/analytics'
 import { TestStep } from '../views/TestStep'
+import { CodeLanguageContext } from '../codeLanguageContext'
 import {
   buildTestOutQuestions,
   canTestOut,
@@ -112,30 +113,32 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
           {`Passed! You can now open ${unlocks}.`}
         </p>
       ) : null}
-      <TestStep
-        level={quizLevel}
-        prog={{ challengesCompleted: [], testPassed: testedOut, challengeAnswers: {} }}
-        testShort={short}
-        testMcq={mcq}
-        testResult={result}
-        testEdited={edited}
-        onTestShortChange={(id, value) => {
-          markEdited(id)
-          setShort((prev) => ({ ...prev, [id]: value }))
-        }}
-        onTestMcqChange={(id, choice) => {
-          markEdited(id)
-          setMcq((prev) => ({ ...prev, [id]: choice }))
-        }}
-        onUpdatePassingScore={() => undefined}
-        onUpdateQuestion={() => undefined}
-        onMoveQuestion={() => undefined}
-        onRemoveQuestion={() => undefined}
-        onAddQuestion={() => undefined}
-        onSubmit={submit}
-        // "Retake" draws a new set of questions.
-        onRetake={start}
-      />
+      <CodeLanguageContext.Provider value={languageId}>
+        <TestStep
+          level={quizLevel}
+          prog={{ challengesCompleted: [], testPassed: testedOut, challengeAnswers: {} }}
+          testShort={short}
+          testMcq={mcq}
+          testResult={result}
+          testEdited={edited}
+          onTestShortChange={(id, value) => {
+            markEdited(id)
+            setShort((prev) => ({ ...prev, [id]: value }))
+          }}
+          onTestMcqChange={(id, choice) => {
+            markEdited(id)
+            setMcq((prev) => ({ ...prev, [id]: choice }))
+          }}
+          onUpdatePassingScore={() => undefined}
+          onUpdateQuestion={() => undefined}
+          onMoveQuestion={() => undefined}
+          onRemoveQuestion={() => undefined}
+          onAddQuestion={() => undefined}
+          onSubmit={submit}
+          // "Retake" draws a new set of questions.
+          onRetake={start}
+        />
+      </CodeLanguageContext.Provider>
     </section>
   )
 }
