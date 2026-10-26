@@ -1,7 +1,9 @@
 import { Award, Flame, Flag, Layers, Zap, type LucideIcon } from 'lucide-react'
 import type { BadgeDef, BadgeKind, EarnedBadge } from './badges'
+import { RankIcon } from '../ranks/RankIcon'
+import { rankFromBadgeId } from '../ranks/ranks'
 
-const ICONS: Record<BadgeKind, LucideIcon> = {
+const ICONS: Record<Exclude<BadgeKind, 'rank'>, LucideIcon> = {
   start: Flag,
   section: Layers,
   course: Award,
@@ -9,22 +11,32 @@ const ICONS: Record<BadgeKind, LucideIcon> = {
   xp: Zap,
 }
 
+function BadgeIcon({ kind, id }: { kind: BadgeKind; id: string }) {
+  if (kind === 'rank') {
+    const rank = rankFromBadgeId(id)
+    return rank ? <RankIcon rank={rank.id} size={20} /> : <Award size={20} />
+  }
+  const Icon = ICONS[kind]
+  return <Icon size={20} />
+}
+
 function BadgeTile({
+  id,
   kind,
   title,
   detail,
   locked = false,
 }: {
+  id: string
   kind: BadgeKind
   title: string
   detail: string
   locked?: boolean
 }) {
-  const Icon = ICONS[kind]
   return (
     <li className={`cq-badge-tile cq-badge-tile--${kind}${locked ? ' cq-badge-tile--locked' : ''}`}>
       <span className="cq-badge-icon" aria-hidden>
-        <Icon size={20} />
+        <BadgeIcon kind={kind} id={id} />
       </span>
       <span className="cq-badge-text">
         <span className="cq-badge-title">{title}</span>
@@ -54,7 +66,7 @@ export function BadgesPanel({ earned, toEarn }: { earned: EarnedBadge[]; toEarn:
       {earned.length > 0 ? (
         <ul className="cq-badge-grid">
           {earned.map((badge) => (
-            <BadgeTile key={badge.id} kind={badge.kind} title={badge.title} detail={earnedOn(badge.on)} />
+            <BadgeTile key={badge.id} id={badge.id} kind={badge.kind} title={badge.title} detail={earnedOn(badge.on)} />
           ))}
         </ul>
       ) : (
@@ -67,7 +79,7 @@ export function BadgesPanel({ earned, toEarn }: { earned: EarnedBadge[]; toEarn:
           <summary>Badges to earn ({toEarn.length})</summary>
           <ul className="cq-badge-grid">
             {toEarn.map((badge) => (
-              <BadgeTile key={badge.id} kind={badge.kind} title={badge.title} detail={badge.description} locked />
+              <BadgeTile key={badge.id} id={badge.id} kind={badge.kind} title={badge.title} detail={badge.description} locked />
             ))}
           </ul>
         </details>

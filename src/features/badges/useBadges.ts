@@ -12,7 +12,7 @@ import {
   type EarnedBadge,
 } from './badges'
 
-const KIND_ORDER: BadgeKind[] = ['start', 'section', 'course', 'streak', 'xp']
+const KIND_ORDER: BadgeKind[] = ['start', 'section', 'rank', 'course', 'streak', 'xp']
 
 interface UseBadgesOptions {
   progressVersion: number

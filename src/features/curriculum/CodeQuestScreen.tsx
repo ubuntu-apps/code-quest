@@ -208,7 +208,12 @@ export function CodeQuestScreen() {
   const { badgeToast, showBadges } = useBadgeToast()
   const onBadgesEarned = useCallback(
     (badges: EarnedBadge[]) => {
-      showBadges(badges.map((b) => b.title))
+      // Badges are in course order, so the last rank badge is the highest one just earned.
+      const rank = badges.filter((b) => b.kind === 'rank').at(-1)
+      showBadges(
+        badges.map((b) => b.title),
+        rank?.title,
+      )
       // Badges come with a passed check or quiz, so their sound follows that one.
       playSound('badge', 0.6)
     },
