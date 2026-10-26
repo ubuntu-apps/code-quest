@@ -143,6 +143,7 @@ export function CodeEditor({
         errorTitle={errorTitle}
         errorColumn={errorColumn}
         errorUiEpoch={errorUiEpoch}
+        keyLanguage={language === 'sql' ? 'sql' : 'python'}
       />
     </div>
   )
@@ -170,7 +171,9 @@ export function CodeEditor({
       <span id={hintId} className="cq-sr-only">
         Tab indents. Press Escape, then Tab, to move to the next control.
       </span>
-      {touch && focused ? <CodeKeyBar target={() => targetRef.current} /> : null}
+      {touch && focused ? (
+        <CodeKeyBar target={() => targetRef.current} language={language === 'sql' ? 'sql' : 'python'} />
+      ) : null}
     </>
   )
 }

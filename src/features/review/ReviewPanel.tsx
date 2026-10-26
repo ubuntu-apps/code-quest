@@ -4,6 +4,7 @@ import type { LanguageBundle, TestGradeResult, TestQuestion } from '../curriculu
 import { gradeTest } from '../curriculum/validateAnswer'
 import { localDateKey } from '../curriculum/streak'
 import { TestStep } from '../curriculum/views/TestStep'
+import { CodeLanguageContext } from '../curriculum/codeLanguageContext'
 import { playSound } from '../sound/sound'
 import { countEvent } from '../../lib/analytics'
 import { pickReview, reviewPool, REVIEW_SIZE } from './reviewSchedule'
@@ -121,31 +122,33 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
             Close
           </button>
         </div>
-        <TestStep
-          practice
-          questionSources={sources}
-          level={reviewLevel}
-          prog={{ challengesCompleted: [], testPassed: false, challengeAnswers: {} }}
-          testShort={short}
-          testMcq={mcq}
-          testResult={result}
-          testEdited={edited}
-          onTestShortChange={(id, value) => {
-            markEdited(id)
-            setShort((prev) => ({ ...prev, [id]: value }))
-          }}
-          onTestMcqChange={(id, choice) => {
-            markEdited(id)
-            setMcq((prev) => ({ ...prev, [id]: choice }))
-          }}
-          onUpdatePassingScore={() => undefined}
-          onUpdateQuestion={() => undefined}
-          onMoveQuestion={() => undefined}
-          onRemoveQuestion={() => undefined}
-          onAddQuestion={() => undefined}
-          onSubmit={check}
-          onRetake={() => setOpen(false)}
-        />
+        <CodeLanguageContext.Provider value={languageId}>
+          <TestStep
+            practice
+            questionSources={sources}
+            level={reviewLevel}
+            prog={{ challengesCompleted: [], testPassed: false, challengeAnswers: {} }}
+            testShort={short}
+            testMcq={mcq}
+            testResult={result}
+            testEdited={edited}
+            onTestShortChange={(id, value) => {
+              markEdited(id)
+              setShort((prev) => ({ ...prev, [id]: value }))
+            }}
+            onTestMcqChange={(id, choice) => {
+              markEdited(id)
+              setMcq((prev) => ({ ...prev, [id]: choice }))
+            }}
+            onUpdatePassingScore={() => undefined}
+            onUpdateQuestion={() => undefined}
+            onMoveQuestion={() => undefined}
+            onRemoveQuestion={() => undefined}
+            onAddQuestion={() => undefined}
+            onSubmit={check}
+            onRetake={() => setOpen(false)}
+          />
+        </CodeLanguageContext.Provider>
       </section>
     )
   }

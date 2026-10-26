@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type InputHTMLAttributes } from 'react'
+import { useContext, useEffect, useRef, useState, type InputHTMLAttributes } from 'react'
+import { CodeLanguageContext } from '../codeLanguageContext'
 import { CodeKeyBar } from './CodeKeyBar'
 import { hasCoarsePointer } from './pointer'
 
@@ -8,6 +9,7 @@ import { hasCoarsePointer } from './pointer'
  */
 export function AnswerInput(props: InputHTMLAttributes<HTMLInputElement>) {
   const ref = useRef<HTMLInputElement>(null)
+  const language = useContext(CodeLanguageContext)
   const [touch] = useState(hasCoarsePointer)
   const [focused, setFocused] = useState(false)
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -34,7 +36,7 @@ export function AnswerInput(props: InputHTMLAttributes<HTMLInputElement>) {
           props.onBlur?.(e)
         }}
       />
-      {touch && focused ? <CodeKeyBar textareaRef={ref} variant="answer" /> : null}
+      {touch && focused ? <CodeKeyBar textareaRef={ref} variant="answer" language={language === 'sql' ? 'sql' : 'python'} /> : null}
     </>
   )
 }

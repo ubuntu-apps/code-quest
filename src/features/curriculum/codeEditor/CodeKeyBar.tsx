@@ -30,32 +30,71 @@ type CodeKey =
   | { label: string; aria?: string; kind: 'pair'; open: string; close: string }
   | { label: string; aria?: string; kind: 'text'; text: string }
 
+const INDENT: CodeKey = { label: '⇥', aria: 'Indent', kind: 'tab' }
+const UNINDENT: CodeKey = { label: '⇤', aria: 'Remove indent', kind: 'untab' }
+const PARENS: CodeKey = { label: '( )', aria: 'Parentheses', kind: 'pair', open: '(', close: ')' }
+const DOUBLE_QUOTES: CodeKey = { label: '" "', aria: 'Double quotes', kind: 'pair', open: '"', close: '"' }
+const SINGLE_QUOTES: CodeKey = { label: "' '", aria: 'Single quotes', kind: 'pair', open: "'", close: "'" }
+const text = (t: string, aria?: string): CodeKey => ({ label: t, aria, kind: 'text', text: t })
+
 /** Keys that are slow to reach on a phone keyboard, in roughly the order Python needs them. */
-const KEYS: CodeKey[] = [
-  { label: '⇥', aria: 'Indent', kind: 'tab' },
-  { label: '⇤', aria: 'Remove indent', kind: 'untab' },
-  { label: ':', kind: 'text', text: ':' },
-  { label: '( )', aria: 'Parentheses', kind: 'pair', open: '(', close: ')' },
+const PYTHON_KEYS: CodeKey[] = [
+  INDENT,
+  UNINDENT,
+  text(':'),
+  PARENS,
   { label: '[ ]', aria: 'Square brackets', kind: 'pair', open: '[', close: ']' },
-  { label: '" "', aria: 'Double quotes', kind: 'pair', open: '"', close: '"' },
-  { label: "' '", aria: 'Single quotes', kind: 'pair', open: "'", close: "'" },
-  { label: '=', kind: 'text', text: '=' },
-  { label: '_', aria: 'Underscore', kind: 'text', text: '_' },
-  { label: '.', aria: 'Dot', kind: 'text', text: '.' },
-  { label: ',', aria: 'Comma', kind: 'text', text: ',' },
-  { label: '#', kind: 'text', text: '#' },
+  DOUBLE_QUOTES,
+  SINGLE_QUOTES,
+  text('='),
+  text('_', 'Underscore'),
+  text('.', 'Dot'),
+  text(','),
+  text('#'),
   { label: '{ }', aria: 'Curly braces', kind: 'pair', open: '{', close: '}' },
-  { label: '+', kind: 'text', text: '+' },
-  { label: '-', kind: 'text', text: '-' },
-  { label: '*', kind: 'text', text: '*' },
-  { label: '/', kind: 'text', text: '/' },
-  { label: '<', kind: 'text', text: '<' },
-  { label: '>', kind: 'text', text: '>' },
-  { label: '!', kind: 'text', text: '!' },
+  text('+'),
+  text('-'),
+  text('*'),
+  text('/'),
+  text('<'),
+  text('>'),
+  text('!'),
 ]
 
-/** A one-line answer box gets no indent keys. */
-const ANSWER_KEYS = KEYS.filter((key) => key.kind !== 'tab' && key.kind !== 'untab')
+/**
+ * The same for SQL, in roughly the order the lessons use them. `%` (LIKE patterns) and `||`
+ * (joining text) sit on a phone keyboard's second symbol page. SQL only uses `|` doubled,
+ * so one tap types both. Indenting is only for looks in SQL, so those keys come last.
+ */
+const SQL_KEYS: CodeKey[] = [
+  PARENS,
+  SINGLE_QUOTES,
+  text(','),
+  text('.', 'Dot'),
+  text('_', 'Underscore'),
+  text(';', 'Semicolon'),
+  text('='),
+  text('*'),
+  text('%', 'Percent'),
+  text('||', 'Join text (two bars)'),
+  text('<'),
+  text('>'),
+  text('-'),
+  text('+'),
+  text('/'),
+  text('!'),
+  DOUBLE_QUOTES,
+  INDENT,
+  UNINDENT,
+]
+
+export type KeyBarLanguage = 'python' | 'sql'
+
+/** The keys for a course; a one-line answer box gets no indent keys. */
+function keysFor(language: KeyBarLanguage, variant: 'code' | 'answer'): CodeKey[] {
+  const keys = language === 'sql' ? SQL_KEYS : PYTHON_KEYS
+  return variant === 'answer' ? keys.filter((key) => key.kind !== 'tab' && key.kind !== 'untab') : keys
+}
 
 function editFor(key: CodeKey, target: KeyBarTarget): TextEdit | null {
   const value = target.value()
@@ -81,6 +120,7 @@ export function CodeKeyBar({
   textareaRef,
   target,
   variant = 'code',
+  language = 'python',
 }: {
   /** A plain text box to type into… */
   textareaRef?: RefObject<HTMLTextAreaElement | HTMLInputElement | null>
@@ -88,6 +128,8 @@ export function CodeKeyBar({
   target?: () => KeyBarTarget | null
   /** "answer": for a one-line quiz answer, without the indent keys. */
   variant?: 'code' | 'answer'
+  /** Which symbols to offer: SQL needs `%`, `||` and `;` rather than Python's `:` and `#`. */
+  language?: KeyBarLanguage
 }) {
   const press = (key: CodeKey) => {
     const el = textareaRef?.current
@@ -100,7 +142,7 @@ export function CodeKeyBar({
 
   return (
     <div className="cq-code-keys" role="toolbar" aria-label="Code symbols">
-      {(variant === 'answer' ? ANSWER_KEYS : KEYS).map((key) => (
+      {keysFor(language, variant).map((key) => (
         <button
           key={key.label}
           type="button"

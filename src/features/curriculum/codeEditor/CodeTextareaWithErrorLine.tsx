@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { CodeEditorLineGutter } from './CodeEditorLineGutter'
-import { CodeKeyBar } from './CodeKeyBar'
+import { CodeKeyBar, type KeyBarLanguage } from './CodeKeyBar'
 import { hasCoarsePointer } from './pointer'
 import { CodeTextarea } from './CodeTextarea'
 import { DraggableErrorPopover } from './DraggableErrorPopover'
@@ -23,6 +23,8 @@ export type CodeTextareaWithErrorLineProps = {
   /** Increment when validation runs again so the popover can reopen after dismiss */
   errorUiEpoch?: number
   spellCheck?: boolean
+  /** Which symbol keys to show on phones and tablets. */
+  keyLanguage?: KeyBarLanguage
 }
 
 export function CodeTextareaWithErrorLine({
@@ -37,6 +39,7 @@ export function CodeTextareaWithErrorLine({
   errorColumn,
   errorUiEpoch = 0,
   spellCheck,
+  keyLanguage,
 }: CodeTextareaWithErrorLineProps) {
   const taRef = useRef<HTMLTextAreaElement>(null)
   const backdropRef = useRef<HTMLDivElement>(null)
@@ -78,7 +81,7 @@ export function CodeTextareaWithErrorLine({
         },
       }
     : {}
-  const keyBar = touch && focused ? <CodeKeyBar textareaRef={taRef} /> : null
+  const keyBar = touch && focused ? <CodeKeyBar textareaRef={taRef} language={keyLanguage} /> : null
 
   useEffect(() => {
     syncScroll()
