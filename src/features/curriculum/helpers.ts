@@ -91,7 +91,10 @@ export function hasRequiredProjects(levels: Level[]): boolean {
 /**
  * A section unlocks when the previous one is finished: its easy and medium projects
  * if it has any, otherwise (when `lockByQuizzes` is on) the quiz of every topic in it.
- * Testing out of the previous section (testOut.ts) also counts as finishing it.
+ * Testing out of the previous section (testOut.ts) also counts as finishing it, and so
+ * does passing every quiz in it, which is what earns the section certificate
+ * (certificate/courseCompletion.ts): the app never says a section is complete while the
+ * next one stays locked.
  */
 export function isSectionUnlocked(
   languageId: string,
@@ -104,6 +107,7 @@ export function isSectionUnlocked(
   if (!previous) return true
   if (previous.sectionRef && hasTestedOut(languageId, previous.sectionRef.id)) return true
   const levels = previous.file.levels
+  if (levels.length > 0 && levels.every((level) => loadProgress(languageId, level.id).testPassed)) return true
   if (hasRequiredProjects(levels)) return areRequiredSectionProjectsComplete(languageId, levels)
   if (!lockByQuizzes) return true
   return levels.every((level) => loadProgress(languageId, level.id).testPassed)
