@@ -92,6 +92,17 @@ describe('section project gates', () => {
     expect(isSectionUnlocked('python', sections, 1)).toBe(true)
   })
 
+  it('also unlocks when every quiz is passed, as that earns the section certificate', () => {
+    const sectionA = { file: { levels: [topic, project('easy', 'easy'), project('med', 'medium'), project('hard', 'hard')] } }
+    const sections = [sectionA, { file: { levels: [topic] } }]
+    for (const id of ['topic1', 'easy', 'med']) saveProgress('python', id, { challengesCompleted: [], testPassed: true })
+    // The project challenges aren't solved, and the hard project's quiz isn't passed yet.
+    expect(isSectionUnlocked('python', sections, 1)).toBe(false)
+    saveProgress('python', 'hard', { challengesCompleted: [], testPassed: true })
+    expect(areRequiredSectionProjectsComplete('python', sectionA.file.levels)).toBe(false)
+    expect(isSectionUnlocked('python', sections, 1)).toBe(true)
+  })
+
   it('without projects, the next section is open by default', () => {
     const sections = [{ file: { levels: [{ ...topic, id: 'quizA' }] } }, { file: { levels: [topic] } }]
     expect(isSectionUnlocked('python', sections, 1)).toBe(true)
