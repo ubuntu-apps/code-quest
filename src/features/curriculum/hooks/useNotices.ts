@@ -33,7 +33,7 @@ export function useXpToast(totalXp: number) {
 export function useBadgeToast() {
   const [badgeToast, setBadgeToast] = useState<{ text: string; key: number } | null>(null)
 
-  /** With `newRank` (such as "SQL Knight"), the pop-up leads with the new rank. */
+  /** With `newRank` (such as "SQL Engineer"), the pop-up leads with the new rank. */
   const showBadges = useCallback((titles: string[], newRank?: string) => {
     if (titles.length === 0) return
     const others = newRank ? titles.filter((t) => t !== newRank) : titles
