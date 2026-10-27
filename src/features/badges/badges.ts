@@ -1,7 +1,7 @@
 import type { LanguageBundle } from '../curriculum/types'
 import { loadProgress } from '../curriculum/progressStorage'
 import { isSectionFinished } from '../certificate/courseCompletion'
-import { RANKS, rankThresholds } from '../ranks/ranks'
+import { OLD_RANK_IDS, RANKS, rankThresholds } from '../ranks/ranks'
 
 export type BadgeKind = 'start' | 'section' | 'course' | 'rank' | 'streak' | 'xp'
 
@@ -110,6 +110,29 @@ export function badgeDefinitions({
 /** Badges stay earned once earned (even if content changes later), so they are saved. */
 export const BADGES_STORAGE_KEY = 'codequest:badges'
 
+/**
+ * Rank badges saved under the first rank names (`rank:sql:knight`, "SQL Knight") get the
+ * id and title of the rank now in that place (`rank:sql:engineer`, "SQL Engineer"), keeping
+ * the date they were earned. The next save stores them that way.
+ */
+export function renameOldRankBadges(badges: Record<string, EarnedBadge>): Record<string, EarnedBadge> {
+  const out: Record<string, EarnedBadge> = {}
+  for (const badge of Object.values(badges)) {
+    const [kind, course, rankId] = badge.id.split(':')
+    const renamed = kind === 'rank' ? OLD_RANK_IDS[rankId] : undefined
+    const rank = renamed ? RANKS.find((r) => r.id === renamed) : undefined
+    if (!rank) {
+      out[badge.id] = out[badge.id] ?? badge
+      continue
+    }
+    const id = `rank:${course}:${rank.id}`
+    // "SQL Knight" → "SQL Engineer": the course's name is everything before the rank.
+    const courseTitle = badge.title.replace(/\s*\S+$/, '')
+    out[id] = out[id] ?? { ...badge, id, title: courseTitle ? `${courseTitle} ${rank.title}` : rank.title }
+  }
+  return out
+}
+
 /** The saved badges, or null before badges were first worked out on this device. */
 export function loadEarnedBadges(): Record<string, EarnedBadge> | null {
   try {
@@ -117,7 +140,7 @@ export function loadEarnedBadges(): Record<string, EarnedBadge> | null {
     if (raw === null) return null
     const parsed = JSON.parse(raw) as unknown
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {}
-    return parsed as Record<string, EarnedBadge>
+    return renameOldRankBadges(parsed as Record<string, EarnedBadge>)
   } catch {
     return null
   }

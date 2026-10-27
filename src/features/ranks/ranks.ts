@@ -3,13 +3,14 @@ import { isSectionFinished } from '../certificate/courseCompletion'
 
 /**
  * Ranks: a title for how far a learner has come in one course, shown next to the
- * course's name. Everyone starts as a Novice; finishing sections (every quiz passed, or
+ * course's name: a coder's ladder from Tinkerer to Wizard. Everyone starts as a
+ * Tinkerer; finishing sections (every quiz passed, or
  * the skip-ahead quiz, the same as for a section's certificate) earns the next rank.
  *
- * In a 10-section course the ranks come at 3, 6 and 9 sections, and Legend at all 10.
+ * In a 10-section course the ranks come at 3, 6 and 9 sections, and Wizard at all 10.
  * Courses of other sizes use the same shares of their sections.
  */
-export type RankId = 'novice' | 'squire' | 'knight' | 'champion' | 'legend'
+export type RankId = 'tinkerer' | 'builder' | 'engineer' | 'architect' | 'wizard'
 
 export interface RankDef {
   id: RankId
@@ -19,12 +20,23 @@ export interface RankDef {
 }
 
 export const RANKS: readonly RankDef[] = [
-  { id: 'novice', title: 'Novice', share: 0 },
-  { id: 'squire', title: 'Squire', share: 0.3 },
-  { id: 'knight', title: 'Knight', share: 0.6 },
-  { id: 'champion', title: 'Champion', share: 0.9 },
-  { id: 'legend', title: 'Legend', share: 1 },
+  { id: 'tinkerer', title: 'Tinkerer', share: 0 },
+  { id: 'builder', title: 'Builder', share: 0.3 },
+  { id: 'engineer', title: 'Engineer', share: 0.6 },
+  { id: 'architect', title: 'Architect', share: 0.9 },
+  { id: 'wizard', title: 'Wizard', share: 1 },
 ]
+
+/**
+ * The first ranks were Novice, Squire, Knight, Champion and Legend. Rank badges saved
+ * under those names move to the rank in the same place (badges.ts).
+ */
+export const OLD_RANK_IDS: Readonly<Record<string, RankId>> = {
+  squire: 'builder',
+  knight: 'engineer',
+  champion: 'architect',
+  legend: 'wizard',
+}
 
 /**
  * The number of finished sections each rank needs in a course of `total` sections, in
@@ -77,11 +89,12 @@ export function courseRank(languageId: string, bundle: LanguageBundle): CourseRa
   return rankFor(finished, bundle.sections.length)
 }
 
-/** "Finish 2 more sections to become a Knight", or null at the top rank. */
+/** "Finish 2 more sections to become an Engineer", or null at the top rank. */
 export function nextRankHint(rank: CourseRank): string | null {
   if (!rank.next) return null
   const left = rank.next.at - rank.finished
-  return `Finish ${left} more section${left === 1 ? '' : 's'} to become a ${rank.next.rank.title}`
+  const title = rank.next.rank.title
+  return `Finish ${left} more section${left === 1 ? '' : 's'} to become ${/^[AEIOU]/.test(title) ? 'an' : 'a'} ${title}`
 }
 
 /** The rank a rank badge stands for (its id is `rank:<course>:<rank>`), or null. */
