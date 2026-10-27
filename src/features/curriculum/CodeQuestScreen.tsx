@@ -29,7 +29,8 @@ import { ReviewPanel } from '../review/ReviewPanel'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
 import { Breadcrumbs } from './components/Breadcrumbs'
-import { AppHeader } from './components/AppHeader'
+import { AppHeader, type HeaderCourse } from './components/AppHeader'
+import { courseRank } from '../ranks/ranks'
 import { Notices } from './components/Notices'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { ShareSheet } from '../../components/ShareSheet'
@@ -227,6 +228,14 @@ export function CodeQuestScreen() {
     totalXp,
     onEarned: onBadgesEarned,
   })
+
+  // The top bar: the course being learned, the rank in it and its XP (as on Home).
+  const headerBundle = !isEditMode && activeOpenableId ? (languageBundles[activeOpenableId] ?? null) : null
+  const headerCourse = useMemo((): HeaderCourse | null => {
+    void progressVersion
+    if (!activeOpenableId || !headerBundle) return null
+    return { title: headerBundle.index.title, rank: courseRank(activeOpenableId, headerBundle).rank, xp: totalXp }
+  }, [activeOpenableId, headerBundle, totalXp, progressVersion])
 
   const sandbox = useSandbox(languageId)
   const challenges = useChallenges(languageId, selectedLevel, recordActivity, showXp)
@@ -586,7 +595,7 @@ export function CodeQuestScreen() {
 
   return (
     <div className={shellClassName}>
-      <AppHeader showBack={showBack} onBack={back} isAdmin={isAdmin} />
+      <AppHeader showBack={showBack} onBack={back} isAdmin={isAdmin} course={headerCourse} />
 
       {isEditMode ? (
         <Suspense fallback={null}>
