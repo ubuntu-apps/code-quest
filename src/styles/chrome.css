@@ -88,8 +88,53 @@
 }
 
 .cq-brand {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
   font-weight: 600;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* After the app's name: the course, the rank in it and its XP. */
+.cq-brand-course {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.cq-brand-sep {
+  margin: 0 0.4rem;
+  color: var(--cq-muted);
+}
+
+.cq-brand-part {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cq-brand-rank {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 0 0 auto;
+  color: var(--cq-hl-builtin);
+}
+
+.cq-brand-xp {
+  flex: 0 0 auto;
+  color: var(--cq-muted);
+}
+
+/* Phones: the course, rank and XP matter more than the app's name. */
+@media (max-width: 400px) {
+  .cq-brand--course .cq-brand-name,
+  .cq-brand--course .cq-brand-sep--first {
+    display: none;
+  }
 }
 
 .cq-admin-badge {
