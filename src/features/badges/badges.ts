@@ -107,6 +107,16 @@ export function badgeDefinitions({
   ]
 }
 
+/**
+ * Whether a saved badge belongs on the page for `languageId`: badges for a course's quizzes,
+ * sections and ranks (their id holds the course: `section:sql:joins`) only there, and
+ * streak and XP badges everywhere.
+ */
+export function badgeShownForCourse(badge: Pick<EarnedBadge, 'id' | 'kind'>, languageId: string | null): boolean {
+  if (!languageId || badge.kind === 'streak' || badge.kind === 'xp') return true
+  return badge.id.split(':')[1] === languageId
+}
+
 /** Badges stay earned once earned (even if content changes later), so they are saved. */
 export const BADGES_STORAGE_KEY = 'codequest:badges'
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { renameOldRankBadges, type EarnedBadge } from './badges'
+import { badgeShownForCourse, renameOldRankBadges, type EarnedBadge } from './badges'
 
 const badge = (id: string, title: string, kind: EarnedBadge['kind'] = 'rank'): EarnedBadge => ({
   id,
@@ -26,5 +26,16 @@ describe('rank badges under the first rank names', () => {
       'rank:sql:wizard': badge('rank:sql:wizard', 'SQL Wizard'),
     }
     expect(renameOldRankBadges(others)).toEqual(others)
+  })
+})
+
+describe('badges on a course\'s Home', () => {
+  it('show that course\'s badges and the ones for every course', () => {
+    expect(badgeShownForCourse({ id: 'first-quiz:sql', kind: 'start' }, 'sql')).toBe(true)
+    expect(badgeShownForCourse({ id: 'first-quiz:sql', kind: 'start' }, 'python')).toBe(false)
+    expect(badgeShownForCourse({ id: 'rank:sql:builder', kind: 'rank' }, 'python')).toBe(false)
+    expect(badgeShownForCourse({ id: 'streak:7', kind: 'streak' }, 'python')).toBe(true)
+    expect(badgeShownForCourse({ id: 'xp:100', kind: 'xp' }, 'python')).toBe(true)
+    expect(badgeShownForCourse({ id: 'section:sql:joins', kind: 'section' }, null)).toBe(true)
   })
 })

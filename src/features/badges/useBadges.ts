@@ -7,6 +7,7 @@ import {
   loadEarnedBadges,
   recordNewBadges,
   subscribeBadges,
+  badgeShownForCourse,
   type BadgeDef,
   type BadgeKind,
   type EarnedBadge,
@@ -54,13 +55,14 @@ export function useBadges({ progressVersion, languageId, bundle, totalXp, onEarn
     if (fresh.length > 0) onEarned(fresh)
   }, [defs, onEarned])
 
-  // Oldest first; badges earned together keep the course order (first quiz, sections, …).
+  // The course being learned, plus streaks and XP. Oldest first; badges earned together
+  // keep the course order (first quiz, sections, …).
   const earned = useMemo(
     () =>
-      Object.values(saved).sort(
-        (a, b) => a.on.localeCompare(b.on) || KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind),
-      ),
-    [saved],
+      Object.values(saved)
+        .filter((badge) => badgeShownForCourse(badge, languageId))
+        .sort((a, b) => a.on.localeCompare(b.on) || KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind)),
+    [saved, languageId],
   )
   const toEarn = useMemo(() => defs.filter((d) => !d.earned && !saved[d.id]), [defs, saved])
 
