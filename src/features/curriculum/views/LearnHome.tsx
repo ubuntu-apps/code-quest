@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { BellRing, Flame, Play, Snowflake, Zap } from 'lucide-react'
+import { BellRing, ChevronRight, Flame, Lock, Play, Snowflake, Zap } from 'lucide-react'
 import type { RootIndex } from '../types'
 import type { ContentSource } from '../../editor/curriculumDraftStorage'
 import { AddItemButton } from '../../editor'
@@ -40,6 +40,10 @@ interface LearnHomeProps {
   onImportFromGitHub?: () => void
   onContinue: () => void
   onOpenLanguage: (path: string, id: string) => void
+  /** The course Home shows progress for (null: none picked yet, or edit mode). */
+  activeCourseId?: string | null
+  /** Makes another course the one Home shows, without leaving Home. */
+  onSelectCourse?: (id: string) => void
   onUpdateHomeLead: (text: string) => void
   onUpdateLanguage: (langId: string, patch: { title?: string; id?: string }) => void
   onMoveLanguage: (langId: string, direction: -1 | 1) => void
@@ -66,6 +70,8 @@ export function LearnHome({
   onImportFromGitHub,
   onContinue,
   onOpenLanguage,
+  activeCourseId = null,
+  onSelectCourse,
   onUpdateHomeLead,
   onUpdateLanguage,
   onMoveLanguage,
@@ -84,9 +90,80 @@ export function LearnHome({
           ? 'Do a challenge, quiz or review today to keep it going.'
           : 'Done for today. See you tomorrow!'
 
+  // The course Home shows progress for. Picked: a switcher next to the title. Not picked
+  // yet (a new learner) or editing: the full course cards, first thing on the page.
+  const activeCourse = activeCourseId
+    ? (displayRootIndex.languages.find((lang) => lang.id === activeCourseId) ?? null)
+    : null
+  const courseList = (
+    <>
+      <EditableText as="p" className="cq-lead" value={homeLead} onChange={onUpdateHomeLead} />
+      <ul className="cq-card-list">
+        {displayRootIndex.languages.map((lang, langIndex) => (
+          <CatalogListItem
+            key={lang.id}
+            title={lang.title}
+            onTitleChange={(title) => onUpdateLanguage(lang.id, { title })}
+            onClick={() => onOpenLanguage(lang.path, lang.id)}
+            meta={lang.comingSoon ? <span className="cq-card-meta">Coming soon</span> : undefined}
+            locked={lang.comingSoon === true && !canOpenComingSoon}
+            disabled={lang.comingSoon === true && !canOpenComingSoon}
+            listIndex={langIndex}
+            listLength={displayRootIndex.languages.length}
+            onMoveUp={() => onMoveLanguage(lang.id, -1)}
+            onMoveDown={() => onMoveLanguage(lang.id, 1)}
+            onRemove={() => onRemoveLanguage(lang.id)}
+            confirmMessage={`Delete language "${lang.title}"?`}
+          />
+        ))}
+      </ul>
+      <AddItemButton label="Add language" onClick={onAddLanguage} />
+    </>
+  )
+
   return (
     <div className="cq-stack">
-      <h1 className="cq-title">Home</h1>
+      <div className="cq-home-head">
+        <h1 className="cq-title">Home</h1>
+        {activeCourse ? (
+          <div className="cq-course-switch" role="group" aria-label="Your course">
+            {displayRootIndex.languages.map((lang) => {
+              const soon = lang.comingSoon === true && !canOpenComingSoon
+              const current = lang.id === activeCourse.id
+              return (
+                <button
+                  key={lang.id}
+                  type="button"
+                  className={`cq-course-switch-btn${current ? ' cq-course-switch-btn--current' : ''}`}
+                  aria-pressed={current}
+                  disabled={soon}
+                  title={soon ? `${lang.title}: coming soon` : undefined}
+                  onClick={() => onSelectCourse?.(lang.id)}
+                >
+                  {lang.title}
+                  {soon ? (
+                    <>
+                      <Lock size={12} aria-hidden />
+                      <span className="cq-sr-only">, coming soon</span>
+                    </>
+                  ) : null}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
+      </div>
+      {activeCourse ? (
+        <button
+          type="button"
+          className="cq-link-btn cq-course-sections-link"
+          onClick={() => onOpenLanguage(activeCourse.path, activeCourse.id)}
+        >
+          See all {activeCourse.title} sections
+          <ChevronRight size={15} aria-hidden />
+        </button>
+      ) : null}
+      {activeCourse ? null : courseList}
       {isEditMode && (
         <ContentSourceToggle
           contentSource={contentSource}
@@ -152,27 +229,6 @@ export function LearnHome({
       </div>
       {review}
       {badges}
-      <EditableText as="p" className="cq-lead" value={homeLead} onChange={onUpdateHomeLead} />
-      <ul className="cq-card-list">
-        {displayRootIndex.languages.map((lang, langIndex) => (
-          <CatalogListItem
-            key={lang.id}
-            title={lang.title}
-            onTitleChange={(title) => onUpdateLanguage(lang.id, { title })}
-            onClick={() => onOpenLanguage(lang.path, lang.id)}
-            meta={lang.comingSoon ? <span className="cq-card-meta">Coming soon</span> : undefined}
-            locked={lang.comingSoon === true && !canOpenComingSoon}
-            disabled={lang.comingSoon === true && !canOpenComingSoon}
-            listIndex={langIndex}
-            listLength={displayRootIndex.languages.length}
-            onMoveUp={() => onMoveLanguage(lang.id, -1)}
-            onMoveDown={() => onMoveLanguage(lang.id, 1)}
-            onRemove={() => onRemoveLanguage(lang.id)}
-            confirmMessage={`Delete language "${lang.title}"?`}
-          />
-        ))}
-      </ul>
-      <AddItemButton label="Add language" onClick={onAddLanguage} />
       {reminderOpen ? <ReminderSheet appUrl={appUrl} onClose={() => setReminderOpen(false)} /> : null}
     </div>
   )

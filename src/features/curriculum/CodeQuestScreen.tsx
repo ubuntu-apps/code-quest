@@ -134,6 +134,7 @@ export function CodeQuestScreen() {
     goToLevel,
     goToLevelStep,
     backFromLearn,
+    selectCourse,
   } = useLearnRoute()
   const switchTab = useTabMemory({ tab, activeLanguageId, goToTab, navigate })
 
@@ -396,6 +397,8 @@ export function CodeQuestScreen() {
           }}
           onContinue={() => continueTarget && void openLevelByPath(continueTarget)}
           onOpenLanguage={(path, id) => void openLanguage(path, id)}
+          activeCourseId={isEditMode ? null : activeOpenableId}
+          onSelectCourse={selectCourse}
           onUpdateHomeLead={updateHomeLead}
           onUpdateLanguage={updateLanguage}
           onMoveLanguage={moveLanguage}

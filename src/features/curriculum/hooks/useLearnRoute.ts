@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import type { LearnView, LevelStep, TabId } from '../constants'
 import {
@@ -22,6 +22,8 @@ function learnViewFromPath(parsed: ReturnType<typeof parseAppPath>): LearnView {
 export function useLearnRoute() {
   const location = useLocation()
   const navigate = useNavigate()
+  // Picking a course on Home saves it without changing the address; this re-reads it.
+  const [, setCourseVersion] = useState(0)
 
   const parsed = useMemo(() => parseAppPath(location.pathname), [location.pathname])
   const tab = parsed.tab
@@ -46,6 +48,11 @@ export function useLearnRoute() {
     goToLanguage: (langId: string) => {
       saveSelectedLanguage(langId)
       navigate(learnLanguagePath(langId))
+    },
+    /** Makes a course the one being learned (Home then shows its progress), staying put. */
+    selectCourse: (langId: string) => {
+      saveSelectedLanguage(langId)
+      setCourseVersion((v) => v + 1)
     },
     goToSection: (langId: string, secId: string) => navigate(learnSectionPath(langId, secId)),
     goToLevel: (langId: string, secId: string, lvlId: string, step: LevelStep = 'intro') =>
