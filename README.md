@@ -69,7 +69,8 @@ npm run dev        # http://localhost:5173/code-quest/
 | --- | --- |
 | `npm run dev` | Dev server with the content editor enabled |
 | `npm run build` | Type-check, build to `dist/`, and add `404.html` for GitHub Pages routing |
-| `npm run check` | Lint, run tests, and build (what CI runs) |
+| `npm run check` | Lint, check lesson ids, run tests, and build (what CI runs) |
+| `npm run lesson-ids:update` | Add new lessons to `scripts/lesson-ids.json` (see [Keeping learners' progress](#keeping-learners-progress)) |
 | `npm run check:content` | Run every lesson challenge to check it works (needs Python 3; pandas for the pandas lessons) |
 | `npm test` | Vitest in watch mode (`npm run test:run` for a single run) |
 | `npm run lint` | ESLint |
@@ -123,6 +124,15 @@ node scripts/check-curriculum.mjs --section python/data_and_apis --verbose
 For every challenge it runs the solution (must pass), the starter code and empty code (must fail), using the same Python helpers as the app. It also flags missing prompts, hints and solutions, text-matched grading, and quizzes whose answers are always in the same position. Sections listed in `scripts/curriculum-check.json` must be clean or CI fails; add a section there once it has been rewritten.
 
 You can also edit lessons in the app. In `npm run dev`, use the editor button in the header; **Save** writes straight to `public/content/`.
+
+#### Keeping learners' progress
+
+Progress is saved in each learner's browser under the course id and the lesson id (`codequest:progress:python:first_program`), and challenge and question ids start with the lesson id. Most edits are safe: changing text, hints, starter code and solutions, and adding, removing or reordering challenges, questions, lessons and sections. Two kinds of change need care:
+
+- **Renaming a lesson.** Change its `id` in the data file and add the old id to the lesson's `formerIds`, e.g. `formerIds: ['hello']`. The app then moves learners' progress, drafts, review history and Continue button over to the new id (`src/features/curriculum/levelRenames.ts`). `scripts/lesson-ids.json` lists every lesson id ever published, and `npm run check` (so CI too) fails when one of them is no longer a lesson and isn't in any lesson's `formerIds`. After adding lessons, run `npm run lesson-ids:update` and commit the file. Never remove ids from it. Renaming a course isn't supported.
+- **Changing a challenge's checks.** A challenge's saved progress remembers a fingerprint of its title and checks, and a changed fingerprint clears learners' solved mark and draft, because the exercise may now be different. When the change only fixes a check (a typo in an expected value, a test that was too strict), add `keepProgress: true` to the challenge in the data file before regenerating. The generator compares the challenge with the JSON it is replacing and lists the old fingerprint in `acceptedFingerprints`, so learners keep their progress (`scripts/progress-safety.mjs`). Accepted fingerprints are carried forward on every run, so you can remove the flag again afterwards. To make a challenge count as new on purpose, change its title.
+
+The R generator still gives challenges random ids, so regenerating R gives every R challenge a new id. That's harmless while R is "Coming soon"; the R rewrite should use the permanent ids from `scripts/curriculum-ids.mjs`.
 
 #### Saving from the deployed site (optional)
 

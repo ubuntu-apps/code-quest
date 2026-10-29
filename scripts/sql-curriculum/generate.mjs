@@ -8,6 +8,7 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { COURSE } from './data/course.mjs'
 import { assertUnique, challengeId, questionId } from '../curriculum-ids.mjs'
+import { applyKeepProgress, previousChallenges, readPreviousSection } from '../progress-safety.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const outDir = resolve(here, '../../public/content/sql')
@@ -21,6 +22,8 @@ function unique(levelId, what, items) {
 function buildLevel(topic) {
   return {
     id: topic.id,
+    // Ids this lesson had before it was renamed; the app moves saved progress over.
+    ...(topic.formerIds?.length ? { formerIds: topic.formerIds } : {}),
     title: topic.title,
     kind: topic.kind,
     projectDifficulty: topic.projectDifficulty,
@@ -59,7 +62,12 @@ await mkdir(outDir, { recursive: true })
 const written = COURSE.filter((section) => section.topics.length > 0)
 for (const section of written) {
   const file = { sectionId: section.sectionId, title: section.title, levels: section.topics.map(buildLevel) }
-  await writeFile(resolve(outDir, section.filename), `${JSON.stringify(file, null, 2)}\n`, 'utf8')
+  const path = resolve(outDir, section.filename)
+  // Compare with the version learners have, before it is replaced (see ../progress-safety.mjs).
+  for (const id of applyKeepProgress(file, previousChallenges(readPreviousSection(path)))) {
+    console.log(`  ${id}: checks changed, learners keep their progress (keepProgress)`)
+  }
+  await writeFile(path, `${JSON.stringify(file, null, 2)}\n`, 'utf8')
   console.log(`Wrote ${section.filename} (${file.levels.length} lessons)`)
 }
 

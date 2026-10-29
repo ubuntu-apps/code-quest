@@ -97,6 +97,8 @@ export function challenge(spec) {
     solution: spec.solution,
     hints: spec.hints,
     validation: spec.validation,
+    // Learners keep their progress when only the checks were fixed (see ../progress-safety.mjs).
+    ...(spec.keepProgress ? { keepProgress: true } : {}),
   }
 }
 
@@ -112,6 +114,8 @@ export function buildLevel(topic) {
   assertUnique(topic.id, questions.map((q) => q.id), 'questions')
   return {
     id: topic.id,
+    // Ids this lesson had before it was renamed; the app moves saved progress over.
+    ...(topic.formerIds?.length ? { formerIds: topic.formerIds } : {}),
     title: topic.title,
     kind: topic.kind ?? 'topic',
     projectDifficulty: topic.projectDifficulty,

@@ -1,13 +1,15 @@
 import { loadProgress, progressKey, type LevelProgress } from './progressStorage'
 import type { Challenge, LanguageBundle, Level } from './types'
 import { migrateLanguageIds } from './idMigration'
+import { migrateRenamedLevels } from './levelRenames'
 
 /**
  * Progress is stored by challenge id. Ids are permanent (made from the challenge's title;
  * see scripts/curriculum-ids.mjs), but a challenge can still be rewritten under the same
  * title, and a saved "done" mark or draft would then belong to the old version. So each challenge's
  * progress remembers a fingerprint of the challenge (its title and how it is checked),
- * and progress for a challenge whose fingerprint has changed is dropped. A passed quiz
+ * and progress for a challenge whose fingerprint has changed is dropped, unless the
+ * content lists the old fingerprint in `acceptedFingerprints` (a fixed check). A passed quiz
  * is kept, so rewritten content never locks a learner out of later lessons.
  */
 
@@ -60,7 +62,12 @@ export function reconcileLevelProgress(languageId: string, level: Level, trustUn
     const fingerprint = challengeFingerprint(ch)
     versions[ch.id] = fingerprint
     const stamp = stamps[ch.id]
-    const outdated = stamp === undefined ? !trustUnstamped : stamp !== fingerprint
+    // A fingerprint listed in acceptedFingerprints is an earlier version whose checks were
+    // fixed rather than rewritten, so progress made against it still counts.
+    const outdated =
+      stamp === undefined
+        ? !trustUnstamped
+        : stamp !== fingerprint && !(ch.acceptedFingerprints ?? []).includes(stamp)
     if (outdated && hasChallengeState(prev, ch.id)) stale.add(ch.id)
   }
   const sameVersions =
@@ -101,7 +108,9 @@ export function reconcileLanguageProgress(languageId: string, bundle: LanguageBu
   } catch {
     return false
   }
-  // Progress saved under the old position-based ids moves to the permanent ids first.
+  // Progress saved under a lesson's former id moves to its current id first, then
+  // progress saved under the old position-based ids moves to the permanent ids.
+  migrateRenamedLevels(languageId, bundle)
   let dropped = migrateLanguageIds(languageId, bundle, challengeFingerprint)
   for (const { file } of bundle.sections) {
     for (const level of file.levels) {

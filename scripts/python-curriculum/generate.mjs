@@ -11,6 +11,7 @@ import { buildLevel, buildSection, challenge, mcq, shortText } from './helpers.m
 import { COURSE } from './data/course.mjs'
 import { sectionProjectsFor } from './data/section-projects.mjs'
 import { EXPLANATIONS } from './data/explanations/index.mjs'
+import { applyKeepProgress, previousChallenges, readPreviousSection } from '../progress-safety.mjs'
 
 /**
  * Sections that get their "Easy/Medium/Hard project" levels (data/section-projects.mjs).
@@ -62,6 +63,10 @@ for (const section of SECTIONS) {
     topics: [...section.topics, ...sectionProjects].map(finalizeTopic),
   })
   const path = resolve(outDir, section.filename)
+  // Compare with the version learners have, before it is replaced (see ../progress-safety.mjs).
+  for (const id of applyKeepProgress(file, previousChallenges(readPreviousSection(path)))) {
+    console.log(`  ${id}: checks changed, learners keep their progress (keepProgress)`)
+  }
   await writeFile(path, `${JSON.stringify(file, null, 2)}\n`, 'utf8')
   console.log(`Wrote ${section.filename} (${file.levels.length} topics)`)
 }

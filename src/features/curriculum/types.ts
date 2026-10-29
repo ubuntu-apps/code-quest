@@ -50,6 +50,12 @@ export interface Challenge {
   hint?: string
   solution?: string
   validation: Validation
+  /**
+   * Earlier fingerprints of this challenge whose progress still counts (see
+   * progressFingerprint.ts). Written by the generators when a challenge marked
+   * `keepProgress` has its checks fixed, so learners who solved it keep it.
+   */
+  acceptedFingerprints?: string[]
 }
 
 export type TestQuestion =
@@ -93,6 +99,11 @@ export interface SandboxSnippet {
 
 export interface Level {
   id: string
+  /**
+   * Ids this lesson had before it was renamed. Saved progress is keyed by lesson id, so the
+   * app moves progress saved under these ids to the current one (see levelRenames.ts).
+   */
+  formerIds?: string[]
   title: string
   kind?: LevelKind
   projectDifficulty?: ProjectDifficulty
