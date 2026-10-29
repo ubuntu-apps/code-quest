@@ -1,21 +1,62 @@
+<p align="center">
+  <img src="public/og-image.png" alt="CodeQuest: learn Python and SQL free, right in your browser" width="720">
+</p>
+
 # CodeQuest
 
-CodeQuest is an installable web app (PWA) for learning to code. Each lesson has a short intro with a live code sandbox, hands-on challenges that are checked by running real code in the browser, and a quiz.
+**Learn to code for free, right in your browser.** CodeQuest teaches Python and SQL through short lessons, hands-on challenges and quizzes. Your code runs on your own device, so there is nothing to install, no account to create and no ads.
 
-Live site: <https://ubuntu-apps.github.io/code-quest/>
+### [Start learning now](https://ubuntu-apps.github.io/code-quest/)
+
+Open the link on a laptop, a school Chromebook, a tablet or a phone, press **Start your Quest**, and you are writing your first line of Python within a minute.
+
+## Why CodeQuest
+
+- **Free, with no catch.** No ads, no paywall, no sign-up.
+- **Nothing to install.** Python and SQL run inside the browser, so it works on locked-down school and work computers too.
+- **Made for phones as well as laptops.** A phone-friendly code editor with extra keys for brackets, quotes and indents.
+- **Learn by doing.** Every lesson has a live sandbox and challenges that run your code and tell you exactly which characters of the output were different.
+- **Keeps you going.** XP and ranks, a daily streak with streak freezes, 23 badges, an optional calendar reminder and a daily review of quiz questions you got wrong.
+- **Works offline.** Install it like an app and download the lessons for a plane, a train or a patchy connection.
+- **A certificate when you finish.** Save it as an image or print it.
+- **Private.** Your progress stays on your device. CodeQuest only sends anonymous counts (such as "someone passed the Variables quiz"), with no cookies, and you can turn that off on the About tab.
 
 ## Courses
 
-| Course | Status | Code runs with |
+| Course | What you learn | Size |
 | --- | --- | --- |
-| Python | Live, 10 sections | [Pyodide](https://pyodide.org) in a Web Worker |
-| SQL | Live, 10 sections | SQLite, through Pyodide's `sqlite3` in the same Web Worker |
-| R | Coming soon (`comingSoon` in `public/content/index.json`), 15 sections | [WebR](https://docs.r-wasm.org/webr/) |
-| Java | Draft, not listed in the app | none yet (text-checked only) |
+| **Python** | Fundamentals, decisions and loops, data structures, functions, errors and exceptions, files, modules and packages, classes and objects, data and APIs (JSON, CSV, pandas, SQLite), and capstone projects | 10 sections, about 125 lessons, over 1,000 challenges |
+| **SQL** | Querying a table, functions and expressions, summarising data, joins, subqueries and sets, changing data, designing tables, window functions, advanced queries, and capstone projects | 10 sections, about 120 lessons, over 1,000 challenges |
+| **R** | Coming soon | |
 
-The Java files in `public/content/java/` are kept for later. To publish them, add a `java` entry to `public/content/index.json`.
+No experience is needed. If you already know some of a section, you can take a short test to skip ahead.
 
-## Getting started
+## How a lesson works
+
+1. **Intro**: a short explanation with examples. Press **Try it** on any example to load it into the sandbox and run it.
+2. **Challenges**: write code to solve a small task. **Run** shows what your code prints; **Check** tests it and highlights any difference from the expected output. Hints are there if you get stuck.
+3. **Quiz**: a few questions, each with a one-line explanation. Pass it to unlock the next lesson.
+
+## For teachers, clubs and homeschoolers
+
+CodeQuest is free to use with a class. Students need only a browser and the link: no accounts to set up, no software to install, and nothing to manage. Each section follows a clear order, so it can sit alongside your own lessons or be set as homework.
+
+Progress is stored on each student's device. Students can download a backup from the About tab to move to another device.
+
+If you use CodeQuest with learners, I would love to hear how it goes: [send feedback](mailto:goran.stojanov@ctstate.edu?subject=CodeQuest%20in%20class) or [open an issue](https://github.com/ubuntu-apps/code-quest/issues/new).
+
+## Feedback and problems
+
+- Found a wrong answer or a confusing lesson? Every challenge and quiz has a **Report a problem** link, or [open an issue](https://github.com/ubuntu-apps/code-quest/issues/new).
+- Ideas and general feedback: use **Send feedback** on the About tab.
+
+---
+
+## For developers
+
+CodeQuest is an installable web app (PWA) built with React, TypeScript and Vite. Python runs with [Pyodide](https://pyodide.org) in a Web Worker, SQL runs on SQLite through Pyodide's `sqlite3`, and R will run with [WebR](https://docs.r-wasm.org/webr/). The Java files in `public/content/java/` are a draft that is not listed in the app; to publish them, add a `java` entry to `public/content/index.json`.
+
+### Getting started
 
 Requires Node 24 (see `.nvmrc`).
 
@@ -35,7 +76,7 @@ npm run dev        # http://localhost:5173/code-quest/
 | `npm run preview` | Serve the production build locally |
 | `npm run icons` | Regenerate the PWA icons from `public/favicon.svg` |
 
-## How it works
+### How it works
 
 - **Content** lives in `public/content/` as JSON: `index.json` lists the languages, each language folder has its own `index.json` of sections, and each section file holds its levels (intro, challenges, quiz). The app validates every file against the Zod schemas in `src/features/curriculum/curriculumSchemas.ts`. Python quiz questions carry a one-line `explanation`, written in `scripts/python-curriculum/data/explanations/` (one per question, in order) and added by the generator.
 - **Python** runs in `public/pyodide-worker.js`, off the main thread. Runs stop after 10 seconds, the sandbox has a Stop button, and `input()` reads from the sandbox's Input box. The runtime is downloaded from the jsDelivr CDN on first use.
@@ -44,7 +85,7 @@ npm run dev        # http://localhost:5173/code-quest/
 - **Offline**: the service worker (configured in `vite.config.ts`) precaches the app, fetches lessons network-first with a cached fallback, and keeps the Python and R runtimes cache-first once they've been used. "Download for offline" on the About tab fetches everything up front. Runtime versions are pinned in `src/runtimeVersions.ts`; bump them there to update.
 - **Old devices**: the build targets Safari 12 so lessons and quizzes work on old iPhones. Running code needs Safari 16.4+ or a recent Chrome or Firefox.
 
-### Project layout
+#### Project layout
 
 ```
 src/
@@ -61,7 +102,7 @@ scripts/
   r-curriculum/          R course generator
 ```
 
-## Editing content
+### Editing content
 
 Course JSON is generated from the data files under `scripts/`:
 
@@ -83,7 +124,7 @@ For every challenge it runs the solution (must pass), the starter code and empty
 
 You can also edit lessons in the app. In `npm run dev`, use the editor button in the header; **Save** writes straight to `public/content/`.
 
-### Saving from the deployed site (optional)
+#### Saving from the deployed site (optional)
 
 The editor can commit changes to GitHub when signed in. Copy `.env.example` to `.env.local` and fill in:
 
@@ -95,6 +136,6 @@ The editor can commit changes to GitHub when signed in. Copy `.env.example` to `
 
 Only users with write access to the repository can sign in to edit.
 
-## Deployment
+### Deployment
 
 Every push to `main` runs `.github/workflows/deploy-pages.yml`, which lints, tests, builds and publishes `dist/` to GitHub Pages. Pull requests run the same checks in `.github/workflows/ci.yml`.
