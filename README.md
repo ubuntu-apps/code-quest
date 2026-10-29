@@ -19,7 +19,7 @@ Open the link on a laptop, a school Chromebook, a tablet or a phone, press **Sta
 - **Keeps you going.** XP and ranks, a daily streak with streak freezes, 23 badges, an optional calendar reminder and a daily review of quiz questions you got wrong.
 - **Works offline.** Install it like an app and download the lessons for a plane, a train or a patchy connection.
 - **A certificate when you finish.** Save it as an image or print it.
-- **Private.** Your progress stays on your device. CodeQuest only sends anonymous counts (such as "someone passed the Variables quiz"), with no cookies, and you can turn that off on the About tab.
+- **Private.** Your progress stays on your device. CodeQuest only sends anonymous counts (such as "someone passed the Variables quiz"), with no cookies, and you can turn that off on the About tab. See the [privacy statement](PRIVACY.md).
 
 ## Courses
 
