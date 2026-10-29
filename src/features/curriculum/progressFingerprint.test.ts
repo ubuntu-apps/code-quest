@@ -60,4 +60,20 @@ describe('progress fingerprints', () => {
     expect(reconcileLanguageProgress('python', bundle(after))).toBe(true)
     expect(loadProgress('python', 'l1').challengesCompleted).toEqual(['c1'])
   })
+
+  it('keeps progress for a fixed check whose old fingerprint is accepted', () => {
+    localStorage.setItem(progressFormatKey('python'), '2')
+    const before = challenge('c1', 'wrong')
+    saveProgress('python', 'l1', { challengesCompleted: ['c1'], testPassed: false, challengeAnswers: { c1: 'x' } })
+    reconcileLanguageProgress('python', bundle(level([before])))
+
+    const fixed: Challenge = { ...challenge('c1', 'right'), acceptedFingerprints: [challengeFingerprint(before)] }
+    expect(reconcileLanguageProgress('python', bundle(level([fixed])))).toBe(false)
+    const p = loadProgress('python', 'l1')
+    expect(p.challengesCompleted).toEqual(['c1'])
+    expect(p.challengeAnswers).toEqual({ c1: 'x' })
+    expect(p.challengesReset).toBeUndefined()
+    // The saved stamp moves to the fixed version, so the old one can later be dropped.
+    expect(p.challengeVersions).toEqual({ c1: challengeFingerprint(fixed) })
+  })
 })

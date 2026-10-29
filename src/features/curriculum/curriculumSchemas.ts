@@ -64,6 +64,7 @@ const challengeSchema = z.object({
   hint: z.string().optional(),
   solution: z.string().optional(),
   validation: validationSchema,
+  acceptedFingerprints: z.array(z.string()).optional(),
 })
 
 const levelIntroSchema = z.object({
@@ -87,6 +88,7 @@ const sandboxSnippetSchema = z.object({
 
 const levelSchema = z.object({
   id: z.string(),
+  formerIds: z.array(z.string()).optional(),
   title: z.string(),
   kind: z.enum(['topic', 'project']).optional(),
   projectDifficulty: z.enum(['easy', 'medium', 'hard']).optional(),

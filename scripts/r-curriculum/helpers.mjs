@@ -80,6 +80,8 @@ export function challenge(spec) {
 export function buildLevel(topic) {
   return {
     id: topic.id,
+    // Ids this lesson had before it was renamed; the app moves saved progress over.
+    ...(topic.formerIds?.length ? { formerIds: topic.formerIds } : {}),
     title: topic.title,
     intro: {
       title: topic.introTitle ?? topic.title,

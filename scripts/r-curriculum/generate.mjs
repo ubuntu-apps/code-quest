@@ -7,6 +7,7 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildSection, finalizeTopic } from './helpers.mjs'
 import { sections } from './curriculum.mjs'
+import { applyKeepProgress, previousChallenges, readPreviousSection } from '../progress-safety.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const outDir = resolve(here, '../../public/content/r')
@@ -24,6 +25,10 @@ for (const section of sections) {
   totalTopics += file.levels.length
   totalChallenges += file.levels.reduce((sum, level) => sum + level.challenges.length, 0)
   const path = resolve(outDir, section.filename)
+  // Compare with the version learners have, before it is replaced (see ../progress-safety.mjs).
+  for (const id of applyKeepProgress(file, previousChallenges(readPreviousSection(path)))) {
+    console.log(`  ${id}: checks changed, learners keep their progress (keepProgress)`)
+  }
   await writeFile(path, `${JSON.stringify(file, null, 2)}\n`, 'utf8')
   console.log(`Wrote ${section.filename} (${file.levels.length} topics, ${file.levels[0]?.challenges.length ?? 0} challenges each)`)
 }
