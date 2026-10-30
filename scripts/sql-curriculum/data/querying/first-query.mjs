@@ -93,7 +93,7 @@ export default makeTopic({
       'List the column after `SELECT` and the table after `FROM`.'),
     mc('`SELECT * FORM books;` gives an error. Why?', ['`books` is not a table', '`FORM` should be `FROM`', '`*` is not allowed', 'The semicolon is missing'], 1,
       'SQLite only knows the keyword `FROM`; the misspelt `FORM` makes the statement unreadable.'),
-    mc('You run two SELECT statements in a challenge. Which result is checked?', ['The first', 'Both', 'Neither', 'The last'], 3,
-      'Each statement shows its own result, and challenges check the last one.'),
+    mc("`pets` has 5 rows. How many rows does `SELECT name FROM pets;` show?", ["`5`", "`1`", "`0`", "It depends on how many columns `pets` has"], 0,
+      "With no WHERE, a SELECT shows every row. Naming a column only chooses which columns appear, not which rows."),
   ],
 })

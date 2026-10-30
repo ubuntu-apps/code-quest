@@ -356,54 +356,54 @@
             "explanation": "Conditions on groups go in HAVING."
           },
           {
-            "id": "shop_orders-q-5y9mq0",
+            "id": "shop_orders-q-1ecqqci",
             "type": "mcq",
-            "prompt": "Why does the view LEFT JOIN customers to the paid totals?",
+            "prompt": "Ben's only order is unpaid. Which query keeps Ben, with a NULL total?",
             "choices": [
               {
                 "id": "a",
-                "label": "To sort them"
+                "label": "`customers c JOIN orders o ON o.customer_id = c.id AND o.status = 'paid'`"
               },
               {
                 "id": "b",
-                "label": "Views must"
+                "label": "`customers c LEFT JOIN orders o ON o.customer_id = c.id WHERE o.status = 'paid'`"
               },
               {
                 "id": "c",
-                "label": "To remove duplicates"
+                "label": "`customers c LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'paid'`"
               },
               {
                 "id": "d",
-                "label": "So customers with no paid orders still appear, with 0"
+                "label": "`customers c JOIN orders o ON o.customer_id = c.id WHERE o.status = 'paid'`"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "COALESCE turns their NULLs into 0."
+            "correctChoiceId": "c",
+            "explanation": "A test in ON only decides which orders match, so the LEFT JOIN keeps Ben with NULLs. The same test in WHERE runs after the join and removes him, because NULL = 'paid' is not true."
           },
           {
-            "id": "shop_orders-q-1d8pzww",
+            "id": "shop_orders-q-sznja4",
             "type": "mcq",
-            "prompt": "Why build a report from the smallest correct query up?",
+            "prompt": "Revenue is 100 in June and 120 in July. What does `ROUND(100.0 * (revenue - LAG(revenue) OVER (ORDER BY month)) / LAG(revenue) OVER (ORDER BY month), 1)` give for July?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster to run"
+                "label": "`16.7`"
               },
               {
                 "id": "b",
-                "label": "SQLite needs it"
+                "label": "`120.0`"
               },
               {
                 "id": "c",
-                "label": "Views need it"
+                "label": "`20.0`"
               },
               {
                 "id": "d",
-                "label": "Each step can be checked by eye before the next is added"
+                "label": "`NULL`"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "A wrong join is easy to spot early and hard to find later."
+            "correctChoiceId": "c",
+            "explanation": "LAG gives the previous month, 100. (120 − 100) / 100 is 0.2, which is 20.0 per cent. For June there is no earlier month, so it gives NULL."
           }
         ]
       },
@@ -2047,29 +2047,29 @@
             "explanation": "UNIQUE on email would refuse the repeats otherwise."
           },
           {
-            "id": "booking_system-q-apzv9o",
+            "id": "booking_system-q-1brfxwg",
             "type": "mcq",
-            "prompt": "Arriving on the 2nd and leaving on the 5th is how many nights?",
+            "prompt": "What does `julianday('2026-07-05') - julianday('2026-07-02')` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "4"
+                "label": "`2.0`"
               },
               {
                 "id": "b",
-                "label": "3"
+                "label": "`4.0`"
               },
               {
                 "id": "c",
-                "label": "5"
+                "label": "`3.0`"
               },
               {
                 "id": "d",
-                "label": "2"
+                "label": "`5.0`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "The nights of the 2nd, 3rd and 4th."
+            "correctChoiceId": "c",
+            "explanation": "julianday turns each date into a day number, so the difference is the number of nights: arriving on the 2nd and leaving on the 5th is 3 nights."
           },
           {
             "id": "booking_system-q-1iddpv",

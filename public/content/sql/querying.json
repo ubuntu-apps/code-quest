@@ -355,29 +355,29 @@
             "explanation": "SQLite only knows the keyword `FROM`; the misspelt `FORM` makes the statement unreadable."
           },
           {
-            "id": "first_query-q-t0vsv8",
+            "id": "first_query-q-p51drg",
             "type": "mcq",
-            "prompt": "You run two SELECT statements in a challenge. Which result is checked?",
+            "prompt": "`pets` has 5 rows. How many rows does `SELECT name FROM pets;` show?",
             "choices": [
               {
                 "id": "a",
-                "label": "The first"
+                "label": "`5`"
               },
               {
                 "id": "b",
-                "label": "Both"
+                "label": "`1`"
               },
               {
                 "id": "c",
-                "label": "Neither"
+                "label": "`0`"
               },
               {
                 "id": "d",
-                "label": "The last"
+                "label": "It depends on how many columns `pets` has"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Each statement shows its own result, and challenges check the last one."
+            "correctChoiceId": "a",
+            "explanation": "With no WHERE, a SELECT shows every row. Naming a column only chooses which columns appear, not which rows."
           }
         ]
       },
@@ -2840,29 +2840,29 @@
             "explanation": "For a NULL rating the comparison is unknown, so the row is not kept."
           },
           {
-            "id": "null_values-q-1un1pps",
+            "id": "null_values-q-xxrjwy",
             "type": "mcq",
-            "prompt": "How does CodeQuest show a missing value in a result?",
+            "prompt": "What does `SELECT NULL = NULL;` show?",
             "choices": [
               {
                 "id": "a",
-                "label": "As 0"
+                "label": "`1`"
               },
               {
                 "id": "b",
-                "label": "As `NULL`"
+                "label": "`0`"
               },
               {
                 "id": "c",
-                "label": "As an empty space"
+                "label": "An error"
               },
               {
                 "id": "d",
-                "label": "It hides the row"
+                "label": "`NULL`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Results show missing values as NULL."
+            "correctChoiceId": "d",
+            "explanation": "Any comparison with NULL is unknown, even NULL with NULL, so the result is `NULL`. That is why you test for it with `IS NULL`."
           }
         ]
       },
@@ -4930,29 +4930,29 @@
             "explanation": "Without AS, the heading would be the calculation itself."
           },
           {
-            "id": "proj_shop_stock_check-q-vklf7l",
+            "id": "proj_shop_stock_check-q-1vrfrqj",
             "type": "mcq",
-            "prompt": "What is 25% off 40?",
+            "prompt": "Which product does `WHERE price * stock > 300` keep?",
             "choices": [
               {
                 "id": "a",
-                "label": "`10`"
+                "label": "Price 50, stock 6"
               },
               {
                 "id": "b",
-                "label": "`35`"
+                "label": "Price 9.99, stock 30"
               },
               {
                 "id": "c",
-                "label": "`15`"
+                "label": "Price 12, stock 30"
               },
               {
                 "id": "d",
-                "label": "`30`"
+                "label": "Price 300, stock 1"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "25% off leaves 75%: 40 × 0.75 = 30."
+            "correctChoiceId": "c",
+            "explanation": "12 × 30 = 360 is over 300. 50 × 6 and 300 × 1 are exactly 300, which `>` does not keep, and 9.99 × 30 is 299.7."
           },
           {
             "id": "proj_shop_stock_check-q-bpm6iz",

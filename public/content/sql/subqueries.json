@@ -374,29 +374,29 @@
             "explanation": "Its result is needed before the outer comparison can be made."
           },
           {
-            "id": "scalar_subqueries-q-1gcpo4i",
+            "id": "scalar_subqueries-q-1q3z1dw",
             "type": "mcq",
-            "prompt": "What is a good way to write a subquery?",
+            "prompt": "Tracks last 200, 240 and 310 seconds. How many does `WHERE duration_s > (SELECT AVG(duration_s) FROM tracks)` keep?",
             "choices": [
               {
                 "id": "a",
-                "label": "Avoid aggregates"
+                "label": "`2`"
               },
               {
                 "id": "b",
-                "label": "Run it alone first, then put it in brackets"
+                "label": "`3`"
               },
               {
                 "id": "c",
-                "label": "Always add LIMIT"
+                "label": "`0`"
               },
               {
                 "id": "d",
-                "label": "Write the outer query last"
+                "label": "`1`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Checking the inner result first makes mistakes easy to see."
+            "correctChoiceId": "d",
+            "explanation": "The subquery gives the average, 250. Only the 310-second track is longer than that."
           }
         ]
       },
@@ -1182,29 +1182,29 @@
             "explanation": "MAX of no rows is NULL; COALESCE can replace it."
           },
           {
-            "id": "correlated_subqueries-q-i6ve3a",
+            "id": "correlated_subqueries-q-1fdsrih",
             "type": "mcq",
-            "prompt": "Why use two correlated subqueries for plays and followers?",
+            "prompt": "An artist has 3 plays and 2 followers. If you join both plays and followers to artists, what does `COUNT(p.id)` give for them?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is shorter"
+                "label": "`3`"
               },
               {
                 "id": "b",
-                "label": "Joining both would multiply the rows and inflate the counts"
+                "label": "`5`"
               },
               {
                 "id": "c",
-                "label": "Joins can't count"
+                "label": "`6`"
               },
               {
                 "id": "d",
-                "label": "To sort them"
+                "label": "`2`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Each subquery counts its own table independently."
+            "correctChoiceId": "c",
+            "explanation": "Each play row pairs with each follower row, so the join has 3 × 2 = 6 rows and COUNT counts 6. A correlated subquery for each count gives 3 and 2."
           },
           {
             "id": "correlated_subqueries-q-lrepvo",
@@ -2000,29 +2000,29 @@
             "explanation": "SQLite allows leaving it out, but a name is good practice."
           },
           {
-            "id": "from_subqueries-q-8g8b8v",
+            "id": "from_subqueries-q-8e5t6i",
             "type": "mcq",
-            "prompt": "Why name every calculated column inside the subquery?",
+            "prompt": "What does `SELECT AVG(n) FROM (SELECT COUNT(*) FROM plays GROUP BY listener_id);` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Those names become the columns the outer query uses"
+                "label": "The average of the counts"
               },
               {
                 "id": "b",
-                "label": "It is faster"
+                "label": "An error: no such column: n"
               },
               {
                 "id": "c",
-                "label": "To sort them"
+                "label": "`NULL`"
               },
               {
                 "id": "d",
-                "label": "SQLite requires it"
+                "label": "`0`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Without a name, `COUNT(*)` would be awkward to refer to."
+            "correctChoiceId": "b",
+            "explanation": "The subquery's column is headed `COUNT(*)`, not `n`, so the outer query can't find `n`. Writing `COUNT(*) AS n` inside fixes it."
           },
           {
             "id": "from_subqueries-q-df0lr9",
@@ -3820,29 +3820,29 @@
             "explanation": "`COALESCE(ap.plays, 0)`."
           },
           {
-            "id": "several_ctes-q-1xnqmya",
+            "id": "several_ctes-q-1j1f6cm",
             "type": "mcq",
-            "prompt": "Why LEFT JOIN the CTEs to artists?",
+            "prompt": "The CTE `play_counts` has a row only for artists with plays. What does `SELECT a.name, pc.plays FROM artists a LEFT JOIN play_counts pc ON pc.artist_id = a.id` show for an artist with no plays?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "Nothing: the artist is missing"
               },
               {
                 "id": "b",
-                "label": "To keep artists that have nothing to count"
+                "label": "The name and NULL"
               },
               {
                 "id": "c",
-                "label": "CTEs need it"
+                "label": "The name and 0"
               },
               {
                 "id": "d",
-                "label": "To remove duplicates"
+                "label": "An error"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "An inner join would drop them."
+            "explanation": "The LEFT JOIN keeps the artist; with no matching row, `pc.plays` is NULL. `COALESCE(pc.plays, 0)` would show 0."
           },
           {
             "id": "several_ctes-q-1uwyp77",
@@ -4258,29 +4258,29 @@
             "explanation": "Then pick the top rows from the CTE."
           },
           {
-            "id": "top_per_group-q-m4clw6",
+            "id": "top_per_group-q-16n5uow",
             "type": "mcq",
-            "prompt": "Why count plays with a LEFT JOIN in \"Hits, with ties\"?",
+            "prompt": "A CTE counts plays with `FROM tracks t JOIN plays p ON p.track_id = t.id GROUP BY t.id`. What happens to a track with no plays?",
             "choices": [
               {
                 "id": "a",
-                "label": "So unplayed tracks have 0 and can still be an artist's top"
+                "label": "It is not in the CTE at all"
               },
               {
                 "id": "b",
-                "label": "To remove duplicates"
+                "label": "It has 0 plays"
               },
               {
                 "id": "c",
-                "label": "LEFT JOIN is required in CTEs"
+                "label": "It has NULL plays"
               },
               {
                 "id": "d",
-                "label": "It is faster"
+                "label": "An error"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "An artist with only unplayed tracks would otherwise disappear."
+            "explanation": "A plain JOIN finds no play for it, so it has no rows to group and is left out. `LEFT JOIN` with `COUNT(p.track_id)` would give it 0."
           },
           {
             "id": "top_per_group-q-d5e41m",
@@ -4601,29 +4601,29 @@
             "explanation": "`WITH name AS (…)`."
           },
           {
-            "id": "proj_weekly_chart-q-g97dor",
+            "id": "proj_weekly_chart-q-148isf2",
             "type": "mcq",
-            "prompt": "Why count plays and followers in separate CTEs?",
+            "prompt": "Plays per track: A 5, B 5, C 5 and D 3. How many rows does `ORDER BY plays DESC LIMIT 2` show?",
             "choices": [
               {
                 "id": "a",
-                "label": "To sort them"
+                "label": "`3`"
               },
               {
                 "id": "b",
-                "label": "Joining both raw tables would multiply the counts"
+                "label": "`4`"
               },
               {
                 "id": "c",
-                "label": "It is shorter"
+                "label": "`2`"
               },
               {
                 "id": "d",
-                "label": "CTEs can only count once"
+                "label": "`1`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "One row per artist in each CTE keeps the join clean."
+            "correctChoiceId": "c",
+            "explanation": "LIMIT counts rows, not values: it stops at 2 even though three tracks tie on 5. Which two you get depends on the tie-break, so add one, such as `t.title`."
           },
           {
             "id": "proj_weekly_chart-q-6pujs8",

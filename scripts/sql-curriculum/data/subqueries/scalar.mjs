@@ -96,7 +96,7 @@ export default makeTopic({
       'For example `duration_s - (SELECT AVG(duration_s) FROM tracks)`.'),
     mc('Which runs first?', ['They run at the same time', 'Whichever is shorter', 'The subquery', 'The outer query'], 2,
       'Its result is needed before the outer comparison can be made.'),
-    mc('What is a good way to write a subquery?', ['Avoid aggregates', 'Run it alone first, then put it in brackets', 'Always add LIMIT', 'Write the outer query last'], 1,
-      'Checking the inner result first makes mistakes easy to see.'),
+    mc("Tracks last 200, 240 and 310 seconds. How many does `WHERE duration_s > (SELECT AVG(duration_s) FROM tracks)` keep?", ["`2`", "`3`", "`0`", "`1`"], 3,
+      "The subquery gives the average, 250. Only the 310-second track is longer than that."),
   ],
 })

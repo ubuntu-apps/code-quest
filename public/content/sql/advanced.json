@@ -1656,29 +1656,29 @@
             "explanation": "Every day gets a row, with or without data."
           },
           {
-            "id": "fill_gaps-q-98ckex",
+            "id": "fill_gaps-q-wq1b2c",
             "type": "mcq",
-            "prompt": "Why LEFT JOIN, not JOIN, from the calendar?",
+            "prompt": "A calendar has 7 days, and there are sales on 5 of them. How many rows does `FROM calendar c JOIN sales s ON s.sold_on = c.day … GROUP BY c.day` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "`7`"
               },
               {
                 "id": "b",
-                "label": "JOIN needs a key"
+                "label": "`12`"
               },
               {
                 "id": "c",
-                "label": "So days with no sales keep their row"
+                "label": "`2`"
               },
               {
                 "id": "d",
-                "label": "To remove duplicates"
+                "label": "`5`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "An inner join would drop the empty days again."
+            "correctChoiceId": "d",
+            "explanation": "A plain JOIN keeps only the days with a matching sale, so the 2 empty days vanish. A LEFT JOIN from the calendar keeps all 7."
           },
           {
             "id": "fill_gaps-q-x5tddb",
@@ -4844,29 +4844,29 @@
             "explanation": "Nobody needs to rebuild it when someone joins."
           },
           {
-            "id": "proj_staff_directory-q-5e62sj",
+            "id": "proj_staff_directory-q-bndc6q",
             "type": "mcq",
-            "prompt": "Why LEFT JOIN for the manager's name?",
+            "prompt": "In `SELECT s.name, m.name FROM staff s JOIN staff m ON s.manager_id = m.id`, what happens to the head, whose manager_id is NULL?",
             "choices": [
               {
                 "id": "a",
-                "label": "So the person with no manager still appears"
+                "label": "They are missing from the result"
               },
               {
                 "id": "b",
-                "label": "To remove duplicates"
+                "label": "They show with a NULL manager"
               },
               {
                 "id": "c",
-                "label": "A self-join needs it"
+                "label": "They show as their own manager"
               },
               {
                 "id": "d",
-                "label": "To sort"
+                "label": "An error"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "An inner join would drop the top of the tree."
+            "explanation": "No staff row has an id equal to NULL, so the plain JOIN drops the head. `LEFT JOIN staff m` keeps them, with NULL for the manager."
           },
           {
             "id": "proj_staff_directory-q-5qn1ku",
@@ -5227,29 +5227,29 @@
             "explanation": "A JSON true, rather than the text \"true\"."
           },
           {
-            "id": "proj_product_catalogue-q-8c43gh",
+            "id": "proj_product_catalogue-q-iro9mx",
             "type": "mcq",
-            "prompt": "Why `COALESCE(details, '{}')` in Restock flags?",
+            "prompt": "What does `json_set(NULL, '$.restock', 1)` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "json_set on NULL gives NULL, so start from an empty object instead"
+                "label": "`'{\"restock\":1}'`"
               },
               {
                 "id": "b",
-                "label": "To remove details"
+                "label": "`'{}'`"
               },
               {
                 "id": "c",
-                "label": "To sort"
+                "label": "An error"
               },
               {
                 "id": "d",
-                "label": "It is needed by UPDATE"
+                "label": "`NULL`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "The gift card has no details."
+            "correctChoiceId": "d",
+            "explanation": "json_set changes the JSON it is given, and NULL gives NULL. `json_set(COALESCE(details, '{}'), '$.restock', 1)` starts from an empty object instead."
           }
         ]
       },
@@ -5432,29 +5432,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_sales_calendar-q-1jlk6zp",
+            "id": "proj_sales_calendar-q-17gybeg",
             "type": "mcq",
-            "prompt": "Why does the report start from a calendar CTE?",
+            "prompt": "What does `WITH RECURSIVE d(day) AS (SELECT '2026-10-01' UNION ALL SELECT date(day, '+1 day') FROM d WHERE day < '2026-10-07') SELECT COUNT(*) FROM d` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "So days with no sales still get a row"
+                "label": "`6`"
               },
               {
                 "id": "b",
-                "label": "To sort the dates"
+                "label": "`7`"
               },
               {
                 "id": "c",
-                "label": "To make it faster"
+                "label": "`8`"
               },
               {
                 "id": "d",
-                "label": "Views need it"
+                "label": "It never stops"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "GROUP BY on sales alone skips quiet days."
+            "correctChoiceId": "b",
+            "explanation": "It starts on October 1 and adds a day while the last day is before the 7th, so the 7th is the last row added: 7 days. That full list is what the sales are joined onto."
           },
           {
             "id": "proj_sales_calendar-q-16761o8",

@@ -1128,29 +1128,29 @@
             "explanation": "For example `c.id AS customer_id`."
           },
           {
-            "id": "table_aliases-q-1nrp0w0",
+            "id": "table_aliases-q-8na05p",
             "type": "mcq",
-            "prompt": "Why rename `o.id` and `c.id` in the output?",
+            "prompt": "Does `SELECT o.id, c.id FROM orders o JOIN customers c ON o.customer_id = c.id` run?",
             "choices": [
               {
                 "id": "a",
-                "label": "So the two id columns are easy to tell apart"
+                "label": "No: ambiguous column name: id"
               },
               {
                 "id": "b",
-                "label": "It is required"
+                "label": "Yes, but both columns are headed `id`"
               },
               {
                 "id": "c",
-                "label": "It makes the query faster"
+                "label": "Yes, headed `o.id` and `c.id`"
               },
               {
                 "id": "d",
-                "label": "To sort them"
+                "label": "Only with AS"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Two columns both called id are confusing to read."
+            "correctChoiceId": "b",
+            "explanation": "The aliases make each `id` clear to SQLite, but the headings drop them, so you get two columns called `id`. `AS order_id` and `AS customer_id` make the result readable."
           },
           {
             "id": "table_aliases-q-zfslzr",
@@ -1604,29 +1604,29 @@
             "explanation": "Any expression over the joined columns works."
           },
           {
-            "id": "join_filter_sort-q-dthz06",
+            "id": "join_filter_sort-q-12qs1wj",
             "type": "mcq",
-            "prompt": "Why add `i.order_id` after `line_total DESC`?",
+            "prompt": "The line totals are 30 (order 5), 12 (order 9) and 30 (order 2). In what order does `ORDER BY line_total DESC, i.order_id` list the orders?",
             "choices": [
               {
                 "id": "a",
-                "label": "To join the tables"
+                "label": "2, 5, 9"
               },
               {
                 "id": "b",
-                "label": "It is required"
+                "label": "5, 2, 9"
               },
               {
                 "id": "c",
-                "label": "So lines with the same total come in a fixed order"
+                "label": "9, 2, 5"
               },
               {
                 "id": "d",
-                "label": "To remove duplicates"
+                "label": "9, 5, 2"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Equal totals would otherwise come in any order."
+            "correctChoiceId": "a",
+            "explanation": "The biggest totals come first. Orders 5 and 2 tie on 30, so the second key sorts them by order id: 2, then 5, then 9 with 12."
           },
           {
             "id": "join_filter_sort-q-1eo31r4",
@@ -3417,29 +3417,29 @@
             "explanation": "After the joins, all columns are available."
           },
           {
-            "id": "three_tables-q-1plg7zo",
+            "id": "three_tables-q-wr60i9",
             "type": "mcq",
-            "prompt": "What is a good way to write a long join?",
+            "prompt": "There are 4 orders and 10 order lines, each for a listed product. How many rows does `orders o JOIN order_items i ON i.order_id = o.id JOIN products p ON p.id = i.product_id` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Starting with ORDER BY"
+                "label": "`4`"
               },
               {
                 "id": "b",
-                "label": "Without aliases"
+                "label": "`14`"
               },
               {
                 "id": "c",
-                "label": "One join at a time, checking the rows"
+                "label": "`40`"
               },
               {
                 "id": "d",
-                "label": "All at once"
+                "label": "`10`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Each step is easy to check in the sandbox."
+            "correctChoiceId": "d",
+            "explanation": "Each order line matches one order and one product, so the result has one row per line: 10. The order details repeat on each of its lines."
           },
           {
             "id": "three_tables-q-akemu1",
@@ -4852,29 +4852,29 @@
             "explanation": "LEFT JOIN keeps them; COUNT(o.id) gives them 0."
           },
           {
-            "id": "proj_customer_insights-q-18mqiar",
+            "id": "proj_customer_insights-q-1tiugs3",
             "type": "mcq",
-            "prompt": "Why `COUNT(DISTINCT o.id)` for orders after joining order_items?",
+            "prompt": "Ana has 2 orders, one with 3 lines and one with 1 line. After joining order_items, what are `COUNT(*)` and `COUNT(DISTINCT o.id)` for her?",
             "choices": [
               {
                 "id": "a",
-                "label": "To skip NULLs"
+                "label": "4 and 2"
               },
               {
                 "id": "b",
-                "label": "To sort"
+                "label": "2 and 2"
               },
               {
                 "id": "c",
-                "label": "It is faster"
+                "label": "4 and 4"
               },
               {
                 "id": "d",
-                "label": "Each order now has one row per line, so COUNT(*) would count lines"
+                "label": "6 and 2"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Joining order_items repeats each order once per line."
+            "correctChoiceId": "a",
+            "explanation": "The join gives one row per line, so `COUNT(*)` counts 4 lines. `COUNT(DISTINCT o.id)` counts each order once: 2."
           },
           {
             "id": "proj_customer_insights-q-n8ogd3",
@@ -5171,29 +5171,29 @@
             "explanation": "One group per manager, adding up their team's orders."
           },
           {
-            "id": "proj_sales_team_review-q-1mt4pdy",
+            "id": "proj_sales_team_review-q-1wcae3v",
             "type": "mcq",
-            "prompt": "Why must every join be LEFT in Everyone's numbers?",
+            "prompt": "Omar has no orders. What happens to him in `employees e LEFT JOIN orders o ON o.employee_id = e.id JOIN order_items i ON i.order_id = o.id`?",
             "choices": [
               {
                 "id": "a",
-                "label": "LEFT is faster"
+                "label": "He shows with NULLs"
               },
               {
                 "id": "b",
-                "label": "A plain join later would drop staff with no orders"
+                "label": "He shows with 0"
               },
               {
                 "id": "c",
-                "label": "COALESCE needs it"
+                "label": "An error"
               },
               {
                 "id": "d",
-                "label": "To sort"
+                "label": "The second join drops him"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "The NULL rows have nothing to match in the next table."
+            "correctChoiceId": "d",
+            "explanation": "The LEFT JOIN keeps Omar with NULL in `o.id`, but the plain JOIN then finds no line where `i.order_id = NULL`, so his row goes. The second join must be LEFT too."
           },
           {
             "id": "proj_sales_team_review-q-iythtx",
@@ -5221,14 +5221,14 @@
             "explanation": "Each order appears once per line, so count distinct ids."
           },
           {
-            "id": "proj_sales_team_review-q-1hzzidk",
+            "id": "proj_sales_team_review-q-1sdf8zo",
             "type": "shortText",
-            "prompt": "What value does a CASE give with `ELSE 0` when the condition is false?",
+            "prompt": "The statuses are shipped, waiting, shipped and NULL. What does `SUM(CASE WHEN status = 'shipped' THEN 1 ELSE 0 END)` give?",
             "validation": {
               "mode": "equalsNormalized",
-              "expected": "0"
+              "expected": "2"
             },
-            "explanation": "So the SUM only adds the matching values."
+            "explanation": "The two shipped rows give 1 each. waiting gives 0, and so does NULL: `NULL = 'shipped'` is not true, so it falls to `ELSE 0`."
           },
           {
             "id": "proj_sales_team_review-q-b6hhew",

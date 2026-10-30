@@ -3898,29 +3898,29 @@
             "explanation": "Then OVER w uses it."
           },
           {
-            "id": "named_windows-q-yzs9jm",
+            "id": "named_windows-q-iu0kiv",
             "type": "mcq",
-            "prompt": "Why name a window?",
+            "prompt": "With `WINDOW w AS (ORDER BY x)` and x values 1, 2 and 4, what do `SUM(x) OVER w` and `MAX(x) OVER w` give on the row where x is 2?",
             "choices": [
               {
                 "id": "a",
-                "label": "To allow WHERE"
+                "label": "`3` and `2`"
               },
               {
                 "id": "b",
-                "label": "To sort the result"
+                "label": "`7` and `4`"
               },
               {
                 "id": "c",
-                "label": "It is faster"
+                "label": "`2` and `2`"
               },
               {
                 "id": "d",
-                "label": "To write the same window once for several functions"
+                "label": "`3` and `4`"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Less repetition, fewer mistakes."
+            "correctChoiceId": "a",
+            "explanation": "Both functions share the window w. With ORDER BY, the frame runs from the first row to the current one, so on x = 2 it covers 1 and 2: sum 3, max 2."
           },
           {
             "id": "named_windows-q-1ehdkwt",

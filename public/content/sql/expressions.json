@@ -1195,29 +1195,29 @@
             "explanation": "An even number leaves no remainder when divided by 2."
           },
           {
-            "id": "number_functions-q-1atvbr2",
+            "id": "number_functions-q-5onksf",
             "type": "mcq",
-            "prompt": "A total of 80 with a 25% discount. What is paid?",
+            "prompt": "What does `SELECT 19 * 75 / 100;` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "`55`"
+                "label": "`14.25`"
               },
               {
                 "id": "b",
-                "label": "`20`"
+                "label": "`14`"
               },
               {
                 "id": "c",
-                "label": "`60`"
+                "label": "`15`"
               },
               {
                 "id": "d",
-                "label": "`105`"
+                "label": "`14.0`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Paying 75%: 80 × 75 / 100 = 60."
+            "correctChoiceId": "b",
+            "explanation": "Every number is a whole number, so SQLite does integer division: 1425 / 100 is 14, with the decimals dropped. `19 * 0.75` or `/ 100.0` keeps 14.25."
           },
           {
             "id": "number_functions-q-1jxzgpf",
@@ -2877,29 +2877,29 @@
             "explanation": "%d is the day, %m the month and %Y the year; the slashes are kept."
           },
           {
-            "id": "dates-q-wf0p9",
+            "id": "dates-q-vsxnhj",
             "type": "mcq",
-            "prompt": "Why do challenges avoid `date('now')`?",
+            "prompt": "Which keeps the orders from 2026, whatever the month and day?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is not SQL"
+                "label": "`strftime('%Y', order_date) = 2026`"
               },
               {
                 "id": "b",
-                "label": "Its result changes every day"
+                "label": "`order_date = '2026'`"
               },
               {
                 "id": "c",
-                "label": "It gives an error in SQLite"
+                "label": "`strftime('%y', order_date) = '2026'`"
               },
               {
                 "id": "d",
-                "label": "It is slow"
+                "label": "`strftime('%Y', order_date) = '2026'`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "'now' depends on the day the query runs, so a fixed date gives repeatable results."
+            "correctChoiceId": "d",
+            "explanation": "`strftime` gives text, so compare it with the text `'2026'`. Compared with the number 2026 it is never equal, `%y` gives only `'26'`, and the full date is not `'2026'`."
           },
           {
             "id": "dates-q-1b4c99k",
@@ -3706,29 +3706,29 @@
             "explanation": "`typeof(x)` gives 'integer', 'real', 'text', 'blob' or 'null'."
           },
           {
-            "id": "types_cast-q-1wv7vkc",
+            "id": "types_cast-q-5bkd52",
             "type": "mcq",
-            "prompt": "Why should a postcode like `'02134'` stay text?",
+            "prompt": "What does `SELECT '10' + 5;` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Text is faster"
+                "label": "`15`"
               },
               {
                 "id": "b",
-                "label": "Numbers cannot be stored"
+                "label": "`'105'`"
               },
               {
                 "id": "c",
-                "label": "As a number it would lose its leading zero"
+                "label": "An error"
               },
               {
                 "id": "d",
-                "label": "SQLite requires it"
+                "label": "`'10 5'`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Codes that are not quantities keep their exact form as text."
+            "correctChoiceId": "a",
+            "explanation": "`+` always does arithmetic, so SQLite turns the text `'10'` into a number: 15. To join text, use `||`."
           },
           {
             "id": "types_cast-q-1lscelg",
@@ -4680,9 +4680,9 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_order_tracker-q-zsiqi1",
+            "id": "proj_order_tracker-q-1c8zzzx",
             "type": "mcq",
-            "prompt": "An order of 80 has a discount of NULL. What was paid?",
+            "prompt": "What does `SELECT 80 - COALESCE(NULL, 0);` give?",
             "choices": [
               {
                 "id": "a",
@@ -4690,19 +4690,19 @@
               },
               {
                 "id": "b",
-                "label": "`80`"
-              },
-              {
-                "id": "c",
                 "label": "`0`"
               },
               {
+                "id": "c",
+                "label": "`80`"
+              },
+              {
                 "id": "d",
-                "label": "`72`"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "A missing discount means none, so with COALESCE(discount, 0) the full 80 is paid."
+            "correctChoiceId": "c",
+            "explanation": "`COALESCE` gives its first value that is not NULL, here 0, so the result is 80 − 0 = 80. Without it, `80 - NULL` would be NULL."
           },
           {
             "id": "proj_order_tracker-q-1fvtbxd",
@@ -4968,29 +4968,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_staff_report-q-15hfav2",
+            "id": "proj_staff_report-q-yry4ig",
             "type": "mcq",
-            "prompt": "Why divide the days by 365.25 for years of service?",
+            "prompt": "What does `CAST((julianday('2026-10-24') - julianday('2015-04-01')) / 365.25 AS INTEGER)` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "To allow for leap years"
+                "label": "`12`"
               },
               {
                 "id": "b",
-                "label": "Months have 30.4 days"
+                "label": "`11.56`"
               },
               {
                 "id": "c",
-                "label": "It rounds the result"
+                "label": "`4224`"
               },
               {
                 "id": "d",
-                "label": "SQLite requires it"
+                "label": "`11`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Every fourth year has 366 days, so a year is about 365.25 days on average."
+            "correctChoiceId": "d",
+            "explanation": "The dates are 4,224 days apart. Divided by 365.25 that is about 11.56 years, and CAST to INTEGER drops the decimals: 11 full years."
           },
           {
             "id": "proj_staff_report-q-4luqfo",
@@ -5018,29 +5018,29 @@
             "explanation": ".2 keeps two decimals, rounding the last one. (The comma flag only works with %d.)"
           },
           {
-            "id": "proj_staff_report-q-60u647",
+            "id": "proj_staff_report-q-1mdrmo8",
             "type": "mcq",
-            "prompt": "Which band does a salary of 50000 get with `>= 65000 A, >= 50000 B, >= 35000 C`?",
+            "prompt": "What does `CASE WHEN salary >= 35000 THEN 'C' WHEN salary >= 50000 THEN 'B' ELSE 'D' END` give for a salary of 70000?",
             "choices": [
               {
                 "id": "a",
-                "label": "A"
+                "label": "`'B'`"
               },
               {
                 "id": "b",
-                "label": "B"
+                "label": "`'C'`"
               },
               {
                 "id": "c",
-                "label": "C"
+                "label": "`'D'`"
               },
               {
                 "id": "d",
-                "label": "D"
+                "label": "`NULL`"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "50000 is not 65000 or more, but it is 50000 or more."
+            "explanation": "CASE takes the first WHEN that is true. 70000 >= 35000 is already true, so it never reaches the B test. Put the highest band first."
           },
           {
             "id": "proj_staff_report-q-k92pka",

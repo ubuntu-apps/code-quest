@@ -96,9 +96,9 @@ export default makeTopic({
       'Anything with NULL is NULL.'),
     mc('Where does the "two or more paid orders" filter go?', ['In the ORDER BY', 'HAVING COUNT(*) >= 2', 'In the JOIN', 'WHERE COUNT(*) >= 2'], 1,
       'Conditions on groups go in HAVING.'),
-    mc('Why does the view LEFT JOIN customers to the paid totals?', ['To sort them', 'Views must', 'To remove duplicates', 'So customers with no paid orders still appear, with 0'], 3,
-      'COALESCE turns their NULLs into 0.'),
-    mc('Why build a report from the smallest correct query up?', ['It is faster to run', 'SQLite needs it', 'Views need it', 'Each step can be checked by eye before the next is added'], 3,
-      'A wrong join is easy to spot early and hard to find later.'),
+    mc("Ben's only order is unpaid. Which query keeps Ben, with a NULL total?", ["`customers c JOIN orders o ON o.customer_id = c.id AND o.status = 'paid'`", "`customers c LEFT JOIN orders o ON o.customer_id = c.id WHERE o.status = 'paid'`", "`customers c LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'paid'`", "`customers c JOIN orders o ON o.customer_id = c.id WHERE o.status = 'paid'`"], 2,
+      "A test in ON only decides which orders match, so the LEFT JOIN keeps Ben with NULLs. The same test in WHERE runs after the join and removes him, because NULL = 'paid' is not true."),
+    mc("Revenue is 100 in June and 120 in July. What does `ROUND(100.0 * (revenue - LAG(revenue) OVER (ORDER BY month)) / LAG(revenue) OVER (ORDER BY month), 1)` give for July?", ["`16.7`", "`120.0`", "`20.0`", "`NULL`"], 2,
+      "LAG gives the previous month, 100. (120 − 100) / 100 is 0.2, which is 20.0 per cent. For June there is no earlier month, so it gives NULL."),
   ],
 })
