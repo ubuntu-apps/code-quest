@@ -81,7 +81,7 @@ export default makeTopic({
       'LIMIT would keep two rows in total, not two per player.'),
     mc('Can you rank groups from GROUP BY within a partition?', ['Yes, like ranking each team\'s nights by team total', 'Only with DISTINCT', 'Only one group', 'No'], 0,
       'The window runs over the grouped rows.'),
-    mc('How does the window version compare with the correlated subquery from the subqueries section?', ['It gives different answers', 'It needs no ORDER BY', 'It is usually shorter and clearer', 'It can\'t handle ties'], 2,
+    mc('How does the window version compare with the correlated subquery from the subqueries quest?', ['It gives different answers', 'It needs no ORDER BY', 'It is usually shorter and clearer', 'It can\'t handle ties'], 2,
       'Both work; windows say it more directly.'),
     mc('Why ROW_NUMBER, not RANK, for the winning margin?', ['RANK needs DISTINCT', 'So there is always a row 2, even when the top two tie', 'RANK is slower', 'RANK can\'t partition'], 1,
       'With RANK, a tie for first leaves no rank 2.'),

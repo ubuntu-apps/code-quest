@@ -86,6 +86,8 @@ export function ch(difficulty, title, prompt, validation, extra = {}) {
     solution: extra.solution,
     hints: extra.hints,
     validation,
+    // Fixed checks keep learners' progress (see scripts/progress-safety.mjs).
+    ...(extra.keepProgress ? { keepProgress: true } : {}),
   }
 }
 
@@ -119,7 +121,7 @@ export const py = String.raw
  * @param {string} title
  * @param {{ prompt: string, starter?: string, hint: string, solution: string, tests: [string, string][], setup?: string }} spec
  */
-export function task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '' }) {
+export function task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '', keepProgress = false }) {
   return ch(
     difficulty,
     title,
@@ -129,7 +131,7 @@ export function task(difficulty, title, { prompt, starter = '', hint, solution, 
       setupCode: setup,
       tests: tests.map(([label, assertion], i) => ({ id: `t${i + 1}`, label, assertion })),
     },
-    { starterCode: starter, hint, solution },
+    { starterCode: starter, hint, solution, keepProgress },
   )
 }
 

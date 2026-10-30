@@ -104,7 +104,7 @@ export default makeTopic({
       'Their member_id is not among the member ids.'),
     mc('Can DELETE use NOT EXISTS?', ['No', 'Only in UPDATE', 'Only with IN', 'Yes, like any WHERE'], 3,
       'For example, members with no loans.'),
-    mc('In this app, what happens to the data after a Run with DELETE?', ['Each Run starts from a fresh copy, so nothing is lost', 'It is gone for good', 'The next lesson starts empty', 'It is backed up to a file'], 0,
+    mc('In this app, what happens to the data after a Run with DELETE?', ['Each Run starts from a fresh copy, so nothing is lost', 'It is gone for good', 'The next stage starts empty', 'It is backed up to a file'], 0,
       'In a real database, though, a DELETE is permanent.'),
   ],
 })

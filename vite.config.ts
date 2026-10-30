@@ -79,7 +79,7 @@ export default defineConfig({
         id: '/code-quest/',
         name: 'CodeQuest',
         short_name: 'CodeQuest',
-        description: 'Learn to code — fundamentals, challenges, and quizzes.',
+        description: 'Learn to code through quests of hands-on challenges.',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',
