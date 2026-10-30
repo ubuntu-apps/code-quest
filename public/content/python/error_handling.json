@@ -1457,29 +1457,29 @@
             "explanation": "`finally` runs whether the `try` succeeded, failed or returned."
           },
           {
-            "id": "else_finally-q-qcle7t",
+            "id": "else_finally-q-19zyrvq",
             "type": "mcq",
-            "prompt": "Why put follow-up code in `else` instead of at the end of `try`?",
+            "prompt": "What does this print?\n\n```\ntry:\n    n = int(\"5\")\nexcept ValueError:\n    print(\"bad\")\nelse:\n    print(n * 2)\nfinally:\n    print(\"done\")\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "So its own errors aren't caught by an `except` meant for something else"
+                "label": "`10`, then `done`"
               },
               {
                 "id": "b",
-                "label": "It runs faster"
+                "label": "`done`"
               },
               {
                 "id": "c",
-                "label": "Python requires it"
+                "label": "`bad`, then `done`"
               },
               {
                 "id": "d",
-                "label": "So it runs twice"
+                "label": "`10`"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "Code in `else` isn't protected by the `except` clauses, so its own bugs still show up."
+            "explanation": "No error, so `else` runs, and `finally` always runs last."
           },
           {
             "id": "else_finally-q-r08xxv",
@@ -2625,29 +2625,29 @@
             "explanation": "A value of the wrong type is a `TypeError`."
           },
           {
-            "id": "raising_exceptions-q-kypdg5",
+            "id": "raising_exceptions-q-1qk05pp",
             "type": "mcq",
-            "prompt": "Why raise instead of returning `None`?",
+            "prompt": "What does this print?\n\n```\ndef age(text):\n    n = int(text)\n    if n < 0:\n        raise ValueError(\"negative\")\n    return n\n\ntry:\n    age(\"-3\")\nexcept ValueError as e:\n    print(e)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "`-3`"
               },
               {
                 "id": "b",
-                "label": "Python requires it"
+                "label": "`negative`"
               },
               {
                 "id": "c",
-                "label": "It prints nicer"
+                "label": "`None`"
               },
               {
                 "id": "d",
-                "label": "An exception can't be ignored by accident, and it points at the cause"
+                "label": "A traceback"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "A returned `None` is easy to miss, but an exception stops the program and points at the problem."
+            "correctChoiceId": "b",
+            "explanation": "`raise` stops `age`, and the caller's `except` receives the exception, whose text is the message."
           },
           {
             "id": "raising_exceptions-q-1bh2uv8",
@@ -3703,29 +3703,29 @@
             "explanation": "Running Python with `-O` removes `assert` statements, so they can't be relied on for checking input."
           },
           {
-            "id": "assertions-q-1iw9rr7",
+            "id": "assertions-q-zk11d3",
             "type": "mcq",
-            "prompt": "How do CodeQuest's challenge checks work?",
+            "prompt": "Which line raises an `AssertionError`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Someone reads your code"
+                "label": "`assert 0.1 + 0.2 > 0.3`"
               },
               {
                 "id": "b",
-                "label": "They count your lines"
+                "label": "`assert [] == []`"
               },
               {
                 "id": "c",
-                "label": "They guess at random"
+                "label": "`assert \"a\" < \"b\"`"
               },
               {
                 "id": "d",
-                "label": "Like assertions: each check is a condition run against your code"
+                "label": "`assert 0.1 + 0.2 == 0.3`"
               }
             ],
             "correctChoiceId": "d",
-            "explanation": "Each check is a condition evaluated after your code runs, just like an `assert`."
+            "explanation": "`0.1 + 0.2` is `0.30000000000000004`, so it is not exactly equal to 0.3. Compare floats with `math.isclose` instead."
           },
           {
             "id": "assertions-q-kid2ah",
@@ -3788,29 +3788,29 @@
             "explanation": "Bugs hide at the edges, so test typical values and boundary cases."
           },
           {
-            "id": "assertions-q-1m8jqq6",
+            "id": "assertions-q-12irhis",
             "type": "mcq",
-            "prompt": "Why put values in the assertion message?",
+            "prompt": "What does this assertion show when it fails?\n\n```\ntotal = 7\nassert total == 10, f\"expected 10, got {total}\"\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is required"
+                "label": "`AssertionError` with no message"
               },
               {
                 "id": "b",
-                "label": "It hides the error"
+                "label": "`False`"
               },
               {
                 "id": "c",
-                "label": "So a failure says what went wrong, not just that it did"
+                "label": "`AssertionError: expected 10, got 7`"
               },
               {
                 "id": "d",
-                "label": "It makes the test faster"
+                "label": "`expected 10, got {total}`"
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "A message with the actual values shows what went wrong without rerunning the code."
+            "explanation": "The text after the comma becomes the message, so the failure says what went wrong."
           },
           {
             "id": "assertions-q-42rsd1",
@@ -4232,29 +4232,29 @@
             "explanation": "A guard clause checks for a problem first and returns or raises straight away."
           },
           {
-            "id": "defensive_programming-q-1rdm69e",
+            "id": "defensive_programming-q-1pkcw4n",
             "type": "mcq",
-            "prompt": "Why normalise input with `strip()` and `lower()` before checking it?",
+            "prompt": "What is `\" YES \".strip().lower() == \"yes\"`?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "`True`"
               },
               {
                 "id": "b",
-                "label": "Python needs it"
+                "label": "`False`"
               },
               {
                 "id": "c",
-                "label": "So `\" Yes\"`, `\"YES\"` and `\"yes\"` count as the same answer"
+                "label": "`\"yes\"`"
               },
               {
                 "id": "d",
-                "label": "To make it longer"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Normalising removes harmless differences like case and extra spaces."
+            "correctChoiceId": "a",
+            "explanation": "`strip()` removes the spaces and `lower()` the capitals, so any spelling of yes passes the same check."
           },
           {
             "id": "defensive_programming-q-1xj9jxq",
@@ -4332,29 +4332,29 @@
             "explanation": "A made-up value hides the problem, and wrong totals spread through the program."
           },
           {
-            "id": "defensive_programming-q-6z0vxn",
+            "id": "defensive_programming-q-4q2u4i",
             "type": "mcq",
-            "prompt": "Why collect every problem in a sign-up form?",
+            "prompt": "What does this print?\n\n```\nerrors = []\nif \"@\" not in \"ana.example.com\":\n    errors.append(\"email\")\nif len(\"12\") < 4:\n    errors.append(\"pin\")\nprint(errors)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "So the user can fix them all at once"
+                "label": "`['email']`"
               },
               {
                 "id": "b",
-                "label": "Python requires it"
+                "label": "`['pin']`"
               },
               {
                 "id": "c",
-                "label": "To avoid using `if`"
+                "label": "`[]`"
               },
               {
                 "id": "d",
-                "label": "It uses less memory"
+                "label": "`['email', 'pin']`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Reporting every problem at once saves the user a round of fixing and resubmitting."
+            "correctChoiceId": "d",
+            "explanation": "Each check adds to the list instead of stopping, so the user sees every problem at once."
           },
           {
             "id": "defensive_programming-q-f5r57v",
@@ -4871,29 +4871,29 @@
             "explanation": "The reset runs each round, so only the last item is counted."
           },
           {
-            "id": "debugging-q-1jrrcxl",
+            "id": "debugging-q-1845nc5",
             "type": "mcq",
-            "prompt": "What is \"rubber duck debugging\"?",
+            "prompt": "`print(repr(name))` shows `'Ana\\n'`. Why is `name == \"Ana\"` false?",
             "choices": [
               {
                 "id": "a",
-                "label": "Testing with toys"
+                "label": "`name` ends with a line break"
               },
               {
                 "id": "b",
-                "label": "Deleting code until it works"
+                "label": "`name` is a number"
               },
               {
                 "id": "c",
-                "label": "Explaining the code line by line, out loud"
+                "label": "`repr` changed the text"
               },
               {
                 "id": "d",
-                "label": "A Python module"
+                "label": "`==` doesn't work on strings"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Explaining each line forces you to check what the code really does."
+            "correctChoiceId": "a",
+            "explanation": "`repr` shows hidden characters. The `\\n` at the end makes it a different string; `name.strip()` removes it."
           },
           {
             "id": "debugging-q-1iajwrd",
@@ -5734,29 +5734,29 @@
             "explanation": "`\"hello\".split()` gives one part, and unpacking needs three."
           },
           {
-            "id": "proj_safe_calculator-q-17d1kaw",
+            "id": "proj_safe_calculator-q-1cyimvn",
             "type": "mcq",
-            "prompt": "Why `raise ValueError(...) from e` in `read_number`?",
+            "prompt": "What does this print?\n\n```\ntry:\n    try:\n        float(\"x\")\n    except ValueError as err:\n        raise ValueError(\"Not a number: x\") from err\nexcept ValueError as e:\n    print(e.__cause__)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "To hide the original"
+                "label": "`Not a number: x`"
               },
               {
                 "id": "b",
-                "label": "To make it faster"
+                "label": "`could not convert string to float: 'x'`"
               },
               {
                 "id": "c",
-                "label": "Python requires it"
+                "label": "`None`"
               },
               {
                 "id": "d",
-                "label": "To give a clearer message and keep the original as the cause"
+                "label": "`x`"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "`from e` adds a clear message while keeping the original error as the cause."
+            "correctChoiceId": "b",
+            "explanation": "`from err` stores the original exception as `__cause__`, so the clearer message doesn't lose the real one."
           },
           {
             "id": "proj_safe_calculator-q-k8rh3n",
@@ -6023,29 +6023,29 @@
             "explanation": "As a subclass, it is still caught as a `ValueError`, and its own name says exactly what failed."
           },
           {
-            "id": "proj_signup_form-q-1xramlr",
+            "id": "proj_signup_form-q-1ei1mpl",
             "type": "mcq",
-            "prompt": "Why collect every problem instead of stopping at the first?",
+            "prompt": "What does this print?\n\n```\nproblems = []\nfor field in [\"name\", \"age\"]:\n    try:\n        if field == \"age\":\n            int(\"x\")\n    except ValueError:\n        problems.append(field)\nprint(problems)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is shorter"
+                "label": "`[]`"
               },
               {
                 "id": "b",
-                "label": "Python needs it"
+                "label": "`['age']`"
               },
               {
                 "id": "c",
-                "label": "So the user can fix everything in one go"
+                "label": "`['name', 'age']`"
               },
               {
                 "id": "d",
-                "label": "To raise more errors"
+                "label": "A `ValueError` stops the loop"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Reporting every problem at once means the user can fix them all in one go."
+            "correctChoiceId": "b",
+            "explanation": "The `try` is inside the loop, so the error from `int(\"x\")` is caught, `age` is recorded, and the loop goes on."
           },
           {
             "id": "proj_signup_form-q-1pp5yhw",
@@ -6373,29 +6373,29 @@
             "explanation": "Its own exception type lets callers handle bad rows separately from other failures."
           },
           {
-            "id": "proj_data_importer-q-4t9v3p",
+            "id": "proj_data_importer-q-1w9oo4r",
             "type": "mcq",
-            "prompt": "Why does `parse_row` raise `RowError(...) from e` for a bad age?",
+            "prompt": "With `class RowError(ValueError): pass`, what does `isinstance(RowError(\"bad age\"), ValueError)` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "To hide the ValueError"
+                "label": "`False`"
               },
               {
                 "id": "b",
-                "label": "To make the age an int"
+                "label": "An error"
               },
               {
                 "id": "c",
-                "label": "The message is clearer, and the original error is kept as the cause"
+                "label": "`True`"
               },
               {
                 "id": "d",
-                "label": "It must"
+                "label": "`RowError`"
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "Chaining with `from e` gives a clear message and keeps the original error."
+            "explanation": "A `RowError` is a kind of `ValueError`, so code that catches `ValueError` catches it too."
           },
           {
             "id": "proj_data_importer-q-18gpwqp",

@@ -852,29 +852,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "csv_data-q-1l7i6hc",
+            "id": "csv_data-q-1ku1az6",
             "type": "mcq",
-            "prompt": "What does CSV stand for?",
+            "prompt": "What does `next(csv.reader(['a,\"b,c\",d']))` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Coded Spreadsheet View"
+                "label": "`['a', '\"b', 'c\"', 'd']`"
               },
               {
                 "id": "b",
-                "label": "Comma-separated values"
+                "label": "`['a', 'b,c', 'd']`"
               },
               {
                 "id": "c",
-                "label": "Compressed string values"
+                "label": "`['a,\"b,c\",d']`"
               },
               {
                 "id": "d",
-                "label": "Column sorted values"
+                "label": "`['a', 'b', 'c', 'd']`"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "CSV is plain text with one record per line and commas between the fields."
+            "explanation": "csv understands quotes: a comma inside double quotes is part of the value, not a separator."
           },
           {
             "id": "csv_data-q-c0plgp",
@@ -1431,29 +1431,29 @@
             "explanation": "Unix time counts seconds from the epoch, 1970-01-01 00:00 UTC."
           },
           {
-            "id": "datetime_data-q-1jrzzaq",
+            "id": "datetime_data-q-13u1rp",
             "type": "mcq",
-            "prompt": "Why pass `tz=timezone.utc` to `fromtimestamp`?",
+            "prompt": "What does `datetime.fromtimestamp(0, tz=timezone.utc).isoformat()` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "`1970-01-01T00:00:00`"
               },
               {
                 "id": "b",
-                "label": "Timestamps are always negative"
+                "label": "`1970-01-01T00:00:00+00:00`"
               },
               {
                 "id": "c",
-                "label": "Python requires it"
+                "label": "`0`"
               },
               {
                 "id": "d",
-                "label": "Without it, the answer depends on the computer's own clock"
+                "label": "It depends on the computer's time zone"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Without a time zone, `fromtimestamp` uses the computer's local time."
+            "correctChoiceId": "b",
+            "explanation": "With `tz=timezone.utc` the result is an aware datetime in UTC, the same on every computer."
           },
           {
             "id": "datetime_data-q-olbwor",
@@ -2514,29 +2514,29 @@
             "explanation": "`ValueError` is for a value of the right type that is out of range or malformed."
           },
           {
-            "id": "data_validation-q-1m5ceuc",
+            "id": "data_validation-q-9aflhr",
             "type": "mcq",
-            "prompt": "What is the advantage of collecting all errors instead of stopping at the first?",
+            "prompt": "What does this print?\n\n```\nerrors = {}\nform = {\"name\": \"\", \"age\": \"abc\"}\nif not form[\"name\"]:\n    errors[\"name\"] = \"required\"\nif not form[\"age\"].isdigit():\n    errors[\"age\"] = \"must be a number\"\nprint(len(errors))\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "The user can fix everything in one go"
+                "label": "`2`"
               },
               {
                 "id": "b",
-                "label": "It is faster"
+                "label": "`1`"
               },
               {
                 "id": "c",
-                "label": "It uses less memory"
+                "label": "`0`"
               },
               {
                 "id": "d",
-                "label": "Errors become warnings"
+                "label": "A `KeyError`"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "Reporting every problem at once saves round trips."
+            "explanation": "Both checks run and each records its own problem, so the form can report everything at once."
           },
           {
             "id": "data_validation-q-g3c37s",
@@ -2599,29 +2599,29 @@
             "explanation": "`__post_init__` runs after the dataclass's generated `__init__`."
           },
           {
-            "id": "data_validation-q-bpx9kz",
+            "id": "data_validation-q-1w9ebat",
             "type": "mcq",
-            "prompt": "Which library is widely used to validate data with type-annotated models?",
+            "prompt": "What does `re.fullmatch(r\"\\d{4}\", \"20255\")` return?",
             "choices": [
               {
                 "id": "a",
-                "label": "`requests`"
+                "label": "`None`"
               },
               {
                 "id": "b",
-                "label": "`pydantic`"
+                "label": "A match for `2025`"
               },
               {
                 "id": "c",
-                "label": "`pathlib`"
+                "label": "`True`"
               },
               {
                 "id": "d",
-                "label": "`csv`"
+                "label": "A `ValueError`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "pydantic checks data against classes with type hints and reports every problem."
+            "correctChoiceId": "a",
+            "explanation": "`fullmatch` needs the whole text to fit. Five digits aren't exactly four, so there is no match, and `None` comes back."
           },
           {
             "id": "data_validation-q-f0a5p5",
@@ -4056,29 +4056,29 @@
             "explanation": "Without a timeout, a request to a server that never answers can wait forever."
           },
           {
-            "id": "urllib_requests-q-8n7ojo",
+            "id": "urllib_requests-q-vh5oeo",
             "type": "mcq",
-            "prompt": "What does HTTP status 404 mean?",
+            "prompt": "What does `urlencode({\"q\": \"cats & dogs\", \"page\": 2})` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Server error"
+                "label": "`q=cats & dogs&page=2`"
               },
               {
                 "id": "b",
-                "label": "Not found"
+                "label": "`{\"q\": \"cats & dogs\", \"page\": 2}`"
               },
               {
                 "id": "c",
-                "label": "Redirect"
+                "label": "`q=cats+%26+dogs&page=2`"
               },
               {
                 "id": "d",
-                "label": "Unauthorized"
+                "label": "`q=cats%20&%20dogs&page=2`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "404 means the server has no resource at that URL."
+            "correctChoiceId": "c",
+            "explanation": "`urlencode` escapes the `&` inside the value as `%26` and spaces as `+`, so the query can't be misread."
           },
           {
             "id": "urllib_requests-q-c6mwpj",
@@ -4740,29 +4740,29 @@
             "explanation": "Pagination splits a long list into pages, each pointing to the next."
           },
           {
-            "id": "rest_apis-q-1jfrcjt",
+            "id": "rest_apis-q-1uw3xm5",
             "type": "mcq",
-            "prompt": "Why put a version like `/v1/` in API paths?",
+            "prompt": "What does `json.loads('{\"next_page\": null}')[\"next_page\"]` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "To make URLs shorter"
+                "label": "`\"null\"`"
               },
               {
                 "id": "b",
-                "label": "It is required by HTTP"
+                "label": "`0`"
               },
               {
                 "id": "c",
-                "label": "To speed up requests"
+                "label": "A `KeyError`"
               },
               {
                 "id": "d",
-                "label": "So the API can change without breaking existing clients"
+                "label": "`None`"
               }
             ],
             "correctChoiceId": "d",
-            "explanation": "Old clients keep using `/v1/` while `/v2/` makes changes that would break them."
+            "explanation": "JSON `null` becomes Python `None`, which is how a client knows it has reached the last page."
           }
         ]
       }
@@ -5573,14 +5573,14 @@
             "explanation": "The minus sign puts high averages first, and the name breaks ties."
           },
           {
-            "id": "proj_movie_ratings-q-ot1oqz",
+            "id": "proj_movie_ratings-q-1rpb57l",
             "type": "shortText",
-            "prompt": "What is the average of 5 and 4, rounded to 1 place?",
+            "prompt": "What is `round((5 + 4) / 2, 1)`? (a number)",
             "validation": {
               "mode": "equalsNormalized",
               "expected": "4.5"
             },
-            "explanation": "(5 + 4) / 2 is 4.5."
+            "explanation": "The brackets add first, `/` gives 4.5, and rounding to one place keeps it as 4.5."
           },
           {
             "id": "proj_movie_ratings-q-bsumni",
@@ -5797,29 +5797,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_bookshop_client-q-mbbl65",
+            "id": "proj_bookshop_client-q-1ae8167",
             "type": "mcq",
-            "prompt": "Why does `BookClient` take the `api` function as a parameter?",
+            "prompt": "What does this print?\n\n```\nimport json\n\ndef fake_api(method, path):\n    return 200, '{\"title\": \"Emma\"}'\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n    def title(self, path):\n        status, text = self.api(\"GET\", path)\n        return json.loads(text)[\"title\"]\n\nprint(BookClient(fake_api).title(\"/books/1\"))\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Python requires it"
+                "label": "`{\"title\": \"Emma\"}`"
               },
               {
                 "id": "b",
-                "label": "So a real HTTP function, or a pretend one, can be passed in without changing the class"
+                "label": "`200`"
               },
               {
                 "id": "c",
-                "label": "It is faster"
+                "label": "`Emma`"
               },
               {
                 "id": "d",
-                "label": "To hide it"
+                "label": "A network error"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Passing the `api` function in lets tests use a fake instead of real HTTP."
+            "correctChoiceId": "c",
+            "explanation": "The client calls whatever `api` function it was given, so a fake one answers without any network."
           },
           {
             "id": "proj_bookshop_client-q-126opdc",

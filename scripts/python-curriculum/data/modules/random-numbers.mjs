@@ -136,7 +136,7 @@ export default makeTopic({
     mc("What should you use for a password or security code?", ["`random.choice`", "The `secrets` module", "`random.seed`", "`random.randint`"], 1),
     qShort("`random.choices([\"a\", \"b\"], k=4)` returns a list of how many items? (a number)", "4"),
     mc("What does `weights=[1, 9]` do in `choices([\"win\", \"lose\"], weights=[1, 9])`?", ["Picks 9 items", "Picks \"win\" 9 times as often", "Picks \"lose\" about 9 times as often as \"win\"", "Nothing"], 2),
-    mc("Why do simulations use many trials?", ["Python needs it", "Each trial is slower", "Fewer trials are random", "The more trials, the closer the estimate"], 3),
+    mc("What does this print?\n\n```\nimport random\nrandom.seed(1)\na = random.randint(1, 100)\nrandom.seed(1)\nb = random.randint(1, 100)\nprint(a == b)\n```", ["`False`", "`True`", "Sometimes `True`, sometimes `False`", "An error"], 1),
     mc("Why aren't `random` numbers truly random?", ["They come from a formula started from a seed", "They are typed in", "They repeat every 10 numbers", "They are always even"], 0),
   ],
 })

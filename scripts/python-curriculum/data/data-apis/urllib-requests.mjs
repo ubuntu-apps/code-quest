@@ -141,7 +141,7 @@ export default makeTopic({
     mc("What does `response.read()` return?", ["`str`", "`dict`", "`bytes`", "A list of lines"], 2),
     qShort("Which `urllib.parse` function turns a dict into `a=1&b=2`? (name only)", "urlencode"),
     mc("Why pass `timeout=` to `urlopen`?", ["So a slow server can't hang your program forever", "To make requests faster", "To retry automatically", "To cache the response"], 0),
-    mc("What does HTTP status 404 mean?", ["Server error", "Not found", "Redirect", "Unauthorized"], 1),
+    mc("What does `urlencode({\"q\": \"cats & dogs\", \"page\": 2})` give?", ["`q=cats & dogs&page=2`", "`{\"q\": \"cats & dogs\", \"page\": 2}`", "`q=cats+%26+dogs&page=2`", "`q=cats%20&%20dogs&page=2`"], 2),
     mc("Which exception does urllib raise for a 500 response?", ["`ValueError`", "`TimeoutError`", "`JSONDecodeError`", "`HTTPError`"], 3),
     mc("A `Request` body (`data=`) must be…", ["`bytes`", "A `dict`", "A `str`", "JSON"], 0),
     qShort("Which `urlparse` attribute holds the domain, like `api.example.com`? (attribute name)", "netloc"),

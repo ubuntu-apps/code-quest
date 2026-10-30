@@ -83,9 +83,9 @@ export default makeProject("medium", {
   questions: [
     mc("What does `any(ch.isdigit() for ch in \"abc1\")` give?", ["`False`", "`True`", "`1`", "`\"1\"`"], 1),
     mc("When is `all(...)` true?", ["When at least one item is true", "Never", "Only when every item is true", "When the list is long"], 2),
-    mc("Why is each rule its own function?", ["Each is small, easy to test, and reused by `strength` and `feedback`", "Python needs it", "It makes the program run faster", "So there are more lines"], 0),
+    mc("What does `all(len(p) >= 8 for p in [\"sunshine\", \"abc\"])` give?", ["`True`", "`[True, False]`", "`False`", "`1`"], 2),
     mc("What does `\"!\".isalnum()` return?", ["`True`", "`\"!\"`", "An error", "`False`"], 3),
-    qShort("How many points does `Sunshine7!` score, out of 4? (a number)", "4"),
+    qShort("What is `sum([True, False, True, True])`? (a number)", "3"),
     mc("`feedback` returns a list. Why not print the tips inside it?", ["Lists can't be printed", "Returning lets the caller decide how to show them, and makes them easy to check", "Printing is slower", "It must return something"], 1),
   ],
 })

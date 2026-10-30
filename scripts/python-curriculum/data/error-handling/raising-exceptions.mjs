@@ -141,7 +141,7 @@ export default makeTopic({
     mc("What does `raise ValueError(\"Too big\")` do?", ["Prints \"Too big\" and carries on", "Stops the function and sends a ValueError up to the caller", "Returns \"Too big\"", "Nothing until the program ends"], 1),
     mc("Which exception suits a month of 13?", ["`TypeError`", "`KeyError`", "`ValueError`", "`NameError`"], 2),
     mc("Which exception suits a list passed where a number was needed?", ["`TypeError`", "`ValueError`", "`IndexError`", "`ZeroDivisionError`"], 0),
-    mc("Why raise instead of returning `None`?", ["It is faster", "Python requires it", "It prints nicer", "An exception can't be ignored by accident, and it points at the cause"], 3),
+    mc("What does this print?\n\n```\ndef age(text):\n    n = int(text)\n    if n < 0:\n        raise ValueError(\"negative\")\n    return n\n\ntry:\n    age(\"-3\")\nexcept ValueError as e:\n    print(e)\n```", ["`-3`", "`negative`", "`None`", "A traceback"], 1),
     qShort("Which keyword do you use to raise an exception yourself? (one word)", "raise"),
     mc("What does a bare `raise` inside `except` do?", ["Raises a new `Exception`", "Re-raises the exception that was just caught", "Ignores the error", "Is a `SyntaxError`"], 1),
     mc("What does `raise ValueError(...) from e` keep?", ["The original exception, as the cause", "Only the new message", "Nothing", "The line number only"], 0),

@@ -314,29 +314,29 @@
             "explanation": "A set ignores repeats and checks `in` quickly, and the order of guesses doesn't matter."
           },
           {
-            "id": "hangman-q-1ge9xr1",
+            "id": "hangman-q-1efracj",
             "type": "mcq",
-            "prompt": "Why do most of the functions return values instead of printing?",
+            "prompt": "What does `print(print(\"hi\"))` show?",
             "choices": [
               {
                 "id": "a",
-                "label": "Printing is slow"
+                "label": "`hi` twice"
               },
               {
                 "id": "b",
-                "label": "Python requires it"
+                "label": "`hi`, then `None`"
               },
               {
                 "id": "c",
-                "label": "Each piece can be checked on its own, and the game can be played automatically"
+                "label": "Only `None`"
               },
               {
                 "id": "d",
-                "label": "To hide the word"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Functions that return values can each be tested, and a test can play the whole game without typing."
+            "correctChoiceId": "b",
+            "explanation": "The inner `print` shows `hi` and returns `None`. A function that only prints gives nothing back to check."
           },
           {
             "id": "hangman-q-10v4wo",
@@ -389,14 +389,29 @@
             "explanation": "Letters that were guessed are shown and the rest stay hidden as `_`."
           },
           {
-            "id": "hangman-q-1kqkn8f",
-            "type": "shortText",
-            "prompt": "How many points is `cat` worth, solved with all 6 lives left? (a number)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "60"
-            },
-            "explanation": "Each different letter is worth 10 and each life left 5: 3 × 10 + 6 × 5 is 60."
+            "id": "hangman-q-m78y73",
+            "type": "mcq",
+            "prompt": "What does `\" \".join(c if c in {\"a\"} else \"_\" for c in \"cat\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`_a_`"
+              },
+              {
+                "id": "b",
+                "label": "`c a t`"
+              },
+              {
+                "id": "c",
+                "label": "`_ a _`"
+              },
+              {
+                "id": "d",
+                "label": "`a`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Each letter becomes itself if it was guessed, otherwise `_`, and `\" \".join` puts spaces between them."
           },
           {
             "id": "hangman-q-1oqlhfd",
@@ -758,29 +773,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "expense_tracker-q-r4ox29",
+            "id": "expense_tracker-q-1xbnh97",
             "type": "mcq",
-            "prompt": "Why are amounts negative for spending and positive for income?",
+            "prompt": "What is `sum([-12.5, 100, -40])`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Python needs it"
+                "label": "`47.5`"
               },
               {
                 "id": "b",
-                "label": "Adding up every amount then gives the balance directly"
+                "label": "`152.5`"
               },
               {
                 "id": "c",
-                "label": "To save space"
+                "label": "`-52.5`"
               },
               {
                 "id": "d",
-                "label": "CSV requires it"
+                "label": "`47`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "With signed amounts, the balance is simply the sum of every amount."
+            "correctChoiceId": "a",
+            "explanation": "With spending stored as negative numbers, one `sum` gives the balance: 100 - 12.5 - 40."
           },
           {
             "id": "expense_tracker-q-1yazbzs",
@@ -858,14 +873,29 @@
             "explanation": "A class method builds and returns a new object, so it is called on the class."
           },
           {
-            "id": "expense_tracker-q-gg4bwg",
-            "type": "shortText",
-            "prompt": "What is the biggest category's bar length in the report? (a number)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "20"
-            },
-            "explanation": "The bars are scaled so the largest category gets the full width of 20."
+            "id": "expense_tracker-q-1s7a7h5",
+            "type": "mcq",
+            "prompt": "What does `\"#\" * round(20 * 30 / 120)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`####`"
+              },
+              {
+                "id": "b",
+                "label": "`######`"
+              },
+              {
+                "id": "c",
+                "label": "`#####`"
+              },
+              {
+                "id": "d",
+                "label": "A `TypeError`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "20 * 30 / 120 is 5.0, `round` turns it into the int 5, and a string times an int repeats it."
           },
           {
             "id": "expense_tracker-q-1gv6rdo",
@@ -1277,29 +1307,29 @@
             "explanation": "Cells are numbered 1 to 9 for the player, and lists count from 0."
           },
           {
-            "id": "tic_tac_toe-q-hzfuos",
+            "id": "tic_tac_toe-q-z7eydo",
             "type": "mcq",
-            "prompt": "Why write the eight lines out once as `LINES`?",
+            "prompt": "With `LINES = [(0, 1, 2), (3, 4, 5), (0, 4, 8)]` and `board = [\"X\", \"O\", \" \", \" \", \"X\", \" \", \"O\", \" \", \"X\"]`, what is `any(board[a] == board[b] == board[c] == \"X\" for a, b, c in LINES)`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Lists are faster"
+                "label": "`False`"
               },
               {
                 "id": "b",
-                "label": "Python requires it"
+                "label": "`(0, 4, 8)`"
               },
               {
                 "id": "c",
-                "label": "Checking for a winner becomes one short loop"
+                "label": "`\"X\"`"
               },
               {
                 "id": "d",
-                "label": "To save memory"
+                "label": "`True`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "With all eight lines in one list, a loop can check each line the same way."
+            "correctChoiceId": "d",
+            "explanation": "With every line written out once, one `any` checks them all; here the diagonal 0, 4, 8 is all X."
           },
           {
             "id": "tic_tac_toe-q-4yeus3",
@@ -1352,14 +1382,29 @@
             "explanation": "Minimax assumes each player chooses the move that is best for them."
           },
           {
-            "id": "tic_tac_toe-q-1w9rcov",
-            "type": "shortText",
-            "prompt": "With perfect play from both sides, what is the score of the empty board? (a number)",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "0"
-            },
-            "explanation": "Tic-tac-toe is a draw with perfect play from both sides, and a draw scores 0."
+            "id": "tic_tac_toe-q-i4b0gd",
+            "type": "mcq",
+            "prompt": "With `board = [\"X\", \"O\", \"X\", \" \", \"O\", \" \", \" \", \" \", \" \"]`, what is `[i + 1 for i, c in enumerate(board) if c == \" \"]`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[3, 5, 6, 7, 8]`"
+              },
+              {
+                "id": "b",
+                "label": "`[4, 6, 7, 8, 9]`"
+              },
+              {
+                "id": "c",
+                "label": "`[4, 6]`"
+              },
+              {
+                "id": "d",
+                "label": "`['X', 'O']`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`enumerate` counts from 0, so `i + 1` turns each index of an empty cell into the cell number a player types."
           },
           {
             "id": "tic_tac_toe-q-1ngxsmk",
@@ -2722,29 +2767,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "capstone_planning-q-10skdtt",
+            "id": "capstone_planning-q-1w8v2g3",
             "type": "mcq",
-            "prompt": "What is a minimum viable product?",
+            "prompt": "When does pytest report this test as passing?\n\n```\ndef test_total():\n    assert total([2, 3]) == 5\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "The smallest program Python can run"
+                "label": "When `total` prints `5`"
               },
               {
                 "id": "b",
-                "label": "The few must-have features that make a first useful version"
+                "label": "When the file is called `main.py`"
               },
               {
                 "id": "c",
-                "label": "A product with no bugs"
+                "label": "When `total` returns `True`"
               },
               {
                 "id": "d",
-                "label": "A free version"
+                "label": "When `total([2, 3])` returns 5 without raising"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "An MVP is the smallest version that is actually useful; the rest comes after."
+            "correctChoiceId": "d",
+            "explanation": "A test passes when it runs to the end without an exception. The `assert` checks the value `total` returns."
           },
           {
             "id": "capstone_planning-q-fhgjy9",
@@ -2847,29 +2892,29 @@
             "explanation": "Projects usually keep their test files together in a `tests/` folder."
           },
           {
-            "id": "capstone_planning-q-103wvhs",
+            "id": "capstone_planning-q-1urmtg4",
             "type": "mcq",
-            "prompt": "How should a project grow after its first version?",
+            "prompt": "What does this print?\n\n```\ndef add(books, title):\n    return books + [title]\n\nshelf = [\"Dune\"]\nnew = add(shelf, \"Emma\")\nprint(len(shelf), len(new))\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "All features at once"
+                "label": "`2 2`"
               },
               {
                 "id": "b",
-                "label": "One feature at a time: add, test, commit, repeat"
+                "label": "`1 2`"
               },
               {
                 "id": "c",
-                "label": "Rewrite it every week"
+                "label": "`1 1`"
               },
               {
                 "id": "d",
-                "label": "Only by adding comments"
+                "label": "`2 1`"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "Small, tested steps keep the project working all the time."
+            "explanation": "`books + [title]` builds a new list and leaves the original alone, which keeps the function easy to test."
           },
           {
             "id": "capstone_planning-q-1l6idd2",

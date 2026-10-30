@@ -1003,29 +1003,29 @@
             "explanation": "Methods that change the object usually return `None`; methods that answer a question return the answer."
           },
           {
-            "id": "methods-q-rhrhjn",
+            "id": "methods-q-julzgh",
             "type": "mcq",
-            "prompt": "Why put `deposit` and `withdraw` inside the class?",
+            "prompt": "What does this print?\n\n```\nclass Account:\n    def __init__(self):\n        self.balance = 0\n    def deposit(self, amount):\n        self.balance += amount\n\na = Account()\nb = Account()\na.deposit(50)\nprint(a.balance, b.balance)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "So the code that keeps the balance right lives with the balance"
+                "label": "`50 50`"
               },
               {
                 "id": "b",
-                "label": "It is faster"
+                "label": "`50 0`"
               },
               {
                 "id": "c",
-                "label": "Functions can't change numbers"
+                "label": "`0 0`"
               },
               {
                 "id": "d",
-                "label": "To hide the balance"
+                "label": "`0 50`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Keeping the rules next to the data means the balance can only change through checked code."
+            "correctChoiceId": "b",
+            "explanation": "`self` is the object the method was called on, so only `a`'s balance changes."
           }
         ]
       }
@@ -1537,29 +1537,29 @@
             "explanation": "`__str__` must return a string; `print` inside it returns `None`."
           },
           {
-            "id": "dunder_methods-q-16yqo9u",
+            "id": "dunder_methods-q-1p3kk19",
             "type": "mcq",
-            "prompt": "What does \"dunder\" stand for?",
+            "prompt": "What does this print?\n\n```\nclass Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __repr__(self):\n        return f\"Point({self.x}, {self.y})\"\n\nprint([Point(1, 2)])\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Double underscore"
+                "label": "`[<Point object at 0x...>]`"
               },
               {
                 "id": "b",
-                "label": "Dynamic under"
+                "label": "`Point(1, 2)`"
               },
               {
                 "id": "c",
-                "label": "Data under"
+                "label": "`[Point(1, 2)]`"
               },
               {
                 "id": "d",
-                "label": "Default number"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "\"Dunder\" is short for the double underscores around names like `__init__`."
+            "correctChoiceId": "c",
+            "explanation": "A list shows its items with `repr`, so the custom `__repr__` is used inside the brackets."
           }
         ]
       }
@@ -2430,29 +2430,29 @@
             "explanation": "The class guards its own data, so outside code can't leave an object in a broken state."
           },
           {
-            "id": "encapsulation-q-p0f6j3",
+            "id": "encapsulation-q-1qiwuqi",
             "type": "mcq",
-            "prompt": "Why check values in `__init__`?",
+            "prompt": "What happens when this runs?\n\n```\nclass Age:\n    def __init__(self, years):\n        if years < 0:\n            raise ValueError(\"age can't be negative\")\n        self.years = years\n\nAge(-5)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "An `Age` with `years` of -5"
               },
               {
                 "id": "b",
-                "label": "Python requires it"
+                "label": "An `Age` with `years` of 0"
               },
               {
                 "id": "c",
-                "label": "So an invalid object can never be made"
+                "label": "`None`"
               },
               {
                 "id": "d",
-                "label": "To print errors"
+                "label": "A `ValueError`, and no object is made"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Checking in `__init__` means every object starts out valid."
+            "correctChoiceId": "d",
+            "explanation": "The check in `__init__` raises before the attribute is set, so an invalid object never exists."
           },
           {
             "id": "encapsulation-q-om9v89",
@@ -3049,29 +3049,29 @@
             "explanation": "A read-only property refuses assignment with an `AttributeError`."
           },
           {
-            "id": "properties-q-ifmzam",
+            "id": "properties-q-1sjyk7p",
             "type": "mcq",
-            "prompt": "Why does `__init__` write `self.age = age` rather than `self._age = age`?",
+            "prompt": "What does this print?\n\n```\nclass Person:\n    def __init__(self, age):\n        self.age = age\n    @property\n    def age(self):\n        return self._age\n    @age.setter\n    def age(self, value):\n        self._age = max(0, value)\n\nprint(Person(-3).age)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is shorter"
+                "label": "`-3`"
               },
               {
                 "id": "b",
-                "label": "So the setter's check runs for new objects too"
+                "label": "`None`"
               },
               {
                 "id": "c",
-                "label": "It is faster"
+                "label": "An `AttributeError`"
               },
               {
                 "id": "d",
-                "label": "Underscores aren't allowed in `__init__`"
+                "label": "`0`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Assigning through the property runs the setter, so its check applies from the start."
+            "correctChoiceId": "d",
+            "explanation": "`self.age = age` in `__init__` goes through the setter, so even new objects get the check."
           },
           {
             "id": "properties-q-13a4vk9",
@@ -5759,29 +5759,29 @@
             "explanation": "The object applies its own rules, so callers don't repeat them."
           },
           {
-            "id": "oop_design-q-q7ekhw",
+            "id": "oop_design-q-mybhya",
             "type": "mcq",
-            "prompt": "Why pass an engine into `Car(make, engine)` instead of creating it inside?",
+            "prompt": "What does this print?\n\n```\nclass FakeEngine:\n    def start(self):\n        return \"vroom (fake)\"\n\nclass Car:\n    def __init__(self, engine):\n        self.engine = engine\n    def go(self):\n        return self.engine.start()\n\nprint(Car(FakeEngine()).go())\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "`vroom (fake)`"
               },
               {
                 "id": "b",
-                "label": "Any engine, or a fake in a test, can be swapped in without changing `Car`"
+                "label": "`vroom`"
               },
               {
                 "id": "c",
-                "label": "Python requires it"
+                "label": "An `AttributeError`"
               },
               {
                 "id": "d",
-                "label": "To save memory"
+                "label": "`None`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Passing parts in (dependency injection) makes them easy to swap and to fake in tests."
+            "correctChoiceId": "a",
+            "explanation": "`Car` uses whatever engine it is given, so a fake one can be passed in for a test without changing `Car`."
           },
           {
             "id": "oop_design-q-kwlhbm",
@@ -6088,29 +6088,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_playlist-q-4ngpyr",
+            "id": "proj_playlist-q-1xi8y13",
             "type": "mcq",
-            "prompt": "Why store song lengths in seconds?",
+            "prompt": "What is `divmod(476, 60)`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Python needs it"
+                "label": "`(7, 56)`"
               },
               {
                 "id": "b",
-                "label": "Whole seconds are easy to add up; text is made only when shown"
+                "label": "`(56, 7)`"
               },
               {
                 "id": "c",
-                "label": "It uses less memory"
+                "label": "`7.93`"
               },
               {
                 "id": "d",
-                "label": "Songs are short"
+                "label": "`(7.93, 0)`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Store numbers for calculations and format them only for display."
+            "correctChoiceId": "a",
+            "explanation": "`divmod` gives the whole minutes and the seconds left over in one step: 476 seconds is 7 minutes and 56 seconds."
           },
           {
             "id": "proj_playlist-q-8v76u3",
@@ -6188,14 +6188,14 @@
             "explanation": "A computed property is always up to date with `seconds`."
           },
           {
-            "id": "proj_playlist-q-1w7c6p",
+            "id": "proj_playlist-q-1g2oxmh",
             "type": "shortText",
-            "prompt": "What is 261 seconds as `m:ss`?",
+            "prompt": "What does `f\"{261 // 60}:{261 % 60:02d}\"` give?",
             "validation": {
               "mode": "equalsNormalized",
               "expected": "4:21"
             },
-            "explanation": "261 is 4 × 60 + 21."
+            "explanation": "`//` gives the 4 whole minutes, `%` the 21 seconds left, and `:02d` pads the seconds to two digits."
           },
           {
             "id": "proj_playlist-q-fjvuo0",
@@ -6527,14 +6527,29 @@
             "explanation": "`ceil` rounds up to the next whole number."
           },
           {
-            "id": "proj_parking_garage-q-1lxuolt",
-            "type": "shortText",
-            "prompt": "How much does a car (2.5 an hour) pay for 0.25 hours?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "2.5"
-            },
-            "explanation": "Parking time is charged in whole hours rounded up, so a quarter hour costs one hour: 2.5."
+            "id": "proj_parking_garage-q-s8dd0r",
+            "type": "mcq",
+            "prompt": "What does this print?\n\n```\nclass Vehicle:\n    rate = 1.0\n    def fee(self, hours):\n        return self.rate * hours\n\nclass Car(Vehicle):\n    rate = 2.5\n\nprint(Car().fee(2))\n```",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2.0`"
+              },
+              {
+                "id": "b",
+                "label": "`5.0`"
+              },
+              {
+                "id": "c",
+                "label": "`2.5`"
+              },
+              {
+                "id": "d",
+                "label": "An `AttributeError`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`Car` inherits `fee`, and `self.rate` finds the car's own `rate` first, so the fee is 2.5 * 2."
           },
           {
             "id": "proj_parking_garage-q-10zlyms",
@@ -6836,9 +6851,9 @@
             "explanation": "Each character's own `hit` decides what happens, so the battle needs no type checks."
           },
           {
-            "id": "proj_monster_battle-q-2tkdlb",
+            "id": "proj_monster_battle-q-1tavu93",
             "type": "mcq",
-            "prompt": "Attack 3 against defense 5. How much damage?",
+            "prompt": "What is `max(1, 3 - 5)`?",
             "choices": [
               {
                 "id": "a",
@@ -6854,46 +6869,46 @@
               },
               {
                 "id": "d",
-                "label": "`1`, the minimum"
+                "label": "`1`"
               }
             ],
             "correctChoiceId": "d",
-            "explanation": "Damage never goes below 1, so a weak attack still does something."
+            "explanation": "`max` returns the larger value, so damage never drops below 1, even when the defence is higher than the attack."
           },
           {
-            "id": "proj_monster_battle-q-u42v3w",
+            "id": "proj_monster_battle-q-3ywkwj",
             "type": "shortText",
-            "prompt": "A hero with 28 of 30 hp drinks a potion (+10). How many hp now?",
+            "prompt": "What is `min(30, 28 + 10)`? (a number)",
             "validation": {
               "mode": "equalsNormalized",
               "expected": "30"
             },
-            "explanation": "Healing stops at the maximum hp, so 28 + 10 is capped at 30."
+            "explanation": "`min` caps the result, so healing can never take a character above its maximum hp."
           },
           {
-            "id": "proj_monster_battle-q-g4m15k",
+            "id": "proj_monster_battle-q-1qpnoq3",
             "type": "mcq",
-            "prompt": "Why is nothing in the battle random?",
+            "prompt": "What does this print?\n\n```\nclass Character:\n    def hit(self):\n        return \"bonk\"\n\nclass Mage(Character):\n    def hit(self):\n        return \"fireball or \" + super().hit()\n\nprint(Mage().hit())\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Random numbers are slow"
+                "label": "`bonk`"
               },
               {
                 "id": "b",
-                "label": "So every battle can be checked line by line"
+                "label": "`fireball or bonk`"
               },
               {
                 "id": "c",
-                "label": "Python can't do random"
+                "label": "`fireball or `"
               },
               {
                 "id": "d",
-                "label": "Battles must be short"
+                "label": "A `RecursionError`"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "With no randomness, the outcome is the same every time and can be checked."
+            "explanation": "`Mage.hit` overrides the parent's method and uses `super().hit()` to add the parent's result."
           }
         ]
       }

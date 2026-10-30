@@ -75,10 +75,10 @@ export default makeProject("medium", {
   ],
   questions: [
     mc("Why wrap `input()` in `float()` here?", ["`input()` returns text, and maths needs a number","`float()` makes input faster","It removes spaces","`print` needs it"], 0),
-    mc("What is 0 °C in °F?", ["`0`","`32.0`","`100`","`-32`"], 1),
+    mc("`celsius = float(\"25\")`. What is `celsius * 9 / 5 + 32`?", ["`77`", "`77.0`", "`\"77.0\"`", "A `TypeError`"], 1),
     mc("What does `f\"{6.21371:.2f}\"` give?", ["`6.2`","`6.22`","`6.21`","`6.21371`"], 2),
-    mc("Which formula converts °C to °F?", ["`(c + 32) * 9 / 5`", "`c * 5 / 9 - 32`", "`c + 32`", "`c * 9 / 5 + 32`"], 3),
+    mc("With `c = 25.0` and `f = 77.0`, which line prints `25.0 °C = 77.0 °F`?", ["`print(\"{c} °C = {f} °F\")`", "`print(c, \"°C =\", f, \"°F\", sep=\"\")`", "`print(f\"{c} °C = {f} °F\")`", "`print(f\"{c}°C = {f}°F\")`"], 2),
     mc("The user types `abc`. What does `float(input())` do?", ["Returns `0.0`","Raises a `ValueError`","Returns `\"abc\"`","Returns `None`"], 1),
-    qShort("What is -40 °C in °F? (a number)", "-40"),
+    qShort("What does `print(f\"{-40 * 9 / 5 + 32:.1f}\")` show?", "-40.0"),
   ],
 })

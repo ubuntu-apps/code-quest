@@ -95,7 +95,7 @@ export default makeProject("hard", {
   ],
   questions: [
     mc("Why give the importer its own `RowError`?", ["Python needs one", "So callers can catch exactly \"a bad row\", separate from other errors", "It is faster", "To avoid messages"], 1),
-    mc("Why does `parse_row` raise `RowError(...) from e` for a bad age?", ["To hide the ValueError", "To make the age an int", "The message is clearer, and the original error is kept as the cause", "It must"], 2),
+    mc("With `class RowError(ValueError): pass`, what does `isinstance(RowError(\"bad age\"), ValueError)` give?", ["`False`", "An error", "`True`", "`RowError`"], 2),
     mc("In normal mode, what happens to a bad row?", ["It is skipped, logged as a warning and listed in the problems", "The import stops", "It is imported anyway", "The program crashes"], 0),
     mc("Where does the \"Import finished\" log line go, so it always runs?", ["In `else`", "In `except`", "After the `return`", "In `finally`"], 3),
     qShort("`\"Dev, 25\".split(\",\")` gives how many fields? (a number)", "2"),

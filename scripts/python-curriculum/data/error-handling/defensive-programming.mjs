@@ -133,11 +133,11 @@ export default makeTopic({
   ],
   questions: [
     mc("What is a guard clause?", ["A comment at the top", "A check at the top of a function that leaves early when something is wrong", "A `finally` block", "A test function"], 1),
-    mc("Why normalise input with `strip()` and `lower()` before checking it?", ["It is faster", "Python needs it", "So `\" Yes\"`, `\"YES\"` and `\"yes\"` count as the same answer", "To make it longer"], 2),
+    mc("What is `\" YES \".strip().lower() == \"yes\"`?", ["`True`", "`False`", "`\"yes\"`", "An error"], 0),
     mc("What does EAFP mean?", ["Easier to ask forgiveness than permission: try it and catch the exception", "Every argument fits perfectly", "Errors are always fatal", "Exit after first problem"], 0),
     mc("Which is LBYL?", ["`try: prices[k]`", "`except KeyError:`", "`raise KeyError(k)`", "`if k in prices:`"], 3),
     mc("Why is returning a made-up 0 for a missing price risky?", ["0 is not a number", "Bad data spreads quietly instead of failing clearly", "It is slower", "Functions can't return 0"], 1),
-    mc("Why collect every problem in a sign-up form?", ["So the user can fix them all at once", "Python requires it", "To avoid using `if`", "It uses less memory"], 0),
+    mc("What does this print?\n\n```\nerrors = []\nif \"@\" not in \"ana.example.com\":\n    errors.append(\"email\")\nif len(\"12\") < 4:\n    errors.append(\"pin\")\nprint(errors)\n```", ["`['email']`", "`['pin']`", "`[]`", "`['email', 'pin']`"], 3),
     mc("A function moves money between two accounts after checking the amount and the balance. When should the balances change?", ["Before the checks", "Between the checks", "Only after every check has passed", "It doesn't matter"], 2),
     mc("Which is the safest way to turn text into an int with a fallback?", ["Check that every character is a digit", "Use `eval(text)`", "Assume it is fine", "`try: int(text)` with `except ValueError`"], 3),
     mc("What does \"fail loudly\" mean?", ["Print in capitals", "Raise a clear error instead of carrying on with bad data", "Beep", "Restart the program"], 1),

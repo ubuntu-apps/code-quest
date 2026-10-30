@@ -85,8 +85,8 @@ export default makeProject("hard", {
     mc("Why are `Hero` and `Mage` subclasses of `Character`?", ["To make them faster", "They are characters that add to or change what a character can do", "Python needs it for battles", "So they can't be hit"], 1),
     mc("How does a mage out of mana hit?", ["It can't hit", "With a smaller fireball", "Like any character, through `super().hit(other)`", "It heals instead"], 2),
     mc("Why doesn't `Battle.round` check what kind of character is attacking?", ["Each character's own `hit` decides what happens (polymorphism)", "All characters hit the same", "It uses `isinstance` elsewhere", "Mages never attack"], 0),
-    mc("Attack 3 against defense 5. How much damage?", ["`-2`", "`0`", "`3`", "`1`, the minimum"], 3),
-    qShort("A hero with 28 of 30 hp drinks a potion (+10). How many hp now?", "30"),
-    mc("Why is nothing in the battle random?", ["Random numbers are slow", "So every battle can be checked line by line", "Python can't do random", "Battles must be short"], 1),
+    mc("What is `max(1, 3 - 5)`?", ["`-2`", "`0`", "`3`", "`1`"], 3),
+    qShort("What is `min(30, 28 + 10)`? (a number)", "30"),
+    mc("What does this print?\n\n```\nclass Character:\n    def hit(self):\n        return \"bonk\"\n\nclass Mage(Character):\n    def hit(self):\n        return \"fireball or \" + super().hit()\n\nprint(Mage().hit())\n```", ["`bonk`", "`fireball or bonk`", "`fireball or `", "A `RecursionError`"], 1),
   ],
 })

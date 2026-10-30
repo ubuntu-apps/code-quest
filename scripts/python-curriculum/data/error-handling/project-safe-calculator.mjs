@@ -89,7 +89,7 @@ export default makeProject("easy", {
     mc("Why do the small functions raise errors instead of printing them?", ["Printing is slow", "So one place can decide how errors are shown, and the functions stay simple", "Functions can't print", "Raising is shorter"], 1),
     mc("What does `f\"{7.0:g}\"` give?", ["`7.0`", "`7.00`", "`7`", "`7g`"], 2),
     mc("`a, op, b = \"hello\".split()` raises which exception?", ["`ValueError`", "`TypeError`", "`IndexError`", "`KeyError`"], 0),
-    mc("Why `raise ValueError(...) from e` in `read_number`?", ["To hide the original", "To make it faster", "Python requires it", "To give a clearer message and keep the original as the cause"], 3),
+    mc("What does this print?\n\n```\ntry:\n    try:\n        float(\"x\")\n    except ValueError as err:\n        raise ValueError(\"Not a number: x\") from err\nexcept ValueError as e:\n    print(e.__cause__)\n```", ["`Not a number: x`", "`could not convert string to float: 'x'`", "`None`", "`x`"], 1),
     qShort("What does `safe_calculate(\"6 * 7\")` return?", "= 42"),
     mc("Which function turns exceptions into messages for the user?", ["All of them", "Only `safe_calculate`", "Only `calculate`", "None of them"], 1),
   ],

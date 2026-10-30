@@ -86,11 +86,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("What does `2d6` mean?", ["Two dice with two sides", "Roll two six-sided dice", "A six with two dice removed", "Roll until you get 2 and 6"], 1),
+    mc("What does `\"2d6\".split(\"d\")` give?", ["`['2d6']`", "`[2, 6]`", "`('2', 'd', '6')`", "`['2', '6']`"], 3),
     mc("Why is the interactive loop behind a main guard?", ["So it runs twice", "Because `input` needs it", "So importing `dice` never starts asking questions", "To make it random"], 2),
     mc("What does `\"d20\".partition(\"d\")` give?", ["`(\"\", \"d\", \"20\")`", "`(\"d\", \"20\")`", "`[\"d20\"]`", "`(1, 20)`"], 0),
     mc("How can checks test code that rolls random dice?", ["They can't", "They roll real dice", "They ignore the numbers", "They set a seed so the rolls repeat"], 3),
     qShort("What should `describe([5])` return?", "5 = 5"),
-    mc("Why split the module into small functions like `parse` and `roll_many`?", ["Other programs can import and reuse just the parts they need", "Python needs it", "It makes the dice fairer", "To use more memory"], 0),
+    mc("`dice.py` defines `roll(sides)` and has a main guard. Which line in another file lets you call `roll(6)` directly?", ["`import roll from dice`", "`from dice import roll`", "`import dice.roll`", "`from roll import dice`"], 1),
   ],
 })

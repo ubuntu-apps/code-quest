@@ -138,7 +138,7 @@ export default makeTopic({
     mc("What does `datetime.strptime(\"31/02/2025\", \"%d/%m/%Y\")` do?", ["Raises `ValueError`", "Gives 3 March", "Gives 28 February", "Returns `None`"], 0),
     qShort("In a `strftime` pattern, which code gives the four-digit year? (like `%x`)", "%Y"),
     mc("How do you get the hours in a `timedelta` called `gap`?", ["`gap.hours`", "`gap.days * 24`", "`int(gap)`", "`gap.total_seconds() / 3600`"], 3),
-    mc("Why pass \"today\" into a function instead of calling `date.today()` inside it?", ["It is faster", "It is required", "It can be tested with any date", "It changes the time zone"], 2),
+    qShort("With `def days_left(due, today): return (due - today).days`, what is `days_left(date(2025, 3, 10), date(2025, 3, 1))`? (a number)", "9"),
     mc("What does `date.fromisoformat(\"2025-07-04\")` give?", ["4 July 2025", "7 April 2025", "A string", "An error"], 0),
   ],
 })

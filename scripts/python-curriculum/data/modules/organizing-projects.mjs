@@ -130,9 +130,9 @@ export default makeTopic({
   ],
   questions: [
     mc("When is it time to split a program into modules?", ["Never", "When it gets long and parts have different jobs", "Only when it has a bug", "After writing tests"], 1),
-    mc("Why keep calculations apart from `input` and `print`?", ["Printing is slow", "Python requires it", "A function that returns can be reused and tested anywhere", "It uses less memory"], 2),
+    mc("Which `total` can a test check with `assert total([2, 3]) == 5`?", ["`def total(nums): print(sum(nums))`", "`def total(nums): sum(nums)`", "`def total(): return sum(map(int, input().split()))`", "`def total(nums): return sum(nums)`"], 3),
     mc("What should `main.py` usually contain?", ["Imports, a `main()` that connects the pieces, and the main guard", "All the calculations", "Only constants", "The tests"], 0),
-    mc("Why should imports flow one way, from `main` down?", ["It is faster", "It makes files shorter", "Python requires it", "It prevents circular imports"], 3),
+    mc("`a.py` has `from b import f` and `b.py` has `from a import g`. What usually happens when you run `a.py`?", ["It works", "An `ImportError` about a partially initialised module", "Python merges the two files", "It loops forever"], 1),
     mc("Where does a module's docstring go?", ["At the end", "As the first line of the file", "In README.md", "In `__init__.py` only"], 1),
     mc("`settings.TAX_RATE` is changed while the program runs. Which import sees the new value?", ["`import settings`, then `settings.TAX_RATE`", "`from settings import TAX_RATE`", "Both", "Neither"], 0),
     mc("How are test files usually named?", ["`convert_check.py`", "`test_convert.py`", "`convert.test`", "`tests.py` only"], 1),

@@ -1063,29 +1063,29 @@
             "explanation": "`collections` holds extra container types such as `Counter`, `defaultdict` and `deque`."
           },
           {
-            "id": "stdlib_overview-q-ge6ze6",
+            "id": "stdlib_overview-q-9zu2e2",
             "type": "mcq",
-            "prompt": "Before installing a package for a job, what is worth checking?",
+            "prompt": "After `from statistics import mean`, what is `mean([2, 4, 9])`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Whether it is written in C"
+                "label": "`5`"
               },
               {
                 "id": "b",
-                "label": "Whether the standard library already does it"
+                "label": "`15`"
               },
               {
                 "id": "c",
-                "label": "Whether you have a printer"
+                "label": "`4`"
               },
               {
                 "id": "d",
-                "label": "Nothing"
+                "label": "A `NameError`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "The standard library covers many common jobs, and it is always installed."
+            "correctChoiceId": "a",
+            "explanation": "`from ... import mean` makes the name `mean` available directly. The mean of 2, 4 and 9 is 15 / 3 = 5."
           },
           {
             "id": "stdlib_overview-q-12b8k0b",
@@ -1602,29 +1602,29 @@
             "explanation": "Weights set how likely each item is: 1 to 9 here."
           },
           {
-            "id": "random_module-q-1bqv73e",
+            "id": "random_module-q-ktq5pe",
             "type": "mcq",
-            "prompt": "Why do simulations use many trials?",
+            "prompt": "What does this print?\n\n```\nimport random\nrandom.seed(1)\na = random.randint(1, 100)\nrandom.seed(1)\nb = random.randint(1, 100)\nprint(a == b)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Python needs it"
+                "label": "`False`"
               },
               {
                 "id": "b",
-                "label": "Each trial is slower"
+                "label": "`True`"
               },
               {
                 "id": "c",
-                "label": "Fewer trials are random"
+                "label": "Sometimes `True`, sometimes `False`"
               },
               {
                 "id": "d",
-                "label": "The more trials, the closer the estimate"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Random results vary, and averaging many trials smooths the noise."
+            "correctChoiceId": "b",
+            "explanation": "The same seed starts the same sequence, so the first number after each `seed(1)` is the same. That is how checks test random code."
           },
           {
             "id": "random_module-q-14ye09p",
@@ -2136,29 +2136,14 @@
             "explanation": "A `timedelta` stores days and seconds; `total_seconds()` gives the whole length in seconds."
           },
           {
-            "id": "dates_times-q-1pj7023",
-            "type": "mcq",
-            "prompt": "Why pass \"today\" into a function instead of calling `date.today()` inside it?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "It is faster"
-              },
-              {
-                "id": "b",
-                "label": "It is required"
-              },
-              {
-                "id": "c",
-                "label": "It can be tested with any date"
-              },
-              {
-                "id": "d",
-                "label": "It changes the time zone"
-              }
-            ],
-            "correctChoiceId": "c",
-            "explanation": "A function that receives the date can be tested with any day, not only the real today."
+            "id": "dates_times-q-1c8sd3z",
+            "type": "shortText",
+            "prompt": "With `def days_left(due, today): return (due - today).days`, what is `days_left(date(2025, 3, 10), date(2025, 3, 1))`? (a number)",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "9"
+            },
+            "explanation": "Because `today` is a parameter, any date can be passed in, so the answer can be checked without waiting for a real day."
           },
           {
             "id": "dates_times-q-r00id5",
@@ -3069,29 +3054,29 @@
             "explanation": "The guarded code runs only when the file is run directly, not when it is imported."
           },
           {
-            "id": "name_main-q-164d13h",
+            "id": "name_main-q-1d78fgi",
             "type": "mcq",
-            "prompt": "Why put a program's steps in a `main()` function?",
+            "prompt": "`helpers.py` contains `def main(): print(\"start\")` and `if __name__ == \"__main__\": main()`. What does `import helpers` print?",
             "choices": [
               {
                 "id": "a",
-                "label": "Python requires it"
+                "label": "`start`"
               },
               {
                 "id": "b",
-                "label": "It runs twice"
+                "label": "`__main__`"
               },
               {
                 "id": "c",
-                "label": "It hides errors"
+                "label": "Nothing"
               },
               {
                 "id": "d",
-                "label": "Its variables stay local and it is easy to call or test"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "A `main()` function keeps the program's variables local and can be called from tests."
+            "correctChoiceId": "c",
+            "explanation": "When `helpers` is imported, `__name__` is `\"helpers\"`, so the guarded `main()` doesn't run."
           },
           {
             "id": "name_main-q-pphhzi",
@@ -4636,29 +4621,29 @@
             "explanation": "`pip` is a command-line tool, not Python code."
           },
           {
-            "id": "pip_venv-q-1bbbpmc",
+            "id": "pip_venv-q-1pwrrvu",
             "type": "mcq",
-            "prompt": "Why use a virtual environment?",
+            "prompt": "In `requirements.txt`, what does `requests>=2.31` allow?",
             "choices": [
               {
                 "id": "a",
-                "label": "Each project gets its own private set of packages"
+                "label": "Exactly version 2.31"
               },
               {
                 "id": "b",
-                "label": "It makes Python faster"
+                "label": "Version 2.31 or any newer one"
               },
               {
                 "id": "c",
-                "label": "It is required for imports"
+                "label": "Any version below 2.31"
               },
               {
                 "id": "d",
-                "label": "It hides your code"
+                "label": "Only 2.31.x patch releases"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "A virtual environment keeps one project's packages from clashing with another's."
+            "correctChoiceId": "b",
+            "explanation": "`>=` sets a minimum version; `==` pins one exact version."
           },
           {
             "id": "pip_venv-q-1y4c6md",
@@ -5130,29 +5115,29 @@
             "explanation": "Split when separate jobs are getting tangled together, not before."
           },
           {
-            "id": "organizing_projects-q-1hv8d03",
+            "id": "organizing_projects-q-r56f0j",
             "type": "mcq",
-            "prompt": "Why keep calculations apart from `input` and `print`?",
+            "prompt": "Which `total` can a test check with `assert total([2, 3]) == 5`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Printing is slow"
+                "label": "`def total(nums): print(sum(nums))`"
               },
               {
                 "id": "b",
-                "label": "Python requires it"
+                "label": "`def total(nums): sum(nums)`"
               },
               {
                 "id": "c",
-                "label": "A function that returns can be reused and tested anywhere"
+                "label": "`def total(): return sum(map(int, input().split()))`"
               },
               {
                 "id": "d",
-                "label": "It uses less memory"
+                "label": "`def total(nums): return sum(nums)`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "A function that returns its result can be used by any interface and checked by tests."
+            "correctChoiceId": "d",
+            "explanation": "Only a function that takes its input as a parameter and returns the result can be checked by a test."
           },
           {
             "id": "organizing_projects-q-shzqh2",
@@ -5180,29 +5165,29 @@
             "explanation": "`main.py` connects the modules; the real work lives in them."
           },
           {
-            "id": "organizing_projects-q-x5vlkp",
+            "id": "organizing_projects-q-5au8q",
             "type": "mcq",
-            "prompt": "Why should imports flow one way, from `main` down?",
+            "prompt": "`a.py` has `from b import f` and `b.py` has `from a import g`. What usually happens when you run `a.py`?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "It works"
               },
               {
                 "id": "b",
-                "label": "It makes files shorter"
+                "label": "An `ImportError` about a partially initialised module"
               },
               {
                 "id": "c",
-                "label": "Python requires it"
+                "label": "Python merges the two files"
               },
               {
                 "id": "d",
-                "label": "It prevents circular imports"
+                "label": "It loops forever"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "When imports only go one way, no two modules depend on each other, so there's no circle."
+            "correctChoiceId": "b",
+            "explanation": "Each file waits for the other to finish loading: a circular import. Imports that flow one way avoid it."
           },
           {
             "id": "organizing_projects-q-btylzc",
@@ -5524,29 +5509,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_dice_roller-q-wxobhe",
+            "id": "proj_dice_roller-q-bdkett",
             "type": "mcq",
-            "prompt": "What does `2d6` mean?",
+            "prompt": "What does `\"2d6\".split(\"d\")` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Two dice with two sides"
+                "label": "`['2d6']`"
               },
               {
                 "id": "b",
-                "label": "Roll two six-sided dice"
+                "label": "`[2, 6]`"
               },
               {
                 "id": "c",
-                "label": "A six with two dice removed"
+                "label": "`('2', 'd', '6')`"
               },
               {
                 "id": "d",
-                "label": "Roll until you get 2 and 6"
+                "label": "`['2', '6']`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Dice notation is the number of dice, `d`, then the number of sides."
+            "correctChoiceId": "d",
+            "explanation": "`split(\"d\")` cuts the text at the `d` and returns the pieces as strings, so they still need `int()`."
           },
           {
             "id": "proj_dice_roller-q-7rznw8",
@@ -5634,29 +5619,29 @@
             "explanation": "With one die, the total is just that roll."
           },
           {
-            "id": "proj_dice_roller-q-9uhl7d",
+            "id": "proj_dice_roller-q-jke8yo",
             "type": "mcq",
-            "prompt": "Why split the module into small functions like `parse` and `roll_many`?",
+            "prompt": "`dice.py` defines `roll(sides)` and has a main guard. Which line in another file lets you call `roll(6)` directly?",
             "choices": [
               {
                 "id": "a",
-                "label": "Other programs can import and reuse just the parts they need"
+                "label": "`import roll from dice`"
               },
               {
                 "id": "b",
-                "label": "Python needs it"
+                "label": "`from dice import roll`"
               },
               {
                 "id": "c",
-                "label": "It makes the dice fairer"
+                "label": "`import dice.roll`"
               },
               {
                 "id": "d",
-                "label": "To use more memory"
+                "label": "`from roll import dice`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Small functions can be imported and tested one at a time."
+            "correctChoiceId": "b",
+            "explanation": "`from dice import roll` imports the module and makes the name `roll` available; the main guard stops the dice game from starting."
           }
         ]
       }
@@ -5878,29 +5863,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_habit_tracker-q-4846co",
+            "id": "proj_habit_tracker-q-waqavd",
             "type": "mcq",
-            "prompt": "Why store dates as `2025-03-13`?",
+            "prompt": "What does `date(2025, 3, 9).isoformat()` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "It is shorter"
+                "label": "`\"2025-03-09\"`"
               },
               {
                 "id": "b",
-                "label": "It is the standard form that `fromisoformat` reads and `isoformat` writes"
+                "label": "`\"2025-3-9\"`"
               },
               {
                 "id": "c",
-                "label": "Python can't store other forms"
+                "label": "`\"09/03/2025\"`"
               },
               {
                 "id": "d",
-                "label": "It hides the year"
+                "label": "`date(2025, 3, 9)`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "ISO dates sort correctly as text and are what `date.fromisoformat` reads."
+            "correctChoiceId": "a",
+            "explanation": "`isoformat()` writes the standard `YYYY-MM-DD` text with zero-padding, the form `fromisoformat` reads back."
           },
           {
             "id": "proj_habit_tracker-q-qscsxo",
@@ -5928,29 +5913,29 @@
             "explanation": "Passing the date in makes the functions testable with fixed dates."
           },
           {
-            "id": "proj_habit_tracker-q-yjra5q",
+            "id": "proj_habit_tracker-q-1qyydsk",
             "type": "mcq",
-            "prompt": "Today isn't logged yet, but yesterday and the day before are. What is the current streak?",
+            "prompt": "What is `date(2025, 3, 1) - timedelta(days=1)`?",
             "choices": [
               {
                 "id": "a",
-                "label": "2"
+                "label": "`2025-03-00`"
               },
               {
                 "id": "b",
-                "label": "0"
+                "label": "`2025-02-29`"
               },
               {
                 "id": "c",
-                "label": "1"
+                "label": "`2025-02-28`"
               },
               {
                 "id": "d",
-                "label": "3"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "The streak counts back from yesterday when today isn't logged yet, so it is 2."
+            "correctChoiceId": "c",
+            "explanation": "Date maths knows the calendar: the day before 1 March 2025 is 28 February, because 2025 is not a leap year."
           },
           {
             "id": "proj_habit_tracker-q-27emky",
@@ -6340,29 +6325,29 @@
             "explanation": "`__init__.py` can re-export key names, so users can import them from `shop` directly."
           },
           {
-            "id": "proj_shop_package-q-a6i3zf",
+            "id": "proj_shop_package-q-1rwey2",
             "type": "mcq",
-            "prompt": "Why is `main()` behind a main guard?",
+            "prompt": "`main.py` ends with a bare `main()` call and no guard. What happens when a test runs `import main`?",
             "choices": [
               {
                 "id": "a",
-                "label": "To make it faster"
+                "label": "Nothing until the test calls `main()`"
               },
               {
                 "id": "b",
-                "label": "So importing `main.py` doesn't start a shopping session"
+                "label": "An `ImportError`"
               },
               {
                 "id": "c",
-                "label": "Because `shop` needs it"
+                "label": "A shopping session starts during the import"
               },
               {
                 "id": "d",
-                "label": "To hide the receipt"
+                "label": "Python skips the call"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "The guard keeps the interactive session from starting when the module is imported."
+            "correctChoiceId": "c",
+            "explanation": "Importing runs the whole file, so a bare `main()` starts the program. The guard runs it only when the file is the program."
           }
         ]
       }

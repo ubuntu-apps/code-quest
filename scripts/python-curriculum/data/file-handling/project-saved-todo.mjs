@@ -88,11 +88,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("Why store the tasks as `[x] title` lines?", ["Python needs brackets", "It is easy for both the program and a person to read", "It makes the file smaller", "It hides the tasks"], 1),
+    mc("With `line = \"[x] pay rent\"`, what is `line[1] == \"x\"`?", ["`True`", "`False`", "`\"x\"`", "An `IndexError`"], 0),
     mc("What should `load` return the very first time, before the file exists?", ["`None`", "An error", "An empty list", "A list with one empty task"], 2),
     mc("Why does `save` write to a `.tmp` file first?", ["So a crash mid-save can never leave a half-written list", "It is faster", "Python can't write to `.txt` directly", "To make a backup copy"], 0),
     mc("What does `\"[ ] call Ana\"[4:]` give?", ["`\"[ ] \"`", "`\" call Ana\"`", "`\"Ana\"`", "`\"call Ana\"`"], 3),
-    qShort("`clear` removes the finished tasks. With 2 of 5 tasks done, how many are left? (a number)", "3"),
+    qShort("With `tasks = [{\"title\": \"a\", \"done\": True}, {\"title\": \"b\", \"done\": False}]`, how many tasks are in `[t for t in tasks if not t[\"done\"]]`? (a number)", "1"),
     mc("Why catch `IndexError` for `done 9`?", ["To delete task 9", "There is no task 9, and the program should reply instead of crashing", "To add task 9", "It is never raised"], 1),
   ],
 })

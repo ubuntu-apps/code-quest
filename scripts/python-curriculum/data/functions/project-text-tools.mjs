@@ -81,7 +81,7 @@ export default makeProject("easy", {
     mc("Why does each tool **return** its answer instead of printing it?", ["Printing is not allowed in functions", "So other code, like `report`, can use the answer", "It is faster", "Returning prints it too"], 1),
     mc("What does `\"  hello   world \".split()` give?", ["`[\"\", \"hello\", \"\", \"world\", \"\"]`", "`[\"hello world\"]`", "`[\"hello\", \"world\"]`", "An error"], 2),
     mc("What does `ch.isalpha()` check?", ["Whether `ch` is a letter", "Whether `ch` is a capital", "Whether `ch` is a vowel", "Whether `ch` is a digit"], 0),
-    mc("Why build `report` out of the four tools?", ["It is required", "To make the program longer", "Each tool is then tested once and reused, not rewritten", "Tools can only be used inside other functions"], 2),
+    mc("What does this print?\n\n```\ndef shout(s):\n    return s.upper() + \"!\"\n\ndef both(s):\n    return shout(s) + \" \" + s\n\nprint(both(\"hi\"))\n```", ["`HI! hi`", "`HI!`", "`hi HI!`", "`None`"], 0),
     qShort("What is `\"Odd\"[0].upper() + \"odd\"[1:]`?", "Odd"),
     mc("What does `\"\\n\".join([\"a\", \"b\"])` give?", ["`\"a\\nb\"`: two lines", "`\"ab\"`", "`[\"a\", \"b\"]`", "`\"a b\"`"], 0),
   ],

@@ -130,7 +130,7 @@ export default makeTopic({
     mc("What is composition?", ["Inheriting from two classes", "Writing music", "Objects holding other objects, like a car that has an engine", "Combining two functions"], 2),
     mc("Which relationship suits composition rather than inheritance?", ["\"Has a\"", "\"Is a\"", "\"Was a\"", "None"], 0),
     mc("What does \"tell, don't ask\" mean?", ["Ask the user before acting", "Print everything", "Read attributes before changing them", "Call a method and let the object apply its own rules"], 3),
-    mc("Why pass an engine into `Car(make, engine)` instead of creating it inside?", ["It is faster", "Any engine, or a fake in a test, can be swapped in without changing `Car`", "Python requires it", "To save memory"], 1),
+    mc("What does this print?\n\n```\nclass FakeEngine:\n    def start(self):\n        return \"vroom (fake)\"\n\nclass Car:\n    def __init__(self, engine):\n        self.engine = engine\n    def go(self):\n        return self.engine.start()\n\nprint(Car(FakeEngine()).go())\n```", ["`vroom (fake)`", "`vroom`", "An `AttributeError`", "`None`"], 0),
     mc("A class has only `__init__` and one method. What is it often better as?", ["A function", "Two classes", "A module", "A subclass"], 0),
     qShort("How many jobs should a well-designed class have? (a number)", "1"),
     mc("Why raise different errors for a missing book and a book already on loan?", ["Python needs two", "To be shorter", "It looks nicer", "Callers can handle the two problems differently"], 3),

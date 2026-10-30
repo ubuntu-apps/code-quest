@@ -89,7 +89,7 @@ export default {
     "File exceptions carry the path that caused them in `filename`.",
     "`open` expects a file, so a folder raises `IsADirectoryError` (Windows raises `PermissionError`).",
     "`\"x\"` mode raises `FileExistsError` instead of overwriting.",
-    "The file can be deleted or locked after the check, and `exists` doesn't spot every problem anyway.",
+    "Trying the open and catching the error handles a missing file in one place, and `e.filename` says which one.",
     "`except OSError:` catches every file-related error.",
     "`errors=\"replace\"` swaps bytes that can't be decoded for the replacement character.",
     "A decode error means the bytes are a bad value for the chosen encoding, so it is a kind of `ValueError`.",
@@ -108,7 +108,7 @@ export default {
     "At the end of a binary file, reads return empty bytes, `b\"\"`.",
   ],
   processing_files: [
-    "Input, process, output: the same shape as most programs.",
+    "A set keeps each different line once, which is how a `seen` set removes duplicate lines.",
     "Reading one line at a time means file size doesn't matter.",
     "The original file stays intact if anything goes wrong halfway through.",
     "`os.replace` renames the file in one step, so readers never see a half-written file.",
@@ -120,7 +120,7 @@ export default {
     "A set checks quickly whether a line has already been written.",
   ],
   proj_notes_keeper: [
-    "Data in a file outlives the program; variables are lost when it ends.",
+    "`\"a\"` creates the file if needed and always writes at the end, so both notes are kept, each with its line break.",
     "Append mode adds to the end and keeps the existing notes.",
     "No file yet simply means no notes yet.",
     "A file can't easily lose a line in the middle, so the program rewrites the whole list.",
@@ -136,11 +136,11 @@ export default {
     "A missing input file is reported clearly, and no empty report is written.",
   ],
   proj_saved_todo: [
-    "A simple text format can be read by the program and edited by a person.",
+    "Index 1 is the second character, the one between the brackets, so this is how `load` tells a finished task.",
     "No file yet means no tasks yet.",
     "Writing to a temp file and then renaming it means the real file is always complete.",
     "The status takes the first 4 characters (`[ ] `), so the title starts at index 4.",
-    "Removing the 2 finished tasks leaves 3.",
+    "The comprehension keeps only the tasks whose `done` is false, which is how `clear` removes finished tasks.",
     "A bad task number is a normal mistake, so catch it and reply with a helpful message.",
   ],
 }

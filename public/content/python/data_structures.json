@@ -6528,29 +6528,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_grade_book-q-jirxf7",
+            "id": "proj_grade_book-q-tbaciu",
             "type": "mcq",
-            "prompt": "Why keep the scores in a dict rather than a list?",
+            "prompt": "With `grades = {\"Ana\": 91, \"Ben\": 78}`, what is `min(grades, key=grades.get)`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Dicts are always sorted"
+                "label": "`78`"
               },
               {
                 "id": "b",
-                "label": "Each score is found by the student's name"
+                "label": "`'Ben'`"
               },
               {
                 "id": "c",
-                "label": "Lists can't hold numbers"
+                "label": "`'Ana'`"
               },
               {
                 "id": "d",
-                "label": "Dicts use less memory"
+                "label": "`('Ben', 78)`"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "A dict maps each name to its score, so a score can be looked up by name."
+            "explanation": "Looping over a dict gives its keys, and `key=grades.get` compares them by their scores, so the name with the lowest score comes back."
           },
           {
             "id": "proj_grade_book-q-11865rn",
@@ -6603,9 +6603,9 @@
             "explanation": "`key=grades.get` compares by score but returns the name."
           },
           {
-            "id": "proj_grade_book-q-lpxjtq",
+            "id": "proj_grade_book-q-5212xj",
             "type": "mcq",
-            "prompt": "A score of 80 gets which letter here?",
+            "prompt": "What does this print?\n\n```\nscore = 80\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelif score >= 70:\n    print(\"C\")\n```",
             "choices": [
               {
                 "id": "a",
@@ -6617,15 +6617,15 @@
               },
               {
                 "id": "c",
-                "label": "`B`"
+                "label": "`B` and then `C`"
               },
               {
                 "id": "d",
-                "label": "`F`"
+                "label": "`B`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "`B` is for 80 or more (and under 90), so 80 is just a B."
+            "correctChoiceId": "d",
+            "explanation": "Only the first branch whose condition is true runs. 80 >= 80 is true, so `B` is printed and the rest is skipped."
           },
           {
             "id": "proj_grade_book-q-5gc7gx",

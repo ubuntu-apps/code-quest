@@ -136,6 +136,6 @@ export default makeTopic({
     mc("What does `x, y = 1, 2` do?", ["Sets `x` to 1 and `y` to 2","Sets both to 2","Makes a pair called `x`","Raises an error"], 0),
     mc("How do you swap `a` and `b` in one line?", ["`a = b`", "`a, b = b, a`", "`swap(a, b)`", "`a = b = a`"], 1),
     mc("Are `Score` and `score` the same variable?", ["Yes, case is ignored","Only for numbers","Only inside `print`","No, names are case-sensitive"], 3),
-    mc("Which name explains itself best?", ["`x`","`seconds_per_day`","`data2`","`s`"], 1),
+    mc("After `a = 3`, `b = a` and then `a = 7`, what is `b`?", ["`3`", "`7`", "`10`", "An error"], 0),
   ],
 })

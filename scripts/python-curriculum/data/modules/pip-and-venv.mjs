@@ -132,7 +132,7 @@ export default makeTopic({
   questions: [
     mc("What is PyPI?", ["A standard library module", "The Python Package Index, where packages are published", "A type of virtual environment", "A Python version"], 1),
     mc("Where do you run `pip install`?", ["Inside a Python program", "In the `import` line", "In a terminal", "In requirements.txt"], 2),
-    mc("Why use a virtual environment?", ["Each project gets its own private set of packages", "It makes Python faster", "It is required for imports", "It hides your code"], 0),
+    mc("In `requirements.txt`, what does `requests>=2.31` allow?", ["Exactly version 2.31", "Version 2.31 or any newer one", "Any version below 2.31", "Only 2.31.x patch releases"], 1),
     mc("What does `pip install -r requirements.txt` do?", ["Removes the packages", "Reads the file aloud", "Creates a virtual environment", "Installs every package listed in the file"], 3),
     mc("What does `requests==2.32.3` mean in requirements.txt?", ["At least 2.32.3", "Exactly version 2.32.3", "Any version but 2.32.3", "Version 2 or 32 or 3"], 1),
     mc("You install `beautifulsoup4`. What do you import?", ["`bs4`", "`beautifulsoup4`", "`soup`", "`beautifulsoup`"], 0),

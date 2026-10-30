@@ -78,10 +78,10 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("Why read the quantity with `int()` but the price with `float()`?", ["Quantities are whole numbers, but prices can have decimals","`int()` is faster","`float()` can't read whole numbers","There is no reason"], 0),
+    mc("What does `int(\"2\") * float(\"3.50\")` give?", ["`7`", "`\"23.50\"`", "A `TypeError`", "`7.0`"], 3),
     mc("What does `f\"{'Tea':<6}|\"` give?", ["`   Tea|`", "`Tea   |`", "`Tea|`", "`Tea      |`"], 1),
     mc("How many characters long is `f\"{2.7:>8.2f}\"`?", ["`4`","`8`","`6`","`2`"], 1),
-    mc("What is a 20% tip on 13.50?", ["`0.27`","`27.00`","`2.70`","`20.00`"], 2),
+    mc("What does `round(13.50 * 0.2, 2)` give?", ["`2.7`", "`2.70`", "`\"2.70\"`", "`3`"], 0),
     mc("What does `\"-\" * 24` give?", ["`\"-24\"`","An error","One dash","24 dashes"], 3),
     qShort("What does `f\"{9.9:.2f}\"` show?", "9.90"),
   ],

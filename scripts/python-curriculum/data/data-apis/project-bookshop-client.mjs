@@ -85,7 +85,7 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why does `BookClient` take the `api` function as a parameter?", ["Python requires it", "So a real HTTP function, or a pretend one, can be passed in without changing the class", "It is faster", "To hide it"], 1),
+    mc("What does this print?\n\n```\nimport json\n\ndef fake_api(method, path):\n    return 200, '{\"title\": \"Emma\"}'\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n    def title(self, path):\n        status, text = self.api(\"GET\", path)\n        return json.loads(text)[\"title\"]\n\nprint(BookClient(fake_api).title(\"/books/1\"))\n```", ["`{\"title\": \"Emma\"}`", "`200`", "`Emma`", "A network error"], 2),
     mc("Why do all requests go through `_call`?", ["It is a rule of REST", "To make more requests", "The error handling and JSON decoding are written once", "To slow them down"], 2),
     mc("Which status codes does `_call` turn into an `ApiError`?", ["400 and up", "Only 404", "Only 500", "Anything but 200"], 0),
     mc("How does `all_books` know when to stop?", ["After 3 pages", "When a page is empty", "When it gets an error", "When `next_page` is `None`"], 3),

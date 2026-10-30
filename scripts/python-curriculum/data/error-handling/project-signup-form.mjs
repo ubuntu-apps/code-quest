@@ -89,7 +89,7 @@ export default makeProject("medium", {
   ],
   questions: [
     mc("Why is `ValidationError` a kind of `ValueError`?", ["It must be", "Code that catches `ValueError` still catches it, and its name says what went wrong", "To make it faster", "So it can't be caught"], 1),
-    mc("Why collect every problem instead of stopping at the first?", ["It is shorter", "Python needs it", "So the user can fix everything in one go", "To raise more errors"], 2),
+    mc("What does this print?\n\n```\nproblems = []\nfor field in [\"name\", \"age\"]:\n    try:\n        if field == \"age\":\n            int(\"x\")\n    except ValueError:\n        problems.append(field)\nprint(problems)\n```", ["`[]`", "`['age']`", "`['name', 'age']`", "A `ValueError` stops the loop"], 1),
     mc("What does `form.get(\"age\", \"\")` give when there is no `age`?", ["`\"\"`", "`None`", "A `KeyError`", "`0`"], 0),
     mc("In `validate`, what happens when one check raises?", ["The whole function stops", "The program ends", "All later checks are skipped", "Its message is added to the list and the next check runs"], 3),
     qShort("What does `\"  ana lima \".strip().title()` give?", "Ana Lima"),

@@ -131,11 +131,11 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc("Why are amounts negative for spending and positive for income?", ["Python needs it", "Adding up every amount then gives the balance directly", "To save space", "CSV requires it"], 1),
+    mc("What is `sum([-12.5, 100, -40])`?", ["`47.5`", "`152.5`", "`-52.5`", "`47`"], 0),
     mc("Why store dates as ISO text like `2025-03-09`?", ["It is shorter", "Dates can't be stored", "`startswith(\"2025-03\")` picks a month, and sorting the text sorts by date", "JSON requires it"], 2),
     mc("What does `asdict(transaction)` give?", ["A dict of its fields, ready for JSON", "A string", "A copy of the object", "A list of values"], 0),
     mc("Why is `load` a class method?", ["It is faster", "It changes every budget", "It must be private", "It makes a new `Budget` from a file, before any object exists"], 3),
-    qShort("What is the biggest category's bar length in the report? (a number)", "20"),
+    mc("What does `\"#\" * round(20 * 30 / 120)` give?", ["`####`", "`######`", "`#####`", "A `TypeError`"], 2),
     mc("Why open the CSV file with `newline=\"\"`?", ["To save space", "So the csv module controls line endings and there are no blank rows", "To add a header", "It is required for reading only"], 1),
     mc("What should `run` reply to `add 2025-02-30 -5 food Snack`?", ["`Bad date: 2025-02-30`", "An error that stops the program", "`Added: Snack (-5.00)`", "Nothing"], 0),
     mc("Which part of the program handles what the user types?", ["`Transaction`", "`Budget.report`", "`parse_amount` only", "`run`, on top of the `Budget` class"], 3),

@@ -136,7 +136,7 @@ export default makeTopic({
     mc("How can you read a function's documentation in code?", ["`help(f)` or `f.__doc__`", "`dir(f)`", "`f.docs()`", "`print(f)`"], 0),
     qShort("Which module tells you the Python version (as `version_info`)? (one word)", "sys"),
     mc("Which module has `Counter` and `defaultdict`?", ["`itertools`", "`string`", "`statistics`", "`collections`"], 3),
-    mc("Before installing a package for a job, what is worth checking?", ["Whether it is written in C", "Whether the standard library already does it", "Whether you have a printer", "Nothing"], 1),
+    mc("After `from statistics import mean`, what is `mean([2, 4, 9])`?", ["`5`", "`15`", "`4`", "A `NameError`"], 0),
     mc("What does `statistics.mode` return?", ["The average", "The middle value", "The most common value", "The spread"], 2),
   ],
 })

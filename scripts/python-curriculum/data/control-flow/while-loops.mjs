@@ -125,7 +125,7 @@ export default makeTopic({
     qShort("How many times does the body run? `n = 0`, then `while n < 3: n += 1` (a number)", "3"),
     mc("How often does the body of `while False:` run?", ["Once", "Forever", "Never", "Twice"], 2),
     mc("When is `while` a better choice than other loops?", ["When printing text", "Always", "Never", "When you don't know in advance how many rounds you need"], 3),
-    mc("What does CodeQuest do with a loop that never ends?", ["Stops it after 10 seconds", "Freezes the browser", "Deletes the code", "Runs it on a server"], 0),
+    mc("What does this print?\n\n```\nn = 1\nwhile n < 20:\n    n = n * 3\nprint(n)\n```", ["`9`", "`20`", "`81`", "`27`"], 3),
     mc("After `x = 10` and `while x > 0: x -= 3`, what is `x`?", ["`0`", "`-2`", "`1`", "`-3`"], 1),
     mc("What is missing from this loop?\n\n```\ni = 0\nwhile i < 5:\n    print(i)\n```", ["A colon", "`else:`", "`i += 1` inside the loop", "Nothing"], 2),
     mc("What is an off-by-one error?", ["A wrong variable name", "A loop that runs forever", "A missing colon", "A loop that runs one time too many or too few"], 3),
