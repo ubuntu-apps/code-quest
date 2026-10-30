@@ -90,7 +90,7 @@ export default makeTopic({
       '0 is a value; NULL means the value is missing.'),
     mc('`WHERE rating >= 4.5` keeps books without a rating?', ['Yes', 'Only if they are new', 'It depends on the genre', 'No'], 3,
       'For a NULL rating the comparison is unknown, so the row is not kept.'),
-    mc('How does CodeQuest show a missing value in a result?', ['As 0', 'As `NULL`', 'As an empty space', 'It hides the row'], 1,
-      'Results show missing values as NULL.'),
+    mc("What does `SELECT NULL = NULL;` show?", ["`1`", "`0`", "An error", "`NULL`"], 3,
+      "Any comparison with NULL is unknown, even NULL with NULL, so the result is `NULL`. That is why you test for it with `IS NULL`."),
   ],
 })

@@ -192,8 +192,8 @@ const cleanUp = makeProject('hard', {
     }),
   ],
   questions: [
-    mc('Why `WHERE email <> LOWER(email)` when lowering emails?', ['So only the rows that actually change are updated', 'It is required', 'To skip NULLs only', 'To sort them'], 0,
-      'The rows-changed count then shows how many were fixed.'),
+    mc("The emails are 'ana@x.org', 'Ben@X.org' and NULL. How many rows does `UPDATE members SET email = LOWER(email) WHERE email <> LOWER(email);` change?", ["`3`", "`2`", "`0`", "`1`"], 3,
+      "Only Ben's email differs from its lower-case version. Ana's is already lower case, and for NULL the comparison is unknown, so neither is touched."),
     mc('Which finds missing statuses?', ["`status = 'NULL'`", "`status = ''`", '`status IS NULL`', '`status = NULL`'], 2,
       '= NULL is never true.'),
     mc('When merging duplicates, why move the loans before deleting the members?', ['DELETE needs it', 'It is faster', 'The UPDATE looks up each member\'s name, which needs the duplicate rows to still exist', 'Order doesn\'t matter'], 2,

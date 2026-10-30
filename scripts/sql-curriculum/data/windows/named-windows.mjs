@@ -77,8 +77,8 @@ export default makeTopic({
   questions: [
     mc('Where does the WINDOW clause go?', ['After ORDER BY', 'After HAVING, before ORDER BY', 'Before FROM', 'Inside OVER'], 1,
       'Then OVER w uses it.'),
-    mc('Why name a window?', ['To allow WHERE', 'To sort the result', 'It is faster', 'To write the same window once for several functions'], 3,
-      'Less repetition, fewer mistakes.'),
+    mc("With `WINDOW w AS (ORDER BY x)` and x values 1, 2 and 4, what do `SUM(x) OVER w` and `MAX(x) OVER w` give on the row where x is 2?", ["`3` and `2`", "`7` and `4`", "`2` and `2`", "`3` and `4`"], 0,
+      "Both functions share the window w. With ORDER BY, the frame runs from the first row to the current one, so on x = 2 it covers 1 and 2: sum 3, max 2."),
     mc('How do you add a frame to a named window w?', ['You can\'t', 'OVER w ROWS …', 'WINDOW w ROWS …', 'OVER (w ROWS BETWEEN …)'], 3,
       'The named window itself must not have a frame then.'),
     mc('Where does FILTER go in `COUNT(*) FILTER (WHERE points >= 40) OVER w`?', ['In the WINDOW clause', 'In WHERE', 'Between the aggregate and OVER', 'After OVER'], 2,

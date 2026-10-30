@@ -58,8 +58,8 @@ const staffDirectory = makeProject('easy', {
   questions: [
     mc('Why does a view suit the directory?', ['It is faster than a table', 'It can be updated', 'It runs its query each time, so it always shows the current staff', 'It copies the staff table'], 2,
       'Nobody needs to rebuild it when someone joins.'),
-    mc('Why LEFT JOIN for the manager\'s name?', ['So the person with no manager still appears', 'To remove duplicates', 'A self-join needs it', 'To sort'], 0,
-      'An inner join would drop the top of the tree.'),
+    mc("In `SELECT s.name, m.name FROM staff s JOIN staff m ON s.manager_id = m.id`, what happens to the head, whose manager_id is NULL?", ["They are missing from the result", "They show with a NULL manager", "They show as their own manager", "An error"], 0,
+      "No staff row has an id equal to NULL, so the plain JOIN drops the head. `LEFT JOIN staff m` keeps them, with NULL for the manager."),
     mc('What does `julianday(\'2026-10-24\') - julianday(hired)` give?', ['A date', 'Years', 'Months', 'The number of days between the dates'], 3,
       'Divide by 365.25 for years.'),
     mc('How does the levels query find the second level?', ['GROUP BY manager_id', 'ORDER BY level', 'It joins staff whose manager_id is a first-level id', 'WHERE level = 2'], 2,
@@ -129,8 +129,8 @@ const productCatalogue = makeProject('medium', {
       'Sorting first sets the order.'),
     qShort("What does `json('true')` turn the text 'true' into? (one word)", 'true',
       'A JSON true, rather than the text "true".'),
-    mc("Why `COALESCE(details, '{}')` in Restock flags?", ['json_set on NULL gives NULL, so start from an empty object instead', 'To remove details', 'To sort', 'It is needed by UPDATE'], 0,
-      'The gift card has no details.'),
+    mc("What does `json_set(NULL, '$.restock', 1)` give?", ["`'{\"restock\":1}'`", "`'{}'`", "An error", "`NULL`"], 3,
+      "json_set changes the JSON it is given, and NULL gives NULL. `json_set(COALESCE(details, '{}'), '$.restock', 1)` starts from an empty object instead."),
   ],
 })
 
@@ -184,8 +184,8 @@ const salesCalendar = makeProject('hard', {
     }),
   ],
   questions: [
-    mc('Why does the report start from a calendar CTE?', ['So days with no sales still get a row', 'To sort the dates', 'To make it faster', 'Views need it'], 0,
-      'GROUP BY on sales alone skips quiet days.'),
+    mc("What does `WITH RECURSIVE d(day) AS (SELECT '2026-10-01' UNION ALL SELECT date(day, '+1 day') FROM d WHERE day < '2026-10-07') SELECT COUNT(*) FROM d` give?", ["`6`", "`7`", "`8`", "It never stops"], 1,
+      "It starts on October 1 and adds a day while the last day is before the 7th, so the 7th is the last row added: 7 days. That full list is what the sales are joined onto."),
     mc('Can a view hold a recursive CTE and a window function?', ['Yes, any SELECT can be a view', 'Only one of them', 'Only without GROUP BY', 'No'], 0,
       'The view runs it all each time.'),
     mc('Why LEFT JOIN sales to staff in the weekend table?', ['It is needed by FILTER', 'To sort by name', 'To include the self-checkout', 'So staff with no sales still appear, with 0'], 3,

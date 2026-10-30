@@ -325,54 +325,54 @@
             "explanation": "`INSERT INTO t (a, b) VALUES (1, 2);`"
           },
           {
-            "id": "insert_rows-q-rfpo6k",
+            "id": "insert_rows-q-1ta59dp",
             "type": "mcq",
-            "prompt": "Why name the columns in an INSERT?",
+            "prompt": "`members` has the columns id, name, email and joined. What does `INSERT INTO members VALUES ('Ana', 'ana@x.org', '2026-10-01');` do?",
             "choices": [
               {
                 "id": "a",
-                "label": "So it keeps working if the table gains columns, and the values go where you mean"
+                "label": "Adds Ana, filling in the id"
               },
               {
                 "id": "b",
-                "label": "It is faster"
+                "label": "Fails: the table has 4 columns but 3 values were supplied"
               },
               {
                 "id": "c",
-                "label": "SQLite requires it"
+                "label": "Adds Ana with joined NULL"
               },
               {
                 "id": "d",
-                "label": "To sort the rows"
-              }
-            ],
-            "correctChoiceId": "a",
-            "explanation": "Without names, values are matched to columns by position."
-          },
-          {
-            "id": "insert_rows-q-cq9zh7",
-            "type": "mcq",
-            "prompt": "What does the result **Done: 1 row changed.** mean?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Nothing happened"
-              },
-              {
-                "id": "b",
-                "label": "One row was added (or changed)"
-              },
-              {
-                "id": "c",
-                "label": "An error"
-              },
-              {
-                "id": "d",
-                "label": "One column was added"
+                "label": "Adds a row with 'Ana' as the id"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "Statements that change data report how many rows they changed."
+            "explanation": "Without a column list, VALUES must give every column, in order. Naming the columns, `(name, email, joined)`, lets SQLite fill in the id."
+          },
+          {
+            "id": "insert_rows-q-1cko512",
+            "type": "mcq",
+            "prompt": "`email` is UNIQUE, and Ana has no email (NULL). Can Ben also be added with a NULL email?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No: UNIQUE constraint failed"
+              },
+              {
+                "id": "b",
+                "label": "Only if Ana is removed first"
+              },
+              {
+                "id": "c",
+                "label": "Yes: NULLs never count as equal"
+              },
+              {
+                "id": "d",
+                "label": "Only with INSERT OR IGNORE"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "UNIQUE stops two equal values, but NULL isn't equal to anything, even another NULL, so many rows can have no email."
           },
           {
             "id": "insert_rows-q-17juqj0",
@@ -897,29 +897,29 @@
             "explanation": "The two lists must have the same number of columns."
           },
           {
-            "id": "insert_many-q-1w8by57",
+            "id": "insert_many-q-1bp4dx4",
             "type": "mcq",
-            "prompt": "Why DISTINCT in the overdue-fines INSERT?",
+            "prompt": "`fines.member_id` is UNIQUE, and member 3 has two overdue loans. What does `INSERT INTO fines (member_id) SELECT member_id FROM loans WHERE due < '2026-10-01'` do?",
             "choices": [
               {
                 "id": "a",
-                "label": "A member with two overdue loans would otherwise get two rows, and member_id must be unique in fines"
+                "label": "Adds one fine for member 3"
               },
               {
                 "id": "b",
-                "label": "To sort"
+                "label": "Adds two fines for member 3"
               },
               {
                 "id": "c",
-                "label": "To skip NULLs"
+                "label": "Adds nothing, without an error"
               },
               {
                 "id": "d",
-                "label": "It is required"
+                "label": "Fails: UNIQUE constraint failed: fines.member_id"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "fines has one row per member."
+            "correctChoiceId": "d",
+            "explanation": "The SELECT gives member 3 twice, so the second row clashes and the whole INSERT stops. `SELECT DISTINCT member_id` gives each member once."
           },
           {
             "id": "insert_many-q-mwxmr6",
@@ -1374,29 +1374,29 @@
             "explanation": "In SQLite, IS and IS NOT treat NULL as a normal value."
           },
           {
-            "id": "update_rows-q-tpu5tx",
+            "id": "update_rows-q-rt6kpe",
             "type": "mcq",
-            "prompt": "What does **Done: 3 rows changed.** tell you after an UPDATE?",
+            "prompt": "Three loans have no returned date. How many rows does `UPDATE loans SET returned = '2026-10-24' WHERE returned = NULL;` change?",
             "choices": [
               {
                 "id": "a",
-                "label": "It failed"
+                "label": "`0`"
               },
               {
                 "id": "b",
-                "label": "Three columns changed"
+                "label": "`3`"
               },
               {
                 "id": "c",
-                "label": "How many rows the WHERE matched"
+                "label": "Every row"
               },
               {
                 "id": "d",
-                "label": "The table has 3 rows"
+                "label": "`1`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "A quick check that the WHERE did what you expected."
+            "correctChoiceId": "a",
+            "explanation": "`= NULL` is never true, so no rows match and nothing changes. `WHERE returned IS NULL` finds the three loans."
           },
           {
             "id": "update_rows-q-1x9q5sz",
@@ -2953,29 +2953,29 @@
             "explanation": "For example, members with no loans."
           },
           {
-            "id": "delete_rows-q-1k72h5w",
+            "id": "delete_rows-q-1l1qthz",
             "type": "mcq",
-            "prompt": "In this app, what happens to the data after a Run with DELETE?",
+            "prompt": "loans has the ids 1 to 5. Which ids are left after `DELETE FROM loans WHERE id > 3 OR id = 1;`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Each Run starts from a fresh copy, so nothing is lost"
+                "label": "1, 4 and 5"
               },
               {
                 "id": "b",
-                "label": "It is gone for good"
+                "label": "2 and 3"
               },
               {
                 "id": "c",
-                "label": "The next stage starts empty"
+                "label": "1, 2 and 3"
               },
               {
                 "id": "d",
-                "label": "It is backed up to a file"
+                "label": "4 and 5"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "In a real database, though, a DELETE is permanent."
+            "correctChoiceId": "b",
+            "explanation": "DELETE removes every row the WHERE matches: 4 and 5 (over 3) and 1. That leaves 2 and 3."
           }
         ]
       },
@@ -4877,29 +4877,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "changes_across_tables-q-1ahsx2t",
+            "id": "changes_across_tables-q-xdz01d",
             "type": "mcq",
-            "prompt": "Why delete a member's loans and fines before the member?",
+            "prompt": "members has 6 rows. What does `SELECT COUNT(*) FROM members` give after `BEGIN; DELETE FROM members; ROLLBACK;`?",
             "choices": [
               {
                 "id": "a",
-                "label": "To sort them"
+                "label": "`0`"
               },
               {
                 "id": "b",
-                "label": "So no rows are left pointing to a member who no longer exists"
+                "label": "`NULL`"
               },
               {
                 "id": "c",
-                "label": "SQLite requires that order"
+                "label": "An error"
               },
               {
                 "id": "d",
-                "label": "It is faster"
+                "label": "`6`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Children first, then the parent they point to."
+            "correctChoiceId": "d",
+            "explanation": "ROLLBACK undoes everything since BEGIN, so the delete never happened and all 6 members are still there."
           },
           {
             "id": "changes_across_tables-q-f8olgf",
@@ -5062,29 +5062,29 @@
             "explanation": "COALESCE uses today for loans not yet returned."
           },
           {
-            "id": "changes_across_tables-q-o180wc",
+            "id": "changes_across_tables-q-1gfe2ev",
             "type": "mcq",
-            "prompt": "Why delete all fines before inserting the recalculated ones?",
+            "prompt": "Member 3 owes 2.00. What does member 3 owe after `INSERT INTO fines (member_id, amount) VALUES (3, 5.00) ON CONFLICT (member_id) DO UPDATE SET amount = amount + excluded.amount;`?",
             "choices": [
               {
                 "id": "a",
-                "label": "To save space"
+                "label": "`2.0`"
               },
               {
                 "id": "b",
-                "label": "Otherwise the new rows would clash with the old ones, or be added to them"
+                "label": "`7.0`"
               },
               {
                 "id": "c",
-                "label": "DELETE is required before INSERT"
+                "label": "`5.0`"
               },
               {
                 "id": "d",
-                "label": "To sort them"
+                "label": "Two rows: 2.0 and 5.0"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "Starting from empty makes the new fines the whole truth."
+            "explanation": "Member 3 already has a row, so the conflict runs the UPDATE: the old amount plus `excluded.amount`, the 5.00 that was being inserted. 2.00 + 5.00 = 7.0."
           },
           {
             "id": "changes_across_tables-q-18y02fm",
@@ -6025,29 +6025,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_data_clean_up-q-170xpor",
+            "id": "proj_data_clean_up-q-jthbip",
             "type": "mcq",
-            "prompt": "Why `WHERE email <> LOWER(email)` when lowering emails?",
+            "prompt": "The emails are 'ana@x.org', 'Ben@X.org' and NULL. How many rows does `UPDATE members SET email = LOWER(email) WHERE email <> LOWER(email);` change?",
             "choices": [
               {
                 "id": "a",
-                "label": "So only the rows that actually change are updated"
+                "label": "`3`"
               },
               {
                 "id": "b",
-                "label": "It is required"
+                "label": "`2`"
               },
               {
                 "id": "c",
-                "label": "To skip NULLs only"
+                "label": "`0`"
               },
               {
                 "id": "d",
-                "label": "To sort them"
+                "label": "`1`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "The rows-changed count then shows how many were fixed."
+            "correctChoiceId": "d",
+            "explanation": "Only Ben's email differs from its lower-case version. Ana's is already lower case, and for NULL the comparison is unknown, so neither is touched."
           },
           {
             "id": "proj_data_clean_up-q-j9sus5",

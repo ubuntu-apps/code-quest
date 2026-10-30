@@ -2628,29 +2628,29 @@
             "explanation": "Only when foreign keys are on, of course."
           },
           {
-            "id": "foreign_keys-q-123vown",
+            "id": "foreign_keys-q-yhe91p",
             "type": "mcq",
-            "prompt": "Why might tickets cascade but events set null when their parent goes?",
+            "prompt": "events.room_id has `ON DELETE SET NULL`, foreign keys are on, and room 2 has 3 events. No event had a NULL room before. What does `SELECT COUNT(*) FROM events WHERE room_id IS NULL` give after `DELETE FROM rooms WHERE id = 2;`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Cascade is faster"
+                "label": "`0`"
               },
               {
                 "id": "b",
-                "label": "It is required"
+                "label": "`3`"
               },
               {
                 "id": "c",
-                "label": "A ticket means nothing without its event, but an event can get a new room"
+                "label": "An error"
               },
               {
                 "id": "d",
-                "label": "Set null is the default"
+                "label": "`NULL`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Choose the rule that matches what the data means."
+            "correctChoiceId": "b",
+            "explanation": "SET NULL keeps the three events but empties their room_id, so all three now have a NULL room. With CASCADE they would have been deleted instead."
           },
           {
             "id": "foreign_keys-q-1n4vvrj",
@@ -3611,29 +3611,29 @@
             "explanation": "Write CREATE TABLE yourself when you need them."
           },
           {
-            "id": "tables_from_queries-q-kn2p99",
+            "id": "tables_from_queries-q-1ghotvx",
             "type": "mcq",
-            "prompt": "Why name calculated columns with AS in CREATE TABLE … AS SELECT?",
+            "prompt": "What are the columns of the table made by `CREATE TABLE t AS SELECT name, price * 2 FROM products;`?",
             "choices": [
               {
                 "id": "a",
-                "label": "To sort them"
+                "label": "`name` and `price`"
               },
               {
                 "id": "b",
-                "label": "They become the new table's column names"
+                "label": "`name` and `price * 2`"
               },
               {
                 "id": "c",
-                "label": "It is required"
+                "label": "`name` and `column2`"
               },
               {
                 "id": "d",
-                "label": "It is faster"
+                "label": "None: it fails without a name"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "Otherwise a column could be called SUM(price)."
+            "explanation": "The new table takes the headings of the query, so the calculated column is called `price * 2`, which is awkward to use. `price * 2 AS double_price` gives it a proper name."
           },
           {
             "id": "tables_from_queries-q-dzocfp",
@@ -3746,29 +3746,29 @@
             "explanation": "Later duplicates are skipped."
           },
           {
-            "id": "tables_from_queries-q-1avqbhi",
+            "id": "tables_from_queries-q-c05myu",
             "type": "mcq",
-            "prompt": "In the archive challenge, why use the same WHERE twice?",
+            "prompt": "contacts has 10 rows: 4 in 'Leeds', 2 with a NULL city and 4 elsewhere. How many rows does `INSERT INTO archive SELECT * FROM contacts WHERE city <> 'Leeds'` copy?",
             "choices": [
               {
                 "id": "a",
-                "label": "For speed"
+                "label": "`6`"
               },
               {
                 "id": "b",
-                "label": "So exactly the copied rows are deleted"
+                "label": "`8`"
               },
               {
                 "id": "c",
-                "label": "It is required"
+                "label": "`4`"
               },
               {
                 "id": "d",
-                "label": "To sort"
+                "label": "`2`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Copy, then delete the same rows."
+            "correctChoiceId": "c",
+            "explanation": "The NULL cities don't count as \"not Leeds\": the comparison is unknown. So 4 rows are copied, and a DELETE with the same WHERE removes exactly those 4."
           },
           {
             "id": "tables_from_queries-q-1fgphge",

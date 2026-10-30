@@ -288,29 +288,29 @@
             "explanation": "All rows minus the rows with a score leaves the missing ones."
           },
           {
-            "id": "count_rows-q-1wjaidh",
+            "id": "count_rows-q-1te9o0f",
             "type": "mcq",
-            "prompt": "Why name a count with AS?",
+            "prompt": "The payments are `'card'`, `'cash'`, NULL, `'card'` and `'Card'`. What does `SELECT COUNT(*) FROM sales WHERE payment = 'card'` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "It's required"
+                "label": "`2`"
               },
               {
                 "id": "b",
-                "label": "To change the count"
+                "label": "`3`"
               },
               {
                 "id": "c",
-                "label": "So the heading says what it is, instead of COUNT(*)"
+                "label": "`4`"
               },
               {
                 "id": "d",
-                "label": "To make it faster"
+                "label": "`5`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Like any calculated column, it is headed by its expression unless you name it."
+            "correctChoiceId": "a",
+            "explanation": "Only the two rows that are exactly `'card'` match. Text comparison is case-sensitive, so `'Card'` doesn't, and NULL never equals anything."
           },
           {
             "id": "count_rows-q-1xcxtr3",
@@ -3557,29 +3557,29 @@
             "explanation": "AVG always gives a decimal result."
           },
           {
-            "id": "careful_totals-q-ja6yna",
+            "id": "careful_totals-q-1d73w5r",
             "type": "mcq",
-            "prompt": "1 latte at 4.00 and 9 cookies at 2.00. What is the price paid per item?",
+            "prompt": "The lines are 1 latte at 4.00 and 9 cookies at 2.00. What does `SUM(quantity * unit_price) / SUM(quantity)` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "`2.20`"
+                "label": "`3.0`"
               },
               {
                 "id": "b",
-                "label": "`3.00`"
+                "label": "`2.2`"
               },
               {
                 "id": "c",
-                "label": "`2.00`"
+                "label": "`2.0`"
               },
               {
                 "id": "d",
-                "label": "`4.00`"
+                "label": "`22.0`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Takings 22.00 divided by 10 items is 2.20; AVG(unit_price) would say 3.00."
+            "correctChoiceId": "b",
+            "explanation": "It is the price paid per item: 22.00 of takings over 10 items is 2.2. `AVG(unit_price)` would give 3.0, the plain average of the two prices."
           },
           {
             "id": "careful_totals-q-1cuzpcm",
@@ -3657,29 +3657,29 @@
             "explanation": "Without ELSE, non-tea rows are NULL; if all are, the sum is NULL."
           },
           {
-            "id": "careful_totals-q-x0it2d",
+            "id": "careful_totals-q-r1ihu1",
             "type": "mcq",
-            "prompt": "What should you do before writing a total?",
+            "prompt": "What does `AVG(score)` give for the scores 80, NULL and 85?",
             "choices": [
               {
                 "id": "a",
-                "label": "Add ROUND"
+                "label": "`55.0`"
               },
               {
                 "id": "b",
-                "label": "Use GROUP BY"
+                "label": "`NULL`"
               },
               {
                 "id": "c",
-                "label": "Say in words what it should mean"
+                "label": "`82`"
               },
               {
                 "id": "d",
-                "label": "Use COUNT(*)"
+                "label": "`82.5`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Different totals answer different questions, so decide which question you are answering."
+            "correctChoiceId": "d",
+            "explanation": "AVG skips NULLs, so it averages 80 and 85: 82.5. To count the missing score as 0, you would need `AVG(COALESCE(score, 0))`, which gives 55.0."
           }
         ]
       },
@@ -3980,29 +3980,29 @@
             "explanation": "There are no group totals yet when WHERE runs."
           },
           {
-            "id": "summary_reports-q-9rxj67",
+            "id": "summary_reports-q-1sb84hc",
             "type": "mcq",
-            "prompt": "What is a good way to build a long report?",
+            "prompt": "Cake never sold more than 2 at a time. What does `SELECT product, COUNT(*) FROM sales WHERE quantity > 2 GROUP BY product` show for cake?",
             "choices": [
               {
                 "id": "a",
-                "label": "Step by step: grouping, then totals, then filters and sorting"
+                "label": "A row with `0`"
               },
               {
                 "id": "b",
-                "label": "All at once"
+                "label": "A row with `NULL`"
               },
               {
                 "id": "c",
-                "label": "Starting with LIMIT"
+                "label": "No row for cake at all"
               },
               {
                 "id": "d",
-                "label": "Without GROUP BY"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Checking each step in the sandbox makes mistakes easy to spot."
+            "correctChoiceId": "c",
+            "explanation": "WHERE removes rows before grouping, so cake has no rows left to group and does not appear. A row with 0 needs a different approach, such as `SUM(CASE …)` without the WHERE."
           },
           {
             "id": "summary_reports-q-wnmx0c",
@@ -4598,14 +4598,14 @@
             "explanation": "Every row has a score when the two counts are equal."
           },
           {
-            "id": "proj_exam_board-q-17cbu29",
+            "id": "proj_exam_board-q-16krkao",
             "type": "shortText",
-            "prompt": "A subject averaged 74.0 in autumn and 79.5 in spring. What is the change?",
+            "prompt": "Autumn scores are 70 and 78; spring scores are 79 and 80. What does `AVG(CASE WHEN term = 'spring' THEN score END) - AVG(CASE WHEN term = 'autumn' THEN score END)` give?",
             "validation": {
               "mode": "equalsNormalized",
               "expected": "5.5"
             },
-            "explanation": "Spring minus autumn."
+            "explanation": "A CASE with no ELSE gives NULL for the other term, and AVG skips NULLs, so each AVG sees one term: 79.5 − 74.0 = 5.5."
           },
           {
             "id": "proj_exam_board-q-2napaf",
@@ -4884,29 +4884,29 @@
             "explanation": "It tests a group total."
           },
           {
-            "id": "proj_product_review-q-154iqjr",
+            "id": "proj_product_review-q-2ctv8p",
             "type": "mcq",
-            "prompt": "In the decision, a product with 12 items in one store gets…",
+            "prompt": "A product sold 3 items in North and 4 in South. What does `CASE WHEN SUM(quantity) >= 10 THEN 'keep' WHEN COUNT(DISTINCT store) > 1 THEN 'watch' ELSE 'review' END` give for it?",
             "choices": [
               {
                 "id": "a",
-                "label": "`review`"
+                "label": "`'keep'`"
               },
               {
                 "id": "b",
-                "label": "`watch`"
+                "label": "`'review'`"
               },
               {
                 "id": "c",
-                "label": "NULL"
+                "label": "`'watch'`"
               },
               {
                 "id": "d",
-                "label": "`keep`"
+                "label": "`NULL`"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "The first WHEN (10 or more items) is already true."
+            "correctChoiceId": "c",
+            "explanation": "7 items is under 10, so the first WHEN fails. It sold in 2 stores, so the second WHEN is true: `'watch'`."
           },
           {
             "id": "proj_product_review-q-1ibpeck",
