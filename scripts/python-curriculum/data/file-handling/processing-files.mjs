@@ -122,7 +122,7 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc("What are the three steps of most file processing?", ["Open, close, open", "Read the input, process it, write the result", "Write, read, delete", "Copy, paste, save"], 1),
+    mc("What does `len(set([\"b\\n\", \"a\\n\", \"b\\n\"]))` give?", ["`3`", "`1`", "`2`", "An error"], 2),
     mc("Why process a big file line by line?", ["It sorts the lines", "It is the only way to write", "The whole file never has to fit in memory", "It removes line breaks"], 2),
     mc("Why write the result to a new file instead of the input?", ["If the program fails halfway, the original is still safe", "Python can't write to a file it reads", "New files are faster", "It keeps the encoding"], 0),
     mc("What does `os.replace(temp, name)` do?", ["Copies the text", "Deletes both files", "Renames `name` to `temp`", "Swaps the finished temp file into place in one step"], 3),

@@ -125,7 +125,7 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc("What does CSV stand for?", ["Coded Spreadsheet View", "Comma-separated values", "Compressed string values", "Column sorted values"], 1),
+    mc("What does `next(csv.reader(['a,\"b,c\",d']))` give?", ["`['a', '\"b', 'c\"', 'd']`", "`['a', 'b,c', 'd']`", "`['a,\"b,c\",d']`", "`['a', 'b', 'c', 'd']`"], 1),
     mc("What type is every value that `csv.reader` gives you?", ["`str`", "Whatever type the value looks like", "`bytes`", "`int` or `str`"], 0),
     qShort("Which csv class gives you each row as a dict? (class name)", "DictReader"),
     mc("Which method writes a single row with `csv.writer`?", ["`write`", "`row`", "`append`", "`writerow`"], 3),

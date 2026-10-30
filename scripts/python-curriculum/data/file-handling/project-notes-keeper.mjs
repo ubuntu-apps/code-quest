@@ -84,7 +84,7 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("Why do the notes survive after the program ends?", ["Python remembers them", "They are kept in a file", "They are in a global variable", "They are printed"], 1),
+    mc("What does `notes.txt` contain after this runs, if the file didn't exist before?\n\n```\nfor note in [\"milk\", \"eggs\"]:\n    with open(\"notes.txt\", \"a\") as f:\n        f.write(note + \"\\n\")\n```", ["Only `eggs`", "Two lines: `milk` and `eggs`", "`milkeggs` on one line", "Nothing: `\"a\"` can't create a file"], 1),
     mc("Which mode adds a note without losing the others?", ["`\"w\"`", "`\"r\"`", "`\"a\"`", "`\"x\"`"], 2),
     mc("What should `list_notes` do when `notes.txt` doesn't exist yet?", ["Return an empty list", "Crash with a traceback", "Create a folder", "Return `None`"], 0),
     mc("How does `delete_note` remove a note?", ["Appends a blank line", "Opens the file with `\"x\"`", "Uses `os.remove`", "Reads all the notes, removes one, and writes the rest back with `\"w\"`"], 3),

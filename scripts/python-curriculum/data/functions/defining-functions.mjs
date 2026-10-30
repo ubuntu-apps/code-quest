@@ -123,8 +123,8 @@ export default makeTopic({
     mc("`say_hello` is a function. What does `say_hello` (without brackets) do on its own line?", ["Nothing: it is the function itself, not a call", "Calls the function", "Raises a `SyntaxError`", "Deletes the function"], 0),
     mc("Calling a function before its `def` line has run gives…", ["A `SyntaxError`", "Nothing", "A `TypeError`", "A `NameError`"], 3),
     qShort("A function is called three times and its body prints two lines. How many lines are printed? (a number)", "6"),
-    mc("Which is the best function name?", ["`Function1`", "`print_receipt`", "`x`", "`DoIt`"], 1),
+    mc("How many times is `Hi` printed?\n\n```\ndef greet():\n    print(\"Hi\")\n\ngreet\ngreet()\ngreet()\n```", ["`3`", "`1`", "`2`", "`0`"], 2),
     mc("Can a function call another function?", ["No", "Only built-in ones", "Yes", "Only if they have the same name"], 2),
-    mc("Why turn repeated code into a function?", ["It runs twice as fast", "You change it in one place and every call follows", "Python requires it", "It hides the code"], 1),
+    mc("What does this print?\n\n```\ndef line(n):\n    return \"-\" * n\n\nprint(line(3) + line(2))\n```", ["`---`", "`--- --`", "`-----`", "`None`"], 2),
   ],
 })

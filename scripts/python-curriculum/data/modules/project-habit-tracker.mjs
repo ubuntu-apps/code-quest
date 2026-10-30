@@ -93,9 +93,9 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why store dates as `2025-03-13`?", ["It is shorter", "It is the standard form that `fromisoformat` reads and `isoformat` writes", "Python can't store other forms", "It hides the year"], 1),
+    mc("What does `date(2025, 3, 9).isoformat()` give?", ["`\"2025-03-09\"`", "`\"2025-3-9\"`", "`\"09/03/2025\"`", "`date(2025, 3, 9)`"], 0),
     mc("Why does every function take `today` as a parameter?", ["It is faster", "Dates need it", "So the checks can use any date instead of the real one", "To change the clock"], 2),
-    mc("Today isn't logged yet, but yesterday and the day before are. What is the current streak?", ["2", "0", "1", "3"], 0),
+    mc("What is `date(2025, 3, 1) - timedelta(days=1)`?", ["`2025-03-00`", "`2025-02-29`", "`2025-02-28`", "An error"], 2),
     mc("How do you find the Monday of `today`'s week?", ["`today.monday()`", "`today - timedelta(days=7)`", "`date(today.year, 1, 1)`", "`today - timedelta(days=today.weekday())`"], 3),
     qShort("`date(2025, 3, 13) - date(2025, 3, 12)` equals `timedelta(days=...)`? (a number)", "1"),
     mc("Why turn `days` into a set?", ["Repeated dates count once, and checking `day in done` is fast", "Sets sort dates", "Sets can be saved to files", "It is required by `datetime`"], 0),

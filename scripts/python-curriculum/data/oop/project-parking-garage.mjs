@@ -90,7 +90,7 @@ export default makeProject("medium", {
     mc("How does `Van` add its minimum charge?", ["It copies `Vehicle.fee`", "It changes `rate` to 10", "It overrides `fee` and builds on `super().fee(hours)`", "The garage checks for vans"], 2),
     mc("Why doesn't `Garage.leave` need to know which kind of vehicle it has?", ["Each vehicle works out its own fee: it just calls `vehicle.fee(...)`", "All vehicles pay the same", "It checks `type()`", "It doesn't charge vans"], 0),
     mc("What does `math.ceil(2.25)` give?", ["`2`", "`2.25`", "`2.5`", "`3`"], 3),
-    qShort("How much does a car (2.5 an hour) pay for 0.25 hours?", "2.5"),
+    mc("What does this print?\n\n```\nclass Vehicle:\n    rate = 1.0\n    def fee(self, hours):\n        return self.rate * hours\n\nclass Car(Vehicle):\n    rate = 2.5\n\nprint(Car().fee(2))\n```", ["`2.0`", "`5.0`", "`2.5`", "An `AttributeError`"], 1),
     mc("What is the garage holding vehicles an example of?", ["Inheritance", "Composition", "A data class", "Duck typing only"], 1),
   ],
 })

@@ -134,10 +134,10 @@ export default {
     "A list is the simplest general collection; reach for others when a need appears.",
   ],
   proj_grade_book: [
-    "A dict maps each name to its score, so a score can be looked up by name.",
+    "Looping over a dict gives its keys, and `key=grades.get` compares them by their scores, so the name with the lowest score comes back.",
     "`.values()` gives just the values, here the scores.",
     "`key=grades.get` compares by score but returns the name.",
-    "`B` is for 80 or more (and under 90), so 80 is just a B.",
+    "Only the first branch whose condition is true runs. 80 >= 80 is true, so `B` is printed and the rest is skipped.",
     "`len` of a dict counts its keys.",
     "Sorting the names by their scores, with `reverse=True`, puts the highest first.",
   ],

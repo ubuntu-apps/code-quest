@@ -132,7 +132,7 @@ export default makeTopic({
     mc("What does `e.filename` give?", ["The path involved in the error", "The error message", "The line number", "The file's text"], 0),
     mc("Opening a folder with `open()` raises…", ["`FileNotFoundError`", "`PermissionError`", "`TypeError`", "`IsADirectoryError`"], 3),
     qShort("Which mode raises `FileExistsError` if the file is already there? (one letter)", "x"),
-    mc("Why is try-and-catch safer than checking `os.path.exists` first?", ["It is shorter", "The file could change between the check and the open, and it covers every problem", "Checking is not allowed", "It is faster"], 1),
+    mc("`notes.txt` doesn't exist. What does this print?\n\n```\ntry:\n    open(\"notes.txt\").read()\nexcept FileNotFoundError as e:\n    print(e.filename)\n```", ["`notes.txt`", "`None`", "A traceback", "`FileNotFoundError`"], 0),
     mc("When should you catch the broad `OSError`?", ["When every file problem should be handled the same way", "Always", "Never", "Only for folders"], 0),
     mc("What does `errors=\"replace\"` do when reading?", ["Deletes bad lines", "Raises a clearer error", "Swaps unreadable bytes for �", "Converts the file"], 2),
     mc("`UnicodeDecodeError` is a kind of…", ["`OSError`", "`KeyError`", "`TypeError`", "`ValueError`"], 3),

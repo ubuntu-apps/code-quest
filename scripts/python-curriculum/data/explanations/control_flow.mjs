@@ -38,7 +38,7 @@ export default {
     "A block can't be empty, so `pass` is a placeholder that does nothing.",
   ],
   match_case: [
-    "Structural pattern matching, `match` and `case`, arrived in Python 3.10.",
+    "`\"stop\" | \"halt\"` matches either word, so the second case runs.",
     "`_` is the wildcard pattern: it matches any value, so it works as the default case.",
     "`|` in a pattern means \"or\", so the case matches either value.",
     "Unlike some languages, a `match` with no matching case simply does nothing.",
@@ -55,7 +55,7 @@ export default {
     "`n` goes 0, 1, 2, 3, and when it reaches 3 the condition `n < 3` is false, so the body ran 3 times.",
     "The condition is checked first, and `False` is never true, so the body is skipped.",
     "`while` repeats until something happens, like a correct guess, however many rounds that takes.",
-    "Code runs with a 10-second limit, so a runaway loop is stopped instead of freezing the page.",
+    "`n` goes 1, 3, 9, 27. The check runs before each round, so the loop stops once `n` is 27, which is no longer below 20.",
     "`x` goes 10, 7, 4, 1, -2, and the loop stops once it is no longer above 0.",
     "`i` never changes, so `i < 5` stays true and the loop never ends.",
     "Off-by-one errors usually come from `<` vs `<=` or from starting at 0 vs 1.",
@@ -110,7 +110,7 @@ export default {
   ],
   loop_patterns: [
     "Adding to 0 doesn't change a sum, so 0 is the right starting value.",
-    "If every number were negative, a start of 0 would wrongly stay the largest.",
+    "No number beats the starting 0, so the answer is wrong when every number is negative. Start with `largest = nums[0]` instead.",
     "The average is the total divided by how many items there are.",
     "`enumerate` gives each item together with its index, starting at 0.",
     "The first loop works out the average; the second compares each score with it.",
@@ -120,7 +120,7 @@ export default {
     "`.split()` gives a list of strings; convert each with `int()` to do maths.",
   ],
   proj_guess_the_number: [
-    "The `while` condition is checked before the first round, so `guess` must already exist.",
+    "The condition is checked before the first round, so `guess` must already exist. Read the first guess before the loop.",
     "A guess below the secret number is too low.",
     "The condition depends on `guess`, so without a new guess it never becomes false.",
     "`range(1, 6)` gives 1 to 5, which is five tries.",
@@ -137,8 +137,8 @@ export default {
   ],
   proj_prime_finder: [
     "A remainder of 0 means `d` goes into `n` exactly.",
-    "By definition a prime has exactly two divisors, 1 and itself, so 1 isn't prime.",
-    "Divisors come in pairs, `d` and `n // d`, and one of each pair is at most the square root.",
+    "3 is the first number that divides 15 evenly, and `break` ends the loop straight after printing it.",
+    "`d * d <= n` is true exactly while `d` is no bigger than the square root of `n`, without needing `math.sqrt`.",
     "The `else` runs only when no `break` happened, which means no divisor was found.",
     "7 × 13 is 91, so it divides exactly and 91 isn't prime.",
     "`range` stops before its stop value, so `+ 1` is needed to include the limit.",

@@ -140,7 +140,7 @@ export default makeTopic({
     mc("What is `__name__` when a file is run directly?", ["The file name", "`\"__main__\"`", "`None`", "`\"main.py\"`"], 1),
     mc("What is `__name__` inside `greetings.py` when another file imports it?", ["`\"__main__\"`", "`\"greetings.py\"`", "`\"greetings\"`", "`\"import\"`"], 2),
     mc("What does `if __name__ == \"__main__\":` let a file do?", ["Run some code only when it is the program, not when imported", "Import itself", "Run faster", "Hide its functions"], 0),
-    mc("Why put a program's steps in a `main()` function?", ["Python requires it", "It runs twice", "It hides errors", "Its variables stay local and it is easy to call or test"], 3),
+    mc("`helpers.py` contains `def main(): print(\"start\")` and `if __name__ == \"__main__\": main()`. What does `import helpers` print?", ["`start`", "`__main__`", "Nothing", "An error"], 2),
     mc("A module without a guard calls `input()` at the top level. What happens when it is imported?", ["Nothing", "It asks for input during the import", "The input is skipped", "It is imported twice"], 1),
     mc("What is in `sys.argv` for `python add.py 3 4`?", ["`[\"add.py\", \"3\", \"4\"]`", "`[3, 4]`", "`\"3 4\"`", "`[\"3\", \"4\", \"add.py\"]`"], 0),
     mc("After `import greetings`, which part of a guarded `greetings.py` runs?", ["Only the guarded part", "Nothing at all", "Everything", "Everything except the guarded part"], 3),

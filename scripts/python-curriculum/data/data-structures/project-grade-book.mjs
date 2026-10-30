@@ -73,10 +73,10 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("Why keep the scores in a dict rather than a list?", ["Dicts are always sorted", "Each score is found by the student's name", "Lists can't hold numbers", "Dicts use less memory"], 1),
+    mc("With `grades = {\"Ana\": 91, \"Ben\": 78}`, what is `min(grades, key=grades.get)`?", ["`78`", "`'Ben'`", "`'Ana'`", "`('Ben', 78)`"], 1),
     mc("What does `grades.values()` give?", ["The scores", "The names", "The `(name, score)` pairs", "The number of students"], 0),
     mc("What does `max(grades, key=grades.get)` return?", ["The highest score", "The last name", "A sorted list", "The name with the highest score"], 3),
-    mc("A score of 80 gets which letter here?", ["`A`", "`C`", "`B`", "`F`"], 2),
+    mc("What does this print?\n\n```\nscore = 80\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelif score >= 70:\n    print(\"C\")\n```", ["`A`", "`C`", "`B` and then `C`", "`B`"], 3),
     qShort("What is `len({\"Ana\": 91, \"Ben\": 78})`? (a number)", "2"),
     mc("Which gives the names from the best score to the worst?", ["`sorted(grades)`", "`sorted(grades, key=grades.get, reverse=True)`", "`grades.sort()`", "`reversed(grades)`"], 1),
   ],

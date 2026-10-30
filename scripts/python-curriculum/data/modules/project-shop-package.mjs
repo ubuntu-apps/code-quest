@@ -91,6 +91,6 @@ export default makeProject("hard", {
     mc("Which module should import nothing from the rest of the shop?", ["`prices`", "`cart`", "`receipt`", "`main`"], 0),
     mc("Why does `add` call `price_of(item)` before changing the cart?", ["To print the price", "To round the total", "To make the cart a dict", "So an unknown item raises an error and the cart stays unchanged"], 3),
     mc("Which file brings the package's most useful names together?", ["`main.py`", "`prices.py`", "`shop.py`", "`__init__.py`"], 3),
-    mc("Why is `main()` behind a main guard?", ["To make it faster", "So importing `main.py` doesn't start a shopping session", "Because `shop` needs it", "To hide the receipt"], 1),
+    mc("`main.py` ends with a bare `main()` call and no guard. What happens when a test runs `import main`?", ["Nothing until the test calls `main()`", "An `ImportError`", "A shopping session starts during the import", "Python skips the call"], 2),
   ],
 })

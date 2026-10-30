@@ -117,8 +117,8 @@ export default makeTopic({
     mc("What happens if the user types `abc` for `int(input(\"? \"))`?", ["It returns 0","A `ValueError` stops the program","It returns `\"abc\"`","Python asks again by itself"], 1),
     mc("Which turns `\" Yes \"` into `\"yes\"`?", ["`.upper()`", "`.split()`", "`.title()`", "`.strip().lower()`"], 3),
     mc("What does the text inside `input(\"Age? \")` do?", ["It is the default answer", "It is shown to the user as a prompt", "It is the variable name", "Nothing"], 1),
-    mc("In CodeQuest's sandbox, where do the answers for `input()` come from?", ["The Input box, one line per `input()` call","A pop-up window","The code editor","They are random"], 0),
-    mc("Which is the usual order of a small program?", ["Print, read, process", "Read the input, process it, print the result", "Process, print, read", "Read, print, read"], 1),
+    mc("The user types `3` and then `4` for `a = input()` and `b = input()`. What does `print(a + b)` show?", ["`7`", "`34`", "`3 4`", "A `TypeError`"], 1),
+    mc("The user types ` 7 ` with spaces around it. What is `int(input())`?", ["A `ValueError`", "`\" 7 \"`", "`7`", "`0`"], 2),
     mc("The user types `2.5`. What does `int(input())` do?", ["Gives `2`","Gives `3`","Raises a `ValueError`","Gives `2.5`"], 2),
   ],
 })

@@ -1865,29 +1865,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "match_case-q-e41u2m",
+            "id": "match_case-q-traavw",
             "type": "mcq",
-            "prompt": "Which Python version added `match`?",
+            "prompt": "What does this print?\n\n```\ncommand = \"halt\"\nmatch command:\n    case \"go\":\n        print(\"Going\")\n    case \"stop\" | \"halt\":\n        print(\"Stopping\")\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "`3.10`"
+                "label": "`Going`"
               },
               {
                 "id": "b",
-                "label": "`3.0`"
+                "label": "`Stopping`"
               },
               {
                 "id": "c",
-                "label": "`2.7`"
+                "label": "Both lines"
               },
               {
                 "id": "d",
-                "label": "`3.6`"
+                "label": "Nothing"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Structural pattern matching, `match` and `case`, arrived in Python 3.10."
+            "correctChoiceId": "b",
+            "explanation": "`\"stop\" | \"halt\"` matches either word, so the second case runs."
           },
           {
             "id": "match_case-q-19nspcf",
@@ -2489,29 +2489,29 @@
             "explanation": "`while` repeats until something happens, like a correct guess, however many rounds that takes."
           },
           {
-            "id": "while_loops-q-qxmbjf",
+            "id": "while_loops-q-1htk15",
             "type": "mcq",
-            "prompt": "What does CodeQuest do with a loop that never ends?",
+            "prompt": "What does this print?\n\n```\nn = 1\nwhile n < 20:\n    n = n * 3\nprint(n)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Stops it after 10 seconds"
+                "label": "`9`"
               },
               {
                 "id": "b",
-                "label": "Freezes the browser"
+                "label": "`20`"
               },
               {
                 "id": "c",
-                "label": "Deletes the code"
+                "label": "`81`"
               },
               {
                 "id": "d",
-                "label": "Runs it on a server"
+                "label": "`27`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Code runs with a 10-second limit, so a runaway loop is stopped instead of freezing the page."
+            "correctChoiceId": "d",
+            "explanation": "`n` goes 1, 3, 9, 27. The check runs before each round, so the loop stops once `n` is 27, which is no longer below 20."
           },
           {
             "id": "while_loops-q-1fqnzvf",
@@ -5034,29 +5034,29 @@
             "explanation": "Adding to 0 doesn't change a sum, so 0 is the right starting value."
           },
           {
-            "id": "loop_patterns-q-smqmaj",
+            "id": "loop_patterns-q-142evjs",
             "type": "mcq",
-            "prompt": "Why start the largest-so-far at the first item rather than at 0?",
+            "prompt": "What does this print?\n\n```\nnums = [-4, -9, -2]\nlargest = 0\nfor n in nums:\n    if n > largest:\n        largest = n\nprint(largest)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is faster"
+                "label": "`-2`"
               },
               {
                 "id": "b",
-                "label": "So it works when every number is negative"
+                "label": "`0`"
               },
               {
                 "id": "c",
-                "label": "Python requires it"
+                "label": "`-9`"
               },
               {
                 "id": "d",
-                "label": "0 is not a number"
+                "label": "`-4`"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "If every number were negative, a start of 0 would wrongly stay the largest."
+            "explanation": "No number beats the starting 0, so the answer is wrong when every number is negative. Start with `largest = nums[0]` instead."
           },
           {
             "id": "loop_patterns-q-1h62lnf",
@@ -5418,29 +5418,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_guess_the_number-q-60ebq9",
+            "id": "proj_guess_the_number-q-120vd0o",
             "type": "mcq",
-            "prompt": "Why read the first guess before the `while` loop?",
+            "prompt": "No earlier line sets `guess`. What happens when this runs?\n\n```\nwhile guess != 7:\n    guess = int(input())\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Python requires it"
+                "label": "The loop is skipped"
               },
               {
                 "id": "b",
-                "label": "So the condition `guess != secret` has a guess to compare"
+                "label": "It asks for one guess"
               },
               {
                 "id": "c",
-                "label": "To make it faster"
+                "label": "A `NameError`: `guess` has no value yet"
               },
               {
                 "id": "d",
-                "label": "It is not needed"
+                "label": "It loops forever"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "The `while` condition is checked before the first round, so `guess` must already exist."
+            "correctChoiceId": "c",
+            "explanation": "The condition is checked before the first round, so `guess` must already exist. Read the first guess before the loop."
           },
           {
             "id": "proj_guess_the_number-q-rykwu",
@@ -6126,54 +6126,54 @@
             "explanation": "A remainder of 0 means `d` goes into `n` exactly."
           },
           {
-            "id": "proj_prime_finder-q-1vnxb0v",
+            "id": "proj_prime_finder-q-1iwmdn4",
             "type": "mcq",
-            "prompt": "Is 1 a prime?",
+            "prompt": "What does this print?\n\n```\nn = 15\nfor d in range(2, n):\n    if n % d == 0:\n        print(d)\n        break\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Yes"
+                "label": "`3`"
               },
               {
                 "id": "b",
-                "label": "Only in Python"
+                "label": "`5`"
               },
               {
                 "id": "c",
-                "label": "No, primes start at 2"
+                "label": "`3` and then `5`"
               },
               {
                 "id": "d",
-                "label": "It depends on the limit"
-              }
-            ],
-            "correctChoiceId": "c",
-            "explanation": "By definition a prime has exactly two divisors, 1 and itself, so 1 isn't prime."
-          },
-          {
-            "id": "proj_prime_finder-q-m99qls",
-            "type": "mcq",
-            "prompt": "Why can the check stop once `d * d > n`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "Any larger divisor pairs with a smaller one already tried"
-              },
-              {
-                "id": "b",
-                "label": "Python limits loops"
-              },
-              {
-                "id": "c",
-                "label": "Bigger numbers are never divisors"
-              },
-              {
-                "id": "d",
-                "label": "To avoid an error"
+                "label": "Nothing"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "Divisors come in pairs, `d` and `n // d`, and one of each pair is at most the square root."
+            "explanation": "3 is the first number that divides 15 evenly, and `break` ends the loop straight after printing it."
+          },
+          {
+            "id": "proj_prime_finder-q-b70g1p",
+            "type": "mcq",
+            "prompt": "Which loop line tries divisors `d` only while `d` is at most the square root of `n`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`while d <= n * n:`"
+              },
+              {
+                "id": "b",
+                "label": "`while d * d > n:`"
+              },
+              {
+                "id": "c",
+                "label": "`while d * d <= n:`"
+              },
+              {
+                "id": "d",
+                "label": "`while d < n // 2:`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`d * d <= n` is true exactly while `d` is no bigger than the square root of `n`, without needing `math.sqrt`."
           },
           {
             "id": "proj_prime_finder-q-1nvi57a",

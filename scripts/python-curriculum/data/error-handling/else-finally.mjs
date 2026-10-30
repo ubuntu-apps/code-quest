@@ -127,7 +127,7 @@ export default makeTopic({
   questions: [
     mc("When does the `else` block of a `try` run?", ["Always", "Only when no exception was raised in `try`", "Only after an exception", "Before `try`"], 1),
     mc("When does `finally` run?", ["Only after an error", "Only after success", "Always, as the last step", "Never, if there is a `return`"], 2),
-    mc("Why put follow-up code in `else` instead of at the end of `try`?", ["So its own errors aren't caught by an `except` meant for something else", "It runs faster", "Python requires it", "So it runs twice"], 0),
+    mc("What does this print?\n\n```\ntry:\n    n = int(\"5\")\nexcept ValueError:\n    print(\"bad\")\nelse:\n    print(n * 2)\nfinally:\n    print(\"done\")\n```", ["`10`, then `done`", "`done`", "`bad`, then `done`", "`10`"], 0),
     mc("A `try` block returns a value. Does `finally` still run?", ["No", "Only if there is an `except`", "Only on errors", "Yes, just before the function returns"], 3),
     qShort("In which block do you close a connection that must be closed whatever happens? (one word)", "finally"),
     mc("What is the correct order?", ["`try`, `else`, `except`, `finally`", "`try`, `except`, `else`, `finally`", "`try`, `finally`, `except`, `else`", "`except`, `try`, `else`, `finally`"], 1),

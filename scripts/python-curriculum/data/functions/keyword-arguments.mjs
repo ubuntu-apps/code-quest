@@ -118,7 +118,7 @@ export default makeTopic({
     mc("`def area(width, height)`. What does `area(3, width=4)` do?", ["Returns 12", "Raises a `TypeError`: multiple values for `width`", "Returns 7", "Ignores the 3"], 1),
     mc("What does the lone `*` in `def f(a, *, b):` do?", ["Multiplies `a` by `b`", "Makes `b` optional", "Makes `b` keyword-only: it must be passed by name", "Collects extra arguments"], 2),
     qShort("`def f(a, *, b): return a - b`. What is `f(10, b=3)`? (a number)", "7"),
-    mc("Why make a flag like `express` keyword-only?", ["It runs faster", "Python requires it", "So calls say `express=True` instead of a puzzling bare `True`", "So it can't have a default"], 2),
+    mc("With `def ship(item, *, express=False):`, which call works?", ["`ship(\"book\", True)`", "`ship(express=True)`", "`ship(True, \"book\")`", "`ship(\"book\", express=True)`"], 3),
     mc("With `def area(width, height):`, what does `area(widht=4, height=3)` raise?", ["Nothing, it guesses", "A `NameError`", "A `SyntaxError`", "A `TypeError` about an unexpected keyword argument"], 3),
     mc("`def f(a, b=2, c=3)`. Which call sets only `c`?", ["`f(1, 5)`", "`f(1, c=5)`", "`f(c=5)`", "`f(1, 2)`"], 1),
     mc("Why do keyword arguments help readers?", ["The call says what each value means", "They hide the values", "They shorten the function", "They make code run faster"], 0),

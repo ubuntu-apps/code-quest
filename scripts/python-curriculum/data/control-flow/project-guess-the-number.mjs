@@ -81,7 +81,7 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("Why read the first guess before the `while` loop?", ["Python requires it", "So the condition `guess != secret` has a guess to compare", "To make it faster", "It is not needed"], 1),
+    mc("No earlier line sets `guess`. What happens when this runs?\n\n```\nwhile guess != 7:\n    guess = int(input())\n```", ["The loop is skipped", "It asks for one guess", "A `NameError`: `guess` has no value yet", "It loops forever"], 2),
     mc("Which comparison is true when the guess is too low?", ["`guess > secret`", "`guess == secret`", "`guess < secret`", "`guess != guess`"], 2),
     mc("What happens if you forget to read a new guess inside the loop?", ["The loop never ends", "Python asks automatically", "The loop ends at once", "Nothing changes"], 0),
     mc("In `for tries in range(1, 6):`, how many guesses does the player get?", ["6", "1", "4", "5"], 3),

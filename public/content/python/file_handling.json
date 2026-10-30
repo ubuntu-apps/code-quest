@@ -3812,29 +3812,29 @@
             "explanation": "`\"x\"` mode raises `FileExistsError` instead of overwriting."
           },
           {
-            "id": "file_errors-q-n2o1tk",
+            "id": "file_errors-q-4v7w35",
             "type": "mcq",
-            "prompt": "Why is try-and-catch safer than checking `os.path.exists` first?",
+            "prompt": "`notes.txt` doesn't exist. What does this print?\n\n```\ntry:\n    open(\"notes.txt\").read()\nexcept FileNotFoundError as e:\n    print(e.filename)\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is shorter"
+                "label": "`notes.txt`"
               },
               {
                 "id": "b",
-                "label": "The file could change between the check and the open, and it covers every problem"
+                "label": "`None`"
               },
               {
                 "id": "c",
-                "label": "Checking is not allowed"
+                "label": "A traceback"
               },
               {
                 "id": "d",
-                "label": "It is faster"
+                "label": "`FileNotFoundError`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "The file can be deleted or locked after the check, and `exists` doesn't spot every problem anyway."
+            "correctChoiceId": "a",
+            "explanation": "Trying the open and catching the error handles a missing file in one place, and `e.filename` says which one."
           },
           {
             "id": "file_errors-q-ur45io",
@@ -4760,29 +4760,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "processing_files-q-1gec5ip",
+            "id": "processing_files-q-rahu9e",
             "type": "mcq",
-            "prompt": "What are the three steps of most file processing?",
+            "prompt": "What does `len(set([\"b\\n\", \"a\\n\", \"b\\n\"]))` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Open, close, open"
+                "label": "`3`"
               },
               {
                 "id": "b",
-                "label": "Read the input, process it, write the result"
+                "label": "`1`"
               },
               {
                 "id": "c",
-                "label": "Write, read, delete"
+                "label": "`2`"
               },
               {
                 "id": "d",
-                "label": "Copy, paste, save"
+                "label": "An error"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Input, process, output: the same shape as most programs."
+            "correctChoiceId": "c",
+            "explanation": "A set keeps each different line once, which is how a `seen` set removes duplicate lines."
           },
           {
             "id": "processing_files-q-h60ehh",
@@ -5174,29 +5174,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_notes_keeper-q-5xjqgo",
+            "id": "proj_notes_keeper-q-ugdwqv",
             "type": "mcq",
-            "prompt": "Why do the notes survive after the program ends?",
+            "prompt": "What does `notes.txt` contain after this runs, if the file didn't exist before?\n\n```\nfor note in [\"milk\", \"eggs\"]:\n    with open(\"notes.txt\", \"a\") as f:\n        f.write(note + \"\\n\")\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "Python remembers them"
+                "label": "Only `eggs`"
               },
               {
                 "id": "b",
-                "label": "They are kept in a file"
+                "label": "Two lines: `milk` and `eggs`"
               },
               {
                 "id": "c",
-                "label": "They are in a global variable"
+                "label": "`milkeggs` on one line"
               },
               {
                 "id": "d",
-                "label": "They are printed"
+                "label": "Nothing: `\"a\"` can't create a file"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "Data in a file outlives the program; variables are lost when it ends."
+            "explanation": "`\"a\"` creates the file if needed and always writes at the end, so both notes are kept, each with its line break."
           },
           {
             "id": "proj_notes_keeper-q-jzinal",
@@ -5820,29 +5820,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "proj_saved_todo-q-1uwo5yd",
+            "id": "proj_saved_todo-q-t9n9gn",
             "type": "mcq",
-            "prompt": "Why store the tasks as `[x] title` lines?",
+            "prompt": "With `line = \"[x] pay rent\"`, what is `line[1] == \"x\"`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Python needs brackets"
+                "label": "`True`"
               },
               {
                 "id": "b",
-                "label": "It is easy for both the program and a person to read"
+                "label": "`False`"
               },
               {
                 "id": "c",
-                "label": "It makes the file smaller"
+                "label": "`\"x\"`"
               },
               {
                 "id": "d",
-                "label": "It hides the tasks"
+                "label": "An `IndexError`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "A simple text format can be read by the program and edited by a person."
+            "correctChoiceId": "a",
+            "explanation": "Index 1 is the second character, the one between the brackets, so this is how `load` tells a finished task."
           },
           {
             "id": "proj_saved_todo-q-aulbof",
@@ -5920,14 +5920,14 @@
             "explanation": "The status takes the first 4 characters (`[ ] `), so the title starts at index 4."
           },
           {
-            "id": "proj_saved_todo-q-ilef0q",
+            "id": "proj_saved_todo-q-kjjkj0",
             "type": "shortText",
-            "prompt": "`clear` removes the finished tasks. With 2 of 5 tasks done, how many are left? (a number)",
+            "prompt": "With `tasks = [{\"title\": \"a\", \"done\": True}, {\"title\": \"b\", \"done\": False}]`, how many tasks are in `[t for t in tasks if not t[\"done\"]]`? (a number)",
             "validation": {
               "mode": "equalsNormalized",
-              "expected": "3"
+              "expected": "1"
             },
-            "explanation": "Removing the 2 finished tasks leaves 3."
+            "explanation": "The comprehension keeps only the tasks whose `done` is false, which is how `clear` removes finished tasks."
           },
           {
             "id": "proj_saved_todo-q-1pzanux",

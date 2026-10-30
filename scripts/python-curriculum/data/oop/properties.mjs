@@ -136,7 +136,7 @@ export default makeTopic({
     mc("Why can a computed property like `area` never be out of date?", ["It is cached", "It is set in `__init__`", "It is worked out each time it is read", "Python updates it on a timer"], 2),
     mc("Which decorator adds a setter for a property called `age`?", ["`@age.setter`", "`@setter`", "`@property.setter`", "`@set_age`"], 0),
     mc("What happens when you assign to a property that has no setter?", ["It works", "Nothing", "`ValueError`", "`AttributeError`"], 3),
-    mc("Why does `__init__` write `self.age = age` rather than `self._age = age`?", ["It is shorter", "So the setter's check runs for new objects too", "It is faster", "Underscores aren't allowed in `__init__`"], 1),
+    mc("What does this print?\n\n```\nclass Person:\n    def __init__(self, age):\n        self.age = age\n    @property\n    def age(self):\n        return self._age\n    @age.setter\n    def age(self, value):\n        self._age = max(0, value)\n\nprint(Person(-3).age)\n```", ["`-3`", "`None`", "An `AttributeError`", "`0`"], 3),
     mc("`c.diameter` is a property. What does `c.diameter()` do?", ["Calls the value it returns, usually a `TypeError`", "Works the same", "Returns the method", "Sets the diameter"], 0),
     mc("What is a big advantage of properties over `get_x()`/`set_x()` methods?", ["They are faster", "They are private", "They can't raise errors", "You can add one later without changing the code that uses the attribute"], 3),
     mc("What should reading a property not do?", ["Return a value", "Use `self`", "Do slow work or change the object", "Use other attributes"], 2),

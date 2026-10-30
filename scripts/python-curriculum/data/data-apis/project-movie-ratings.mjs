@@ -85,7 +85,7 @@ export default makeProject("easy", {
     mc("Why start the line count at 2 with `enumerate(..., start=2)`?", ["Lists start at 2", "To skip a row", "Line 1 of the file is the header", "It is a typo"], 2),
     mc("What does `sort_keys=True` do in `json.dump`?", ["Writes the keys in alphabetical order", "Sorts the values", "Removes duplicates", "Nothing for dicts"], 0),
     mc("How does sorting by `(-average, name)` order movies?", ["By name only", "Lowest first", "Randomly", "Highest average first, ties alphabetically"], 3),
-    qShort("What is the average of 5 and 4, rounded to 1 place?", "4.5"),
+    qShort("What is `round((5 + 4) / 2, 1)`? (a number)", "4.5"),
     mc("Why is `\"two\"` skipped?", ["It is a word, so `int()` raises `ValueError`", "It is too long", "It is lowercase", "Two stars aren't allowed"], 0),
   ],
 })

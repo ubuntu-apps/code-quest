@@ -136,7 +136,7 @@ export default makeTopic({
   ],
   questions: [
     mc("What does encapsulation mean?", ["Hiding code in a file", "The object looks after its own data and keeps it valid", "Making every attribute public", "Using many classes"], 1),
-    mc("Why check values in `__init__`?", ["It is faster", "Python requires it", "So an invalid object can never be made", "To print errors"], 2),
+    mc("What happens when this runs?\n\n```\nclass Age:\n    def __init__(self, years):\n        if years < 0:\n            raise ValueError(\"age can't be negative\")\n        self.years = years\n\nAge(-5)\n```", ["An `Age` with `years` of -5", "An `Age` with `years` of 0", "`None`", "A `ValueError`, and no object is made"], 3),
     mc("Which error suits a value of the right type that isn't allowed, like an age of -5?", ["`ValueError`", "`TypeError`", "`NameError`", "`KeyError`"], 0),
     mc("What does a single leading underscore, as in `_balance`, mean?", ["It is deleted", "Python blocks outside access", "It is a class attribute", "Internal: don't use it from outside the class"], 3),
     mc("Why should `history()` return `list(self._history)`?", ["Lists are slow", "So callers can't change the object's own list", "To sort it", "It doesn't matter"], 1),

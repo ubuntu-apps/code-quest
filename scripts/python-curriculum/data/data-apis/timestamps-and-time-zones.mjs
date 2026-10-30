@@ -129,7 +129,7 @@ export default makeTopic({
     mc("What is a naive datetime?", ["One with a typo", "One with no time zone attached", "One in UTC", "One before 1970"], 1),
     mc("What does `Z` at the end of an ISO time mean?", ["Zero seconds", "The zone is unknown", "UTC", "Midnight"], 2),
     mc("What is a Unix timestamp?", ["Seconds since midnight UTC on 1 January 1970", "The current date as text", "Milliseconds since the computer started", "A date in ISO form"], 0),
-    mc("Why pass `tz=timezone.utc` to `fromtimestamp`?", ["It is faster", "Timestamps are always negative", "Python requires it", "Without it, the answer depends on the computer's own clock"], 3),
+    mc("What does `datetime.fromtimestamp(0, tz=timezone.utc).isoformat()` give?", ["`1970-01-01T00:00:00`", "`1970-01-01T00:00:00+00:00`", "`0`", "It depends on the computer's time zone"], 1),
     mc("Is 14:00 at `+02:00` equal to 12:00 UTC?", ["No", "Yes, they are the same moment", "Only in summer", "Comparing them raises an error"], 1),
     mc("What happens when you compare a naive and an aware datetime?", ["`TypeError`", "The naive one is treated as UTC", "`False`", "It works"], 0),
     qShort("Which datetime method shows the same moment in another time zone? (name only)", "astimezone"),

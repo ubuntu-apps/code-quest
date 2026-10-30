@@ -152,6 +152,6 @@ export default makeTopic({
     qShort("Which status code means \"Not Found\"? (number)", "404"),
     mc("Why are PUT and DELETE called idempotent?", ["They are faster", "Repeating them has the same effect as doing them once", "They need no body", "They cannot fail"], 1),
     mc("An API returns 20 items and a `next_page` field. What is this called?", ["Caching", "Versioning", "Pagination", "Throttling"], 2),
-    mc("Why put a version like `/v1/` in API paths?", ["To make URLs shorter", "It is required by HTTP", "To speed up requests", "So the API can change without breaking existing clients"], 3),
+    mc("What does `json.loads('{\"next_page\": null}')[\"next_page\"]` give?", ["`\"null\"`", "`0`", "A `KeyError`", "`None`"], 3),
   ],
 })

@@ -127,10 +127,10 @@ export default makeTopic({
   ],
   questions: [
     mc("Why keep the guessed letters in a set?", ["Sets keep the order", "Order doesn't matter, repeats are ignored and `in` is quick", "Sets can be printed", "Lists can't hold letters"], 1),
-    mc("Why do most of the functions return values instead of printing?", ["Printing is slow", "Python requires it", "Each piece can be checked on its own, and the game can be played automatically", "To hide the word"], 2),
+    mc("What does `print(print(\"hi\"))` show?", ["`hi` twice", "`hi`, then `None`", "Only `None`", "An error"], 1),
     mc("Why does `pick_word` use `random.Random(seed)`?", ["The same seed always picks the same word, so the game can be checked", "It is more random", "It is the only way to pick", "It avoids repeats"], 0),
     mc("What does `masked(\"banana\", {\"a\"})` return?", ["`\"banana\"`", "`\"_ _ _ _ _ _\"`", "`\"a a a\"`", "`\"_ a _ a _ a\"`"], 3),
-    qShort("How many points is `cat` worth, solved with all 6 lives left? (a number)", "60"),
+    mc("What does `\" \".join(c if c in {\"a\"} else \"_\" for c in \"cat\")` give?", ["`_a_`", "`c a t`", "`_ a _`", "`a`"], 2),
     mc("What should happen when the player types `ab`?", ["The game crashes", "A `ValueError` from `check_guess`, shown as a message, and the game goes on", "Both letters count", "The game ends"], 1),
     mc("`apply_guess` gets a letter already in `guessed`. What does it do?", ["Returns \"You already tried ...\" without costing a life", "Takes a life", "Adds it again", "Ends the game"], 0),
     mc("Where does `input` appear in the finished game?", ["In every function", "In `check_guess`", "In `masked`", "Only in `main`"], 3),

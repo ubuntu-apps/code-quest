@@ -81,11 +81,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("Why store song lengths in seconds?", ["Python needs it", "Whole seconds are easy to add up; text is made only when shown", "It uses less memory", "Songs are short"], 1),
+    mc("What is `divmod(476, 60)`?", ["`(7, 56)`", "`(56, 7)`", "`7.93`", "`(7.93, 0)`"], 0),
     mc("What does `f\"{5:02d}\"` give?", ["`\"5\"`", "`\"50\"`", "`\"05\"`", "`\"2\"`"], 2),
     mc("What makes `len(playlist)` work?", ["A `__len__` method", "A `length` property", "The name `songs`", "Inheriting from `list`"], 0),
     mc("Why is `length` a property rather than an attribute set in `__init__`?", ["Properties are faster", "Attributes can't hold text", "Python requires it", "It is worked out from `seconds`, so it can never be out of date"], 3),
-    qShort("What is 261 seconds as `m:ss`?", "4:21"),
+    qShort("What does `f\"{261 // 60}:{261 % 60:02d}\"` give?", "4:21"),
     mc("What does `divmod(3723, 3600)` give?", ["`(1, 123)`", "`(1, 3600)`", "`(3600, 123)`", "`1.03`"], 0),
   ],
 })

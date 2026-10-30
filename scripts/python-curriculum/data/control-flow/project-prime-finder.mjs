@@ -78,8 +78,8 @@ export default makeProject("hard", {
   ],
   questions: [
     mc("What does `n % d == 0` tell you?", ["`n` is even", "`d` divides `n` evenly", "`n` is prime", "`d` is bigger than `n`"], 1),
-    mc("Is 1 a prime?", ["Yes", "Only in Python", "No, primes start at 2", "It depends on the limit"], 2),
-    mc("Why can the check stop once `d * d > n`?", ["Any larger divisor pairs with a smaller one already tried", "Python limits loops", "Bigger numbers are never divisors", "To avoid an error"], 0),
+    mc("What does this print?\n\n```\nn = 15\nfor d in range(2, n):\n    if n % d == 0:\n        print(d)\n        break\n```", ["`3`", "`5`", "`3` and then `5`", "Nothing"], 0),
+    mc("Which loop line tries divisors `d` only while `d` is at most the square root of `n`?", ["`while d <= n * n:`", "`while d * d > n:`", "`while d * d <= n:`", "`while d < n // 2:`"], 2),
     mc("When does the inner loop's `else:` add the number?", ["After every divisor", "When a divisor was found", "Always", "When the loop ended without `break`, so no divisor was found"], 3),
     qShort("What is `91 % 7`? (a number)", "0"),
     mc("Why `range(2, limit + 1)`?", ["To skip 2", "So the limit itself is included", "Because primes are odd", "range needs three numbers"], 1),

@@ -132,7 +132,7 @@ export default makeTopic({
     qShort("`range(1, 5)` gives how many numbers? (a number)", "4"),
     mc("Why does `name.upper()` on its own line change nothing?", ["It is a syntax error", "Strings can't change: the new string is thrown away", "It changes the next line", "`upper` needs an argument"], 1),
     mc("A loop should add up a list of numbers, but `total = 0` was put inside the loop. What happens?", ["The total is reset on every round", "Nothing changes", "It runs once", "It raises an error"], 0),
-    mc("What is \"rubber duck debugging\"?", ["Testing with toys", "Deleting code until it works", "Explaining the code line by line, out loud", "A Python module"], 2),
+    mc("`print(repr(name))` shows `'Ana\\n'`. Why is `name == \"Ana\"` false?", ["`name` ends with a line break", "`name` is a number", "`repr` changed the text", "`==` doesn't work on strings"], 0),
     mc("What should you do after fixing a bug?", ["Leave the debug prints in", "Rewrite the whole program", "Nothing", "Remove the debug prints and add a test for that case"], 3),
     mc("What does `total =+ score` do?", ["Adds `score` to `total`", "Sets `total` to `+score`, throwing the old total away", "A syntax error", "Subtracts"], 1),
   ],

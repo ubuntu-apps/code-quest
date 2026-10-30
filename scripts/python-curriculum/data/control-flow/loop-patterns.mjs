@@ -121,7 +121,7 @@ export default makeTopic({
   ],
   questions: [
     mc("Where does a running total start?", ["Inside the loop", "At 0, before the loop", "At the first number, inside the loop", "After the loop"], 1),
-    mc("Why start the largest-so-far at the first item rather than at 0?", ["It is faster", "So it works when every number is negative", "Python requires it", "0 is not a number"], 1),
+    mc("What does this print?\n\n```\nnums = [-4, -9, -2]\nlargest = 0\nfor n in nums:\n    if n > largest:\n        largest = n\nprint(largest)\n```", ["`-2`", "`0`", "`-9`", "`-4`"], 1),
     mc("How do you get the average from a loop?", ["Count the items and divide the total by the count", "Use `range`", "Divide by 2", "Take the middle item"], 0),
     mc("What does `enumerate(\"ab\")` give a loop?", ["`\"a\"` and `\"b\"`", "`0` and `1`", "Pairs of index and item: `(0, \"a\")`, `(1, \"b\")`", "The length"], 2),
     mc("Why does \"how many scores are above average?\" need two loops?", ["It doesn't", "Loops can only count", "To be faster", "You need the average before you can compare"], 3),

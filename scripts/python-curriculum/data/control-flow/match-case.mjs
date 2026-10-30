@@ -116,7 +116,7 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc("Which Python version added `match`?", ["`3.10`", "`3.0`", "`2.7`", "`3.6`"], 0),
+    mc("What does this print?\n\n```\ncommand = \"halt\"\nmatch command:\n    case \"go\":\n        print(\"Going\")\n    case \"stop\" | \"halt\":\n        print(\"Stopping\")\n```", ["`Going`", "`Stopping`", "Both lines", "Nothing"], 1),
     mc("What does `case _:` match?", ["Only an empty string", "Anything: it is the default", "Nothing", "Only `None`"], 1),
     mc("How do you match `\"sat\"` or `\"sun\"` in one case?", ["`case \"sat\" or \"sun\":`", "`case \"sat\", \"sun\":`", "`case \"sat\" | \"sun\":`", "`case [\"sat\" \"sun\"]:`"], 2),
     mc("What happens if no case matches and there is no `case _`?", ["A `ValueError`", "The first case runs", "The program stops", "Nothing: the match is skipped"], 3),

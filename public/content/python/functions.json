@@ -360,29 +360,29 @@
             "explanation": "Each call runs the whole body, so 3 calls × 2 lines is 6 lines."
           },
           {
-            "id": "defining_functions-q-80ji9z",
+            "id": "defining_functions-q-1wvb35f",
             "type": "mcq",
-            "prompt": "Which is the best function name?",
+            "prompt": "How many times is `Hi` printed?\n\n```\ndef greet():\n    print(\"Hi\")\n\ngreet\ngreet()\ngreet()\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "`Function1`"
+                "label": "`3`"
               },
               {
                 "id": "b",
-                "label": "`print_receipt`"
+                "label": "`1`"
               },
               {
                 "id": "c",
-                "label": "`x`"
+                "label": "`2`"
               },
               {
                 "id": "d",
-                "label": "`DoIt`"
+                "label": "`0`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "A snake_case verb phrase says what the function does."
+            "correctChoiceId": "c",
+            "explanation": "`greet` on its own only names the function. Only the two lines with brackets call it."
           },
           {
             "id": "defining_functions-q-pxrxh8",
@@ -410,29 +410,29 @@
             "explanation": "Functions can call other functions, which is how bigger programs are built from small parts."
           },
           {
-            "id": "defining_functions-q-v8fqal",
+            "id": "defining_functions-q-ygodu9",
             "type": "mcq",
-            "prompt": "Why turn repeated code into a function?",
+            "prompt": "What does this print?\n\n```\ndef line(n):\n    return \"-\" * n\n\nprint(line(3) + line(2))\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It runs twice as fast"
+                "label": "`---`"
               },
               {
                 "id": "b",
-                "label": "You change it in one place and every call follows"
+                "label": "`--- --`"
               },
               {
                 "id": "c",
-                "label": "Python requires it"
+                "label": "`-----`"
               },
               {
                 "id": "d",
-                "label": "It hides the code"
+                "label": "`None`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "With the code in one function, a fix or change happens once and every call gets it."
+            "correctChoiceId": "c",
+            "explanation": "Each call returns its own string of dashes, so one function serves every length: 3 + 2 dashes."
           }
         ]
       }
@@ -2437,29 +2437,29 @@
             "explanation": "`a` is 10 and `b` is 3, so the result is 7."
           },
           {
-            "id": "keyword_arguments-q-x221ru",
+            "id": "keyword_arguments-q-ubdvs0",
             "type": "mcq",
-            "prompt": "Why make a flag like `express` keyword-only?",
+            "prompt": "With `def ship(item, *, express=False):`, which call works?",
             "choices": [
               {
                 "id": "a",
-                "label": "It runs faster"
+                "label": "`ship(\"book\", True)`"
               },
               {
                 "id": "b",
-                "label": "Python requires it"
+                "label": "`ship(express=True)`"
               },
               {
                 "id": "c",
-                "label": "So calls say `express=True` instead of a puzzling bare `True`"
+                "label": "`ship(True, \"book\")`"
               },
               {
                 "id": "d",
-                "label": "So it can't have a default"
+                "label": "`ship(\"book\", express=True)`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "A bare `True` in a call doesn't say what it means; `express=True` does."
+            "correctChoiceId": "d",
+            "explanation": "After the `*`, `express` can only be passed by name, so a bare `True` is a `TypeError`. The call then says what `True` means."
           },
           {
             "id": "keyword_arguments-q-kzmtp1",
@@ -5521,29 +5521,29 @@
             "explanation": "`.isalpha()` is `True` for letters only."
           },
           {
-            "id": "proj_text_tools-q-1kpw9dl",
+            "id": "proj_text_tools-q-19agryb",
             "type": "mcq",
-            "prompt": "Why build `report` out of the four tools?",
+            "prompt": "What does this print?\n\n```\ndef shout(s):\n    return s.upper() + \"!\"\n\ndef both(s):\n    return shout(s) + \" \" + s\n\nprint(both(\"hi\"))\n```",
             "choices": [
               {
                 "id": "a",
-                "label": "It is required"
+                "label": "`HI! hi`"
               },
               {
                 "id": "b",
-                "label": "To make the program longer"
+                "label": "`HI!`"
               },
               {
                 "id": "c",
-                "label": "Each tool is then tested once and reused, not rewritten"
+                "label": "`hi HI!`"
               },
               {
                 "id": "d",
-                "label": "Tools can only be used inside other functions"
+                "label": "`None`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Building `report` from the tested tools reuses them instead of writing the same logic again."
+            "correctChoiceId": "a",
+            "explanation": "`both` uses the value `shout` returns, `HI!`, and adds the original text after it."
           },
           {
             "id": "proj_text_tools-q-1x73gpx",
@@ -5825,29 +5825,29 @@
             "explanation": "`all` is `True` only if no item is false."
           },
           {
-            "id": "proj_password_checker-q-gjkfht",
+            "id": "proj_password_checker-q-8kz21g",
             "type": "mcq",
-            "prompt": "Why is each rule its own function?",
+            "prompt": "What does `all(len(p) >= 8 for p in [\"sunshine\", \"abc\"])` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "Each is small, easy to test, and reused by `strength` and `feedback`"
+                "label": "`True`"
               },
               {
                 "id": "b",
-                "label": "Python needs it"
+                "label": "`[True, False]`"
               },
               {
                 "id": "c",
-                "label": "It makes the program run faster"
+                "label": "`False`"
               },
               {
                 "id": "d",
-                "label": "So there are more lines"
+                "label": "`1`"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Small single-purpose functions are easy to test and can be combined in several places."
+            "correctChoiceId": "c",
+            "explanation": "`all` is only true when every item passes. `\"abc\"` is shorter than 8, so the answer is `False`."
           },
           {
             "id": "proj_password_checker-q-1poa432",
@@ -5875,14 +5875,14 @@
             "explanation": "`!` is neither a letter nor a digit, so `.isalnum()` is `False`."
           },
           {
-            "id": "proj_password_checker-q-19z7so8",
+            "id": "proj_password_checker-q-6sajii",
             "type": "shortText",
-            "prompt": "How many points does `Sunshine7!` score, out of 4? (a number)",
+            "prompt": "What is `sum([True, False, True, True])`? (a number)",
             "validation": {
               "mode": "equalsNormalized",
-              "expected": "4"
+              "expected": "3"
             },
-            "explanation": "It is long enough and mixes capitals, lowercase letters, a digit and a symbol, so it meets all four rules."
+            "explanation": "`True` counts as 1 and `False` as 0, so summing the results of the rules counts how many passed."
           },
           {
             "id": "proj_password_checker-q-1akntt",

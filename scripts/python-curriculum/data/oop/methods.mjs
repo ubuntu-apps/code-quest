@@ -130,6 +130,6 @@ export default makeTopic({
     mc("Where should a list attribute like `self.items` be created?", ["In `__init__`, so each object gets its own", "Outside the class", "In each method", "In a global variable"], 0),
     qShort("What is the conventional name of a method's first parameter?", "self"),
     mc("Which kind of method usually returns nothing?", ["One that answers a question", "One that prints", "One that is called first", "One that changes the object"], 3),
-    mc("Why put `deposit` and `withdraw` inside the class?", ["So the code that keeps the balance right lives with the balance", "It is faster", "Functions can't change numbers", "To hide the balance"], 0),
+    mc("What does this print?\n\n```\nclass Account:\n    def __init__(self):\n        self.balance = 0\n    def deposit(self, amount):\n        self.balance += amount\n\na = Account()\nb = Account()\na.deposit(50)\nprint(a.balance, b.balance)\n```", ["`50 50`", "`50 0`", "`0 0`", "`0 50`"], 1),
   ],
 })

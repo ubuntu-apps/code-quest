@@ -139,6 +139,6 @@ export default makeTopic({
     qShort("What does `f\"{p!r}\"` call on `p`? (the method name)", "__repr__"),
     mc("Why can't objects with `__eq__` go in a set straight away?", ["Sets only hold numbers", "They are too big", "They need `__lt__`", "They also need a matching `__hash__`"], 3),
     mc("What goes wrong if `__str__` prints instead of returning?", ["Nothing", "It prints twice", "`TypeError: __str__ returned non-string`", "It returns an empty string"], 2),
-    mc("What does \"dunder\" stand for?", ["Double underscore", "Dynamic under", "Data under", "Default number"], 0),
+    mc("What does this print?\n\n```\nclass Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __repr__(self):\n        return f\"Point({self.x}, {self.y})\"\n\nprint([Point(1, 2)])\n```", ["`[<Point object at 0x...>]`", "`Point(1, 2)`", "`[Point(1, 2)]`", "An error"], 2),
   ],
 })

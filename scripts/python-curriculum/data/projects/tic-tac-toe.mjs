@@ -137,10 +137,10 @@ export default makeTopic({
   ],
   questions: [
     mc("How is cell 7 stored in the board list?", ["`board[7]`", "`board[6]`", "`board[0][7]`", "`board[-7]`"], 1),
-    mc("Why write the eight lines out once as `LINES`?", ["Lists are faster", "Python requires it", "Checking for a winner becomes one short loop", "To save memory"], 2),
+    mc("With `LINES = [(0, 1, 2), (3, 4, 5), (0, 4, 8)]` and `board = [\"X\", \"O\", \" \", \" \", \"X\", \" \", \"O\", \" \", \"X\"]`, what is `any(board[a] == board[b] == board[c] == \"X\" for a, b, c in LINES)`?", ["`False`", "`(0, 4, 8)`", "`\"X\"`", "`True`"], 3),
     mc("What is the order of the simple opponent's rules?", ["Win, block, centre, corner, edge", "Centre, win, block", "Corner, edge, centre", "Random"], 0),
     mc("What does minimax assume?", ["Players move randomly", "The computer always goes first", "Only one move ahead", "Both sides play their best moves"], 3),
-    qShort("With perfect play from both sides, what is the score of the empty board? (a number)", "0"),
+    mc("With `board = [\"X\", \"O\", \"X\", \" \", \"O\", \" \", \" \", \" \", \" \"]`, what is `[i + 1 for i, c in enumerate(board) if c == \" \"]`?", ["`[3, 5, 6, 7, 8]`", "`[4, 6, 7, 8, 9]`", "`[4, 6]`", "`['X', 'O']`"], 1),
     mc("Why remember scores in a dict?", ["To print them", "The same positions come up again by different routes, so each is worked out only once", "Dicts sort the moves", "To save the game"], 1),
     mc("Why is `score` recursive?", ["A position's score comes from the scores of the positions one move later", "Recursion is faster than loops", "Python requires it for games", "To avoid lists"], 0),
     mc("What does `all_results()[\"X\"] == 0` show?", ["X always wins", "The game is broken", "Nobody can win", "No sequence of moves beats the computer"], 3),
