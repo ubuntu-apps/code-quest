@@ -30,7 +30,7 @@
       ],
       "intro": {
         "title": "Keys and relationships",
-        "bodyMarkdown": "Real databases split their data over several tables. This section's shop has five: `customers`, `orders`, `order_items`, `products` and `employees`. Open **Tables** to see how they fit together.\n\nWhy not one big table? An order would then repeat the customer's name and city on every line, and a customer who moved would need changing in many places. Splitting the data stores each fact **once**, and the tables point to each other instead.\n\nEvery table has an `id` column, its **primary key**: a number that identifies one row and is never repeated. Other tables refer to a row by that number. In `orders`, `customer_id` holds the `id` of the customer who placed the order. A column like that is a **foreign key**.\n\n```\nSELECT id, customer_id, employee_id, order_date FROM orders;\n```\n\nSo order 1 has `customer_id` 1: it was placed by the customer whose `id` is 1, Ana Silva. In the same way, `employee_id` points to `employees`, `order_items` points to both `orders` and `products`, and `employees.manager_id` points to another employee.\n\nWithout joins, following a key takes two steps: look up the id, then use it.\n\n```\nSELECT id FROM customers WHERE name = 'Ana Silva';\nSELECT id, order_date FROM orders WHERE customer_id = 1;\n```\n\nThe next lesson does both steps in one query. In this one, practise reading the keys.",
+        "bodyMarkdown": "Real databases split their data over several tables. This quest's shop has five: `customers`, `orders`, `order_items`, `products` and `employees`. Open **Tables** to see how they fit together.\n\nWhy not one big table? An order would then repeat the customer's name and city on every line, and a customer who moved would need changing in many places. Splitting the data stores each fact **once**, and the tables point to each other instead.\n\nEvery table has an `id` column, its **primary key**: a number that identifies one row and is never repeated. Other tables refer to a row by that number. In `orders`, `customer_id` holds the `id` of the customer who placed the order. A column like that is a **foreign key**.\n\n```\nSELECT id, customer_id, employee_id, order_date FROM orders;\n```\n\nSo order 1 has `customer_id` 1: it was placed by the customer whose `id` is 1, Ana Silva. In the same way, `employee_id` points to `employees`, `order_items` points to both `orders` and `products`, and `employees.manager_id` points to another employee.\n\nWithout joins, following a key takes two steps: look up the id, then use it.\n\n```\nSELECT id FROM customers WHERE name = 'Ana Silva';\nSELECT id, order_date FROM orders WHERE customer_id = 1;\n```\n\nThe next stage does both steps in one query. In this one, practise reading the keys.",
         "sandboxCode": "SELECT id, customer_id, employee_id, order_date FROM orders;",
         "readMore": {
           "label": "SQLite: foreign keys",
@@ -469,7 +469,7 @@
       ],
       "intro": {
         "title": "INNER JOIN",
-        "bodyMarkdown": "`JOIN` combines rows from two tables in one query. `ON` says which rows belong together, usually a foreign key equal to a primary key:\n\n```\nSELECT orders.id, orders.order_date, customers.name\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;\n```\n\nFor each order, SQLite finds the customer whose `id` equals the order's `customer_id`, and puts the two rows side by side. The result has one row per matching pair.\n\nBecause both tables have columns called `id` and `name`, write `table.column` to say which one you mean: `orders.id`, `customers.name`. It is a good habit even when the name is unique.\n\n`JOIN` on its own means `INNER JOIN`: only rows that **have** a match appear. Customers who never ordered aren't in the result above, because no order points to them. (The `LEFT JOIN` lesson keeps them.)\n\nGetting `ON` wrong is a common join mistake. `ON orders.id = customers.id` runs without an error, but pairs order 1 with customer 1, order 2 with customer 2, and so on, which means nothing. Always join a foreign key to the key it points to.\n\nWhich table comes first doesn't change an inner join's rows: `FROM customers JOIN orders ON …` gives the same pairs.",
+        "bodyMarkdown": "`JOIN` combines rows from two tables in one query. `ON` says which rows belong together, usually a foreign key equal to a primary key:\n\n```\nSELECT orders.id, orders.order_date, customers.name\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;\n```\n\nFor each order, SQLite finds the customer whose `id` equals the order's `customer_id`, and puts the two rows side by side. The result has one row per matching pair.\n\nBecause both tables have columns called `id` and `name`, write `table.column` to say which one you mean: `orders.id`, `customers.name`. It is a good habit even when the name is unique.\n\n`JOIN` on its own means `INNER JOIN`: only rows that **have** a match appear. Customers who never ordered aren't in the result above, because no order points to them. (The `LEFT JOIN` stage keeps them.)\n\nGetting `ON` wrong is a common join mistake. `ON orders.id = customers.id` runs without an error, but pairs order 1 with customer 1, order 2 with customer 2, and so on, which means nothing. Always join a foreign key to the key it points to.\n\nWhich table comes first doesn't change an inner join's rows: `FROM customers JOIN orders ON …` gives the same pairs.",
         "sandboxCode": "SELECT orders.id, orders.order_date, customers.name\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;",
         "readMore": {
           "label": "SQLite: joins in SELECT",
@@ -1335,7 +1335,7 @@
       ],
       "intro": {
         "title": "Filtering and sorting joins",
-        "bodyMarkdown": "A join gives you rows with the columns of both tables, and everything you know still works on them. `WHERE` can test a column from either table, and `ORDER BY` can sort by any of them.\n\nAna's orders, found by her name instead of her id:\n\n```\nSELECT o.id, o.order_date\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE c.name = 'Ana Silva';\n```\n\nThis is the two-step lookup from the first lesson, done in one query. The order is always the same: `FROM` and `JOIN`, then `WHERE`, then `ORDER BY` and `LIMIT`.\n\nShipped orders, sorted by customer and then by date:\n\n```\nSELECT c.name, o.order_date\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE o.status = 'shipped'\nORDER BY c.name, o.order_date;\n```\n\nYou can also calculate with columns from both tables, and sort by the result. Here are the order lines worth more than 20, biggest first:\n\n```\nSELECT i.order_id, p.name, ROUND(i.quantity * p.price, 2) AS line_total\nFROM order_items i\nJOIN products p ON i.product_id = p.id\nWHERE i.quantity * p.price > 20\nORDER BY line_total DESC, i.order_id;\n```",
+        "bodyMarkdown": "A join gives you rows with the columns of both tables, and everything you know still works on them. `WHERE` can test a column from either table, and `ORDER BY` can sort by any of them.\n\nAna's orders, found by her name instead of her id:\n\n```\nSELECT o.id, o.order_date\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE c.name = 'Ana Silva';\n```\n\nThis is the two-step lookup from the first stage, done in one query. The order is always the same: `FROM` and `JOIN`, then `WHERE`, then `ORDER BY` and `LIMIT`.\n\nShipped orders, sorted by customer and then by date:\n\n```\nSELECT c.name, o.order_date\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE o.status = 'shipped'\nORDER BY c.name, o.order_date;\n```\n\nYou can also calculate with columns from both tables, and sort by the result. Here are the order lines worth more than 20, biggest first:\n\n```\nSELECT i.order_id, p.name, ROUND(i.quantity * p.price, 2) AS line_total\nFROM order_items i\nJOIN products p ON i.product_id = p.id\nWHERE i.quantity * p.price > 20\nORDER BY line_total DESC, i.order_id;\n```",
         "sandboxCode": "SELECT c.name, o.order_date\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE o.status = 'shipped'\nORDER BY c.name, o.order_date;",
         "readMore": {
           "label": "SQLite: the SELECT statement",
@@ -1781,7 +1781,7 @@
       ],
       "intro": {
         "title": "Totals across tables",
-        "bodyMarkdown": "Joins and `GROUP BY` work well together: join first to bring in the names, then group and count.\n\n```\nSELECT c.name, COUNT(*) AS orders\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nGROUP BY c.id, c.name;\n```\n\nWhy group by `c.id` as well as `c.name`? Two customers could share a name, and grouping by the name alone would add their orders together. Grouping by the id keeps each customer separate, and adding the name lets you show it.\n\nTotals often need a calculation from both tables. The total of each order is the sum of quantity times price over its lines:\n\n```\nSELECT i.order_id, ROUND(SUM(i.quantity * p.price), 2) AS total\nFROM order_items i\nJOIN products p ON i.product_id = p.id\nGROUP BY i.order_id;\n```\n\n`WHERE`, `HAVING` and `ORDER BY` work as before. The rows are joined, then filtered by `WHERE`, then grouped, then the groups are filtered by `HAVING`.\n\nOne thing to notice: a customer with no orders doesn't appear at all, not even with 0. The inner join dropped them before the counting began. The `LEFT JOIN` lesson fixes that.",
+        "bodyMarkdown": "Joins and `GROUP BY` work well together: join first to bring in the names, then group and count.\n\n```\nSELECT c.name, COUNT(*) AS orders\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nGROUP BY c.id, c.name;\n```\n\nWhy group by `c.id` as well as `c.name`? Two customers could share a name, and grouping by the name alone would add their orders together. Grouping by the id keeps each customer separate, and adding the name lets you show it.\n\nTotals often need a calculation from both tables. The total of each order is the sum of quantity times price over its lines:\n\n```\nSELECT i.order_id, ROUND(SUM(i.quantity * p.price), 2) AS total\nFROM order_items i\nJOIN products p ON i.product_id = p.id\nGROUP BY i.order_id;\n```\n\n`WHERE`, `HAVING` and `ORDER BY` work as before. The rows are joined, then filtered by `WHERE`, then grouped, then the groups are filtered by `HAVING`.\n\nOne thing to notice: a customer with no orders doesn't appear at all, not even with 0. The inner join dropped them before the counting began. The `LEFT JOIN` stage fixes that.",
         "sandboxCode": "SELECT c.name, COUNT(*) AS orders\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nGROUP BY c.id, c.name;",
         "readMore": {
           "label": "SQLite: aggregate functions",
@@ -2659,7 +2659,7 @@
       ],
       "intro": {
         "title": "Rows with no match",
-        "bodyMarkdown": "Some of the most useful questions are about what is missing: customers who never ordered, products nobody bought, staff with no sales. A `LEFT JOIN` finds them, because the unmatched rows are the ones with `NULL` on the right side.\n\n```\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL;\n```\n\nRead it as: take every customer, attach their orders if they have any, then keep only the rows where no order was attached. Test a column that can't be `NULL` in a real match, like the right table's `id`.\n\nThis `WHERE` is fine, unlike the one in the last lesson. There, `WHERE o.status = 'shipped'` threw the unmatched rows away by accident. Here, `WHERE o.id IS NULL` keeps only the unmatched rows, on purpose.\n\nYou can combine both ideas. Customers with no **shipped** order: put the status in `ON`, so only shipped orders can match, then keep the rows that found none:\n\n```\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'shipped'\nWHERE o.id IS NULL;\n```\n\nRemember to use `IS NULL`, never `= NULL`, which is never true.",
+        "bodyMarkdown": "Some of the most useful questions are about what is missing: customers who never ordered, products nobody bought, staff with no sales. A `LEFT JOIN` finds them, because the unmatched rows are the ones with `NULL` on the right side.\n\n```\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL;\n```\n\nRead it as: take every customer, attach their orders if they have any, then keep only the rows where no order was attached. Test a column that can't be `NULL` in a real match, like the right table's `id`.\n\nThis `WHERE` is fine, unlike the one in the last stage. There, `WHERE o.status = 'shipped'` threw the unmatched rows away by accident. Here, `WHERE o.id IS NULL` keeps only the unmatched rows, on purpose.\n\nYou can combine both ideas. Customers with no **shipped** order: put the status in `ON`, so only shipped orders can match, then keep the rows that found none:\n\n```\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'shipped'\nWHERE o.id IS NULL;\n```\n\nRemember to use `IS NULL`, never `= NULL`, which is never true.",
         "sandboxCode": "SELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL;",
         "readMore": {
           "label": "SQLite: joins in SELECT",
@@ -4311,7 +4311,7 @@
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "The same trick as in the self-join lesson."
+            "explanation": "The same trick as in the self-join stage."
           },
           {
             "id": "many_to_many-q-p9cadl",
@@ -4420,7 +4420,7 @@
     },
     {
       "id": "proj_order_lookup",
-      "title": "Easy project: Order lookup",
+      "title": "Easy side quest: Order lookup",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -4441,7 +4441,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Order lookup",
+        "title": "Easy side quest: Order lookup",
         "bodyMarkdown": "You're on the shop's help desk. Customers phone in about their orders, and you answer by looking them up across `orders`, `customers`, `employees`, `order_items` and `products`.\n\nToday is 2026-10-24. A line's value is `quantity * price`, rounded to 2 decimals at the end.",
         "sandboxCode": "SELECT o.id, o.order_date, o.status, c.name AS customer\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE o.id = 7;",
         "readMore": {
@@ -4719,7 +4719,7 @@
     },
     {
       "id": "proj_customer_insights",
-      "title": "Medium project: Customer insights",
+      "title": "Medium side quest: Customer insights",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -4740,7 +4740,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Customer insights",
+        "title": "Medium side quest: Customer insights",
         "bodyMarkdown": "The marketing team wants to understand the customers: who orders, who spends, who has gone quiet, and what each category attracts.\n\nRemember: customers who never ordered only appear with a `LEFT JOIN`, and their totals need `COALESCE`.",
         "sandboxCode": "SELECT c.name, COUNT(o.id) AS orders\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nGROUP BY c.id, c.name;",
         "readMore": {
@@ -5018,7 +5018,7 @@
     },
     {
       "id": "proj_sales_team_review",
-      "title": "Hard project: Sales team review",
+      "title": "Hard side quest: Sales team review",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -5034,7 +5034,7 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Sales team review",
+        "title": "Hard side quest: Sales team review",
         "bodyMarkdown": "It's review time for the staff. Maria, the manager, wants to see who works for whom, how much each person and each team sold, and how much is still waiting to ship.\n\nThese queries join `employees` to itself and to the order tables. Build them step by step in the sandbox.",
         "sandboxCode": "SELECT e.name AS employee, COALESCE(m.name, '(none)') AS manager\nFROM employees e\nLEFT JOIN employees m ON e.manager_id = m.id;",
         "readMore": {

@@ -15,7 +15,7 @@ export default makeTopic({
     "```\nSELECT name, salary,\n  ROUND(salary * CASE WHEN role = 'Support' THEN 1.10 ELSE 1.05 END) AS new_salary\nFROM employees;\n```",
     '**Filtering on a worked-out value.** In `WHERE`, a `CASE` can work out the value to compare. This finds orders worth more than 100 after their discount, treating a missing discount as none:',
     "```\nSELECT id, total, discount FROM orders\nWHERE CASE WHEN discount IS NULL THEN total\n           ELSE total * (100 - discount) / 100.0 END > 100;\n```",
-    "Dates written as `YYYY-MM-DD` compare correctly as text, because the year comes first: `hire_date < '2020-01-01'` means \"hired before 2020\". The next lessons do much more with dates.",
+    "Dates written as `YYYY-MM-DD` compare correctly as text, because the year comes first: `hire_date < '2020-01-01'` means \"hired before 2020\". The next stages do much more with dates.",
   ],
   sandboxCode: "SELECT id, status FROM orders\nORDER BY CASE WHEN status = 'pending' THEN 0 ELSE 1 END, id;",
   sandboxSnippets: [

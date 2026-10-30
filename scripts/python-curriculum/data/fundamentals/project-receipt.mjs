@@ -5,7 +5,7 @@ export default makeProject("hard", {
   id: "proj_receipt_calculator",
   title: "Receipt calculator",
   paragraphs: [
-    "The biggest program in Fundamentals: a receipt for a café order. It asks for an item, its price, the quantity and a tip percentage, then prints a neatly aligned receipt. It uses every lesson so far.",
+    "The biggest program in Fundamentals: a receipt for a café order. It asks for an item, its price, the quantity and a tip percentage, then prints a neatly aligned receipt. It uses every stage so far.",
     "When the user types `Latte`, `4.5`, `3` and `20`, the finished program shows (the first four lines are the questions and answers):",
     "```\nItem: Latte\nPrice: 4.5\nQuantity: 3\nTip %: 20\n------------------------\n3 x Latte          13.50\nTip (20%)           2.70\n------------------------\nTotal              16.20\n```",
     "Every receipt line is 24 characters wide: a label left-aligned in 16 characters, then an amount right-aligned in 8 characters with 2 decimals. In an f-string, that's `f\"{label:<16}{amount:>8.2f}\"`. The dashed lines are `\"-\" * 24`.",
@@ -59,7 +59,7 @@ export default makeProject("hard", {
       ],
     }),
     task("hard", "Print the receipt", {
-      prompt: "All the values are ready. Print the five receipt lines exactly as in the lesson: a dashed line, the item line, the tip line, another dashed line and the total.",
+      prompt: "All the values are ready. Print the five receipt lines exactly as in the intro: a dashed line, the item line, the tip line, another dashed line and the total.",
       starter: "item = \"Latte\"\nquantity = 3\nsubtotal = 13.5\ntip_percent = 20\ntip = 2.7\ntotal = 16.2\n",
       hint: "Build each label first, such as `f\"{quantity} x {item}\"` and `f\"Tip ({tip_percent}%)\"`, then print it with the amount using `:<16` and `:>8.2f`.",
       solution: "item = \"Latte\"\nquantity = 3\nsubtotal = 13.5\ntip_percent = 20\ntip = 2.7\ntotal = 16.2\nprint(\"-\" * 24)\nitem_label = f\"{quantity} x {item}\"\ntip_label = f\"Tip ({tip_percent}%)\"\nprint(f\"{item_label:<16}{subtotal:>8.2f}\")\nprint(f\"{tip_label:<16}{tip:>8.2f}\")\nprint(\"-\" * 24)\nprint(f\"{'Total':<16}{total:>8.2f}\")",

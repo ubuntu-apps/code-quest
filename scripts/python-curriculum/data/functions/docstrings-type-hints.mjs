@@ -93,7 +93,7 @@ export default makeTopic({
     }),
     task("hard", "Document it fully", {
       prompt: "Define `average(numbers: list[float]) -> float` with a docstring that has `Args:` and `Returns:` sections. It returns 0.0 for an empty list.",
-      hint: "Follow the layout in the lesson. In the body: `if not numbers: return 0.0`, then `return sum(numbers) / len(numbers)`.",
+      hint: "Follow the layout in the intro. In the body: `if not numbers: return 0.0`, then `return sum(numbers) / len(numbers)`.",
       solution: "def average(numbers: list[float]) -> float:\n    \"\"\"Return the average of a list of numbers.\n\n    Args:\n        numbers: the values to average.\n\n    Returns:\n        The average, or 0.0 for an empty list.\n    \"\"\"\n    if not numbers:\n        return 0.0\n    return sum(numbers) / len(numbers)",
       tests: [
         ["The docstring has Args and Returns", "average.__doc__ is not None and \"Args:\" in average.__doc__ and \"Returns:\" in average.__doc__"],

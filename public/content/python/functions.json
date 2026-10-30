@@ -470,7 +470,7 @@
       ],
       "intro": {
         "title": "Parameters and arguments",
-        "bodyMarkdown": "A function that always does exactly the same thing is useful, but one you can hand information to is far more useful. Put names inside the brackets of the `def` line: these are **parameters**, placeholders for the values the function will be given.\n\n```\ndef greet(name):\n    print(f\"Hello, {name}!\")\n\ngreet(\"Ana\")    # Hello, Ana!\ngreet(\"Ben\")    # Hello, Ben!\n```\n\nThe values you pass in a call are **arguments**. When `greet(\"Ana\")` runs, Python sets the parameter `name` to `\"Ana\"` and then runs the body. The next call starts fresh with its own value. An argument can be any expression: a variable, a calculation, the result of another call, such as `greet(user.title())`.\n\nA function can take several parameters, separated by commas. Arguments are matched to parameters **by position**: the first argument goes to the first parameter, the second to the second, and so on. Swap them and the function still runs, just with the values in the wrong places:\n\n```\ndef describe_pet(name, animal):\n    print(f\"{name} is a {animal}.\")\n\ndescribe_pet(\"Rex\", \"dog\")    # Rex is a dog.\ndescribe_pet(\"dog\", \"Rex\")    # dog is a Rex.\n```\n\nThe number of arguments has to match. Leave one out and Python stops with `TypeError: describe_pet() missing 1 required positional argument: 'animal'`; pass too many and it says it \"takes 2 positional arguments but 3 were given\". Both messages tell you exactly what's wrong.\n\nParameters only exist **inside** the function: they're created fresh for each call and vanish when it ends. A parameter can share its name with a variable outside, but they are separate; the scope lesson later in this section explains why.\n\nParameters turn a function into a reusable tool. `draw_line(char, length)` can draw any line you want, and a single `print_receipt(item, price, qty)` serves every item in a shop.",
+        "bodyMarkdown": "A function that always does exactly the same thing is useful, but one you can hand information to is far more useful. Put names inside the brackets of the `def` line: these are **parameters**, placeholders for the values the function will be given.\n\n```\ndef greet(name):\n    print(f\"Hello, {name}!\")\n\ngreet(\"Ana\")    # Hello, Ana!\ngreet(\"Ben\")    # Hello, Ben!\n```\n\nThe values you pass in a call are **arguments**. When `greet(\"Ana\")` runs, Python sets the parameter `name` to `\"Ana\"` and then runs the body. The next call starts fresh with its own value. An argument can be any expression: a variable, a calculation, the result of another call, such as `greet(user.title())`.\n\nA function can take several parameters, separated by commas. Arguments are matched to parameters **by position**: the first argument goes to the first parameter, the second to the second, and so on. Swap them and the function still runs, just with the values in the wrong places:\n\n```\ndef describe_pet(name, animal):\n    print(f\"{name} is a {animal}.\")\n\ndescribe_pet(\"Rex\", \"dog\")    # Rex is a dog.\ndescribe_pet(\"dog\", \"Rex\")    # dog is a Rex.\n```\n\nThe number of arguments has to match. Leave one out and Python stops with `TypeError: describe_pet() missing 1 required positional argument: 'animal'`; pass too many and it says it \"takes 2 positional arguments but 3 were given\". Both messages tell you exactly what's wrong.\n\nParameters only exist **inside** the function: they're created fresh for each call and vanish when it ends. A parameter can share its name with a variable outside, but they are separate; the scope stage later in this quest explains why.\n\nParameters turn a function into a reusable tool. `draw_line(char, length)` can draw any line you want, and a single `print_receipt(item, price, qty)` serves every item in a shop.",
         "sandboxCode": "def describe_pet(name, animal):\n    print(f\"{name} is a {animal}.\")\n\ndescribe_pet(\"Rex\", \"dog\")\ndescribe_pet(\"Tom\", \"cat\")\n\ndef draw_line(char, length):\n    print(char * length)\n\ndraw_line(\"=\", 12)\ndraw_line(\"~\", 6)",
         "readMore": {
           "label": "Python tutorial: defining functions",
@@ -3273,7 +3273,7 @@
           "title": "Hard: Document it fully",
           "promptMarkdown": "Define `average(numbers: list[float]) -> float` with a docstring that has `Args:` and `Returns:` sections. It returns 0.0 for an empty list.",
           "starterCode": "",
-          "hint": "Follow the layout in the lesson. In the body: `if not numbers: return 0.0`, then `return sum(numbers) / len(numbers)`.",
+          "hint": "Follow the layout in the intro. In the body: `if not numbers: return 0.0`, then `return sum(numbers) / len(numbers)`.",
           "solution": "def average(numbers: list[float]) -> float:\n    \"\"\"Return the average of a list of numbers.\n\n    Args:\n        numbers: the values to average.\n\n    Returns:\n        The average, or 0.0 for an empty list.\n    \"\"\"\n    if not numbers:\n        return 0.0\n    return sum(numbers) / len(numbers)",
           "validation": {
             "mode": "python_tests",
@@ -5261,7 +5261,7 @@
     },
     {
       "id": "proj_text_tools",
-      "title": "Easy project: Text tools",
+      "title": "Easy side quest: Text tools",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -5282,7 +5282,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Text tools",
+        "title": "Easy side quest: Text tools",
         "bodyMarkdown": "Build a small toolbox of text functions, then use them together in a report. Each tool is one short function that does one job and **returns** its answer, which makes it easy to test and to reuse.\n\nThe tools: `count_vowels(text)` counts the vowels, `word_count(text)` counts the words, `capitalize_words(text)` capitalises the first letter of every word, and `is_palindrome(text)` says whether the text reads the same backwards, ignoring spaces and capitals. When the user types `never odd or even`, the finished program shows:\n\n```\nText: never odd or even\nWords: 4\nVowels: 6\nTitle: Never Odd Or Even\nPalindrome: yes\n```\n\nBuild it one tool at a time, then a `report(text)` function that uses all four and returns the four lines as one string, and finally the program that reads the text and prints the report. Type a sentence in the Input box to try the sandbox.",
         "sandboxCode": "def count_vowels(text):\n    return sum(1 for ch in text.lower() if ch in \"aeiou\")\n\ndef word_count(text):\n    return len(text.split())\n\ntext = input(\"Text: \")\nprint(\"Words:\", word_count(text))\nprint(\"Vowels:\", count_vowels(text))"
       },
@@ -5401,7 +5401,7 @@
         {
           "id": "proj_text_tools-the-report",
           "title": "Hard: The report",
-          "promptMarkdown": "The four tools are ready. Define `report(text)` that uses them to **return** four lines as one string, like the lesson: `Words: 4`, `Vowels: 6`, `Title: ...` and `Palindrome: yes` (or `no`).",
+          "promptMarkdown": "The four tools are ready. Define `report(text)` that uses them to **return** four lines as one string, like the intro: `Words: 4`, `Vowels: 6`, `Title: ...` and `Palindrome: yes` (or `no`).",
           "starterCode": "def count_vowels(text):\n    return sum(1 for ch in text.lower() if ch in \"aeiou\")\n\ndef word_count(text):\n    return len(text.split())\n\ndef capitalize_words(text):\n    return \" \".join(w[0].upper() + w[1:] for w in text.split())\n\ndef is_palindrome(text):\n    letters = [ch for ch in text.lower() if ch.isalpha()]\n    return letters == letters[::-1]\n\n",
           "hint": "Build a list of four f-strings, using a conditional expression for yes/no, and return `\"\\n\".join(lines)`.",
           "solution": "def count_vowels(text):\n    return sum(1 for ch in text.lower() if ch in \"aeiou\")\n\ndef word_count(text):\n    return len(text.split())\n\ndef capitalize_words(text):\n    return \" \".join(w[0].upper() + w[1:] for w in text.split())\n\ndef is_palindrome(text):\n    letters = [ch for ch in text.lower() if ch.isalpha()]\n    return letters == letters[::-1]\n\ndef report(text):\n    lines = [\n        f\"Words: {word_count(text)}\",\n        f\"Vowels: {count_vowels(text)}\",\n        f\"Title: {capitalize_words(text)}\",\n        f\"Palindrome: {'yes' if is_palindrome(text) else 'no'}\",\n    ]\n    return \"\\n\".join(lines)\n",
@@ -5585,7 +5585,7 @@
     },
     {
       "id": "proj_password_checker",
-      "title": "Medium project: Password checker",
+      "title": "Medium side quest: Password checker",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -5606,7 +5606,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Password checker",
+        "title": "Medium side quest: Password checker",
         "bodyMarkdown": "Build a password checker that scores a password and suggests how to make it stronger. Each rule is its own small function, and bigger functions are built out of the small ones.\n\nA password scores one point for each rule it meets: at least 8 characters, a digit, a capital letter, and a symbol (anything that isn't a letter or digit). A score of 4 is `Strong`, 2 or 3 is `Okay`, and 0 or 1 is `Weak`. When the user types `sunshine7`, the finished program shows:\n\n```\nPassword: sunshine7\nStrength: 2/4 (Okay)\n- Add a capital letter\n- Add a symbol\n```\n\nA handy built-in for the rules: `any(...)` is `True` when at least one item is true, so `any(ch.isdigit() for ch in pw)` asks \"is any character a digit?\". (`all(...)` is its partner: true only when every item is.) String methods do the rest: `isdigit()`, `isupper()` and `isalnum()`.\n\nBuild it in steps: the three character checks, the score, the list of tips, and finally the whole program. Type a password in the Input box to try the sandbox.",
         "sandboxCode": "def has_digit(pw):\n    return any(ch.isdigit() for ch in pw)\n\ndef has_upper(pw):\n    return any(ch.isupper() for ch in pw)\n\npw = input(\"Password: \")\nprint(\"Digit:\", has_digit(pw), \"Capital:\", has_upper(pw), \"Length:\", len(pw))"
       },
@@ -5914,7 +5914,7 @@
     },
     {
       "id": "proj_bank_accounts",
-      "title": "Hard project: Bank accounts",
+      "title": "Hard side quest: Bank accounts",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -5935,8 +5935,8 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Bank accounts",
-        "bodyMarkdown": "Build a tiny bank. The accounts live in one dict, mapping each name to a balance, and every operation is a function that takes that dict as its first argument. No globals: whoever calls a function hands it the accounts to work on.\n\nThe operations: `open_account(accounts, name, deposit=0)`, `deposit(accounts, name, amount)`, `withdraw(accounts, name, amount)` (refused when there isn't enough money), `transfer(accounts, from_name, to_name, amount)` (built from `withdraw` and `deposit`), and `statement(accounts)`, which returns the accounts as lines of text, richest first.\n\nThe last step reads a list of text commands and returns what the bank says back. For example:\n\n```\nopen Ana 100        ->  Opened Ana\nopen Ben            ->  Opened Ben\ntransfer Ana Ben 30 ->  Moved $30.00 from Ana to Ben\nwithdraw Ben 50     ->  Not enough money\nshow                ->  Ana: $70.00\n                        Ben: $30.00\n                        Total: $100.00\n```\n\nIt uses everything in this section: parameters and return values, a default value, functions calling functions, a lambda as a sort key, and passing data in rather than reaching for globals.",
+        "title": "Hard side quest: Bank accounts",
+        "bodyMarkdown": "Build a tiny bank. The accounts live in one dict, mapping each name to a balance, and every operation is a function that takes that dict as its first argument. No globals: whoever calls a function hands it the accounts to work on.\n\nThe operations: `open_account(accounts, name, deposit=0)`, `deposit(accounts, name, amount)`, `withdraw(accounts, name, amount)` (refused when there isn't enough money), `transfer(accounts, from_name, to_name, amount)` (built from `withdraw` and `deposit`), and `statement(accounts)`, which returns the accounts as lines of text, richest first.\n\nThe last step reads a list of text commands and returns what the bank says back. For example:\n\n```\nopen Ana 100        ->  Opened Ana\nopen Ben            ->  Opened Ben\ntransfer Ana Ben 30 ->  Moved $30.00 from Ana to Ben\nwithdraw Ben 50     ->  Not enough money\nshow                ->  Ana: $70.00\n                        Ben: $30.00\n                        Total: $100.00\n```\n\nIt uses everything in this quest: parameters and return values, a default value, functions calling functions, a lambda as a sort key, and passing data in rather than reaching for globals.",
         "sandboxCode": "def open_account(accounts, name, deposit=0):\n    if name in accounts:\n        return False\n    accounts[name] = deposit\n    return True\n\ndef deposit(accounts, name, amount):\n    accounts[name] += amount\n    return accounts[name]\n\nbank = {}\nopen_account(bank, \"Ana\", 100)\nopen_account(bank, \"Ben\")\nprint(deposit(bank, \"Ben\", 25), bank)"
       },
       "challenges": [
@@ -6073,7 +6073,7 @@
         {
           "id": "proj_bank_accounts-run-the-bank",
           "title": "Expert: Run the bank",
-          "promptMarkdown": "Define `run(accounts, commands)` that carries out each command and returns the list of replies (see the lesson): `open NAME [AMOUNT]`, `deposit NAME AMOUNT` (reply `Ana: $150.00`), `withdraw NAME AMOUNT` (the new balance, or `Not enough money`), `transfer FROM TO AMOUNT`, and `show` (the statement lines). A name that doesn't exist gives `No account NAME`, and anything else `Unknown command`.",
+          "promptMarkdown": "Define `run(accounts, commands)` that carries out each command and returns the list of replies (see the intro): `open NAME [AMOUNT]`, `deposit NAME AMOUNT` (reply `Ana: $150.00`), `withdraw NAME AMOUNT` (the new balance, or `Not enough money`), `transfer FROM TO AMOUNT`, and `show` (the statement lines). A name that doesn't exist gives `No account NAME`, and anything else `Unknown command`.",
           "starterCode": "def open_account(accounts, name, deposit=0):\n    if name in accounts:\n        return False\n    accounts[name] = deposit\n    return True\n\ndef deposit(accounts, name, amount):\n    accounts[name] += amount\n    return accounts[name]\n\ndef withdraw(accounts, name, amount):\n    if amount > accounts[name]:\n        return False\n    accounts[name] -= amount\n    return True\n\ndef transfer(accounts, from_name, to_name, amount):\n    if not withdraw(accounts, from_name, amount):\n        return False\n    deposit(accounts, to_name, amount)\n    return True\n\ndef statement(accounts):\n    lines = []\n    for name in sorted(accounts, key=lambda n: (-accounts[n], n)):\n        lines.append(f\"{name}: ${accounts[name]:.2f}\")\n    lines.append(f\"Total: ${sum(accounts.values()):.2f}\")\n    return lines\n\n",
           "hint": "Split each command into its parts. Check the action with `if`/`elif`; for the money commands, check the names exist before calling your functions, and turn the amount into a float.",
           "solution": "def open_account(accounts, name, deposit=0):\n    if name in accounts:\n        return False\n    accounts[name] = deposit\n    return True\n\ndef deposit(accounts, name, amount):\n    accounts[name] += amount\n    return accounts[name]\n\ndef withdraw(accounts, name, amount):\n    if amount > accounts[name]:\n        return False\n    accounts[name] -= amount\n    return True\n\ndef transfer(accounts, from_name, to_name, amount):\n    if not withdraw(accounts, from_name, amount):\n        return False\n    deposit(accounts, to_name, amount)\n    return True\n\ndef statement(accounts):\n    lines = []\n    for name in sorted(accounts, key=lambda n: (-accounts[n], n)):\n        lines.append(f\"{name}: ${accounts[name]:.2f}\")\n    lines.append(f\"Total: ${sum(accounts.values()):.2f}\")\n    return lines\n\ndef run(accounts, commands):\n    output = []\n    for command in commands:\n        parts = command.split()\n        action, args = parts[0], parts[1:]\n        if action == \"open\":\n            amount = float(args[1]) if len(args) > 1 else 0\n            if open_account(accounts, args[0], amount):\n                output.append(f\"Opened {args[0]}\")\n            else:\n                output.append(f\"{args[0]} already exists\")\n        elif action == \"show\":\n            output.extend(statement(accounts))\n        elif action in (\"deposit\", \"withdraw\", \"transfer\"):\n            names = args[:-1]\n            missing = [n for n in names if n not in accounts]\n            if missing:\n                output.append(f\"No account {missing[0]}\")\n                continue\n            amount = float(args[-1])\n            if action == \"deposit\":\n                balance = deposit(accounts, names[0], amount)\n                output.append(f\"{names[0]}: ${balance:.2f}\")\n            elif action == \"withdraw\":\n                if withdraw(accounts, names[0], amount):\n                    output.append(f\"{names[0]}: ${accounts[names[0]]:.2f}\")\n                else:\n                    output.append(\"Not enough money\")\n            elif transfer(accounts, names[0], names[1], amount):\n                output.append(f\"Moved ${amount:.2f} from {names[0]} to {names[1]}\")\n            else:\n                output.append(\"Not enough money\")\n        else:\n            output.append(\"Unknown command\")\n    return output\n",

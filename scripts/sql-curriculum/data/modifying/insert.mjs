@@ -7,7 +7,7 @@ export default makeTopic({
   title: 'Adding rows: INSERT',
   database: MODIFYING_DB,
   paragraphs: [
-    "So far every query only read data. This section changes it. The database is a small lending library: `members` borrow `books`, each borrowing is a row in `loans`, some members owe `fines`, and new books wait in `arrivals`. Open **Tables** to see them. Today is 2026-10-24.",
+    "So far every query only read data. This quest changes it. The database is a small lending library: `members` borrow `books`, each borrowing is a row in `loans`, some members owe `fines`, and new books wait in `arrivals`. Open **Tables** to see them. Today is 2026-10-24.",
     "Nothing here can break: every **Run** and **Check** starts from a fresh copy of the database. A **Check** compares the tables afterwards with what was asked.",
     '`INSERT INTO` adds a row. Name the columns, then give the values in the same order:',
     "```\nINSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');\n```",

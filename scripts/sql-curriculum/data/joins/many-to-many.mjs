@@ -91,7 +91,7 @@ export default makeTopic({
     mc('How do you find products bought together?', ['LEFT JOIN products', 'Join products to itself on price', 'GROUP BY product', 'Join order_items to itself on the order id'], 3,
       'Two lines of the same order are two products bought together.'),
     mc('Why `i1.product_id < i2.product_id` in the pairs query?', ['To find cheaper products', 'So each pair appears once and no product pairs with itself', 'It is required', 'To sort by price'], 1,
-      'The same trick as in the self-join lesson.'),
+      'The same trick as in the self-join stage.'),
     mc('To go from orders to products you pass through…', ['customers', 'employees', 'nothing', 'order_items'], 3,
       'The junction table links the two.'),
     mc('If order 5 has 3 lines, how many pairs does the pairs query give for it?', ['3', '2', '6', '9'], 0,

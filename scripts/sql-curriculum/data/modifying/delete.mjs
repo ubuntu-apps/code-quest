@@ -13,7 +13,7 @@ export default makeTopic({
     "```\nSELECT * FROM loans WHERE returned < '2026-09-01';\n-- those are the ones? then:\nDELETE FROM loans WHERE returned < '2026-09-01';\n```",
     'Subqueries pick rows by looking at other tables. Remove the fines of people who are no longer members (the fine for member 9 belongs to nobody):',
     '```\nDELETE FROM fines\nWHERE member_id NOT IN (SELECT id FROM members);\n```',
-    "Deleting a row doesn't touch other tables. If you delete a member, their loans still point to an id that no longer exists. The section on designing tables shows how foreign keys can stop that; for now, it is up to you to delete or change the related rows too.",
+    "Deleting a row doesn't touch other tables. If you delete a member, their loans still point to an id that no longer exists. The quest on designing tables shows how foreign keys can stop that; for now, it is up to you to delete or change the related rows too.",
   ],
   sandboxCode: "SELECT * FROM loans WHERE returned < '2026-09-01';",
   sandboxSnippets: [

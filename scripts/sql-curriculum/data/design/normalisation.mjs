@@ -105,7 +105,7 @@ export default makeTopic({
     mc('What does a ticket row need after normalising?', ['The guest id, the event id and the seat', 'Every column of the sheet', 'The guest\'s name and email', 'The event\'s date and price'], 0,
       'Everything else is found through the ids.'),
     mc('Events and performers are many-to-many. What do you need?', ['A list of names in one column', 'An events column in performers', 'A junction table with one row per pair', 'A performer column in events'], 2,
-      'Like order_items in the joins section.'),
+      'Like order_items in the joins quest.'),
     mc('Why can\'t the sheet store an event with no tickets yet?', ['It can', 'Every row is a ticket, so an event only exists as part of one', 'Events need ids', 'The sheet is full'], 1,
       'In an events table, it is just a row.'),
   ],

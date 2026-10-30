@@ -160,7 +160,7 @@ export function LearnLevel({
   const nextAfter = (chIndex: number): { label: string; go: () => void } => {
     const rest = [...level.challenges.slice(chIndex + 1), ...level.challenges.slice(0, chIndex)]
     const next = rest.find((c) => !isDone(c.id))
-    if (!next) return { label: 'Take the quiz', go: () => handleStepChange('quiz') }
+    if (!next) return { label: 'Go to the gate', go: () => handleStepChange('quiz') }
     return {
       label: 'Next challenge',
       go: () => document.getElementById(`challenge-${next.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
@@ -182,9 +182,9 @@ export function LearnLevel({
           <div className="cq-reset-note" role="status">
             <p>
               {prog.challengesReset === 1
-                ? 'This lesson was updated since you last worked on it, so your earlier answer to one challenge was cleared.'
-                : `This lesson was updated since you last worked on it, so your earlier answers to ${prog.challengesReset} challenges were cleared.`}{' '}
-              Passed quizzes always stay passed.
+                ? 'This stage was updated since you last worked on it, so your earlier answer to one challenge was cleared.'
+                : `This stage was updated since you last worked on it, so your earlier answers to ${prog.challengesReset} challenges were cleared.`}{' '}
+              Cleared gates always stay cleared.
             </p>
             <button
               type="button"

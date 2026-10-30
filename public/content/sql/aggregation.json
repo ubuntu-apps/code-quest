@@ -30,7 +30,7 @@
       ],
       "intro": {
         "title": "Counting rows: COUNT",
-        "bodyMarkdown": "So far every query showed rows. This section is about **summarising** them: how many sales, how much money, the average score. The database is new: two weeks of `sales` at a small café chain with three stores, and a class's exam `results`. Open **Tables** to see the columns.\n\nAn **aggregate function** turns many rows into one value. `COUNT(*)` counts rows:\n\n```\nSELECT COUNT(*) AS sales FROM sales;\n```\n\nThe result is a single row with a single number. With `WHERE`, only the matching rows are counted:\n\n```\nSELECT COUNT(*) AS card_sales FROM sales WHERE payment = 'card';\n```\n\n`COUNT(column)` counts only the rows where that column **has a value**, skipping `NULL`. A few payments weren't recorded, so `COUNT(payment)` is smaller than `COUNT(*)`, and the difference is the number of missing values.\n\n```\nSELECT COUNT(*) AS all_sales, COUNT(payment) AS recorded,\n       COUNT(*) - COUNT(payment) AS missing\nFROM sales;\n```\n\nAs with any calculated column, name each count with `AS`.",
+        "bodyMarkdown": "So far every query showed rows. This quest is about **summarising** them: how many sales, how much money, the average score. The database is new: two weeks of `sales` at a small café chain with three stores, and a class's exam `results`. Open **Tables** to see the columns.\n\nAn **aggregate function** turns many rows into one value. `COUNT(*)` counts rows:\n\n```\nSELECT COUNT(*) AS sales FROM sales;\n```\n\nThe result is a single row with a single number. With `WHERE`, only the matching rows are counted:\n\n```\nSELECT COUNT(*) AS card_sales FROM sales WHERE payment = 'card';\n```\n\n`COUNT(column)` counts only the rows where that column **has a value**, skipping `NULL`. A few payments weren't recorded, so `COUNT(payment)` is smaller than `COUNT(*)`, and the difference is the number of missing values.\n\n```\nSELECT COUNT(*) AS all_sales, COUNT(payment) AS recorded,\n       COUNT(*) - COUNT(payment) AS missing\nFROM sales;\n```\n\nAs with any calculated column, name each count with `AS`.",
         "sandboxCode": "SELECT COUNT(*) AS sales FROM sales;",
         "readMore": {
           "label": "SQLite: aggregate functions",
@@ -4138,7 +4138,7 @@
     },
     {
       "id": "proj_cafe_report",
-      "title": "Easy project: Café weekly report",
+      "title": "Easy side quest: Café weekly report",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -4159,7 +4159,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Café weekly report",
+        "title": "Easy side quest: Café weekly report",
         "bodyMarkdown": "The café's owner wants a report on the two weeks of `sales`: how each store did, which categories and products sell, how people pay and how the weeks compare.\n\nTakings are always `quantity * unit_price`, rounded to 2 decimals at the end. Each challenge is one table of the report.",
         "sandboxCode": "SELECT store, COUNT(*) AS sales, SUM(quantity) AS items,\n       ROUND(SUM(quantity * unit_price), 2) AS revenue\nFROM sales\nGROUP BY store;",
         "readMore": {
@@ -4415,7 +4415,7 @@
     },
     {
       "id": "proj_exam_board",
-      "title": "Medium project: Exam board",
+      "title": "Medium side quest: Exam board",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -4436,7 +4436,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Exam board",
+        "title": "Medium side quest: Exam board",
         "bodyMarkdown": "The exam board is meeting about the class's `results`. They want averages per term, absences, grade counts, the subjects that improved most, and the honour roll.\n\nA missing score means the student was absent. Grades are `A` for 90 or more, `B` for 75 or more, `C` for 60 or more and `D` below that.",
         "sandboxCode": "SELECT subject, term, ROUND(AVG(score), 1) AS average\nFROM results\nGROUP BY subject, term;",
         "readMore": {
@@ -4691,7 +4691,7 @@
     },
     {
       "id": "proj_product_review",
-      "title": "Hard project: Product review",
+      "title": "Hard side quest: Product review",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -4712,8 +4712,8 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Product review",
-        "bodyMarkdown": "The café is reviewing its menu. For every product, the owner wants to know how it sells, where it sells, how it's paid for, and finally a decision: keep it, watch it or review it.\n\nThis project uses the whole section: grouping, `HAVING`, `COUNT(DISTINCT)`, `GROUP_CONCAT`, conditional totals and careful averages.",
+        "title": "Hard side quest: Product review",
+        "bodyMarkdown": "The café is reviewing its menu. For every product, the owner wants to know how it sells, where it sells, how it's paid for, and finally a decision: keep it, watch it or review it.\n\nThis side quest uses the whole quest: grouping, `HAVING`, `COUNT(DISTINCT)`, `GROUP_CONCAT`, conditional totals and careful averages.",
         "sandboxCode": "SELECT product, category, SUM(quantity) AS items,\n       ROUND(SUM(quantity * unit_price), 2) AS revenue,\n       COUNT(DISTINCT store) AS stores\nFROM sales\nGROUP BY product, category;",
         "readMore": {
           "label": "SQLite: aggregate functions",

@@ -39,7 +39,7 @@ export const INSTALL_GUIDES: InstallGuide[] = [
 
 export function formatInstallGuidesText(url: string): string {
   const intro =
-    'CodeQuest is a free app for learning coding — lessons, challenges, and quizzes.\n\n' +
+    'CodeQuest is a free app for learning to code through quests of hands-on challenges.\n\n' +
     `Open or install: ${url}`
 
   const sections = INSTALL_GUIDES.map((guide) => {
@@ -52,7 +52,7 @@ export function formatInstallGuidesText(url: string): string {
 
 export function formatInstallGuidesTextShort(url: string): string {
   return [
-    'CodeQuest is a free app for learning coding — lessons, challenges, and quizzes.',
+    'CodeQuest is a free app for learning to code through quests of hands-on challenges.',
     '',
     `Install: ${url}`,
     '',

@@ -32,11 +32,11 @@ export function snippet(label, code) {
  */
 export function makeProject(difficulty, config) {
   const label =
-    difficulty === 'easy' ? 'Easy project' : difficulty === 'medium' ? 'Medium project' : 'Hard project'
+    difficulty === 'easy' ? 'Easy side quest' : difficulty === 'medium' ? 'Medium side quest' : 'Hard side quest'
   const title =
-    config.title.startsWith('Easy project') ||
-    config.title.startsWith('Medium project') ||
-    config.title.startsWith('Hard project')
+    config.title.startsWith('Easy side quest') ||
+    config.title.startsWith('Medium side quest') ||
+    config.title.startsWith('Hard side quest')
       ? config.title
       : `${label}: ${config.title}`
   return {

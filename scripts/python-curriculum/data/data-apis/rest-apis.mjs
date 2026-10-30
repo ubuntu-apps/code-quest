@@ -25,7 +25,7 @@ export default makeTopic({
   readMore: { label: "MDN: HTTP request methods", url: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods", source: "MDN Web Docs" },
   challenges: [
     task("easy", "GET a collection", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCall `GET /todos`. Store the status code in `status`, the parsed list in `todos`, and how many there are in `count`.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCall `GET /todos`. Store the status code in `status`, the parsed list in `todos`, and how many there are in `count`.",
       starter: "import json\n\nstatus, text = api(\"GET\", \"/todos\")\ntodos = ___\ncount = ___",
       hint: "Parse the response text with `json.loads(text)`, then use `len(todos)`.",
       solution: "import json\n\nstatus, text = api(\"GET\", \"/todos\")\ntodos = json.loads(text)\ncount = len(todos)",
@@ -37,7 +37,7 @@ export default makeTopic({
       ],
     }),
     task("easy", "GET one resource", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nFetch the todo with id 2 and store its title in `title`.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nFetch the todo with id 2 and store its title in `title`.",
       starter: "import json\n\nstatus, text = api(\"GET\", ___)\ntitle = ___",
       hint: "One resource lives at `/todos/<id>`, so the path is `\"/todos/2\"`.",
       solution: "import json\n\nstatus, text = api(\"GET\", \"/todos/2\")\ntitle = json.loads(text)[\"title\"]",
@@ -60,7 +60,7 @@ export default makeTopic({
       ],
     }),
     task("medium", "Check the status code", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `get_title(todo_id)`: return the todo's title, or `None` when the API answers 404.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `get_title(todo_id)`: return the todo's title, or `None` when the API answers 404.",
       starter: "import json\n\ndef get_title(todo_id):\n    status, text = api(\"GET\", f\"/todos/{todo_id}\")\n    ___",
       hint: "Check `if status == 404: return None` before parsing the body.",
       solution: "import json\n\ndef get_title(todo_id):\n    status, text = api(\"GET\", f\"/todos/{todo_id}\")\n    if status == 404:\n        return None\n    return json.loads(text)[\"title\"]",
@@ -72,7 +72,7 @@ export default makeTopic({
       ],
     }),
     task("medium", "Create with POST", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCreate a todo titled `Read book` by POSTing JSON to `/todos`. Store the status in `status` and the new todo's id in `new_id`.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nCreate a todo titled `Read book` by POSTing JSON to `/todos`. Store the status in `status` and the new todo's id in `new_id`.",
       starter: "import json\n\nstatus, text = api(\"POST\", \"/todos\", ___)\nnew_id = ___",
       hint: "The body is a JSON string: `json.dumps({\"title\": \"Read book\"})`. The response is the created todo.",
       solution: "import json\n\nstatus, text = api(\"POST\", \"/todos\", json.dumps({\"title\": \"Read book\"}))\nnew_id = json.loads(text)[\"id\"]",
@@ -84,7 +84,7 @@ export default makeTopic({
       ],
     }),
     task("medium", "Delete a resource", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nDelete todo 3. Store the status in `status`, then confirm it is gone: set `gone` to `True` if fetching it now returns 404.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nDelete todo 3. Store the status in `status`, then confirm it is gone: set `gone` to `True` if fetching it now returns 404.",
       starter: "status, text = api(___, ___)\ngone = ___",
       hint: "Call `api(\"DELETE\", \"/todos/3\")`, then compare `api(\"GET\", \"/todos/3\")[0] == 404`.",
       solution: "status, text = api(\"DELETE\", \"/todos/3\")\ngone = api(\"GET\", \"/todos/3\")[0] == 404",
@@ -96,7 +96,7 @@ export default makeTopic({
       ],
     }),
     task("hard", "Update with PUT", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nMark todo 1 as done. PUT replaces the whole resource, so send both `title` and `done`. Store the status in `status`.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nMark todo 1 as done. PUT replaces the whole resource, so send both `title` and `done`. Store the status in `status`.",
       starter: "import json\n\ncurrent = json.loads(api(\"GET\", \"/todos/1\")[1])\nstatus, text = api(\"PUT\", \"/todos/1\", ___)",
       hint: "Send `json.dumps({\"title\": current[\"title\"], \"done\": True})`.",
       solution: "import json\n\ncurrent = json.loads(api(\"GET\", \"/todos/1\")[1])\nstatus, text = api(\"PUT\", \"/todos/1\", json.dumps({\"title\": current[\"title\"], \"done\": True}))",
@@ -108,7 +108,7 @@ export default makeTopic({
       ],
     }),
     task("hard", "Filter on the server", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nAsk the API for unfinished todos only, using the query string `?done=false`. Store their titles in `open_titles`.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nAsk the API for unfinished todos only, using the query string `?done=false`. Store their titles in `open_titles`.",
       starter: "import json\n\nstatus, text = api(\"GET\", ___)\nopen_titles = ___",
       hint: "The path is `\"/todos?done=false\"`; then collect `t[\"title\"]` for each todo.",
       solution: "import json\n\nstatus, text = api(\"GET\", \"/todos?done=false\")\nopen_titles = [t[\"title\"] for t in json.loads(text)]",
@@ -119,7 +119,7 @@ export default makeTopic({
       ],
     }),
     task("expert", "Turn API errors into exceptions", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `create_todo(title)` that POSTs a new todo and returns its id. If the API answers 400, raise `ValueError` with the API's `error` message.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWrite `create_todo(title)` that POSTs a new todo and returns its id. If the API answers 400, raise `ValueError` with the API's `error` message.",
       starter: "import json\n\ndef create_todo(title):\n    ___",
       hint: "Parse the response first. `if status == 400: raise ValueError(data[\"error\"])`.",
       solution: "import json\n\ndef create_todo(title):\n    status, text = api(\"POST\", \"/todos\", json.dumps({\"title\": title}))\n    data = json.loads(text)\n    if status == 400:\n        raise ValueError(data[\"error\"])\n    return data[\"id\"]",
@@ -130,7 +130,7 @@ export default makeTopic({
       ],
     }),
     task("expert", "Follow pagination", {
-      prompt: "Your code can call the pretend todo API from the lesson: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWith `?page=N&per_page=2` the API returns `{\"items\": [...], \"next_page\": N + 1 or null}`. Write `fetch_all()` that follows `next_page` from page 1 and returns every todo.",
+      prompt: "Your code can call the pretend todo API from the intro: `api(method, path, body=None)` returns `(status, text)`, where `text` is the JSON response.\n\nWith `?page=N&per_page=2` the API returns `{\"items\": [...], \"next_page\": N + 1 or null}`. Write `fetch_all()` that follows `next_page` from page 1 and returns every todo.",
       starter: "import json\n\ndef fetch_all():\n    ___",
       hint: "Start with `page = 1`; loop while `page` is not `None`, extending a list with `data[\"items\"]` and setting `page = data[\"next_page\"]`.",
       solution: "import json\n\ndef fetch_all():\n    todos = []\n    page = 1\n    while page is not None:\n        status, text = api(\"GET\", f\"/todos?page={page}&per_page=2\")\n        data = json.loads(text)\n        todos.extend(data[\"items\"])\n        page = data[\"next_page\"]\n    return todos",

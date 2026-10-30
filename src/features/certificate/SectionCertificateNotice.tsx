@@ -16,7 +16,7 @@ interface SectionCertificateNoticeProps {
 }
 
 /**
- * "Section complete" with a button for its certificate: on the section's page, and under
+ * "Quest complete" with a button for its certificate: on the section's page, and under
  * the quiz that finished it. Shows nothing until the section is finished.
  */
 export function SectionCertificateNotice({
@@ -41,9 +41,9 @@ export function SectionCertificateNotice({
   return (
     <section className="cq-panel cq-certificate-panel">
       <h2 className="cq-subtitle">
-        <Award size={18} aria-hidden /> Section complete
+        <Award size={18} aria-hidden /> Quest complete
       </h2>
-      <p>You finished {section.sectionRef.title}. Your section certificate is ready.</p>
+      <p>You finished {section.sectionRef.title}. Your quest certificate is ready.</p>
       <button type="button" className="cq-btn cq-btn--primary" onClick={() => setOpen(true)}>
         Get certificate
       </button>

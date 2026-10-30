@@ -13,7 +13,7 @@ export default makeTopic({
     'If two rows tie for the top, both are kept. Sometimes that is right. When you need exactly one row per group, add a rule that breaks ties: let the subquery pick one **id**, sorted by your rule, with `LIMIT 1`:',
     '```\nSELECT t.title\nFROM tracks t\nWHERE t.id = (\n  SELECT t2.id FROM tracks t2\n  WHERE t2.artist_id = t.artist_id\n  ORDER BY t2.duration_s DESC, t2.id\n  LIMIT 1\n);\n```',
     'When the value you rank by is itself a total, like plays per track, work it out in a CTE first, then pick the top rows from the CTE in the same way.',
-    'The window functions section shows a shorter way to do all this, with `ROW_NUMBER()` and `RANK()`. The subquery way works in every database, and helps you see what those functions do.',
+    'The window functions quest shows a shorter way to do all this, with `ROW_NUMBER()` and `RANK()`. The subquery way works in every database, and helps you see what those functions do.',
   ],
   sandboxCode: 'SELECT t.title, t.duration_s\nFROM tracks t\nWHERE t.duration_s = (\n  SELECT MAX(duration_s) FROM tracks WHERE artist_id = t.artist_id\n);',
   sandboxSnippets: [
@@ -88,7 +88,7 @@ export default makeTopic({
     mc('"Fewer than 2 rows rank above it" keeps…', ['The top two rows of each group', 'The bottom two', 'The top row only', 'Every row'], 0,
       'The first has 0 rows above it, the second has 1.'),
     mc('Which later SQL feature makes top-per-group queries shorter?', ['CASE', 'COALESCE', 'Window functions like ROW_NUMBER()', 'UNION'], 2,
-      'They come in the window functions section.'),
+      'They come in the window functions quest.'),
     mc('In "Favourite artists", why sort by `x.artist` after `x.plays DESC`?', ['To remove NULLs', 'To break ties between artists with the same plays', 'To sort the output', 'It is required by LIMIT'], 1,
       'Without it, a tie could pick either artist.'),
   ],

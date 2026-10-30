@@ -2649,7 +2649,7 @@
       ],
       "intro": {
         "title": "for loops",
-        "bodyMarkdown": "A `for` loop goes through a sequence one item at a time and runs its block for each one. Strings are sequences of characters, so `for ch in word:` visits every letter in turn:\n\n```\nword = \"code\"\nfor ch in word:\n    print(ch)\n```\n\nThe name after `for` (here `ch`) is the **loop variable**. On each iteration it holds the current item, and you can call it anything that describes the item: `letter`, `word`, `n`. Unlike `while`, a `for` loop needs no counter to update and can't run forever: it stops when the items run out.\n\nTo go through the words of a sentence, split it first: `for word in sentence.split():`. (`split()` gives a list of words; lists get their own section next.)\n\nMost loops follow the **accumulator** pattern: set up a result before the loop, update it inside, and use it after. Counting, adding up and building new text all work this way:\n\n```\ntext = \"Programming is fun\"\nvowels = 0\nfor ch in text.lower():\n    if ch in \"aeiou\":\n        vowels += 1\nprint(vowels)   # 5\n```\n\nTo build a new string, start with `result = \"\"` and add to it: `result = result + ch`. Adding each character in front (`result = ch + result`) reverses the text.\n\nEvery character has a number, its code: `ord(\"a\")` is 97, and `chr(97)` turns it back into `\"a\"`. The letters a to z have the codes 97 to 122, one after another, so `chr(ord(ch) + 1)` is the next letter. That's the basis of simple ciphers.\n\nFor counting a fixed number of times, `for` loops use `range()`, which the next lesson covers in detail: `for i in range(3):` runs three times, with `i` set to 0, 1 and 2.",
+        "bodyMarkdown": "A `for` loop goes through a sequence one item at a time and runs its block for each one. Strings are sequences of characters, so `for ch in word:` visits every letter in turn:\n\n```\nword = \"code\"\nfor ch in word:\n    print(ch)\n```\n\nThe name after `for` (here `ch`) is the **loop variable**. On each iteration it holds the current item, and you can call it anything that describes the item: `letter`, `word`, `n`. Unlike `while`, a `for` loop needs no counter to update and can't run forever: it stops when the items run out.\n\nTo go through the words of a sentence, split it first: `for word in sentence.split():`. (`split()` gives a list of words; lists get their own quest next.)\n\nMost loops follow the **accumulator** pattern: set up a result before the loop, update it inside, and use it after. Counting, adding up and building new text all work this way:\n\n```\ntext = \"Programming is fun\"\nvowels = 0\nfor ch in text.lower():\n    if ch in \"aeiou\":\n        vowels += 1\nprint(vowels)   # 5\n```\n\nTo build a new string, start with `result = \"\"` and add to it: `result = result + ch`. Adding each character in front (`result = ch + result`) reverses the text.\n\nEvery character has a number, its code: `ord(\"a\")` is 97, and `chr(97)` turns it back into `\"a\"`. The letters a to z have the codes 97 to 122, one after another, so `chr(ord(ch) + 1)` is the next letter. That's the basis of simple ciphers.\n\nFor counting a fixed number of times, `for` loops use `range()`, which the next stage covers in detail: `for i in range(3):` runs three times, with `i` set to 0, 1 and 2.",
         "sandboxCode": "word = \"loop\"\nfor letter in word:\n    print(letter.upper())\n\ntotal = 0\nfor digit in \"2026\":\n    total += int(digit)\nprint(\"Digit sum:\", total)",
         "readMore": {
           "label": "Python tutorial: for statements",
@@ -5238,7 +5238,7 @@
     },
     {
       "id": "proj_guess_the_number",
-      "title": "Easy project: Guess the number",
+      "title": "Easy side quest: Guess the number",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -5259,7 +5259,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Guess the number",
+        "title": "Easy side quest: Guess the number",
         "bodyMarkdown": "Build the classic guessing game. The program has a secret number; the player guesses, and the program says whether each guess is too low, too high or correct, until they get it or run out of tries. It uses comparisons, `if`/`elif`/`else`, a `while` loop and `break`.\n\nTo keep the checks predictable the secret is always 7 here. (A real game would pick one with `random.randint(1, 10)`, which you'll meet in Modules and packages.) When the player types 3, 9 and 7, the finished game shows:\n\n```\nGuess a number from 1 to 10.\nYour guess: 3\nToo low\nYour guess: 9\nToo high\nYour guess: 7\nCorrect! You got it in 3 tries.\n```\n\nBuild it in steps: compare one guess, read a guess, keep asking until it's right, count the tries, and finally limit the player to 5 tries. Type guesses on separate lines in the Input box to try the sandbox.",
         "sandboxCode": "secret = 7\nguess = int(input(\"Your guess: \"))\nwhile guess != secret:\n    if guess < secret:\n        print(\"Too low\")\n    else:\n        print(\"Too high\")\n    guess = int(input(\"Your guess: \"))\nprint(\"Correct!\")"
       },
@@ -5557,7 +5557,7 @@
     },
     {
       "id": "proj_quiz_game",
-      "title": "Medium project: Quiz game",
+      "title": "Medium side quest: Quiz game",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -5578,7 +5578,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Quiz game",
+        "title": "Medium side quest: Quiz game",
         "bodyMarkdown": "Build a three-question quiz that keeps score and finishes with a message that depends on how well the player did. It uses `input()`, comparisons that ignore capital letters, a counter, `if`/`elif`/`else`, `match` and a `for` loop.\n\nThe questions: *What is 2 + 2?* (4), *What is the capital of Italy?* (Rome) and *What colour do you get by mixing blue and yellow?* (green). Answers count whatever their capitals and spaces, so ` ROME ` is right too. When the player types 4, rome and blue, the finished game shows:\n\n```\nWhat is 2 + 2? 4\nCorrect!\nWhat is the capital of Italy? rome\nCorrect!\nWhat colour do you get by mixing blue and yellow? blue\nWrong, it was green.\nScore: 2/3 (67%)\nWell done!\n```\n\nThe final message: `Perfect!` for 100%, `Well done!` for 50% or more, and `Keep practising!` below that. The percentage is rounded to a whole number with `:.0f`.\n\nBuild it in steps: check one answer, ask a question, keep score, pick the final message, then put the questions in a loop. Type three answers on separate lines in the Input box to try the sandbox.",
         "sandboxCode": "score = 0\nanswer = input(\"What is 2 + 2? \")\nif answer.strip() == \"4\":\n    print(\"Correct!\")\n    score += 1\nelse:\n    print(\"Wrong, it was 4.\")\nanswer = input(\"What is the capital of Italy? \")\nif answer.strip().lower() == \"rome\":\n    print(\"Correct!\")\n    score += 1\nelse:\n    print(\"Wrong, it was Rome.\")\nprint(\"Score:\", score)"
       },
@@ -5891,7 +5891,7 @@
     },
     {
       "id": "proj_prime_finder",
-      "title": "Hard project: Prime finder",
+      "title": "Hard side quest: Prime finder",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -5912,8 +5912,8 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Prime finder",
-        "bodyMarkdown": "A **prime** is a whole number above 1 that divides evenly only by 1 and itself: 2, 3, 5, 7, 11 and so on. 9 isn't prime, because 3 × 3 = 9. Build a program that lists every prime up to a limit the user types. It uses nested loops, `break`, a loop's `else`, and the counting patterns from this section.\n\nWhen the user types 50, the finished program shows:\n\n```\nPrimes up to: 50\nPrimes up to 50:\n2 3 5 7 11 13 17 19 23 29 31 37 41 43 47\nFound 15 primes. The largest is 47.\n```\n\nThe key test: `n % d == 0` is `True` when `d` divides `n` evenly. To check whether `n` is prime, try every `d` from 2 upwards; as soon as one divides it, `n` isn't prime and you can `break`. If the loop finishes without a `break`, it is. You only need to try divisors up to the square root of `n`, that is while `d * d <= n`, because any bigger divisor pairs with a smaller one you've already tried.\n\nBuild it in steps: the divisibility check, reading the limit, a prime test for one number, the faster test, all the primes up to a limit, and finally the whole program. Type a limit in the Input box to try the sandbox.",
+        "title": "Hard side quest: Prime finder",
+        "bodyMarkdown": "A **prime** is a whole number above 1 that divides evenly only by 1 and itself: 2, 3, 5, 7, 11 and so on. 9 isn't prime, because 3 × 3 = 9. Build a program that lists every prime up to a limit the user types. It uses nested loops, `break`, a loop's `else`, and the counting patterns from this quest.\n\nWhen the user types 50, the finished program shows:\n\n```\nPrimes up to: 50\nPrimes up to 50:\n2 3 5 7 11 13 17 19 23 29 31 37 41 43 47\nFound 15 primes. The largest is 47.\n```\n\nThe key test: `n % d == 0` is `True` when `d` divides `n` evenly. To check whether `n` is prime, try every `d` from 2 upwards; as soon as one divides it, `n` isn't prime and you can `break`. If the loop finishes without a `break`, it is. You only need to try divisors up to the square root of `n`, that is while `d * d <= n`, because any bigger divisor pairs with a smaller one you've already tried.\n\nBuild it in steps: the divisibility check, reading the limit, a prime test for one number, the faster test, all the primes up to a limit, and finally the whole program. Type a limit in the Input box to try the sandbox.",
         "sandboxCode": "limit = int(input(\"Primes up to: \"))\nfor n in range(2, limit + 1):\n    for d in range(2, n):\n        if n % d == 0:\n            break\n    else:\n        print(n, end=\" \")\nprint()"
       },
       "challenges": [

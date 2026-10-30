@@ -12,7 +12,7 @@ export default makeTopic({
     "`os.makedirs(\"data/2026\", exist_ok=True)` creates a folder, including any missing folders above it; `exist_ok=True` means \"and don't complain if it's already there\". `os.listdir(folder)` returns the names of everything in a folder, files and folders alike, in no particular order, so sort them when the order matters.",
     "```\nimport os\n\nos.makedirs(\"reports\", exist_ok=True)\nwith open(os.path.join(\"reports\", \"jan.txt\"), \"w\", encoding=\"utf-8\") as f:\n    f.write(\"January\\n\")\nprint(sorted(os.listdir(\"reports\")))       # ['jan.txt']\nprint(os.path.exists(\"reports/jan.txt\"))   # True\n```",
     "`os.rename(old, new)` renames or moves a file, and `os.remove(path)` deletes one, permanently, with no recycle bin. Check what you're about to delete, and be extra careful in loops.",
-    "The next lesson shows `pathlib`, a newer and often neater way to do all of this. You'll meet both in real code, so it's worth knowing the `os` way too.",
+    "The next stage shows `pathlib`, a newer and often neater way to do all of this. You'll meet both in real code, so it's worth knowing the `os` way too.",
   ],
   sandboxCode: "import os\n\nprint(\"Working directory:\", os.getcwd())\nos.makedirs(\"demo/sub\", exist_ok=True)\nwith open(os.path.join(\"demo\", \"a.txt\"), \"w\", encoding=\"utf-8\") as f:\n    f.write(\"hi\\n\")\nprint(sorted(os.listdir(\"demo\")))\nfor name in sorted(os.listdir(\"demo\")):\n    full = os.path.join(\"demo\", name)\n    print(name, \"folder\" if os.path.isdir(full) else \"file\")",
   sandboxSnippets: [

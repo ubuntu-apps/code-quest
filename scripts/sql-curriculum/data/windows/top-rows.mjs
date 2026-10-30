@@ -7,7 +7,7 @@ export default makeTopic({
   title: 'The top rows in each group',
   database: WINDOWS_DB,
   paragraphs: [
-    'The subqueries section found "the top row in each group" with correlated subqueries. Window functions make it shorter and easier to read: number or rank the rows within each group, then keep the first few.',
+    'The subqueries quest found "the top row in each group" with correlated subqueries. Window functions make it shorter and easier to read: number or rank the rows within each group, then keep the first few.',
     '```\nWITH ranked AS (\n  SELECT player_id, played_on, points,\n         ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY points DESC, played_on) AS n\n  FROM games\n)\nSELECT player_id, played_on, points\nFROM ranked\nWHERE n = 1\nORDER BY player_id;\n```',
     "That is each player's best game, with ties going to the earlier night. Change `n = 1` to `n <= 3` for each player's top three.",
     "Choose the function by what should happen with ties. `ROW_NUMBER` keeps exactly as many rows as you ask for, so it needs a tie-breaker that decides which tied row wins. `RANK` keeps every tied row, so `rank <= 3` can return more than three rows. `DENSE_RANK` with `= 2` finds everyone on the second-best score.",

@@ -5,11 +5,11 @@ export default makeTopic({
   id: "hangman",
   title: "Hangman",
   paragraphs: [
-    "Welcome to the capstone projects. Each one is a complete program built in ten steps, using skills from across the course, and each step adds one piece to the program from the step before. The finished code is yours to keep and change: try it in the sandbox, or copy it onto your own computer and run it there.",
+    "Welcome to the capstone quest. Each one is a complete program built in ten steps, using skills from across the course, and each step adds one piece to the program from the step before. The finished code is yours to keep and change: try it in the sandbox, or copy it onto your own computer and run it there.",
     "The first is **Hangman**, the word-guessing game. The computer picks a secret word and shows a blank for each letter. You guess one letter at a time: right guesses fill in the blanks, and each wrong one costs a life. Find the word before your six lives run out.",
     "```\nI'm thinking of a word with 6 letters.\n_ _ _ _ _ _   Lives: 6   Wrong: none\nGuess a letter: o\nGood guess!\n_ _ _ _ o _   Lives: 6   Wrong: none\nGuess a letter: e\nNo e in the word\n_ _ _ _ o _   Lives: 5   Wrong: e\n...\nYou win! The word was python. Score: 85\n```",
     "The game is a handful of small functions: one shows the word with blanks, one checks the player's input, one applies a guess, one sums up the state of play. The guessed letters live in a **set**, because the order doesn't matter and `letter in guessed` is quick. Only the last steps use `input` and `print`; everything before returns values, so each piece can be checked on its own, and the whole game can even be played automatically from a list of guesses.",
-    "To play the finished game on your own computer, add `main([\"python\", \"rocket\", \"planet\"])` under a main guard at the bottom of the file. You'll use strings, sets, loops, functions and exceptions from the early sections, `random` from Modules (with a seed, so the checks know which word was picked), and files and JSON for the word list and the high-score table.",
+    "To play the finished game on your own computer, add `main([\"python\", \"rocket\", \"planet\"])` under a main guard at the bottom of the file. You'll use strings, sets, loops, functions and exceptions from the early quests, `random` from Modules (with a seed, so the checks know which word was picked), and files and JSON for the word list and the high-score table.",
   ],
   sandboxCode: "word = \"python\"\nguessed = {\"p\", \"o\", \"z\"}\nprint(\" \".join(letter if letter in guessed else \"_\" for letter in word))\nprint(\"Wrong:\", sorted(letter for letter in guessed if letter not in word))",
   sandboxSnippets: [

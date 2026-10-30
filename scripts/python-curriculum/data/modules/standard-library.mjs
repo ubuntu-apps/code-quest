@@ -13,7 +13,7 @@ export default makeTopic({
     "`string` has ready-made strings of characters, so you never need to type out the alphabet, and `itertools` builds the combinations and arrangements that are fiddly to write as loops:",
     "```\nimport string\nfrom itertools import combinations\n\nprint(string.ascii_lowercase)   # abcdefghijklmnopqrstuvwxyz\nprint(string.digits)            # 0123456789\nprint(list(combinations([\"Ana\", \"Ben\", \"Cy\"], 2)))\n# [('Ana', 'Ben'), ('Ana', 'Cy'), ('Ben', 'Cy')]\n```",
     "To find your way around a module, `dir(module)` lists its names and `help(module.name)` prints its documentation. The same text is in the `__doc__` attribute, so `print(statistics.median.__doc__)` explains the median function. For the full picture, the Python docs have a page for every module, with examples.",
-    "You've already used `collections` (for `Counter` and `defaultdict`) and `os` and `pathlib` (for files). The next two lessons look closely at two more you'll use all the time: `random` and `datetime`.",
+    "You've already used `collections` (for `Counter` and `defaultdict`) and `os` and `pathlib` (for files). The next two stages look closely at two more you'll use all the time: `random` and `datetime`.",
   ],
   sandboxCode: "import statistics\nimport string\nimport sys\nfrom itertools import permutations\n\nprint(statistics.mean([3, 8, 10]))\nprint(string.punctuation)\nprint(sys.version_info.major, sys.version_info.minor)\nprint([\"\".join(p) for p in permutations(\"abc\")])",
   sandboxSnippets: [

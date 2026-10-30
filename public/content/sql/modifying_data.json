@@ -30,7 +30,7 @@
       ],
       "intro": {
         "title": "Adding rows: INSERT",
-        "bodyMarkdown": "So far every query only read data. This section changes it. The database is a small lending library: `members` borrow `books`, each borrowing is a row in `loans`, some members owe `fines`, and new books wait in `arrivals`. Open **Tables** to see them. Today is 2026-10-24.\n\nNothing here can break: every **Run** and **Check** starts from a fresh copy of the database. A **Check** compares the tables afterwards with what was asked.\n\n`INSERT INTO` adds a row. Name the columns, then give the values in the same order:\n\n```\nINSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');\n```\n\nThe result says **Done: 1 row changed.** To see the new row, add a query after it: `SELECT * FROM members;`. Statements run in order, so the query sees the change.\n\nColumns you leave out get their **default**. In `members`, `status` defaults to `'active'`, and `id` is an `INTEGER PRIMARY KEY`, which SQLite fills in by itself with the next free number. Columns with no default get `NULL`.\n\nYou can leave out the column list, but then you must give a value for every column, in the table's order. That breaks as soon as someone adds a column, so always name them.\n\nText goes in single quotes, as in `WHERE`. A single quote inside the text is written twice: `'The Baker''s Map'`. Missing values are written `NULL`, without quotes.",
+        "bodyMarkdown": "So far every query only read data. This quest changes it. The database is a small lending library: `members` borrow `books`, each borrowing is a row in `loans`, some members owe `fines`, and new books wait in `arrivals`. Open **Tables** to see them. Today is 2026-10-24.\n\nNothing here can break: every **Run** and **Check** starts from a fresh copy of the database. A **Check** compares the tables afterwards with what was asked.\n\n`INSERT INTO` adds a row. Name the columns, then give the values in the same order:\n\n```\nINSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');\n```\n\nThe result says **Done: 1 row changed.** To see the new row, add a query after it: `SELECT * FROM members;`. Statements run in order, so the query sees the change.\n\nColumns you leave out get their **default**. In `members`, `status` defaults to `'active'`, and `id` is an `INTEGER PRIMARY KEY`, which SQLite fills in by itself with the next free number. Columns with no default get `NULL`.\n\nYou can leave out the column list, but then you must give a value for every column, in the table's order. That breaks as soon as someone adds a column, so always name them.\n\nText goes in single quotes, as in `WHERE`. A single quote inside the text is written twice: `'The Baker''s Map'`. Missing values are written `NULL`, without quotes.",
         "sandboxCode": "INSERT INTO members (name, email, joined)\nVALUES ('Hana Sato', 'hana.sato@example.com', '2026-10-24');\nSELECT * FROM members;",
         "readMore": {
           "label": "SQLite: INSERT",
@@ -2539,7 +2539,7 @@
       ],
       "intro": {
         "title": "Removing rows: DELETE",
-        "bodyMarkdown": "`DELETE FROM` removes the rows that match its `WHERE`:\n\n```\nDELETE FROM loans\nWHERE id = 10;\n```\n\nAs with `UPDATE`, **without `WHERE` every row goes**: `DELETE FROM loans;` empties the table (the table itself stays, with no rows). Use the same habit: write the `WHERE` as a `SELECT` first, look at the rows, then change `SELECT *` to `DELETE`.\n\n```\nSELECT * FROM loans WHERE returned < '2026-09-01';\n-- those are the ones? then:\nDELETE FROM loans WHERE returned < '2026-09-01';\n```\n\nSubqueries pick rows by looking at other tables. Remove the fines of people who are no longer members (the fine for member 9 belongs to nobody):\n\n```\nDELETE FROM fines\nWHERE member_id NOT IN (SELECT id FROM members);\n```\n\nDeleting a row doesn't touch other tables. If you delete a member, their loans still point to an id that no longer exists. The section on designing tables shows how foreign keys can stop that; for now, it is up to you to delete or change the related rows too.",
+        "bodyMarkdown": "`DELETE FROM` removes the rows that match its `WHERE`:\n\n```\nDELETE FROM loans\nWHERE id = 10;\n```\n\nAs with `UPDATE`, **without `WHERE` every row goes**: `DELETE FROM loans;` empties the table (the table itself stays, with no rows). Use the same habit: write the `WHERE` as a `SELECT` first, look at the rows, then change `SELECT *` to `DELETE`.\n\n```\nSELECT * FROM loans WHERE returned < '2026-09-01';\n-- those are the ones? then:\nDELETE FROM loans WHERE returned < '2026-09-01';\n```\n\nSubqueries pick rows by looking at other tables. Remove the fines of people who are no longer members (the fine for member 9 belongs to nobody):\n\n```\nDELETE FROM fines\nWHERE member_id NOT IN (SELECT id FROM members);\n```\n\nDeleting a row doesn't touch other tables. If you delete a member, their loans still point to an id that no longer exists. The quest on designing tables shows how foreign keys can stop that; for now, it is up to you to delete or change the related rows too.",
         "sandboxCode": "SELECT * FROM loans WHERE returned < '2026-09-01';",
         "readMore": {
           "label": "SQLite: DELETE",
@@ -4288,7 +4288,7 @@
           "title": "Expert: Upsert, shown",
           "promptMarkdown": "Add `1.0` to the fines of members 2 and 3 (creating rows where needed), returning `member_id` and the resulting `amount`.",
           "starterCode": "",
-          "hint": "The upsert from the last lesson, then `RETURNING member_id, amount`.",
+          "hint": "The upsert from the last stage, then `RETURNING member_id, amount`.",
           "solution": "INSERT INTO fines (member_id, amount)\nVALUES (2, 1.0), (3, 1.0)\nON CONFLICT (member_id) DO UPDATE\nSET amount = amount + excluded.amount\nRETURNING member_id, amount;",
           "validation": {
             "mode": "sql_tests",
@@ -5168,7 +5168,7 @@
     },
     {
       "id": "proj_front_desk",
-      "title": "Easy project: Front desk day",
+      "title": "Easy side quest: Front desk day",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -5184,7 +5184,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Front desk day",
+        "title": "Easy side quest: Front desk day",
         "bodyMarkdown": "You're on the library's front desk today, 2026-10-24. People come in to join, borrow, return, renew and pay. Each challenge is one visitor; get the data right for each.\n\nAnything that changes two tables goes in a transaction. A book that goes out lowers `available`; a book that comes back raises it.",
         "sandboxCode": "SELECT * FROM loans WHERE returned IS NULL;",
         "readMore": {
@@ -5514,7 +5514,7 @@
     },
     {
       "id": "proj_stock_take",
-      "title": "Medium project: Stock take",
+      "title": "Medium side quest: Stock take",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -5530,7 +5530,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Stock take",
+        "title": "Medium side quest: Stock take",
         "bodyMarkdown": "Once a year the library counts its books. Some numbers in `books` are wrong, new copies have arrived, one book was lost and some books nobody borrows any more.\n\nA book's `available` should always be its `copies` minus its loans still out.",
         "sandboxCode": "SELECT b.id, b.title, b.copies, b.available,\n  (SELECT COUNT(*) FROM loans l WHERE l.book_id = b.id AND l.returned IS NULL) AS out\nFROM books b;",
         "readMore": {
@@ -5870,7 +5870,7 @@
     },
     {
       "id": "proj_data_clean_up",
-      "title": "Hard project: Data clean-up",
+      "title": "Hard side quest: Data clean-up",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -5891,7 +5891,7 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Data clean-up",
+        "title": "Hard side quest: Data clean-up",
         "bodyMarkdown": "Years of quick fixes have left the library's data messy: capital letters in emails, missing statuses, a member entered twice, a loan typed in twice, fines for nobody, and counts that don't add up.\n\nFix each problem with as few statements as you can, and use a transaction when a fix touches more than one table.",
         "sandboxCode": "SELECT * FROM members;\nSELECT member_id, book_id, borrowed, COUNT(*) AS copies\nFROM loans GROUP BY member_id, book_id, borrowed HAVING COUNT(*) > 1;",
         "readMore": {
@@ -5944,7 +5944,7 @@
           "title": "Hard: One person, one record",
           "promptMarkdown": "Members with the same name are the same person. In one transaction, move all loans to the lowest id for that name, then delete the other members with that name.",
           "starterCode": "",
-          "hint": "The same two statements as \"Merge every duplicate\" in the last lesson.",
+          "hint": "The same two statements as \"Merge every duplicate\" in the last stage.",
           "solution": "BEGIN;\nUPDATE loans\nSET member_id = (\n  SELECT MIN(m2.id) FROM members m2\n  WHERE m2.name = (SELECT name FROM members WHERE id = loans.member_id)\n)\nWHERE member_id IN (SELECT id FROM members);\nDELETE FROM members\nWHERE id NOT IN (SELECT MIN(id) FROM members GROUP BY name);\nCOMMIT;",
           "validation": {
             "mode": "sql_tests",

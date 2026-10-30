@@ -34,7 +34,7 @@ export function CertificatePanel({ languageId, bundle, completion, baseUrl }: Ce
           <h2 className="cq-subtitle">
             <Award size={18} aria-hidden /> Course complete
           </h2>
-          <p>You finished every section of {courseTitle}. Your certificate is ready.</p>
+          <p>You finished every quest of {courseTitle}. Your certificate is ready.</p>
           <button
             type="button"
             className="cq-btn cq-btn--primary"
@@ -47,17 +47,17 @@ export function CertificatePanel({ languageId, bundle, completion, baseUrl }: Ce
         <p className="cq-muted cq-certificate-hint">
           <Award size={16} aria-hidden />
           {completion.sectionsTotal === 1
-            ? `Finish the section to earn your ${courseTitle} certificate.`
-            : `Finish all ${completion.sectionsTotal} sections to earn your ${courseTitle} certificate (${completion.sectionsFinished} done so far).`}
+            ? `Finish the quest to earn your ${courseTitle} certificate.`
+            : `Finish all ${completion.sectionsTotal} quests to earn your ${courseTitle} certificate (${completion.sectionsFinished} done so far).`}
         </p>
       )}
 
       {finishedSections.length > 0 ? (
         <section className="cq-panel cq-section-certificates" aria-labelledby="cq-section-certificates-title">
           <h2 className="cq-subtitle" id="cq-section-certificates-title">
-            <Award size={18} aria-hidden /> Section certificates
+            <Award size={18} aria-hidden /> Quest certificates
           </h2>
-          <p className="cq-muted">One for each section you finish. Open one to print it or save it as an image.</p>
+          <p className="cq-muted">One for each quest you finish. Open one to print it or save it as an image.</p>
           <ul className="cq-section-certificate-list">
             {finishedSections.map(({ loaded, number }) => (
               <li key={loaded.sectionRef.id}>
@@ -70,7 +70,7 @@ export function CertificatePanel({ languageId, bundle, completion, baseUrl }: Ce
                     {number}
                   </span>
                   {loaded.sectionRef.title}
-                  <span className="cq-sr-only"> certificate (section {number})</span>
+                  <span className="cq-sr-only"> certificate (quest {number})</span>
                 </button>
               </li>
             ))}

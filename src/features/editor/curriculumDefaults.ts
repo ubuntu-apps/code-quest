@@ -8,7 +8,7 @@ export function createDefaultLevel(): Level {
   const id = newId('level')
   return {
     id,
-    title: 'New level',
+    title: 'New stage',
     intro: { bodyMarkdown: 'Write the intro here.' },
     challenges: [],
     test: { passingScorePercent: 70, questions: [] },

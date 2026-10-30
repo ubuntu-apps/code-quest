@@ -43,7 +43,7 @@ export default makeTopic({
     }),
     query('medium', 'Products per tag', {
       prompt: "For each tag, show `tag` and how many products have it (`products`). Most first, then by tag.",
-      hint: 'The lesson\'s second example.',
+      hint: 'The intro\'s second example.',
       solution: COUNTS,
     }),
     query('medium', 'No tags', {

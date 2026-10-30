@@ -71,7 +71,7 @@ export function BadgesPanel({ earned, toEarn }: { earned: EarnedBadge[]; toEarn:
         </ul>
       ) : (
         <p className="cq-muted cq-badges-empty">
-          Pass a quiz, finish a section or learn a few days in a row to earn your first badge.
+          Clear a gate, finish a quest or learn a few days in a row to earn your first badge.
         </p>
       )}
       {toEarn.length > 0 ? (

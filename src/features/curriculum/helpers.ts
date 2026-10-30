@@ -116,15 +116,15 @@ export function isSectionUnlocked(
 /** Shown inside a section whose prerequisite isn't met: what to do to start it. */
 export function sectionStartHint(previousLevels: Level[], previousTitle: string): string {
   return hasRequiredProjects(previousLevels)
-    ? `You can look around. To start this section, complete the easy and medium projects in ${previousTitle}.`
-    : `You can look around. To start this section, pass every quiz in ${previousTitle}.`
+    ? `You can look around. To start this quest, complete the easy and medium side quests in ${previousTitle}.`
+    : `You can look around. To start this quest, clear every gate in ${previousTitle}.`
 }
 
 /** Explains what unlocks the section that comes after `previousLevels` (titled `previousTitle`). */
 export function sectionUnlockHint(previousLevels: Level[], previousTitle: string): string {
   return hasRequiredProjects(previousLevels)
-    ? `Preview · complete the easy and medium projects in ${previousTitle} to start`
-    : `Preview · pass every quiz in ${previousTitle} to start`
+    ? `Preview · complete the easy and medium side quests in ${previousTitle} to start`
+    : `Preview · clear every gate in ${previousTitle} to start`
 }
 
 export function pythonErrorLinePointer(

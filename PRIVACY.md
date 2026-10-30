@@ -8,7 +8,7 @@ CodeQuest is a free app for learning to code: https://ubuntu-apps.github.io/code
 
 Everything a learner does in CodeQuest is saved only in their own browser, on their own device:
 
-- lessons, challenges and quizzes completed, and code they have typed
+- stages, challenges and gate quizzes completed, and code they have typed
 - XP, streak, badges, rank and quiz review history
 - settings such as theme and sounds
 - the name a learner types on a certificate, if they make one
@@ -17,7 +17,7 @@ None of this is sent to us or to anyone else. Learners can delete it by clearing
 
 ## Anonymous usage counts
 
-To see which lessons people reach and where they get stuck, CodeQuest sends anonymous counts to [GoatCounter](https://www.goatcounter.com), a privacy-friendly analytics service. Examples: a screen was opened, someone passed the Variables quiz, someone opened a hint for a challenge.
+To see which stages people reach and where they get stuck, CodeQuest sends anonymous counts to [GoatCounter](https://www.goatcounter.com), a privacy-friendly analytics service. Examples: a screen was opened, someone cleared the Variables gate (quiz), someone opened a hint for a challenge.
 
 - No cookies, and no identifier for the learner or device.
 - Nothing the learner types is sent: no code, answers or names.

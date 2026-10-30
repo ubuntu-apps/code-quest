@@ -7,7 +7,7 @@ export default makeTopic({
   title: 'A value from another query',
   database: SUBQUERIES_DB,
   paragraphs: [
-    "This section's database is a small music streaming service: `artists`, their `tracks`, the `listeners`, every time a listener `plays` a track, and which artists each listener `follows`. Open **Tables** to see them.",
+    "This quest's database is a small music streaming service: `artists`, their `tracks`, the `listeners`, every time a listener `plays` a track, and which artists each listener `follows`. Open **Tables** to see them.",
     'Which tracks are longer than average? You could work out the average first, then type it into a second query. A **subquery** does both at once: a whole query in brackets, used where a value would go.',
     '```\nSELECT title, duration_s\nFROM tracks\nWHERE duration_s > (SELECT AVG(duration_s) FROM tracks);\n```',
     'SQLite runs the query in brackets first, gets one number, and uses it in the comparison. Typing the number in yourself would work today, but would be wrong as soon as a track is added; the subquery always uses the current average.',

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { BellRing, ChevronRight, Flame, Lock, Play, Snowflake, Zap } from 'lucide-react'
+import { BellRing, ChevronRight, Compass, Flame, Lock, Snowflake, Zap } from 'lucide-react'
 import type { RootIndex } from '../types'
 import type { ContentSource } from '../../editor/curriculumDraftStorage'
 import { AddItemButton } from '../../editor'
@@ -83,11 +83,11 @@ export function LearnHome({
   const nextFreezeAt = (Math.floor(streakCount / FREEZE_EVERY_DAYS) + 1) * FREEZE_EVERY_DAYS
   const streakHint =
     streakCount === 0
-      ? 'Solve a challenge, take a quiz or do the daily review each day to keep your streak.'
+      ? 'Solve a challenge, clear a gate or do the daily review each day to keep your streak.'
       : streak.atRisk && streak.coveredByFreeze > 0
-        ? `A streak freeze covers the day you missed. Do a challenge, quiz or review today to keep your streak.`
+        ? `A streak freeze covers the day you missed. Do a challenge, gate or review today to keep your streak.`
         : streak.atRisk
-          ? 'Do a challenge, quiz or review today to keep it going.'
+          ? 'Do a challenge, gate or review today to keep it going.'
           : 'Done for today. See you tomorrow!'
 
   // The course Home shows progress for. Picked: a switcher next to the title. Not picked
@@ -159,7 +159,7 @@ export function LearnHome({
           className="cq-link-btn cq-course-sections-link"
           onClick={() => onOpenLanguage(activeCourse.path, activeCourse.id)}
         >
-          See all {activeCourse.title} sections
+          See all {activeCourse.title} quests
           <ChevronRight size={15} aria-hidden />
         </button>
       ) : null}
@@ -178,7 +178,7 @@ export function LearnHome({
           onClick={onContinue}
           disabled={!continueTarget}
         >
-          <Play size={16} />
+          <Compass size={16} aria-hidden />
           {hasStarted ? 'Continue your Quest' : 'Start your Quest'}
         </button>
         <div className="cq-home-kpis">

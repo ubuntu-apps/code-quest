@@ -8,7 +8,7 @@ const customerCleanup = makeProject('easy', {
   database: EXPRESSIONS_DB,
   paragraphs: [
     "The shop is sending its first newsletter, and the `customers` table needs tidying first: names in odd capitals, spaces around cities, emails in mixed case and missing phone numbers.",
-    "You won't change the table itself (that comes in a later section). Instead, each challenge builds part of a clean list, and the last one puts it all together.",
+    "You won't change the table itself (that comes in a later quest). Instead, each challenge builds part of a clean list, and the last one puts it all together.",
     "You'll need `TRIM`, `UPPER`, `LOWER`, `SUBSTR`, `INSTR`, `COALESCE` and `||`.",
   ],
   sandboxCode: 'SELECT first_name, last_name, email, city, phone FROM customers;',
@@ -137,7 +137,7 @@ const staffReport = makeProject('hard', {
   paragraphs: [
     "The manager needs a staff report from the `employees` table: years of service, pay bands, monthly pay, bonuses and a one-line summary for each person.",
     'Take "today" to be 2026-10-24. A missing bonus means no bonus.',
-    'This project uses the whole section: text functions, numbers, `CASE`, `COALESCE`, dates, `CAST` and `printf`.',
+    'This side quest uses the whole quest: text functions, numbers, `CASE`, `COALESCE`, dates, `CAST` and `printf`.',
   ],
   sandboxCode: 'SELECT name, role, salary, hire_date, bonus FROM employees;',
   sandboxSnippets: [

@@ -13,7 +13,7 @@ export default makeTopic({
     "```\ndef parse(text):\n    try:\n        return int(text)\n    except ValueError:\n        print(\"Could not parse\", repr(text))\n        raise\n```",
     "Sometimes the low-level exception isn't the right one to show. `raise NewError(...) from e` raises a clearer exception and keeps the original attached as its **cause**, so the traceback shows both (\"The above exception was the direct cause of the following exception\"):",
     "```\ndef get_setting(settings, key):\n    try:\n        return settings[key]\n    except KeyError as e:\n        raise ValueError(f\"Missing setting: {key}\") from e\n```",
-    "Raising early, at the top of a function, keeps the rest of it simple: once the checks are passed, the code below can trust its inputs. The next lessons build on this with your own exception types and defensive programming.",
+    "Raising early, at the top of a function, keeps the rest of it simple: once the checks are passed, the code below can trust its inputs. The next stages build on this with your own exception types and defensive programming.",
   ],
   sandboxCode: "def set_age(age):\n    if not isinstance(age, int):\n        raise TypeError(\"age must be a whole number\")\n    if age < 0:\n        raise ValueError(\"Age can't be negative\")\n    return age\n\nfor value in [30, -5, \"old\"]:\n    try:\n        print(set_age(value))\n    except (ValueError, TypeError) as e:\n        print(type(e).__name__, \"-\", e)",
   sandboxSnippets: [

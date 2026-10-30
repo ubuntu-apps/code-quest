@@ -30,7 +30,7 @@
       ],
       "intro": {
         "title": "Totals beside every row",
-        "bodyMarkdown": "This section's database is a pub quiz league: `players` in teams, and `games`, one row for each player on each quiz night with their `points`. Open **Tables** to see them.\n\n`SUM(points)` adds up all the rows into one row. Add `OVER ()` and it becomes a **window function**: it still adds up all the rows, but every row stays, with the total beside it:\n\n```\nSELECT id, player_id, points,\n       SUM(points) OVER () AS total\nFROM games\nORDER BY id;\n```\n\nThe rows a window function looks at are its **window**. Empty brackets mean the window is the whole result. Any aggregate works this way: `COUNT(*) OVER ()`, `AVG(points) OVER ()`, `MAX(points) OVER ()`. Having the total on each row makes comparisons easy, such as each game's share of all the points: `100.0 * points / SUM(points) OVER ()`.\n\nWindow functions are worked out after `WHERE`, `GROUP BY` and `HAVING`, just before `ORDER BY`. So the window only sees the rows that are left, and with `GROUP BY` it works over the groups: `SUM(SUM(points)) OVER ()` adds up the group totals.\n\nThat order also means `WHERE` can't use a window function: **misuse of window function** is the error. Work the window out in a subquery, then filter outside it:\n\n```\nSELECT id, points\nFROM (SELECT id, points, AVG(points) OVER () AS average FROM games) AS g\nWHERE points > average\nORDER BY id;\n```",
+        "bodyMarkdown": "This quest's database is a pub quiz league: `players` in teams, and `games`, one row for each player on each quiz night with their `points`. Open **Tables** to see them.\n\n`SUM(points)` adds up all the rows into one row. Add `OVER ()` and it becomes a **window function**: it still adds up all the rows, but every row stays, with the total beside it:\n\n```\nSELECT id, player_id, points,\n       SUM(points) OVER () AS total\nFROM games\nORDER BY id;\n```\n\nThe rows a window function looks at are its **window**. Empty brackets mean the window is the whole result. Any aggregate works this way: `COUNT(*) OVER ()`, `AVG(points) OVER ()`, `MAX(points) OVER ()`. Having the total on each row makes comparisons easy, such as each game's share of all the points: `100.0 * points / SUM(points) OVER ()`.\n\nWindow functions are worked out after `WHERE`, `GROUP BY` and `HAVING`, just before `ORDER BY`. So the window only sees the rows that are left, and with `GROUP BY` it works over the groups: `SUM(SUM(points)) OVER ()` adds up the group totals.\n\nThat order also means `WHERE` can't use a window function: **misuse of window function** is the error. Work the window out in a subquery, then filter outside it:\n\n```\nSELECT id, points\nFROM (SELECT id, points, AVG(points) OVER () AS average FROM games) AS g\nWHERE points > average\nORDER BY id;\n```",
         "sandboxCode": "SELECT id, player_id, points,\n       SUM(points) OVER () AS total\nFROM games\nORDER BY id;",
         "readMore": {
           "label": "SQLite: window functions",
@@ -224,7 +224,7 @@
               }
             ],
             "correctChoiceId": "d",
-            "explanation": "Later lessons put things inside the brackets."
+            "explanation": "Later stages put things inside the brackets."
           },
           {
             "id": "window_basics-q-1ayj3su",
@@ -842,7 +842,7 @@
       ],
       "intro": {
         "title": "Numbering rows: ROW_NUMBER",
-        "bodyMarkdown": "Some window functions only make sense in order. `ROW_NUMBER()` numbers the rows 1, 2, 3, … in the order given by `ORDER BY` inside the `OVER`:\n\n```\nSELECT id, played_on, player_id,\n       ROW_NUMBER() OVER (ORDER BY played_on, id) AS n\nFROM games\nORDER BY n;\n```\n\nThe `ORDER BY` inside `OVER` only decides the numbering. The order of the result is still decided by the query's own `ORDER BY` at the end, so you usually write both.\n\nWith `PARTITION BY`, numbering starts again at 1 in each group. This numbers each player's games in date order, so their first game is 1:\n\n```\nSELECT player_id, played_on,\n       ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on) AS game_no\nFROM games\nORDER BY player_id, game_no;\n```\n\n`ROW_NUMBER` always gives different numbers, even to rows that tie in the `ORDER BY`. Which of two tied rows gets the lower number is then up to the database, and may change. So make the order unique: add a tie-breaker such as the id, or use `RANK` (next lesson) when ties should share a number.\n\nTo keep only some numbers, such as each player's first game, number the rows in a subquery and filter outside it.",
+        "bodyMarkdown": "Some window functions only make sense in order. `ROW_NUMBER()` numbers the rows 1, 2, 3, … in the order given by `ORDER BY` inside the `OVER`:\n\n```\nSELECT id, played_on, player_id,\n       ROW_NUMBER() OVER (ORDER BY played_on, id) AS n\nFROM games\nORDER BY n;\n```\n\nThe `ORDER BY` inside `OVER` only decides the numbering. The order of the result is still decided by the query's own `ORDER BY` at the end, so you usually write both.\n\nWith `PARTITION BY`, numbering starts again at 1 in each group. This numbers each player's games in date order, so their first game is 1:\n\n```\nSELECT player_id, played_on,\n       ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on) AS game_no\nFROM games\nORDER BY player_id, game_no;\n```\n\n`ROW_NUMBER` always gives different numbers, even to rows that tie in the `ORDER BY`. Which of two tied rows gets the lower number is then up to the database, and may change. So make the order unique: add a tie-breaker such as the id, or use `RANK` (next stage) when ties should share a number.\n\nTo keep only some numbers, such as each player's first game, number the rows in a subquery and filter outside it.",
         "sandboxCode": "SELECT player_id, played_on,\n       ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on) AS game_no\nFROM games\nORDER BY player_id, game_no;",
         "readMore": {
           "label": "SQLite: built-in window functions",
@@ -1310,7 +1310,7 @@
           "title": "Medium: All three",
           "promptMarkdown": "For the first quiz night, show each `player_id` and `points`, with `row_no` (ROW_NUMBER, ties by player id), `rank` (RANK) and `dense_rank` (DENSE_RANK), all from the highest points. Sort by points (highest first), then player id.",
           "starterCode": "",
-          "hint": "The lesson's example: three window functions over the same ORDER BY.",
+          "hint": "The intro's example: three window functions over the same ORDER BY.",
           "solution": "SELECT player_id, points,\n       ROW_NUMBER() OVER (ORDER BY points DESC, player_id) AS row_no,\n       RANK() OVER (ORDER BY points DESC) AS rank,\n       DENSE_RANK() OVER (ORDER BY points DESC) AS dense_rank\nFROM games\nWHERE played_on = (SELECT MIN(played_on) FROM games)\nORDER BY points DESC, player_id;",
           "validation": {
             "mode": "sql_tests",
@@ -1661,7 +1661,7 @@
       ],
       "intro": {
         "title": "The top rows in each group",
-        "bodyMarkdown": "The subqueries section found \"the top row in each group\" with correlated subqueries. Window functions make it shorter and easier to read: number or rank the rows within each group, then keep the first few.\n\n```\nWITH ranked AS (\n  SELECT player_id, played_on, points,\n         ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY points DESC, played_on) AS n\n  FROM games\n)\nSELECT player_id, played_on, points\nFROM ranked\nWHERE n = 1\nORDER BY player_id;\n```\n\nThat is each player's best game, with ties going to the earlier night. Change `n = 1` to `n <= 3` for each player's top three.\n\nChoose the function by what should happen with ties. `ROW_NUMBER` keeps exactly as many rows as you ask for, so it needs a tie-breaker that decides which tied row wins. `RANK` keeps every tied row, so `rank <= 3` can return more than three rows. `DENSE_RANK` with `= 2` finds everyone on the second-best score.\n\nThe ranking can run over groups from `GROUP BY` too: total the points per team and night first, then rank the nights within each team.",
+        "bodyMarkdown": "The subqueries quest found \"the top row in each group\" with correlated subqueries. Window functions make it shorter and easier to read: number or rank the rows within each group, then keep the first few.\n\n```\nWITH ranked AS (\n  SELECT player_id, played_on, points,\n         ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY points DESC, played_on) AS n\n  FROM games\n)\nSELECT player_id, played_on, points\nFROM ranked\nWHERE n = 1\nORDER BY player_id;\n```\n\nThat is each player's best game, with ties going to the earlier night. Change `n = 1` to `n <= 3` for each player's top three.\n\nChoose the function by what should happen with ties. `ROW_NUMBER` keeps exactly as many rows as you ask for, so it needs a tie-breaker that decides which tied row wins. `RANK` keeps every tied row, so `rank <= 3` can return more than three rows. `DENSE_RANK` with `= 2` finds everyone on the second-best score.\n\nThe ranking can run over groups from `GROUP BY` too: total the points per team and night first, then rank the nights within each team.",
         "sandboxCode": "WITH ranked AS (\n  SELECT player_id, played_on, points,\n         ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY points DESC, played_on) AS n\n  FROM games\n)\nSELECT player_id, played_on, points\nFROM ranked\nWHERE n = 1\nORDER BY player_id;",
         "readMore": {
           "label": "SQLite: window functions",
@@ -2067,7 +2067,7 @@
       ],
       "intro": {
         "title": "Running totals",
-        "bodyMarkdown": "Put `ORDER BY` inside the `OVER` of an aggregate, and it adds up as it goes: each row gets the total from the start up to that row. That is a **running total**.\n\n```\nSELECT player_id, played_on, points,\n       SUM(points) OVER (PARTITION BY player_id ORDER BY played_on) AS season_so_far\nFROM games\nORDER BY player_id, played_on;\n```\n\nEach player's total grows game by game, and starts again for the next player. The other aggregates work the same way: `AVG` gives the average so far, `MAX` the best so far, `COUNT(*)` the games so far.\n\nThe rows a running total covers are called its **frame**. With `ORDER BY` and nothing else, the frame runs from the start of the partition to the current row, **and every row that ties with it** in the `ORDER BY`. That catches people out:\n\n```\nSELECT id, played_on, points,\n       SUM(points) OVER (ORDER BY played_on) AS running\nFROM games\nORDER BY id;\n```\n\nEvery game on the same night shows the same `running` value, the total after the whole night, because those games tie on `played_on`. To add one game at a time, make the order unique: `ORDER BY played_on, id`. (The frames lesson shows how to choose the frame yourself.)\n\nFor a running total of groups, total the groups first and run the window over them: `SUM(SUM(points)) OVER (ORDER BY played_on)` after `GROUP BY played_on` gives the league's points so far, night by night.",
+        "bodyMarkdown": "Put `ORDER BY` inside the `OVER` of an aggregate, and it adds up as it goes: each row gets the total from the start up to that row. That is a **running total**.\n\n```\nSELECT player_id, played_on, points,\n       SUM(points) OVER (PARTITION BY player_id ORDER BY played_on) AS season_so_far\nFROM games\nORDER BY player_id, played_on;\n```\n\nEach player's total grows game by game, and starts again for the next player. The other aggregates work the same way: `AVG` gives the average so far, `MAX` the best so far, `COUNT(*)` the games so far.\n\nThe rows a running total covers are called its **frame**. With `ORDER BY` and nothing else, the frame runs from the start of the partition to the current row, **and every row that ties with it** in the `ORDER BY`. That catches people out:\n\n```\nSELECT id, played_on, points,\n       SUM(points) OVER (ORDER BY played_on) AS running\nFROM games\nORDER BY id;\n```\n\nEvery game on the same night shows the same `running` value, the total after the whole night, because those games tie on `played_on`. To add one game at a time, make the order unique: `ORDER BY played_on, id`. (The frames stage shows how to choose the frame yourself.)\n\nFor a running total of groups, total the groups first and run the window over them: `SUM(SUM(points)) OVER (ORDER BY played_on)` after `GROUP BY played_on` gives the league's points so far, night by night.",
         "sandboxCode": "SELECT player_id, played_on, points,\n       SUM(points) OVER (PARTITION BY player_id ORDER BY played_on) AS season_so_far\nFROM games\nORDER BY player_id, played_on;",
         "readMore": {
           "label": "SQLite: window frames",
@@ -3825,7 +3825,7 @@
           "title": "Hard: Streak labels",
           "promptMarkdown": "Show each game's `player_id`, `played_on` and `night`, with `streak`: night minus the player's game number, so games in an unbroken run share it. Sort by player id, then date.",
           "starterCode": "",
-          "hint": "The lesson's example.",
+          "hint": "The intro's example.",
           "solution": "WITH numbered AS (\n  SELECT player_id, played_on,\n         DENSE_RANK() OVER (ORDER BY played_on) AS night\n  FROM games\n)\nSELECT player_id, played_on, night,\n       night - ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on) AS streak\nFROM numbered\nORDER BY player_id, played_on;",
           "validation": {
             "mode": "sql_tests",
@@ -4136,7 +4136,7 @@
     },
     {
       "id": "proj_league_table",
-      "title": "Easy project: League table",
+      "title": "Easy side quest: League table",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -4147,7 +4147,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: League table",
+        "title": "Easy side quest: League table",
         "bodyMarkdown": "You run the quiz league's noticeboard. Each challenge is one part of it: the standings, last night's results, the night winners, the team table, the gap to the leader and the most wins.\n\nPlayers on the same points share a place (RANK).",
         "sandboxCode": "SELECT p.name, SUM(g.points) AS total,\n       RANK() OVER (ORDER BY SUM(g.points) DESC) AS place\nFROM games g\nJOIN players p ON p.id = g.player_id\nGROUP BY p.id, p.name\nORDER BY place, p.name;",
         "readMore": {
@@ -4397,7 +4397,7 @@
     },
     {
       "id": "proj_form_report",
-      "title": "Medium project: Player form report",
+      "title": "Medium side quest: Player form report",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -4408,7 +4408,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Player form report",
+        "title": "Medium side quest: Player form report",
         "bodyMarkdown": "Team captains want to know who is in form. Build the report one table at a time: every game in order, the change from game to game, a rolling average, each player's best night, who is above their average now, and who has improved.\n\nEvery challenge lists players by name.",
         "sandboxCode": "SELECT p.name, g.played_on, g.points,\n       ROW_NUMBER() OVER (PARTITION BY g.player_id ORDER BY g.played_on) AS game_no\nFROM games g\nJOIN players p ON p.id = g.player_id\nORDER BY p.name, g.played_on;",
         "readMore": {
@@ -4658,7 +4658,7 @@
     },
     {
       "id": "proj_season_review",
-      "title": "Hard project: Season review",
+      "title": "Hard side quest: Season review",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -4669,7 +4669,7 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Season review",
+        "title": "Hard side quest: Season review",
         "bodyMarkdown": "The season is over, and the league wants a review: the league's points night by night, each month's top scorer, the most consistent players, comebacks after missed nights, the teams on each night, and a summary card for every player.\n\nEach challenge needs more than one window, or a window and a GROUP BY together.",
         "sandboxCode": "SELECT played_on, SUM(points) AS night_points,\n       SUM(SUM(points)) OVER (ORDER BY played_on) AS league_so_far\nFROM games\nGROUP BY played_on\nORDER BY played_on;",
         "readMore": {

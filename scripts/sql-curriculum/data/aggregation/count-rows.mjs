@@ -7,7 +7,7 @@ export default makeTopic({
   title: 'Counting rows: COUNT',
   database: AGGREGATION_DB,
   paragraphs: [
-    "So far every query showed rows. This section is about **summarising** them: how many sales, how much money, the average score. The database is new: two weeks of `sales` at a small café chain with three stores, and a class's exam `results`. Open **Tables** to see the columns.",
+    "So far every query showed rows. This quest is about **summarising** them: how many sales, how much money, the average score. The database is new: two weeks of `sales` at a small café chain with three stores, and a class's exam `results`. Open **Tables** to see the columns.",
     "An **aggregate function** turns many rows into one value. `COUNT(*)` counts rows:",
     '```\nSELECT COUNT(*) AS sales FROM sales;\n```',
     'The result is a single row with a single number. With `WHERE`, only the matching rows are counted:',

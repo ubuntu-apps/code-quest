@@ -7,7 +7,7 @@ export default makeTopic({
   title: 'Text functions',
   database: EXPRESSIONS_DB,
   paragraphs: [
-    "This section uses a new database: a small online shop's `customers`, `orders` and `employees`. Open **Tables** to see the columns. Like most real data, it's a little messy: some names are typed in odd cases, and some cities have extra spaces around them.",
+    "This quest uses a new database: a small online shop's `customers`, `orders` and `employees`. Open **Tables** to see the columns. Like most real data, it's a little messy: some names are typed in odd cases, and some cities have extra spaces around them.",
     'A **function** takes values in brackets and gives back a new value. Text functions change or measure text:',
     '```\nSELECT first_name, UPPER(first_name) AS upper_name, LOWER(email) AS email\nFROM customers;\n```',
     '`UPPER(text)` gives capitals, `LOWER(text)` small letters, and `LENGTH(text)` the number of characters, spaces included. Like calculations, functions change only the result, never the table, and a function given `NULL` gives `NULL` back.',

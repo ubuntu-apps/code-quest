@@ -14,7 +14,7 @@ export default makeTopic({
     "```\n# requirements.txt\nrequests==2.32.3\npandas==2.2.2\npytest>=8.0\n```",
     "Versions are usually written `MAJOR.MINOR.PATCH`: a new major version may break your code, a minor one adds features, a patch only fixes bugs. Compare versions as numbers, not text: as strings, `\"2.10\" < \"2.9\"`, because the character `1` comes before `9`. Splitting on dots and comparing tuples of ints, `(2, 10) > (2, 9)`, gets it right.",
     "Inside Python, `sys.prefix` is the folder of the Python that's running; in a virtual environment it differs from `sys.base_prefix`, so comparing them tells you whether one is active.",
-    "This app runs Python in your browser, so there's no terminal and no pip here, but popular packages like `numpy` and `pandas` are ready to import, as the Data and APIs section shows. The challenges practise what you can do in code: reading requirement files, comparing versions and checking the environment.",
+    "This app runs Python in your browser, so there's no terminal and no pip here, but popular packages like `numpy` and `pandas` are ready to import, as the Data and APIs quest shows. The challenges practise what you can do in code: reading requirement files, comparing versions and checking the environment.",
   ],
   sandboxCode: "import sys\n\nprint(\"Python\", sys.version.split()[0])\nprint(\"In a virtual environment?\", sys.prefix != sys.base_prefix)\n\ndef parse_version(text):\n    return tuple(int(part) for part in text.split(\".\"))\n\nprint(\"2.10\" > \"2.9\", parse_version(\"2.10\") > parse_version(\"2.9\"))",
   sandboxSnippets: [

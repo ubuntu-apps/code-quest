@@ -11,7 +11,7 @@ export default makeTopic({
     'You ask a database for data with a **query**, written in **SQL** (Structured Query Language). The simplest query shows a whole table:',
     '```\nSELECT * FROM books;\n```',
     '`SELECT` says what to show, `*` means "every column", and `FROM books` names the table. The semicolon `;` ends the statement. In CodeQuest the result appears as a table, with the number of rows underneath.',
-    "This lesson's database has three tables: `books`, `pets` and `products`. Open **Tables** above the editor to see their columns at any time.",
+    "This stage's database has three tables: `books`, `pets` and `products`. Open **Tables** above the editor to see their columns at any time.",
     'To show only some of the columns, name them instead of `*`. This shows just the title of each book:',
     '```\nSELECT title FROM books;\n```',
     'SQL keywords are not case-sensitive: `select title from books` works too. Writing keywords in capitals is a common habit that makes them stand out from table and column names. Spaces and line breaks don\'t matter either, so longer queries are often spread over several lines.',
@@ -64,7 +64,7 @@ export default makeTopic({
     }),
     query('expert', 'Every species', {
       prompt: 'Show the `species` of every pet (one row per pet, so some species appear more than once).',
-      hint: 'Name the `species` column instead of `*`. A later lesson shows how to list each species once.',
+      hint: 'Name the `species` column instead of `*`. A later stage shows how to list each species once.',
       solution: 'SELECT species FROM pets;',
     }),
     query('expert', 'Read the error', {

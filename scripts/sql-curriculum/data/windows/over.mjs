@@ -7,7 +7,7 @@ export default makeTopic({
   title: 'Totals beside every row',
   database: WINDOWS_DB,
   paragraphs: [
-    "This section's database is a pub quiz league: `players` in teams, and `games`, one row for each player on each quiz night with their `points`. Open **Tables** to see them.",
+    "This quest's database is a pub quiz league: `players` in teams, and `games`, one row for each player on each quiz night with their `points`. Open **Tables** to see them.",
     '`SUM(points)` adds up all the rows into one row. Add `OVER ()` and it becomes a **window function**: it still adds up all the rows, but every row stays, with the total beside it:',
     '```\nSELECT id, player_id, points,\n       SUM(points) OVER () AS total\nFROM games\nORDER BY id;\n```',
     "The rows a window function looks at are its **window**. Empty brackets mean the window is the whole result. Any aggregate works this way: `COUNT(*) OVER ()`, `AVG(points) OVER ()`, `MAX(points) OVER ()`. Having the total on each row makes comparisons easy, such as each game's share of all the points: `100.0 * points / SUM(points) OVER ()`.",
@@ -77,7 +77,7 @@ export default makeTopic({
     mc('What is the difference between `SUM(points)` and `SUM(points) OVER ()`?', ['The first collapses the rows into one; the second keeps every row', 'The second is faster', 'The first keeps every row', 'None'], 0,
       'OVER turns an aggregate into a window function.'),
     mc('What do empty brackets in `OVER ()` mean?', ['An error', 'No rows', 'The current row only', 'The window is the whole result'], 3,
-      'Later lessons put things inside the brackets.'),
+      'Later stages put things inside the brackets.'),
     mc('Why does `WHERE points > AVG(points) OVER ()` fail?', ['AVG can\'t be a window function', 'points is text', 'OVER needs a column', 'WHERE runs before window functions'], 3,
       'Filter on the window in an outer query.'),
     qShort('Which keyword turns an aggregate into a window function?', 'OVER',

@@ -14,7 +14,7 @@ export default makeTopic({
     'Give the subquery a name with `AS`. SQLite lets you leave it out, but most databases require it, and you need it to refer to the subquery\'s columns. Inside, name every calculated column, because those names are the columns of the new table.',
     'A subquery in `FROM` can be joined like a table:',
     '```\nSELECT l.name, pl.plays\nFROM listeners l\nJOIN (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS pl ON pl.listener_id = l.id\nORDER BY pl.plays DESC, l.name;\n```',
-    'When the same subquery is needed twice, the query gets long and repetitive. The `WITH` lessons later in this section fix that.',
+    'When the same subquery is needed twice, the query gets long and repetitive. The `WITH` stages later in this quest fix that.',
   ],
   sandboxCode: 'SELECT AVG(plays) AS average\nFROM (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS per_listener;',
   sandboxSnippets: [
@@ -71,7 +71,7 @@ export default makeTopic({
     }),
     query('expert', 'Versus the average', {
       prompt: "For each listener who played, show `name`, `plays` and how far they are from the average listener (`vs_average`, 2 decimals). Highest first, then by name.",
-      hint: '`ROUND(pl.plays - (SELECT AVG(plays) FROM (…the counts again…) AS x), 2) AS vs_average`. Notice how the counts are written twice: the next lessons fix that.',
+      hint: '`ROUND(pl.plays - (SELECT AVG(plays) FROM (…the counts again…) AS x), 2) AS vs_average`. Notice how the counts are written twice: the next stages fix that.',
       solution: 'SELECT l.name, pl.plays,\n       ROUND(pl.plays - (\n         SELECT AVG(plays)\n         FROM (SELECT listener_id, COUNT(*) AS plays FROM plays GROUP BY listener_id) AS x\n       ), 2) AS vs_average\nFROM listeners l\nJOIN (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS pl ON pl.listener_id = l.id\nORDER BY pl.plays DESC, l.name;',
     }),
   ],

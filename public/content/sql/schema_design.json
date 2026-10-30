@@ -30,7 +30,7 @@
       ],
       "intro": {
         "title": "CREATE TABLE and types",
-        "bodyMarkdown": "Until now the tables were already there. This section is about making them. The database belongs to an events venue that has kept its bookings in one spreadsheet-like table, `ticket_sheet`, and wants proper tables instead.\n\n`CREATE TABLE` names the table and lists its columns, each with a type:\n\n```\nCREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);\n```\n\nSQLite has five kinds of values: `INTEGER` (whole numbers), `REAL` (numbers with decimals), `TEXT`, `BLOB` (raw bytes) and `NULL`. Use `INTEGER`, `REAL` and `TEXT` as column types. There is no date type: store dates as `TEXT` in the form `YYYY-MM-DD`, and true/false as `INTEGER` 0 or 1.\n\nSQLite is relaxed about types. A column's type is a preference, not a rule, so it will store the text `'ten'` in an `INTEGER` column. Add `STRICT` after the closing bracket to make SQLite refuse values of the wrong type: `CREATE TABLE scores (…) STRICT;`.\n\nTo see a table's columns, query `pragma_table_info`:\n\n```\nSELECT name, type FROM pragma_table_info('rooms');\n```\n\n`CREATE TABLE` gives an error if the table already exists. `CREATE TABLE IF NOT EXISTS` skips it quietly instead, which is useful in scripts that may run more than once.",
+        "bodyMarkdown": "Until now the tables were already there. This quest is about making them. The database belongs to an events venue that has kept its bookings in one spreadsheet-like table, `ticket_sheet`, and wants proper tables instead.\n\n`CREATE TABLE` names the table and lists its columns, each with a type:\n\n```\nCREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);\n```\n\nSQLite has five kinds of values: `INTEGER` (whole numbers), `REAL` (numbers with decimals), `TEXT`, `BLOB` (raw bytes) and `NULL`. Use `INTEGER`, `REAL` and `TEXT` as column types. There is no date type: store dates as `TEXT` in the form `YYYY-MM-DD`, and true/false as `INTEGER` 0 or 1.\n\nSQLite is relaxed about types. A column's type is a preference, not a rule, so it will store the text `'ten'` in an `INTEGER` column. Add `STRICT` after the closing bracket to make SQLite refuse values of the wrong type: `CREATE TABLE scores (…) STRICT;`.\n\nTo see a table's columns, query `pragma_table_info`:\n\n```\nSELECT name, type FROM pragma_table_info('rooms');\n```\n\n`CREATE TABLE` gives an error if the table already exists. `CREATE TABLE IF NOT EXISTS` skips it quietly instead, which is useful in scripts that may run more than once.",
         "sandboxCode": "CREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);\nSELECT name, type FROM pragma_table_info('guests');",
         "readMore": {
           "label": "SQLite: datatypes",
@@ -1060,7 +1060,7 @@
       ],
       "intro": {
         "title": "NOT NULL and DEFAULT",
-        "bodyMarkdown": "A table can protect itself from bad data with **constraints**: rules written into the table that SQLite checks on every INSERT and UPDATE. The first two are about missing values.\n\n`NOT NULL` means the column must always have a value. An insert without one gives **NOT NULL constraint failed: guests.name**:\n\n```\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT\n);\n```\n\n`DEFAULT` gives a value to use when the INSERT leaves the column out. Defaults are written like values: numbers as they are, text in single quotes.\n\n```\nCREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  seat TEXT NOT NULL,\n  status TEXT NOT NULL DEFAULT 'booked',\n  price REAL NOT NULL DEFAULT 0\n);\n```\n\nThe two go well together: the column always has a value, and the usual one is filled in for you. But a default is only used when the column is left out. Writing `NULL` on purpose still stores `NULL`, which `NOT NULL` then refuses.\n\n`NOT NULL` doesn't stop empty text: `''` is a value, not a missing one. To refuse that too you need a `CHECK`, in the next lesson. Defaults can also be `CURRENT_DATE` or `CURRENT_TIMESTAMP`, which fill in today's date or time.",
+        "bodyMarkdown": "A table can protect itself from bad data with **constraints**: rules written into the table that SQLite checks on every INSERT and UPDATE. The first two are about missing values.\n\n`NOT NULL` means the column must always have a value. An insert without one gives **NOT NULL constraint failed: guests.name**:\n\n```\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT\n);\n```\n\n`DEFAULT` gives a value to use when the INSERT leaves the column out. Defaults are written like values: numbers as they are, text in single quotes.\n\n```\nCREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  seat TEXT NOT NULL,\n  status TEXT NOT NULL DEFAULT 'booked',\n  price REAL NOT NULL DEFAULT 0\n);\n```\n\nThe two go well together: the column always has a value, and the usual one is filled in for you. But a default is only used when the column is left out. Writing `NULL` on purpose still stores `NULL`, which `NOT NULL` then refuses.\n\n`NOT NULL` doesn't stop empty text: `''` is a value, not a missing one. To refuse that too you need a `CHECK`, in the next stage. Defaults can also be `CURRENT_DATE` or `CURRENT_TIMESTAMP`, which fill in today's date or time.",
         "sandboxCode": "CREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  seat TEXT NOT NULL,\n  status TEXT NOT NULL DEFAULT 'booked',\n  price REAL NOT NULL DEFAULT 0\n);\nINSERT INTO tickets (seat) VALUES ('A1');\nSELECT * FROM tickets;",
         "readMore": {
           "label": "SQLite: CREATE TABLE",
@@ -2194,7 +2194,7 @@
       ],
       "intro": {
         "title": "Foreign keys",
-        "bodyMarkdown": "A **foreign key** column holds the primary key of a row in another table, as `loans.member_id` did in the last section. `REFERENCES` turns that into a rule: the value must exist in the other table.\n\n```\nPRAGMA foreign_keys = ON;\nCREATE TABLE events (\n  id INTEGER PRIMARY KEY,\n  title TEXT NOT NULL,\n  room_id INTEGER REFERENCES rooms (id)\n);\n```\n\n**SQLite only checks foreign keys after `PRAGMA foreign_keys = ON;`**, and the setting lasts for one connection. Here each Run is a new connection, so start your SQL with it. Without it, `REFERENCES` is written down but never checked.\n\nWith the check on, an event in room 9 (which doesn't exist) gives **FOREIGN KEY constraint failed**. So does deleting a room that events still use. Add the parent rows first, and delete the children first.\n\n`ON DELETE` changes what happens when the parent row is deleted:\n\n`ON DELETE CASCADE`, as in `room_id INTEGER REFERENCES rooms (id) ON DELETE CASCADE`, deletes the child rows too. `ON DELETE SET NULL` keeps them but empties the foreign key. Without either, deleting a parent that still has children is refused. Pick what makes sense for the data: a ticket means nothing without its event (cascade), but an event can wait for a new room (set null).\n\nA foreign key can point at its own table: `manager_id INTEGER REFERENCES staff (id)`.",
+        "bodyMarkdown": "A **foreign key** column holds the primary key of a row in another table, as `loans.member_id` did in the last quest. `REFERENCES` turns that into a rule: the value must exist in the other table.\n\n```\nPRAGMA foreign_keys = ON;\nCREATE TABLE events (\n  id INTEGER PRIMARY KEY,\n  title TEXT NOT NULL,\n  room_id INTEGER REFERENCES rooms (id)\n);\n```\n\n**SQLite only checks foreign keys after `PRAGMA foreign_keys = ON;`**, and the setting lasts for one connection. Here each Run is a new connection, so start your SQL with it. Without it, `REFERENCES` is written down but never checked.\n\nWith the check on, an event in room 9 (which doesn't exist) gives **FOREIGN KEY constraint failed**. So does deleting a room that events still use. Add the parent rows first, and delete the children first.\n\n`ON DELETE` changes what happens when the parent row is deleted:\n\n`ON DELETE CASCADE`, as in `room_id INTEGER REFERENCES rooms (id) ON DELETE CASCADE`, deletes the child rows too. `ON DELETE SET NULL` keeps them but empties the foreign key. Without either, deleting a parent that still has children is refused. Pick what makes sense for the data: a ticket means nothing without its event (cascade), but an event can wait for a new room (set null).\n\nA foreign key can point at its own table: `manager_id INTEGER REFERENCES staff (id)`.",
         "sandboxCode": "PRAGMA foreign_keys = ON;\nCREATE TABLE events (\n  id INTEGER PRIMARY KEY,\n  title TEXT NOT NULL,\n  room_id INTEGER REFERENCES rooms (id)\n);\nINSERT INTO events (title, room_id) VALUES ('Jazz Night', 1);\nSELECT * FROM events;",
         "readMore": {
           "label": "SQLite: foreign key support",
@@ -4286,7 +4286,7 @@
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "Like order_items in the joins section."
+            "explanation": "Like order_items in the joins quest."
           },
           {
             "id": "normalisation-q-272vj5",
@@ -5407,7 +5407,7 @@
     },
     {
       "id": "proj_volunteer_rota",
-      "title": "Easy project: Volunteer rota",
+      "title": "Easy side quest: Volunteer rota",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -5418,7 +5418,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Volunteer rota",
+        "title": "Easy side quest: Volunteer rota",
         "bodyMarkdown": "The venue runs on volunteers. Design three tables for the rota: `volunteers`, the `shifts` that need people, and `rota`, which says who works which shift.\n\nEach challenge starts from the venue's database again, so create every table it needs. Later challenges build on the earlier designs: copy them across.",
         "sandboxCode": "PRAGMA foreign_keys = ON;\nCREATE TABLE volunteers (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT UNIQUE,\n  joined TEXT NOT NULL\n);\nCREATE TABLE shifts (\n  id INTEGER PRIMARY KEY,\n  event_title TEXT NOT NULL,\n  shift_date TEXT NOT NULL,\n  hours REAL NOT NULL DEFAULT 4 CHECK (hours > 0)\n);\nCREATE TABLE rota (\n  volunteer_id INTEGER NOT NULL REFERENCES volunteers (id) ON DELETE CASCADE,\n  shift_id INTEGER NOT NULL REFERENCES shifts (id) ON DELETE CASCADE,\n  PRIMARY KEY (volunteer_id, shift_id)\n);\nSELECT name FROM sqlite_schema WHERE type = 'table';",
         "readMore": {
@@ -5751,7 +5751,7 @@
     },
     {
       "id": "proj_normalise_sheet",
-      "title": "Medium project: Normalise the sheet",
+      "title": "Medium side quest: Normalise the sheet",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -5767,7 +5767,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Normalise the sheet",
+        "title": "Medium side quest: Normalise the sheet",
         "bodyMarkdown": "Time to replace `ticket_sheet` for good with `guests`, `events` (pointing at `rooms`) and `tickets`, with every rule written into the tables.\n\nEach challenge starts fresh, so each one builds what it needs. The challenges add one table at a time: copy your earlier answers forward.",
         "sandboxCode": "PRAGMA foreign_keys = ON;\nCREATE TABLE guests (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL,\n  email TEXT NOT NULL UNIQUE COLLATE NOCASE\n);\nINSERT INTO guests (name, email)\nSELECT DISTINCT guest_name, guest_email FROM ticket_sheet ORDER BY guest_name;\nCREATE TABLE events (\n  id INTEGER PRIMARY KEY,\n  title TEXT NOT NULL,\n  event_date TEXT NOT NULL,\n  room_id INTEGER REFERENCES rooms (id),\n  price REAL NOT NULL CHECK (price >= 0)\n);\nINSERT INTO events (title, event_date, room_id, price)\nSELECT DISTINCT s.event_title, s.event_date, r.id, s.price\nFROM ticket_sheet s\nJOIN rooms r ON r.name = s.room\nORDER BY s.event_date, s.event_title;\nCREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  guest_id INTEGER NOT NULL REFERENCES guests (id),\n  event_id INTEGER NOT NULL REFERENCES events (id) ON DELETE CASCADE,\n  seat TEXT NOT NULL DEFAULT 'standing',\n  UNIQUE (event_id, seat)\n);\nINSERT INTO tickets (guest_id, event_id, seat)\nSELECT g.id, e.id, COALESCE(s.seat, 'standing')\nFROM ticket_sheet s\nJOIN guests g ON g.email = s.guest_email\nJOIN events e ON e.title = s.event_title\nORDER BY g.id, e.id;\nSELECT * FROM tickets;",
         "readMore": {
@@ -6100,7 +6100,7 @@
     },
     {
       "id": "proj_venue_system",
-      "title": "Hard project: Venue booking system",
+      "title": "Hard side quest: Venue booking system",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -6111,7 +6111,7 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Venue booking system",
+        "title": "Hard side quest: Venue booking system",
         "bodyMarkdown": "The venue wants a booking system it can trust. Design it so bad data can't get in: rooms with real seat counts, events on real dates in existing rooms, prices in cents, and tickets with known statuses.\n\nEach challenge starts fresh. Copy your earlier answers forward as the design grows.",
         "sandboxCode": "PRAGMA foreign_keys = ON;\nBEGIN;\nCREATE TABLE rooms_new (\n  id INTEGER PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  seats INTEGER NOT NULL CHECK (seats > 0)\n);\nINSERT INTO rooms_new (id, name, seats) SELECT id, name, seats FROM rooms;\nDROP TABLE rooms;\nALTER TABLE rooms_new RENAME TO rooms;\nCOMMIT;\nCREATE TABLE events (\n  id INTEGER PRIMARY KEY,\n  title TEXT NOT NULL,\n  event_date TEXT NOT NULL CHECK (event_date = date(event_date)),\n  room_id INTEGER REFERENCES rooms (id) ON DELETE SET NULL,\n  price_cents INTEGER NOT NULL DEFAULT 0 CHECK (price_cents >= 0)\n);\nCREATE TABLE statuses (\n  code TEXT NOT NULL PRIMARY KEY\n);\nINSERT INTO statuses (code) VALUES ('booked'), ('cancelled'), ('used');\nCREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  event_id INTEGER NOT NULL REFERENCES events (id) ON DELETE CASCADE,\n  guest_email TEXT NOT NULL,\n  seat TEXT,\n  status TEXT NOT NULL DEFAULT 'booked' REFERENCES statuses (code),\n  UNIQUE (event_id, seat)\n);\nSELECT name FROM sqlite_schema WHERE type = 'table';",
         "readMore": {

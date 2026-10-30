@@ -12,7 +12,7 @@ export default makeTopic({
     "The `ORDER BY` inside `OVER` only decides the numbering. The order of the result is still decided by the query's own `ORDER BY` at the end, so you usually write both.",
     'With `PARTITION BY`, numbering starts again at 1 in each group. This numbers each player\'s games in date order, so their first game is 1:',
     '```\nSELECT player_id, played_on,\n       ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on) AS game_no\nFROM games\nORDER BY player_id, game_no;\n```',
-    "`ROW_NUMBER` always gives different numbers, even to rows that tie in the `ORDER BY`. Which of two tied rows gets the lower number is then up to the database, and may change. So make the order unique: add a tie-breaker such as the id, or use `RANK` (next lesson) when ties should share a number.",
+    "`ROW_NUMBER` always gives different numbers, even to rows that tie in the `ORDER BY`. Which of two tied rows gets the lower number is then up to the database, and may change. So make the order unique: add a tie-breaker such as the id, or use `RANK` (next stage) when ties should share a number.",
     'To keep only some numbers, such as each player\'s first game, number the rows in a subquery and filter outside it.',
   ],
   sandboxCode: 'SELECT player_id, played_on,\n       ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on) AS game_no\nFROM games\nORDER BY player_id, game_no;',

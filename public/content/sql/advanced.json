@@ -25,7 +25,7 @@
       ],
       "intro": {
         "title": "Saved queries: views",
-        "bodyMarkdown": "This section's database is a garden centre: `staff` (each with a `manager_id`), `categories` (inside other categories), `products` (with extra `details` stored as JSON), `sales`, and `targets` for each quarter. Open **Tables** to see them.\n\nA **view** is a query with a name. Once it is made, you can select from it as if it were a table:\n\n```\nCREATE VIEW sale_lines AS\nSELECT s.id AS sale_id, s.sold_on, p.name AS product, s.quantity\nFROM sales s\nJOIN products p ON p.id = s.product_id;\n\nSELECT * FROM sale_lines WHERE quantity >= 3 ORDER BY sale_id;\n```\n\nA view stores the query, not the rows. Each time you select from it, the query runs again, so it always shows the data as it is now. That makes views good for queries you use often, and for hiding a long join behind a simple name.\n\nThe view's columns are named by the query, so name calculated columns with `AS`, or list the names after the view's name: `CREATE VIEW top_sellers (product, sold) AS SELECT …`.\n\nViews can be used anywhere a table can in a SELECT: in joins, in subqueries, and in other views. You can't INSERT into a view or UPDATE it in SQLite: change the tables underneath instead.\n\nTo change a view, drop it and make it again: SQLite has no `CREATE OR REPLACE VIEW`. `DROP VIEW sale_lines;` removes it (the tables stay as they are), and `CREATE VIEW IF NOT EXISTS` skips the CREATE when the view is already there.",
+        "bodyMarkdown": "This quest's database is a garden centre: `staff` (each with a `manager_id`), `categories` (inside other categories), `products` (with extra `details` stored as JSON), `sales`, and `targets` for each quarter. Open **Tables** to see them.\n\nA **view** is a query with a name. Once it is made, you can select from it as if it were a table:\n\n```\nCREATE VIEW sale_lines AS\nSELECT s.id AS sale_id, s.sold_on, p.name AS product, s.quantity\nFROM sales s\nJOIN products p ON p.id = s.product_id;\n\nSELECT * FROM sale_lines WHERE quantity >= 3 ORDER BY sale_id;\n```\n\nA view stores the query, not the rows. Each time you select from it, the query runs again, so it always shows the data as it is now. That makes views good for queries you use often, and for hiding a long join behind a simple name.\n\nThe view's columns are named by the query, so name calculated columns with `AS`, or list the names after the view's name: `CREATE VIEW top_sellers (product, sold) AS SELECT …`.\n\nViews can be used anywhere a table can in a SELECT: in joins, in subqueries, and in other views. You can't INSERT into a view or UPDATE it in SQLite: change the tables underneath instead.\n\nTo change a view, drop it and make it again: SQLite has no `CREATE OR REPLACE VIEW`. `DROP VIEW sale_lines;` removes it (the tables stay as they are), and `CREATE VIEW IF NOT EXISTS` skips the CREATE when the view is already there.",
         "sandboxCode": "CREATE VIEW sale_lines AS\nSELECT s.id AS sale_id, s.sold_on, p.name AS product, s.quantity\nFROM sales s\nJOIN products p ON p.id = s.product_id;\n\nSELECT * FROM sale_lines WHERE quantity >= 3 ORDER BY sale_id;",
         "readMore": {
           "label": "SQLite: CREATE VIEW",
@@ -85,7 +85,7 @@
         {
           "id": "views-sale-lines",
           "title": "Easy: Sale lines",
-          "promptMarkdown": "Create the lesson's view `sale_lines`: each sale's id (`sale_id`), `sold_on`, the product's name (`product`) and `quantity`.",
+          "promptMarkdown": "Create the intro's view `sale_lines`: each sale's id (`sale_id`), `sold_on`, the product's name (`product`) and `quantity`.",
           "starterCode": "",
           "hint": "Join sales to products inside the view.",
           "solution": "CREATE VIEW sale_lines AS\nSELECT s.id AS sale_id, s.sold_on, p.name AS product, s.quantity\nFROM sales s\nJOIN products p ON p.id = s.product_id;",
@@ -1050,7 +1050,7 @@
           "title": "Easy: Levels",
           "promptMarkdown": "Show each staff member's `name` and `level` (1 for the person at the top). Sort by level, then name.",
           "starterCode": "",
-          "hint": "The lesson's first example.",
+          "hint": "The intro's first example.",
           "solution": "WITH RECURSIVE chart(id, name, level) AS (\n  SELECT id, name, 1 FROM staff WHERE manager_id IS NULL\n  UNION ALL\n  SELECT s.id, s.name, c.level + 1\n  FROM staff s\n  JOIN chart c ON s.manager_id = c.id\n)\nSELECT name, level FROM chart ORDER BY level, name;",
           "validation": {
             "mode": "sql_tests",
@@ -1510,7 +1510,7 @@
           "title": "Easy: Every day",
           "promptMarkdown": "Show every `day` from the first sale to the last with its number of `sales` (0 on days with none). In date order.",
           "starterCode": "",
-          "hint": "The lesson's example: a calendar CTE, LEFT JOIN sales, `COUNT(s.id)`.",
+          "hint": "The intro's example: a calendar CTE, LEFT JOIN sales, `COUNT(s.id)`.",
           "solution": "WITH RECURSIVE days(day) AS (\n  SELECT MIN(sold_on) FROM sales\n  UNION ALL\n  SELECT date(day, '+1 day') FROM days\n  WHERE day < (SELECT MAX(sold_on) FROM sales)\n)\nSELECT d.day, COUNT(s.id) AS sales\nFROM days d\nLEFT JOIN sales s ON s.sold_on = d.day\nGROUP BY d.day\nORDER BY d.day;",
           "validation": {
             "mode": "sql_tests",
@@ -2406,7 +2406,7 @@
           "title": "Easy: With VALUES",
           "promptMarkdown": "Make the rows with a VALUES list of quarters 1 to 4 and CROSS JOIN: `staff_id`, `quarter` (a number) and `target`, leaving out empty quarters. Sort by staff_id, then quarter.",
           "starterCode": "",
-          "hint": "The lesson's second example.",
+          "hint": "The intro's second example.",
           "solution": "WITH quarters(quarter) AS (VALUES (1), (2), (3), (4))\nSELECT t.staff_id, q.quarter,\n       CASE q.quarter WHEN 1 THEN t.q1 WHEN 2 THEN t.q2 WHEN 3 THEN t.q3 ELSE t.q4 END AS target\nFROM targets t\nCROSS JOIN quarters q\nWHERE target IS NOT NULL\nORDER BY t.staff_id, q.quarter;",
           "validation": {
             "mode": "sql_tests",
@@ -3323,7 +3323,7 @@
           "title": "Medium: Products per tag",
           "promptMarkdown": "For each tag, show `tag` and how many products have it (`products`). Most first, then by tag.",
           "starterCode": "",
-          "hint": "The lesson's second example.",
+          "hint": "The intro's second example.",
           "solution": "SELECT t.value AS tag, COUNT(*) AS products\nFROM products p, json_each(p.details, '$.tags') AS t\nGROUP BY tag\nORDER BY products DESC, tag;",
           "validation": {
             "mode": "sql_tests",
@@ -4697,7 +4697,7 @@
     },
     {
       "id": "proj_staff_directory",
-      "title": "Easy project: Staff directory",
+      "title": "Easy side quest: Staff directory",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -4708,7 +4708,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Staff directory",
+        "title": "Easy side quest: Staff directory",
         "bodyMarkdown": "The garden centre wants a staff directory for its notice board and intranet: who everyone reports to, how long they have been here, how the teams are arranged, and an org chart that stays up to date by itself.\n\nToday is 2026-10-24.",
         "sandboxCode": "SELECT s.name, s.role, m.name AS manager\nFROM staff s\nLEFT JOIN staff m ON m.id = s.manager_id\nORDER BY s.name;",
         "readMore": {
@@ -5012,7 +5012,7 @@
     },
     {
       "id": "proj_product_catalogue",
-      "title": "Medium project: Product catalogue",
+      "title": "Medium side quest: Product catalogue",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -5023,7 +5023,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Product catalogue",
+        "title": "Medium side quest: Product catalogue",
         "bodyMarkdown": "The website needs a catalogue built from the products table: names with their categories and colours, a tag index, a care table, a price list as JSON for the web page, category paths, and a restock flag in the details.",
         "sandboxCode": "SELECT name, json_extract(details, '$.colour') AS colour, details\nFROM products\nORDER BY name;",
         "readMore": {
@@ -5310,7 +5310,7 @@
     },
     {
       "id": "proj_sales_calendar",
-      "title": "Hard project: Sales calendar",
+      "title": "Hard side quest: Sales calendar",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -5321,7 +5321,7 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Sales calendar",
+        "title": "Hard side quest: Sales calendar",
         "bodyMarkdown": "The owner wants a daily sales report that doesn't skip quiet days, a view of it for the office, a weekend table for staff, the self-checkout's share, an index so the report stays fast as sales grow, and the best day of each week.\n\nEvery challenge covers each day from the first sale to the last.",
         "sandboxCode": "WITH RECURSIVE days(day) AS (\n  SELECT MIN(sold_on) FROM sales\n  UNION ALL\n  SELECT date(day, '+1 day') FROM days\n  WHERE day < (SELECT MAX(sold_on) FROM sales)\n)\nSELECT d.day, COUNT(s.id) AS sales\nFROM days d\nLEFT JOIN sales s ON s.sold_on = d.day\nGROUP BY d.day\nORDER BY d.day;",
         "readMore": {

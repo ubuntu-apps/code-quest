@@ -9,7 +9,7 @@ export default makeTopic({
   title: 'Foreign keys',
   database: DESIGN_DB,
   paragraphs: [
-    'A **foreign key** column holds the primary key of a row in another table, as `loans.member_id` did in the last section. `REFERENCES` turns that into a rule: the value must exist in the other table.',
+    'A **foreign key** column holds the primary key of a row in another table, as `loans.member_id` did in the last quest. `REFERENCES` turns that into a rule: the value must exist in the other table.',
     '```\nPRAGMA foreign_keys = ON;\nCREATE TABLE events (\n  id INTEGER PRIMARY KEY,\n  title TEXT NOT NULL,\n  room_id INTEGER REFERENCES rooms (id)\n);\n```',
     "**SQLite only checks foreign keys after `PRAGMA foreign_keys = ON;`**, and the setting lasts for one connection. Here each Run is a new connection, so start your SQL with it. Without it, `REFERENCES` is written down but never checked.",
     'With the check on, an event in room 9 (which doesn\'t exist) gives **FOREIGN KEY constraint failed**. So does deleting a room that events still use. Add the parent rows first, and delete the children first.',

@@ -10,7 +10,7 @@ export default makeTopic({
     'Some of the most useful questions are about what is missing: customers who never ordered, products nobody bought, staff with no sales. A `LEFT JOIN` finds them, because the unmatched rows are the ones with `NULL` on the right side.',
     '```\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id\nWHERE o.id IS NULL;\n```',
     "Read it as: take every customer, attach their orders if they have any, then keep only the rows where no order was attached. Test a column that can't be `NULL` in a real match, like the right table's `id`.",
-    "This `WHERE` is fine, unlike the one in the last lesson. There, `WHERE o.status = 'shipped'` threw the unmatched rows away by accident. Here, `WHERE o.id IS NULL` keeps only the unmatched rows, on purpose.",
+    "This `WHERE` is fine, unlike the one in the last stage. There, `WHERE o.status = 'shipped'` threw the unmatched rows away by accident. Here, `WHERE o.id IS NULL` keeps only the unmatched rows, on purpose.",
     'You can combine both ideas. Customers with no **shipped** order: put the status in `ON`, so only shipped orders can match, then keep the rows that found none:',
     "```\nSELECT c.name\nFROM customers c\nLEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'shipped'\nWHERE o.id IS NULL;\n```",
     'Remember to use `IS NULL`, never `= NULL`, which is never true.',

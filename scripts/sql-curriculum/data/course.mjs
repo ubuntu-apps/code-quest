@@ -60,5 +60,5 @@ export const COURSE = [
   { sectionId: 'schema_design', filename: 'schema_design.json', title: 'Designing tables', topics: [...designTopics, ...designProjects] },
   { sectionId: 'window_functions', filename: 'window_functions.json', title: 'Window functions', topics: [...windowsTopics, ...windowsProjects] },
   { sectionId: 'advanced', filename: 'advanced.json', title: 'Advanced queries', topics: [...advancedTopics, ...advancedProjects] },
-  { sectionId: 'projects', filename: 'projects.json', title: 'Capstone projects', topics: capstoneTopics },
+  { sectionId: 'projects', filename: 'projects.json', title: 'Capstone quest', topics: capstoneTopics },
 ]

@@ -13,7 +13,7 @@ export default makeTopic({
     'Put a comma **between** columns, but not after the last one. A missing comma is a common mistake: `SELECT title author FROM books` doesn\'t give an error, but shows the title in a column called `author`. A comma before `FROM` gives `near "FROM": syntax error`.',
     '**Renaming a column.** `AS` gives a column a different name in the result. It doesn\'t change the table, only the heading you see:',
     '```\nSELECT name AS pet, species AS kind FROM pets;\n```',
-    'A name with a space in it needs double quotes: `SELECT title AS "Book title" FROM books`. Text values use single quotes (next lesson); names use double quotes.',
+    'A name with a space in it needs double quotes: `SELECT title AS "Book title" FROM books`. Text values use single quotes (next stage); names use double quotes.',
     'Why not always use `*`? Naming the columns shows only what you need, in the order you want, and the query keeps giving the same columns even if someone adds a column to the table later.',
   ],
   sandboxCode: 'SELECT title, author, year FROM books;',

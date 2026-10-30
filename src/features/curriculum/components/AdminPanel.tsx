@@ -23,8 +23,8 @@ export function AdminPanel() {
       <h2 className="cq-subtitle">Admin mode</h2>
       <p className="cq-muted">
         {admin
-          ? 'On: every section and lesson is unlocked, and challenge answers can be opened without losing XP.'
-          : 'For testing: unlocks every section and lesson.'}
+          ? 'On: every quest and stage is unlocked, and challenge answers can be opened without losing XP.'
+          : 'For testing: unlocks every quest and stage.'}
       </p>
       {admin ? (
         <div className="cq-row">

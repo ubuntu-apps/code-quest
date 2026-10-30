@@ -10,7 +10,7 @@ export default makeTopic({
     'A join gives you rows with the columns of both tables, and everything you know still works on them. `WHERE` can test a column from either table, and `ORDER BY` can sort by any of them.',
     "Ana's orders, found by her name instead of her id:",
     "```\nSELECT o.id, o.order_date\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE c.name = 'Ana Silva';\n```",
-    'This is the two-step lookup from the first lesson, done in one query. The order is always the same: `FROM` and `JOIN`, then `WHERE`, then `ORDER BY` and `LIMIT`.',
+    'This is the two-step lookup from the first stage, done in one query. The order is always the same: `FROM` and `JOIN`, then `WHERE`, then `ORDER BY` and `LIMIT`.',
     "Shipped orders, sorted by customer and then by date:",
     "```\nSELECT c.name, o.order_date\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nWHERE o.status = 'shipped'\nORDER BY c.name, o.order_date;\n```",
     'You can also calculate with columns from both tables, and sort by the result. Here are the order lines worth more than 20, biggest first:',

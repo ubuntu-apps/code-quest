@@ -99,7 +99,7 @@ export const COURSE = [
   {
     sectionId: 'projects',
     filename: 'projects.json',
-    title: 'Capstone projects',
+    title: 'Capstone quest',
     // Easiest first; planning your own project comes last.
     topics: topics(
       'hangman',

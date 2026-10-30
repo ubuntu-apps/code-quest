@@ -9,7 +9,7 @@ const libraryReport = makeProject('easy', {
   database: QUERYING_DB,
   paragraphs: [
     'The library wants a few lists from its `books` table: what it has, the classics, the books still waiting for a rating, and the best-rated ones.',
-    'Each challenge is one part of the report. They use what you learned in this section: choosing columns, `WHERE`, `NULL`, `ORDER BY`, `LIMIT` and joining text with `||`.',
+    'Each challenge is one part of the report. They use what you learned in this quest: choosing columns, `WHERE`, `NULL`, `ORDER BY`, `LIMIT` and joining text with `||`.',
     'Try your ideas in the sandbox first. Remember to sort when the order matters, and to give calculated columns the name the challenge asks for.',
   ],
   sandboxCode: 'SELECT title, author, year, rating FROM books ORDER BY author, title;',
@@ -136,7 +136,7 @@ const stockCheck = makeProject('hard', {
   database: QUERYING_DB,
   paragraphs: [
     "It's the end of the month at the shop, and the manager wants a stock check from the `products` table: what to reorder, what the stock is worth, the sale prices and a final report.",
-    'This project puts the whole section together: conditions, `IN`, `LIKE`, `ORDER BY` with tie-breakers, calculated columns with `AS`, `ROUND` and `UPPER`.',
+    'This side quest puts the whole quest together: conditions, `IN`, `LIKE`, `ORDER BY` with tie-breakers, calculated columns with `AS`, `ROUND` and `UPPER`.',
     'Give calculated columns exactly the names the challenges ask for, and add tie-breakers where rows could be equal.',
   ],
   sandboxCode: 'SELECT name, category, price, stock, price * stock AS stock_value FROM products;',

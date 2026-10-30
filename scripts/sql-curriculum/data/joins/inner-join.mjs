@@ -11,7 +11,7 @@ export default makeTopic({
     '```\nSELECT orders.id, orders.order_date, customers.name\nFROM orders\nJOIN customers ON orders.customer_id = customers.id;\n```',
     'For each order, SQLite finds the customer whose `id` equals the order\'s `customer_id`, and puts the two rows side by side. The result has one row per matching pair.',
     'Because both tables have columns called `id` and `name`, write `table.column` to say which one you mean: `orders.id`, `customers.name`. It is a good habit even when the name is unique.',
-    "`JOIN` on its own means `INNER JOIN`: only rows that **have** a match appear. Customers who never ordered aren't in the result above, because no order points to them. (The `LEFT JOIN` lesson keeps them.)",
+    "`JOIN` on its own means `INNER JOIN`: only rows that **have** a match appear. Customers who never ordered aren't in the result above, because no order points to them. (The `LEFT JOIN` stage keeps them.)",
     'Getting `ON` wrong is a common join mistake. `ON orders.id = customers.id` runs without an error, but pairs order 1 with customer 1, order 2 with customer 2, and so on, which means nothing. Always join a foreign key to the key it points to.',
     'Which table comes first doesn\'t change an inner join\'s rows: `FROM customers JOIN orders ON …` gives the same pairs.',
   ],

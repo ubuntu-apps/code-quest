@@ -11,8 +11,8 @@ export default makeTopic({
     "Every object gets its own attributes, so changing one dog doesn't touch another:",
     "```\nrex = Dog(\"Rex\", 3)\nfido = Dog(\"Fido\", 5)\nrex.age = 4\nprint(rex.age, fido.age)        # 4 5\nprint(type(rex).__name__)       # Dog\nprint(isinstance(fido, Dog))    # True\n```",
     "Class names use CapWords (`Dog`, `BankAccount`), while attributes are lowercase like other variables. `__init__` parameters can have defaults, just like a function's: `def __init__(self, name, age=0)` lets you write `Dog(\"Pip\")`. Leave out a required argument and you get `TypeError: Dog.__init__() missing 1 required positional argument: 'age'`; read an attribute that was never set and you get `AttributeError: 'Dog' object has no attribute 'colour'`.",
-    "Why not just use a dict like `{\"name\": \"Rex\", \"age\": 3}`? A class gives every object the same shape, gives the type a name you can check with `isinstance`, and, from the next lesson on, holds the functions that belong with the data. You've actually written a class already: `class InvalidAgeError(Exception): pass` in the errors section made a new kind of exception.",
-    "One thing a plain class can't do yet is print nicely: `print(rex)` shows something like `<__main__.Dog object at 0x7f3a...>`. A later lesson in this section fixes that.",
+    "Why not just use a dict like `{\"name\": \"Rex\", \"age\": 3}`? A class gives every object the same shape, gives the type a name you can check with `isinstance`, and, from the next stage on, holds the functions that belong with the data. You've actually written a class already: `class InvalidAgeError(Exception): pass` in the errors quest made a new kind of exception.",
+    "One thing a plain class can't do yet is print nicely: `print(rex)` shows something like `<__main__.Dog object at 0x7f3a...>`. A later stage in this quest fixes that.",
   ],
   sandboxCode: "class Dog:\n    def __init__(self, name, age=0):\n        self.name = name\n        self.age = age\n\ndogs = [Dog(\"Rex\", 3), Dog(\"Fido\", 5), Dog(\"Pip\")]\nfor dog in dogs:\n    print(dog.name, \"is\", dog.age)\nprint(isinstance(dogs[0], Dog))",
   sandboxSnippets: [

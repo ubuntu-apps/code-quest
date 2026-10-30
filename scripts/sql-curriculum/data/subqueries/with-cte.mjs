@@ -9,7 +9,7 @@ export default makeTopic({
   paragraphs: [
     '`WITH` gives a subquery a name **before** the main query, which can then use it like a table. Such a named subquery is called a **common table expression**, or CTE.',
     '```\nWITH per_listener AS (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n)\nSELECT l.name, pl.plays\nFROM per_listener pl\nJOIN listeners l ON l.id = pl.listener_id\nWHERE pl.plays > (SELECT AVG(plays) FROM per_listener)\nORDER BY pl.plays DESC, l.name;\n```',
-    'Compare it with the last lesson, where the counts had to be written twice. Here they are written once and used twice: in `FROM` and inside the subquery for the average.',
+    'Compare it with the last stage, where the counts had to be written twice. Here they are written once and used twice: in `FROM` and inside the subquery for the average.',
     'A query with `WITH` reads from top to bottom: first the steps, then the answer. That makes long queries much easier to follow, and to check: you can test the CTE by itself by putting a plain `SELECT * FROM per_listener;` after it.',
     "The CTE only exists while its query runs; it doesn't create a table. Inside it, name every calculated column with `AS`, or list the names after the CTE's name: `WITH genre_plays(genre, plays) AS (…)`.",
   ],

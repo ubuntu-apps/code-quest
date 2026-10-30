@@ -61,7 +61,7 @@ export function explainSqlError(error: SqlErrorPayload, code: string): FriendlyP
     return {
       ...base,
       title: 'Unknown function',
-      tip: `SQLite has no function called ${m[1]}. Check the spelling, and that it's one this lesson uses.`,
+      tip: `SQLite has no function called ${m[1]}. Check the spelling, and that it's one this stage uses.`,
     }
   }
   if ((m = message.match(/^wrong number of arguments to function (.+)\(\)$/))) {

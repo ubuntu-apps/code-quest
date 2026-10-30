@@ -7,7 +7,7 @@ export default makeProject("medium", {
   paragraphs: [
     "Build a word counter: give it some text and it reports how many words there are, how many different ones, and which words are used most. It's the kind of program behind word clouds and search engines, and it uses lists, sets, dicts, sorting and comprehensions.",
     "Words need cleaning before they can be counted: `Data`, `data,` and `data.` should all count as the same word. Make every word lowercase and `strip` the punctuation off its ends with `w.strip(\".,!?:\")`.",
-    "For the text in this project, the finished report is:",
+    "For the text in this side quest, the finished report is:",
     "```\nWords: 23\nDifferent: 15\ndata: 5\ncode: 4\nkeeps: 2\n```",
     "The plan: clean the words into a list, count them all with `len`, count the different ones with a set, count each word in a dict, and sort the dict's keys by their counts to find the top three.",
     "Build it in steps; the last challenge puts everything together.",
@@ -70,7 +70,7 @@ export default makeProject("medium", {
       ],
     }),
     task("expert", "The report", {
-      prompt: "Put it all together and print the report from the lesson: `Words: 23`, `Different: 15`, then the top three words with their counts, like `data: 5`.",
+      prompt: "Put it all together and print the report from the intro: `Words: 23`, `Different: 15`, then the top three words with their counts, like `data: 5`.",
       starter: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\n",
       hint: "Clean the words, count them, find the top three, then print two summary lines and loop over the top three.",
       solution: "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(f\"Words: {len(words)}\")\nprint(f\"Different: {len(counts)}\")\nfor w in sorted(counts, key=counts.get, reverse=True)[:3]:\n    print(f\"{w}: {counts[w]}\")",
