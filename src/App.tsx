@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-
 import { CodeQuestScreen } from './features/curriculum/CodeQuestScreen'
 import { InstallAppBanner } from './components/InstallAppBanner'
 import { UpdateBanner } from './components/UpdateBanner'
+import { ProgressFileBanner } from './components/ProgressFileBanner'
 import { EditorProvider } from './features/editor'
 import { learnHomePath, learnLanguagePath } from './features/curriculum/learnPaths'
 import { SupporterLanding } from './features/support/SupporterLanding'
@@ -25,6 +26,7 @@ function AppRoutes() {
     <EditorProvider>
       <InstallAppBanner />
       <UpdateBanner />
+      <ProgressFileBanner />
       <Routes>
         <Route
           path="/auth/callback"
