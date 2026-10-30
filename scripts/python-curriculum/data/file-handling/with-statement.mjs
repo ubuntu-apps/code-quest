@@ -7,7 +7,7 @@ export default makeTopic({
   paragraphs: [
     "Remembering to call `close()` is easy to forget, and if an error happens between `open` and `close`, the `close()` line never runs. The `with` statement solves both problems: it opens the file, runs the indented block, and **always** closes the file afterwards, whether the block finished normally or with an error.",
     "```\nwith open(\"hello.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"Hello again!\\n\")\n\nwith open(\"hello.txt\", encoding=\"utf-8\") as f:\n    text = f.read()\n\nprint(text)\nprint(f.closed)   # True: closed as soon as the block ended\n```",
-    "Read it as: \"with the file `hello.txt` open, and called `f`, do this\". The name after `as` is the file object, just like the result of `open` in the last lesson. Variables you create inside the block, such as `text`, still exist after it; only the file is closed.",
+    "Read it as: \"with the file `hello.txt` open, and called `f`, do this\". The name after `as` is the file object, just like the result of `open` in the last stage. Variables you create inside the block, such as `text`, still exist after it; only the file is closed.",
     "From now on, use `with` whenever you open a file. It's shorter, it can't forget, and every experienced Python programmer will expect it.",
     "One `with` can open several files at once, separated by commas, which is handy for reading one file while writing another:",
     "```\nwith open(\"a.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"from a\\n\")\n\nwith open(\"a.txt\", encoding=\"utf-8\") as src, open(\"b.txt\", \"w\", encoding=\"utf-8\") as dst:\n    dst.write(src.read().upper())\n```",

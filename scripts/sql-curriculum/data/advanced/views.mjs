@@ -12,7 +12,7 @@ export default makeTopic({
   title: 'Saved queries: views',
   database: ADVANCED_DB,
   paragraphs: [
-    "This section's database is a garden centre: `staff` (each with a `manager_id`), `categories` (inside other categories), `products` (with extra `details` stored as JSON), `sales`, and `targets` for each quarter. Open **Tables** to see them.",
+    "This quest's database is a garden centre: `staff` (each with a `manager_id`), `categories` (inside other categories), `products` (with extra `details` stored as JSON), `sales`, and `targets` for each quarter. Open **Tables** to see them.",
     'A **view** is a query with a name. Once it is made, you can select from it as if it were a table:',
     '```\nCREATE VIEW sale_lines AS\nSELECT s.id AS sale_id, s.sold_on, p.name AS product, s.quantity\nFROM sales s\nJOIN products p ON p.id = s.product_id;\n\nSELECT * FROM sale_lines WHERE quantity >= 3 ORDER BY sale_id;\n```',
     "A view stores the query, not the rows. Each time you select from it, the query runs again, so it always shows the data as it is now. That makes views good for queries you use often, and for hiding a long join behind a simple name.",
@@ -41,7 +41,7 @@ export default makeTopic({
       checks: [viewColumns('cheap_products'), viewRows('cheap_products', 'name')],
     }),
     query('easy', 'Sale lines', {
-      prompt: 'Create the lesson\'s view `sale_lines`: each sale\'s id (`sale_id`), `sold_on`, the product\'s name (`product`) and `quantity`.',
+      prompt: 'Create the intro\'s view `sale_lines`: each sale\'s id (`sale_id`), `sold_on`, the product\'s name (`product`) and `quantity`.',
       hint: 'Join sales to products inside the view.',
       solution: SALE_LINES,
       checks: [viewColumns('sale_lines'), viewRows('sale_lines', 'sale_id')],

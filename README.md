@@ -4,7 +4,7 @@
 
 # CodeQuest
 
-**Learn to code for free, right in your browser.** CodeQuest teaches Python and SQL through short lessons, hands-on challenges and quizzes. Your code runs on your own device, so there is nothing to install, no account to create and no ads.
+**Learn to code for free, right in your browser.** CodeQuest teaches Python and SQL through quests: each quest is a series of short stages with hands-on challenges, and each stage ends with a gate, a short quiz that opens the next one. Your code runs on your own device, so there is nothing to install, no account to create and no ads.
 
 ### [Start learning now](https://ubuntu-apps.github.io/code-quest/)
 
@@ -15,31 +15,35 @@ Open the link on a laptop, a school Chromebook, a tablet or a phone, press **Sta
 - **Free, with no catch.** No ads, no paywall, no sign-up.
 - **Nothing to install.** Python and SQL run inside the browser, so it works on locked-down school and work computers too.
 - **Made for phones as well as laptops.** A phone-friendly code editor with extra keys for brackets, quotes and indents.
-- **Learn by doing.** Every lesson has a live sandbox and challenges that run your code and tell you exactly which characters of the output were different.
-- **Keeps you going.** XP and ranks, a daily streak with streak freezes, 23 badges, an optional calendar reminder and a daily review of quiz questions you got wrong.
-- **Works offline.** Install it like an app and download the lessons for a plane, a train or a patchy connection.
-- **A certificate when you finish.** Save it as an image or print it.
-- **Private.** Your progress stays on your device. CodeQuest only sends anonymous counts (such as "someone passed the Variables quiz"), with no cookies, and you can turn that off on the About tab.
+- **Learn by doing.** Every stage has a live sandbox and challenges that run your code and tell you exactly which characters of the output were different.
+- **Keeps you going.** XP and ranks, a daily streak with streak freezes, 23 badges, an optional calendar reminder and a daily review of gate questions you got wrong.
+- **Works offline.** Install it like an app and download the quests for a plane, a train or a patchy connection.
+- **Certificates.** One for each quest you finish and one for the whole course. Save them as an image or print them.
+- **Private.** Your progress stays on your device. CodeQuest only sends anonymous counts (such as "someone cleared the Variables gate"), with no cookies, and you can turn that off on the About tab. See the [privacy statement](PRIVACY.md).
 
 ## Courses
 
 | Course | What you learn | Size |
 | --- | --- | --- |
-| **Python** | Fundamentals, decisions and loops, data structures, functions, errors and exceptions, files, modules and packages, classes and objects, data and APIs (JSON, CSV, pandas, SQLite), and capstone projects | 10 sections, about 125 lessons, over 1,000 challenges |
-| **SQL** | Querying a table, functions and expressions, summarising data, joins, subqueries and sets, changing data, designing tables, window functions, advanced queries, and capstone projects | 10 sections, about 120 lessons, over 1,000 challenges |
+| **Python** | Fundamentals, decisions and loops, data structures, functions, errors and exceptions, files, modules and packages, classes and objects, data and APIs (JSON, CSV, pandas, SQLite), and a capstone quest | 10 quests, about 125 stages, over 1,000 challenges |
+| **SQL** | Querying a table, functions and expressions, summarising data, joins, subqueries and sets, changing data, designing tables, window functions, advanced queries, and a capstone quest | 10 quests, about 120 stages, over 1,000 challenges |
 | **R** | Coming soon | |
 
-No experience is needed. If you already know some of a section, you can take a short test to skip ahead.
+No experience is needed. If you already know some of a quest, you can take a skip-ahead gate to jump past it.
 
-## How a lesson works
+## How a quest works
+
+Each course is a path of quests. A quest has about ten stages, then easy, medium and hard side quests (small projects); finishing the easy and medium side quests opens the next quest. Every stage has three steps:
 
 1. **Intro**: a short explanation with examples. Press **Try it** on any example to load it into the sandbox and run it.
 2. **Challenges**: write code to solve a small task. **Run** shows what your code prints; **Check** tests it and highlights any difference from the expected output. Hints are there if you get stuck.
-3. **Quiz**: a few questions, each with a one-line explanation. Pass it to unlock the next lesson.
+3. **Gate**: a few quiz questions, each with a one-line explanation. Clear it (70% or more) to open the next stage.
+
+Finishing quests also raises your rank, from Tinkerer to Builder, Engineer, Architect and Wizard.
 
 ## For teachers, clubs and homeschoolers
 
-CodeQuest is free to use with a class. Students need only a browser and the link: no accounts to set up, no software to install, and nothing to manage. Each section follows a clear order, so it can sit alongside your own lessons or be set as homework.
+CodeQuest is free to use with a class. Students need only a browser and the link: no accounts to set up, no software to install, and nothing to manage. Each quest follows a clear order, so it can sit alongside your own lessons or be set as homework.
 
 Progress is stored on each student's device. Students can download a backup from the About tab to move to another device.
 
@@ -47,14 +51,14 @@ If you use CodeQuest with learners, I would love to hear how it goes: [send feed
 
 ## Feedback and problems
 
-- Found a wrong answer or a confusing lesson? Every challenge and quiz has a **Report a problem** link, or [open an issue](https://github.com/ubuntu-apps/code-quest/issues/new).
+- Found a wrong answer or a confusing stage? Every challenge and gate has a **Report a problem** link, or [open an issue](https://github.com/ubuntu-apps/code-quest/issues/new).
 - Ideas and general feedback: use **Send feedback** on the About tab.
 
 ---
 
 ## For developers
 
-CodeQuest is an installable web app (PWA) built with React, TypeScript and Vite. Python runs with [Pyodide](https://pyodide.org) in a Web Worker, SQL runs on SQLite through Pyodide's `sqlite3`, and R will run with [WebR](https://docs.r-wasm.org/webr/). The Java files in `public/content/java/` are a draft that is not listed in the app; to publish them, add a `java` entry to `public/content/index.json`.
+CodeQuest is an installable web app (PWA) built with React, TypeScript and Vite. In the code and content files, a quest is a **section**, a stage is a **level** (`kind: 'project'` for side quests), and a gate is a level's **test** (its quiz). Python runs with [Pyodide](https://pyodide.org) in a Web Worker, SQL runs on SQLite through Pyodide's `sqlite3`, and R will run with [WebR](https://docs.r-wasm.org/webr/). The Java files in `public/content/java/` are a draft that is not listed in the app; to publish them, add a `java` entry to `public/content/index.json`.
 
 ### Getting started
 

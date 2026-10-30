@@ -7,14 +7,14 @@ export default makeTopic({
   title: 'Keys and relationships',
   database: JOINS_DB,
   paragraphs: [
-    "Real databases split their data over several tables. This section's shop has five: `customers`, `orders`, `order_items`, `products` and `employees`. Open **Tables** to see how they fit together.",
+    "Real databases split their data over several tables. This quest's shop has five: `customers`, `orders`, `order_items`, `products` and `employees`. Open **Tables** to see how they fit together.",
     "Why not one big table? An order would then repeat the customer's name and city on every line, and a customer who moved would need changing in many places. Splitting the data stores each fact **once**, and the tables point to each other instead.",
     "Every table has an `id` column, its **primary key**: a number that identifies one row and is never repeated. Other tables refer to a row by that number. In `orders`, `customer_id` holds the `id` of the customer who placed the order. A column like that is a **foreign key**.",
     '```\nSELECT id, customer_id, employee_id, order_date FROM orders;\n```',
     "So order 1 has `customer_id` 1: it was placed by the customer whose `id` is 1, Ana Silva. In the same way, `employee_id` points to `employees`, `order_items` points to both `orders` and `products`, and `employees.manager_id` points to another employee.",
     "Without joins, following a key takes two steps: look up the id, then use it.",
     "```\nSELECT id FROM customers WHERE name = 'Ana Silva';\nSELECT id, order_date FROM orders WHERE customer_id = 1;\n```",
-    "The next lesson does both steps in one query. In this one, practise reading the keys.",
+    "The next stage does both steps in one query. In this one, practise reading the keys.",
   ],
   sandboxCode: 'SELECT id, customer_id, employee_id, order_date FROM orders;',
   sandboxSnippets: [

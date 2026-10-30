@@ -23,7 +23,7 @@ function curriculumUrl(baseUrl: string, source: string, cacheBust?: boolean): st
 }
 
 const OFFLINE_LOAD_ERROR =
-  "Couldn't load the lessons. You may be offline: lessons you've opened before work offline, but these haven't been downloaded yet. Connect to the internet and try again."
+  "Couldn't load the quests. You may be offline: stages you've opened before work offline, but these haven't been downloaded yet. Connect to the internet and try again."
 
 /** True for a fetch that never got a response (offline, DNS, blocked), not an HTTP error. */
 function isNetworkError(error: unknown): boolean {

@@ -11,7 +11,7 @@ export default makeTopic({
     '`CEIL(x)` always rounds **up** to the next whole number and `FLOOR(x)` always rounds **down**: `CEIL(15.01)` is 16 and `FLOOR(15.99)` is 15. Use them when rounding the usual way would be wrong, such as counting how many boxes you need.',
     '`ABS(x)` drops the minus sign, which is handy for "how far apart": `ABS(total - 100)` is the distance from 100 either way.',
     '```\nSELECT id, total, ROUND(total) AS rounded, CEIL(total) AS up, FLOOR(total) AS down\nFROM orders;\n```',
-    'Remember whole-number division from the last section: `salary / 12` drops the decimals because both numbers are whole. Divide by `12.0` to keep them, and round the result: `ROUND(salary / 12.0, 2)`.',
+    'Remember whole-number division from the last quest: `salary / 12` drops the decimals because both numbers are whole. Divide by `12.0` to keep them, and round the result: `ROUND(salary / 12.0, 2)`.',
     '`%` gives the **remainder** of a division: `7 % 2` is 1. A number is even when `x % 2 = 0`, and `x % 10` is its last digit.',
     "Percentages work as in maths: a 15% discount on a total is `total * 15 / 100.0`, and what is left to pay is `total * (100 - 15) / 100.0`.",
   ],

@@ -4,7 +4,7 @@
  */
 
 const TITLE = 'CodeQuest: keep your streak going'
-const DESCRIPTION = 'One challenge or quiz keeps your daily streak alive.'
+const DESCRIPTION = 'One challenge or gate keeps your daily streak alive.'
 const DURATION_MINUTES = 15
 
 function pad(n: number): string {

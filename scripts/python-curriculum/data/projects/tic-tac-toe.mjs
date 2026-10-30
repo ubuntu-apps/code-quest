@@ -10,7 +10,7 @@ export default makeTopic({
     "The board is a list of nine strings, each `\"X\"`, `\"O\"` or `\" \"`. Cell `n` is `board[n - 1]`, and a three-in-a-row is any of eight lines of positions, written out once as a constant. With that, checking for a winner is a short loop.",
     "The computer player comes in two versions. The first follows simple rules: win if it can, block if it must, otherwise take the centre, then a corner. That's already hard to beat, but not perfect. The second **looks ahead**: it tries every move, then every reply to that move, and so on to the end of the game, assuming both sides play their best. This is the **minimax** idea, and it's naturally recursive: the score of a position is the best (or, on the opponent's turn, the worst) of the scores of the positions one move later.",
     "Looking ahead through every game is a lot of work, and the same positions come up again and again by different routes. So the program remembers each position's score in a dict the first time it works it out. This trick, called **memoisation**, makes the computer's moves instant, fast enough for the last step, which plays every possible game against it to prove it never loses.",
-    "You'll use lists and tuples, loops and functions, exceptions for bad moves, recursion from the Functions section, and a dict as a cache.",
+    "You'll use lists and tuples, loops and functions, exceptions for bad moves, recursion from the Functions quest, and a dict as a cache.",
   ],
   sandboxCode: "board = [\"X\", \"O\", \" \", \" \", \"X\", \" \", \" \", \" \", \"O\"]\nrows = [\" \" + \" | \".join(board[i:i + 3]) for i in (0, 3, 6)]\nprint(\"\\n---+---+---\\n\".join(rows))\nprint(\"Free:\", [i + 1 for i, v in enumerate(board) if v == \" \"])",
   sandboxSnippets: [

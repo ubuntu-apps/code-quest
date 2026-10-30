@@ -28,7 +28,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Levels', {
       prompt: "Show each staff member's `name` and `level` (1 for the person at the top). Sort by level, then name.",
-      hint: 'The lesson\'s first example.',
+      hint: 'The intro\'s first example.',
       solution: LEVELS,
     }),
     query('easy', 'Category depth', {

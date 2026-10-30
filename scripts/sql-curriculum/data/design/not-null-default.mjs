@@ -15,7 +15,7 @@ export default makeTopic({
     "`DEFAULT` gives a value to use when the INSERT leaves the column out. Defaults are written like values: numbers as they are, text in single quotes.",
     "```\nCREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  seat TEXT NOT NULL,\n  status TEXT NOT NULL DEFAULT 'booked',\n  price REAL NOT NULL DEFAULT 0\n);\n```",
     "The two go well together: the column always has a value, and the usual one is filled in for you. But a default is only used when the column is left out. Writing `NULL` on purpose still stores `NULL`, which `NOT NULL` then refuses.",
-    "`NOT NULL` doesn't stop empty text: `''` is a value, not a missing one. To refuse that too you need a `CHECK`, in the next lesson. Defaults can also be `CURRENT_DATE` or `CURRENT_TIMESTAMP`, which fill in today's date or time.",
+    "`NOT NULL` doesn't stop empty text: `''` is a value, not a missing one. To refuse that too you need a `CHECK`, in the next stage. Defaults can also be `CURRENT_DATE` or `CURRENT_TIMESTAMP`, which fill in today's date or time.",
   ],
   sandboxCode: "CREATE TABLE tickets (\n  id INTEGER PRIMARY KEY,\n  seat TEXT NOT NULL,\n  status TEXT NOT NULL DEFAULT 'booked',\n  price REAL NOT NULL DEFAULT 0\n);\nINSERT INTO tickets (seat) VALUES ('A1');\nSELECT * FROM tickets;",
   sandboxSnippets: [

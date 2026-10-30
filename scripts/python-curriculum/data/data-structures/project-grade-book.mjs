@@ -6,7 +6,7 @@ export default makeProject("easy", {
   title: "Grade book",
   paragraphs: [
     "Build a grade book for a small class. Each student's score lives in a dictionary, and the program works out the class average, the top student and a letter grade for everyone, then prints a report sorted from the best score down.",
-    "The letter grades: `A` for 90 or more, `B` for 80 or more, `C` for 70 or more, and `F` below that. With the five students in this project, the finished report is:",
+    "The letter grades: `A` for 90 or more, `B` for 80 or more, `C` for 70 or more, and `F` below that. With the five students in this side quest, the finished report is:",
     "```\nAna: 91 (A)\nCleo: 85 (B)\nBen: 78 (C)\nEli: 72 (C)\nDev: 64 (F)\nAverage: 78.0\n```",
     "Useful pieces: `sum(grades.values())` and `len(grades)` for the average, `max(grades, key=grades.get)` for the top student, and `sorted(grades, key=grades.get, reverse=True)` for the names from best to worst.",
     "Build it in steps: store the scores, add a student, the average, the top student, the letter grades, and finally the whole report.",
@@ -63,7 +63,7 @@ export default makeProject("easy", {
       ],
     }),
     task("hard", "The report", {
-      prompt: "Print the report from the lesson: one line per student from the highest score to the lowest, like `Ana: 91 (A)`, then `Average: 78.0`.",
+      prompt: "Print the report from the intro: one line per student from the highest score to the lowest, like `Ana: 91 (A)`, then `Average: 78.0`.",
       starter: "grades = {\"Ana\": 91, \"Ben\": 78, \"Cleo\": 85, \"Dev\": 64, \"Eli\": 72}\nletters = {\"Ana\": \"A\", \"Ben\": \"C\", \"Cleo\": \"B\", \"Dev\": \"F\", \"Eli\": \"C\"}\n",
       hint: "Loop over `sorted(grades, key=grades.get, reverse=True)` and print `f\"{name}: {grades[name]} ({letters[name]})\"`. Work out the average and print it with `:.1f` after the loop.",
       solution: "grades = {\"Ana\": 91, \"Ben\": 78, \"Cleo\": 85, \"Dev\": 64, \"Eli\": 72}\nletters = {\"Ana\": \"A\", \"Ben\": \"C\", \"Cleo\": \"B\", \"Dev\": \"F\", \"Eli\": \"C\"}\nfor name in sorted(grades, key=grades.get, reverse=True):\n    print(f\"{name}: {grades[name]} ({letters[name]})\")\naverage = sum(grades.values()) / len(grades)\nprint(f\"Average: {average:.1f}\")",

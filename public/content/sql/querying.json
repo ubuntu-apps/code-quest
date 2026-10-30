@@ -35,7 +35,7 @@
       ],
       "intro": {
         "title": "Your first query",
-        "bodyMarkdown": "A **database** keeps data in **tables**. A table looks like a spreadsheet: each **column** holds one kind of value (a title, a year, a price) and each **row** is one record, such as one book. This course uses **SQLite**, a small database that runs right here in your browser.\n\nYou ask a database for data with a **query**, written in **SQL** (Structured Query Language). The simplest query shows a whole table:\n\n```\nSELECT * FROM books;\n```\n\n`SELECT` says what to show, `*` means \"every column\", and `FROM books` names the table. The semicolon `;` ends the statement. In CodeQuest the result appears as a table, with the number of rows underneath.\n\nThis lesson's database has three tables: `books`, `pets` and `products`. Open **Tables** above the editor to see their columns at any time.\n\nTo show only some of the columns, name them instead of `*`. This shows just the title of each book:\n\n```\nSELECT title FROM books;\n```\n\nSQL keywords are not case-sensitive: `select title from books` works too. Writing keywords in capitals is a common habit that makes them stand out from table and column names. Spaces and line breaks don't matter either, so longer queries are often spread over several lines.\n\nText after `--` is a **comment**: SQLite ignores it until the end of the line. Use comments to leave notes for people reading your SQL.\n\n```\n-- every pet in the clinic\nSELECT * FROM pets;\n```\n\nYou can write several statements one after another. Each one runs in turn and shows its own result. In challenges, the **last** result is the one that is checked.",
+        "bodyMarkdown": "A **database** keeps data in **tables**. A table looks like a spreadsheet: each **column** holds one kind of value (a title, a year, a price) and each **row** is one record, such as one book. This course uses **SQLite**, a small database that runs right here in your browser.\n\nYou ask a database for data with a **query**, written in **SQL** (Structured Query Language). The simplest query shows a whole table:\n\n```\nSELECT * FROM books;\n```\n\n`SELECT` says what to show, `*` means \"every column\", and `FROM books` names the table. The semicolon `;` ends the statement. In CodeQuest the result appears as a table, with the number of rows underneath.\n\nThis stage's database has three tables: `books`, `pets` and `products`. Open **Tables** above the editor to see their columns at any time.\n\nTo show only some of the columns, name them instead of `*`. This shows just the title of each book:\n\n```\nSELECT title FROM books;\n```\n\nSQL keywords are not case-sensitive: `select title from books` works too. Writing keywords in capitals is a common habit that makes them stand out from table and column names. Spaces and line breaks don't matter either, so longer queries are often spread over several lines.\n\nText after `--` is a **comment**: SQLite ignores it until the end of the line. Use comments to leave notes for people reading your SQL.\n\n```\n-- every pet in the clinic\nSELECT * FROM pets;\n```\n\nYou can write several statements one after another. Each one runs in turn and shows its own result. In challenges, the **last** result is the one that is checked.",
         "sandboxCode": "SELECT * FROM books;",
         "readMore": {
           "label": "SQLite: the SELECT statement",
@@ -121,7 +121,7 @@
           "title": "Expert: Every species",
           "promptMarkdown": "Show the `species` of every pet (one row per pet, so some species appear more than once).",
           "starterCode": "",
-          "hint": "Name the `species` column instead of `*`. A later lesson shows how to list each species once.",
+          "hint": "Name the `species` column instead of `*`. A later stage shows how to list each species once.",
           "solution": "SELECT species FROM pets;",
           "validation": {
             "mode": "sql_tests",
@@ -456,7 +456,7 @@
       ],
       "intro": {
         "title": "Choosing columns",
-        "bodyMarkdown": "To show several columns, list them after `SELECT`, separated by commas:\n\n```\nSELECT title, author, year FROM books;\n```\n\nThe result has the columns in the order you list them, which doesn't have to be the order in the table. `SELECT year, title FROM books` puts the year first.\n\nPut a comma **between** columns, but not after the last one. A missing comma is a common mistake: `SELECT title author FROM books` doesn't give an error, but shows the title in a column called `author`. A comma before `FROM` gives `near \"FROM\": syntax error`.\n\n**Renaming a column.** `AS` gives a column a different name in the result. It doesn't change the table, only the heading you see:\n\n```\nSELECT name AS pet, species AS kind FROM pets;\n```\n\nA name with a space in it needs double quotes: `SELECT title AS \"Book title\" FROM books`. Text values use single quotes (next lesson); names use double quotes.\n\nWhy not always use `*`? Naming the columns shows only what you need, in the order you want, and the query keeps giving the same columns even if someone adds a column to the table later.",
+        "bodyMarkdown": "To show several columns, list them after `SELECT`, separated by commas:\n\n```\nSELECT title, author, year FROM books;\n```\n\nThe result has the columns in the order you list them, which doesn't have to be the order in the table. `SELECT year, title FROM books` puts the year first.\n\nPut a comma **between** columns, but not after the last one. A missing comma is a common mistake: `SELECT title author FROM books` doesn't give an error, but shows the title in a column called `author`. A comma before `FROM` gives `near \"FROM\": syntax error`.\n\n**Renaming a column.** `AS` gives a column a different name in the result. It doesn't change the table, only the heading you see:\n\n```\nSELECT name AS pet, species AS kind FROM pets;\n```\n\nA name with a space in it needs double quotes: `SELECT title AS \"Book title\" FROM books`. Text values use single quotes (next stage); names use double quotes.\n\nWhy not always use `*`? Naming the columns shows only what you need, in the order you want, and the query keeps giving the same columns even if someone adds a column to the table later.",
         "sandboxCode": "SELECT title, author, year FROM books;",
         "readMore": {
           "label": "SQLite: result columns",
@@ -3794,7 +3794,7 @@
       ],
       "intro": {
         "title": "Calculated columns",
-        "bodyMarkdown": "A column in the result can be a **calculation** instead of a stored value. This shows how much each product's stock is worth:\n\n```\nSELECT name, price * stock AS stock_value FROM products;\n```\n\nYou can use `+`, `-`, `*` and `/`, with brackets as in maths. **Always name a calculated column with `AS`**: otherwise its heading is the calculation itself, such as `price * stock`.\n\n**Watch out for whole-number division.** When both numbers are whole, SQLite gives a whole-number answer: `7 / 2` is `3`. If either number has a decimal point, you get decimals: `7 / 2.0` is `3.5`. So `stock / 8.0` keeps the decimals that `stock / 8` drops.\n\n`ROUND(value, 2)` rounds to 2 decimal places, which is handy for money: `ROUND(price * 0.8, 2)`.\n\n`||` joins text together. Numbers can be joined too:\n\n```\nSELECT title || ' (' || year || ')' AS label FROM books;\n```\n\n`UPPER(text)` and `LOWER(text)` change the case, and `LENGTH(text)` counts the characters. The next section has many more functions.\n\nA calculation can be used in `WHERE` and `ORDER BY` too. In `WHERE`, write the calculation again rather than using its `AS` name: most databases don't allow the name there.\n\n```\nSELECT name, price * stock AS stock_value FROM products\nWHERE price * stock > 500\nORDER BY stock_value DESC;\n```",
+        "bodyMarkdown": "A column in the result can be a **calculation** instead of a stored value. This shows how much each product's stock is worth:\n\n```\nSELECT name, price * stock AS stock_value FROM products;\n```\n\nYou can use `+`, `-`, `*` and `/`, with brackets as in maths. **Always name a calculated column with `AS`**: otherwise its heading is the calculation itself, such as `price * stock`.\n\n**Watch out for whole-number division.** When both numbers are whole, SQLite gives a whole-number answer: `7 / 2` is `3`. If either number has a decimal point, you get decimals: `7 / 2.0` is `3.5`. So `stock / 8.0` keeps the decimals that `stock / 8` drops.\n\n`ROUND(value, 2)` rounds to 2 decimal places, which is handy for money: `ROUND(price * 0.8, 2)`.\n\n`||` joins text together. Numbers can be joined too:\n\n```\nSELECT title || ' (' || year || ')' AS label FROM books;\n```\n\n`UPPER(text)` and `LOWER(text)` change the case, and `LENGTH(text)` counts the characters. The next quest has many more functions.\n\nA calculation can be used in `WHERE` and `ORDER BY` too. In `WHERE`, write the calculation again rather than using its `AS` name: most databases don't allow the name there.\n\n```\nSELECT name, price * stock AS stock_value FROM products\nWHERE price * stock > 500\nORDER BY stock_value DESC;\n```",
         "sandboxCode": "SELECT name, price * stock AS stock_value FROM products;",
         "readMore": {
           "label": "SQLite: core functions",
@@ -4196,7 +4196,7 @@
     },
     {
       "id": "proj_library_report",
-      "title": "Easy project: Library report",
+      "title": "Easy side quest: Library report",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -4217,8 +4217,8 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Library report",
-        "bodyMarkdown": "The library wants a few lists from its `books` table: what it has, the classics, the books still waiting for a rating, and the best-rated ones.\n\nEach challenge is one part of the report. They use what you learned in this section: choosing columns, `WHERE`, `NULL`, `ORDER BY`, `LIMIT` and joining text with `||`.\n\nTry your ideas in the sandbox first. Remember to sort when the order matters, and to give calculated columns the name the challenge asks for.",
+        "title": "Easy side quest: Library report",
+        "bodyMarkdown": "The library wants a few lists from its `books` table: what it has, the classics, the books still waiting for a rating, and the best-rated ones.\n\nEach challenge is one part of the report. They use what you learned in this quest: choosing columns, `WHERE`, `NULL`, `ORDER BY`, `LIMIT` and joining text with `||`.\n\nTry your ideas in the sandbox first. Remember to sort when the order matters, and to give calculated columns the name the challenge asks for.",
         "sandboxCode": "SELECT title, author, year, rating FROM books ORDER BY author, title;",
         "readMore": {
           "label": "SQLite: the SELECT statement",
@@ -4484,7 +4484,7 @@
     },
     {
       "id": "proj_pet_clinic",
-      "title": "Medium project: Pet clinic",
+      "title": "Medium side quest: Pet clinic",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -4505,7 +4505,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Pet clinic",
+        "title": "Medium side quest: Pet clinic",
         "bodyMarkdown": "The vet's clinic keeps its patients in the `pets` table. Today you'll prepare the lists the reception desk needs: the check-up list, the records with missing details, weights in pounds, and labels for the appointment board.\n\nSome pets have no breed or no owner recorded, so watch out for `NULL`. One kilogram is about 2.2046 pounds.",
         "sandboxCode": "SELECT name, species, age, owner FROM pets ORDER BY age DESC;",
         "readMore": {
@@ -4772,7 +4772,7 @@
     },
     {
       "id": "proj_shop_stock_check",
-      "title": "Hard project: Shop stock check",
+      "title": "Hard side quest: Shop stock check",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -4793,8 +4793,8 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Shop stock check",
-        "bodyMarkdown": "It's the end of the month at the shop, and the manager wants a stock check from the `products` table: what to reorder, what the stock is worth, the sale prices and a final report.\n\nThis project puts the whole section together: conditions, `IN`, `LIKE`, `ORDER BY` with tie-breakers, calculated columns with `AS`, `ROUND` and `UPPER`.\n\nGive calculated columns exactly the names the challenges ask for, and add tie-breakers where rows could be equal.",
+        "title": "Hard side quest: Shop stock check",
+        "bodyMarkdown": "It's the end of the month at the shop, and the manager wants a stock check from the `products` table: what to reorder, what the stock is worth, the sale prices and a final report.\n\nThis side quest puts the whole quest together: conditions, `IN`, `LIKE`, `ORDER BY` with tie-breakers, calculated columns with `AS`, `ROUND` and `UPPER`.\n\nGive calculated columns exactly the names the challenges ask for, and add tie-breakers where rows could be equal.",
         "sandboxCode": "SELECT name, category, price, stock, price * stock AS stock_value FROM products;",
         "readMore": {
           "label": "SQLite: core functions",

@@ -40,7 +40,7 @@ export default makeTopic({
     }),
     query('easy', 'With VALUES', {
       prompt: "Make the rows with a VALUES list of quarters 1 to 4 and CROSS JOIN: `staff_id`, `quarter` (a number) and `target`, leaving out empty quarters. Sort by staff_id, then quarter.",
-      hint: 'The lesson\'s second example.',
+      hint: 'The intro\'s second example.',
       solution: ROWS + 'WHERE target IS NOT NULL\nORDER BY t.staff_id, q.quarter;',
     }),
     query('medium', 'Yearly totals', {

@@ -12,7 +12,7 @@ export default makeTopic({
     "Each player's total grows game by game, and starts again for the next player. The other aggregates work the same way: `AVG` gives the average so far, `MAX` the best so far, `COUNT(*)` the games so far.",
     "The rows a running total covers are called its **frame**. With `ORDER BY` and nothing else, the frame runs from the start of the partition to the current row, **and every row that ties with it** in the `ORDER BY`. That catches people out:",
     '```\nSELECT id, played_on, points,\n       SUM(points) OVER (ORDER BY played_on) AS running\nFROM games\nORDER BY id;\n```',
-    "Every game on the same night shows the same `running` value, the total after the whole night, because those games tie on `played_on`. To add one game at a time, make the order unique: `ORDER BY played_on, id`. (The frames lesson shows how to choose the frame yourself.)",
+    "Every game on the same night shows the same `running` value, the total after the whole night, because those games tie on `played_on`. To add one game at a time, make the order unique: `ORDER BY played_on, id`. (The frames stage shows how to choose the frame yourself.)",
     'For a running total of groups, total the groups first and run the window over them: `SUM(SUM(points)) OVER (ORDER BY played_on)` after `GROUP BY played_on` gives the league\'s points so far, night by night.',
   ],
   sandboxCode: 'SELECT player_id, played_on, points,\n       SUM(points) OVER (PARTITION BY player_id ORDER BY played_on) AS season_so_far\nFROM games\nORDER BY player_id, played_on;',

@@ -32,7 +32,7 @@ export default makeTopic({
     }),
     query('easy', 'Every day', {
       prompt: 'Show every `day` from the first sale to the last with its number of `sales` (0 on days with none). In date order.',
-      hint: 'The lesson\'s example: a calendar CTE, LEFT JOIN sales, `COUNT(s.id)`.',
+      hint: 'The intro\'s example: a calendar CTE, LEFT JOIN sales, `COUNT(s.id)`.',
       solution: EVERY_DAY,
     }),
     query('medium', 'Empty days', {

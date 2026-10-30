@@ -11,7 +11,7 @@ export default makeTopic({
     "A function can take several parameters, separated by commas. Arguments are matched to parameters **by position**: the first argument goes to the first parameter, the second to the second, and so on. Swap them and the function still runs, just with the values in the wrong places:",
     "```\ndef describe_pet(name, animal):\n    print(f\"{name} is a {animal}.\")\n\ndescribe_pet(\"Rex\", \"dog\")    # Rex is a dog.\ndescribe_pet(\"dog\", \"Rex\")    # dog is a Rex.\n```",
     "The number of arguments has to match. Leave one out and Python stops with `TypeError: describe_pet() missing 1 required positional argument: 'animal'`; pass too many and it says it \"takes 2 positional arguments but 3 were given\". Both messages tell you exactly what's wrong.",
-    "Parameters only exist **inside** the function: they're created fresh for each call and vanish when it ends. A parameter can share its name with a variable outside, but they are separate; the scope lesson later in this section explains why.",
+    "Parameters only exist **inside** the function: they're created fresh for each call and vanish when it ends. A parameter can share its name with a variable outside, but they are separate; the scope stage later in this quest explains why.",
     "Parameters turn a function into a reusable tool. `draw_line(char, length)` can draw any line you want, and a single `print_receipt(item, price, qty)` serves every item in a shop.",
   ],
   sandboxCode: "def describe_pet(name, animal):\n    print(f\"{name} is a {animal}.\")\n\ndescribe_pet(\"Rex\", \"dog\")\ndescribe_pet(\"Tom\", \"cat\")\n\ndef draw_line(char, length):\n    print(char * length)\n\ndraw_line(\"=\", 12)\ndraw_line(\"~\", 6)",

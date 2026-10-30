@@ -5,7 +5,7 @@ export default makeProject("hard", {
   id: "proj_prime_finder",
   title: "Prime finder",
   paragraphs: [
-    "A **prime** is a whole number above 1 that divides evenly only by 1 and itself: 2, 3, 5, 7, 11 and so on. 9 isn't prime, because 3 × 3 = 9. Build a program that lists every prime up to a limit the user types. It uses nested loops, `break`, a loop's `else`, and the counting patterns from this section.",
+    "A **prime** is a whole number above 1 that divides evenly only by 1 and itself: 2, 3, 5, 7, 11 and so on. 9 isn't prime, because 3 × 3 = 9. Build a program that lists every prime up to a limit the user types. It uses nested loops, `break`, a loop's `else`, and the counting patterns from this quest.",
     "When the user types 50, the finished program shows:",
     "```\nPrimes up to: 50\nPrimes up to 50:\n2 3 5 7 11 13 17 19 23 29 31 37 41 43 47\nFound 15 primes. The largest is 47.\n```",
     "The key test: `n % d == 0` is `True` when `d` divides `n` evenly. To check whether `n` is prime, try every `d` from 2 upwards; as soon as one divides it, `n` isn't prime and you can `break`. If the loop finishes without a `break`, it is. You only need to try divisors up to the square root of `n`, that is while `d * d <= n`, because any bigger divisor pairs with a smaller one you've already tried.",

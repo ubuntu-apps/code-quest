@@ -91,7 +91,7 @@ export async function downloadForOffline(options: {
       bundles[lang.id] = await loadLanguageBundle(baseUrl, lang.path, { fresh: true })
     }
   } catch {
-    throw new Error('Could not download the lessons. Check your internet connection and try again.')
+    throw new Error('Could not download the quests. Check your internet connection and try again.')
   }
 
   const runtimes: string[] = []

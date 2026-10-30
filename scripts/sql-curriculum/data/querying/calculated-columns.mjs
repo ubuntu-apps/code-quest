@@ -14,7 +14,7 @@ export default makeTopic({
     '`ROUND(value, 2)` rounds to 2 decimal places, which is handy for money: `ROUND(price * 0.8, 2)`.',
     '`||` joins text together. Numbers can be joined too:',
     "```\nSELECT title || ' (' || year || ')' AS label FROM books;\n```",
-    '`UPPER(text)` and `LOWER(text)` change the case, and `LENGTH(text)` counts the characters. The next section has many more functions.',
+    '`UPPER(text)` and `LOWER(text)` change the case, and `LENGTH(text)` counts the characters. The next quest has many more functions.',
     'A calculation can be used in `WHERE` and `ORDER BY` too. In `WHERE`, write the calculation again rather than using its `AS` name: most databases don\'t allow the name there.',
     '```\nSELECT name, price * stock AS stock_value FROM products\nWHERE price * stock > 500\nORDER BY stock_value DESC;\n```',
   ],

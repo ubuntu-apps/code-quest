@@ -5,7 +5,7 @@ export default makeProject("hard", {
   id: "proj_inventory_tracker",
   title: "Inventory tracker",
   paragraphs: [
-    "Build a small stock-keeping program for a shop. It keeps an **inventory**, a dict mapping each item to how many are in stock, and understands typed commands until the user types `quit`. It brings together everything from this section and the last: dicts, lists, sorting, `split()`, a `while True` loop and `if`/`elif`.",
+    "Build a small stock-keeping program for a shop. It keeps an **inventory**, a dict mapping each item to how many are in stock, and understands typed commands until the user types `quit`. It brings together everything from this quest and the last: dicts, lists, sorting, `split()`, a `while True` loop and `if`/`elif`.",
     "The commands: `add ITEM QTY` adds stock and prints `Added 5 apple`. `remove ITEM QTY` takes stock away and prints `Removed 2 apple`, or `Not enough apple` (changing nothing) when there isn't enough; an item that reaches 0 is deleted. `show` prints every item in alphabetical order, like `apple: 3`, or `Empty` when there's nothing. `quit` prints `Bye!` and stops, and anything else prints `Unknown command`.",
     "A session looks like this (the lines starting with `>` are what the user typed):",
     "```\n> add apple 5\nAdded 5 apple\n> add pear 2\nAdded 2 pear\n> remove pear 3\nNot enough pear\n> remove apple 2\nRemoved 2 apple\n> show\napple: 3\npear: 2\n> quit\nBye!\n```",
@@ -68,7 +68,7 @@ export default makeProject("hard", {
       ],
     }),
     task("expert", "The inventory tracker", {
-      prompt: "Write the whole program from the lesson: read commands with `input(\"> \")` until `quit`, handling `add`, `remove`, `show` and unknown commands exactly as described. The check types `add apple 5`, `add pear 2`, `remove pear 3`, `remove apple 2`, `show`, `sell fig 1`, `add apple` and `quit`.",
+      prompt: "Write the whole program from the intro: read commands with `input(\"> \")` until `quit`, handling `add`, `remove`, `show` and unknown commands exactly as described. The check types `add apple 5`, `add pear 2`, `remove pear 3`, `remove apple 2`, `show`, `sell fig 1`, `add apple` and `quit`.",
       hint: "`while True:` with `parts = input(\"> \").split()`. Check `parts[0]` with `if`/`elif`; for `add` and `remove`, also check `len(parts) == 3` so a short command falls through to `else`.",
       solution: "inventory = {}\nwhile True:\n    parts = input(\"> \").split()\n    if not parts:\n        continue\n    action = parts[0]\n    if action == \"quit\":\n        print(\"Bye!\")\n        break\n    elif action == \"show\":\n        if not inventory:\n            print(\"Empty\")\n        for item in sorted(inventory):\n            print(f\"{item}: {inventory[item]}\")\n    elif action == \"add\" and len(parts) == 3:\n        item, qty = parts[1], int(parts[2])\n        inventory[item] = inventory.get(item, 0) + qty\n        print(f\"Added {qty} {item}\")\n    elif action == \"remove\" and len(parts) == 3:\n        item, qty = parts[1], int(parts[2])\n        if inventory.get(item, 0) < qty:\n            print(f\"Not enough {item}\")\n        else:\n            inventory[item] -= qty\n            if inventory[item] == 0:\n                del inventory[item]\n            print(f\"Removed {qty} {item}\")\n    else:\n        print(\"Unknown command\")",
       setup: typedInput("add apple 5", "add pear 2", "remove pear 3", "remove apple 2", "show", "sell fig 1", "add apple", "quit"),

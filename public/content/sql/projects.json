@@ -1,6 +1,6 @@
 {
   "sectionId": "projects",
-  "title": "Capstone projects",
+  "title": "Capstone quest",
   "levels": [
     {
       "id": "shop_orders",
@@ -25,7 +25,7 @@
       ],
       "intro": {
         "title": "An online shop's orders",
-        "bodyMarkdown": "Welcome to the capstone projects. Each one is a full piece of work on a database of its own, using skills from across the course: you'll choose which tables to join, how to group, when a window or a CTE is the right tool, and which NULLs to watch out for. The challenges say what the result should look like, not how to get it, so there is usually more than one good answer.\n\nThe first is a small online shop selling tea, coffee and kitchen things. The owner wants a report on the last six months: what sold, who bought it, how the months compare and how much the discounts cost.\n\nThe tables are `customers`, `products`, `orders` (with a `status`: only `paid` orders count as sales) and `order_items`, one row for each product in an order, with the `quantity` and the `unit_price` actually charged. That can be lower than the product's list `price` when there was a discount, so revenue is always `quantity * unit_price`.\n\nA good habit for a report like this: start from the smallest correct query, check its rows by eye, then build on it. Here, most answers start from paid orders joined to their items:\n\n```\nSELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;\n```",
+        "bodyMarkdown": "Welcome to the capstone quest. Each one is a full piece of work on a database of its own, using skills from across the course: you'll choose which tables to join, how to group, when a window or a CTE is the right tool, and which NULLs to watch out for. The challenges say what the result should look like, not how to get it, so there is usually more than one good answer.\n\nThe first is a small online shop selling tea, coffee and kitchen things. The owner wants a report on the last six months: what sold, who bought it, how the months compare and how much the discounts cost.\n\nThe tables are `customers`, `products`, `orders` (with a `status`: only `paid` orders count as sales) and `order_items`, one row for each product in an order, with the `quantity` and the `unit_price` actually charged. That can be lower than the product's list `price` when there was a discount, so revenue is always `quantity * unit_price`.\n\nA good habit for a report like this: start from the smallest correct query, check its rows by eye, then build on it. Here, most answers start from paid orders joined to their items:\n\n```\nSELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;\n```",
         "sandboxCode": "SELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;",
         "readMore": {
           "label": "SQLite: SELECT",
@@ -51,7 +51,7 @@
           "title": "Easy: Order totals",
           "promptMarkdown": "For each paid order, show `order_id`, `ordered_on`, the customer's name (`customer`) and the order's `total` (2 decimals). In date order, then by order id.",
           "starterCode": "",
-          "hint": "The lesson's example.",
+          "hint": "The intro's example.",
           "solution": "SELECT o.id AS order_id, o.ordered_on, c.name AS customer,\n       ROUND(SUM(i.quantity * i.unit_price), 2) AS total\nFROM orders o\nJOIN customers c ON c.id = o.customer_id\nJOIN order_items i ON i.order_id = o.id\nWHERE o.status = 'paid'\nGROUP BY o.id, o.ordered_on, c.name\nORDER BY o.ordered_on, o.id;",
           "validation": {
             "mode": "sql_tests",
@@ -531,7 +531,7 @@
           "title": "Medium: Course marks",
           "promptMarkdown": "Show each student's mark on each course they take: `course`, `name` and `mark` (weighted, with missing work as 0, 1 decimal). Sort by course, then highest mark, then name.",
           "starterCode": "",
-          "hint": "The lesson's example.",
+          "hint": "The intro's example.",
           "solution": "SELECT c.title AS course, s.name,\n       ROUND(SUM(COALESCE(r.score, 0) * a.weight) / 100.0, 1) AS mark\nFROM enrolments e\nJOIN students s ON s.id = e.student_id\nJOIN courses c ON c.id = e.course_id\nJOIN assessments a ON a.course_id = e.course_id\nLEFT JOIN results r ON r.assessment_id = a.id AND r.student_id = e.student_id\nGROUP BY e.student_id, e.course_id, c.title, s.name\nORDER BY course, mark DESC, s.name;",
           "validation": {
             "mode": "sql_tests",
@@ -905,7 +905,7 @@
       ],
       "intro": {
         "title": "A library's loans",
-        "bodyMarkdown": "A small library wants to know where its books are. The library owns `books`, and of some books it has more than one physical `copies`. `members` borrow copies: each row of `loans` has the copy, the member, the date it was borrowed, the date it is due back (three weeks later) and the date it came back, `returned_on`, which is **NULL while the copy is still out**.\n\nSo a loan joins to its book through its copy: `loans → copies → books`. Today is 2026-10-24.\n\n```\nSELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;\n```\n\nDates are text in the form `YYYY-MM-DD`, so comparing them with `<` and `>` works, and `julianday()` turns them into day numbers to subtract. A loan is overdue when it is still out and its due date is before today.\n\nWatch the counts in this project: a book with two copies, each with several loans, makes many rows when joined, so count with care, or count in subqueries.",
+        "bodyMarkdown": "A small library wants to know where its books are. The library owns `books`, and of some books it has more than one physical `copies`. `members` borrow copies: each row of `loans` has the copy, the member, the date it was borrowed, the date it is due back (three weeks later) and the date it came back, `returned_on`, which is **NULL while the copy is still out**.\n\nSo a loan joins to its book through its copy: `loans → copies → books`. Today is 2026-10-24.\n\n```\nSELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;\n```\n\nDates are text in the form `YYYY-MM-DD`, so comparing them with `<` and `>` works, and `julianday()` turns them into day numbers to subtract. A loan is overdue when it is still out and its due date is before today.\n\nWatch the counts in this capstone: a book with two copies, each with several loans, makes many rows when joined, so count with care, or count in subqueries.",
         "sandboxCode": "SELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;",
         "readMore": {
           "label": "SQLite: date and time functions",
@@ -919,7 +919,7 @@
           "title": "Easy: Out right now",
           "promptMarkdown": "Show every copy that is out now: the book's `title`, the member's name (`member`) and `due_on`. Sort by due date, then title.",
           "starterCode": "",
-          "hint": "The lesson's example: `WHERE l.returned_on IS NULL`.",
+          "hint": "The intro's example: `WHERE l.returned_on IS NULL`.",
           "solution": "SELECT b.title, m.name AS member, l.due_on\nFROM loans l\nJOIN copies c ON c.id = l.copy_id\nJOIN books b ON b.id = c.book_id\nJOIN members m ON m.id = l.member_id\nWHERE l.returned_on IS NULL\nORDER BY l.due_on, b.title;",
           "validation": {
             "mode": "sql_tests",
@@ -1779,7 +1779,7 @@
       ],
       "intro": {
         "title": "Building a booking system",
-        "bodyMarkdown": "The last project builds a database instead of only reading one. A family runs a few holiday cottages, and until now every booking request has gone into a spreadsheet. Two sheets have been loaded as they are: `cottage_sheet` (each cottage, how many it sleeps and its nightly rate) and `requests` (who asked for which cottage, when, and for how many people).\n\nOver ten steps you'll design proper tables, move the data across, find and fix double bookings, speed up the lookups and build the reports. **Each step starts from the sheets again**, so the starter code carries all your earlier steps; add the new step after them. If an earlier step was wrong, fix it in the starter.\n\nThe design: `cottages` and `guests` each get an id, and `bookings` points to both, one row per stay. A stay is from `arrive` to `depart`, and the guests sleep the nights in between: arriving on the 2nd and leaving on the 5th is 3 nights, and someone else can arrive on the 5th.\n\n```\ncottages (id, name, sleeps, nightly_rate)\nguests   (id, name, email)\nbookings (id, guest_id → guests, cottage_id → cottages, arrive, depart, party)\n```\n\nTwo stays at the same cottage clash when each starts before the other ends: `a.arrive < b.depart AND b.arrive < a.depart`. That one condition covers every kind of overlap, and stays that only touch (one leaves the day the other arrives) don't count.",
+        "bodyMarkdown": "The last capstone builds a database instead of only reading one. A family runs a few holiday cottages, and until now every booking request has gone into a spreadsheet. Two sheets have been loaded as they are: `cottage_sheet` (each cottage, how many it sleeps and its nightly rate) and `requests` (who asked for which cottage, when, and for how many people).\n\nOver ten steps you'll design proper tables, move the data across, find and fix double bookings, speed up the lookups and build the reports. **Each step starts from the sheets again**, so the starter code carries all your earlier steps; add the new step after them. If an earlier step was wrong, fix it in the starter.\n\nThe design: `cottages` and `guests` each get an id, and `bookings` points to both, one row per stay. A stay is from `arrive` to `depart`, and the guests sleep the nights in between: arriving on the 2nd and leaving on the 5th is 3 nights, and someone else can arrive on the 5th.\n\n```\ncottages (id, name, sleeps, nightly_rate)\nguests   (id, name, email)\nbookings (id, guest_id → guests, cottage_id → cottages, arrive, depart, party)\n```\n\nTwo stays at the same cottage clash when each starts before the other ends: `a.arrive < b.depart AND b.arrive < a.depart`. That one condition covers every kind of overlap, and stays that only touch (one leaves the day the other arrives) don't count.",
         "sandboxCode": "SELECT * FROM requests ORDER BY id;",
         "readMore": {
           "label": "SQLite: CREATE TABLE",

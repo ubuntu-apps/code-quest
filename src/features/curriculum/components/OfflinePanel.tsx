@@ -12,8 +12,8 @@ import {
 const RUNTIME_COURSES = new Set(['python', 'sql', 'r'])
 
 const STEP_LABEL: Record<OfflineStep, string> = {
-  lessons: 'Downloading lessons…',
-  python: 'Downloading Python and the packages lessons use…',
+  lessons: 'Downloading quests…',
+  python: 'Downloading Python and the packages the stages use…',
   sql: 'Downloading the SQL engine…',
   r: 'Downloading R…',
 }
@@ -69,7 +69,7 @@ export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelP
     <section className="cq-panel cq-offline-panel">
       <h2 className="cq-subtitle">Use CodeQuest offline</h2>
       <p className="cq-muted">
-        Lessons you have opened already work offline. Download everything now to keep learning without internet.
+        Stages you have opened already work offline. Download everything now to keep learning without internet.
       </p>
       {runtimeCourses.length > 0 ? (
         <fieldset className="cq-offline-courses" disabled={working}>

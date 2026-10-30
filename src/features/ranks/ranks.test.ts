@@ -21,9 +21,9 @@ describe('ranks', () => {
   })
 
   it('say what the next rank takes', () => {
-    expect(nextRankHint(rankFor(1, 10))).toBe('Finish 2 more sections to become a Builder')
-    expect(nextRankHint(rankFor(9, 10))).toBe('Finish 1 more section to become a Wizard')
-    expect(nextRankHint(rankFor(4, 10))).toBe('Finish 2 more sections to become an Engineer')
+    expect(nextRankHint(rankFor(1, 10))).toBe('Finish 2 more quests to become a Builder')
+    expect(nextRankHint(rankFor(9, 10))).toBe('Finish 1 more quest to become a Wizard')
+    expect(nextRankHint(rankFor(4, 10))).toBe('Finish 2 more quests to become an Engineer')
     expect(nextRankHint(rankFor(10, 10))).toBeNull()
   })
 

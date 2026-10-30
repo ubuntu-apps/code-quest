@@ -35,7 +35,7 @@
       ],
       "intro": {
         "title": "Text functions",
-        "bodyMarkdown": "This section uses a new database: a small online shop's `customers`, `orders` and `employees`. Open **Tables** to see the columns. Like most real data, it's a little messy: some names are typed in odd cases, and some cities have extra spaces around them.\n\nA **function** takes values in brackets and gives back a new value. Text functions change or measure text:\n\n```\nSELECT first_name, UPPER(first_name) AS upper_name, LOWER(email) AS email\nFROM customers;\n```\n\n`UPPER(text)` gives capitals, `LOWER(text)` small letters, and `LENGTH(text)` the number of characters, spaces included. Like calculations, functions change only the result, never the table, and a function given `NULL` gives `NULL` back.\n\n`TRIM(text)` removes spaces from both ends; `LTRIM` and `RTRIM` remove them from the left or the right only. `LENGTH(' Lagos')` is 6, and `LENGTH(TRIM(' Lagos'))` is 5.\n\nFunctions can go inside each other. The innermost one is worked out first:\n\n```\nSELECT UPPER(TRIM(city)) AS city FROM customers;\n```\n\nFunctions work in `WHERE` and `ORDER BY` too. `=` is case-sensitive, so comparing in one case finds every spelling: `WHERE LOWER(first_name) = 'ben'` finds `ben`, `Ben` and `BEN`.\n\nText joined with `||` can include function results: `first_name || ' ' || UPPER(last_name)`.",
+        "bodyMarkdown": "This quest uses a new database: a small online shop's `customers`, `orders` and `employees`. Open **Tables** to see the columns. Like most real data, it's a little messy: some names are typed in odd cases, and some cities have extra spaces around them.\n\nA **function** takes values in brackets and gives back a new value. Text functions change or measure text:\n\n```\nSELECT first_name, UPPER(first_name) AS upper_name, LOWER(email) AS email\nFROM customers;\n```\n\n`UPPER(text)` gives capitals, `LOWER(text)` small letters, and `LENGTH(text)` the number of characters, spaces included. Like calculations, functions change only the result, never the table, and a function given `NULL` gives `NULL` back.\n\n`TRIM(text)` removes spaces from both ends; `LTRIM` and `RTRIM` remove them from the left or the right only. `LENGTH(' Lagos')` is 6, and `LENGTH(TRIM(' Lagos'))` is 5.\n\nFunctions can go inside each other. The innermost one is worked out first:\n\n```\nSELECT UPPER(TRIM(city)) AS city FROM customers;\n```\n\nFunctions work in `WHERE` and `ORDER BY` too. `=` is case-sensitive, so comparing in one case finds every spelling: `WHERE LOWER(first_name) = 'ben'` finds `ben`, `Ben` and `BEN`.\n\nText joined with `||` can include function results: `first_name || ' ' || UPPER(last_name)`.",
         "sandboxCode": "SELECT first_name, UPPER(first_name) AS upper_name, LOWER(email) AS email\nFROM customers;",
         "readMore": {
           "label": "SQLite: core functions",
@@ -913,7 +913,7 @@
       ],
       "intro": {
         "title": "Numbers and rounding",
-        "bodyMarkdown": "`ROUND(x)` rounds to a whole number and `ROUND(x, 2)` to two decimal places. Halves round away from zero, so `ROUND(2.5)` is 3. The result keeps a decimal point: `ROUND(42.5)` shows as `43.0`.\n\n`CEIL(x)` always rounds **up** to the next whole number and `FLOOR(x)` always rounds **down**: `CEIL(15.01)` is 16 and `FLOOR(15.99)` is 15. Use them when rounding the usual way would be wrong, such as counting how many boxes you need.\n\n`ABS(x)` drops the minus sign, which is handy for \"how far apart\": `ABS(total - 100)` is the distance from 100 either way.\n\n```\nSELECT id, total, ROUND(total) AS rounded, CEIL(total) AS up, FLOOR(total) AS down\nFROM orders;\n```\n\nRemember whole-number division from the last section: `salary / 12` drops the decimals because both numbers are whole. Divide by `12.0` to keep them, and round the result: `ROUND(salary / 12.0, 2)`.\n\n`%` gives the **remainder** of a division: `7 % 2` is 1. A number is even when `x % 2 = 0`, and `x % 10` is its last digit.\n\nPercentages work as in maths: a 15% discount on a total is `total * 15 / 100.0`, and what is left to pay is `total * (100 - 15) / 100.0`.",
+        "bodyMarkdown": "`ROUND(x)` rounds to a whole number and `ROUND(x, 2)` to two decimal places. Halves round away from zero, so `ROUND(2.5)` is 3. The result keeps a decimal point: `ROUND(42.5)` shows as `43.0`.\n\n`CEIL(x)` always rounds **up** to the next whole number and `FLOOR(x)` always rounds **down**: `CEIL(15.01)` is 16 and `FLOOR(15.99)` is 15. Use them when rounding the usual way would be wrong, such as counting how many boxes you need.\n\n`ABS(x)` drops the minus sign, which is handy for \"how far apart\": `ABS(total - 100)` is the distance from 100 either way.\n\n```\nSELECT id, total, ROUND(total) AS rounded, CEIL(total) AS up, FLOOR(total) AS down\nFROM orders;\n```\n\nRemember whole-number division from the last quest: `salary / 12` drops the decimals because both numbers are whole. Divide by `12.0` to keep them, and round the result: `ROUND(salary / 12.0, 2)`.\n\n`%` gives the **remainder** of a division: `7 % 2` is 1. A number is even when `x % 2 = 0`, and `x % 10` is its last digit.\n\nPercentages work as in maths: a 15% discount on a total is `total * 15 / 100.0`, and what is left to pay is `total * (100 - 15) / 100.0`.",
         "sandboxCode": "SELECT id, total, ROUND(total) AS rounded, CEIL(total) AS up, FLOOR(total) AS down\nFROM orders;",
         "readMore": {
           "label": "SQLite: maths functions",
@@ -1754,7 +1754,7 @@
       ],
       "intro": {
         "title": "Sorting and filtering with CASE",
-        "bodyMarkdown": "`CASE` is an expression, so it can go anywhere a value can: in `ORDER BY`, in `WHERE`, and inside calculations.\n\n**A custom order.** Alphabetical order isn't always what you want. To show pending orders first, sort by a number that `CASE` gives each row:\n\n```\nSELECT id, status FROM orders\nORDER BY CASE WHEN status = 'pending' THEN 0 ELSE 1 END, id;\n```\n\nPending orders get 0 and the rest get 1, so the pending ones come first; `id` then orders each group. The numbers themselves aren't shown.\n\n**Different rules for different rows.** A `CASE` inside a calculation lets each row use its own rule. Here support staff get a 10% rise and everyone else 5%:\n\n```\nSELECT name, salary,\n  ROUND(salary * CASE WHEN role = 'Support' THEN 1.10 ELSE 1.05 END) AS new_salary\nFROM employees;\n```\n\n**Filtering on a worked-out value.** In `WHERE`, a `CASE` can work out the value to compare. This finds orders worth more than 100 after their discount, treating a missing discount as none:\n\n```\nSELECT id, total, discount FROM orders\nWHERE CASE WHEN discount IS NULL THEN total\n           ELSE total * (100 - discount) / 100.0 END > 100;\n```\n\nDates written as `YYYY-MM-DD` compare correctly as text, because the year comes first: `hire_date < '2020-01-01'` means \"hired before 2020\". The next lessons do much more with dates.",
+        "bodyMarkdown": "`CASE` is an expression, so it can go anywhere a value can: in `ORDER BY`, in `WHERE`, and inside calculations.\n\n**A custom order.** Alphabetical order isn't always what you want. To show pending orders first, sort by a number that `CASE` gives each row:\n\n```\nSELECT id, status FROM orders\nORDER BY CASE WHEN status = 'pending' THEN 0 ELSE 1 END, id;\n```\n\nPending orders get 0 and the rest get 1, so the pending ones come first; `id` then orders each group. The numbers themselves aren't shown.\n\n**Different rules for different rows.** A `CASE` inside a calculation lets each row use its own rule. Here support staff get a 10% rise and everyone else 5%:\n\n```\nSELECT name, salary,\n  ROUND(salary * CASE WHEN role = 'Support' THEN 1.10 ELSE 1.05 END) AS new_salary\nFROM employees;\n```\n\n**Filtering on a worked-out value.** In `WHERE`, a `CASE` can work out the value to compare. This finds orders worth more than 100 after their discount, treating a missing discount as none:\n\n```\nSELECT id, total, discount FROM orders\nWHERE CASE WHEN discount IS NULL THEN total\n           ELSE total * (100 - discount) / 100.0 END > 100;\n```\n\nDates written as `YYYY-MM-DD` compare correctly as text, because the year comes first: `hire_date < '2020-01-01'` means \"hired before 2020\". The next stages do much more with dates.",
         "sandboxCode": "SELECT id, status FROM orders\nORDER BY CASE WHEN status = 'pending' THEN 0 ELSE 1 END, id;",
         "readMore": {
           "label": "SQLite: the CASE expression",
@@ -4284,7 +4284,7 @@
     },
     {
       "id": "proj_customer_cleanup",
-      "title": "Easy project: Customer clean-up",
+      "title": "Easy side quest: Customer clean-up",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -4305,8 +4305,8 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Customer clean-up",
-        "bodyMarkdown": "The shop is sending its first newsletter, and the `customers` table needs tidying first: names in odd capitals, spaces around cities, emails in mixed case and missing phone numbers.\n\nYou won't change the table itself (that comes in a later section). Instead, each challenge builds part of a clean list, and the last one puts it all together.\n\nYou'll need `TRIM`, `UPPER`, `LOWER`, `SUBSTR`, `INSTR`, `COALESCE` and `||`.",
+        "title": "Easy side quest: Customer clean-up",
+        "bodyMarkdown": "The shop is sending its first newsletter, and the `customers` table needs tidying first: names in odd capitals, spaces around cities, emails in mixed case and missing phone numbers.\n\nYou won't change the table itself (that comes in a later quest). Instead, each challenge builds part of a clean list, and the last one puts it all together.\n\nYou'll need `TRIM`, `UPPER`, `LOWER`, `SUBSTR`, `INSTR`, `COALESCE` and `||`.",
         "sandboxCode": "SELECT first_name, last_name, email, city, phone FROM customers;",
         "readMore": {
           "label": "SQLite: core functions",
@@ -4572,7 +4572,7 @@
     },
     {
       "id": "proj_order_tracker",
-      "title": "Medium project: Order tracker",
+      "title": "Medium side quest: Order tracker",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -4593,7 +4593,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Order tracker",
+        "title": "Medium side quest: Order tracker",
         "bodyMarkdown": "The shop wants a page that tracks its `orders`: what state each one is in, how long shipping took, what customers actually paid, and which orders are still waiting.\n\nTake \"today\" to be 2026-10-24. A missing discount means no discount; a missing ship date means the order hasn't shipped.\n\nYou'll use `CASE`, `COALESCE`, `julianday`, `strftime` and `printf`.",
         "sandboxCode": "SELECT id, order_date, ship_date, total, discount, status FROM orders;",
         "readMore": {
@@ -4860,7 +4860,7 @@
     },
     {
       "id": "proj_staff_report",
-      "title": "Hard project: Staff report",
+      "title": "Hard side quest: Staff report",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -4881,8 +4881,8 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Staff report",
-        "bodyMarkdown": "The manager needs a staff report from the `employees` table: years of service, pay bands, monthly pay, bonuses and a one-line summary for each person.\n\nTake \"today\" to be 2026-10-24. A missing bonus means no bonus.\n\nThis project uses the whole section: text functions, numbers, `CASE`, `COALESCE`, dates, `CAST` and `printf`.",
+        "title": "Hard side quest: Staff report",
+        "bodyMarkdown": "The manager needs a staff report from the `employees` table: years of service, pay bands, monthly pay, bonuses and a one-line summary for each person.\n\nTake \"today\" to be 2026-10-24. A missing bonus means no bonus.\n\nThis side quest uses the whole quest: text functions, numbers, `CASE`, `COALESCE`, dates, `CAST` and `printf`.",
         "sandboxCode": "SELECT name, role, salary, hire_date, bonus FROM employees;",
         "readMore": {
           "label": "SQLite: the printf function",

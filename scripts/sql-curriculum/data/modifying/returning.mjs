@@ -72,7 +72,7 @@ export default makeTopic({
     }),
     query('expert', 'Upsert, shown', {
       prompt: "Add `1.0` to the fines of members 2 and 3 (creating rows where needed), returning `member_id` and the resulting `amount`.",
-      hint: 'The upsert from the last lesson, then `RETURNING member_id, amount`.',
+      hint: 'The upsert from the last stage, then `RETURNING member_id, amount`.',
       solution: 'INSERT INTO fines (member_id, amount)\nVALUES (2, 1.0), (3, 1.0)\nON CONFLICT (member_id) DO UPDATE\nSET amount = amount + excluded.amount\nRETURNING member_id, amount;',
       checks: [AFTER.fines],
     }),

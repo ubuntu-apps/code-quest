@@ -13,7 +13,7 @@ export default makeTopic({
     "A join could answer the same question, but `IN` has one advantage: it never repeats rows. Joining listeners to their plays repeats a listener once per play; `WHERE id IN (SELECT listener_id FROM plays)` keeps each listener once, however often they played.",
     '`NOT IN` keeps the rows whose value is **not** in the list, such as the tracks nobody has played:',
     '```\nSELECT title\nFROM tracks\nWHERE id NOT IN (SELECT track_id FROM plays);\n```',
-    "One trap: if the list contains a `NULL`, `NOT IN` keeps nothing at all. `3 NOT IN (1, 2, NULL)` isn't true, it's unknown, because the missing value might be 3. When the subquery's column can be `NULL`, add `WHERE column IS NOT NULL` inside it, or use `NOT EXISTS` (coming up in two lessons).",
+    "One trap: if the list contains a `NULL`, `NOT IN` keeps nothing at all. `3 NOT IN (1, 2, NULL)` isn't true, it's unknown, because the missing value might be 3. When the subquery's column can be `NULL`, add `WHERE column IS NOT NULL` inside it, or use `NOT EXISTS` (coming up in two stages).",
     'Subqueries can be nested: the list itself can come from a query that uses another subquery.',
   ],
   sandboxCode: "SELECT title\nFROM tracks\nWHERE artist_id IN (SELECT id FROM artists WHERE genre = 'jazz');",

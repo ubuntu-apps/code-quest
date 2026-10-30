@@ -5,7 +5,7 @@ export default makeProject("easy", {
   id: "proj_about_me_card",
   title: "About me card",
   paragraphs: [
-    "Time to build something. In this project you'll make a little profile card, step by step, using what you've learned: variables, maths, string methods and f-strings. Each challenge adds one piece, and the last one puts the whole card together.",
+    "Time to build something. In this side quest you'll make a little profile card, step by step, using what you've learned: variables, maths, string methods and f-strings. Each challenge adds one piece, and the last one puts the whole card together.",
     "This is the finished card:",
     "```\n==========================\nSAM RIVERA\nAge: 28 (born 1998)\nHobby: rock climbing\nDays lived: about 10,220\n==========================\n```",
     "The details live in variables at the top of the program, and everything else is worked out from them. Change the name or the birth year, and the whole card updates. That's the point of variables.",
@@ -66,7 +66,7 @@ export default makeProject("easy", {
       ],
     }),
     task("hard", "Print the card", {
-      prompt: "Everything is ready in the variables. Print the whole card, exactly as shown in the lesson: the border, the heading, three detail lines and the border again.",
+      prompt: "Everything is ready in the variables. Print the whole card, exactly as shown in the intro: the border, the heading, three detail lines and the border again.",
       starter: "name = \"Sam Rivera\"\nbirth_year = 1998\nhobby = \"rock climbing\"\ncurrent_year = 2026\nage = current_year - birth_year\nheading = name.upper()\ndays = age * 365\nborder = \"=\" * 26\n",
       hint: "Six `print` calls. Use `border` and `heading` as they are, and f-strings for the three detail lines; the days need `{days:,}`.",
       solution: "name = \"Sam Rivera\"\nbirth_year = 1998\nhobby = \"rock climbing\"\ncurrent_year = 2026\nage = current_year - birth_year\nheading = name.upper()\ndays = age * 365\nborder = \"=\" * 26\nprint(border)\nprint(heading)\nprint(f\"Age: {age} (born {birth_year})\")\nprint(f\"Hobby: {hobby}\")\nprint(f\"Days lived: about {days:,}\")\nprint(border)",

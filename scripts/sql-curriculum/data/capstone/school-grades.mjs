@@ -47,7 +47,7 @@ export default makeTopic({
     }),
     query('medium', 'Course marks', {
       prompt: "Show each student's mark on each course they take: `course`, `name` and `mark` (weighted, with missing work as 0, 1 decimal). Sort by course, then highest mark, then name.",
-      hint: 'The lesson\'s example.',
+      hint: 'The intro\'s example.',
       solution: MARKS,
     }),
     query('medium', 'Letter grades', {

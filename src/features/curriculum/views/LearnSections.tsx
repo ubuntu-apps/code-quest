@@ -1,3 +1,4 @@
+import { Compass, LockKeyhole, Map as MapIcon, Mountain, Trophy } from 'lucide-react'
 import type { LanguageBundle } from '../types'
 import { computeLevelXp, sectionUnlockHint } from '../helpers'
 import { loadProgress } from '../progressStorage'
@@ -53,7 +54,7 @@ export function LearnSections({
         />
         {rank ? <CourseRankBadge rank={rank} courseTitle={bundle.index.title} /> : null}
       </div>
-      <p className="cq-lead">Sections</p>
+      <p className="cq-lead">Quests</p>
       {completion && languageId ? (
         <SupportNudge
           languageId={languageId}
@@ -96,13 +97,13 @@ export function LearnSections({
               : 'Not started'
           const meta = previewOnly ? (
             <span className="cq-card-meta">
-              {sectionUnlockHint(previousLevels, previousRef?.title ?? 'the previous section')}
+              {sectionUnlockHint(previousLevels, previousRef?.title ?? 'the previous quest')}
             </span>
           ) : (
             <StatusMeta
               status={status}
               label={statusLabel}
-              details={`${completedCount}/${levels.length} levels complete · ${sectionXp} XP`}
+              details={`${completedCount}/${levels.length} stages complete · ${sectionXp} XP`}
             />
           )
 
@@ -110,11 +111,22 @@ export function LearnSections({
             <CatalogListItem
               key={sec.id}
               title={sec.title}
-              titlePlaceholder="Section title"
+              titlePlaceholder="Quest title"
               onTitleChange={(title) => onUpdateSectionTitle(sec.id, title)}
               onTitleCommit={(title) => onUpdateSectionTitle(sec.id, title, { commit: true })}
               onClick={() => onSelectSection(sec.id)}
-              eyebrow={`Section ${secIndex + 1} of ${sectionCount}`}
+              eyebrow={`Quest ${secIndex + 1} of ${sectionCount}`}
+              icon={
+                previewOnly ? (
+                  <LockKeyhole size={20} />
+                ) : status === 'passed' ? (
+                  <Trophy size={20} />
+                ) : status === 'in-progress' ? (
+                  <Compass size={20} />
+                ) : (
+                  <MapIcon size={20} />
+                )
+              }
               meta={meta}
               status={previewOnly ? undefined : status}
               progressPercent={pct}
@@ -123,23 +135,28 @@ export function LearnSections({
               onMoveUp={() => onMoveSection(sec.id, -1)}
               onMoveDown={() => onMoveSection(sec.id, 1)}
               onRemove={() => onRemoveSection(sec.id)}
-              confirmMessage={`Delete section "${sec.title}"?`}
+              confirmMessage={`Delete quest "${sec.title}"?`}
             />
           )
         })}
         {upcoming.map((sec, i) => (
           <li key={sec.id} className="cq-card-list-item">
             <div className="cq-card-row">
-              <div className="cq-card-btn cq-card-btn--locked cq-card-btn--soon" aria-disabled="true">
-                <span className="cq-card-eyebrow">{`Section ${bundle.index.sections.length + i + 1} of ${sectionCount}`}</span>
-                <span className="cq-card-title">{sec.title}</span>
-                <span className="cq-card-meta">Coming soon</span>
+              <div className="cq-card-btn cq-card-btn--with-icon cq-card-btn--locked cq-card-btn--soon" aria-disabled="true">
+                <span className="cq-card-body">
+                  <span className="cq-card-eyebrow">{`Quest ${bundle.index.sections.length + i + 1} of ${sectionCount}`}</span>
+                  <span className="cq-card-title">{sec.title}</span>
+                  <span className="cq-card-meta">Coming soon</span>
+                </span>
+                <span className="cq-card-icon" aria-hidden="true">
+                  <Mountain size={20} />
+                </span>
               </div>
             </div>
           </li>
         ))}
       </ul>
-      {languageId && <AddItemButton label="Add section" onClick={onAddSection} />}
+      {languageId && <AddItemButton label="Add quest" onClick={onAddSection} />}
       {completion && languageId ? (
         <CertificatePanel
           languageId={languageId}

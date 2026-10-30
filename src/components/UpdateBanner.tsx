@@ -17,7 +17,7 @@ export function UpdateBanner() {
           Reload
         </button>
         <p className="cq-install-banner__hint">
-          Challenge answers are saved. Unsubmitted quiz answers and sandbox code will be cleared.
+          Challenge answers are saved. Unsubmitted gate answers and sandbox code will be cleared.
         </p>
       </div>
       <button

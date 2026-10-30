@@ -30,7 +30,7 @@
       ],
       "intro": {
         "title": "A value from another query",
-        "bodyMarkdown": "This section's database is a small music streaming service: `artists`, their `tracks`, the `listeners`, every time a listener `plays` a track, and which artists each listener `follows`. Open **Tables** to see them.\n\nWhich tracks are longer than average? You could work out the average first, then type it into a second query. A **subquery** does both at once: a whole query in brackets, used where a value would go.\n\n```\nSELECT title, duration_s\nFROM tracks\nWHERE duration_s > (SELECT AVG(duration_s) FROM tracks);\n```\n\nSQLite runs the query in brackets first, gets one number, and uses it in the comparison. Typing the number in yourself would work today, but would be wrong as soon as a track is added; the subquery always uses the current average.\n\nA subquery used as a value must give **one column**. It should also give one row. If it gives no rows, its value is `NULL`. If it gives several, SQLite quietly uses the first one, and most other databases give an error, so make sure it can only give one, for example with an aggregate like `MAX` or with `LIMIT 1`.\n\nA value subquery can go anywhere a value can, including the `SELECT` list. This shows how far each track is from the average:\n\n```\nSELECT title,\n       duration_s - (SELECT AVG(duration_s) FROM tracks) AS diff\nFROM tracks;\n```\n\nA good habit: run the subquery on its own in the sandbox first, check its result, then put it in brackets inside the bigger query.",
+        "bodyMarkdown": "This quest's database is a small music streaming service: `artists`, their `tracks`, the `listeners`, every time a listener `plays` a track, and which artists each listener `follows`. Open **Tables** to see them.\n\nWhich tracks are longer than average? You could work out the average first, then type it into a second query. A **subquery** does both at once: a whole query in brackets, used where a value would go.\n\n```\nSELECT title, duration_s\nFROM tracks\nWHERE duration_s > (SELECT AVG(duration_s) FROM tracks);\n```\n\nSQLite runs the query in brackets first, gets one number, and uses it in the comparison. Typing the number in yourself would work today, but would be wrong as soon as a track is added; the subquery always uses the current average.\n\nA subquery used as a value must give **one column**. It should also give one row. If it gives no rows, its value is `NULL`. If it gives several, SQLite quietly uses the first one, and most other databases give an error, so make sure it can only give one, for example with an aggregate like `MAX` or with `LIMIT 1`.\n\nA value subquery can go anywhere a value can, including the `SELECT` list. This shows how far each track is from the average:\n\n```\nSELECT title,\n       duration_s - (SELECT AVG(duration_s) FROM tracks) AS diff\nFROM tracks;\n```\n\nA good habit: run the subquery on its own in the sandbox first, check its result, then put it in brackets inside the bigger query.",
         "sandboxCode": "SELECT title, duration_s\nFROM tracks\nWHERE duration_s > (SELECT AVG(duration_s) FROM tracks);",
         "readMore": {
           "label": "SQLite: subquery expressions",
@@ -480,7 +480,7 @@
       ],
       "intro": {
         "title": "IN with a subquery",
-        "bodyMarkdown": "A subquery that returns a whole column of values can follow `IN`. The row is kept when its value is somewhere in that list:\n\n```\nSELECT title\nFROM tracks\nWHERE artist_id IN (SELECT id FROM artists WHERE genre = 'jazz');\n```\n\nRead it from the inside out: find the ids of the jazz artists, then keep the tracks whose `artist_id` is one of them.\n\nA join could answer the same question, but `IN` has one advantage: it never repeats rows. Joining listeners to their plays repeats a listener once per play; `WHERE id IN (SELECT listener_id FROM plays)` keeps each listener once, however often they played.\n\n`NOT IN` keeps the rows whose value is **not** in the list, such as the tracks nobody has played:\n\n```\nSELECT title\nFROM tracks\nWHERE id NOT IN (SELECT track_id FROM plays);\n```\n\nOne trap: if the list contains a `NULL`, `NOT IN` keeps nothing at all. `3 NOT IN (1, 2, NULL)` isn't true, it's unknown, because the missing value might be 3. When the subquery's column can be `NULL`, add `WHERE column IS NOT NULL` inside it, or use `NOT EXISTS` (coming up in two lessons).\n\nSubqueries can be nested: the list itself can come from a query that uses another subquery.",
+        "bodyMarkdown": "A subquery that returns a whole column of values can follow `IN`. The row is kept when its value is somewhere in that list:\n\n```\nSELECT title\nFROM tracks\nWHERE artist_id IN (SELECT id FROM artists WHERE genre = 'jazz');\n```\n\nRead it from the inside out: find the ids of the jazz artists, then keep the tracks whose `artist_id` is one of them.\n\nA join could answer the same question, but `IN` has one advantage: it never repeats rows. Joining listeners to their plays repeats a listener once per play; `WHERE id IN (SELECT listener_id FROM plays)` keeps each listener once, however often they played.\n\n`NOT IN` keeps the rows whose value is **not** in the list, such as the tracks nobody has played:\n\n```\nSELECT title\nFROM tracks\nWHERE id NOT IN (SELECT track_id FROM plays);\n```\n\nOne trap: if the list contains a `NULL`, `NOT IN` keeps nothing at all. `3 NOT IN (1, 2, NULL)` isn't true, it's unknown, because the missing value might be 3. When the subquery's column can be `NULL`, add `WHERE column IS NOT NULL` inside it, or use `NOT EXISTS` (coming up in two stages).\n\nSubqueries can be nested: the list itself can come from a query that uses another subquery.",
         "sandboxCode": "SELECT title\nFROM tracks\nWHERE artist_id IN (SELECT id FROM artists WHERE genre = 'jazz');",
         "readMore": {
           "label": "SQLite: the IN operator",
@@ -1791,7 +1791,7 @@
       ],
       "intro": {
         "title": "Subqueries in FROM",
-        "bodyMarkdown": "A query's result is itself a table, so a subquery can go in `FROM`, and the outer query reads from it like any other table. This is how you work with totals of totals.\n\nHow many plays does a listener make on average? First count each listener's plays, then average those counts:\n\n```\nSELECT AVG(plays) AS average\nFROM (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS per_listener;\n```\n\n`AVG(COUNT(*))` doesn't work: aggregates can't be nested. The subquery makes one row per listener with their count, and the outer query averages that column.\n\nGive the subquery a name with `AS`. SQLite lets you leave it out, but most databases require it, and you need it to refer to the subquery's columns. Inside, name every calculated column, because those names are the columns of the new table.\n\nA subquery in `FROM` can be joined like a table:\n\n```\nSELECT l.name, pl.plays\nFROM listeners l\nJOIN (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS pl ON pl.listener_id = l.id\nORDER BY pl.plays DESC, l.name;\n```\n\nWhen the same subquery is needed twice, the query gets long and repetitive. The `WITH` lessons later in this section fix that.",
+        "bodyMarkdown": "A query's result is itself a table, so a subquery can go in `FROM`, and the outer query reads from it like any other table. This is how you work with totals of totals.\n\nHow many plays does a listener make on average? First count each listener's plays, then average those counts:\n\n```\nSELECT AVG(plays) AS average\nFROM (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS per_listener;\n```\n\n`AVG(COUNT(*))` doesn't work: aggregates can't be nested. The subquery makes one row per listener with their count, and the outer query averages that column.\n\nGive the subquery a name with `AS`. SQLite lets you leave it out, but most databases require it, and you need it to refer to the subquery's columns. Inside, name every calculated column, because those names are the columns of the new table.\n\nA subquery in `FROM` can be joined like a table:\n\n```\nSELECT l.name, pl.plays\nFROM listeners l\nJOIN (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS pl ON pl.listener_id = l.id\nORDER BY pl.plays DESC, l.name;\n```\n\nWhen the same subquery is needed twice, the query gets long and repetitive. The `WITH` stages later in this quest fix that.",
         "sandboxCode": "SELECT AVG(plays) AS average\nFROM (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS per_listener;",
         "readMore": {
           "label": "SQLite: subqueries in FROM",
@@ -1913,7 +1913,7 @@
           "title": "Expert: Versus the average",
           "promptMarkdown": "For each listener who played, show `name`, `plays` and how far they are from the average listener (`vs_average`, 2 decimals). Highest first, then by name.",
           "starterCode": "",
-          "hint": "`ROUND(pl.plays - (SELECT AVG(plays) FROM (…the counts again…) AS x), 2) AS vs_average`. Notice how the counts are written twice: the next lessons fix that.",
+          "hint": "`ROUND(pl.plays - (SELECT AVG(plays) FROM (…the counts again…) AS x), 2) AS vs_average`. Notice how the counts are written twice: the next stages fix that.",
           "solution": "SELECT l.name, pl.plays,\n       ROUND(pl.plays - (\n         SELECT AVG(plays)\n         FROM (SELECT listener_id, COUNT(*) AS plays FROM plays GROUP BY listener_id) AS x\n       ), 2) AS vs_average\nFROM listeners l\nJOIN (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n) AS pl ON pl.listener_id = l.id\nORDER BY pl.plays DESC, l.name;",
           "validation": {
             "mode": "sql_tests",
@@ -3131,7 +3131,7 @@
       ],
       "intro": {
         "title": "WITH: naming a subquery",
-        "bodyMarkdown": "`WITH` gives a subquery a name **before** the main query, which can then use it like a table. Such a named subquery is called a **common table expression**, or CTE.\n\n```\nWITH per_listener AS (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n)\nSELECT l.name, pl.plays\nFROM per_listener pl\nJOIN listeners l ON l.id = pl.listener_id\nWHERE pl.plays > (SELECT AVG(plays) FROM per_listener)\nORDER BY pl.plays DESC, l.name;\n```\n\nCompare it with the last lesson, where the counts had to be written twice. Here they are written once and used twice: in `FROM` and inside the subquery for the average.\n\nA query with `WITH` reads from top to bottom: first the steps, then the answer. That makes long queries much easier to follow, and to check: you can test the CTE by itself by putting a plain `SELECT * FROM per_listener;` after it.\n\nThe CTE only exists while its query runs; it doesn't create a table. Inside it, name every calculated column with `AS`, or list the names after the CTE's name: `WITH genre_plays(genre, plays) AS (…)`.",
+        "bodyMarkdown": "`WITH` gives a subquery a name **before** the main query, which can then use it like a table. Such a named subquery is called a **common table expression**, or CTE.\n\n```\nWITH per_listener AS (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n)\nSELECT l.name, pl.plays\nFROM per_listener pl\nJOIN listeners l ON l.id = pl.listener_id\nWHERE pl.plays > (SELECT AVG(plays) FROM per_listener)\nORDER BY pl.plays DESC, l.name;\n```\n\nCompare it with the last stage, where the counts had to be written twice. Here they are written once and used twice: in `FROM` and inside the subquery for the average.\n\nA query with `WITH` reads from top to bottom: first the steps, then the answer. That makes long queries much easier to follow, and to check: you can test the CTE by itself by putting a plain `SELECT * FROM per_listener;` after it.\n\nThe CTE only exists while its query runs; it doesn't create a table. Inside it, name every calculated column with `AS`, or list the names after the CTE's name: `WITH genre_plays(genre, plays) AS (…)`.",
         "sandboxCode": "WITH per_listener AS (\n  SELECT listener_id, COUNT(*) AS plays\n  FROM plays\n  GROUP BY listener_id\n)\nSELECT * FROM per_listener;",
         "readMore": {
           "label": "SQLite: the WITH clause",
@@ -3590,7 +3590,7 @@
           "title": "Easy: Plays and followers",
           "promptMarkdown": "With two CTEs, show every artist's `name`, `plays` and `followers` (0 when there are none). In name order.",
           "starterCode": "",
-          "hint": "The two CTEs from the lesson, LEFT JOINed to artists, with `COALESCE(…, 0)` and `ORDER BY a.name`.",
+          "hint": "The two CTEs from the intro, LEFT JOINed to artists, with `COALESCE(…, 0)` and `ORDER BY a.name`.",
           "solution": "WITH artist_plays AS (\n  SELECT t.artist_id, COUNT(*) AS plays\n  FROM plays p\n  JOIN tracks t ON t.id = p.track_id\n  GROUP BY t.artist_id\n),\nartist_followers AS (\n  SELECT artist_id, COUNT(*) AS followers\n  FROM follows\n  GROUP BY artist_id\n)\nSELECT a.name,\n       COALESCE(ap.plays, 0) AS plays,\n       COALESCE(af.followers, 0) AS followers\nFROM artists a\nLEFT JOIN artist_plays ap ON ap.artist_id = a.id\nLEFT JOIN artist_followers af ON af.artist_id = a.id\nORDER BY a.name;",
           "validation": {
             "mode": "sql_tests",
@@ -3602,7 +3602,7 @@
           "title": "Easy: Recent listeners",
           "promptMarkdown": "With a CTE `recent` of the plays on or after 2026-10-10 and a second CTE of their distinct listener ids, show those listeners' `name`s in alphabetical order.",
           "starterCode": "",
-          "hint": "The chain from the lesson, plus `ORDER BY name`.",
+          "hint": "The chain from the intro, plus `ORDER BY name`.",
           "solution": "WITH recent AS (\n  SELECT * FROM plays WHERE played_on >= '2026-10-10'\n),\nrecent_listeners AS (\n  SELECT DISTINCT listener_id FROM recent\n)\nSELECT name\nFROM listeners\nWHERE id IN (SELECT listener_id FROM recent_listeners)\nORDER BY name;",
           "validation": {
             "mode": "sql_tests",
@@ -4001,7 +4001,7 @@
       ],
       "intro": {
         "title": "The top in each group",
-        "bodyMarkdown": "\"Each artist's longest track\" sounds like a `GROUP BY`, but `GROUP BY artist_id` with `MAX(duration_s)` only gives the length, not the title. You need the whole **row** that holds the top value.\n\nA correlated subquery finds it: keep each track whose length equals the longest length of its own artist.\n\n```\nSELECT t.title, t.duration_s\nFROM tracks t\nWHERE t.duration_s = (\n  SELECT MAX(duration_s) FROM tracks WHERE artist_id = t.artist_id\n);\n```\n\nIf two rows tie for the top, both are kept. Sometimes that is right. When you need exactly one row per group, add a rule that breaks ties: let the subquery pick one **id**, sorted by your rule, with `LIMIT 1`:\n\n```\nSELECT t.title\nFROM tracks t\nWHERE t.id = (\n  SELECT t2.id FROM tracks t2\n  WHERE t2.artist_id = t.artist_id\n  ORDER BY t2.duration_s DESC, t2.id\n  LIMIT 1\n);\n```\n\nWhen the value you rank by is itself a total, like plays per track, work it out in a CTE first, then pick the top rows from the CTE in the same way.\n\nThe window functions section shows a shorter way to do all this, with `ROW_NUMBER()` and `RANK()`. The subquery way works in every database, and helps you see what those functions do.",
+        "bodyMarkdown": "\"Each artist's longest track\" sounds like a `GROUP BY`, but `GROUP BY artist_id` with `MAX(duration_s)` only gives the length, not the title. You need the whole **row** that holds the top value.\n\nA correlated subquery finds it: keep each track whose length equals the longest length of its own artist.\n\n```\nSELECT t.title, t.duration_s\nFROM tracks t\nWHERE t.duration_s = (\n  SELECT MAX(duration_s) FROM tracks WHERE artist_id = t.artist_id\n);\n```\n\nIf two rows tie for the top, both are kept. Sometimes that is right. When you need exactly one row per group, add a rule that breaks ties: let the subquery pick one **id**, sorted by your rule, with `LIMIT 1`:\n\n```\nSELECT t.title\nFROM tracks t\nWHERE t.id = (\n  SELECT t2.id FROM tracks t2\n  WHERE t2.artist_id = t.artist_id\n  ORDER BY t2.duration_s DESC, t2.id\n  LIMIT 1\n);\n```\n\nWhen the value you rank by is itself a total, like plays per track, work it out in a CTE first, then pick the top rows from the CTE in the same way.\n\nThe window functions quest shows a shorter way to do all this, with `ROW_NUMBER()` and `RANK()`. The subquery way works in every database, and helps you see what those functions do.",
         "sandboxCode": "SELECT t.title, t.duration_s\nFROM tracks t\nWHERE t.duration_s = (\n  SELECT MAX(duration_s) FROM tracks WHERE artist_id = t.artist_id\n);",
         "readMore": {
           "label": "SQLite: subquery expressions",
@@ -4330,7 +4330,7 @@
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "They come in the window functions section."
+            "explanation": "They come in the window functions quest."
           },
           {
             "id": "top_per_group-q-5ogric",
@@ -4413,7 +4413,7 @@
     },
     {
       "id": "proj_weekly_chart",
-      "title": "Easy project: Weekly chart",
+      "title": "Easy side quest: Weekly chart",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -4429,7 +4429,7 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Weekly chart",
+        "title": "Easy side quest: Weekly chart",
         "bodyMarkdown": "You edit the service's chart page. Each challenge is one box on the page: the top tracks, the new releases, the tracks nobody has found yet, the artist chart and each genre's hit.\n\nPlays are counted over the whole `plays` table. Today is 2026-10-24.",
         "sandboxCode": "SELECT t.title, COUNT(p.id) AS plays\nFROM tracks t\nLEFT JOIN plays p ON p.track_id = t.id\nGROUP BY t.id, t.title\nORDER BY plays DESC, t.title;",
         "readMore": {
@@ -4706,7 +4706,7 @@
     },
     {
       "id": "proj_listener_insights",
-      "title": "Medium project: Listener insights",
+      "title": "Medium side quest: Listener insights",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -4722,7 +4722,7 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Listener insights",
+        "title": "Medium side quest: Listener insights",
         "bodyMarkdown": "The product team wants to understand the listeners: who never started, who listens most, who follows artists without listening to them, and what each listener likes best.\n\nListeners without plays should appear wherever the question is about every listener.",
         "sandboxCode": "SELECT l.name, l.plan,\n       (SELECT COUNT(*) FROM plays p WHERE p.listener_id = l.id) AS plays\nFROM listeners l;",
         "readMore": {
@@ -4999,7 +4999,7 @@
     },
     {
       "id": "proj_catalogue_review",
-      "title": "Hard project: Catalogue review",
+      "title": "Hard side quest: Catalogue review",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -5015,7 +5015,7 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Catalogue review",
+        "title": "Hard side quest: Catalogue review",
         "bodyMarkdown": "The label is reviewing its catalogue. It wants a profile of each artist, the tracks that reach every kind of listener, the gaps in what people have discovered, and how well follows turn into listening.\n\nUse whichever tools fit: subqueries, EXISTS, set operators and CTEs. Build each answer step by step in the sandbox.",
         "sandboxCode": "SELECT a.name,\n  (SELECT COUNT(*) FROM tracks t WHERE t.artist_id = a.id) AS tracks\nFROM artists a;",
         "readMore": {

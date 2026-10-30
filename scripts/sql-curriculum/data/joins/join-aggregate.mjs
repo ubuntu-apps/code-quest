@@ -13,7 +13,7 @@ export default makeTopic({
     'Totals often need a calculation from both tables. The total of each order is the sum of quantity times price over its lines:',
     '```\nSELECT i.order_id, ROUND(SUM(i.quantity * p.price), 2) AS total\nFROM order_items i\nJOIN products p ON i.product_id = p.id\nGROUP BY i.order_id;\n```',
     '`WHERE`, `HAVING` and `ORDER BY` work as before. The rows are joined, then filtered by `WHERE`, then grouped, then the groups are filtered by `HAVING`.',
-    "One thing to notice: a customer with no orders doesn't appear at all, not even with 0. The inner join dropped them before the counting began. The `LEFT JOIN` lesson fixes that.",
+    "One thing to notice: a customer with no orders doesn't appear at all, not even with 0. The inner join dropped them before the counting began. The `LEFT JOIN` stage fixes that.",
   ],
   sandboxCode: 'SELECT c.name, COUNT(*) AS orders\nFROM orders o\nJOIN customers c ON o.customer_id = c.id\nGROUP BY c.id, c.name;',
   sandboxSnippets: [

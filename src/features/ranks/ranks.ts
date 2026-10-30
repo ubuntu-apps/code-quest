@@ -94,7 +94,7 @@ export function nextRankHint(rank: CourseRank): string | null {
   if (!rank.next) return null
   const left = rank.next.at - rank.finished
   const title = rank.next.rank.title
-  return `Finish ${left} more section${left === 1 ? '' : 's'} to become ${/^[AEIOU]/.test(title) ? 'an' : 'a'} ${title}`
+  return `Finish ${left} more quest${left === 1 ? '' : 's'} to become ${/^[AEIOU]/.test(title) ? 'an' : 'a'} ${title}`
 }
 
 /** The rank a rank badge stands for (its id is `rank:<course>:<rank>`), or null. */

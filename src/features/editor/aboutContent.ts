@@ -5,7 +5,7 @@ export interface AboutContent {
 }
 
 export const DEFAULT_ABOUT_CONTENT: AboutContent = {
-  lead: 'CodeQuest teaches programming through short lessons, hands-on coding challenges and quizzes. Your code runs right here in your browser, and your progress is saved on this device.',
+  lead: 'CodeQuest teaches programming through quests. Each quest is a series of short stages with hands-on coding challenges, and each stage ends with a gate: a short quiz that opens the next stage. Your code runs right here in your browser, and your progress is saved on this device.',
   installIntro: '',
   installSteps: [],
 }

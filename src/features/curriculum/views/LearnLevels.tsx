@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { DoorClosed, DoorClosedLocked, DoorOpen, Footprints, KeyRound, Swords } from 'lucide-react'
 import type { LoadedSection, Level } from '../types'
 import { loadProgress } from '../progressStorage'
 import { completedChallengeIds } from '../helpers'
@@ -81,28 +82,46 @@ export function LearnLevels({
             status === 'passed'
               ? challengesDone
                 ? 'Completed'
-                : 'Quiz passed'
+                : 'Gate cleared'
               : status === 'challenges-done'
-                ? 'Challenges done'
+                ? 'Key found'
                 : status === 'in-progress'
                   ? 'In progress'
                   : 'Not started'
           const statusDetails =
-            status === 'challenges-done' ? 'take the quiz' : status === 'passed' && challengesDone ? undefined : challengeCount
+            status === 'challenges-done' ? 'clear the gate' : status === 'passed' && challengesDone ? undefined : challengeCount
 
           const isProject = lvl.kind === 'project'
           const projectLabel =
             lvl.projectDifficulty === 'easy' || lvl.projectDifficulty === 'medium'
-              ? 'Required project'
+              ? 'Required side quest'
               : lvl.projectDifficulty === 'hard'
-                ? 'Optional project'
-                : 'Project'
+                ? 'Optional side quest'
+                : 'Side quest'
           const lessonNumber = selectedSection.file.levels.slice(0, lvlIndex + 1).filter((l) => l.kind !== 'project').length
           const lessonCount = selectedSection.file.levels.filter((l) => l.kind !== 'project').length
-          const eyebrow = isProject ? projectLabel : `Lesson ${lessonNumber} of ${lessonCount}`
+          const eyebrow = isProject ? (
+            <>
+              <Swords size={12} aria-hidden className="cq-eyebrow-icon" /> {projectLabel}
+            </>
+          ) : (
+            `Stage ${lessonNumber} of ${lessonCount}`
+          )
+          // The stage's door: shut, on the way, key found (challenges done), open (gate cleared).
+          const icon = locked ? (
+            <DoorClosedLocked size={20} />
+          ) : status === 'passed' ? (
+            <DoorOpen size={20} />
+          ) : status === 'challenges-done' ? (
+            <KeyRound size={20} />
+          ) : status === 'in-progress' ? (
+            <Footprints size={20} />
+          ) : (
+            <DoorClosed size={20} />
+          )
           const meta = locked ? (
             <span className="cq-card-meta">
-              {sectionLockedHint ? 'Locked' : 'Locked · pass the previous quiz to unlock'}
+              {sectionLockedHint ? 'Locked' : 'Locked · clear the previous gate to unlock'}
             </span>
           ) : (
             <StatusMeta status={status} label={statusLabel} details={statusDetails} />
@@ -118,6 +137,7 @@ export function LearnLevels({
                 onOpenLevel(lvl)
               }}
               eyebrow={eyebrow}
+              icon={icon}
               meta={meta}
               status={locked ? undefined : status}
               locked={locked}
@@ -127,12 +147,12 @@ export function LearnLevels({
               onMoveUp={() => onMoveLevel(lvl.id, -1)}
               onMoveDown={() => onMoveLevel(lvl.id, 1)}
               onRemove={() => onRemoveLevel(lvl.id)}
-              confirmMessage={`Delete level "${lvl.title}"?`}
+              confirmMessage={`Delete stage "${lvl.title}"?`}
             />
           )
         })}
       </ul>
-      <AddItemButton label="Add level" onClick={onAddLevel} />
+      <AddItemButton label="Add stage" onClick={onAddLevel} />
     </div>
   )
 }

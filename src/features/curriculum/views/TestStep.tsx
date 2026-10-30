@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { DoorClosed, DoorOpen } from 'lucide-react'
 import type { Level, TestGradeResult, TestQuestion } from '../types'
 import type { LevelProgress } from '../progressStorage'
 import { PASS_DEFAULT } from '../constants'
@@ -87,7 +88,7 @@ export function TestStep({
     <section className="cq-panel cq-test">
       {suggestPractice ? (
         <p className="cq-test-practice-note">
-          {`You've solved ${challengesDone} of ${challengesTotal} challenges. Working through them first makes this quiz much easier.`}{' '}
+          {`You've solved ${challengesDone} of ${challengesTotal} challenges. Working through them first makes this gate much easier.`}{' '}
           {onGoToChallenges ? (
             <button type="button" className="cq-link-btn" onClick={onGoToChallenges}>
               Go to the challenges
@@ -97,7 +98,7 @@ export function TestStep({
       ) : null}
       {practice ? null : (
         <p className="cq-muted">
-          Passing score:{' '}
+          To clear the gate:{' '}
           {isEditingLocal ? (
             <input
               type="number"
@@ -111,7 +112,7 @@ export function TestStep({
           ) : (
             (level.test.passingScorePercent ?? PASS_DEFAULT)
           )}
-          % · {prog.testPassed ? 'You already passed at least once.' : 'Answer all questions, then Submit.'}
+          % · {prog.testPassed ? "You've cleared this gate before." : 'Answer every question, then press Check my answers.'}
         </p>
       )}
       <ul className="cq-test-list">
@@ -219,7 +220,7 @@ export function TestStep({
                     canMoveDown={qi < level.test.questions.length - 1}
                     onMoveUp={() => onMoveQuestion(q.id, -1)}
                     onMoveDown={() => onMoveQuestion(q.id, 1)}
-                    confirmMessage="Delete this quiz question?"
+                    confirmMessage="Delete this gate question?"
                     onDelete={() => onRemoveQuestion(q.id)}
                   />
                 </div>
@@ -253,7 +254,7 @@ export function TestStep({
               ? 'Retake'
               : testResult
                 ? 'Submit again'
-                : 'Submit quiz'}
+                : 'Check my answers'}
         </button>
         {testResult && !resultCurrent && !practice ? (
           <button type="button" className="cq-btn" onClick={onRetake}>
@@ -264,7 +265,7 @@ export function TestStep({
       {/* Read out after Submit; the score line below appears too late to be announced itself. */}
       <p className="cq-sr-only" role="status">
         {testResult && resultCurrent
-          ? `Score ${testResult.correct} out of ${testResult.total}.${practice ? '' : testResult.passed ? ' Passed.' : ' Not passed.'}`
+          ? `Score ${testResult.correct} out of ${testResult.total}.${practice ? '' : testResult.passed ? ' Gate cleared.' : ' The gate is still shut.'}`
           : ''}
       </p>
       {testResult && resultCurrent && (
@@ -275,17 +276,25 @@ export function TestStep({
               : 'cq-score cq-score--fail'
           }
         >
+          {practice ? null : testResult.passed ? (
+            <span className="cq-gate-result">
+              <DoorOpen size={22} aria-hidden className="cq-gate-door cq-gate-door--open" /> Gate cleared!{' '}
+            </span>
+          ) : (
+            <span className="cq-gate-result">
+              <DoorClosed size={22} aria-hidden className="cq-gate-door" /> The gate stays shut.{' '}
+            </span>
+          )}
           Score {testResult.correct}/{testResult.total} (
           {Math.round((testResult.correct / Math.max(testResult.total, 1)) * 100)}%)
-          {practice ? null : testResult.passed ? ' Passed' : ' Not passed'}
-          {!revealAnswers && ' · Change the answers marked Incorrect and submit again. Correct answers are shown once you pass.'}
+          {!revealAnswers && ' · Change the answers marked Incorrect and submit again. Correct answers are shown once you clear the gate.'}
         </p>
       )}
       {testResult && resultCurrent && testResult.passed && !isEditingLocal ? afterPass : null}
       {testResult && resultCurrent && testResult.passed && nextLevelTitle && onGoToNextLevel ? (
         <div className="cq-row">
           <button type="button" className="cq-btn cq-btn--primary" onClick={onGoToNextLevel}>
-            Next lesson: {nextLevelTitle}
+            Next stage: {nextLevelTitle}
           </button>
         </div>
       ) : null}
@@ -295,11 +304,11 @@ export function TestStep({
       {!isEditingLocal ? (
         <a
           className="cq-report-link"
-          href={reportProblemUrl(`the quiz for "${level.title}"`, `quiz for lesson ${level.id}`)}
+          href={reportProblemUrl(`the gate for "${level.title}"`, `gate for stage ${level.id}`)}
           target="_blank"
           rel="noopener noreferrer"
         >
-          Report a problem with this quiz
+          Report a problem with this gate
         </a>
       ) : null}
     </section>

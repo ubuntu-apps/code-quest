@@ -57,8 +57,8 @@ export function badgeDefinitions({
     {
       id: `first-quiz:${languageId}`,
       kind: 'start',
-      title: 'First quiz',
-      description: `Pass your first ${course} quiz`,
+      title: 'First gate',
+      description: `Clear your first ${course} gate`,
       earned: anyQuizPassed,
     },
     ...sections.map(
@@ -66,7 +66,7 @@ export function badgeDefinitions({
         id: `section:${languageId}:${sec.id}`,
         kind: 'section',
         title: sec.title,
-        description: `Pass every quiz in ${sec.title}, or its skip-ahead quiz`,
+        description: `Clear every gate in ${sec.title}, or its skip-ahead gate`,
         earned: sec.finished,
       }),
     ),
@@ -75,7 +75,7 @@ export function badgeDefinitions({
         id: `rank:${languageId}:${rank.id}`,
         kind: 'rank',
         title: `${course} ${rank.title}`,
-        description: `Finish ${thresholds[i + 1]} section${thresholds[i + 1] === 1 ? '' : 's'} of ${course}`,
+        description: `Finish ${thresholds[i + 1]} quest${thresholds[i + 1] === 1 ? '' : 's'} of ${course}`,
         earned: sections.length > 0 && finishedCount >= thresholds[i + 1],
       }),
     ),
@@ -83,7 +83,7 @@ export function badgeDefinitions({
       id: `course:${languageId}`,
       kind: 'course',
       title: `${course} complete`,
-      description: `Finish every section of ${course}`,
+      description: `Finish every quest of ${course}`,
       earned: sections.length > 0 && sections.every((sec) => sec.finished),
     },
     ...STREAK_BADGE_DAYS.map(

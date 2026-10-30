@@ -5,7 +5,7 @@ export default makeTopic({
   id: "import_statements",
   title: "Importing modules",
   paragraphs: [
-    "You've already met `import math`. A **module** is a file of Python code (functions, variables, classes) that other programs can use. Python comes with hundreds of them, called the **standard library**, and later in this section you'll write your own. Importing a module lets you use its code without copying it into your program.",
+    "You've already met `import math`. A **module** is a file of Python code (functions, variables, classes) that other programs can use. Python comes with hundreds of them, called the **standard library**, and later in this quest you'll write your own. Importing a module lets you use its code without copying it into your program.",
     "```\nimport math\n\nprint(math.sqrt(16))   # 4.0\nprint(math.pi)         # 3.141592653589793\n```",
     "`import math` creates one name in your program, `math`, and everything inside the module is reached with a dot: `math.sqrt`, `math.pi`. The dot keeps the module's names apart from yours, so your own variable called `floor` can't clash with `math.floor`. Imports go at the top of the file, so a reader sees at once what the program depends on.",
     "When you only need a few names, `from ... import ...` brings them straight into your program. The code gets shorter, but the reminder of where each name came from is gone, so it's best for a handful of well-known names.",

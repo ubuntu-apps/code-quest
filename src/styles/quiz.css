@@ -247,3 +247,38 @@
   background: var(--cq-accent-dim);
   font-size: var(--cq-text-sm);
 }
+
+/* "Gate cleared!" / "The gate stays shut." before the score, with a door that swings open. */
+.cq-gate-result {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.cq-gate-door {
+  flex: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cq-gate-door--open {
+    transform-origin: 30% 100%;
+    animation: cq-door-swing 0.7s ease-out;
+  }
+}
+
+@keyframes cq-door-swing {
+  0% {
+    transform: perspective(60px) rotateY(0deg) scale(0.8);
+    opacity: 0.4;
+  }
+  60% {
+    transform: perspective(60px) rotateY(-25deg) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(60px) rotateY(0deg) scale(1);
+  }
+}

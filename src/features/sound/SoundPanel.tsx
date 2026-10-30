@@ -14,7 +14,7 @@ export function SoundPanel() {
         Sounds
       </h2>
       <p className="cq-muted cq-sound-lead">
-        Short sounds when a check passes or fails, a quiz is done, or you earn a badge.
+        Short sounds when a check passes or fails, a gate is done, or you earn a badge.
       </p>
       <div className="cq-segmented" role="radiogroup" aria-labelledby="cq-sound-title">
         {[

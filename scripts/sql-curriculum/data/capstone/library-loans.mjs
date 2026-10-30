@@ -13,7 +13,7 @@ export default makeTopic({
     "So a loan joins to its book through its copy: `loans → copies → books`. Today is 2026-10-24.",
     '```\n' + OUT_NOW + '\n```',
     "Dates are text in the form `YYYY-MM-DD`, so comparing them with `<` and `>` works, and `julianday()` turns them into day numbers to subtract. A loan is overdue when it is still out and its due date is before today.",
-    "Watch the counts in this project: a book with two copies, each with several loans, makes many rows when joined, so count with care, or count in subqueries.",
+    "Watch the counts in this capstone: a book with two copies, each with several loans, makes many rows when joined, so count with care, or count in subqueries.",
   ],
   sandboxCode: OUT_NOW,
   sandboxSnippets: [
@@ -24,7 +24,7 @@ export default makeTopic({
   challenges: [
     query('easy', 'Out right now', {
       prompt: "Show every copy that is out now: the book's `title`, the member's name (`member`) and `due_on`. Sort by due date, then title.",
-      hint: 'The lesson\'s example: `WHERE l.returned_on IS NULL`.',
+      hint: 'The intro\'s example: `WHERE l.returned_on IS NULL`.',
       solution: OUT_NOW,
     }),
     query('easy', 'Overdue', {

@@ -44,7 +44,7 @@ export default makeTopic({
     }),
     query('medium', 'All three', {
       prompt: "For the first quiz night, show each `player_id` and `points`, with `row_no` (ROW_NUMBER, ties by player id), `rank` (RANK) and `dense_rank` (DENSE_RANK), all from the highest points. Sort by points (highest first), then player id.",
-      hint: 'The lesson\'s example: three window functions over the same ORDER BY.',
+      hint: 'The intro\'s example: three window functions over the same ORDER BY.',
       solution: 'SELECT player_id, points,\n       ROW_NUMBER() OVER (ORDER BY points DESC, player_id) AS row_no,\n       RANK() OVER (ORDER BY points DESC) AS rank,\n       DENSE_RANK() OVER (ORDER BY points DESC) AS dense_rank\nFROM games\nWHERE played_on = (SELECT MIN(played_on) FROM games)\nORDER BY points DESC, player_id;',
     }),
     query('medium', 'Within the team', {

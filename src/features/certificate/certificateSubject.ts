@@ -24,7 +24,7 @@ export function courseSubject(languageId: string, courseTitle: string, completio
     earnedKey: languageId,
     courseTitle,
     section: null,
-    stats: `${plural(completion.sectionsTotal, 'section')} · ${plural(completion.lessonsTotal, 'lesson')} · ${completion.xp} XP`,
+    stats: `${plural(completion.sectionsTotal, 'quest')} · ${plural(completion.lessonsTotal, 'stage')} · ${completion.xp} XP`,
   }
 }
 
@@ -43,7 +43,7 @@ export function sectionSubject(
     earnedKey: `${languageId}/${section.sectionRef.id}`,
     courseTitle,
     section: { title: section.sectionRef.title, number },
-    stats: [plural(levels.length, 'lesson'), skippedAhead ? 'skip-ahead quiz passed' : '', xp > 0 ? `${xp} XP` : '']
+    stats: [plural(levels.length, 'lesson'), skippedAhead ? 'skip-ahead gate cleared' : '', xp > 0 ? `${xp} XP` : '']
       .filter(Boolean)
       .join(' · '),
   }

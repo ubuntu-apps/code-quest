@@ -168,7 +168,7 @@ const cleanUp = makeProject('hard', {
     }),
     query('hard', 'One person, one record', {
       prompt: "Members with the same name are the same person. In one transaction, move all loans to the lowest id for that name, then delete the other members with that name.",
-      hint: 'The same two statements as "Merge every duplicate" in the last lesson.',
+      hint: 'The same two statements as "Merge every duplicate" in the last stage.',
       solution: 'BEGIN;\nUPDATE loans\nSET member_id = (\n  SELECT MIN(m2.id) FROM members m2\n  WHERE m2.name = (SELECT name FROM members WHERE id = loans.member_id)\n)\nWHERE member_id IN (SELECT id FROM members);\nDELETE FROM members\nWHERE id NOT IN (SELECT MIN(id) FROM members GROUP BY name);\nCOMMIT;',
       checks: [AFTER.loans, AFTER.members],
     }),

@@ -13,8 +13,8 @@ export function PrivacyPanel() {
       </h2>
       <p className="cq-muted">
         CodeQuest has no accounts and doesn&apos;t know who you are. Your progress stays on this device. To see
-        which lessons people reach and where they get stuck, it sends anonymous counts (for example
-        &ldquo;someone passed the Variables quiz&rdquo;) to{' '}
+        which stages people reach and where they get stuck, it sends anonymous counts (for example
+        &ldquo;someone cleared the Variables gate&rdquo;) to{' '}
         <a href="https://www.goatcounter.com" target="_blank" rel="noopener noreferrer">
           GoatCounter
         </a>

@@ -6,7 +6,7 @@ export default makeProject("medium", {
   title: "Bookshop API client",
   paragraphs: [
     "An online bookshop has a REST API, and you're writing the Python **client** for it: a class that hides the HTTP details, so the rest of a program can just ask for books. The API lives at `/books`. `GET /books/<id>` returns one book, `GET /books?page=1` returns a page of two books plus the number of the next page, and `POST /books` adds a book.",
-    "In the challenges, a pretend version of the API is ready as `api(method, path, body=None)`, which returns `(status, text)` like the one in the REST APIs lesson. The client takes that function as a parameter, so a real program could pass in one that makes real HTTP requests, and nothing else would change. When done, it's used like this:",
+    "In the challenges, a pretend version of the API is ready as `api(method, path, body=None)`, which returns `(status, text)` like the one in the REST APIs stage. The client takes that function as a parameter, so a real program could pass in one that makes real HTTP requests, and nothing else would change. When done, it's used like this:",
     "```\nclient = BookClient(api)\nprint(client.get_book(1)[\"title\"])     # Dune\nprint(len(client.all_books()))         # 5, across three pages\nclient.get_book(99)                    # raises ApiError: 404: not found\n```",
     "Every request goes through one private method, `_call`, which turns data into JSON, makes the call, decodes the answer and turns error codes into an `ApiError` exception. The public methods stay short, and the error handling is written once.",
   ],

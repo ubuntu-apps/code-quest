@@ -6353,7 +6353,7 @@
     },
     {
       "id": "proj_grade_book",
-      "title": "Easy project: Grade book",
+      "title": "Easy side quest: Grade book",
       "kind": "project",
       "projectDifficulty": "easy",
       "sandboxSnippets": [
@@ -6374,8 +6374,8 @@
         }
       ],
       "intro": {
-        "title": "Easy project: Grade book",
-        "bodyMarkdown": "Build a grade book for a small class. Each student's score lives in a dictionary, and the program works out the class average, the top student and a letter grade for everyone, then prints a report sorted from the best score down.\n\nThe letter grades: `A` for 90 or more, `B` for 80 or more, `C` for 70 or more, and `F` below that. With the five students in this project, the finished report is:\n\n```\nAna: 91 (A)\nCleo: 85 (B)\nBen: 78 (C)\nEli: 72 (C)\nDev: 64 (F)\nAverage: 78.0\n```\n\nUseful pieces: `sum(grades.values())` and `len(grades)` for the average, `max(grades, key=grades.get)` for the top student, and `sorted(grades, key=grades.get, reverse=True)` for the names from best to worst.\n\nBuild it in steps: store the scores, add a student, the average, the top student, the letter grades, and finally the whole report.",
+        "title": "Easy side quest: Grade book",
+        "bodyMarkdown": "Build a grade book for a small class. Each student's score lives in a dictionary, and the program works out the class average, the top student and a letter grade for everyone, then prints a report sorted from the best score down.\n\nThe letter grades: `A` for 90 or more, `B` for 80 or more, `C` for 70 or more, and `F` below that. With the five students in this side quest, the finished report is:\n\n```\nAna: 91 (A)\nCleo: 85 (B)\nBen: 78 (C)\nEli: 72 (C)\nDev: 64 (F)\nAverage: 78.0\n```\n\nUseful pieces: `sum(grades.values())` and `len(grades)` for the average, `max(grades, key=grades.get)` for the top student, and `sorted(grades, key=grades.get, reverse=True)` for the names from best to worst.\n\nBuild it in steps: store the scores, add a student, the average, the top student, the letter grades, and finally the whole report.",
         "sandboxCode": "grades = {\"Ana\": 91, \"Ben\": 78, \"Cleo\": 85}\ngrades[\"Dev\"] = 64\naverage = sum(grades.values()) / len(grades)\nprint(f\"Average: {average:.1f}\")\nprint(\"Top:\", max(grades, key=grades.get))\nfor name in sorted(grades, key=grades.get, reverse=True):\n    print(name, grades[name])"
       },
       "challenges": [
@@ -6507,7 +6507,7 @@
         {
           "id": "proj_grade_book-the-report",
           "title": "Hard: The report",
-          "promptMarkdown": "Print the report from the lesson: one line per student from the highest score to the lowest, like `Ana: 91 (A)`, then `Average: 78.0`.",
+          "promptMarkdown": "Print the report from the intro: one line per student from the highest score to the lowest, like `Ana: 91 (A)`, then `Average: 78.0`.",
           "starterCode": "grades = {\"Ana\": 91, \"Ben\": 78, \"Cleo\": 85, \"Dev\": 64, \"Eli\": 72}\nletters = {\"Ana\": \"A\", \"Ben\": \"C\", \"Cleo\": \"B\", \"Dev\": \"F\", \"Eli\": \"C\"}\n",
           "hint": "Loop over `sorted(grades, key=grades.get, reverse=True)` and print `f\"{name}: {grades[name]} ({letters[name]})\"`. Work out the average and print it with `:.1f` after the loop.",
           "solution": "grades = {\"Ana\": 91, \"Ben\": 78, \"Cleo\": 85, \"Dev\": 64, \"Eli\": 72}\nletters = {\"Ana\": \"A\", \"Ben\": \"C\", \"Cleo\": \"B\", \"Dev\": \"F\", \"Eli\": \"C\"}\nfor name in sorted(grades, key=grades.get, reverse=True):\n    print(f\"{name}: {grades[name]} ({letters[name]})\")\naverage = sum(grades.values()) / len(grades)\nprint(f\"Average: {average:.1f}\")",
@@ -6667,7 +6667,7 @@
     },
     {
       "id": "proj_word_counter",
-      "title": "Medium project: Word counter",
+      "title": "Medium side quest: Word counter",
       "kind": "project",
       "projectDifficulty": "medium",
       "sandboxSnippets": [
@@ -6688,8 +6688,8 @@
         }
       ],
       "intro": {
-        "title": "Medium project: Word counter",
-        "bodyMarkdown": "Build a word counter: give it some text and it reports how many words there are, how many different ones, and which words are used most. It's the kind of program behind word clouds and search engines, and it uses lists, sets, dicts, sorting and comprehensions.\n\nWords need cleaning before they can be counted: `Data`, `data,` and `data.` should all count as the same word. Make every word lowercase and `strip` the punctuation off its ends with `w.strip(\".,!?:\")`.\n\nFor the text in this project, the finished report is:\n\n```\nWords: 23\nDifferent: 15\ndata: 5\ncode: 4\nkeeps: 2\n```\n\nThe plan: clean the words into a list, count them all with `len`, count the different ones with a set, count each word in a dict, and sort the dict's keys by their counts to find the top three.\n\nBuild it in steps; the last challenge puts everything together.",
+        "title": "Medium side quest: Word counter",
+        "bodyMarkdown": "Build a word counter: give it some text and it reports how many words there are, how many different ones, and which words are used most. It's the kind of program behind word clouds and search engines, and it uses lists, sets, dicts, sorting and comprehensions.\n\nWords need cleaning before they can be counted: `Data`, `data,` and `data.` should all count as the same word. Make every word lowercase and `strip` the punctuation off its ends with `w.strip(\".,!?:\")`.\n\nFor the text in this side quest, the finished report is:\n\n```\nWords: 23\nDifferent: 15\ndata: 5\ncode: 4\nkeeps: 2\n```\n\nThe plan: clean the words into a list, count them all with `len`, count the different ones with a set, count each word in a dict, and sort the dict's keys by their counts to find the top three.\n\nBuild it in steps; the last challenge puts everything together.",
         "sandboxCode": "text = \"The cat and the hat. The end!\"\nwords = [w.strip(\".,!?\") for w in text.lower().split()]\nprint(words)\nprint(len(words), len(set(words)))\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(sorted(counts, key=counts.get, reverse=True)[:2])"
       },
       "challenges": [
@@ -6866,7 +6866,7 @@
         {
           "id": "proj_word_counter-the-report",
           "title": "Expert: The report",
-          "promptMarkdown": "Put it all together and print the report from the lesson: `Words: 23`, `Different: 15`, then the top three words with their counts, like `data: 5`.",
+          "promptMarkdown": "Put it all together and print the report from the intro: `Words: 23`, `Different: 15`, then the top three words with their counts, like `data: 5`.",
           "starterCode": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\n",
           "hint": "Clean the words, count them, find the top three, then print two summary lines and loop over the top three.",
           "solution": "text = \"Tidy data keeps code simple. Fresh data keeps old data useful, and code saves time! Data first, then code: data grows, code follows.\"\nwords = [w.strip(\".,!?:\") for w in text.lower().split()]\ncounts = {}\nfor w in words:\n    counts[w] = counts.get(w, 0) + 1\nprint(f\"Words: {len(words)}\")\nprint(f\"Different: {len(counts)}\")\nfor w in sorted(counts, key=counts.get, reverse=True)[:3]:\n    print(f\"{w}: {counts[w]}\")",
@@ -7026,7 +7026,7 @@
     },
     {
       "id": "proj_inventory_tracker",
-      "title": "Hard project: Inventory tracker",
+      "title": "Hard side quest: Inventory tracker",
       "kind": "project",
       "projectDifficulty": "hard",
       "sandboxSnippets": [
@@ -7047,8 +7047,8 @@
         }
       ],
       "intro": {
-        "title": "Hard project: Inventory tracker",
-        "bodyMarkdown": "Build a small stock-keeping program for a shop. It keeps an **inventory**, a dict mapping each item to how many are in stock, and understands typed commands until the user types `quit`. It brings together everything from this section and the last: dicts, lists, sorting, `split()`, a `while True` loop and `if`/`elif`.\n\nThe commands: `add ITEM QTY` adds stock and prints `Added 5 apple`. `remove ITEM QTY` takes stock away and prints `Removed 2 apple`, or `Not enough apple` (changing nothing) when there isn't enough; an item that reaches 0 is deleted. `show` prints every item in alphabetical order, like `apple: 3`, or `Empty` when there's nothing. `quit` prints `Bye!` and stops, and anything else prints `Unknown command`.\n\nA session looks like this (the lines starting with `>` are what the user typed):\n\n```\n> add apple 5\nAdded 5 apple\n> add pear 2\nAdded 2 pear\n> remove pear 3\nNot enough pear\n> remove apple 2\nRemoved 2 apple\n> show\napple: 3\npear: 2\n> quit\nBye!\n```\n\n`command.split()` breaks a command into its parts: `\"add apple 5\".split()` is `[\"add\", \"apple\", \"5\"]`, so `parts[0]` is the action and the quantity needs `int()`. Check the number of parts before using them, so a short command such as `add apple` prints `Unknown command` instead of crashing.\n\nBuild it in steps: read a command, add stock, remove stock safely, show the stock, a low-stock warning, and finally the whole program. To try the sandbox, type one command per line in the Input box.",
+        "title": "Hard side quest: Inventory tracker",
+        "bodyMarkdown": "Build a small stock-keeping program for a shop. It keeps an **inventory**, a dict mapping each item to how many are in stock, and understands typed commands until the user types `quit`. It brings together everything from this quest and the last: dicts, lists, sorting, `split()`, a `while True` loop and `if`/`elif`.\n\nThe commands: `add ITEM QTY` adds stock and prints `Added 5 apple`. `remove ITEM QTY` takes stock away and prints `Removed 2 apple`, or `Not enough apple` (changing nothing) when there isn't enough; an item that reaches 0 is deleted. `show` prints every item in alphabetical order, like `apple: 3`, or `Empty` when there's nothing. `quit` prints `Bye!` and stops, and anything else prints `Unknown command`.\n\nA session looks like this (the lines starting with `>` are what the user typed):\n\n```\n> add apple 5\nAdded 5 apple\n> add pear 2\nAdded 2 pear\n> remove pear 3\nNot enough pear\n> remove apple 2\nRemoved 2 apple\n> show\napple: 3\npear: 2\n> quit\nBye!\n```\n\n`command.split()` breaks a command into its parts: `\"add apple 5\".split()` is `[\"add\", \"apple\", \"5\"]`, so `parts[0]` is the action and the quantity needs `int()`. Check the number of parts before using them, so a short command such as `add apple` prints `Unknown command` instead of crashing.\n\nBuild it in steps: read a command, add stock, remove stock safely, show the stock, a low-stock warning, and finally the whole program. To try the sandbox, type one command per line in the Input box.",
         "sandboxCode": "inventory = {}\nwhile True:\n    parts = input(\"> \").split()\n    if parts[0] == \"quit\":\n        print(\"Bye!\")\n        break\n    if parts[0] == \"add\":\n        item, qty = parts[1], int(parts[2])\n        inventory[item] = inventory.get(item, 0) + qty\n    print(inventory)"
       },
       "challenges": [
@@ -7215,7 +7215,7 @@
         {
           "id": "proj_inventory_tracker-the-inventory-tracker",
           "title": "Expert: The inventory tracker",
-          "promptMarkdown": "Write the whole program from the lesson: read commands with `input(\"> \")` until `quit`, handling `add`, `remove`, `show` and unknown commands exactly as described. The check types `add apple 5`, `add pear 2`, `remove pear 3`, `remove apple 2`, `show`, `sell fig 1`, `add apple` and `quit`.",
+          "promptMarkdown": "Write the whole program from the intro: read commands with `input(\"> \")` until `quit`, handling `add`, `remove`, `show` and unknown commands exactly as described. The check types `add apple 5`, `add pear 2`, `remove pear 3`, `remove apple 2`, `show`, `sell fig 1`, `add apple` and `quit`.",
           "starterCode": "",
           "hint": "`while True:` with `parts = input(\"> \").split()`. Check `parts[0]` with `if`/`elif`; for `add` and `remove`, also check `len(parts) == 3` so a short command falls through to `else`.",
           "solution": "inventory = {}\nwhile True:\n    parts = input(\"> \").split()\n    if not parts:\n        continue\n    action = parts[0]\n    if action == \"quit\":\n        print(\"Bye!\")\n        break\n    elif action == \"show\":\n        if not inventory:\n            print(\"Empty\")\n        for item in sorted(inventory):\n            print(f\"{item}: {inventory[item]}\")\n    elif action == \"add\" and len(parts) == 3:\n        item, qty = parts[1], int(parts[2])\n        inventory[item] = inventory.get(item, 0) + qty\n        print(f\"Added {qty} {item}\")\n    elif action == \"remove\" and len(parts) == 3:\n        item, qty = parts[1], int(parts[2])\n        if inventory.get(item, 0) < qty:\n            print(f\"Not enough {item}\")\n        else:\n            inventory[item] -= qty\n            if inventory[item] == 0:\n                del inventory[item]\n            print(f\"Removed {qty} {item}\")\n    else:\n        print(\"Unknown command\")",

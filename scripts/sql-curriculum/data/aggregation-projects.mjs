@@ -134,7 +134,7 @@ const productReview = makeProject('hard', {
   database: AGGREGATION_DB,
   paragraphs: [
     "The café is reviewing its menu. For every product, the owner wants to know how it sells, where it sells, how it's paid for, and finally a decision: keep it, watch it or review it.",
-    "This project uses the whole section: grouping, `HAVING`, `COUNT(DISTINCT)`, `GROUP_CONCAT`, conditional totals and careful averages.",
+    "This side quest uses the whole quest: grouping, `HAVING`, `COUNT(DISTINCT)`, `GROUP_CONCAT`, conditional totals and careful averages.",
   ],
   sandboxCode: 'SELECT product, category, SUM(quantity) AS items,\n       ROUND(SUM(quantity * unit_price), 2) AS revenue,\n       COUNT(DISTINCT store) AS stores\nFROM sales\nGROUP BY product, category;',
   sandboxSnippets: [

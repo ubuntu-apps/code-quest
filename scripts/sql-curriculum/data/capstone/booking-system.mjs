@@ -31,7 +31,7 @@ export default makeTopic({
   title: 'Building a booking system',
   database: BOOKING_DB,
   paragraphs: [
-    "The last project builds a database instead of only reading one. A family runs a few holiday cottages, and until now every booking request has gone into a spreadsheet. Two sheets have been loaded as they are: `cottage_sheet` (each cottage, how many it sleeps and its nightly rate) and `requests` (who asked for which cottage, when, and for how many people).",
+    "The last capstone builds a database instead of only reading one. A family runs a few holiday cottages, and until now every booking request has gone into a spreadsheet. Two sheets have been loaded as they are: `cottage_sheet` (each cottage, how many it sleeps and its nightly rate) and `requests` (who asked for which cottage, when, and for how many people).",
     "Over ten steps you'll design proper tables, move the data across, find and fix double bookings, speed up the lookups and build the reports. **Each step starts from the sheets again**, so the starter code carries all your earlier steps; add the new step after them. If an earlier step was wrong, fix it in the starter.",
     "The design: `cottages` and `guests` each get an id, and `bookings` points to both, one row per stay. A stay is from `arrive` to `depart`, and the guests sleep the nights in between: arriving on the 2nd and leaving on the 5th is 3 nights, and someone else can arrive on the 5th.",
     "```\ncottages (id, name, sleeps, nightly_rate)\nguests   (id, name, email)\nbookings (id, guest_id → guests, cottage_id → cottages, arrive, depart, party)\n```",

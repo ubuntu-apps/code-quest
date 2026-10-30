@@ -13,7 +13,7 @@ export default makeTopic({
     "You can try this here: the code below writes a module file, then imports it.",
     "```\nfrom pathlib import Path\n\nPath(\"shapes.py\").write_text(\"\"\"\nprint(\"shapes is loading\")\n\ndef square(side):\n    return side * side\n\"\"\")\n\nimport shapes          # shapes is loading\nimport shapes          # nothing: already loaded\nprint(shapes.square(4))   # 16\n```",
     "By convention, names in capitals (`MAX_PLAYERS = 4`) are constants that shouldn't change, and a name starting with an underscore (`_clean`) is a helper meant for use inside the module only. Python doesn't stop anyone using it, but `from module import *` skips it, and readers know to leave it alone.",
-    "**How the checks work in this section:** in a real project you'd have two files, the module and the program that imports it. Here, your code is the module. The checks save it as a file, such as `greetings.py`, and import it the way another program would, then try what's inside. When a challenge gives you a module to use, it's already in the folder, ready to import.",
+    "**How the checks work in this quest:** in a real project you'd have two files, the module and the program that imports it. Here, your code is the module. The checks save it as a file, such as `greetings.py`, and import it the way another program would, then try what's inside. When a challenge gives you a module to use, it's already in the folder, ready to import.",
   ],
   sandboxCode: "from pathlib import Path\n\nPath(\"tools.py\").write_text(\"\"\"\nTAX = 0.2\n\ndef with_tax(price):\n    return round(price * (1 + TAX), 2)\n\"\"\")\n\nimport tools\nprint(tools.TAX)\nprint(tools.with_tax(10))",
   sandboxSnippets: [

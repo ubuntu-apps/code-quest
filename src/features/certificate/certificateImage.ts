@@ -83,7 +83,7 @@ export function siteLabel(baseUrl: string): string {
  */
 export function certificateFilename(subject: CertificateSubject): string {
   const name = subject.section
-    ? `Certificate for Section ${subject.section.number} - ${subject.section.title} of the ${subject.courseTitle} Course`
+    ? `Certificate for Quest ${subject.section.number} - ${subject.section.title} of the ${subject.courseTitle} Course`
     : `Certificate for the ${subject.courseTitle} Course`
   // eslint-disable-next-line no-control-regex
   return name.replace(/[<>:"/\\|?*\u0000-\u001f]/g, '').replace(/\s+/g, ' ').trim()

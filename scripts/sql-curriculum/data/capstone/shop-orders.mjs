@@ -13,7 +13,7 @@ export default makeTopic({
   title: "An online shop's orders",
   database: SHOP_DB,
   paragraphs: [
-    "Welcome to the capstone projects. Each one is a full piece of work on a database of its own, using skills from across the course: you'll choose which tables to join, how to group, when a window or a CTE is the right tool, and which NULLs to watch out for. The challenges say what the result should look like, not how to get it, so there is usually more than one good answer.",
+    "Welcome to the capstone quest. Each one is a full piece of work on a database of its own, using skills from across the course: you'll choose which tables to join, how to group, when a window or a CTE is the right tool, and which NULLs to watch out for. The challenges say what the result should look like, not how to get it, so there is usually more than one good answer.",
     "The first is a small online shop selling tea, coffee and kitchen things. The owner wants a report on the last six months: what sold, who bought it, how the months compare and how much the discounts cost.",
     "The tables are `customers`, `products`, `orders` (with a `status`: only `paid` orders count as sales) and `order_items`, one row for each product in an order, with the `quantity` and the `unit_price` actually charged. That can be lower than the product's list `price` when there was a discount, so revenue is always `quantity * unit_price`.",
     "A good habit for a report like this: start from the smallest correct query, check its rows by eye, then build on it. Here, most answers start from paid orders joined to their items:",
@@ -34,7 +34,7 @@ export default makeTopic({
     }),
     query('easy', 'Order totals', {
       prompt: "For each paid order, show `order_id`, `ordered_on`, the customer's name (`customer`) and the order's `total` (2 decimals). In date order, then by order id.",
-      hint: 'The lesson\'s example.',
+      hint: 'The intro\'s example.',
       solution: LINES,
     }),
     query('easy', 'Signed up, never ordered', {

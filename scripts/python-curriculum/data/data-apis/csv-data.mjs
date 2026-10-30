@@ -15,7 +15,7 @@ export default makeTopic({
     "```\nbuf = StringIO()\nwriter = csv.writer(buf)\nwriter.writerow([\"name\", \"score\"])\nwriter.writerows([[\"Ana\", 90], [\"Lee, Jr.\", 85]])\nprint(buf.getvalue())\n```",
     "Not every CSV uses commas. Many European exports separate values with `;`, because there the comma is the decimal point (`1,5`). Pass `delimiter=\";\"` to the reader, and swap the decimal comma before converting: `float(\"1,5\".replace(\",\", \".\"))`.",
     "With real files, open them with `newline=\"\"`, because the csv module handles line endings itself (otherwise you can get blank rows on Windows), and with `encoding=\"utf-8\"`, so names like Zoë survive: `open(\"people.csv\", \"w\", newline=\"\", encoding=\"utf-8\")`.",
-    "To total a column per group, loop over the rows and add to a dict: `totals[region] = totals.get(region, 0) + amount`. For bigger analyses, pandas (later in this section) reads a CSV into a table you can filter and group in one line.",
+    "To total a column per group, loop over the rows and add to a dict: `totals[region] = totals.get(region, 0) + amount`. For bigger analyses, pandas (later in this quest) reads a CSV into a table you can filter and group in one line.",
   ],
   sandboxCode: "import csv\nfrom io import StringIO\n\ndata = \"name,score\\nAna,90\\nBob,85\\nCleo,80\\n\"\nrows = list(csv.DictReader(StringIO(data)))\nprint(rows[0])\nprint(sum(int(row[\"score\"]) for row in rows))",
   sandboxSnippets: [

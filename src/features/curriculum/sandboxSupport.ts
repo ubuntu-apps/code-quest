@@ -7,7 +7,7 @@
 export const CODE_RUNTIME_UNSUPPORTED_MESSAGE =
   "This browser is too old to run code here. The interactive sandbox needs a " +
   'newer browser (Safari 16.4+, or a recent Chrome or Firefox). You can still ' +
-  'read the lessons and take the quizzes.'
+  'read the stages and clear the gates.'
 
 let cached: boolean | null = null
 

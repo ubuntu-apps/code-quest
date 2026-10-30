@@ -6,7 +6,7 @@ export default makeTopic({
   title: "HTTP with urllib",
   paragraphs: [
     "When a program talks to a web API, it sends an HTTP **request** to a URL and gets a **response** back: a status code (200 means OK), headers, and a body, which is often JSON. Python's standard library does this with the `urllib` package.",
-    "**No internet here.** The code runner in this app can't reach other websites, so this lesson practises everything around a request: building URLs, preparing requests, decoding responses and handling errors. On your own computer, a complete request looks like this:",
+    "**No internet here.** The code runner in this app can't reach other websites, so this stage practises everything around a request: building URLs, preparing requests, decoding responses and handling errors. On your own computer, a complete request looks like this:",
     "```\nimport json\nfrom urllib.request import urlopen\n\nwith urlopen(\"https://api.example.com/users\", timeout=5) as response:\n    body = response.read().decode(\"utf-8\")\n    users = json.loads(body)\n```",
     "`timeout=5` gives up after 5 seconds instead of waiting forever for a server that doesn't answer. `response.read()` returns **bytes**, not text; `.decode(\"utf-8\")` turns them into a string you can give to `json.loads`.",
     "A URL has parts. For `https://api.example.com/v1/users?limit=10`, `urllib.parse.urlparse` gives you `.scheme` (`https`), `.netloc`, the domain (`api.example.com`), `.path` (`/v1/users`) and `.query` (`limit=10`). `parse_qs(query)` turns the query into a dict of lists, like `{\"limit\": [\"10\"]}`. They are lists because a name can appear more than once, as in `tag=a&tag=b`.",

@@ -28,7 +28,7 @@ export function makeTopic(config) {
 
 /** A project at the end of a section: a bigger task built up over several challenges. */
 export function makeProject(difficulty, config) {
-  const label = difficulty === 'easy' ? 'Easy project' : difficulty === 'medium' ? 'Medium project' : 'Hard project'
+  const label = difficulty === 'easy' ? 'Easy side quest' : difficulty === 'medium' ? 'Medium side quest' : 'Hard side quest'
   return { ...config, title: `${label}: ${config.title}`, kind: 'project', projectDifficulty: difficulty }
 }
 

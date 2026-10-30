@@ -9,7 +9,7 @@ export default makeTopic({
   title: 'CREATE TABLE and types',
   database: DESIGN_DB,
   paragraphs: [
-    "Until now the tables were already there. This section is about making them. The database belongs to an events venue that has kept its bookings in one spreadsheet-like table, `ticket_sheet`, and wants proper tables instead.",
+    "Until now the tables were already there. This quest is about making them. The database belongs to an events venue that has kept its bookings in one spreadsheet-like table, `ticket_sheet`, and wants proper tables instead.",
     '`CREATE TABLE` names the table and lists its columns, each with a type:',
     '```\nCREATE TABLE guests (\n  name TEXT,\n  email TEXT,\n  visits INTEGER\n);\n```',
     "SQLite has five kinds of values: `INTEGER` (whole numbers), `REAL` (numbers with decimals), `TEXT`, `BLOB` (raw bytes) and `NULL`. Use `INTEGER`, `REAL` and `TEXT` as column types. There is no date type: store dates as `TEXT` in the form `YYYY-MM-DD`, and true/false as `INTEGER` 0 or 1.",

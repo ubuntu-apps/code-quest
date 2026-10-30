@@ -60,7 +60,7 @@ export function VersionPanel({ onRevealAdmin }: VersionPanelProps) {
       </div>
       <p className="cq-muted" role="status" aria-live="polite">
         {ready
-          ? 'A new version is ready. Your challenge answers are saved; unsubmitted quiz answers and sandbox code will be cleared.'
+          ? 'A new version is ready. Your challenge answers are saved; unsubmitted gate answers and sandbox code will be cleared.'
           : status === 'idle' || status === 'checking'
             ? ''
             : MESSAGES[status]}

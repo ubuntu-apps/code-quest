@@ -181,7 +181,7 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
         <RotateCcw size={18} aria-hidden /> Daily review
       </h2>
       <p className="cq-muted">
-        {setSize} questions from quizzes you&apos;ve taken. The ones you get wrong come back sooner, so they
+        {setSize} questions from gates you&apos;ve taken. The ones you get wrong come back sooner, so they
         stick. About two minutes; it keeps your streak going but doesn&apos;t earn XP.
       </p>
       <button type="button" className="cq-btn cq-btn--primary" onClick={start}>

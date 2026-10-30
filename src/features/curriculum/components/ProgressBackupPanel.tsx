@@ -40,7 +40,7 @@ export function ProgressBackupPanel() {
     const backup = createProgressBackup()
     const levels = countLevels(backup.entries)
     if (levels === 0) {
-      setNotice({ text: 'Nothing to back up yet. Complete a challenge or quiz first.' })
+      setNotice({ text: 'Nothing to back up yet. Complete a challenge or gate first.' })
       return
     }
     setNotice(null)
@@ -50,7 +50,7 @@ export function ProgressBackupPanel() {
         new Blob([`${JSON.stringify(backup, null, 2)}\n`], { type: 'application/json' }),
       )
       const where = savedMessage(result)
-      if (where) setNotice({ text: `${where} It has your progress in ${levels} ${levels === 1 ? 'topic' : 'topics'}.` })
+      if (where) setNotice({ text: `${where} It has your progress in ${levels} ${levels === 1 ? 'stage' : 'stages'}.` })
     } catch {
       setNotice({ text: 'Could not save the backup. Please try again.', error: true })
     }
@@ -62,7 +62,7 @@ export function ProgressBackupPanel() {
       const backup = parseProgressBackup(await file.text())
       const levels = countLevels(backup.entries)
       const ok = await requestConfirm(
-        `Replace the progress on this device with the backup (${levels} ${levels === 1 ? 'topic' : 'topics'})? Your current progress here will be overwritten.`,
+        `Replace the progress on this device with the backup (${levels} ${levels === 1 ? 'stage' : 'stages'})? Your current progress here will be overwritten.`,
         { title: 'Restore progress', confirmLabel: 'Yes, restore' },
       )
       if (!ok) return

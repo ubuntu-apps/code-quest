@@ -12,12 +12,12 @@ export function CourseRankBadge({ rank, courseTitle }: { rank: CourseRank; cours
         {rank.rank.title}
       </span>
       <span className="cq-rank-next">
-        {hint ?? `Every section finished: the highest ${courseTitle} rank`}
+        {hint ?? `Every quest finished: the highest ${courseTitle} rank`}
         {rank.next ? (
           <span
             className="cq-rank-bar"
             role="progressbar"
-            aria-label={`Sections finished towards ${rank.next.rank.title}`}
+            aria-label={`Quests finished towards ${rank.next.rank.title}`}
             aria-valuemin={0}
             aria-valuemax={rank.next.at}
             aria-valuenow={rank.finished}

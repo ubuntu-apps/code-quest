@@ -1,10 +1,11 @@
 import { useRef, type KeyboardEvent } from 'react'
+import { DoorClosed, DoorOpen, ScrollText, Swords } from 'lucide-react'
 import { STEP_PANEL_ID, stepTabId, type LevelStep } from '../constants'
 
 const STEP_TABS: { id: LevelStep; label: string }[] = [
   { id: 'intro', label: 'Intro' },
   { id: 'challenges', label: 'Challenges' },
-  { id: 'quiz', label: 'Quiz' },
+  { id: 'quiz', label: 'Gate' },
 ]
 
 interface LevelStepNavProps {
@@ -39,7 +40,7 @@ export function LevelStepNav({
   }
   /** What the badge says to a screen reader. */
   const badgeSpoken = (id: LevelStep): string =>
-    id === 'quiz' ? ', passed' : `, ${challengeCount?.done ?? 0} of ${challengeCount?.total ?? 0} solved`
+    id === 'quiz' ? ', cleared' : `, ${challengeCount?.done ?? 0} of ${challengeCount?.total ?? 0} solved`
 
   // The top row is a tab list (arrow keys move between tabs, Tab moves on to the
   // content). The bottom row repeats it as plain buttons for after a long page.
@@ -67,7 +68,7 @@ export function LevelStepNav({
       <div
         className="cq-step-tabs"
         role={isTabs ? 'tablist' : 'group'}
-        aria-label={isTabs ? 'Lesson steps' : 'Go to lesson step'}
+        aria-label={isTabs ? 'Stage steps' : 'Go to stage step'}
       >
         {STEP_TABS.map((t, index) => {
           const active = levelStep === t.id
@@ -87,6 +88,15 @@ export function LevelStepNav({
               className={`cq-step-tab${active ? ' cq-step-tab--active' : ''}`}
               onClick={() => onLevelStepChange(t.id)}
             >
+              {t.id === 'intro' ? (
+                <ScrollText size={15} aria-hidden className="cq-step-tab-icon" />
+              ) : t.id === 'challenges' ? (
+                <Swords size={15} aria-hidden className="cq-step-tab-icon" />
+              ) : testPassed ? (
+                <DoorOpen size={15} aria-hidden className="cq-step-tab-icon" />
+              ) : (
+                <DoorClosed size={15} aria-hidden className="cq-step-tab-icon" />
+              )}
               {t.label}
               {badgeText ? (
                 <span
@@ -110,7 +120,7 @@ export function LevelStepNav({
           className="cq-step-tab cq-step-tab--next"
           onClick={onGoToNextLevel}
           title={nextLevelTitle ? `Continue to ${nextLevelTitle}` : undefined}
-          aria-label={nextLevelTitle ? `Next lesson: ${nextLevelTitle}` : 'Next lesson'}
+          aria-label={nextLevelTitle ? `Next stage: ${nextLevelTitle}` : 'Next stage'}
         >
           Next
         </button>

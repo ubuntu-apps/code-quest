@@ -24,12 +24,12 @@ export default makeTopic({
   challenges: [
     query('easy', 'Plays and followers', {
       prompt: "With two CTEs, show every artist's `name`, `plays` and `followers` (0 when there are none). In name order.",
-      hint: 'The two CTEs from the lesson, LEFT JOINed to artists, with `COALESCE(…, 0)` and `ORDER BY a.name`.',
+      hint: 'The two CTEs from the intro, LEFT JOINed to artists, with `COALESCE(…, 0)` and `ORDER BY a.name`.',
       solution: 'WITH artist_plays AS (\n  SELECT t.artist_id, COUNT(*) AS plays\n  FROM plays p\n  JOIN tracks t ON t.id = p.track_id\n  GROUP BY t.artist_id\n),\nartist_followers AS (\n  SELECT artist_id, COUNT(*) AS followers\n  FROM follows\n  GROUP BY artist_id\n)\nSELECT a.name,\n       COALESCE(ap.plays, 0) AS plays,\n       COALESCE(af.followers, 0) AS followers\nFROM artists a\nLEFT JOIN artist_plays ap ON ap.artist_id = a.id\nLEFT JOIN artist_followers af ON af.artist_id = a.id\nORDER BY a.name;',
     }),
     query('easy', 'Recent listeners', {
       prompt: "With a CTE `recent` of the plays on or after 2026-10-10 and a second CTE of their distinct listener ids, show those listeners' `name`s in alphabetical order.",
-      hint: 'The chain from the lesson, plus `ORDER BY name`.',
+      hint: 'The chain from the intro, plus `ORDER BY name`.',
       solution: "WITH recent AS (\n  SELECT * FROM plays WHERE played_on >= '2026-10-10'\n),\nrecent_listeners AS (\n  SELECT DISTINCT listener_id FROM recent\n)\nSELECT name\nFROM listeners\nWHERE id IN (SELECT listener_id FROM recent_listeners)\nORDER BY name;",
     }),
     query('easy', 'Long plays', {

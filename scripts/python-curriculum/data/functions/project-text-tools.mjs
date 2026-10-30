@@ -57,7 +57,7 @@ export default makeProject("easy", {
       ],
     }),
     task("hard", "The report", {
-      prompt: "The four tools are ready. Define `report(text)` that uses them to **return** four lines as one string, like the lesson: `Words: 4`, `Vowels: 6`, `Title: ...` and `Palindrome: yes` (or `no`).",
+      prompt: "The four tools are ready. Define `report(text)` that uses them to **return** four lines as one string, like the intro: `Words: 4`, `Vowels: 6`, `Title: ...` and `Palindrome: yes` (or `no`).",
       starter: "def count_vowels(text):\n    return sum(1 for ch in text.lower() if ch in \"aeiou\")\n\ndef word_count(text):\n    return len(text.split())\n\ndef capitalize_words(text):\n    return \" \".join(w[0].upper() + w[1:] for w in text.split())\n\ndef is_palindrome(text):\n    letters = [ch for ch in text.lower() if ch.isalpha()]\n    return letters == letters[::-1]\n\n",
       hint: "Build a list of four f-strings, using a conditional expression for yes/no, and return `\"\\n\".join(lines)`.",
       solution: "def count_vowels(text):\n    return sum(1 for ch in text.lower() if ch in \"aeiou\")\n\ndef word_count(text):\n    return len(text.split())\n\ndef capitalize_words(text):\n    return \" \".join(w[0].upper() + w[1:] for w in text.split())\n\ndef is_palindrome(text):\n    letters = [ch for ch in text.lower() if ch.isalpha()]\n    return letters == letters[::-1]\n\ndef report(text):\n    lines = [\n        f\"Words: {word_count(text)}\",\n        f\"Vowels: {count_vowels(text)}\",\n        f\"Title: {capitalize_words(text)}\",\n        f\"Palindrome: {'yes' if is_palindrome(text) else 'no'}\",\n    ]\n    return \"\\n\".join(lines)\n",

@@ -12,7 +12,7 @@ export default makeTopic({
     "```\nname = \"  ada LOVELACE \"\nprint(name.strip().title())   # Ada Lovelace\n```",
     "**Searching.** `count(sub)` counts how often `sub` appears. `find(sub)` gives the index where it first appears, or `-1` if it isn't there. `startswith(prefix)` and `endswith(suffix)` return `True` or `False`: `\"photo.jpg\".endswith(\".jpg\")` is `True`.",
     "**Checking content.** `isdigit()` is `True` when every character is a digit, as in `\"2026\".isdigit()`, and `isalpha()` when every character is a letter. They're useful before turning input into a number.",
-    "**Splitting and joining.** `split()` breaks a string into a list of words at the spaces, and `split(\",\")` breaks it at the commas. `\", \".join(words)` glues a list of strings back together, with `\", \"` between the pieces. (Lists get their own section later; for now, think of them as the pieces in square brackets.)",
+    "**Splitting and joining.** `split()` breaks a string into a list of words at the spaces, and `split(\",\")` breaks it at the commas. `\", \".join(words)` glues a list of strings back together, with `\", \"` between the pieces. (Lists get their own quest later; for now, think of them as the pieces in square brackets.)",
     "```\nwords = \"red green blue\".split()\nprint(words)              # ['red', 'green', 'blue']\nprint(\" + \".join(words))  # red + green + blue\n```",
   ],
   sandboxCode: "text = \"  Hello, CodeQuest!  \"\nprint(text.strip())\nprint(text.strip().upper())\nprint(text.count(\"o\"), text.find(\"Code\"))\nprint(\"a,b,c\".split(\",\"))",

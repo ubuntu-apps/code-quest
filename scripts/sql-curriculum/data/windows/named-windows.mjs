@@ -55,7 +55,7 @@ export default makeTopic({
     }),
     query('hard', 'Streak labels', {
       prompt: "Show each game's `player_id`, `played_on` and `night`, with `streak`: night minus the player's game number, so games in an unbroken run share it. Sort by player id, then date.",
-      hint: 'The lesson\'s example.',
+      hint: 'The intro\'s example.',
       solution: 'WITH numbered AS (\n  SELECT player_id, played_on,\n         DENSE_RANK() OVER (ORDER BY played_on) AS night\n  FROM games\n)\nSELECT player_id, played_on, night,\n       night - ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY played_on) AS streak\nFROM numbered\nORDER BY player_id, played_on;',
     }),
     query('hard', 'Streaks', {

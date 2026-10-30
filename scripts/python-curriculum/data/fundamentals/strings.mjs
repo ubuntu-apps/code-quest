@@ -13,7 +13,7 @@ export default makeTopic({
     "```\nword = \"Python\"\nprint(word[0:2], word[:3], word[3:], word[-3:])   # Py Pyt hon hon\n```",
     "`in` checks whether one string appears inside another: `\"cat\" in \"concatenate\"` is `True`. Like everything about strings, it's case-sensitive: `\"A\" == \"a\"` is `False`.",
     "Strings are **immutable**: you can't change a character in place, so `word[0] = \"J\"` raises a `TypeError`. Instead, build a new string, such as `\"J\" + word[1:]`, and assign it to a name.",
-    "To join a string and a number with `+`, turn the number into text first with `str()`: `\"Age: \" + str(30)`. The next two lessons show neater ways: string methods and f-strings.",
+    "To join a string and a number with `+`, turn the number into text first with `str()`: `\"Age: \" + str(30)`. The next two stages show neater ways: string methods and f-strings.",
   ],
   sandboxCode: "word = \"Python\"\nprint(word[0], word[-1], len(word))\nprint(word[:3], word[3:])\nprint(\"Py\" + \"thon\", \"ha\" * 3)\nprint(\"th\" in word, \"Th\" in word)",
   sandboxSnippets: [

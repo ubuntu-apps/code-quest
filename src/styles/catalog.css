@@ -267,3 +267,49 @@
   margin-top: -0.4rem;
   font-size: var(--cq-text-sm);
 }
+
+/* Quest and stage cards: a round badge on the right with a picture of where the learner is
+   (a map, a compass, a door, footprints, a key…), tinted with the card's status colour. */
+.cq-card-btn--with-icon {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cq-card-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cq-card-icon {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--status-color, var(--cq-muted));
+  background: color-mix(in srgb, var(--status-color, var(--cq-muted)) 13%, transparent);
+}
+
+.cq-card-btn--challenges-done .cq-card-icon {
+  /* The key is the same orange as the "Key found" label, a little darker to read on its tint. */
+  color: color-mix(in srgb, var(--cq-hl-number) 80%, var(--cq-text));
+}
+
+.cq-eyebrow-icon {
+  vertical-align: -0.1em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cq-card-icon svg {
+    transition: transform 0.2s ease;
+  }
+
+  .cq-card-btn:not(.cq-card-btn--locked):hover .cq-card-icon svg {
+    transform: rotate(-10deg) scale(1.12);
+  }
+}
