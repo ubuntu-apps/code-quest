@@ -107,12 +107,13 @@ export default makeTopic({
       ],
     }),
     task("expert", "Fix three mistakes", {
-      prompt: "This program has three mistakes. Fix them all so it prints:\n\n```\nWelcome to CodeQuest\nLessons: 10\nHave fun!\n```",
-      starter: "# A short welcome\npritn(\"Welcome to CodeQuest\")\nprint(\"Lessons:\" 10)\nprint('Have fun!\")",
+      keepProgress: true,
+      prompt: "This program has three mistakes. Fix them all so it prints:\n\n```\nWelcome to CodeQuest\nQuests: 10\nHave fun!\n```",
+      starter: "# A short welcome\npritn(\"Welcome to CodeQuest\")\nprint(\"Quests:\" 10)\nprint('Have fun!\")",
       hint: "Fix one error at a time and run again: a misspelled name, a missing comma between two things in `print`, and quotes that don't match.",
-      solution: "# A short welcome\nprint(\"Welcome to CodeQuest\")\nprint(\"Lessons:\", 10)\nprint(\"Have fun!\")",
+      solution: "# A short welcome\nprint(\"Welcome to CodeQuest\")\nprint(\"Quests:\", 10)\nprint(\"Have fun!\")",
       tests: [
-        ["Prints all three lines", "_cq_stdout.strip().splitlines() == [\"Welcome to CodeQuest\", \"Lessons: 10\", \"Have fun!\"]"],
+        ["Prints all three lines", "_cq_stdout.strip().splitlines() == [\"Welcome to CodeQuest\", \"Quests: 10\", \"Have fun!\"]"],
       ],
     }),
   ],
