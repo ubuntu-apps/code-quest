@@ -77,7 +77,7 @@ cat(sprintf("Group %s did better on test 1 by %.1f points\n", names(which.max(g)
       { code: 'g <- c(A = 79, B = 64.7)\nmax(g) - min(g)', output: '[1] 14.3' }),
     mc('Test 1 has sd 15, test 2 sd 12. What does that tell you?', ['Test 2 was easier', 'Test 2 scores were less spread out', 'Test 1 had more students', 'Nothing'], 1,
       'A smaller sd means scores were closer together.'),
-    qShort('Which argument makes `mean()` leave out missing values? (write it as `name = TRUE`)', 'na.rm = TRUE',
-      '`mean(x, na.rm = TRUE)`'),
+    qShort('Which function gives the value a share of the data is below, as in `__(x, 0.9)`?', 'quantile',
+      '`quantile(class_results$test1, 0.9)`'),
   ],
 })

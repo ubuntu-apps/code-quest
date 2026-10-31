@@ -77,12 +77,12 @@ export default makeTopic({
         ['Uses sqrt() and round()', uses('sqrt(') + ' && ' + uses('round(')],
       ],
     }),
-    task('hard', 'Split the bill', {
-      prompt: 'Three friends share a bill of 47.8. Make `share` what each pays, rounded to 2 decimal places.',
-      starter: 'bill <- 47.8\npeople <- 3\n',
-      hint: '`share <- round(bill / people, 2)`',
-      solution: 'bill <- 47.8\npeople <- 3\nshare <- round(bill / people, 2)',
-      tests: [['share is 15.93', near('share', 15.93)]],
+    task('hard', 'Enough taxis', {
+      prompt: 'Each taxi takes 4 people. Make `taxis` the number of taxis needed for `people`.',
+      starter: 'people <- 23\n',
+      hint: 'A part-full taxi still counts, so round up: `taxis <- ceiling(people / 4)`.',
+      solution: 'people <- 23\ntaxis <- ceiling(people / 4)',
+      tests: [['taxis is 6', near('taxis', 6)]],
     }),
     task('hard', 'Fix the call', {
       prompt: 'This line gives an error. Fix it so it shows `[1] 9.88`.',

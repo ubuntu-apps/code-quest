@@ -96,7 +96,7 @@ export default makeTopic({
       'Fixing disguises while reading saves a step.'),
     mc('What is usually the honest default for missing values?', ['Fill them with 0', 'Leave them and use `na.rm = TRUE`, reporting how many there were', 'Delete the column', 'Guess them'], 1,
       'It doesn\'t invent data, and readers know what is behind the numbers.'),
-    qShort('Which function is TRUE where a value is missing?', 'is.na',
-      '`is.na(x)`'),
+    qShort('Which function, used on `is.na(df)`, gives the share missing in each column?', 'colMeans',
+      '`colMeans(is.na(df))`: the mean of TRUE/FALSE is the share TRUE.'),
   ],
 })

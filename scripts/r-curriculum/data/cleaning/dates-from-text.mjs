@@ -75,9 +75,9 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc('Which `format` reads `"30/10/2026"`?', ['`"%Y-%m-%d"`', '`"%d/%m/%Y"`', '`"%m/%d/%Y"`', '`"%d %b %Y"`'], 1,
-      'Day, month, year, with slashes.',
-      { code: 'format(as.Date("30/10/2026", format = "%d/%m/%Y"))', output: '[1] "2026-10-30"' }),
+    mc('Which `format` reads `"Oct 30, 2026"`?', ['`"%b %d, %Y"`', '`"%d %b %Y"`', '`"%m/%d/%Y"`', '`"%B %d %Y"`'], 0,
+      'Short month name, day, a comma and a space, then the year: the format copies the text exactly.',
+      { code: 'format(as.Date("Oct 30, 2026", format = "%b %d, %Y"))', output: '[1] "2026-10-30"' }),
     mc('What does `as.Date("30/10/2026", format = "%m/%d/%Y")` give?', ['`2026-10-30`', '`NA`: there is no month 30', 'An error', '`2026-30-10`'], 1,
       'A text that doesn\'t fit the format becomes NA.',
       { code: 'as.Date("30/10/2026", format = "%m/%d/%Y")', output: '[1] NA' }),

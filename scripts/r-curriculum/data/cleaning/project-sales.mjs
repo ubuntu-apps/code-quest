@@ -76,7 +76,7 @@ export default makeProject('medium', {
     mc('What does `sort(c(mug = 42.5, poster = 21, tote = 48), decreasing = TRUE)` put first?', ['mug', 'poster', 'tote', 'It keeps the order'], 2,
       'The largest value first, with its name.',
       { code: 'names(sort(c(mug = 42.5, poster = 21, tote = 48), decreasing = TRUE))[1]', output: '[1] "tote"' }),
-    qShort('Which function adds up a column within each group?', 'tapply',
-      '`tapply(values, groups, sum)`'),
+    qShort('Which function puts the per-item takings in order, as in `__(x, decreasing = TRUE)`?', 'sort',
+      '`sort()` keeps the names with their values.'),
   ],
 })

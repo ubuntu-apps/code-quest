@@ -36,7 +36,7 @@ export default makeTopic({
       solution: HARVEST + 'total_kg <- sum(harvest$kg, na.rm = TRUE)',
       tests: [['total_kg is 49.7', near('total_kg', 49.7)]],
     }),
-    task('easy', 'Count the gaps', {
+    task('easy', 'Missing weights', {
       prompt: 'Make `n_missing` the number of missing weights.',
       starter: HARVEST,
       hint: '`n_missing <- sum(is.na(harvest$kg))`',
@@ -80,9 +80,9 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc('What does `sum(c(4, NA, 6), na.rm = TRUE)` give?', ['`NA`', '`10`', '`0`', '`2`'], 1,
-      'The NA is left out.',
-      { code: 'sum(c(4, NA, 6), na.rm = TRUE)', output: '[1] 10' }),
+    mc('What does `colSums(data.frame(a = c(1, NA), b = c(2, 3)), na.rm = TRUE)` give?', ['`a 1, b 5`', '`a NA, b 5`', '`[1] 6`', '`a 1, b 2`'], 0,
+      '`na.rm = TRUE` works in `colSums()` and `colMeans()` too.',
+      { code: 'as.vector(colSums(data.frame(a = c(1, NA), b = c(2, 3)), na.rm = TRUE))', output: '[1] 1 5' }),
     mc('What does `complete.cases(data.frame(a = c(1, NA), b = c(2, 3)))` give?', ['`[1]  TRUE FALSE`', '`[1] FALSE  TRUE`', '`TRUE`', '`[1] 1`'], 0,
       'The second row has an NA in column a.',
       { code: 'complete.cases(data.frame(a = c(1, NA), b = c(2, 3)))', output: '[1]  TRUE FALSE' }),
