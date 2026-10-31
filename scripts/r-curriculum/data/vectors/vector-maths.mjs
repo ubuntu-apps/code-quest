@@ -70,12 +70,12 @@ export default makeTopic({
       solution: 'last_week <- c(12, 15, 9, 20)\nthis_week <- c(14, 15, 12, 23)\nchange <- this_week - last_week',
       tests: [['change is 2, 0, 3, 3', near('change', 'c(2, 0, 3, 3)')]],
     }),
-    task('hard', 'Ride costs', {
-      prompt: 'Riverside Bikes charges 1.00 to unlock plus 0.15 per minute. Make `cost` the price of each ride in `minutes`.',
-      starter: 'minutes <- c(12, 47, 30)\n',
-      hint: 'The 1 and the 0.15 are used for every ride: `cost <- 1 + 0.15 * minutes`.',
-      solution: 'minutes <- c(12, 47, 30)\ncost <- 1 + 0.15 * minutes',
-      tests: [['cost is 2.8, 8.05, 5.5', near('cost', 'c(2.8, 8.05, 5.5)')]],
+    task('hard', 'Phone bills', {
+      prompt: 'A phone plan costs 8 a month plus 0.05 per text. Make `bill` the bill for each month in `texts`.',
+      starter: 'texts <- c(120, 45, 300)\n',
+      hint: 'The 8 and the 0.05 are used for every month: `bill <- 8 + 0.05 * texts`.',
+      solution: 'texts <- c(120, 45, 300)\nbill <- 8 + 0.05 * texts',
+      tests: [['bill is 14, 10.25, 23', near('bill', 'c(14, 10.25, 23)')]],
     }),
     task('expert', 'Percent of the target', {
       prompt: 'Each walker had their own step target. Make `percent` each walker\'s steps as a percentage of their target, rounded to a whole number.',

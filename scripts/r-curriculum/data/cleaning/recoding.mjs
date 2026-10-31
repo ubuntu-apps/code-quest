@@ -97,7 +97,7 @@ export default makeTopic({
     mc('What does `x[!x %in% c("S", "M", "L")]` give for `x <- c("M", "XL", "s")`?', ['`[1] "M"`', '`[1] "XL" "s"`', '`[1] "XL"`', '`character(0)`'], 1,
       'The values that aren\'t in the list.',
       { code: 'x <- c("M", "XL", "s")\nx[!x %in% c("S", "M", "L")]', output: '[1] "XL" "s"' }),
-    qShort('Which operator checks each value against a list of allowed values?', '%in%',
-      '`x %in% c(…)`'),
+    qShort('Which function drops the names from a lookup result, as in `__(size_names[sizes])`?', 'unname',
+      'Without it, each meaning keeps its code as a name.'),
   ],
 })

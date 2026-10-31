@@ -63,12 +63,12 @@ export default makeTopic({
       solution: TRIPS + 'trips$long <- trips$minutes > 30',
       tests: [['long is TRUE for trips 2, 5 and 8', same('trips$long', 'c(FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE)')]],
     }),
-    task('hard', 'Free for members', {
-      prompt: 'Add a column `fare`: 0 for members, and 1 plus 0.15 per minute for everyone else.',
+    task('hard', 'Members and visitors', {
+      prompt: 'Add a column `rider`: `"member"` for members and `"visitor"` for everyone else.',
       starter: TRIPS,
-      hint: '`trips$fare <- ifelse(trips$member, 0, 1 + 0.15 * trips$minutes)`',
-      solution: TRIPS + 'trips$fare <- ifelse(trips$member, 0, 1 + 0.15 * trips$minutes)',
-      tests: [['fare is right for every trip', 'isTRUE(all.equal(trips$fare, c(0, 8.05, 0, 0, 9.25, 0, 4.3, 0)))']],
+      hint: '`trips$rider <- ifelse(trips$member, "member", "visitor")`',
+      solution: TRIPS + 'trips$rider <- ifelse(trips$member, "member", "visitor")',
+      tests: [['rider is right for every trip', 'identical(trips$rider, c("member", "visitor", "member", "member", "visitor", "member", "visitor", "member"))']],
     }),
     task('expert', 'Tidy up the columns', {
       prompt: 'Make `station` a factor with the levels `Park`, `River`, `Market`, and remove the `id` column.',

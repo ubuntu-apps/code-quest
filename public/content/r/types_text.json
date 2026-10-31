@@ -4613,29 +4613,29 @@
             "explanation": "The first two characters."
           },
           {
-            "id": "proj_library_loans-q-bf7qgm",
+            "id": "proj_library_loans-q-tfaly6",
             "type": "mcq",
-            "prompt": "What does `sprintf(\"%.2f\", 3.5)` give?",
+            "prompt": "What does `sprintf(\"%s: %d loans\", \"FI\", 2)` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"3.5\"`"
+                "label": "`\"FI 2 loans\"`"
               },
               {
                 "id": "b",
-                "label": "`\"3.50\"`"
+                "label": "`\"%s: %d loans\"`"
               },
               {
                 "id": "c",
-                "label": "`3.50`"
+                "label": "An error"
               },
               {
                 "id": "d",
-                "label": "`\"3\"`"
+                "label": "`\"FI: 2 loans\"`"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Always two decimals, as text."
+            "correctChoiceId": "d",
+            "explanation": "`%s` takes the text and `%d` the whole number, in order."
           },
           {
             "id": "proj_library_loans-q-1pmcrvp",
@@ -4688,14 +4688,14 @@
             "explanation": "Adding 14 adds fourteen days."
           },
           {
-            "id": "proj_library_loans-q-1uztksz",
+            "id": "proj_library_loans-q-lxw34r",
             "type": "shortText",
-            "prompt": "Which function counts the loans per shelf in one step, as in `__(shelf)`?",
+            "prompt": "Which function makes the shelf codes a factor, with the levels in your order?",
             "validation": {
               "mode": "equalsNormalized",
-              "expected": "table"
+              "expected": "factor"
             },
-            "explanation": "`table()` counts each level of the factor."
+            "explanation": "`factor(x, levels = c(\"FI\", \"SC\", \"HI\"))`"
           }
         ]
       }

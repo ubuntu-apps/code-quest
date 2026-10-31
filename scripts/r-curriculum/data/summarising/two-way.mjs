@@ -91,7 +91,7 @@ export default makeTopic({
     mc('What does `dim(table(c("a", "b", "c"), c("x", "y", "x")))` give?', ['`[1] 3 2`', '`[1] 2 3`', '`[1] 3 3`', '`[1] 6`'], 0,
       'Three values in the first column make 3 rows; two in the second make 2 columns.',
       { code: 'dim(table(c("a", "b", "c"), c("x", "y", "x")))', output: '[1] 3 2' }),
-    mc('Which question does `margin = 1` answer for a rider-by-area table?', ['Of the north deliveries, how many were Sam\'s?', 'Of Sam\'s deliveries, how many were north?', 'How many deliveries in total?', 'Which area is busiest?'], 1,
+    mc('Which question does `margin = 1` answer for a rider-by-area table?', ['Of the north deliveries, what share were Sam\'s?', 'Of Sam\'s deliveries, what share were north?', 'How many deliveries in total?', 'Which area is busiest?'], 1,
       'Each rider\'s row is divided by that rider\'s total.'),
     mc('What is the grand total in `addmargins(table(x, y))`?', ['The number of rows of data', 'The number of columns', 'The largest count', 'Always 100'], 0,
       'Every row of the data falls in exactly one cell.'),

@@ -1,0 +1,105 @@
+// Reshaping and combining: Wide and long.
+import { code, makeTopic, mc, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
+import { RAIN } from './shape-data.mjs'
+
+const LONG = 'long <- data.frame(\n  town = rep(rain$town, times = 3),\n  month = rep(c("jan", "feb", "mar"), each = 3),\n  mm = c(rain$jan, rain$feb, rain$mar)\n)\n'
+const RESHAPE = 'reshape(rain, direction = "long", varying = c("jan", "feb", "mar"), v.names = "mm",\n        timevar = "month", times = c("jan", "feb", "mar"), idvar = "town")'
+
+export default makeTopic({
+  id: 'wide_and_long',
+  title: 'Wide and long',
+  paragraphs: [
+    'The same data can be laid out two ways. This rainfall table is **wide**: one row per town, one column per month. It is easy to read, but awkward to analyse: "total per month" means working across columns, and adding April means adding a column.',
+    code(...RAIN.trim().split('\n')),
+    'The **long** layout has one row per measurement: a town column, a month column and one column of values. Grouping, filtering and stacking new data all become the tools you already know:',
+    code(...LONG.trim().split('\n'), 'tapply(long$mm, long$month, sum)'),
+    'Building it by hand, as above, shows exactly what happens: `rep(…, times = 3)` repeats the towns for each month and `rep(…, each = 3)` repeats each month for the three towns. Base R also has `reshape()`, which does it in one call (its arguments take some getting used to), and `stack()` for the quick case:',
+    code(RESHAPE, 'stack(rain[, c("jan", "feb", "mar")])    # columns values and ind'),
+    'To go back to wide, `reshape(long, direction = "wide", idvar = "town", timevar = "month")` gives columns `mm.jan`, `mm.feb`, `mm.mar`. For a grid of numbers, `tapply(long$mm, list(long$town, long$month), sum)` gives a matrix. Text columns become alphabetical, so make month a factor with `levels = c("jan", "feb", "mar")` to keep calendar order.',
+  ],
+  sandboxCode: RAIN + LONG + 'long\ntapply(long$mm, long$month, sum)',
+  sandboxSnippets: [snippet('With reshape()', RAIN + RESHAPE), snippet('Back to wide', RAIN + LONG + 'reshape(long, direction = "wide", idvar = "town", timevar = "month")')],
+  readMore: { label: 'R documentation: reshape()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/reshape.html', source: 'R documentation' },
+  challenges: [
+    task('easy', 'Long by hand', {
+      prompt: 'Make `long` the rainfall in long form, with the columns `town`, `month` and `mm`: all of January first, then February, then March.',
+      starter: RAIN,
+      hint: '`data.frame(town = rep(rain$town, times = 3), month = rep(c("jan", "feb", "mar"), each = 3), mm = c(rain$jan, rain$feb, rain$mar))`',
+      solution: RAIN + LONG,
+      tests: [['long has 9 rows in the right order', sameFrame('long', 'data.frame(town = rep(c("Ashby", "Brook", "Corran"), 3), month = rep(c("jan", "feb", "mar"), each = 3), mm = c(80, 65, 92, 60, 55, 71, 55, 48, 60))')]],
+    }),
+    task('easy', 'Per month', {
+      prompt: 'Make `per_month` the total rainfall of each month, from `long`.',
+      starter: RAIN + LONG,
+      hint: '`tapply(long$mm, long$month, sum)`',
+      solution: RAIN + LONG + 'per_month <- tapply(long$mm, long$month, sum)',
+      tests: [['per_month is feb 186, jan 237, mar 163', 'isTRUE(all.equal(as.vector(per_month), c(186, 237, 163))) && identical(names(per_month), c("feb", "jan", "mar"))']],
+    }),
+    task('easy', 'The quick way', {
+      prompt: 'Make `st` the three month columns stacked with `stack()`.',
+      starter: RAIN,
+      hint: '`stack(rain[, c("jan", "feb", "mar")])`',
+      solution: RAIN + 'st <- stack(rain[, c("jan", "feb", "mar")])',
+      tests: [['st has 9 rows and the columns values, ind', 'is.data.frame(st) && nrow(st) == 9 && identical(names(st), c("values", "ind"))']],
+    }),
+    task('medium', 'With reshape()', {
+      prompt: 'Make `long2` the long form using `reshape()`. It should match the table built by hand (row names aside).',
+      starter: RAIN,
+      hint: '`reshape(rain, direction = "long", varying = c("jan", "feb", "mar"), v.names = "mm", timevar = "month", times = c("jan", "feb", "mar"), idvar = "town")`',
+      solution: RAIN + 'long2 <- ' + RESHAPE,
+      tests: [['long2 matches the long table', sameFrame('long2', 'local({ ' + LONG.replace(/\n/g, ' ') + '; long })')], ['Uses reshape()', uses('reshape(')]],
+    }),
+    task('medium', 'The wettest record', {
+      prompt: 'Make `wettest` the town and month of the wettest record, as a one-row data frame with those two columns.',
+      starter: RAIN + LONG,
+      hint: '`long[which.max(long$mm), c("town", "month")]`',
+      solution: RAIN + LONG + 'wettest <- long[which.max(long$mm), c("town", "month")]',
+      tests: [['wettest is Corran in jan', sameFrame('wettest', 'data.frame(town = "Corran", month = "jan")')]],
+    }),
+    task('medium', 'Back to a grid', {
+      prompt: 'Make `grid` a matrix of rainfall with towns in rows and months in columns, in calendar order.',
+      starter: RAIN + LONG,
+      hint: '`tapply(long$mm, list(long$town, factor(long$month, levels = c("jan", "feb", "mar"))), sum)`',
+      solution: RAIN + LONG + 'grid <- tapply(long$mm, list(long$town, factor(long$month, levels = c("jan", "feb", "mar"))), sum)',
+      tests: [['grid is 3 by 3 with columns jan, feb, mar', 'is.matrix(grid) && identical(colnames(grid), c("jan", "feb", "mar")) && identical(rownames(grid), c("Ashby", "Brook", "Corran"))'], ['Brook in feb is 55', 'isTRUE(all.equal(grid["Brook", "feb"], 55))']],
+    }),
+    task('hard', 'Back to wide', {
+      prompt: 'Make `wide` from `long` with `reshape()`, then rename its columns so they are `town`, `jan`, `feb`, `mar`, like `rain`.',
+      starter: RAIN + LONG,
+      hint: '`reshape(long, direction = "wide", idvar = "town", timevar = "month")` gives `mm.jan` and so on; `sub("mm.", "", names(wide), fixed = TRUE)` removes the start.',
+      solution: RAIN + LONG + 'wide <- reshape(long, direction = "wide", idvar = "town", timevar = "month")\nnames(wide) <- sub("mm.", "", names(wide), fixed = TRUE)',
+      tests: [['wide matches rain', sameFrame('wide', 'rain')]],
+    }),
+    task('expert', 'January to March', {
+      prompt: 'Using `long`, make `change` a data frame with the columns `town` and `change`: each town\'s March rainfall minus its January rainfall.',
+      starter: RAIN + LONG,
+      hint: 'Join the January rows to the March rows: `m <- merge(long[long$month == "jan", ], long[long$month == "mar", ], by = "town")`, then `m$mm.y - m$mm.x`.',
+      solution: RAIN + LONG + 'm <- merge(long[long$month == "jan", ], long[long$month == "mar", ], by = "town")\nchange <- data.frame(town = m$town, change = m$mm.y - m$mm.x)',
+      tests: [['change is Ashby -25, Brook -17, Corran -32', sameFrame('change', 'data.frame(town = c("Ashby", "Brook", "Corran"), change = c(-25, -17, -32))')]],
+    }),
+  ],
+  questions: [
+    mc('Which layout has one row per measurement?', ['Wide', 'Long', 'Both', 'Neither'], 1,
+      'Long: a column says what was measured (town, month), one column holds the value.'),
+    mc('Why is long often easier to analyse?', ['It is shorter', 'Grouping, filtering and adding new data use the usual tools, without working across columns', 'It is sorted', 'R can\'t use wide data'], 1,
+      'A new month is new rows, not a new column.'),
+    mc('What does `rep(c("a", "b"), times = 2)` give?', ['`[1] "a" "b" "a" "b"`', '`[1] "a" "a" "b" "b"`', '`[1] "a" "b"`', '`[1] "ab" "ab"`'], 0,
+      '`times` repeats the whole vector; `each` repeats each value.',
+      { code: 'rep(c("a", "b"), times = 2)', output: '[1] "a" "b" "a" "b"' }),
+    mc('What does `rep(c("a", "b"), each = 2)` give?', ['`[1] "a" "b" "a" "b"`', '`[1] "a" "a" "b" "b"`', '`[1] "a" "b"`', '`[1] "aa" "bb"`'], 1,
+      'Each value twice, in turn.',
+      { code: 'rep(c("a", "b"), each = 2)', output: '[1] "a" "a" "b" "b"' }),
+    mc('What are the column names of `stack(data.frame(x = 1, y = 2))`?', ['`values` and `ind`', '`x` and `y`', '`name` and `value`', '`key` and `value`'], 0,
+      '`ind` says which column each value came from.',
+      { code: 'names(stack(data.frame(x = 1, y = 2)))', output: '[1] "values" "ind"' }),
+    mc('After reshaping to wide, what are the new columns called?', ['`jan`, `feb`, `mar`', '`mm.jan`, `mm.feb`, `mm.mar`', '`month.jan`, …', '`V1`, `V2`, `V3`'], 1,
+      'The value name, a dot, then the time.'),
+    mc('Why might a grid from `tapply()` have its months as feb, jan, mar?', ['A bug', 'Text groups come out in alphabetical order; a factor with levels sets the order', 'tapply() sorts by value', 'reshape() changed them'], 1,
+      '`factor(month, levels = c("jan", "feb", "mar"))`.'),
+    mc('What does `sub("mm.", "", "mm.jan", fixed = TRUE)` give?', ['`"jan"`', '`"mm.jan"`', '`"mmjan"`', '`""`'], 0,
+      'The first match of "mm." is removed.',
+      { code: 'sub("mm.", "", "mm.jan", fixed = TRUE)', output: '[1] "jan"' }),
+    qShort('Which base R function turns wide data long, or long data wide?', 'reshape',
+      '`reshape(…, direction = "long")` or `direction = "wide"`.'),
+  ],
+})

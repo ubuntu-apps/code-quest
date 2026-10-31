@@ -79,9 +79,9 @@ export default makeTopic({
     }),
   ],
   questions: [
-    mc('What does `range(c(5, 2, 9))` give?', ['`[1] 7`', '`[1] 2 9`', '`[1] 2 5 9`', '`[1] 9`'], 1,
-      'The smallest and largest values.',
-      { code: 'range(c(5, 2, 9))', output: '[1] 2 9' }),
+    mc('What does `unname(quantile(c(1, 2, 3, 4, 5), 0.5))` give?', ['`3`', '`2.5`', '`0.5`', '`5`'], 0,
+      'The 50% quantile is the median.',
+      { code: 'unname(quantile(c(1, 2, 3, 4, 5), 0.5))', output: '[1] 3' }),
     mc('What does `sd(c(4, 4, 4))` give?', ['`4`', '`0`', '`1`', '`NA`'], 1,
       'All the values are the same, so there is no spread.',
       { code: 'sd(c(4, 4, 4))', output: '[1] 0' }),

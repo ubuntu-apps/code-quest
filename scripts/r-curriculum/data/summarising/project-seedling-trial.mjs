@@ -21,11 +21,11 @@ export default makeProject('medium', {
       solution: SEEDLINGS + 'means <- aggregate(height_cm ~ compost, data = seedlings, FUN = mean)',
       tests: [['means is the mean per compost', sameFrame('means', 'aggregate(height_cm ~ compost, data = seedlings, FUN = mean)')]],
     }),
-    task('easy', 'The winner', {
-      prompt: 'Make `best` the compost with the highest mean height.',
-      starter: SEEDLINGS,
-      hint: '`names(which.max(tapply(seedlings$height_cm, seedlings$compost, mean)))`',
-      solution: SEEDLINGS + 'best <- names(which.max(tapply(seedlings$height_cm, seedlings$compost, mean)))',
+    task('easy', 'Best from the table', {
+      prompt: 'Make `best` the compost with the highest mean height, read from the `means` data frame.',
+      starter: SEEDLINGS + 'means <- aggregate(height_cm ~ compost, data = seedlings, FUN = mean)\n',
+      hint: 'The row with the largest mean: `means$compost[which.max(means$height_cm)]`.',
+      solution: SEEDLINGS + 'means <- aggregate(height_cm ~ compost, data = seedlings, FUN = mean)\nbest <- means$compost[which.max(means$height_cm)]',
       tests: [['best is "leaf"', isText('best', 'leaf')]],
     }),
     task('medium', 'The most uneven', {
@@ -67,8 +67,9 @@ cat(sprintf("%-7s %5.1f %6.1f %4.1f\n", names(m)[o], m[o], md[o], s[o]), sep = "
   questions: [
     mc('Leaf mould has mean 10.6 and sd 0.6; home compost mean 8.6 and sd 2.8. Which is more predictable?', ['Home', 'Leaf mould', 'They are the same', 'You can\'t tell'], 1,
       'A smaller sd means the trays grew more evenly.'),
-    mc('Home compost has mean 8.6 but median 7.35. Why?', ['A calculation error', 'One tall seedling pulls the mean up', 'The data has NAs', 'Medians are always lower'], 1,
-      'Tray 10 grew to 12.8 cm, well above the rest.'),
+    mc('The leaf mould trays are 10.4, 11.2, 9.8 and 10.9 cm. What does `diff(range(c(10.4, 11.2, 9.8, 10.9)))` give?', ['`1.4`', '`10.6`', '`9.8 11.2`', '`0.6`'], 0,
+      'The tallest tray minus the shortest: a small range, so leaf mould is even as well as tall.',
+      { code: 'diff(range(c(10.4, 11.2, 9.8, 10.9)))', output: '[1] 1.4' }),
     mc('What does `sprintf("%-7s|", "leaf")` give?', ['`"leaf   |"`', '`"   leaf|"`', '`"leaf|"`', '`"-7leaf|"`'], 0,
       'The `-` means left-aligned, padded to 7 characters.',
       { code: 'sprintf("%-7s|", "leaf")', output: '[1] "leaf   |"' }),

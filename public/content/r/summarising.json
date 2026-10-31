@@ -211,29 +211,29 @@
             "explanation": "Three TRUEs out of four: a share of 0.75."
           },
           {
-            "id": "counts_percentages-q-1rfq4nv",
+            "id": "counts_percentages-q-1ebufgx",
             "type": "mcq",
-            "prompt": "What do the values of `prop.table(table(x))` add up to?",
+            "prompt": "What does `prop.table(c(a = 1, b = 3))` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "100"
+                "label": "`a 0.5, b 0.5`"
               },
               {
                 "id": "b",
-                "label": "The number of rows"
+                "label": "`a 0.25, b 0.75`"
               },
               {
                 "id": "c",
-                "label": "It depends"
+                "label": "`a 1, b 3`"
               },
               {
                 "id": "d",
-                "label": "1"
+                "label": "`a 25, b 75`"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "They are shares of the whole."
+            "correctChoiceId": "b",
+            "explanation": "Each count divided by the total, 4. It works on any vector of counts, not only a table."
           },
           {
             "id": "counts_percentages-q-fo3e2l",
@@ -361,29 +361,29 @@
             "explanation": "Text is sorted alphabetically, unless it is a factor with its own levels."
           },
           {
-            "id": "counts_percentages-q-1dwwz4o",
+            "id": "counts_percentages-q-1xkfqj4",
             "type": "mcq",
-            "prompt": "Which gives the most common value of `x`?",
+            "prompt": "Why is `mode(x)` no use for finding the most common value?",
             "choices": [
               {
                 "id": "a",
-                "label": "`names(which.max(table(x)))`"
+                "label": "It needs `na.rm = TRUE`"
               },
               {
                 "id": "b",
-                "label": "`table(x)[1]`"
+                "label": "It gives the storage type, such as \"numeric\""
               },
               {
                 "id": "c",
-                "label": "`mode(x)`"
+                "label": "It sorts the values"
               },
               {
                 "id": "d",
-                "label": "`max(x)`"
+                "label": "It only works on text"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "`mode()` in R tells you the storage type, not the most common value."
+            "correctChoiceId": "b",
+            "explanation": "Use `names(which.max(table(x)))` for the most common value."
           },
           {
             "id": "counts_percentages-q-120ar5w",
@@ -737,29 +737,29 @@
             "explanation": "Extreme values on one side pull the mean away from the median."
           },
           {
-            "id": "centre-q-123wtr0",
+            "id": "centre-q-19u7cq4",
             "type": "mcq",
-            "prompt": "What does `median(c(7, 1, 5))` give?",
+            "prompt": "What does `mean(c(10, 20, 30, 40, 1000), trim = 0.2)` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "`1`"
+                "label": "`30`"
               },
               {
                 "id": "b",
-                "label": "`4.33`"
+                "label": "`220`"
               },
               {
                 "id": "c",
-                "label": "`5`"
+                "label": "`25`"
               },
               {
                 "id": "d",
-                "label": "`7`"
+                "label": "`40`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Sorted, 1 5 7, the middle is 5."
+            "correctChoiceId": "a",
+            "explanation": "20% of 5 values is 1, so the lowest (10) and highest (1000) are dropped: the mean of 20, 30 and 40."
           },
           {
             "id": "centre-q-gmtxab",
@@ -998,29 +998,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "spread-q-nr902e",
+            "id": "spread-q-qmlk91",
             "type": "mcq",
-            "prompt": "What does `range(c(5, 2, 9))` give?",
+            "prompt": "What does `unname(quantile(c(1, 2, 3, 4, 5), 0.5))` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] 9`"
+                "label": "`5`"
               },
               {
                 "id": "b",
-                "label": "`[1] 2 5 9`"
+                "label": "`3`"
               },
               {
                 "id": "c",
-                "label": "`[1] 7`"
+                "label": "`0.5`"
               },
               {
                 "id": "d",
-                "label": "`[1] 2 9`"
+                "label": "`2.5`"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "The smallest and largest values."
+            "correctChoiceId": "b",
+            "explanation": "The 50% quantile is the median."
           },
           {
             "id": "spread-q-1372dry",
@@ -2341,11 +2341,11 @@
               },
               {
                 "id": "b",
-                "label": "Of Sam's deliveries, how many were north?"
+                "label": "Of Sam's deliveries, what share were north?"
               },
               {
                 "id": "c",
-                "label": "Of the north deliveries, how many were Sam's?"
+                "label": "Of the north deliveries, what share were Sam's?"
               },
               {
                 "id": "d",
@@ -3462,14 +3462,14 @@
             "explanation": "A smaller sd means scores were closer together."
           },
           {
-            "id": "proj_class_results-q-1hj1zs3",
+            "id": "proj_class_results-q-1150edj",
             "type": "shortText",
-            "prompt": "Which argument makes `mean()` leave out missing values? (write it as `name = TRUE`)",
+            "prompt": "Which function gives the value a share of the data is below, as in `__(x, 0.9)`?",
             "validation": {
               "mode": "equalsNormalized",
-              "expected": "na.rm = TRUE"
+              "expected": "quantile"
             },
-            "explanation": "`mean(x, na.rm = TRUE)`"
+            "explanation": "`quantile(class_results$test1, 0.9)`"
           }
         ]
       }
@@ -3512,12 +3512,12 @@
           }
         },
         {
-          "id": "proj_seedling_trial-the-winner",
-          "title": "Easy: The winner",
-          "promptMarkdown": "Make `best` the compost with the highest mean height.",
-          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\n",
-          "hint": "`names(which.max(tapply(seedlings$height_cm, seedlings$compost, mean)))`",
-          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\nbest <- names(which.max(tapply(seedlings$height_cm, seedlings$compost, mean)))",
+          "id": "proj_seedling_trial-best-from-the-table",
+          "title": "Easy: Best from the table",
+          "promptMarkdown": "Make `best` the compost with the highest mean height, read from the `means` data frame.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\nmeans <- aggregate(height_cm ~ compost, data = seedlings, FUN = mean)\n",
+          "hint": "The row with the largest mean: `means$compost[which.max(means$height_cm)]`.",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\nmeans <- aggregate(height_cm ~ compost, data = seedlings, FUN = mean)\nbest <- means$compost[which.max(means$height_cm)]",
           "validation": {
             "mode": "r_tests",
             "setupCode": "",
@@ -3636,29 +3636,29 @@
             "explanation": "A smaller sd means the trays grew more evenly."
           },
           {
-            "id": "proj_seedling_trial-q-jf2h9r",
+            "id": "proj_seedling_trial-q-vi72m4",
             "type": "mcq",
-            "prompt": "Home compost has mean 8.6 but median 7.35. Why?",
+            "prompt": "The leaf mould trays are 10.4, 11.2, 9.8 and 10.9 cm. What does `diff(range(c(10.4, 11.2, 9.8, 10.9)))` give?",
             "choices": [
               {
                 "id": "a",
-                "label": "A calculation error"
+                "label": "`9.8 11.2`"
               },
               {
                 "id": "b",
-                "label": "The data has NAs"
+                "label": "`1.4`"
               },
               {
                 "id": "c",
-                "label": "One tall seedling pulls the mean up"
+                "label": "`10.6`"
               },
               {
                 "id": "d",
-                "label": "Medians are always lower"
+                "label": "`0.6`"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Tray 10 grew to 12.8 cm, well above the rest."
+            "correctChoiceId": "b",
+            "explanation": "The tallest tray minus the shortest: a small range, so leaf mould is even as well as tall."
           },
           {
             "id": "proj_seedling_trial-q-8imp59",
