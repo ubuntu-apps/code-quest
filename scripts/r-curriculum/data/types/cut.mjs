@@ -17,6 +17,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('Including the lower end', 'cut(c(0, 10, 20), breaks = c(0, 10, 20, 30), right = FALSE)'),
     snippet('Open-ended groups', 'cut(c(-5, 3, 250), breaks = c(-Inf, 0, 100, Inf), labels = c("below 0", "0 to 100", "over 100"))'),
+    snippet('An open-ended last band', 'ages <- c(8, 34, 67, 102)\ncut(ages, breaks = c(0, 17, 64, Inf), labels = c("child", "adult", "senior"))'),
+    snippet('Which end is included', 'cut(c(10, 20), breaks = c(0, 10, 20, 30))\ncut(c(10, 20), breaks = c(0, 10, 20, 30), right = FALSE)'),
   ],
   readMore: { label: 'R documentation: cut()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/cut.html', source: 'R documentation' },
   challenges: [
@@ -72,12 +74,27 @@ export default makeTopic({
       solution: 'prices <- c(3.5, 12, 7.25, 19, 5, 10, 2.2)\ncounts <- table(cut(prices, breaks = c(-Inf, 5, 10, Inf), labels = c("under 5", "5 to 10", "over 10")))',
       tests: [['counts is under 5: 3, 5 to 10: 2, over 10: 2', 'identical(as.vector(counts), c(3L, 2L, 2L))']],
     }),
+    task('hard', 'Hours of sleep', {
+      prompt: 'Make `sleep` a band for each night: `"short"` for up to 6 hours, `"ok"` for over 6 up to 8, and `"long"` for over 8.',
+      starter: 'hours <- c(5.5, 7, 8.5, 6, 9, 7.5)\n',
+      hint: '`cut(hours, breaks = c(0, 6, 8, 24), labels = c("short", "ok", "long"))`. Each group includes its right end.',
+      solution: 'hours <- c(5.5, 7, 8.5, 6, 9, 7.5)\nsleep <- cut(hours, breaks = c(0, 6, 8, 24), labels = c("short", "ok", "long"))',
+      tests: [['sleep is short, ok, long, short, long, ok', 'identical(as.character(sleep), c("short", "ok", "long", "short", "long", "ok"))']],
+    }),
     task('expert', 'The busiest band', {
+      alt: 'ages <- c(8, 5, 34, 67, 11, 12, 7, 29, 3, 71)\n',
       prompt: 'Make `busiest` the name of the age band with the most visitors.',
       starter: 'ages <- c(8, 15, 34, 67, 41, 12, 17, 29, 38, 71)\n',
       hint: 'Group with `cut()` (breaks 0, 12, 17, 64, 120 and the four labels), count with `table()`, then `names(which.max(...))`.',
       solution: 'ages <- c(8, 15, 34, 67, 41, 12, 17, 29, 38, 71)\nband <- cut(ages, breaks = c(0, 12, 17, 64, 120), labels = c("child", "teen", "adult", "senior"))\nbusiest <- names(which.max(table(band)))',
       tests: [['busiest is "adult"', 'identical(busiest, "adult")']],
+    }),
+    task('expert', 'Share in each band', {
+      prompt: 'Make `share` the share of rides in each band: short (up to 15 minutes), medium (over 15 up to 45) and long (over 45).',
+      starter: 'minutes <- c(12, 47, 30, 8, 55, 15, 22, 61)\n',
+      hint: 'Group with `cut()`, count with `table()`, then turn the counts into shares with `prop.table()`.',
+      solution: 'minutes <- c(12, 47, 30, 8, 55, 15, 22, 61)\nband <- cut(minutes, breaks = c(0, 15, 45, 300), labels = c("short", "medium", "long"))\nshare <- prop.table(table(band))',
+      tests: [['share is short 0.375, medium 0.25, long 0.375', 'isTRUE(all.equal(as.vector(share), c(3, 2, 3) / 8)) && identical(names(share), c("short", "medium", "long"))']],
     }),
   ],
   questions: [
@@ -89,9 +106,8 @@ export default makeTopic({
     mc('What does `as.character(cut(10, breaks = c(0, 10, 20), right = FALSE))` give?', ['`"(0,10]"`', '`"[10,20)"`', '`"[0,10)"`', '`NA`'], 1,
       'With `right = FALSE`, the lower end is included instead.',
       { code: 'as.character(cut(10, breaks = c(0, 10, 20), right = FALSE))', output: '[1] "[10,20)"' }),
-    mc('What does `cut(25, breaks = c(0, 10, 20))` give?', ['`(10,20]`', 'An error', '`NA`', '`(20,30]`'], 2,
-      '25 is outside all the breaks, so it gets no group.',
-      { code: 'as.character(cut(25, breaks = c(0, 10, 20)))', output: '[1] NA' }),
+    mc('Why does `cut(25, breaks = c(0, 10, 20))` give NA?', ['25 is past the last break, so it has no group', 'cut() only works on whole tens', 'The labels are missing', 'It gives an error'], 0,
+      'Make the breaks cover every value, for example with `Inf` as the last break.'),
     mc('With `breaks = c(0, 10, 20, 30)`, how many labels do you need?', ['4', '3', '2', 'As many as the values'], 1,
       'Four break points make three groups.'),
     mc('What does `class(cut(c(1, 5), breaks = c(0, 3, 6)))` give?', ['`"character"`', '`"numeric"`', '`"factor"`', '`"table"`'], 2,

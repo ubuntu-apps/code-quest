@@ -1,5 +1,5 @@
 // Summarising data: A summary report.
-import { code, makeTopic, mc, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
+import { code, isTexts, makeTopic, mc, near, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
 import { CLASS } from '../datasets.mjs'
 
 export default makeTopic({
@@ -16,7 +16,7 @@ export default makeTopic({
   ],
   sandboxCode: CLASS + r`avg <- tapply(class_results$test1, class_results$group, mean)
 cat(sprintf("Group %s: %.1f\n", names(avg), avg), sep = "")`,
-  sandboxSnippets: [snippet('A table with lined-up numbers', CLASS + r`cat(sprintf("%-5s %5.1f\n", class_results$student[1:4], class_results$test1[1:4]), sep = "")`)],
+  sandboxSnippets: [snippet('A table with lined-up numbers', CLASS + r`cat(sprintf("%-5s %5.1f\n", class_results$student[1:4], class_results$test1[1:4]), sep = "")`), snippet('A line for each group', 'groups <- c("A", "B")\nmeans <- c(77.3, 64.7)\ncat(sprintf("Group %s: %.1f\\n", groups, means), sep = "")'), snippet('Signed changes', 'sprintf("%+.1f", c(5.42, -2, 0))')],
   readMore: { label: 'R documentation: sprintf()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/sprintf.html', source: 'R documentation' },
   challenges: [
     task('easy', 'One line', {
@@ -32,6 +32,13 @@ cat(sprintf("Group %s: %.1f\n", names(avg), avg), sep = "")`,
       hint: '`cat(sprintf("Test 1 median: %.1f\\n", median(class_results$test1)))`',
       solution: CLASS + 'cat(sprintf("Test 1 median: %.1f\\n", median(class_results$test1)))',
       tests: [['Shows Test 1 median: 70.5', prints('Test 1 median: 70.5')], ['Uses sprintf()', uses('sprintf(')]],
+    }),
+    task('easy', 'The mean with a label', {
+      prompt: 'Show the mean of test 1, rounded to 1 decimal place, as `Test 1 mean: 71.8`.',
+      starter: CLASS,
+      hint: '`cat("Test 1 mean:", round(mean(class_results$test1), 1), "\\n")`',
+      solution: CLASS + 'cat("Test 1 mean:", round(mean(class_results$test1), 1), "\\n")',
+      tests: [['Shows Test 1 mean: 71.8', prints('Test 1 mean: 71.8')]],
     }),
     task('medium', 'How many took test 2', {
       prompt: 'Show `Test 2: 11 of 12 students` (one was absent).',
@@ -81,6 +88,13 @@ cat(sprintf("Test 2: mean %.1f (%d absent)\n", mean(t2, na.rm = TRUE), sum(is.na
 cat(sprintf("Best: %s (%.0f, %.0f)\n", best$student, best$test1, best$test2))`,
       tests: [['Shows the report', prints('Students: 12', 'Test 1: mean 71.8, median 70.5', 'Test 2: mean 77.5 (1 absent)', 'Best: Lea (95, 97)')]],
     }),
+    task('expert', 'Best in each group', {
+      prompt: 'Make `best` two texts like `"Group A: Eli (91)"`: the student with the top test 1 score in each group, group A first.',
+      starter: CLASS,
+      hint: 'Split the class with `subset()`, then use `which.max()` for the name and `max()` for the score. `sprintf("Group A: %s (%.0f)", name, score)` builds the text.',
+      solution: CLASS + 'a <- subset(class_results, group == "A")\nb <- subset(class_results, group == "B")\nbest <- c(sprintf("Group A: %s (%.0f)", a$student[which.max(a$test1)], max(a$test1)),\n  sprintf("Group B: %s (%.0f)", b$student[which.max(b$test1)], max(b$test1)))',
+      tests: [['best is Group A: Eli (91), Group B: Lea (95)', isTexts('best', 'Group A: Eli (91)', 'Group B: Lea (95)')]],
+    }),
   ],
   questions: [
     mc('What does `sprintf("%.1f", 79)` give?', ['`"79"`', '`"79.0"`', '`79.0`', '`"79.00"`'], 1,
@@ -95,8 +109,8 @@ cat(sprintf("Best: %s (%.0f, %.0f)\n", best$student, best$test1, best$test2))`,
     mc('What does `cat("A", "B", sep = "")` show?', ['`A B`', '`AB`', '`"AB"`', '`A\\nB`'], 1,
       '`sep = ""` puts nothing between the pieces.',
       { code: 'cat("A", "B", sep = "")', output: 'AB' }),
-    mc('What does `sprintf("%d", 95)` give?', ['`"95"`', 'An error', '`"95.0"`', '`95`'], 0,
-      'A number with no decimal part is accepted by `%d`.',
+    mc('Why does `sprintf("%d", 95)` work but `sprintf("%d", 95.5)` not?', ['`%d` needs a whole number, and 95 is whole even though R stores it as a decimal number', '95 is an integer in R', '`%d` rounds', 'Neither works'], 0,
+      'Use `%.0f` to round any number to a whole one.',
       { code: 'sprintf("%d", 95)', output: '[1] "95"' }),
     mc('What does `sprintf("%5.1f", 3.14159)` give?', ['`"3.1"`', '`"  3.1"`', '`"3.14159"`', '`"00003.1"`'], 1,
       '5 characters wide, so it is padded with spaces: handy for lining up columns.',

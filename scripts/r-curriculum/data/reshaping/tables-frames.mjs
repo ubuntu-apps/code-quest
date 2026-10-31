@@ -1,6 +1,6 @@
 // Reshaping and combining: Tables into data frames.
 import { ORDERS } from '../datasets.mjs'
-import { code, makeTopic, mc, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
+import { code, makeTopic, mc, near, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
 
 const TOTALS = 'totals <- tapply(orders$price, orders$drink, sum)\n'
 
@@ -17,7 +17,7 @@ export default makeTopic({
     'Once both are data frames, `merge()` puts them together: counts and takings per drink in one table, ready to sort and report.',
   ],
   sandboxCode: ORDERS + 'as.data.frame(table(drink = orders$drink))\nas.data.frame(table(day = orders$day, size = orders$size))',
-  sandboxSnippets: [snippet('A named vector', ORDERS + TOTALS + 'data.frame(drink = names(totals), total = as.vector(totals))')],
+  sandboxSnippets: [snippet('A named vector', ORDERS + TOTALS + 'data.frame(drink = names(totals), total = as.vector(totals))'), snippet('Counts as a data frame', ORDERS + 'counts <- as.data.frame(table(drink = orders$drink), stringsAsFactors = FALSE)\ncounts$share <- counts$Freq / sum(counts$Freq)\ncounts[order(-counts$Freq), ]'), snippet('Every combination', ORDERS + 'as.data.frame(table(day = orders$day, size = orders$size))')],
   readMore: { label: 'R documentation: xtabs()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/xtabs.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Counts as a table', {
@@ -33,6 +33,14 @@ export default makeTopic({
       hint: 'Name it inside `table()`: `as.data.frame(table(drink = orders$drink))`.',
       solution: ORDERS + 'counts <- as.data.frame(table(drink = orders$drink))',
       tests: [['counts has the columns drink and Freq', 'is.data.frame(counts) && identical(names(counts), c("drink", "Freq"))']],
+    }),
+    task('easy', 'How many rows', {
+      prompt: 'Make `n_cells` the number of rows in `as.data.frame(table(orders$day, orders$size))`: one per day and size.',
+      starter: ORDERS,
+      alt: (s) => s.replace(/"L"/g, '"M"'),
+      hint: '`nrow(as.data.frame(table(orders$day, orders$size)))`',
+      solution: ORDERS + 'n_cells <- nrow(as.data.frame(table(orders$day, orders$size)))',
+      tests: [['n_cells is 15', near('n_cells', 15)]],
     }),
     task('medium', 'Most ordered first', {
       prompt: 'Make `ranked` the counts sorted from the most ordered drink to the least.',
@@ -76,6 +84,13 @@ export default makeTopic({
       solution: ORDERS + 'counts <- as.data.frame(table(drink = orders$drink))\n' + TOTALS + 'takings <- data.frame(drink = names(totals), total = as.vector(totals))\nreport <- merge(counts, takings, by = "drink")\nreport$avg <- round(report$total / report$Freq, 2)',
       tests: [['report has drink, Freq, total, avg', 'is.data.frame(report) && identical(names(report), c("drink", "Freq", "total", "avg"))'], ['latte: 4 orders, 13.6, avg 3.4', 'isTRUE(all.equal(unlist(report[as.character(report$drink) == "latte", c("Freq", "total", "avg")], use.names = FALSE), c(4, 13.6, 3.4)))']],
     }),
+    task('expert', 'Counts and shares', {
+      prompt: 'Make `counts` a data frame with a `drink` column (text, not a factor), its `Freq` and a `share` column, most ordered first.',
+      starter: ORDERS,
+      hint: '`as.data.frame(table(drink = orders$drink), stringsAsFactors = FALSE)` names the column. Add `share`, then sort with `order(-counts$Freq)`.',
+      solution: ORDERS + 'counts <- as.data.frame(table(drink = orders$drink), stringsAsFactors = FALSE)\ncounts$share <- counts$Freq / sum(counts$Freq)\ncounts <- counts[order(-counts$Freq), ]',
+      tests: [['drink is text: latte, tea, mocha, chai', 'is.data.frame(counts) && identical(counts$drink, c("latte", "tea", "mocha", "chai"))'], ['Freq and share are right', 'identical(as.vector(counts$Freq), c(4L, 3L, 2L, 1L)) && isTRUE(all.equal(counts$share, c(0.4, 0.3, 0.2, 0.1)))']],
+    }),
   ],
   questions: [
     mc('What are the columns of `as.data.frame(table(c("a", "b", "a")))`?', ['`Var1` and `Freq`', '`x` and `n`', '`a` and `b`', '`names` and `values`'], 0,
@@ -91,9 +106,8 @@ export default makeTopic({
     mc('After `v <- c(x = 1, y = 2)`, what does `data.frame(name = names(v), value = as.vector(v))$name` give?', ['`[1] "x" "y"`', '`[1] 1 2`', '`NULL`', '`[1] "name"`'], 0,
       'The names become a column of their own.',
       { code: 'v <- c(x = 1, y = 2)\ndata.frame(name = names(v), value = as.vector(v))$name', output: '[1] "x" "y"' }),
-    mc('What type is the first column of `as.data.frame(table(x))`?', ['Text', 'A factor', 'A number', 'A date'], 1,
-      'It keeps the table\'s levels. Use `as.character()` when you need text.',
-      { code: 'class(as.data.frame(table(c("a", "b")))$Var1)', output: '[1] "factor"' }),
+    mc('Why is the first column of `as.data.frame(table(x))` a factor?', ['table() keeps the levels, so groups with no values aren\'t lost', 'Data frames need factors', 'It is a bug', 'It is text'], 0,
+      'Add `stringsAsFactors = FALSE` for plain text.'),
     mc('A two-way table has 5 days and 3 sizes. How many rows does its data frame have?', ['`3`', '`5`', '`8`', '`15`'], 3,
       'Every combination, 5 × 3.'),
     mc('Why might you drop rows with `Freq == 0` after `as.data.frame(table(…))`?', ['They are errors', 'To keep only combinations that actually happened', 'R needs it', 'To sort the rows'], 1,

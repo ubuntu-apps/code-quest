@@ -15,7 +15,7 @@ export default makeTopic({
     'Finding an outlier is the start, not the end. Look at the whole row (`deliveries[m > upper, ]`), find out what happened, and then decide: fix it, leave it out with a note, or keep it and report the median.',
   ],
   sandboxCode: DELIVERIES + 'm <- deliveries$minutes\nupper <- quantile(m, 0.75) + 1.5 * IQR(m)\nm[m > upper]\nboxplot.stats(m)$out',
-  sandboxSnippets: [snippet('z-scores', DELIVERIES + 'm <- deliveries$minutes\nround((m - mean(m)) / sd(m), 1)')],
+  sandboxSnippets: [snippet('z-scores', DELIVERIES + 'm <- deliveries$minutes\nround((m - mean(m)) / sd(m), 1)'), snippet('The fences by hand', DELIVERIES + 'm <- deliveries$minutes\nq <- quantile(m, c(0.25, 0.75))\nq[2] + 1.5 * IQR(m)\nq[1] - 1.5 * IQR(m)'), snippet('z-scores', DELIVERIES + 'm <- deliveries$minutes\nround((m - mean(m)) / sd(m), 2)')],
   readMore: { label: 'R documentation: boxplot.stats()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/boxplot.stats.html', source: 'R documentation' },
   challenges: [
     task('easy', 'The upper fence', {
@@ -67,12 +67,26 @@ export default makeTopic({
       solution: DELIVERIES + 'clean <- subset(deliveries, minutes <= 48.5)\nclean_mean <- round(mean(clean$minutes), 1)',
       tests: [['clean has 11 rows', 'is.data.frame(clean) && nrow(clean) == 11'], ['clean_mean is 27.7', near('clean_mean', 27.7)]],
     }),
+    task('hard', 'Flag them in the table', {
+      prompt: 'Add a column `outlier` that is TRUE for the deliveries a box plot would mark as outliers.',
+      starter: DELIVERIES,
+      hint: '`boxplot.stats(m)$out` gives the outlying values; `m %in% ...` is TRUE where a time is one of them.',
+      solution: DELIVERIES + 'm <- deliveries$minutes\ndeliveries$outlier <- m %in% boxplot.stats(m)$out',
+      tests: [['outlier is TRUE only for delivery 8', 'identical(deliveries$outlier, 1:12 == 8)']],
+    }),
     task('expert', 'A sensor glitch', {
       prompt: 'A greenhouse sensor glitched once. Make `glitch` the reading that `boxplot.stats()` flags, and `fixed` the readings with that value replaced by `NA`.',
       starter: 'temps <- c(21.4, 22.0, 21.8, 85.0, 22.3, 21.9, 22.1, 21.6)\n',
       hint: '`glitch <- boxplot.stats(temps)$out`, then `fixed <- temps` and `fixed[fixed %in% glitch] <- NA`.',
       solution: 'temps <- c(21.4, 22.0, 21.8, 85.0, 22.3, 21.9, 22.1, 21.6)\nglitch <- boxplot.stats(temps)$out\nfixed <- temps\nfixed[fixed %in% glitch] <- NA',
       tests: [['glitch is 85', near('glitch', 85)], ['fixed has NA in place of 85', 'identical(is.na(fixed), c(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE)) && isTRUE(all.equal(fixed[-4], temps[-4]))']],
+    }),
+    task('expert', 'Both rules agree', {
+      prompt: 'Make `both` the delivery times that are outliers by the IQR rule **and** have a z-score above 2 or below -2.',
+      starter: DELIVERIES,
+      hint: 'One condition is `m %in% boxplot.stats(m)$out`, the other `abs((m - mean(m)) / sd(m)) > 2`. Join them with `&`.',
+      solution: DELIVERIES + 'm <- deliveries$minutes\nboth <- m[m %in% boxplot.stats(m)$out & abs((m - mean(m)) / sd(m)) > 2]',
+      tests: [['both is 74', near('both', 74)]],
     }),
   ],
   questions: [
@@ -93,8 +107,8 @@ export default makeTopic({
       'A very large value inflates the sd, making its own z-score smaller.'),
     mc('You find an outlier. What should you do first?', ['Delete it', 'Look at its row and find out what happened', 'Replace it with the mean', 'Ignore it'], 1,
       'It may be a mistake or something real; decide once you know which.'),
-    mc('Does one outlier change the IQR much?', ['Yes, a lot', 'No, the IQR only uses the middle half', 'It doubles it', 'It makes it NA'], 1,
-      'Like the median, the IQR resists extreme values.'),
+    mc('Why does one outlier hardly change the IQR?', ['The IQR only uses the values a quarter and three quarters of the way up, so the extremes don\'t count', 'R removes outliers first', 'The IQR is always 10', 'It changes it a lot'], 0,
+      'That is why the IQR rule is a fair way to find outliers in the first place.'),
     qShort('Which function gives the values a box plot would mark as outliers, as in `__(x)$out`?', 'boxplot.stats',
       '`boxplot.stats(x)$out` uses the 1.5 × IQR rule.'),
   ],

@@ -24,6 +24,8 @@ for (crop in crops) {
 for (i in seq_along(days)) {
   cat(i, days[i], "\n")
 }`),
+    snippet('Loop over positions', 'days <- c("Mon", "Tue", "Wed")\nfor (i in seq_along(days)) {\n  cat(i, days[i], "\\n")\n}'),
+    snippet('Grow a balance', 'balance <- 200\nfor (year in 1:3) {\n  balance <- balance * 1.1\n  cat("Year", year, ":", balance, "\\n")\n}'),
   ],
   readMore: { label: 'R documentation: Control flow', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/Control.html', source: 'R documentation' },
   challenges: [
@@ -83,12 +85,27 @@ for (i in seq_along(days)) {
       solution: 'saved <- 0\nthis_week <- 20\nfor (week in 1:8) {\n  saved <- saved + this_week\n  this_week <- this_week + 5\n}',
       tests: [['saved is 300', near('saved', 300)]],
     }),
+    task('hard', 'The longest name', {
+      prompt: 'With a `for` loop, make `longest` the longest name in `members` (the first one, if two are equally long).',
+      starter: 'members <- c("Ana", "Benedict", "Cy", "Dorothy")\n',
+      alt: 'members <- c("Kim", "Alexandra", "Jo")\n',
+      hint: 'Start with `longest <- ""`. In the loop, keep the name when `nchar(name) > nchar(longest)`.',
+      solution: 'members <- c("Ana", "Benedict", "Cy", "Dorothy")\nlongest <- ""\nfor (name in members) {\n  if (nchar(name) > nchar(longest)) longest <- name\n}',
+      tests: [['longest is Benedict', isText('longest', 'Benedict')], ['Uses for', uses('for')]],
+    }),
     task('expert', 'Best so far', {
       prompt: 'Make `best_so_far` the highest score up to and including each game, in a loop: for scores 12, 18, 15, 22, 20 it is 12, 18, 18, 22, 22.',
       starter: 'scores <- c(12, 18, 15, 22, 20)\nbest_so_far <- numeric(length(scores))\n',
       hint: 'Start with `best_so_far[1] <- scores[1]`, then for `i` in `2:length(scores)`, take the `max()` of the previous best and `scores[i]`.',
       solution: 'scores <- c(12, 18, 15, 22, 20)\nbest_so_far <- numeric(length(scores))\nbest_so_far[1] <- scores[1]\nfor (i in 2:length(scores)) {\n  best_so_far[i] <- max(best_so_far[i - 1], scores[i])\n}',
       tests: [['best_so_far is 12, 18, 18, 22, 22', near('best_so_far', 'c(12, 18, 18, 22, 22)')]],
+    }),
+    task('expert', 'Growing savings', {
+      prompt: 'Savings grow by `rate` each year. Make `history` the balance at the end of each of the `years`, using a loop.',
+      starter: 'balance <- 200\nrate <- 0.1\nyears <- 4\n',
+      hint: 'Make `history <- numeric(years)` first. Each time round: `balance <- balance * (1 + rate)`, then `history[y] <- balance`.',
+      solution: 'balance <- 200\nrate <- 0.1\nyears <- 4\nhistory <- numeric(years)\nfor (y in 1:years) {\n  balance <- balance * (1 + rate)\n  history[y] <- balance\n}',
+      tests: [['history is 220, 242, 266.2, 292.82', near('history', 'c(220, 242, 266.2, 292.82)')], ['Uses for', uses('for')]],
     }),
   ],
   questions: [
@@ -105,8 +122,8 @@ for (i in seq_along(days)) {
       '`i` is the position; `x[i]` the value there.'),
     mc('Why set `total <- 0` before a running-total loop?', ['R needs every loop to start at 0', 'So there is something to add the first value to', 'To stop the loop', 'It isn\'t needed'], 1,
       'Without it, `total + mm` fails the first time: total doesn\'t exist yet.'),
-    mc('What does `numeric(3)` give?', ['`[1] 3`', '`[1] 0 0 0`', '`[1] 1 2 3`', '`NULL`'], 1,
-      'An empty vector of three zeros, ready to fill in.',
+    mc('Why make the result with `numeric(length(x))` before the loop?', ['The vector has the right length already, and the loop fills one position each time', 'Loops need numbers', 'It makes the loop shorter to type', 'R requires it'], 0,
+      '`numeric(3)` is `[1] 0 0 0`, ready to be filled.',
       { code: 'numeric(3)', output: '[1] 0 0 0' }),
     mc('Which is a simpler way to total `rain` than a loop?', ['`length(rain)`', '`sum(rain)`', '`rain + rain`', '`max(rain)`'], 1,
       'Vector functions do many loops for you.'),

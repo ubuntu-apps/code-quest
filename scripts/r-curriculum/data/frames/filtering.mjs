@@ -19,6 +19,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('Pick columns too', TRIPS + 'subset(trips, minutes > 30, select = c(id, station, minutes))'),
     snippet('NA in a condition', 'df <- data.frame(x = c(5, NA, 9))\ndf[df$x > 6, , drop = FALSE]\nsubset(df, x > 6)'),
+    snippet('Above the average', TRIPS + 'subset(trips, minutes > mean(minutes))'),
+    snippet('Brackets with which()', 'df <- data.frame(x = c(5, NA, 9))\ndf[which(df$x > 6), , drop = FALSE]'),
   ],
   readMore: { label: 'R documentation: subset()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/subset.html', source: 'R documentation' },
   challenges: [
@@ -71,6 +73,13 @@ export default makeTopic({
       solution: TRIPS + 'far <- subset(trips, km > 5, select = c(id, km))',
       tests: [['far is id and km of trips 2, 3, 5 and 8', sameFrame('far', 'trips[c(2, 3, 5, 8), c("id", "km")]')]],
     }),
+    task('hard', 'Short or a member', {
+      prompt: 'Make `picked` the trips that are under 15 minutes **or** were made by a member.',
+      starter: TRIPS,
+      hint: '`|` means "or": `subset(trips, minutes < 15 | member)`.',
+      solution: TRIPS + 'picked <- subset(trips, minutes < 15 | member)',
+      tests: [['picked is the right trips', sameFrame('picked', 'trips[trips$minutes < 15 | trips$member, ]')]],
+    }),
     task('expert', 'Average for members', {
       prompt: 'Make `member_avg` the average trip length in minutes for members only, and `guest_avg` for non-members, each rounded to 1 decimal place.',
       starter: TRIPS,
@@ -78,13 +87,20 @@ export default makeTopic({
       solution: TRIPS + 'member_avg <- round(mean(subset(trips, member)$minutes), 1)\nguest_avg <- round(mean(subset(trips, !member)$minutes), 1)',
       tests: [['member_avg is 20', near('member_avg', 20)], ['guest_avg is 41.3', near('guest_avg', 41.3)]],
     }),
+    task('expert', 'Longer than average', {
+      prompt: 'Make `long` the trips longer than the average trip, with only the `id` and `minutes` columns.',
+      starter: TRIPS,
+      hint: 'Inside `subset()`, `mean(minutes)` works too. Add `select = c(id, minutes)`.',
+      solution: TRIPS + 'long <- subset(trips, minutes > mean(minutes), select = c(id, minutes))',
+      tests: [['long is trips 2, 3, 5 and 8', sameFrame('long', 'trips[trips$minutes > mean(trips$minutes), c("id", "minutes")]')]],
+    }),
   ],
   questions: [
     mc('After `df <- data.frame(x = c(3, 8, 6))`, what does `nrow(subset(df, x > 5))` give?', ['`1`', '`2`', '`3`', '`14`'], 1,
       'Two rows have x over 5.',
       { code: 'df <- data.frame(x = c(3, 8, 6))\nnrow(subset(df, x > 5))', output: '[1] 2' }),
-    mc('What do `df[df$x > 5, ]` and `subset(df, x > 5)` have in common?', ['Nothing', 'Both keep the rows where x is over 5', 'Both keep the column x only', 'Both sort by x'], 1,
-      '`subset()` is a shorter way to write the same filter, and it also drops rows where the condition is NA.'),
+    mc('Why can `subset()` be safer than `df[df$x > 6, ]` when `x` has gaps?', ['subset() drops rows where the condition is NA; brackets keep them as rows of NAs', 'subset() is faster', 'Brackets can\'t filter', 'There is no difference'], 0,
+      'With brackets, `df[which(df$x > 6), ]` does the same.'),
     mc('After `df <- data.frame(x = c(5, NA, 9))`, what does `nrow(subset(df, x > 6))` give?', ['`1`', '`2`', '`0`', '`NA`'], 0,
       '`subset()` leaves out the row where the condition is NA.',
       { code: 'df <- data.frame(x = c(5, NA, 9))\nnrow(subset(df, x > 6))', output: '[1] 1' }),

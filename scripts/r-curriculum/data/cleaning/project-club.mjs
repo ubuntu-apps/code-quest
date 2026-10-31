@@ -21,6 +21,7 @@ export default makeProject('easy', {
   sandboxSnippets: [snippet('Look at the emails', RAW + READ + 'sort(unique(club$email))')],
   challenges: [
     task('easy', 'Read it in', {
+      typedOk: true,
       prompt: 'Read `raw` into `club`, with empty values and `N/A` becoming NA.',
       starter: RAW,
       hint: '`club <- read.csv(text = raw, na.strings = c("", "N/A"))`',
@@ -56,6 +57,7 @@ export default makeProject('easy', {
       tests: [['paid is TRUE TRUE FALSE NA', 'identical(unname(club$paid), c(TRUE, TRUE, FALSE, NA))']],
     }),
     task('expert', 'For the treasurer', {
+      alt: (s) => s.replace('Cy Li,cy@example.org,N/A,no', 'Cy Li,cy@example.org,N/A,yes'),
       prompt: 'Show the summary line for the cleaned list:\n\n```\n4 members, 2 paid, 1 not paid, 1 unknown\n```',
       starter: RAW + READ + EMAIL + NAMES + DEDUPE + PAID,
       hint: '`nrow(club)`, `sum(club$paid, na.rm = TRUE)`, `sum(!club$paid, na.rm = TRUE)` and `sum(is.na(club$paid))`, joined with `cat(..., sep = "")`.',

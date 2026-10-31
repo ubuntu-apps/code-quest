@@ -14,7 +14,7 @@ export default makeTopic({
     code('pnorm(490, mean = 500, sd = 6)     # share of loaves under 490 g', 'qnorm(0.95, mean = 500, sd = 6)    # 95% of loaves weigh less than this'),
   ],
   sandboxCode: 'pnorm(490, mean = 500, sd = 6)\n1 - pnorm(510, mean = 500, sd = 6)\nqnorm(0.95, mean = 500, sd = 6)',
-  sandboxSnippets: [snippet('The 68–95 rule', 'pnorm(1) - pnorm(-1)\npnorm(2) - pnorm(-2)\npnorm(3) - pnorm(-3)')],
+  sandboxSnippets: [snippet('The 68–95 rule', 'pnorm(1) - pnorm(-1)\npnorm(2) - pnorm(-2)\npnorm(3) - pnorm(-3)'), snippet('Below, above and between', 'pnorm(490, 500, 6)\n1 - pnorm(510, 500, 6)\npnorm(510, 500, 6) - pnorm(490, 500, 6)'), snippet('From a share back to a weight', 'qnorm(0.05, 500, 6)\nqnorm(c(0.05, 0.95), 500, 6)')],
   readMore: { label: 'R documentation: Normal', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Light loaves', {
@@ -59,19 +59,31 @@ export default makeTopic({
       solution: 'rejects <- round(400 * pnorm(490, 500, 6))',
       tests: [['rejects is 19', near('rejects', 19)]],
     }),
+    task('hard', 'The middle 90%', {
+      prompt: 'Loaf weights are normal with mean 500 g and sd 6 g. Make `limits` the two weights between which the middle 90% of loaves fall.',
+      hint: 'The middle 90% leaves 5% at each end: `qnorm(c(0.05, 0.95), 500, 6)`.',
+      solution: 'limits <- qnorm(c(0.05, 0.95), 500, 6)',
+      tests: [['limits is about 490.1 and 509.9', near('limits', 'qnorm(c(0.05, 0.95), 500, 6)')]],
+    }),
     task('expert', 'Check by simulation', {
       prompt: 'Set the seed to 9, simulate 10,000 loaves with `rnorm()`, and make `sim_share` the share under 490 g. It should be close to `pnorm(490, 500, 6)`.',
       hint: '`loaves <- rnorm(10000, 500, 6)`, then `mean(loaves < 490)`: the mean of TRUE/FALSE is the share TRUE.',
       solution: 'set.seed(9)\nloaves <- rnorm(10000, 500, 6)\nsim_share <- mean(loaves < 490)',
       tests: [['sim_share matches seed 9', near('sim_share', 'local({ set.seed(9); mean(rnorm(10000, 500, 6) < 490) })')], ['It is close to pnorm()', 'abs(sim_share - pnorm(490, 500, 6)) < 0.01']],
     }),
+    task('expert', 'Set the machine', {
+      prompt: 'The sd stays 6 g, but the bakery can change the mean. Make `target` the mean that leaves only 2% of loaves under 490 g.',
+      hint: '490 must be the 2% point: `490 = target + qnorm(0.02) * 6`. Solve for `target`.',
+      solution: 'target <- 490 - qnorm(0.02) * 6',
+      tests: [['target is about 502.3', near('target', '490 - qnorm(0.02) * 6')], ['Only 2% are under 490 then', 'isTRUE(all.equal(pnorm(490, target, 6), 0.02))']],
+    }),
   ],
   questions: [
     mc('About what share of a normal distribution is within 1 sd of the mean?', ['50%', '68%', '95%', '99.7%'], 1,
       'The 68–95–99.7 rule.',
       { code: 'round(pnorm(1) - pnorm(-1), 2)', output: '[1] 0.68' }),
-    mc('What does `pnorm(0)` give?', ['`0`', '`0.5`', '`1`', '`NA`'], 1,
-      'Half of a normal distribution is below its mean.',
+    mc('Why does `pnorm(0)` give 0.5?', ['A standard normal is centred on 0, so half of it lies below 0', 'pnorm() halves its input', '0 is the most common value', 'It gives 0'], 0,
+      'The normal curve is symmetric around its mean.',
       { code: 'pnorm(0)', output: '[1] 0.5' }),
     mc('What does `pnorm(490, 500, 6)` answer?', ['The share of loaves above 490 g', 'The share of loaves below 490 g', 'The weight of the lightest 490 loaves', 'The z-score of 490'], 1,
       '`pnorm()` always gives the share below.'),

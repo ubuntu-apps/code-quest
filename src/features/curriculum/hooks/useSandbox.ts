@@ -39,7 +39,7 @@ export function useSandbox(languageId: string | null) {
     try {
       const result =
         languageId === 'r'
-          ? await runRCode(code)
+          ? await runRCode(code, { signal: controller.signal })
           : isSql
             ? await runSqlCode(code, setupSqlRef.current, {
                 signal: controller.signal,

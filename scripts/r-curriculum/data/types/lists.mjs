@@ -17,6 +17,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('One or two brackets', 'member <- list(name = "Ana", age = 34)\nmember["name"]\nmember[["name"]]'),
     snippet('Change and add', 'member <- list(name = "Ana", age = 34)\nmember$age <- 35\nmember$email <- "ana@example.org"\nstr(member)'),
+    snippet('Remove an item', 'm <- list(name = "Ana", age = 34, phone = "0111")\nm$phone <- NULL\nnames(m)'),
+    snippet('str() shows the shape', 'm <- list(name = "Ana", loans = c("FI-104", "SC-221"))\nstr(m)'),
   ],
   readMore: { label: 'R documentation: list()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/list.html', source: 'R documentation' },
   challenges: [
@@ -30,6 +32,7 @@ export default makeTopic({
       ],
     }),
     task('easy', 'Get the name', {
+      alt: (s) => s.replace('"Ana Silva"', '"Ben Okafor"'),
       prompt: 'Make `who` the name stored in `member`, using `$`.',
       starter: 'member <- list(name = "Ana Silva", age = 34, loans = c("FI-104", "SC-221"))\n',
       hint: '`who <- member$name`',
@@ -37,6 +40,7 @@ export default makeTopic({
       tests: [['who is "Ana Silva"', isText('who', 'Ana Silva')]],
     }),
     task('easy', 'Count the loans', {
+      alt: (s) => s.replace('c("FI-104", "SC-221", "HI-007")', 'c("FI-104")'),
       prompt: 'Make `n_loans` the number of loans the member has.',
       starter: 'member <- list(name = "Ana Silva", age = 34, loans = c("FI-104", "SC-221", "HI-007"))\n',
       hint: '`n_loans <- length(member$loans)`',
@@ -54,6 +58,7 @@ export default makeTopic({
       ],
     }),
     task('medium', 'A birthday', {
+      typedOk: true,
       prompt: 'Ana has had a birthday. Change her `age` in the list to 35.',
       starter: 'member <- list(name = "Ana Silva", age = 34)\n',
       hint: '`member$age <- 35`',
@@ -68,11 +73,19 @@ export default makeTopic({
       tests: [['member has name, age and email', 'identical(names(member), c("name", "age", "email")) && identical(member$email, "ana@example.org")']],
     }),
     task('hard', 'The second loan', {
+      alt: (s) => s.replace('c("FI-104", "SC-221", "HI-007")', 'c("HI-007", "FI-350", "SC-221")'),
       prompt: 'Make `second` the second loan code of the member.',
       starter: 'member <- list(name = "Ana Silva", loans = c("FI-104", "SC-221", "HI-007"))\n',
       hint: 'Get the vector, then pick position 2: `member$loans[2]`.',
       solution: 'member <- list(name = "Ana Silva", loans = c("FI-104", "SC-221", "HI-007"))\nsecond <- member$loans[2]',
       tests: [['second is "SC-221"', isText('second', 'SC-221')]],
+    }),
+    task('hard', 'A one-line summary', {
+      prompt: 'Make `info` a text like `"Ana Silva, 34, 2 loans"` from the member record.',
+      starter: 'member <- list(name = "Ana Silva", age = 34, loans = c("FI-104", "SC-221"))\n',
+      hint: '`paste0(member$name, ", ", member$age, ", ", length(member$loans), " loans")`',
+      solution: 'member <- list(name = "Ana Silva", age = 34, loans = c("FI-104", "SC-221"))\ninfo <- paste0(member$name, ", ", member$age, ", ", length(member$loans), " loans")',
+      tests: [['info is Ana Silva, 34, 2 loans', isText('info', 'Ana Silva, 34, 2 loans')]],
     }),
     task('expert', 'Fix the brackets', {
       prompt: 'This should give the total of the member\'s fines, 3.5, but it gives an error. Fix the second line.',
@@ -80,6 +93,13 @@ export default makeTopic({
       hint: 'Single brackets give a list, which `sum()` can\'t add. Use `member$fines` or `member[["fines"]]`.',
       solution: 'member <- list(name = "Ana Silva", fines = c(1.5, 2))\ntotal <- sum(member$fines)',
       tests: [['total is 3.5', near('total', 3.5)]],
+    }),
+    task('expert', 'Remove the phone number', {
+      prompt: 'Ana asked for her phone number to be deleted. Remove `phone` from the record, keeping the rest.',
+      starter: 'member <- list(name = "Ana Silva", age = 34, phone = "0111")\n',
+      hint: 'Assigning `NULL` to an item removes it: `member$phone <- NULL`.',
+      solution: 'member <- list(name = "Ana Silva", age = 34, phone = "0111")\nmember$phone <- NULL',
+      tests: [['member has name and age only', 'is.list(member) && identical(names(member), c("name", "age")) && identical(member$name, "Ana Silva")']],
     }),
   ],
   questions: [
@@ -95,8 +115,8 @@ export default makeTopic({
     mc('After `m <- list(name = "Ana", age = 34)`, what does `length(m)` give?', ['`1`', '`2`', '`5`', '`3`'], 1,
       'The list has two items.',
       { code: 'm <- list(name = "Ana", age = 34)\nlength(m)', output: '[1] 2' }),
-    mc('Can one list hold a number, a text and a vector together?', ['No, only one type', 'Yes', 'Only with c()', 'Only numbers and text'], 1,
-      'Lists can hold any mix of types.'),
+    mc('Why keep a member record in a list rather than a vector?', ['A list can hold values of different types and lengths, like a name, an age and several loans', 'Lists are faster', 'Vectors can\'t have names', 'There is no difference'], 0,
+      'A vector would turn everything into text.'),
     mc('After `m <- list(name = "Ana")` and `m$age <- 34`, what does `names(m)` give?', ['`[1] "name"`', '`[1] "name" "age"`', '`[1] "Ana" 34`', '`NULL`'], 1,
       'Assigning to a new name adds an item.',
       { code: 'm <- list(name = "Ana")\nm$age <- 34\nnames(m)', output: '[1] "name" "age"' }),

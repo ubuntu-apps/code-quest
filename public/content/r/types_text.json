@@ -21,6 +21,11 @@
           "id": "integers",
           "label": "Integers",
           "code": "class(5)\nclass(5L)\nclass(1:10)"
+        },
+        {
+          "id": "ask_before_you_use_it",
+          "label": "Ask before you use it",
+          "code": "x <- \"18.5\"\nclass(x)\nis.numeric(x)\nis.character(x)"
         }
       ],
       "intro": {
@@ -154,6 +159,11 @@
                 "id": "t1",
                 "label": "total is 45",
                 "assertion": "is.numeric(total) && isTRUE(all.equal(total, 45))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- c(12, 8, \\\"15\\\", 10)\\ntotal <- sum(sales)\", \"sales <- c(13, 10, \\\"15\\\", 13)\\ntotal <- sum(sales)\", \"sales <- c(12, 8, 15, 10)\\ntotal <- sum(sales)\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -183,6 +193,30 @@
           }
         },
         {
+          "id": "types-total-from-text",
+          "title": "Hard: Total from text",
+          "promptMarkdown": "The counts came in as text. Make `total` their sum as a number.",
+          "starterCode": "counts <- c(\"12\", \"7\", \"15\")\n",
+          "hint": "Turn them into numbers first: `sum(as.numeric(counts))`.",
+          "solution": "counts <- c(\"12\", \"7\", \"15\")\ntotal <- sum(as.numeric(counts))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 34",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 34))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"counts <- c(\\\"12\\\", \\\"7\\\", \\\"15\\\")\\n\", \"counts <- c(\\\"12\\\", \\\"7\\\", \\\"152\\\")\\n\", \"counts <- c(\\\"12\\\", \\\"7\\\", \\\"15\\\")\\ntotal <- sum(as.numeric(counts))\", c(\"total\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
           "id": "types-count-the-yes-answers",
           "title": "Expert: Count the yes answers",
           "promptMarkdown": "Make `n_yes` the number of TRUE values in `answers`. Use `class()` in your head first: TRUE and FALSE count as 1 and 0.",
@@ -197,6 +231,35 @@
                 "id": "t1",
                 "label": "n_yes is 4",
                 "assertion": "is.numeric(n_yes) && isTRUE(all.equal(n_yes, 4))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE)\\n\", \"answers <- c(FALSE, FALSE, TRUE, FALSE, FALSE, TRUE)\\n\", \"answers <- c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE)\\nn_yes <- sum(answers)\", c(\"n_yes\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-name-the-types",
+          "title": "Expert: Name the types",
+          "promptMarkdown": "Make `kinds` a vector with the class of `a`, then `b`, then `flag`.",
+          "starterCode": "a <- \"4\"\nb <- 2.5\nflag <- TRUE\n",
+          "hint": "`class()` gives one text each; put them together with `c()`.",
+          "solution": "a <- \"4\"\nb <- 2.5\nflag <- TRUE\nkinds <- c(class(a), class(b), class(flag))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "kinds is character, numeric, logical",
+                "assertion": "identical(kinds, c(\"character\", \"numeric\", \"logical\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"a <- \\\"4\\\"\\nb <- 2.5\\nflag <- TRUE\\n\", \"a <- 4L\\nb <- \\\"2.5\\\"\\nflag <- 3\\n\", \"a <- \\\"4\\\"\\nb <- 2.5\\nflag <- TRUE\\nkinds <- c(class(a), class(b), class(flag))\", c(\"kinds\"), output = FALSE)"
               }
             ]
           }
@@ -306,29 +369,29 @@
             "explanation": "A comparison gives TRUE or FALSE, which are logical values."
           },
           {
-            "id": "types-q-nhzdnm",
+            "id": "types-q-1ajzizn",
             "type": "mcq",
-            "prompt": "What does `c(1, TRUE, FALSE)` give?",
+            "prompt": "Why does `c(1, TRUE, FALSE)` give `[1] 1 1 0`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] 1 TRUE FALSE`"
+                "label": "R rounds them"
               },
               {
                 "id": "b",
-                "label": "`[1] \"1\" \"TRUE\" \"FALSE\"`"
+                "label": "A vector has one type, so TRUE becomes 1 and FALSE becomes 0 to fit with the number"
               },
               {
                 "id": "c",
-                "label": "`[1] 1 1 0`"
+                "label": "It is a bug"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "TRUE is short for 1"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Logical values become numbers when mixed with numbers: TRUE is 1, FALSE is 0."
+            "correctChoiceId": "b",
+            "explanation": "That is also why `sum()` of TRUE/FALSE values counts the TRUEs."
           },
           {
             "id": "types-q-h1xla5",
@@ -437,6 +500,11 @@
           "id": "find_the_odd_ones",
           "label": "Find the odd ones",
           "code": "raw <- c(\"12\", \"8\", \"n/a\", \"15\", \"?\")\nnums <- suppressWarnings(as.numeric(raw))\nraw[is.na(nums)]"
+        },
+        {
+          "id": "the_warning_points_at_bad_values",
+          "label": "The warning points at bad values",
+          "code": "as.numeric(c(\"12\", \"n/a\", \"15\"))"
         }
       ],
       "intro": {
@@ -470,6 +538,11 @@
                 "id": "t2",
                 "label": "Uses as.numeric()",
                 "assertion": "grepl(\"as.numeric(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices_text <- c(\\\"2.5\\\", \\\"3.4\\\", \\\"4.2\\\")\\n\", \"prices_text <- c(\\\"2.5\\\", \\\"3.4\\\", \\\"4.22\\\")\\n\", \"prices_text <- c(\\\"2.5\\\", \\\"3.4\\\", \\\"4.2\\\")\\nprices <- as.numeric(prices_text)\", c(\"prices\"), output = FALSE)"
               }
             ]
           }
@@ -489,6 +562,11 @@
                 "id": "t1",
                 "label": "labels is \"1\" \"2\" \"3\"",
                 "assertion": "identical(labels, c(\"1\", \"2\", \"3\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tables <- c(1, 2, 3)\\n\", \"tables <- c(6, 4, 2)\\n\", \"tables <- c(1, 2, 3)\\nlabels <- as.character(tables)\", c(\"labels\"), output = FALSE)"
               }
             ]
           }
@@ -508,6 +586,11 @@
                 "id": "t1",
                 "label": "total is 131",
                 "assertion": "is.numeric(total) && isTRUE(all.equal(total, 131))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"visits <- c(\\\"41\\\", \\\"38\\\", \\\"52\\\")\\n\", \"visits <- c(\\\"41\\\", \\\"38\\\", \\\"522\\\")\\n\", \"visits <- c(\\\"41\\\", \\\"38\\\", \\\"52\\\")\\ntotal <- sum(as.numeric(visits))\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -527,6 +610,11 @@
                 "id": "t1",
                 "label": "full_boxes is 8",
                 "assertion": "identical(full_boxes, 8L)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"boxes <- 50 / 6\\n\", \"boxes <- 101 / 6\\n\", \"boxes <- 50 / 6\\nfull_boxes <- as.integer(boxes)\", c(\"full_boxes\"), output = FALSE)"
               }
             ]
           }
@@ -551,6 +639,11 @@
                 "id": "t2",
                 "label": "n_bad is 2",
                 "assertion": "is.numeric(n_bad) && isTRUE(all.equal(n_bad, 2))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"?\\\")\\n\", \"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"12\\\")\\n\", \"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"?\\\")\\namounts <- as.numeric(raw)\\nn_bad <- sum(is.na(amounts))\", c(\"amounts\", \"n_bad\"), output = FALSE)"
               }
             ]
           }
@@ -570,6 +663,11 @@
                 "id": "t1",
                 "label": "answered is TRUE FALSE FALSE TRUE TRUE",
                 "assertion": "isTRUE(all.equal(answered, c(TRUE, FALSE, FALSE, TRUE, TRUE)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(1, 0, 0, 1, 1)\\n\", \"codes <- c(3, 2, 3, 2, 2)\\n\", \"codes <- c(1, 0, 0, 1, 1)\\nanswered <- as.logical(codes)\", c(\"answered\"), output = FALSE)"
               }
             ]
           }
@@ -589,6 +687,35 @@
                 "id": "t1",
                 "label": "bad is \"n/a\" \"?\"",
                 "assertion": "identical(bad, c(\"n/a\", \"?\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"?\\\")\\namounts <- suppressWarnings(as.numeric(raw))\\n\", \"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"?2\\\")\\namounts <- suppressWarnings(as.numeric(raw))\\n\", \"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"?\\\")\\namounts <- suppressWarnings(as.numeric(raw))\\nbad <- raw[is.na(amounts)]\", c(\"bad\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "converting-whole-guests",
+          "title": "Hard: Whole guests",
+          "promptMarkdown": "Make `seats` the guest numbers rounded to the nearest whole number, stored as integers.",
+          "starterCode": "guests <- c(3.7, 2.2, 5.9)\n",
+          "hint": "`as.integer()` cuts off the decimals, so round first: `as.integer(round(guests))`.",
+          "solution": "guests <- c(3.7, 2.2, 5.9)\nseats <- as.integer(round(guests))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "seats is 4L, 2L, 6L",
+                "assertion": "identical(seats, c(4L, 2L, 6L))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"guests <- c(3.7, 2.2, 5.9)\\n\", \"guests <- c(6.2, 2.4, 3.8)\\n\", \"guests <- c(3.7, 2.2, 5.9)\\nseats <- as.integer(round(guests))\", c(\"seats\"), output = FALSE)"
               }
             ]
           }
@@ -613,6 +740,35 @@
                 "id": "t2",
                 "label": "Uses sprintf()",
                 "assertion": "grepl(\"sprintf(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"id_numbers <- c(42, 7, 1350)\\n\", \"id_numbers <- c(1353, 9, 43)\\n\", \"id_numbers <- c(42, 7, 1350)\\nids <- sprintf(\\\"%04d\\\", id_numbers)\", c(\"ids\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "converting-average-of-the-real-numbers",
+          "title": "Expert: Average of the real numbers",
+          "promptMarkdown": "Some answers aren't numbers. Make `avg` the mean of the ones that are.",
+          "starterCode": "raw <- c(\"12\", \"8\", \"n/a\", \"15\", \"?\")\n",
+          "hint": "The bad ones become NA with `as.numeric()`. Then `mean(..., na.rm = TRUE)`.",
+          "solution": "raw <- c(\"12\", \"8\", \"n/a\", \"15\", \"?\")\navg <- mean(suppressWarnings(as.numeric(raw)), na.rm = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "avg is 35 / 3",
+                "assertion": "is.numeric(avg) && isTRUE(all.equal(avg, 35 / 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"?\\\")\\n\", \"raw <- c(\\\"20\\\", \\\"x\\\", \\\"4\\\", \\\"9\\\")\\n\", \"raw <- c(\\\"12\\\", \\\"8\\\", \\\"n/a\\\", \\\"15\\\", \\\"?\\\")\\navg <- mean(suppressWarnings(as.numeric(raw)), na.rm = TRUE)\", c(\"avg\"), output = FALSE)"
               }
             ]
           }
@@ -672,29 +828,29 @@
             "explanation": "Text that isn't a number becomes NA, and R warns you."
           },
           {
-            "id": "converting-q-3lrp5r",
+            "id": "converting-q-h2j9v6",
             "type": "mcq",
-            "prompt": "What does `as.integer(3.9)` give?",
+            "prompt": "Why does `as.integer(3.9)` give 3 and not 4?",
             "choices": [
               {
                 "id": "a",
-                "label": "`3`"
+                "label": "It rounds to the nearest even number"
               },
               {
                 "id": "b",
-                "label": "`4`"
+                "label": "It cuts off the decimal part instead of rounding"
               },
               {
                 "id": "c",
-                "label": "`3.9`"
+                "label": "Integers can't be 4"
               },
               {
                 "id": "d",
-                "label": "`NA`"
+                "label": "3.9 is stored as 3"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "`as.integer()` cuts off the decimals; it doesn't round."
+            "correctChoiceId": "b",
+            "explanation": "Use `round()` first when you want the nearest whole number."
           },
           {
             "id": "converting-q-10iyldd",
@@ -848,6 +1004,16 @@
           "id": "na_stays_na",
           "label": "NA stays NA",
           "code": "x <- c(5, NA, 12)\nifelse(x > 10, \"big\", \"small\")\nifelse(is.na(x), 0, x)"
+        },
+        {
+          "id": "answers_from_vectors",
+          "label": "Answers from vectors",
+          "code": "price <- c(10, 24, 8)\nmember <- c(TRUE, FALSE, TRUE)\nifelse(member, price * 0.9, price)"
+        },
+        {
+          "id": "three_answers",
+          "label": "Three answers",
+          "code": "x <- c(-2, 0, 5)\nifelse(x > 0, \"plus\", ifelse(x < 0, \"minus\", \"zero\"))"
         }
       ],
       "intro": {
@@ -881,6 +1047,11 @@
                 "id": "t2",
                 "label": "Uses ifelse()",
                 "assertion": "grepl(\"ifelse(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 44, 88, 50, 39)\\n\", \"scores <- c(41, 51, 91, 46, 72)\\n\", \"scores <- c(71, 44, 88, 50, 39)\\nresult <- ifelse(scores >= 50, \\\"pass\\\", \\\"fail\\\")\", c(\"result\"), output = FALSE)"
               }
             ]
           }
@@ -900,6 +1071,11 @@
                 "id": "t1",
                 "label": "kind is weekday weekend weekend weekday",
                 "assertion": "identical(kind, c(\"weekday\", \"weekend\", \"weekend\", \"weekday\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days <- c(\\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\", \\\"Mon\\\")\\n\", \"days <- c(\\\"Sat\\\", \\\"Mon\\\", \\\"Tue\\\", \\\"Sun\\\")\\n\", \"days <- c(\\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\", \\\"Mon\\\")\\nkind <- ifelse(days %in% c(\\\"Sat\\\", \\\"Sun\\\"), \\\"weekend\\\", \\\"weekday\\\")\", c(\"kind\"), output = FALSE)"
               }
             ]
           }
@@ -919,6 +1095,11 @@
                 "id": "t1",
                 "label": "delivery is 3.5, 0, 0, 3.5",
                 "assertion": "is.numeric(delivery) && isTRUE(all.equal(delivery, c(3.5, 0, 0, 3.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(18.5, 42, 30, 25.9)\\n\", \"orders <- c(53.8, 61, 86, 38)\\n\", \"orders <- c(18.5, 42, 30, 25.9)\\ndelivery <- ifelse(orders >= 30, 0, 3.5)\", c(\"delivery\"), output = FALSE)"
               }
             ]
           }
@@ -938,6 +1119,11 @@
                 "id": "t1",
                 "label": "charge is 0, 7.05, 0, 8.25",
                 "assertion": "is.numeric(charge) && isTRUE(all.equal(charge, c(0, 7.05, 0, 8.25)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(12, 47, 30, 55)\\n\", \"minutes <- c(56, 33, 49, 13)\\n\", \"minutes <- c(12, 47, 30, 55)\\ncharge <- ifelse(minutes > 30, minutes * 0.15, 0)\", c(\"charge\"), output = FALSE)"
               }
             ]
           }
@@ -962,6 +1148,11 @@
                 "id": "t2",
                 "label": "Uses ifelse()",
                 "assertion": "grepl(\"ifelse(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"rain <- c(2.4, NA, 0, 5.1, NA)\\n\", \"rain <- c(NA, 5.4, 2, NA, 2.5)\\n\", \"rain <- c(2.4, NA, 0, 5.1, NA)\\nfilled <- ifelse(is.na(rain), 0, rain)\", c(\"filled\"), output = FALSE)"
               }
             ]
           }
@@ -981,6 +1172,11 @@
                 "id": "t1",
                 "label": "n_pass is 3",
                 "assertion": "is.numeric(n_pass) && isTRUE(all.equal(n_pass, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"result <- c(\\\"pass\\\", \\\"fail\\\", \\\"pass\\\", \\\"pass\\\", \\\"fail\\\")\\n\", \"result <- c(\\\"pass\\\", \\\"fail\\\", \\\"pass\\\", \\\"pass\\\", \\\"pass\\\")\\n\", \"result <- c(\\\"pass\\\", \\\"fail\\\", \\\"pass\\\", \\\"pass\\\", \\\"fail\\\")\\nn_pass <- sum(result == \\\"pass\\\")\", c(\"n_pass\"), output = FALSE)"
               }
             ]
           }
@@ -1000,6 +1196,35 @@
                 "id": "t1",
                 "label": "band is high low high middle low middle",
                 "assertion": "identical(band, c(\"high\", \"low\", \"high\", \"middle\", \"low\", \"middle\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 44, 88, 50, 39, 65)\\n\", \"scores <- c(68, 41, 51, 91, 46, 72)\\n\", \"scores <- c(71, 44, 88, 50, 39, 65)\\nband <- ifelse(scores >= 70, \\\"high\\\", ifelse(scores >= 50, \\\"middle\\\", \\\"low\\\"))\", c(\"band\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ifelse-members-pay-less",
+          "title": "Hard: Members pay less",
+          "promptMarkdown": "Members pay 10% less. Make `pay` what each customer pays.",
+          "starterCode": "price <- c(10, 24, 8, 15)\nmember <- c(TRUE, FALSE, TRUE, FALSE)\n",
+          "hint": "Both answers can be vectors: `ifelse(member, price * 0.9, price)`.",
+          "solution": "price <- c(10, 24, 8, 15)\nmember <- c(TRUE, FALSE, TRUE, FALSE)\npay <- ifelse(member, price * 0.9, price)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "pay is 9, 24, 7.2, 15",
+                "assertion": "is.numeric(pay) && isTRUE(all.equal(pay, c(9, 24, 7.2, 15)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"price <- c(10, 24, 8, 15)\\nmember <- c(TRUE, FALSE, TRUE, FALSE)\\n\", \"price <- c(16, 11, 26, 11)\\nmember <- c(TRUE, FALSE, TRUE, FALSE)\\n\", \"price <- c(10, 24, 8, 15)\\nmember <- c(TRUE, FALSE, TRUE, FALSE)\\npay <- ifelse(member, price * 0.9, price)\", c(\"pay\"), output = FALSE)"
               }
             ]
           }
@@ -1019,6 +1244,35 @@
                 "id": "t1",
                 "label": "size is small large medium large",
                 "assertion": "identical(size, c(\"small\", \"large\", \"medium\", \"large\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(12, 65, 30, 50)\\nsize <- ifelse(orders >= 20, \\\"medium\\\", ifelse(orders >= 50, \\\"large\\\", \\\"small\\\"))\", \"orders <- c(51, 33, 67, 13)\\nsize <- ifelse(orders >= 20, \\\"medium\\\", ifelse(orders >= 50, \\\"large\\\", \\\"small\\\"))\", \"orders <- c(12, 65, 30, 50)\\nsize <- ifelse(orders >= 50, \\\"large\\\", ifelse(orders >= 20, \\\"medium\\\", \\\"small\\\"))\", c(\"size\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "ifelse-up-down-or-same",
+          "title": "Expert: Up, down or same",
+          "promptMarkdown": "Make `trend` `\"up\"`, `\"down\"` or `\"same\"` for each shop, comparing `now` with `last`.",
+          "starterCode": "last <- c(12, 15, 9, 20)\nnow <- c(14, 15, 7, 23)\n",
+          "hint": "Put one `ifelse()` inside another: `ifelse(now > last, \"up\", ifelse(now < last, \"down\", \"same\"))`.",
+          "solution": "last <- c(12, 15, 9, 20)\nnow <- c(14, 15, 7, 23)\ntrend <- ifelse(now > last, \"up\", ifelse(now < last, \"down\", \"same\"))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "trend is up, same, down, up",
+                "assertion": "identical(trend, c(\"up\", \"same\", \"down\", \"up\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"last <- c(12, 15, 9, 20)\\nnow <- c(14, 15, 7, 23)\\n\", \"last <- c(21, 12, 17, 13)\\nnow <- c(25, 8, 18, 16)\\n\", \"last <- c(12, 15, 9, 20)\\nnow <- c(14, 15, 7, 23)\\ntrend <- ifelse(now > last, \\\"up\\\", ifelse(now < last, \\\"down\\\", \\\"same\\\"))\", c(\"trend\"), output = FALSE)"
               }
             ]
           }
@@ -1053,29 +1307,29 @@
             "explanation": "3 is not over 5, so \"small\"; 8 is, so \"big\"."
           },
           {
-            "id": "ifelse-q-n2ug14",
+            "id": "ifelse-q-1sg8lm4",
             "type": "mcq",
-            "prompt": "What does `ifelse(c(4, NA) > 2, \"yes\", \"no\")` give?",
+            "prompt": "Why does `ifelse(c(4, NA) > 2, \"yes\", \"no\")` give NA for the second value?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] \"yes\" \"no\"`"
+                "label": "NA counts as \"no\""
               },
               {
                 "id": "b",
-                "label": "An error"
+                "label": "The condition is NA there, so R can't pick either answer"
               },
               {
                 "id": "c",
-                "label": "`[1] \"yes\" \"yes\"`"
+                "label": "ifelse() skips the last value"
               },
               {
                 "id": "d",
-                "label": "`[1] \"yes\" NA`"
+                "label": "It gives an error"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Where the condition is NA, the answer is NA."
+            "correctChoiceId": "b",
+            "explanation": "Deal with missing values first, for example with `is.na()`."
           },
           {
             "id": "ifelse-q-1g14l59",
@@ -1259,6 +1513,11 @@
           "id": "back_to_text",
           "label": "Back to text",
           "code": "sizes <- factor(c(\"M\", \"S\"))\nas.character(sizes)\nnlevels(sizes)"
+        },
+        {
+          "id": "levels_are_numbered",
+          "label": "Levels are numbered",
+          "code": "sizes <- factor(c(\"M\", \"S\", \"L\"), levels = c(\"S\", \"M\", \"L\"))\nsizes\nas.integer(sizes)"
         }
       ],
       "intro": {
@@ -1292,6 +1551,11 @@
                 "id": "t2",
                 "label": "tickets has the five values",
                 "assertion": "identical(as.character(tickets), types)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"types <- c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\", \\\"senior\\\", \\\"child\\\")\\n\", \"types <- c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\", \\\"senior\\\", \\\"child2\\\")\\n\", \"types <- c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\", \\\"senior\\\", \\\"child\\\")\\ntickets <- factor(types)\", c(\"types\", \"tickets\"), output = FALSE)"
               }
             ]
           }
@@ -1311,6 +1575,11 @@
                 "id": "t1",
                 "label": "kinds is adult, child, senior",
                 "assertion": "identical(kinds, c(\"adult\", \"child\", \"senior\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tickets <- factor(c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\", \\\"senior\\\", \\\"child\\\"))\\n\", \"tickets <- factor(c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\", \\\"senior\\\", \\\"child2\\\"))\\n\", \"tickets <- factor(c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\", \\\"senior\\\", \\\"child\\\"))\\nkinds <- levels(tickets)\", c(\"kinds\"), output = FALSE)"
               }
             ]
           }
@@ -1335,6 +1604,11 @@
                 "id": "t2",
                 "label": "Uses nlevels()",
                 "assertion": "grepl(\"nlevels(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sizes <- factor(c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\", \\\"XL\\\", \\\"S\\\"))\\n\", \"sizes <- factor(c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\", \\\"XL\\\", \\\"S2\\\"))\\n\", \"sizes <- factor(c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\", \\\"XL\\\", \\\"S\\\"))\\nn_sizes <- nlevels(sizes)\", c(\"n_sizes\"), output = FALSE)"
               }
             ]
           }
@@ -1359,6 +1633,11 @@
                 "id": "t2",
                 "label": "sizes has the five orders",
                 "assertion": "identical(as.character(sizes), orders)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\", \\\"M\\\")\\n\", \"orders <- c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\", \\\"M2\\\")\\n\", \"orders <- c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\", \\\"M\\\")\\nsizes <- factor(orders, levels = c(\\\"S\\\", \\\"M\\\", \\\"L\\\"))\", c(\"orders\", \"sizes\"), output = FALSE)"
               }
             ]
           }
@@ -1383,6 +1662,11 @@
                 "id": "t2",
                 "label": "n_bad is 2",
                 "assertion": "is.numeric(n_bad) && isTRUE(all.equal(n_bad, 2))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(\\\"M\\\", \\\"S\\\", \\\"LL\\\", \\\"M\\\", \\\"m\\\")\\n\", \"orders <- c(\\\"M\\\", \\\"S\\\", \\\"LL\\\", \\\"M\\\", \\\"M\\\")\\n\", \"orders <- c(\\\"M\\\", \\\"S\\\", \\\"LL\\\", \\\"M\\\", \\\"m\\\")\\nsizes <- factor(orders, levels = c(\\\"S\\\", \\\"M\\\", \\\"L\\\"))\\nn_bad <- sum(is.na(sizes))\", c(\"sizes\", \"n_bad\"), output = FALSE)"
               }
             ]
           }
@@ -1402,6 +1686,11 @@
                 "id": "t1",
                 "label": "as_text is adult, child, adult",
                 "assertion": "identical(as_text, c(\"adult\", \"child\", \"adult\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tickets <- factor(c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\"))\\n\", \"tickets <- factor(c(\\\"adult\\\", \\\"child\\\", \\\"adult2\\\"))\\n\", \"tickets <- factor(c(\\\"adult\\\", \\\"child\\\", \\\"adult\\\"))\\nas_text <- as.character(tickets)\", c(\"as_text\"), output = FALSE)"
               }
             ]
           }
@@ -1426,6 +1715,35 @@
                 "id": "t2",
                 "label": "rating has the levels poor, ok, good, great",
                 "assertion": "identical(levels(rating), c(\"poor\", \"ok\", \"good\", \"great\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"good\\\", \\\"poor\\\", \\\"great\\\", \\\"ok\\\", \\\"good\\\")\\n\", \"answers <- c(\\\"good\\\", \\\"poor\\\", \\\"great\\\", \\\"ok\\\", \\\"good2\\\")\\n\", \"answers <- c(\\\"good\\\", \\\"poor\\\", \\\"great\\\", \\\"ok\\\", \\\"good\\\")\\nrating <- factor(answers, levels = c(\\\"poor\\\", \\\"ok\\\", \\\"good\\\", \\\"great\\\"), ordered = TRUE)\", c(\"rating\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "factors-full-names-for-the-levels",
+          "title": "Hard: Full names for the levels",
+          "promptMarkdown": "The tickets use one-letter codes. Change the levels to `\"adult\"`, `\"child\"` and `\"senior\"`, keeping the same order.",
+          "starterCode": "tickets <- factor(c(\"a\", \"c\", \"a\", \"s\"), levels = c(\"a\", \"c\", \"s\"))\n",
+          "hint": "Assign new names to the levels: `levels(tickets) <- c(\"adult\", \"child\", \"senior\")`. Every value changes with them.",
+          "solution": "tickets <- factor(c(\"a\", \"c\", \"a\", \"s\"), levels = c(\"a\", \"c\", \"s\"))\nlevels(tickets) <- c(\"adult\", \"child\", \"senior\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tickets is adult, child, adult, senior",
+                "assertion": "is.factor(tickets) && identical(as.character(tickets), c(\"adult\", \"child\", \"adult\", \"senior\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tickets <- factor(c(\\\"a\\\", \\\"c\\\", \\\"a\\\", \\\"s\\\"), levels = c(\\\"a\\\", \\\"c\\\", \\\"s\\\"))\\n\", \"tickets <- factor(c(\\\"s\\\", \\\"a\\\", \\\"c\\\", \\\"c\\\"), levels = c(\\\"a\\\", \\\"c\\\", \\\"s\\\"))\\n\", \"tickets <- factor(c(\\\"a\\\", \\\"c\\\", \\\"a\\\", \\\"s\\\"), levels = c(\\\"a\\\", \\\"c\\\", \\\"s\\\"))\\nlevels(tickets) <- c(\\\"adult\\\", \\\"child\\\", \\\"senior\\\")\", c(\"tickets\"), output = FALSE)"
               }
             ]
           }
@@ -1450,6 +1768,35 @@
                 "id": "t2",
                 "label": "Compares the factor",
                 "assertion": "grepl(\"rating >\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"good\\\", \\\"poor\\\", \\\"great\\\", \\\"ok\\\", \\\"good\\\")\\nrating <- factor(answers, levels = c(\\\"poor\\\", \\\"ok\\\", \\\"good\\\", \\\"great\\\"), ordered = TRUE)\\n\", \"answers <- c(\\\"good\\\", \\\"poor\\\", \\\"great\\\", \\\"ok\\\", \\\"good2\\\")\\nrating <- factor(answers, levels = c(\\\"poor\\\", \\\"ok\\\", \\\"good\\\", \\\"great\\\"), ordered = TRUE)\\n\", \"answers <- c(\\\"good\\\", \\\"poor\\\", \\\"great\\\", \\\"ok\\\", \\\"good\\\")\\nrating <- factor(answers, levels = c(\\\"poor\\\", \\\"ok\\\", \\\"good\\\", \\\"great\\\"), ordered = TRUE)\\nhappy <- sum(rating > \\\"ok\\\")\", c(\"rating\", \"happy\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "factors-sizes-as-numbers",
+          "title": "Expert: Sizes as numbers",
+          "promptMarkdown": "Make `size_num` the position of each size in the levels, so S is 1, M is 2 and L is 3.",
+          "starterCode": "sizes <- factor(c(\"M\", \"S\", \"L\", \"M\"), levels = c(\"S\", \"M\", \"L\"))\n",
+          "hint": "Inside, a factor stores the level number of each value: `as.integer(sizes)`.",
+          "solution": "sizes <- factor(c(\"M\", \"S\", \"L\", \"M\"), levels = c(\"S\", \"M\", \"L\"))\nsize_num <- as.integer(sizes)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "size_num is 2, 1, 3, 2",
+                "assertion": "is.numeric(size_num) && isTRUE(all.equal(size_num, c(2, 1, 3, 2)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sizes <- factor(c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\"), levels = c(\\\"S\\\", \\\"M\\\", \\\"L\\\"))\\n\", \"sizes <- factor(c(\\\"L\\\", \\\"L\\\", \\\"S\\\"), levels = c(\\\"S\\\", \\\"M\\\", \\\"L\\\"))\\n\", \"sizes <- factor(c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\"), levels = c(\\\"S\\\", \\\"M\\\", \\\"L\\\"))\\nsize_num <- as.integer(sizes)\", c(\"size_num\"), output = FALSE)"
               }
             ]
           }
@@ -1559,29 +1906,29 @@
             "explanation": "The levels you give are kept, in your order, even \"L\", which has no values."
           },
           {
-            "id": "factors-q-1rga3p6",
+            "id": "factors-q-13g7jp9",
             "type": "mcq",
-            "prompt": "What does `class(factor(c(\"a\", \"b\")))` give?",
+            "prompt": "Why can a factor catch typos that a text vector lets through?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"character\"`"
+                "label": "Factors can't hold text"
               },
               {
                 "id": "b",
-                "label": "`\"factor\"`"
+                "label": "Values that aren't one of its levels become NA, so they stand out"
               },
               {
                 "id": "c",
-                "label": "`\"levels\"`"
+                "label": "Factors fix spelling"
               },
               {
                 "id": "d",
-                "label": "`\"integer\"`"
+                "label": "They can't"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "A factor is its own type."
+            "explanation": "A factor only allows the values in its levels."
           },
           {
             "id": "factors-q-1istulb",
@@ -1685,6 +2032,16 @@
           "id": "count_the_nas_too",
           "label": "Count the NAs too",
           "code": "answers <- c(\"yes\", NA, \"no\", \"yes\", NA)\ntable(answers)\ntable(answers, useNA = \"ifany\")"
+        },
+        {
+          "id": "most_common_first",
+          "label": "Most common first",
+          "code": "drinks <- c(\"tea\", \"latte\", \"mocha\", \"latte\", \"tea\", \"latte\")\nsort(table(drinks), decreasing = TRUE)"
+        },
+        {
+          "id": "missing_answers_too",
+          "label": "Missing answers too",
+          "code": "answers <- c(\"yes\", NA, \"no\", \"yes\")\ntable(answers)\ntable(answers, useNA = \"ifany\")"
         }
       ],
       "intro": {
@@ -1718,6 +2075,11 @@
                 "id": "t2",
                 "label": "counts has latte 3, mocha 1, tea 2",
                 "assertion": "identical(as.vector(counts), c(3L, 1L, 2L)) && identical(names(counts), c(\"latte\", \"mocha\", \"tea\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"drinks <- c(\\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\")\\n\", \"drinks <- c(\\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea2\\\")\\n\", \"drinks <- c(\\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\")\\ncounts <- table(drinks)\", c(\"counts\"), output = FALSE)"
               }
             ]
           }
@@ -1737,6 +2099,11 @@
                 "id": "t1",
                 "label": "n_latte is 3",
                 "assertion": "isTRUE(as.numeric(n_latte) == 3)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"drinks <- c(\\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\")\\ncounts <- table(drinks)\\n\", \"drinks <- c(\\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"latte\\\")\\ncounts <- table(drinks)\\n\", \"drinks <- c(\\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\")\\ncounts <- table(drinks)\\nn_latte <- counts[\\\"latte\\\"]\", c(\"n_latte\"), output = FALSE)"
               }
             ]
           }
@@ -1756,6 +2123,11 @@
                 "id": "t1",
                 "label": "kinds is beans, kale, mint",
                 "assertion": "identical(kinds, c(\"beans\", \"kale\", \"mint\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"mint\\\", \\\"beans\\\", \\\"kale\\\")\\ncounts <- table(crops)\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"mint\\\", \\\"beans\\\", \\\"kale2\\\")\\ncounts <- table(crops)\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"mint\\\", \\\"beans\\\", \\\"kale\\\")\\ncounts <- table(crops)\\nkinds <- names(counts)\", c(\"kinds\"), output = FALSE)"
               }
             ]
           }
@@ -1780,6 +2152,11 @@
                 "id": "t2",
                 "label": "Uses table()",
                 "assertion": "grepl(\"table(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"drinks <- c(\\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"chai\\\")\\n\", \"drinks <- c(\\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"chai2\\\")\\n\", \"drinks <- c(\\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"chai\\\")\\nfavourite <- names(sort(table(drinks), decreasing = TRUE))[1]\", c(\"favourite\"), output = FALSE)"
               }
             ]
           }
@@ -1799,6 +2176,11 @@
                 "id": "t1",
                 "label": "percent is maybe 12, no 25, yes 62",
                 "assertion": "identical(as.vector(percent), c(12, 25, 62)) && identical(names(percent), c(\"maybe\", \"no\", \"yes\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"maybe\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"maybe\\\", \\\"no\\\", \\\"yes\\\", \\\"yes2\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"maybe\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\")\\npercent <- round(prop.table(table(answers)) * 100)\", c(\"percent\"), output = FALSE)"
               }
             ]
           }
@@ -1818,6 +2200,11 @@
                 "id": "t1",
                 "label": "counts is S 2, M 3, L 0, XL 0",
                 "assertion": "identical(as.vector(counts), c(2L, 3L, 0L, 0L)) && identical(names(counts), c(\"S\", \"M\", \"L\", \"XL\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(\\\"M\\\", \\\"S\\\", \\\"M\\\", \\\"M\\\", \\\"S\\\")\\n\", \"orders <- c(\\\"M\\\", \\\"S\\\", \\\"M\\\", \\\"M\\\", \\\"S2\\\")\\n\", \"orders <- c(\\\"M\\\", \\\"S\\\", \\\"M\\\", \\\"M\\\", \\\"S\\\")\\ncounts <- table(factor(orders, levels = c(\\\"S\\\", \\\"M\\\", \\\"L\\\", \\\"XL\\\")))\", c(\"counts\"), output = FALSE)"
               }
             ]
           }
@@ -1837,6 +2224,35 @@
                 "id": "t1",
                 "label": "counts is no 1, yes 3, NA 2",
                 "assertion": "identical(as.vector(counts), c(1L, 3L, 2L))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"yes\\\", NA, \\\"no\\\", \\\"yes\\\", NA, \\\"yes\\\")\\n\", \"answers <- c(\\\"no\\\", NA, \\\"no\\\", \\\"yes\\\", \\\"no\\\", \\\"yes\\\")\\n\", \"answers <- c(\\\"yes\\\", NA, \\\"no\\\", \\\"yes\\\", NA, \\\"yes\\\")\\ncounts <- table(answers, useNA = \\\"ifany\\\")\", c(\"counts\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "counting-the-rarest-drink",
+          "title": "Hard: The rarest drink",
+          "promptMarkdown": "Make `rarest` the name of the least common drink.",
+          "starterCode": "drinks <- c(\"tea\", \"latte\", \"mocha\", \"latte\", \"tea\", \"latte\", \"tea\", \"chai\", \"chai\")\n",
+          "hint": "`which.min()` works on a table too; `names()` gives its label.",
+          "solution": "drinks <- c(\"tea\", \"latte\", \"mocha\", \"latte\", \"tea\", \"latte\", \"tea\", \"chai\", \"chai\")\nrarest <- names(which.min(table(drinks)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rarest is mocha",
+                "assertion": "identical(rarest, \"mocha\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"drinks <- c(\\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"tea\\\", \\\"chai\\\", \\\"chai\\\")\\n\", \"drinks <- c(\\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"tea\\\", \\\"chai\\\", \\\"chai2\\\")\\n\", \"drinks <- c(\\\"tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"latte\\\", \\\"tea\\\", \\\"latte\\\", \\\"tea\\\", \\\"chai\\\", \\\"chai\\\")\\nrarest <- names(which.min(table(drinks)))\", c(\"rarest\"), output = FALSE)"
               }
             ]
           }
@@ -1856,6 +2272,35 @@
                 "id": "t1",
                 "label": "regulars is Ana, Ben",
                 "assertion": "identical(regulars, c(\"Ana\", \"Ben\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"customers <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Ben\\\", \\\"Ana\\\")\\n\", \"customers <- c(\\\"Cy\\\", \\\"Ben\\\", \\\"Eli\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Fay\\\", \\\"Ana\\\")\\n\", \"customers <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Ben\\\", \\\"Ana\\\")\\ncounts <- table(customers)\\nregulars <- names(counts[counts > 1])\", c(\"regulars\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "counting-the-top-two",
+          "title": "Expert: The top two",
+          "promptMarkdown": "Make `top2` the names of the two most common crops, most common first.",
+          "starterCode": "crops <- c(\"kale\", \"beans\", \"kale\", \"mint\", \"beans\", \"kale\", \"chard\")\n",
+          "hint": "Sort the table from the biggest count, take the first two with `head()`, then `names()`.",
+          "solution": "crops <- c(\"kale\", \"beans\", \"kale\", \"mint\", \"beans\", \"kale\", \"chard\")\ntop2 <- names(head(sort(table(crops), decreasing = TRUE), 2))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "top2 is kale, beans",
+                "assertion": "identical(top2, c(\"kale\", \"beans\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"mint\\\", \\\"beans\\\", \\\"kale\\\", \\\"chard\\\")\\n\", \"crops <- c(\\\"mint\\\", \\\"beans\\\", \\\"mint\\\", \\\"beans\\\", \\\"beans\\\", \\\"kale\\\")\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"mint\\\", \\\"beans\\\", \\\"kale\\\", \\\"chard\\\")\\ntop2 <- names(head(sort(table(crops), decreasing = TRUE), 2))\", c(\"top2\"), output = FALSE)"
               }
             ]
           }
@@ -1965,29 +2410,29 @@
             "explanation": "With a factor, every level is counted, including ones with no values."
           },
           {
-            "id": "counting-q-9hakf4",
+            "id": "counting-q-ycwelj",
             "type": "mcq",
-            "prompt": "Does `table(c(\"yes\", NA, \"no\"))` count the NA?",
+            "prompt": "Why add `useNA = \"ifany\"` to `table()`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Yes, as \"NA\""
+                "label": "It sorts the table"
               },
               {
                 "id": "b",
-                "label": "Yes, as 0"
+                "label": "It removes the NAs"
               },
               {
                 "id": "c",
-                "label": "No, unless you add `useNA = \"ifany\"`"
+                "label": "It is needed for text"
               },
               {
                 "id": "d",
-                "label": "It gives an error"
+                "label": "table() leaves out NA unless you ask, so missing answers would go unseen"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "NAs are left out by default."
+            "correctChoiceId": "d",
+            "explanation": "How many answers are missing is part of the result."
           },
           {
             "id": "counting-q-1dwwz4o",
@@ -2091,6 +2536,16 @@
           "id": "open_ended_groups",
           "label": "Open-ended groups",
           "code": "cut(c(-5, 3, 250), breaks = c(-Inf, 0, 100, Inf), labels = c(\"below 0\", \"0 to 100\", \"over 100\"))"
+        },
+        {
+          "id": "an_open_ended_last_band",
+          "label": "An open-ended last band",
+          "code": "ages <- c(8, 34, 67, 102)\ncut(ages, breaks = c(0, 17, 64, Inf), labels = c(\"child\", \"adult\", \"senior\"))"
+        },
+        {
+          "id": "which_end_is_included",
+          "label": "Which end is included",
+          "code": "cut(c(10, 20), breaks = c(0, 10, 20, 30))\ncut(c(10, 20), breaks = c(0, 10, 20, 30), right = FALSE)"
         }
       ],
       "intro": {
@@ -2124,6 +2579,11 @@
                 "id": "t2",
                 "label": "length_band is short long medium short long short",
                 "assertion": "identical(as.character(length_band), c(\"short\", \"long\", \"medium\", \"short\", \"long\", \"short\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(12, 47, 30, 8, 55, 15)\\n\", \"minutes <- c(18, 57, 9, 33, 49, 13)\\n\", \"minutes <- c(12, 47, 30, 8, 55, 15)\\nlength_band <- cut(minutes, breaks = c(0, 15, 45, 300), labels = c(\\\"short\\\", \\\"medium\\\", \\\"long\\\"))\", c(\"length_band\"), output = FALSE)"
               }
             ]
           }
@@ -2143,6 +2603,11 @@
                 "id": "t1",
                 "label": "counts is short 3, medium 1, long 2",
                 "assertion": "identical(as.vector(counts), c(3L, 1L, 2L))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(12, 47, 30, 8, 55, 15)\\nlength_band <- cut(minutes, breaks = c(0, 15, 45, 300), labels = c(\\\"short\\\", \\\"medium\\\", \\\"long\\\"))\\n\", \"minutes <- c(18, 57, 9, 33, 49, 13)\\nlength_band <- cut(minutes, breaks = c(301, 48, 17, 1), labels = c(\\\"short\\\", \\\"medium\\\", \\\"long\\\"))\\n\", \"minutes <- c(12, 47, 30, 8, 55, 15)\\nlength_band <- cut(minutes, breaks = c(0, 15, 45, 300), labels = c(\\\"short\\\", \\\"medium\\\", \\\"long\\\"))\\ncounts <- table(length_band)\", c(\"counts\"), output = FALSE)"
               }
             ]
           }
@@ -2162,6 +2627,11 @@
                 "id": "t1",
                 "label": "Shows the groups",
                 "assertion": "grepl(\"(0,5]\", ._cq_stdout, fixed = TRUE) && grepl(\"(10,20]\", ._cq_stdout, fixed = TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(3.5, 12, 7.25, 19)\\n\", \"prices <- c(20, 7.28, 14, 3.6)\\n\", \"prices <- c(3.5, 12, 7.25, 19)\\ncut(prices, breaks = c(0, 5, 10, 20))\", c(), output = TRUE)"
               }
             ]
           }
@@ -2181,6 +2651,11 @@
                 "id": "t1",
                 "label": "band is child teen adult senior adult child teen",
                 "assertion": "identical(as.character(band), c(\"child\", \"teen\", \"adult\", \"senior\", \"adult\", \"child\", \"teen\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ages <- c(8, 15, 34, 67, 41, 12, 17)\\n\", \"ages <- c(18, 15, 43, 68, 37, 17, 9)\\n\", \"ages <- c(8, 15, 34, 67, 41, 12, 17)\\nband <- cut(ages, breaks = c(0, 12, 17, 64, 120), labels = c(\\\"child\\\", \\\"teen\\\", \\\"adult\\\", \\\"senior\\\"))\", c(\"band\"), output = FALSE)"
               }
             ]
           }
@@ -2200,6 +2675,11 @@
                 "id": "t1",
                 "label": "grade is B F A C B A",
                 "assertion": "identical(as.character(grade), c(\"B\", \"F\", \"A\", \"C\", \"B\", \"A\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 44, 88, 50, 65, 80)\\n\", \"scores <- c(83, 67, 51, 91, 46, 72)\\n\", \"scores <- c(71, 44, 88, 50, 65, 80)\\ngrade <- cut(scores, breaks = c(0, 50, 65, 80, 101), labels = c(\\\"F\\\", \\\"C\\\", \\\"B\\\", \\\"A\\\"), right = FALSE)\", c(\"grade\"), output = FALSE)"
               }
             ]
           }
@@ -2219,6 +2699,11 @@
                 "id": "t1",
                 "label": "group is cold cold mild hot",
                 "assertion": "identical(as.character(group), c(\"cold\", \"cold\", \"mild\", \"hot\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(-3, 12, 24, 31)\\ngroup <- cut(temps, breaks = c(0, 15, 25, 40), labels = c(\\\"cold\\\", \\\"mild\\\", \\\"hot\\\"))\\n\", \"temps <- c(32, 27, 14, -4)\\ngroup <- cut(temps, breaks = c(42, 26, 18, 2), labels = c(\\\"cold\\\", \\\"mild\\\", \\\"hot\\\"))\\n\", \"temps <- c(-3, 12, 24, 31)\\ngroup <- cut(temps, breaks = c(-Inf, 15, 25, Inf), labels = c(\\\"cold\\\", \\\"mild\\\", \\\"hot\\\"))\", c(\"group\"), output = FALSE)"
               }
             ]
           }
@@ -2238,6 +2723,35 @@
                 "id": "t1",
                 "label": "counts is under 5: 3, 5 to 10: 2, over 10: 2",
                 "assertion": "identical(as.vector(counts), c(3L, 2L, 2L))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(3.5, 12, 7.25, 19, 5, 10, 2.2)\\n\", \"prices <- c(2.3, 13, 7, 20, 7.28, 14, 3.6)\\n\", \"prices <- c(3.5, 12, 7.25, 19, 5, 10, 2.2)\\ncounts <- table(cut(prices, breaks = c(-Inf, 5, 10, Inf), labels = c(\\\"under 5\\\", \\\"5 to 10\\\", \\\"over 10\\\")))\", c(\"counts\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grouping_numbers-hours-of-sleep",
+          "title": "Hard: Hours of sleep",
+          "promptMarkdown": "Make `sleep` a band for each night: `\"short\"` for up to 6 hours, `\"ok\"` for over 6 up to 8, and `\"long\"` for over 8.",
+          "starterCode": "hours <- c(5.5, 7, 8.5, 6, 9, 7.5)\n",
+          "hint": "`cut(hours, breaks = c(0, 6, 8, 24), labels = c(\"short\", \"ok\", \"long\"))`. Each group includes its right end.",
+          "solution": "hours <- c(5.5, 7, 8.5, 6, 9, 7.5)\nsleep <- cut(hours, breaks = c(0, 6, 8, 24), labels = c(\"short\", \"ok\", \"long\"))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "sleep is short, ok, long, short, long, ok",
+                "assertion": "identical(as.character(sleep), c(\"short\", \"ok\", \"long\", \"short\", \"long\", \"ok\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"hours <- c(5.5, 7, 8.5, 6, 9, 7.5)\\n\", \"hours <- c(7.8, 11, 7, 8.8, 9, 5.6)\\n\", \"hours <- c(5.5, 7, 8.5, 6, 9, 7.5)\\nsleep <- cut(hours, breaks = c(0, 6, 8, 24), labels = c(\\\"short\\\", \\\"ok\\\", \\\"long\\\"))\", c(\"sleep\"), output = FALSE)"
               }
             ]
           }
@@ -2257,6 +2771,35 @@
                 "id": "t1",
                 "label": "busiest is \"adult\"",
                 "assertion": "identical(busiest, \"adult\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ages <- c(8, 15, 34, 67, 41, 12, 17, 29, 38, 71)\\n\", \"ages <- c(8, 5, 34, 67, 11, 12, 7, 29, 3, 71)\\n\", \"ages <- c(8, 15, 34, 67, 41, 12, 17, 29, 38, 71)\\nband <- cut(ages, breaks = c(0, 12, 17, 64, 120), labels = c(\\\"child\\\", \\\"teen\\\", \\\"adult\\\", \\\"senior\\\"))\\nbusiest <- names(which.max(table(band)))\", c(\"busiest\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "grouping_numbers-share-in-each-band",
+          "title": "Expert: Share in each band",
+          "promptMarkdown": "Make `share` the share of rides in each band: short (up to 15 minutes), medium (over 15 up to 45) and long (over 45).",
+          "starterCode": "minutes <- c(12, 47, 30, 8, 55, 15, 22, 61)\n",
+          "hint": "Group with `cut()`, count with `table()`, then turn the counts into shares with `prop.table()`.",
+          "solution": "minutes <- c(12, 47, 30, 8, 55, 15, 22, 61)\nband <- cut(minutes, breaks = c(0, 15, 45, 300), labels = c(\"short\", \"medium\", \"long\"))\nshare <- prop.table(table(band))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "share is short 0.375, medium 0.25, long 0.375",
+                "assertion": "isTRUE(all.equal(as.vector(share), c(3, 2, 3) / 8)) && identical(names(share), c(\"short\", \"medium\", \"long\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(12, 47, 30, 8, 55, 15, 22, 61)\\n\", \"minutes <- c(63, 23, 18, 57, 9, 33, 49, 13)\\n\", \"minutes <- c(12, 47, 30, 8, 55, 15, 22, 61)\\nband <- cut(minutes, breaks = c(0, 15, 45, 300), labels = c(\\\"short\\\", \\\"medium\\\", \\\"long\\\"))\\nshare <- prop.table(table(band))\", c(\"share\"), output = FALSE)"
               }
             ]
           }
@@ -2341,29 +2884,29 @@
             "explanation": "With `right = FALSE`, the lower end is included instead."
           },
           {
-            "id": "grouping_numbers-q-16f5txg",
+            "id": "grouping_numbers-q-ijfr2f",
             "type": "mcq",
-            "prompt": "What does `cut(25, breaks = c(0, 10, 20))` give?",
+            "prompt": "Why does `cut(25, breaks = c(0, 10, 20))` give NA?",
             "choices": [
               {
                 "id": "a",
-                "label": "An error"
+                "label": "The labels are missing"
               },
               {
                 "id": "b",
-                "label": "`(20,30]`"
+                "label": "cut() only works on whole tens"
               },
               {
                 "id": "c",
-                "label": "`(10,20]`"
+                "label": "25 is past the last break, so it has no group"
               },
               {
                 "id": "d",
-                "label": "`NA`"
+                "label": "It gives an error"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "25 is outside all the breaks, so it gets no group."
+            "correctChoiceId": "c",
+            "explanation": "Make the breaks cover every value, for example with `Inf` as the last break."
           },
           {
             "id": "grouping_numbers-q-yz2kc5",
@@ -2492,6 +3035,16 @@
           "id": "money",
           "label": "Money",
           "code": "prices <- c(2.5, 3, 4.25)\nsprintf(\"%.2f\", prices)\ncat(sprintf(\"%-8s %5.2f\\n\", c(\"tea\", \"latte\", \"cake\"), prices), sep = \"\")"
+        },
+        {
+          "id": "split_then_count",
+          "label": "Split, then count",
+          "code": "parts <- strsplit(\"oats,milk,apples\", \",\")[[1]]\nparts\nlength(parts)"
+        },
+        {
+          "id": "pad_with_zeros",
+          "label": "Pad with zeros",
+          "code": "sprintf(\"%03d\", c(7L, 42L, 105L))"
         }
       ],
       "intro": {
@@ -2525,6 +3078,11 @@
                 "id": "t2",
                 "label": "Uses substr()",
                 "assertion": "grepl(\"substr(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"date_text <- \\\"2026-10-30\\\"\\n\", \"date_text <- \\\"2027-10-30\\\"\\n\", \"date_text <- \\\"2026-10-30\\\"\\nyear <- substr(date_text, 1, 4)\", c(\"year\"), output = FALSE)"
               }
             ]
           }
@@ -2544,6 +3102,11 @@
                 "id": "t1",
                 "label": "clean is Ana, Ben, Cy",
                 "assertion": "identical(clean, c(\"Ana\", \"Ben\", \"Cy\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"names_in <- c(\\\"  Ana\\\", \\\"Ben  \\\", \\\" Cy \\\")\\n\", \"names_in <- c(\\\"  Ana\\\", \\\"Ben  \\\", \\\" Cy 2\\\")\\n\", \"names_in <- c(\\\"  Ana\\\", \\\"Ben  \\\", \\\" Cy \\\")\\nclean <- trimws(names_in)\", c(\"clean\"), output = FALSE)"
               }
             ]
           }
@@ -2568,6 +3131,11 @@
                 "id": "t2",
                 "label": "Uses sprintf()",
                 "assertion": "grepl(\"sprintf(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"price <- 9.6\\n\", \"price <- 9.7\\n\", \"price <- 9.6\\nshown <- sprintf(\\\"%.2f\\\", price)\", c(\"shown\"), output = FALSE)"
               }
             ]
           }
@@ -2587,6 +3155,11 @@
                 "id": "t1",
                 "label": "items is oats, milk, apples, coffee",
                 "assertion": "identical(items, c(\"oats\", \"milk\", \"apples\", \"coffee\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"list_text <- \\\"oats,milk,apples,coffee\\\"\\n\", \"list_text <- \\\"tea,bread,eggs\\\"\\n\", \"list_text <- \\\"oats,milk,apples,coffee\\\"\\nitems <- strsplit(list_text, \\\",\\\")[[1]]\", c(\"items\"), output = FALSE)"
               }
             ]
           }
@@ -2606,6 +3179,11 @@
                 "id": "t1",
                 "label": "shelf is FI, SC, HI, FI",
                 "assertion": "identical(shelf, c(\"FI\", \"SC\", \"HI\", \"FI\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\", \\\"FI-350\\\")\\n\", \"codes <- c(\\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-221\\\", \\\"FI-104\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\", \\\"FI-350\\\")\\nshelf <- substr(codes, 1, 2)\", c(\"shelf\"), output = FALSE)"
               }
             ]
           }
@@ -2625,6 +3203,11 @@
                 "id": "t1",
                 "label": "lines is \"Ana has 3 loans\" \"Ben has 2 loans\"",
                 "assertion": "identical(lines, c(\"Ana has 3 loans\", \"Ben has 2 loans\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- c(\\\"Ana\\\", \\\"Ben\\\")\\nloans <- c(3L, 2L)\\n\", \"member <- c(\\\"Ana\\\", \\\"Ben2\\\")\\nloans <- c(3L, 2L)\\n\", \"member <- c(\\\"Ana\\\", \\\"Ben\\\")\\nloans <- c(3L, 2L)\\nlines <- sprintf(\\\"%s has %d loans\\\", member, loans)\", c(\"loans\", \"lines\"), output = FALSE)"
               }
             ]
           }
@@ -2649,6 +3232,35 @@
                 "id": "t2",
                 "label": "Uses sprintf()",
                 "assertion": "grepl(\"sprintf(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"total <- 10.5\\n\", \"total <- 10.6\\n\", \"total <- 10.5\\ncat(sprintf(\\\"Total: %.2f\\\\n\\\", total))\", c(), output = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text_tools-initials",
+          "title": "Hard: Initials",
+          "promptMarkdown": "Make `initials` texts like `\"A.S.\"` from the first and last names.",
+          "starterCode": "first <- c(\"Ana\", \"Ben\", \"Cy\")\nlast <- c(\"Silva\", \"Okafor\", \"Li\")\n",
+          "hint": "`substr(first, 1, 1)` is the first letter. Join the parts with `paste0()`, dots included.",
+          "solution": "first <- c(\"Ana\", \"Ben\", \"Cy\")\nlast <- c(\"Silva\", \"Okafor\", \"Li\")\ninitials <- paste0(substr(first, 1, 1), \".\", substr(last, 1, 1), \".\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "initials is A.S., B.O., C.L.",
+                "assertion": "identical(initials, c(\"A.S.\", \"B.O.\", \"C.L.\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"first <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\")\\nlast <- c(\\\"Silva\\\", \\\"Okafor\\\", \\\"Li\\\")\\n\", \"first <- c(\\\"Dee\\\", \\\"Eli\\\")\\nlast <- c(\\\"Novak\\\", \\\"Park\\\")\\n\", \"first <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\")\\nlast <- c(\\\"Silva\\\", \\\"Okafor\\\", \\\"Li\\\")\\ninitials <- paste0(substr(first, 1, 1), \\\".\\\", substr(last, 1, 1), \\\".\\\")\", c(\"initials\"), output = FALSE)"
               }
             ]
           }
@@ -2668,6 +3280,35 @@
                 "id": "t1",
                 "label": "numbers is 104, 221, 7",
                 "assertion": "is.numeric(numbers) && isTRUE(all.equal(numbers, c(104, 221, 7)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-104\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\")\\nnumbers <- as.numeric(substr(codes, 4, 6))\", c(\"numbers\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text_tools-count-the-words",
+          "title": "Expert: Count the words",
+          "promptMarkdown": "Make `n_words` the number of words in `sentence`. The words are separated by single spaces.",
+          "starterCode": "sentence <- \"the seeds need water\"\n",
+          "hint": "Split at the spaces, take the vector out of the list with `[[1]]`, then `length()`.",
+          "solution": "sentence <- \"the seeds need water\"\nn_words <- length(strsplit(sentence, \" \")[[1]])",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_words is 4",
+                "assertion": "is.numeric(n_words) && isTRUE(all.equal(n_words, 4))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sentence <- \\\"the seeds need water\\\"\\n\", \"sentence <- \\\"seeds need water and light and time\\\"\\n\", \"sentence <- \\\"the seeds need water\\\"\\nn_words <- length(strsplit(sentence, \\\" \\\")[[1]])\", c(\"n_words\"), output = FALSE)"
               }
             ]
           }
@@ -2827,29 +3468,29 @@
             "explanation": "`substr()` works on every text in the vector."
           },
           {
-            "id": "text_tools-q-1he1jbc",
+            "id": "text_tools-q-1c1kx93",
             "type": "mcq",
-            "prompt": "What does `sprintf(\"%d\", 3.5)` give?",
+            "prompt": "Why does `sprintf(\"%d\", 3.5)` give an error?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"4\"`"
+                "label": "3.5 must be text"
               },
               {
                 "id": "b",
-                "label": "`\"3.5\"`"
+                "label": "`%d` is for whole numbers; use `%.1f` for decimals"
               },
               {
                 "id": "c",
-                "label": "`\"3\"`"
+                "label": "It needs `paste()`"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "sprintf() can't show numbers"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "`%d` needs a whole number. Use `%.0f` or `%.1f` for others."
+            "correctChoiceId": "b",
+            "explanation": "`%d` takes whole numbers like `4L` or 4."
           },
           {
             "id": "text_tools-q-1ijih04",
@@ -2908,6 +3549,11 @@
           "id": "a_real_dot",
           "label": "A real dot",
           "code": "gsub(\".\", \",\", \"3.50\")\ngsub(\".\", \",\", \"3.50\", fixed = TRUE)"
+        },
+        {
+          "id": "a_real_dot",
+          "label": "A real dot",
+          "code": "gsub(\".\", \"-\", \"a.b\")\ngsub(\".\", \"-\", \"a.b\", fixed = TRUE)"
         }
       ],
       "intro": {
@@ -2936,6 +3582,11 @@
                 "id": "t1",
                 "label": "is_latte is TRUE FALSE TRUE FALSE TRUE",
                 "assertion": "isTRUE(all.equal(is_latte, c(TRUE, FALSE, TRUE, FALSE, TRUE)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"items <- c(\\\"oat latte\\\", \\\"black tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"chai latte\\\")\\n\", \"items <- c(\\\"oat latte\\\", \\\"black tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"CHAI LATTE\\\")\\n\", \"items <- c(\\\"oat latte\\\", \\\"black tea\\\", \\\"latte\\\", \\\"mocha\\\", \\\"chai latte\\\")\\nis_latte <- grepl(\\\"latte\\\", items)\", c(\"is_latte\"), output = FALSE)"
               }
             ]
           }
@@ -2955,6 +3606,11 @@
                 "id": "t1",
                 "label": "teas is black tea, green tea",
                 "assertion": "identical(teas, c(\"black tea\", \"green tea\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"items <- c(\\\"oat latte\\\", \\\"black tea\\\", \\\"green tea\\\", \\\"mocha\\\", \\\"chai latte\\\")\\n\", \"items <- c(\\\"chai latte\\\", \\\"mocha\\\", \\\"green tea\\\", \\\"black tea\\\", \\\"oat latte\\\")\\n\", \"items <- c(\\\"oat latte\\\", \\\"black tea\\\", \\\"green tea\\\", \\\"mocha\\\", \\\"chai latte\\\")\\nteas <- items[grepl(\\\"tea\\\", items)]\", c(\"teas\"), output = FALSE)"
               }
             ]
           }
@@ -2979,6 +3635,11 @@
                 "id": "t2",
                 "label": "Uses gsub()",
                 "assertion": "grepl(\"gsub(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"date_text <- \\\"2026-10-30\\\"\\n\", \"date_text <- \\\"2027-10-30\\\"\\n\", \"date_text <- \\\"2026-10-30\\\"\\nslashed <- gsub(\\\"-\\\", \\\"/\\\", date_text)\", c(\"slashed\"), output = FALSE)"
               }
             ]
           }
@@ -2998,6 +3659,11 @@
                 "id": "t1",
                 "label": "n_late is 3",
                 "assertion": "is.numeric(n_late) && isTRUE(all.equal(n_late, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"comments <- c(\\\"Bus was LATE again\\\", \\\"on time\\\", \\\"Late by 5 min\\\", \\\"fine\\\", \\\"late\\\")\\n\", \"comments <- c(\\\"on time\\\", \\\"LATE\\\", \\\"fine\\\", \\\"fine\\\", \\\"late start\\\")\\n\", \"comments <- c(\\\"Bus was LATE again\\\", \\\"on time\\\", \\\"Late by 5 min\\\", \\\"fine\\\", \\\"late\\\")\\nn_late <- sum(grepl(\\\"late\\\", comments, ignore.case = TRUE))\", c(\"n_late\"), output = FALSE)"
               }
             ]
           }
@@ -3017,6 +3683,11 @@
                 "id": "t1",
                 "label": "phones is 07700900123, 01614960000",
                 "assertion": "identical(phones, c(\"07700900123\", \"01614960000\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"phones_in <- c(\\\"07 700 900 123\\\", \\\"0161 496 0000\\\")\\n\", \"phones_in <- c(\\\"07 700 900 123\\\", \\\"0161 496 00002\\\")\\n\", \"phones_in <- c(\\\"07 700 900 123\\\", \\\"0161 496 0000\\\")\\nphones <- gsub(\\\" \\\", \\\"\\\", phones_in)\", c(\"phones\"), output = FALSE)"
               }
             ]
           }
@@ -3036,6 +3707,11 @@
                 "id": "t1",
                 "label": "books is BK-104, BK-221",
                 "assertion": "identical(books, c(\"BK-104\", \"BK-221\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"BK-104\\\", \\\"DVD-07\\\", \\\"BK-221\\\", \\\"MAG-12\\\", \\\"EBK-9\\\")\\n\", \"codes <- c(\\\"BK-104\\\", \\\"DVD-07\\\", \\\"BK-221\\\", \\\"MAG-12\\\", \\\"BK-104\\\")\\n\", \"codes <- c(\\\"BK-104\\\", \\\"DVD-07\\\", \\\"BK-221\\\", \\\"MAG-12\\\", \\\"EBK-9\\\")\\nbooks <- codes[grepl(\\\"^BK\\\", codes)]\", c(\"books\"), output = FALSE)"
               }
             ]
           }
@@ -3055,6 +3731,35 @@
                 "id": "t1",
                 "label": "tidy is Ana Silva, Ben Okafor, Cy Li",
                 "assertion": "identical(tidy, c(\"Ana Silva\", \"Ben Okafor\", \"Cy Li\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"names_in <- c(\\\"Ana   Silva\\\", \\\" Ben  Okafor \\\", \\\"Cy Li\\\")\\n\", \"names_in <- c(\\\"Ana   Silva\\\", \\\" Ben  Okafor \\\", \\\"Cy Li2\\\")\\n\", \"names_in <- c(\\\"Ana   Silva\\\", \\\" Ben  Okafor \\\", \\\"Cy Li\\\")\\ntidy <- gsub(\\\" +\\\", \\\" \\\", trimws(names_in))\", c(\"tidy\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "find_replace-only-the-csv-files",
+          "title": "Hard: Only the CSV files",
+          "promptMarkdown": "Make `csv_files` the file names that end in `.csv`.",
+          "starterCode": "files <- c(\"plan.csv\", \"notes.txt\", \"sales.csv\", \"csv-guide.pdf\")\n",
+          "hint": "`$` means \"at the end\", and a real dot needs `\\\\.` in a pattern: `files[grepl(\"\\\\.csv$\", files)]`.",
+          "solution": "files <- c(\"plan.csv\", \"notes.txt\", \"sales.csv\", \"csv-guide.pdf\")\ncsv_files <- files[grepl(\"\\\\.csv$\", files)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "csv_files is plan.csv, sales.csv",
+                "assertion": "identical(csv_files, c(\"plan.csv\", \"sales.csv\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"files <- c(\\\"plan.csv\\\", \\\"notes.txt\\\", \\\"sales.csv\\\", \\\"csv-guide.pdf\\\")\\n\", \"files <- c(\\\"a.txt\\\", \\\"trees.csv\\\", \\\"csv.txt\\\", \\\"b.csv.bak\\\", \\\"z.csv\\\")\\n\", \"files <- c(\\\"plan.csv\\\", \\\"notes.txt\\\", \\\"sales.csv\\\", \\\"csv-guide.pdf\\\")\\ncsv_files <- files[grepl(\\\"\\\\\\\\.csv$\\\", files)]\", c(\"csv_files\"), output = FALSE)"
               }
             ]
           }
@@ -3074,6 +3779,35 @@
                 "id": "t1",
                 "label": "prices is 3.5, 12, 0.99",
                 "assertion": "is.numeric(prices) && isTRUE(all.equal(prices, c(3.5, 12, 0.99)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices_in <- c(\\\"3,50\\\", \\\"12\\\", \\\"0,99\\\")\\n\", \"prices_in <- c(\\\"3,50\\\", \\\"12\\\", \\\"0,992\\\")\\n\", \"prices_in <- c(\\\"3,50\\\", \\\"12\\\", \\\"0,99\\\")\\nprices <- as.numeric(gsub(\\\",\\\", \\\".\\\", prices_in, fixed = TRUE))\", c(\"prices\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "find_replace-tidy-the-codes",
+          "title": "Expert: Tidy the codes",
+          "promptMarkdown": "Make `clean` the book codes written the same way, like `\"BK-104\"`: no spaces at the ends, capital letters, and a dash between the parts.",
+          "starterCode": "codes <- c(\" bk-104\", \"BK 221 \", \"bk_007\")\n",
+          "hint": "Trim first, then swap a space or `_` for a dash with `gsub(\"[ _]\", \"-\", ...)`, then `toupper()`.",
+          "solution": "codes <- c(\" bk-104\", \"BK 221 \", \"bk_007\")\nclean <- toupper(gsub(\"[ _]\", \"-\", trimws(codes)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "clean is BK-104, BK-221, BK-007",
+                "assertion": "identical(clean, c(\"BK-104\", \"BK-221\", \"BK-007\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\" bk-104\\\", \\\"BK 221 \\\", \\\"bk_007\\\")\\n\", \"codes <- c(\\\" bk-104\\\", \\\"BK 221 \\\", \\\"bk_0072\\\")\\n\", \"codes <- c(\\\" bk-104\\\", \\\"BK 221 \\\", \\\"bk_007\\\")\\nclean <- toupper(gsub(\\\"[ _]\\\", \\\"-\\\", trimws(codes)))\", c(\"clean\"), output = FALSE)"
               }
             ]
           }
@@ -3208,29 +3942,29 @@
             "explanation": "`^` means \"at the start\": only \"Ben\" starts with B."
           },
           {
-            "id": "find_replace-q-vdkh36",
+            "id": "find_replace-q-blxxb",
             "type": "mcq",
-            "prompt": "What does `gsub(\".\", \"-\", \"a.b\")` give?",
+            "prompt": "Why does `gsub(\".\", \"-\", \"a.b\")` give `\"---\"`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"---\"`"
+                "label": "In a pattern `.` means any character; use `fixed = TRUE` for a real dot"
               },
               {
                 "id": "b",
-                "label": "An error"
+                "label": "gsub() replaces every letter"
               },
               {
                 "id": "c",
-                "label": "`\"a-b\"`"
+                "label": "The dot is ignored"
               },
               {
                 "id": "d",
-                "label": "`\"a.b\"`"
+                "label": "It is a bug"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "In a pattern, `.` means any character, so every character is replaced. Add `fixed = TRUE` for a real dot."
+            "explanation": "With `fixed = TRUE` the pattern is read as plain text."
           },
           {
             "id": "find_replace-q-1lg7k10",
@@ -3314,6 +4048,11 @@
           "id": "text_is_not_a_date",
           "label": "Text is not a date",
           "code": "\"2026-10-23\" > \"2026-9-30\"\nas.Date(\"2026-10-23\") > as.Date(\"2026-09-30\")"
+        },
+        {
+          "id": "days_as_a_number",
+          "label": "Days as a number",
+          "code": "d <- as.Date(\"2026-12-24\") - as.Date(\"2026-10-30\")\nd\nas.numeric(d)"
         }
       ],
       "intro": {
@@ -3361,6 +4100,11 @@
                 "id": "t1",
                 "label": "days is the number 21",
                 "assertion": "is.numeric(days) && isTRUE(all.equal(days, 21))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"borrowed <- as.Date(\\\"2026-10-02\\\")\\nreturned <- as.Date(\\\"2026-10-23\\\")\\n\", \"borrowed <- as.Date(\\\"2027-10-02\\\")\\nreturned <- as.Date(\\\"2026-10-23\\\")\\n\", \"borrowed <- as.Date(\\\"2026-10-02\\\")\\nreturned <- as.Date(\\\"2026-10-23\\\")\\ndays <- as.numeric(returned - borrowed)\", c(\"days\"), output = FALSE)"
               }
             ]
           }
@@ -3380,6 +4124,11 @@
                 "id": "t1",
                 "label": "due is 2026-10-16",
                 "assertion": "inherits(due, \"Date\") && due == as.Date(\"2026-10-16\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"borrowed <- as.Date(\\\"2026-10-02\\\")\\n\", \"borrowed <- as.Date(\\\"2027-10-02\\\")\\n\", \"borrowed <- as.Date(\\\"2026-10-02\\\")\\ndue <- borrowed + 14\", c(\"due\"), output = FALSE)"
               }
             ]
           }
@@ -3399,6 +4148,11 @@
                 "id": "t1",
                 "label": "day_name is \"Saturday\"",
                 "assertion": "identical(day_name, \"Saturday\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"open_day <- as.Date(\\\"2026-06-13\\\")\\n\", \"open_day <- as.Date(\\\"2027-06-13\\\")\\n\", \"open_day <- as.Date(\\\"2026-06-13\\\")\\nday_name <- weekdays(open_day)\", c(\"day_name\"), output = FALSE)"
               }
             ]
           }
@@ -3423,6 +4177,11 @@
                 "id": "t2",
                 "label": "Uses format()",
                 "assertion": "grepl(\"format(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"open_day <- as.Date(\\\"2026-06-13\\\")\\n\", \"open_day <- as.Date(\\\"2027-06-13\\\")\\n\", \"open_day <- as.Date(\\\"2026-06-13\\\")\\nshown <- format(open_day, \\\"%d %B %Y\\\")\", c(\"shown\"), output = FALSE)"
               }
             ]
           }
@@ -3442,6 +4201,11 @@
                 "id": "t1",
                 "label": "signed_up is 2026-10-30 and 2026-11-02",
                 "assertion": "inherits(signed_up, \"Date\") && identical(format(signed_up), c(\"2026-10-30\", \"2026-11-02\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sheet <- c(\\\"30/10/2026\\\", \\\"02/11/2026\\\")\\n\", \"sheet <- c(\\\"30/10/2027\\\", \\\"02/11/2026\\\")\\n\", \"sheet <- c(\\\"30/10/2026\\\", \\\"02/11/2026\\\")\\nsigned_up <- as.Date(sheet, format = \\\"%d/%m/%Y\\\")\", c(\"signed_up\"), output = FALSE)"
               }
             ]
           }
@@ -3461,6 +4225,35 @@
                 "id": "t1",
                 "label": "late is 2",
                 "assertion": "is.numeric(late) && isTRUE(all.equal(late, 2))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"borrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\"))\\n\", \"borrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\"))\\nreturned <- as.Date(c(\\\"2026-10-30\\\", \\\"2026-10-10\\\", \\\"2026-10-21\\\", \\\"2026-10-20\\\"))\\n\", \"borrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\"))\\nlate <- sum(as.numeric(returned - borrowed) > 14)\", c(\"late\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates-days-to-go",
+          "title": "Hard: Days to go",
+          "promptMarkdown": "Make `days_left` the number of days from `today` to each event, as plain numbers.",
+          "starterCode": "today <- as.Date(\"2026-10-30\")\nevents <- as.Date(c(\"2026-11-05\", \"2026-12-24\"))\n",
+          "hint": "Subtracting dates gives a time difference; `as.numeric()` makes it plain numbers.",
+          "solution": "today <- as.Date(\"2026-10-30\")\nevents <- as.Date(c(\"2026-11-05\", \"2026-12-24\"))\ndays_left <- as.numeric(events - today)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "days_left is 6, 55",
+                "assertion": "is.numeric(days_left) && isTRUE(all.equal(days_left, c(6, 55)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"today <- as.Date(\\\"2026-10-30\\\")\\nevents <- as.Date(c(\\\"2026-11-05\\\", \\\"2026-12-24\\\"))\\n\", \"today <- as.Date(\\\"2027-10-30\\\")\\nevents <- as.Date(c(\\\"2026-11-05\\\", \\\"2027-12-24\\\"))\\n\", \"today <- as.Date(\\\"2026-10-30\\\")\\nevents <- as.Date(c(\\\"2026-11-05\\\", \\\"2026-12-24\\\"))\\ndays_left <- as.numeric(events - today)\", c(\"days_left\"), output = FALSE)"
               }
             ]
           }
@@ -3480,6 +4273,30 @@
                 "id": "t1",
                 "label": "meetings is 05 Sep, 19 Sep, 03 Oct, 17 Oct, 31 Oct",
                 "assertion": "identical(meetings, c(\"05 Sep\", \"19 Sep\", \"03 Oct\", \"17 Oct\", \"31 Oct\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates-weekend-loans",
+          "title": "Expert: Weekend loans",
+          "promptMarkdown": "Make `weekend` the borrowing dates that fall on a Saturday or a Sunday.",
+          "starterCode": "borrowed <- as.Date(c(\"2026-10-03\", \"2026-10-05\", \"2026-10-10\", \"2026-10-14\"))\n",
+          "hint": "`weekdays(borrowed)` gives the day names; keep the dates whose name is `%in% c(\"Saturday\", \"Sunday\")`.",
+          "solution": "borrowed <- as.Date(c(\"2026-10-03\", \"2026-10-05\", \"2026-10-10\", \"2026-10-14\"))\nweekend <- borrowed[weekdays(borrowed) %in% c(\"Saturday\", \"Sunday\")]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "weekend is 2026-10-03 and 2026-10-10",
+                "assertion": "inherits(weekend, \"Date\") && identical(format(weekend), c(\"2026-10-03\", \"2026-10-10\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"borrowed <- as.Date(c(\\\"2026-10-03\\\", \\\"2026-10-05\\\", \\\"2026-10-10\\\", \\\"2026-10-14\\\"))\\n\", \"borrowed <- as.Date(c(\\\"2027-10-03\\\", \\\"2026-10-05\\\", \\\"2027-10-10\\\", \\\"2026-10-14\\\"))\\n\", \"borrowed <- as.Date(c(\\\"2026-10-03\\\", \\\"2026-10-05\\\", \\\"2026-10-10\\\", \\\"2026-10-14\\\"))\\nweekend <- borrowed[weekdays(borrowed) %in% c(\\\"Saturday\\\", \\\"Sunday\\\")]\", c(\"weekend\"), output = FALSE)"
               }
             ]
           }
@@ -3539,29 +4356,29 @@
             "explanation": "Adding 3 adds three days, into November."
           },
           {
-            "id": "dates-q-1t5tmp4",
+            "id": "dates-q-10xn3or",
             "type": "mcq",
-            "prompt": "What does `\"2026-10-30\" - \"2026-10-02\"` give?",
+            "prompt": "Why does `\"2026-10-30\" - \"2026-10-02\"` give an error?",
             "choices": [
               {
                 "id": "a",
-                "label": "`28`"
+                "label": "It needs `format()`"
               },
               {
                 "id": "b",
-                "label": "`NA`"
+                "label": "They are texts; make them dates with `as.Date()` first"
               },
               {
                 "id": "c",
-                "label": "An error: they are text"
+                "label": "Dates can't be subtracted"
               },
               {
                 "id": "d",
-                "label": "`Time difference of 28 days`"
+                "label": "The later date must come second"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "Without `as.Date()`, they are just text, and text can't be subtracted."
+            "correctChoiceId": "b",
+            "explanation": "Date maths works only on real dates."
           },
           {
             "id": "dates-q-f6wmts",
@@ -3715,6 +4532,16 @@
           "id": "change_and_add",
           "label": "Change and add",
           "code": "member <- list(name = \"Ana\", age = 34)\nmember$age <- 35\nmember$email <- \"ana@example.org\"\nstr(member)"
+        },
+        {
+          "id": "remove_an_item",
+          "label": "Remove an item",
+          "code": "m <- list(name = \"Ana\", age = 34, phone = \"0111\")\nm$phone <- NULL\nnames(m)"
+        },
+        {
+          "id": "str_shows_the_shape",
+          "label": "str() shows the shape",
+          "code": "m <- list(name = \"Ana\", loans = c(\"FI-104\", \"SC-221\"))\nstr(m)"
         }
       ],
       "intro": {
@@ -3767,6 +4594,11 @@
                 "id": "t1",
                 "label": "who is \"Ana Silva\"",
                 "assertion": "identical(who, \"Ana Silva\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", age = 34, loans = c(\\\"FI-104\\\", \\\"SC-221\\\"))\\n\", \"member <- list(name = \\\"Ben Okafor\\\", age = 34, loans = c(\\\"FI-104\\\", \\\"SC-221\\\"))\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 34, loans = c(\\\"FI-104\\\", \\\"SC-221\\\"))\\nwho <- member$name\", c(\"who\"), output = FALSE)"
               }
             ]
           }
@@ -3786,6 +4618,11 @@
                 "id": "t1",
                 "label": "n_loans is 3",
                 "assertion": "is.numeric(n_loans) && isTRUE(all.equal(n_loans, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", age = 34, loans = c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\"))\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 34, loans = c(\\\"FI-104\\\"))\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 34, loans = c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\"))\\nn_loans <- length(member$loans)\", c(\"n_loans\"), output = FALSE)"
               }
             ]
           }
@@ -3810,6 +4647,11 @@
                 "id": "t2",
                 "label": "Uses [[ ]]",
                 "assertion": "grepl(\"[[\\\"age\\\"]]\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", age = 34)\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 35)\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 34)\\nage <- member[[\\\"age\\\"]]\", c(\"age\"), output = FALSE)"
               }
             ]
           }
@@ -3848,6 +4690,11 @@
                 "id": "t1",
                 "label": "member has name, age and email",
                 "assertion": "identical(names(member), c(\"name\", \"age\", \"email\")) && identical(member$email, \"ana@example.org\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", age = 34)\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 35)\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 34)\\nmember$email <- \\\"ana@example.org\\\"\", c(\"member\"), output = FALSE)"
               }
             ]
           }
@@ -3867,6 +4714,35 @@
                 "id": "t1",
                 "label": "second is \"SC-221\"",
                 "assertion": "identical(second, \"SC-221\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", loans = c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\"))\\n\", \"member <- list(name = \\\"Ana Silva\\\", loans = c(\\\"HI-007\\\", \\\"FI-350\\\", \\\"SC-221\\\"))\\n\", \"member <- list(name = \\\"Ana Silva\\\", loans = c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"HI-007\\\"))\\nsecond <- member$loans[2]\", c(\"second\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lists-a-one-line-summary",
+          "title": "Hard: A one-line summary",
+          "promptMarkdown": "Make `info` a text like `\"Ana Silva, 34, 2 loans\"` from the member record.",
+          "starterCode": "member <- list(name = \"Ana Silva\", age = 34, loans = c(\"FI-104\", \"SC-221\"))\n",
+          "hint": "`paste0(member$name, \", \", member$age, \", \", length(member$loans), \" loans\")`",
+          "solution": "member <- list(name = \"Ana Silva\", age = 34, loans = c(\"FI-104\", \"SC-221\"))\ninfo <- paste0(member$name, \", \", member$age, \", \", length(member$loans), \" loans\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "info is Ana Silva, 34, 2 loans",
+                "assertion": "identical(info, \"Ana Silva, 34, 2 loans\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", age = 34, loans = c(\\\"FI-104\\\", \\\"SC-221\\\"))\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 35, loans = c(\\\"FI-104\\\", \\\"SC-2212\\\"))\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 34, loans = c(\\\"FI-104\\\", \\\"SC-221\\\"))\\ninfo <- paste0(member$name, \\\", \\\", member$age, \\\", \\\", length(member$loans), \\\" loans\\\")\", c(\"info\"), output = FALSE)"
               }
             ]
           }
@@ -3886,6 +4762,35 @@
                 "id": "t1",
                 "label": "total is 3.5",
                 "assertion": "is.numeric(total) && isTRUE(all.equal(total, 3.5))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", fines = c(1.5, 2))\\ntotal <- sum(member[\\\"fines\\\"])\", \"member <- list(name = \\\"Ana Silva\\\", fines = c(4, 1.6))\\ntotal <- sum(member[\\\"fines\\\"])\", \"member <- list(name = \\\"Ana Silva\\\", fines = c(1.5, 2))\\ntotal <- sum(member$fines)\", c(\"total\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "lists-remove-the-phone-number",
+          "title": "Expert: Remove the phone number",
+          "promptMarkdown": "Ana asked for her phone number to be deleted. Remove `phone` from the record, keeping the rest.",
+          "starterCode": "member <- list(name = \"Ana Silva\", age = 34, phone = \"0111\")\n",
+          "hint": "Assigning `NULL` to an item removes it: `member$phone <- NULL`.",
+          "solution": "member <- list(name = \"Ana Silva\", age = 34, phone = \"0111\")\nmember$phone <- NULL",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "member has name and age only",
+                "assertion": "is.list(member) && identical(names(member), c(\"name\", \"age\")) && identical(member$name, \"Ana Silva\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"member <- list(name = \\\"Ana Silva\\\", age = 34, phone = \\\"0111\\\")\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 35, phone = \\\"0111\\\")\\n\", \"member <- list(name = \\\"Ana Silva\\\", age = 34, phone = \\\"0111\\\")\\nmember$phone <- NULL\", c(\"member\"), output = FALSE)"
               }
             ]
           }
@@ -3995,29 +4900,29 @@
             "explanation": "The list has two items."
           },
           {
-            "id": "lists-q-yrfyj0",
+            "id": "lists-q-9z3o0g",
             "type": "mcq",
-            "prompt": "Can one list hold a number, a text and a vector together?",
+            "prompt": "Why keep a member record in a list rather than a vector?",
             "choices": [
               {
                 "id": "a",
-                "label": "No, only one type"
+                "label": "Lists are faster"
               },
               {
                 "id": "b",
-                "label": "Only with c()"
+                "label": "Vectors can't have names"
               },
               {
                 "id": "c",
-                "label": "Only numbers and text"
+                "label": "A list can hold values of different types and lengths, like a name, an age and several loans"
               },
               {
                 "id": "d",
-                "label": "Yes"
+                "label": "There is no difference"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Lists can hold any mix of types."
+            "correctChoiceId": "c",
+            "explanation": "A vector would turn everything into text."
           },
           {
             "id": "lists-q-7dnoim",
@@ -4140,6 +5045,11 @@
                 "id": "t1",
                 "label": "clean is yes no yes yes no NA yes no",
                 "assertion": "identical(clean, c(\"yes\", \"no\", \"yes\", \"yes\", \"no\", NA, \"yes\", \"no\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"Yes\\\", \\\"no\\\", \\\" yes\\\", \\\"YES\\\", \\\"No\\\", NA, \\\"yes \\\", \\\"no\\\")\\n\", \"answers <- c(\\\"No\\\", \\\"no\\\", \\\" YES\\\", \\\"yes\\\", \\\"Yes \\\", NA, \\\"yes \\\", \\\" no\\\")\\n\", \"answers <- c(\\\"Yes\\\", \\\"no\\\", \\\" yes\\\", \\\"YES\\\", \\\"No\\\", NA, \\\"yes \\\", \\\"no\\\")\\nclean <- tolower(trimws(answers))\", c(\"clean\"), output = FALSE)"
               }
             ]
           }
@@ -4159,6 +5069,11 @@
                 "id": "t1",
                 "label": "counts is no 3, yes 4",
                 "assertion": "identical(as.vector(counts), c(3L, 4L)) && identical(names(counts), c(\"no\", \"yes\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"no\\\", \\\"no\\\", \\\"yes\\\", NA, \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\ncounts <- table(answers)\", c(\"counts\"), output = FALSE)"
               }
             ]
           }
@@ -4178,6 +5093,11 @@
                 "id": "t1",
                 "label": "answer_f has levels yes, no",
                 "assertion": "is.factor(answer_f) && identical(levels(answer_f), c(\"yes\", \"no\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"no\\\", \\\"no\\\", \\\"yes\\\", NA, \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\nanswer_f <- factor(answers, levels = c(\\\"yes\\\", \\\"no\\\"))\", c(\"answer_f\"), output = FALSE)"
               }
             ]
           }
@@ -4197,6 +5117,11 @@
                 "id": "t1",
                 "label": "n_answered is 7",
                 "assertion": "is.numeric(n_answered) && isTRUE(all.equal(n_answered, 7))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"no\\\", \\\"no\\\", \\\"yes\\\", NA, \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\nn_answered <- sum(!is.na(answers))\", c(\"n_answered\"), output = FALSE)"
               }
             ]
           }
@@ -4216,6 +5141,11 @@
                 "id": "t1",
                 "label": "yes_share is 57",
                 "assertion": "is.numeric(yes_share) && isTRUE(all.equal(yes_share, 57))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"no\\\", \\\"no\\\", \\\"yes\\\", NA, \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"yes\\\", \\\"yes\\\", \\\"no\\\", NA, \\\"yes\\\", \\\"no\\\")\\nyes_share <- round(sum(answers == \\\"yes\\\", na.rm = TRUE) / sum(!is.na(answers)) * 100)\", c(\"yes_share\"), output = FALSE)"
               }
             ]
           }
@@ -4424,6 +5354,11 @@
                 "id": "t1",
                 "label": "Both are Dates",
                 "assertion": "inherits(borrowed, \"Date\") && inherits(returned, \"Date\") && length(returned) == 5"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\")\\nreturned <- c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-1182\\\")\\nborrowed <- c(\\\"2027-10-01\\\", \\\"2026-10-03\\\", \\\"2027-10-07\\\", \\\"2026-10-10\\\", \\\"2027-10-12\\\")\\nreturned <- c(\\\"2026-10-12\\\", \\\"2027-10-25\\\", \\\"2026-10-21\\\", \\\"2027-10-30\\\", \\\"2026-10-20\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\")\\nreturned <- c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\")\\nborrowed <- as.Date(borrowed)\\nreturned <- as.Date(returned)\", c(\"borrowed\", \"returned\"), output = FALSE)"
               }
             ]
           }
@@ -4443,6 +5378,11 @@
                 "id": "t1",
                 "label": "days is 11, 22, 14, 20, 8",
                 "assertion": "is.numeric(days) && isTRUE(all.equal(days, c(11, 22, 14, 20, 8)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\"))\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-1182\\\")\\nborrowed <- as.Date(c(\\\"2027-10-01\\\", \\\"2026-10-03\\\", \\\"2027-10-07\\\", \\\"2026-10-10\\\", \\\"2027-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2027-10-25\\\", \\\"2026-10-21\\\", \\\"2027-10-30\\\", \\\"2026-10-20\\\"))\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\"))\\ndays <- as.numeric(returned - borrowed)\", c(\"days\"), output = FALSE)"
               }
             ]
           }
@@ -4462,6 +5402,11 @@
                 "id": "t1",
                 "label": "days_late is 0, 8, 0, 6, 0",
                 "assertion": "is.numeric(days_late) && isTRUE(all.equal(days_late, c(0, 8, 0, 6, 0)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\"))\\ndays <- as.numeric(returned - borrowed)\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-1182\\\")\\nborrowed <- as.Date(c(\\\"2027-10-01\\\", \\\"2026-10-03\\\", \\\"2027-10-07\\\", \\\"2026-10-10\\\", \\\"2027-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2027-10-25\\\", \\\"2026-10-21\\\", \\\"2027-10-30\\\", \\\"2026-10-20\\\"))\\ndays <- as.numeric(returned - borrowed)\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\"))\\ndays <- as.numeric(returned - borrowed)\\ndays_late <- ifelse(days > 14, days - 14, 0)\", c(\"days_late\"), output = FALSE)"
               }
             ]
           }
@@ -4486,6 +5431,11 @@
                 "id": "t2",
                 "label": "total_fines is 3.5",
                 "assertion": "is.numeric(total_fines) && isTRUE(all.equal(total_fines, 3.5))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days_late <- c(0, 8, 0, 6, 0)\\n\", \"days_late <- c(2, 7, 3, 10, 1)\\n\", \"days_late <- c(0, 8, 0, 6, 0)\\nfines <- days_late * 0.25\\ntotal_fines <- sum(fines)\", c(\"fines\", \"total_fines\"), output = FALSE)"
               }
             ]
           }
@@ -4510,6 +5460,11 @@
                 "id": "t2",
                 "label": "per_shelf is FI 2, SC 2, HI 1",
                 "assertion": "identical(as.vector(per_shelf), c(2L, 2L, 1L))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\"))\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"FI-104\\\")\\nborrowed <- as.Date(c(\\\"2027-10-01\\\", \\\"2026-10-03\\\", \\\"2027-10-07\\\", \\\"2026-10-10\\\", \\\"2027-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2027-10-25\\\", \\\"2026-10-21\\\", \\\"2027-10-30\\\", \\\"2026-10-20\\\"))\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- as.Date(c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\"))\\nreturned <- as.Date(c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\"))\\nshelf <- factor(substr(codes, 1, 2), levels = c(\\\"FI\\\", \\\"SC\\\", \\\"HI\\\"))\\nper_shelf <- table(shelf)\", c(\"shelf\", \"per_shelf\"), output = FALSE)"
               }
             ]
           }
@@ -4529,6 +5484,11 @@
                 "id": "t1",
                 "label": "Shows the report",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Late: 2 of 5\", \"Fines: 3.50\", \"Busiest shelf: FI\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\")\\nreturned <- c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-1182\\\")\\nborrowed <- c(\\\"2027-10-01\\\", \\\"2026-10-03\\\", \\\"2027-10-07\\\", \\\"2026-10-10\\\", \\\"2027-10-12\\\")\\nreturned <- c(\\\"2026-10-12\\\", \\\"2027-10-25\\\", \\\"2026-10-21\\\", \\\"2027-10-30\\\", \\\"2026-10-20\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-350\\\", \\\"HI-007\\\", \\\"SC-118\\\")\\nborrowed <- c(\\\"2026-10-01\\\", \\\"2026-10-03\\\", \\\"2026-10-07\\\", \\\"2026-10-10\\\", \\\"2026-10-12\\\")\\nreturned <- c(\\\"2026-10-12\\\", \\\"2026-10-25\\\", \\\"2026-10-21\\\", \\\"2026-10-30\\\", \\\"2026-10-20\\\")\\ndays <- as.numeric(as.Date(returned) - as.Date(borrowed))\\ndays_late <- ifelse(days > 14, days - 14, 0)\\nshelf <- factor(substr(codes, 1, 2), levels = c(\\\"FI\\\", \\\"SC\\\", \\\"HI\\\"))\\ncat(\\\"Late:\\\", sum(days > 14), \\\"of\\\", length(days), \\\"\\\\n\\\")\\ncat(\\\"Fines:\\\", sprintf(\\\"%.2f\\\", sum(days_late * 0.25)), \\\"\\\\n\\\")\\ncat(\\\"Busiest shelf:\\\", names(which.max(table(shelf))), \\\"\\\\n\\\")\", c(\"shelf\"), output = TRUE)"
               }
             ]
           }
@@ -4743,6 +5703,11 @@
                 "id": "t1",
                 "label": "tidy is ana silva, ben okafor, cy li, ana silva, dee mensah",
                 "assertion": "identical(tidy, c(\"ana silva\", \"ben okafor\", \"cy li\", \"ana silva\", \"dee mensah\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- c(\\\"  ana SILVA\\\", \\\"Ben   okafor \\\", \\\"cy LI\\\", \\\"ANA silva\\\", \\\"dee  Mensah\\\")\\n\", \"signups <- c(\\\"  ana SILVA\\\", \\\"Ben   okafor \\\", \\\"cy LI\\\", \\\"ANA silva\\\", \\\"dee  Mensah2\\\")\\n\", \"signups <- c(\\\"  ana SILVA\\\", \\\"Ben   okafor \\\", \\\"cy LI\\\", \\\"ANA silva\\\", \\\"dee  Mensah\\\")\\ntidy <- tolower(gsub(\\\" +\\\", \\\" \\\", trimws(signups)))\", c(\"tidy\"), output = FALSE)"
               }
             ]
           }
@@ -4767,6 +5732,11 @@
                 "id": "t2",
                 "label": "n_people is 4",
                 "assertion": "is.numeric(n_people) && isTRUE(all.equal(n_people, 4))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- c(\\\"ana silva\\\", \\\"ben okafor\\\", \\\"cy li\\\", \\\"ana silva\\\", \\\"dee mensah\\\")\\n\", \"signups <- c(\\\"ana silva\\\", \\\"ben okafor\\\", \\\"cy li\\\", \\\"ana silva\\\", \\\"dee mensah2\\\")\\n\", \"signups <- c(\\\"ana silva\\\", \\\"ben okafor\\\", \\\"cy li\\\", \\\"ana silva\\\", \\\"dee mensah\\\")\\npeople <- unique(signups)\\nn_people <- length(people)\", c(\"people\", \"n_people\"), output = FALSE)"
               }
             ]
           }
@@ -4791,6 +5761,11 @@
                 "id": "t2",
                 "label": "last is silva, okafor, li, mensah",
                 "assertion": "identical(last, c(\"silva\", \"okafor\", \"li\", \"mensah\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"people <- c(\\\"ana silva\\\", \\\"ben okafor\\\", \\\"cy li\\\", \\\"dee mensah\\\")\\n\", \"people <- c(\\\"ana silva\\\", \\\"ben okafor\\\", \\\"cy li\\\", \\\"dee mensah2\\\")\\n\", \"people <- c(\\\"ana silva\\\", \\\"ben okafor\\\", \\\"cy li\\\", \\\"dee mensah\\\")\\nfirst <- sub(\\\" .*\\\", \\\"\\\", people)\\nlast <- sub(\\\".* \\\", \\\"\\\", people)\", c(\"first\", \"last\"), output = FALSE)"
               }
             ]
           }
@@ -4815,6 +5790,11 @@
                 "id": "t2",
                 "label": "Last is Silva, Okafor, Li, Mensah",
                 "assertion": "identical(Last, c(\"Silva\", \"Okafor\", \"Li\", \"Mensah\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"first <- c(\\\"ana\\\", \\\"ben\\\", \\\"cy\\\", \\\"dee\\\")\\nlast <- c(\\\"silva\\\", \\\"okafor\\\", \\\"li\\\", \\\"mensah\\\")\\n\", \"first <- c(\\\"ana\\\", \\\"ben\\\", \\\"cy\\\", \\\"dee2\\\")\\nlast <- c(\\\"silva\\\", \\\"okafor\\\", \\\"li\\\", \\\"mensah2\\\")\\n\", \"first <- c(\\\"ana\\\", \\\"ben\\\", \\\"cy\\\", \\\"dee\\\")\\nlast <- c(\\\"silva\\\", \\\"okafor\\\", \\\"li\\\", \\\"mensah\\\")\\nFirst <- paste0(toupper(substr(first, 1, 1)), substr(first, 2, nchar(first)))\\nLast <- paste0(toupper(substr(last, 1, 1)), substr(last, 2, nchar(last)))\", c(\"First\", \"Last\"), output = FALSE)"
               }
             ]
           }
@@ -4834,6 +5814,11 @@
                 "id": "t1",
                 "label": "initials is AS, BO, CL, DM",
                 "assertion": "identical(initials, c(\"AS\", \"BO\", \"CL\", \"DM\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"First <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\")\\nLast <- c(\\\"Silva\\\", \\\"Okafor\\\", \\\"Li\\\", \\\"Mensah\\\")\\n\", \"First <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Ana\\\")\\nLast <- c(\\\"Silva\\\", \\\"Okafor\\\", \\\"Li\\\", \\\"Silva\\\")\\n\", \"First <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\")\\nLast <- c(\\\"Silva\\\", \\\"Okafor\\\", \\\"Li\\\", \\\"Mensah\\\")\\ninitials <- paste0(substr(First, 1, 1), substr(Last, 1, 1))\", c(\"initials\"), output = FALSE)"
               }
             ]
           }
@@ -4853,6 +5838,11 @@
                 "id": "t1",
                 "label": "Shows the badge list",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"4 people signed up\", \"Ana Silva (AS)\", \"Ben Okafor (BO)\", \"Cy Li (CL)\", \"Dee Mensah (DM)\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- c(\\\"  ana SILVA\\\", \\\"Ben   okafor \\\", \\\"cy LI\\\", \\\"ANA silva\\\", \\\"dee  Mensah\\\")\\n\", \"signups <- c(\\\"  ana SILVA\\\", \\\"Ben   okafor \\\", \\\"cy LI\\\", \\\"ANA silva\\\", \\\"dee  Mensah2\\\")\\n\", \"signups <- c(\\\"  ana SILVA\\\", \\\"Ben   okafor \\\", \\\"cy LI\\\", \\\"ANA silva\\\", \\\"dee  Mensah\\\")\\npeople <- unique(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(signups))))\\nfirst <- sub(\\\" .*\\\", \\\"\\\", people)\\nlast <- sub(\\\".* \\\", \\\"\\\", people)\\nFirst <- paste0(toupper(substr(first, 1, 1)), substr(first, 2, nchar(first)))\\nLast <- paste0(toupper(substr(last, 1, 1)), substr(last, 2, nchar(last)))\\ncat(length(people), \\\"people signed up\\\\n\\\")\\ncat(sprintf(\\\"%s %s (%s%s)\\\\n\\\", First, Last, substr(First, 1, 1), substr(Last, 1, 1)), sep = \\\"\\\")\", c(\"people\"), output = TRUE)"
               }
             ]
           }

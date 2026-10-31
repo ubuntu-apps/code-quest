@@ -15,7 +15,7 @@ export default makeTopic({
     '`conf.level = 0.90` gives a 90% interval, which is narrower: being less sure buys a tighter range. To read the interval: we are 95% confident the true mean weight is between 492.0 g and 499.6 g. Notice that 500 g, the label, is **outside** it.',
   ],
   sandboxCode: LOAVES + 'mean(loaf)\nsd(loaf) / sqrt(length(loaf))\nt.test(loaf)$conf.int',
-  sandboxSnippets: [snippet('By hand', LOAVES + 'se <- sd(loaf) / sqrt(length(loaf))\nmean(loaf) + c(-1, 1) * qt(0.975, df = 9) * se')],
+  sandboxSnippets: [snippet('By hand', LOAVES + 'se <- sd(loaf) / sqrt(length(loaf))\nmean(loaf) + c(-1, 1) * qt(0.975, df = 9) * se'), snippet('The interval by hand', LOAVES + 'se <- sd(loaf) / sqrt(length(loaf))\nmean(loaf) + c(-1, 1) * qt(0.975, df = length(loaf) - 1) * se\nt.test(loaf)$conf.int'), snippet('Wider for more confidence', LOAVES + 't.test(loaf, conf.level = 0.90)$conf.int\nt.test(loaf, conf.level = 0.99)$conf.int')],
   readMore: { label: 'R documentation: t.test()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html', source: 'R documentation' },
   challenges: [
     task('easy', 'The standard error', {
@@ -67,11 +67,26 @@ export default makeTopic({
       solution: LOAVES + 'ci <- t.test(loaf)$conf.int\nwidth <- round(ci[2] - ci[1], 1)',
       tests: [['width is 7.6', near('width', 7.6)]],
     }),
+    task('hard', 'How many loaves', {
+      prompt: 'Roughly, a 95% interval is `2 * 1.96 * sd / sqrt(n)` wide. Make `n_needed` the smallest whole number of loaves that would make it 4 g wide or less, using the sd of this sample.',
+      starter: LOAVES,
+      alt: 'loaf <- c(490, 510, 485, 505, 498, 502)\n',
+      hint: 'Solve `2 * 1.96 * sd / sqrt(n) = 4` for n: `n = (2 * 1.96 * sd(loaf) / 4)^2`. Round up with `ceiling()`.',
+      solution: LOAVES + 'n_needed <- ceiling((2 * 1.96 * sd(loaf) / 4)^2)',
+      tests: [['n_needed is 28', near('n_needed', 28)]],
+    }),
     task('expert', 'Do 95% of intervals catch it?', {
       prompt: 'Simulate it: set the seed to 4 and make `caught` the share of 1000 samples of 10 loaves (`rnorm(10, 500, 6)`) whose 95% interval contains 500. It should be near 0.95.',
       hint: '`replicate(1000, { ci <- t.test(rnorm(10, 500, 6))$conf.int; ci[1] <= 500 & 500 <= ci[2] })`, then `mean()` of the result.',
       solution: 'set.seed(4)\nhits <- replicate(1000, {\n  ci <- t.test(rnorm(10, 500, 6))$conf.int\n  ci[1] <= 500 & 500 <= ci[2]\n})\ncaught <- mean(hits)',
       tests: [['caught matches seed 4', near('caught', 'local({ set.seed(4); mean(replicate(1000, { ci <- t.test(rnorm(10, 500, 6))$conf.int; ci[1] <= 500 & 500 <= ci[2] })) })')], ['It is near 0.95', 'abs(caught - 0.95) < 0.03']],
+    }),
+    task('expert', 'A bootstrap interval', {
+      prompt: 'Resample the loaves 2000 times (with replacement) and keep each mean. Make `boot` the 2.5% and 97.5% quantiles of those means.',
+      starter: LOAVES + 'set.seed(1)\n',
+      hint: '`means <- replicate(2000, mean(sample(loaf, replace = TRUE)))`, then `quantile(means, c(0.025, 0.975))`.',
+      solution: LOAVES + 'set.seed(1)\nmeans <- replicate(2000, mean(sample(loaf, replace = TRUE)))\nboot <- quantile(means, c(0.025, 0.975))',
+      tests: [['boot is right for seed 1', 'local({ set.seed(1); m <- replicate(2000, mean(sample(loaf, replace = TRUE))); isTRUE(all.equal(unname(boot), unname(quantile(m, c(0.025, 0.975))))) })']],
     }),
   ],
   questions: [
@@ -88,9 +103,8 @@ export default makeTopic({
       'Less confidence, tighter range.'),
     mc('Which part of `t.test()` holds the interval?', ['`$p.value`', '`$conf.int`', '`$estimate`', '`$interval`'], 1,
       '`$estimate` is the mean; `$p.value` comes in the next stage.'),
-    mc('What does `round(qt(0.975, df = 9), 2)` give?', ['`1.96`', '`2.26`', '`9`', '`0.98`'], 1,
-      'Bigger than 1.96: small samples need a wider interval.',
-      { code: 'round(qt(0.975, df = 9), 2)', output: '[1] 2.26' }),
+    mc('Why does a 95% interval use `qt(0.975, ...)` and not `qt(0.95, ...)`?', ['The 5% left over is split between the two ends, 2.5% each', 'qt() needs it', '0.975 is more accurate', 'It uses 0.95'], 0,
+      'So 97.5% of the t distribution lies below that value, and 2.5% above it.'),
     mc('The label says 500 g and 500 is outside the 95% interval. What does that suggest?', ['The scale is broken', 'The true mean is probably below 500 g', 'Nothing', 'Every loaf is underweight'], 1,
       'The data don\'t fit a true mean of 500 well. The next stage tests this directly.'),
     qShort('Which function gives a confidence interval for a mean, in its $conf.int part?', 't.test',

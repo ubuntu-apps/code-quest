@@ -19,6 +19,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('Two columns', ORDERS + 'orders[order(orders$drink, -orders$price), c("drink", "price")]'),
     snippet('Days in week order', ORDERS + 'orders$day <- factor(orders$day, levels = c("Mon", "Tue", "Wed", "Thu", "Fri"))\norders[order(orders$day, decreasing = TRUE), c("order", "day")]'),
+    snippet('Two sort keys', ORDERS + 'orders[order(orders$drink, -orders$price), c("drink", "price")]'),
+    snippet('Sizes in a set order', ORDERS + 'orders[order(match(orders$size, c("S", "M", "L"))), c("order", "size")]'),
   ],
   readMore: { label: 'R documentation: order()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/order.html', source: 'R documentation' },
   challenges: [
@@ -74,12 +76,26 @@ export default makeTopic({
         ['by_day is in week order', 'is.data.frame(by_day) && identical(by_day$order, 101:110)'],
       ],
     }),
+    task('hard', 'Latest first', {
+      prompt: 'Make `newest` the orders sorted by order number, highest first.',
+      starter: ORDERS,
+      hint: '`orders[order(orders$order, decreasing = TRUE), ]`',
+      solution: ORDERS + 'newest <- orders[order(orders$order, decreasing = TRUE), ]',
+      tests: [['newest is orders 110 down to 101', sameFrame('newest', 'orders[10:1, ]')]],
+    }),
     task('expert', 'Friday first', {
       prompt: 'Make `latest` the `order` numbers sorted with the latest day first (Fri, Thu, …) and, within a day, the dearest first.',
       starter: ORDERS + 'orders$day <- factor(orders$day, levels = c("Mon", "Tue", "Wed", "Thu", "Fri"))\n',
       hint: 'A factor can\'t take a minus, but `as.integer()` gives its level number: `order(-as.integer(orders$day), -orders$price)`.',
       solution: ORDERS + 'orders$day <- factor(orders$day, levels = c("Mon", "Tue", "Wed", "Thu", "Fri"))\nlatest <- orders$order[order(-as.integer(orders$day), -orders$price)]',
       tests: [['latest is 109, 110, 108, 107, 106, 103, 104, 105, 101, 102', 'identical(as.integer(latest), c(109L, 110L, 108L, 107L, 106L, 103L, 104L, 105L, 101L, 102L))']],
+    }),
+    task('expert', 'By size, dearest first', {
+      prompt: 'Make `sorted` the orders in size order S, M, L, and within each size from the highest price to the lowest.',
+      starter: ORDERS,
+      hint: '`match(orders$size, c("S", "M", "L"))` turns the sizes into 1, 2, 3. Sort by that, then by `-orders$price`.',
+      solution: ORDERS + 'sorted <- orders[order(match(orders$size, c("S", "M", "L")), -orders$price), ]',
+      tests: [['sorted is in the right order', sameFrame('sorted', 'orders[order(factor(orders$size, levels = c("S", "M", "L")), -orders$price), ]')]],
     }),
   ],
   questions: [
@@ -91,8 +107,8 @@ export default makeTopic({
     mc('What does `order(c(2, 1, 2), c(9, 8, 7))` give?', ['`[1] 2 3 1`', '`[1] 2 1 3`', '`[1] 1 2 3`', '`[1] 3 1 2`'], 0,
       'The 1 comes first (position 2). The two 2s tie, so the second vector breaks the tie: 7 (position 3) before 9 (position 1).',
       { code: 'order(c(2, 1, 2), c(9, 8, 7))', output: '[1] 2 3 1' }),
-    mc('What does `order(-c(30, 10, 20))` give?', ['`[1] 1 3 2`', '`[1] 2 3 1`', '`[1] 3 2 1`', 'An error'], 0,
-      'A minus turns it into largest first: 30 (position 1), 20 (3), 10 (2).',
+    mc('Why does a minus, as in `order(-df$price)`, sort from largest to smallest?', ['Negating flips the numbers, so the largest becomes the smallest', 'The minus means "descending" to order()', 'It removes negative prices', 'It doesn\'t'], 0,
+      'It only works for numbers; for text use `decreasing = TRUE`.',
       { code: 'order(-c(30, 10, 20))', output: '[1] 1 3 2' }),
     mc('What does `sort(c("Tue", "Mon", "Fri"))` give?', ['`[1] "Mon" "Tue" "Fri"`', '`[1] "Fri" "Mon" "Tue"`', '`[1] "Tue" "Mon" "Fri"`', 'An error'], 1,
       'Text sorts alphabetically, not in week order.',

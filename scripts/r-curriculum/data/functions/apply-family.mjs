@@ -17,6 +17,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('lapply gives a list', 'lapply(c(2, 5), \\(n) seq_len(n))'),
     snippet('Over a list', 'scores <- list(ana = c(72, 78), ben = c(65, NA), cy = c(88, 85))\nsapply(scores, mean, na.rm = TRUE)'),
+    snippet('sapply or lapply', 'scores <- list(ana = c(72, 78), ben = c(65, 70, 61))\nsapply(scores, mean)\nlapply(scores, range)'),
+    snippet('A function in place', 'sapply(c(4, 9, 16), function(x) sqrt(x) + 1)'),
   ],
   readMore: { label: 'R documentation: lapply() and sapply()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/lapply.html', source: 'R documentation' },
   challenges: [
@@ -41,6 +43,7 @@ export default makeTopic({
       tests: [['avgs is ana 75, ben 65, cy 86.5', same('avgs', 'c(ana = 75, ben = 65, cy = 86.5)')]],
     }),
     task('medium', 'Count per item', {
+      alt: 'scores <- list(ana = c(72), ben = c(65, 70, 71, 60), cy = c(88))\n',
       prompt: 'Make `n_scores` the number of scores each member has, with `sapply()` and `length`.',
       starter: 'scores <- list(ana = c(72, 78, 80), ben = c(65), cy = c(88, 85))\n',
       hint: '`sapply(scores, length)`',
@@ -67,12 +70,27 @@ export default makeTopic({
       solution: 'crops <- c("kale", "beans", "courgettes")\nlengths_of <- unname(sapply(crops, nchar))',
       tests: [['lengths_of is 4, 5, 10', near('lengths_of', 'c(4, 5, 10)')], ['No loop', '!grepl("for", ._cq_code, fixed = TRUE)']],
     }),
+    task('hard', 'Range per person', {
+      prompt: 'Make `ranges` each person\'s best score minus their worst, using `sapply()`.',
+      starter: 'scores <- list(ana = c(72, 78, 80), ben = c(65, 70), cy = c(88, 85))\n',
+      hint: 'Give `sapply()` a function of your own: `sapply(scores, function(s) max(s) - min(s))`.',
+      solution: 'scores <- list(ana = c(72, 78, 80), ben = c(65, 70), cy = c(88, 85))\nranges <- sapply(scores, function(s) max(s) - min(s))',
+      tests: [['ranges is ana 8, ben 5, cy 3', same('ranges', 'c(ana = 8, ben = 5, cy = 3)')], ['Uses sapply()', uses('sapply(')]],
+    }),
     task('expert', 'Grades for everyone', {
       prompt: 'Make `letters_out` the grade letter for each score, using `sapply()` with a function you write: `"A"` for 80 or more, `"B"` for 65 or more, `"C"` for 50 or more, `"F"` otherwise.',
       starter: 'scores <- c(91, 65, 50, 49, 72)\n',
       hint: 'Write `grade <- function(s) { if (s >= 80) "A" else if (s >= 65) "B" else if (s >= 50) "C" else "F" }`, then `sapply(scores, grade)`.',
       solution: 'scores <- c(91, 65, 50, 49, 72)\ngrade <- function(s) {\n  if (s >= 80) "A" else if (s >= 65) "B" else if (s >= 50) "C" else "F"\n}\nletters_out <- sapply(scores, grade)',
       tests: [['letters_out is A B C F B', isTexts('letters_out', 'A', 'B', 'C', 'F', 'B')]],
+    }),
+    task('expert', 'Words per sentence', {
+      prompt: 'Make `n_words` the number of words in each sentence. The words are separated by single spaces.',
+      starter: 'sentences <- c("seeds need water", "kale grows fast in cold weather")\n',
+      alt: 'sentences <- c("one", "two words", "and now three")\n',
+      hint: '`strsplit(sentences, " ")` gives a list with one vector of words per sentence; `sapply(..., length)` counts each.',
+      solution: 'sentences <- c("seeds need water", "kale grows fast in cold weather")\nn_words <- sapply(strsplit(sentences, " "), length)',
+      tests: [['n_words is 3, 6', near('n_words', 'c(3, 6)')]],
     }),
   ],
   questions: [
@@ -89,9 +107,9 @@ export default makeTopic({
       { code: 'as.vector(sapply(list(a = 1:3, b = 4:6), sum))', output: '[1]  6 15' }),
     mc('Why can\'t `grade(c(71, 44))` work when `grade` uses `if`?', ['grade only takes text', '`if` needs a single TRUE or FALSE, but gets two', 'Functions can\'t take vectors', 'It works fine'], 1,
       'That is exactly when `sapply()` helps: it calls the function once per value.'),
-    mc('Where do extra arguments go, as in `na.rm = TRUE`?', ['Before the vector', 'After the function: `sapply(x, mean, na.rm = TRUE)`', 'Inside the function name', 'They can\'t be used'], 1,
-      'They are passed on to the function each time.',
-      { code: 'sapply(list(c(1, NA, 3)), mean, na.rm = TRUE)', output: '[1] 2' }),
+    mc('Why does `sapply()` sometimes give a list instead of a vector?', ['When the results have different lengths, they can\'t be put side by side', 'sapply() always gives a list', 'It depends on the names', 'Never'], 0,
+      'Use `lapply()` when you always want a list.',
+      { code: 'class(sapply(1:3, seq_len))', output: '[1] "list"' }),
     mc('What does `sapply(data.frame(a = 1:2, b = c("x", "y")), class)` give?', ['`a "integer", b "character"`', '`"data.frame"`', 'An error', '`[1] 2`'], 0,
       'A data frame is a list of columns, so `sapply()` goes through them.',
       { code: 'unname(sapply(data.frame(a = 1:2, b = c("x", "y")), class))', output: '[1] "integer"   "character"' }),

@@ -8,7 +8,7 @@ export default makeTopic({
     "As a project grows, one folder of modules gets crowded. A **package** is a folder of modules that belong together, imported by its folder name. A shop program might keep its code like this:",
     "```\nshop/\n    __init__.py\n    prices.py\n    cart.py\nmain.py\n```",
     "From `main.py`, the modules inside are reached with a dot, just like names inside a module. All three of these work; pick the one that reads best where it's used:",
-    "```\nimport shop.prices\nprint(shop.prices.price_of(\"tea\"))\n\nfrom shop import prices\nprint(prices.price_of(\"tea\"))\n\nfrom shop.prices import price_of\nprint(price_of(\"tea\"))\n```",
+    "```text\nimport shop.prices\nprint(shop.prices.price_of(\"tea\"))\n\nfrom shop import prices\nprint(prices.price_of(\"tea\"))\n\nfrom shop.prices import price_of\nprint(price_of(\"tea\"))\n```",
     "The file `__init__.py` makes the folder a regular package, and Python runs it when the package is first imported. It's often empty. It can also import the package's most useful names, so users can write `shop.price_of` without knowing which module it lives in. (Python 3 can import a folder without one, as a \"namespace package\", but the usual habit is to include it.)",
     "You can build a package here with `pathlib`: make the folder, write the files, and import it.",
     "```\nfrom pathlib import Path\n\nPath(\"shop\").mkdir(exist_ok=True)\nPath(\"shop/__init__.py\").write_text(\"\")\nPath(\"shop/prices.py\").write_text(\"\"\"\nPRICES = {\"tea\": 2.25, \"cake\": 4.0}\n\ndef price_of(item):\n    return PRICES[item]\n\"\"\")\n\nfrom shop.prices import price_of\nprint(price_of(\"cake\"))   # 4.0\n```",

@@ -14,7 +14,7 @@ export default makeTopic({
     'Maths on a matrix works value by value, like a vector: `sales * 2` doubles every count. A vector as long as the number of rows is reused down each column, so it lines up with the rows: `sales * c(3.4, 2.5, 4.2)` multiplies each drink\'s counts by its price.',
   ],
   sandboxCode: SALES + 'sales\ndim(sales)\nrowSums(sales)\ncolSums(sales)',
-  sandboxSnippets: [snippet('By row', 'matrix(1:6, nrow = 2)\nmatrix(1:6, nrow = 2, byrow = TRUE)')],
+  sandboxSnippets: [snippet('By row', 'matrix(1:6, nrow = 2)\nmatrix(1:6, nrow = 2, byrow = TRUE)'), snippet('Shares per column', SALES + 'round(prop.table(sales, 2), 2)\ncolSums(prop.table(sales, 2))'), snippet('Neighbouring columns', SALES + 'sales[, -1] - sales[, -ncol(sales)]')],
   readMore: { label: 'R documentation: matrix()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/matrix.html', source: 'R documentation' },
   challenges: [
     task('easy', 'A small grid', {
@@ -65,12 +65,26 @@ export default makeTopic({
       solution: SALES + 'prices <- c(3.4, 2.5, 4.2)\ntakings <- sales * prices',
       tests: [['takings is sales times the price of each row', 'is.matrix(takings) && isTRUE(all.equal(takings, sales * c(3.4, 2.5, 4.2)))'], ['Monday latte is 40.8', 'isTRUE(all.equal(takings["latte", "Mon"], 40.8))']],
     }),
+    task('hard', 'Each day\'s mix', {
+      prompt: 'Make `share` each drink\'s share of that day\'s sales, so that every day (column) adds up to 1.',
+      starter: SALES,
+      hint: '`prop.table()` takes a margin too: `prop.table(sales, 2)` works column by column.',
+      solution: SALES + 'share <- prop.table(sales, 2)',
+      tests: [['Every day adds up to 1', 'is.matrix(share) && isTRUE(all.equal(unname(colSums(share)), rep(1, 5)))'], ['share is right', 'isTRUE(all.equal(share, prop.table(sales, 2)))']],
+    }),
     task('expert', 'Takings per day', {
       prompt: 'Make `per_day` the money taken each day, rounded to 2 decimal places, and `best_day` the day with the most money.',
       starter: SALES + 'prices <- c(3.4, 2.5, 4.2)\n',
       hint: '`round(colSums(sales * prices), 2)`, then `names(which.max(per_day))`.',
       solution: SALES + 'prices <- c(3.4, 2.5, 4.2)\nper_day <- round(colSums(sales * prices), 2)\nbest_day <- names(which.max(per_day))',
       tests: [['per_day is the money per day', same('per_day', 'round(colSums(sales * c(3.4, 2.5, 4.2)), 2)')], ['best_day is "Fri"', 'identical(best_day, "Fri")']],
+    }),
+    task('expert', 'Change from the day before', {
+      prompt: 'Make `change` a matrix of how each drink\'s sales changed from the day before, with columns Tue to Fri.',
+      starter: SALES,
+      hint: 'Line up two smaller matrices: every day but the first, minus every day but the last: `sales[, -1] - sales[, -ncol(sales)]`.',
+      solution: SALES + 'change <- sales[, -1] - sales[, -ncol(sales)]',
+      tests: [['change has columns Tue to Fri', 'is.matrix(change) && identical(colnames(change), c("Tue", "Wed", "Thu", "Fri"))'], ['change is right', 'isTRUE(all.equal(unname(change), unname(sales[, 2:5] - sales[, 1:4])))']],
     }),
   ],
   questions: [
@@ -91,9 +105,8 @@ export default makeTopic({
     mc('What does `matrix(c(1, 2, 3, 4), nrow = 2) * c(10, 100)` give in its first column?', ['`10 200`', '`10 20`', '`100 200`', 'An error'], 0,
       'The vector of 2 lines up with the 2 rows: 1 × 10 and 2 × 100.',
       { code: '(matrix(c(1, 2, 3, 4), nrow = 2) * c(10, 100))[, 1]', output: '[1]  10 200' }),
-    mc('What happens with `matrix(c(1, "a"), nrow = 1)`?', ['An error', 'Both values become text', 'The 1 is dropped', 'It makes a list'], 1,
-      'A matrix has one type, so the number becomes "1".',
-      { code: 'matrix(c(1, "a"), nrow = 1)[1, 1]', output: '[1] "1"' }),
+    mc('Why can\'t a matrix keep a number column next to a text column?', ['Every value in a matrix has the same type, so the numbers would become text', 'Matrices can\'t hold text', 'Matrices only have one column', 'It can'], 0,
+      'Use a data frame when columns need different types.'),
     mc('In `dimnames = list(a, b)`, what are `a` and `b`?', ['The row names, then the column names', 'The column names, then the row names', 'Two matrices', 'The sizes'], 0,
       'Rows first, as always in `[row, column]`.'),
     qShort('Which function turns a matrix on its side, so rows become columns?', 't',

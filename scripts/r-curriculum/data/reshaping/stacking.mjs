@@ -16,7 +16,7 @@ export default makeTopic({
     'For many pieces in a list, `do.call(rbind, pieces)` stacks them all. The row names it makes, like `sep.1`, can be cleared with `rownames(x) <- NULL`.',
   ],
   sandboxCode: SHOPS + 'rbind(shop_a, shop_b)',
-  sandboxSnippets: [snippet('An extra column', SHOPS + '# Run it and read the error\nrbind(shop_a, shop_c)'), snippet('Many pieces', MONTHS + 'do.call(rbind, months)')],
+  sandboxSnippets: [snippet('An extra column', SHOPS + '# Run it and read the error\nrbind(shop_a, shop_c)'), snippet('Many pieces', MONTHS + 'do.call(rbind, months)'), snippet('Shared columns only', SHOPS + 'common <- intersect(intersect(names(shop_a), names(shop_b)), names(shop_c))\ncommon\nrbind(shop_a[common], shop_b[common], shop_c[common])')],
   readMore: { label: 'R documentation: cbind() and rbind()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/cbind.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Two shops', {
@@ -68,12 +68,26 @@ export default makeTopic({
       solution: MONTHS + 'pieces <- lapply(names(months), function(m) cbind(month = m, months[[m]]))\nlong <- do.call(rbind, pieces)\nrownames(long) <- NULL',
       tests: [['long$month is sep sep oct oct nov nov', 'is.data.frame(long) && identical(names(long), c("month", "item", "sold")) && identical(as.character(long$month), rep(c("sep", "oct", "nov"), each = 2))']],
     }),
+    task('hard', 'Best sales first', {
+      prompt: 'Stack the three months into `all`, sorted from the most sold to the least, with the rows numbered 1, 2, 3, … again.',
+      starter: MONTHS,
+      hint: '`do.call(rbind, months)`, then sort with `order(-all$sold)`, then `rownames(all) <- NULL`.',
+      solution: MONTHS + 'all <- do.call(rbind, months)\nall <- all[order(-all$sold), ]\nrownames(all) <- NULL',
+      tests: [['all is sorted by sold', 'is.data.frame(all) && identical(all$sold, c(6, 5, 4, 3, 2, 1))'], ['The rows are numbered 1 to 6', 'identical(rownames(all), as.character(1:6))']],
+    }),
     task('expert', 'Line up any columns', {
       prompt: 'Write `stack_all(pieces)` that stacks a list of data frames even when some have columns the others lack, filling the gaps with NA. Then make `abc` the three shops stacked with it.',
       starter: SHOPS,
       hint: 'Find all the column names with `unique(unlist(lapply(pieces, names)))`: `unlist()` joins the list of name vectors into one vector. For each piece, add the missing ones: `d[setdiff(cols, names(d))] <- NA`. Then `do.call(rbind, …)`.',
       solution: SHOPS + 'stack_all <- function(pieces) {\n  cols <- unique(unlist(lapply(pieces, names)))\n  filled <- lapply(pieces, function(d) {\n    d[setdiff(cols, names(d))] <- NA\n    d[cols]\n  })\n  do.call(rbind, filled)\n}\nabc <- stack_all(list(shop_a, shop_b, shop_c))',
       tests: [['abc has 5 rows with price NA except the last', 'is.data.frame(abc) && nrow(abc) == 5 && identical(abc$price, c(NA, NA, NA, NA, 8.5))'], ['abc$item is mug, tote, mug, poster, mug', 'identical(abc$item, c("mug", "tote", "mug", "poster", "mug"))'], ['stack_all is a function', 'is.function(stack_all)']],
+    }),
+    task('expert', 'Only the shared columns', {
+      prompt: 'Make `all3` the three shops stacked, keeping only the columns that every shop has.',
+      starter: SHOPS,
+      hint: '`intersect()` the names two at a time to find the shared ones, then `rbind(shop_a[common], shop_b[common], shop_c[common])`.',
+      solution: SHOPS + 'common <- intersect(intersect(names(shop_a), names(shop_b)), names(shop_c))\nall3 <- rbind(shop_a[common], shop_b[common], shop_c[common])',
+      tests: [['all3 has item and sold for all five rows', sameFrame('all3', 'data.frame(item = c("mug", "tote", "mug", "poster", "mug"), sold = c(5, 3, 4, 6, 2))')]],
     }),
   ],
   questions: [
@@ -90,9 +104,8 @@ export default makeTopic({
     mc('What does `nrow(do.call(rbind, list(data.frame(x = 1:2), data.frame(x = 3:5))))` give?', ['`2`', '`3`', '`5`', '`1`'], 2,
       'Two rows plus three rows.',
       { code: 'nrow(do.call(rbind, list(data.frame(x = 1:2), data.frame(x = 3:5))))', output: '[1] 5' }),
-    mc('What does `setdiff(c("item", "sold", "price"), c("item", "sold"))` give?', ['`[1] "price"`', '`[1] "item" "sold"`', '`character(0)`', '`[1] "item" "sold" "price"`'], 0,
-      'The names in the first that are missing from the second: the column to add.',
-      { code: 'setdiff(c("item", "sold", "price"), c("item", "sold"))', output: '[1] "price"' }),
+    mc('Why are rows named like `sep.1` and `oct.2` after `do.call(rbind, months)`?', ['rbind() uses the list names to label where each row came from', 'They are errors', 'R adds the month to sort by', 'They aren\'t'], 0,
+      '`rownames(x) <- NULL` numbers the rows 1, 2, 3, … again.'),
     mc('After `df <- data.frame(a = 1:2)` and `df["b"] <- NA`, what is `df$b`?', ['`[1] NA NA`', '`NA`', 'An error', '`NULL`'], 0,
       'One NA is repeated down the new column.',
       { code: 'df <- data.frame(a = 1:2)\ndf["b"] <- NA\ndf$b', output: '[1] NA NA' }),

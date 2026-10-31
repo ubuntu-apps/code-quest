@@ -16,6 +16,11 @@
           "id": "tell_r_what_missing_looks_like",
           "label": "Tell R what missing looks like",
           "code": "x <- read.csv(text = \"\nitem,price\ntea,2.5\ncake,N/A\n\", na.strings = \"N/A\")\nstr(x)"
+        },
+        {
+          "id": "skip_lines_at_the_top",
+          "label": "Skip lines at the top",
+          "code": "csv <- \"Exported 2026-10-30\\nmember,days\\nAna,12\\nBen,20\"\nread.csv(text = csv, skip = 1)"
         }
       ],
       "intro": {
@@ -49,6 +54,11 @@
                 "id": "t2",
                 "label": "Uses read.csv()",
                 "assertion": "grepl(\"read.csv(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"csv <- \\\"member,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\\"\\n\", \"csv <- \\\"member,book,days\\nAna,The Long Walk,13\\nBen,Seed Saving,22\\nCy,River Birds,12\\\"\\n\", \"csv <- \\\"member,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\\"\\nloans <- read.csv(text = csv)\", c(\"loans\"), output = FALSE)"
               }
             ]
           }
@@ -68,6 +78,11 @@
                 "id": "t1",
                 "label": "total_days is 41",
                 "assertion": "is.numeric(total_days) && isTRUE(all.equal(total_days, 41))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,13\\nBen,Seed Saving,22\\nCy,River Birds,12\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\n\\\")\\ntotal_days <- sum(loans$days)\", c(\"total_days\"), output = FALSE)"
               }
             ]
           }
@@ -87,6 +102,11 @@
                 "id": "t1",
                 "label": "Shows the structure",
                 "assertion": "grepl(\"3 obs. of  3 variables\", ._cq_stdout, fixed = TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,13\\nBen,Seed Saving,22\\nCy,River Birds,12\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\n\\\")\\nstr(loans)\", c(), output = TRUE)"
               }
             ]
           }
@@ -106,6 +126,11 @@
                 "id": "t1",
                 "label": "bad is \"20 days\"",
                 "assertion": "identical(bad, c(\"20 days\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loans <- read.csv(text = \\\"\\nmember,days\\nAna,12\\nBen,20 days\\nCy,9\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,days\\nAna,13\\nBen,22 days\\nCy,12\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,days\\nAna,12\\nBen,20 days\\nCy,9\\n\\\")\\nnums <- suppressWarnings(as.numeric(loans$days))\\nbad <- loans$days[is.na(nums)]\", c(\"bad\"), output = FALSE)"
               }
             ]
           }
@@ -130,6 +155,11 @@
                 "id": "t2",
                 "label": "n_missing is 2",
                 "assertion": "is.numeric(n_missing) && isTRUE(all.equal(n_missing, 2))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"csv <- \\\"member,days\\nAna,12\\nBen,N/A\\nCy,\\nDee,9\\\"\\n\", \"csv <- \\\"member,days\\nAna,13\\nBen,N/A\\nCy,\\nDee,11\\\"\\n\", \"csv <- \\\"member,days\\nAna,12\\nBen,N/A\\nCy,\\nDee,9\\\"\\nloans <- read.csv(text = csv, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nn_missing <- sum(is.na(loans$days))\", c(\"loans\", \"n_missing\"), output = FALSE)"
               }
             ]
           }
@@ -149,6 +179,11 @@
                 "id": "t1",
                 "label": "member is Ana, Ben, Cy",
                 "assertion": "identical(loans$member, c(\"Ana\", \"Ben\", \"Cy\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"csv <- \\\"member,days\\n Ana ,12\\nBen  ,20\\n  Cy,9\\\"\\n\", \"csv <- \\\"member,days\\n Ana ,13\\nBen  ,22\\n  Cy,12\\\"\\n\", \"csv <- \\\"member,days\\n Ana ,12\\nBen  ,20\\n  Cy,9\\\"\\nloans <- read.csv(text = csv, strip.white = TRUE)\", c(\"loans\"), output = FALSE)"
               }
             ]
           }
@@ -168,6 +203,35 @@
                 "id": "t1",
                 "label": "again is the same as loans",
                 "assertion": "is.data.frame(again) && identical(names(again), names(loans)) && isTRUE(all.equal(as.list(again), as.list(loans), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,13\\nBen,Seed Saving,22\\nCy,River Birds,12\\n\\\")\\n\", \"loans <- read.csv(text = \\\"\\nmember,book,days\\nAna,The Long Walk,12\\nBen,Seed Saving,20\\nCy,River Birds,9\\n\\\")\\nwrite.csv(loans, \\\"loans_clean.csv\\\", row.names = FALSE)\\nagain <- read.csv(\\\"loans_clean.csv\\\")\", c(\"loans\", \"again\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-a-note-on-top",
+          "title": "Hard: A note on top",
+          "promptMarkdown": "The export starts with a note line before the column names. Make `loans` the data, read without that first line.",
+          "starterCode": "csv <- \"Library export 2026-10-30\nmember,days\nAna,12\nBen,20\"\n",
+          "hint": "`skip = 1` tells `read.csv()` to ignore the first line: `read.csv(text = csv, skip = 1)`.",
+          "solution": "csv <- \"Library export 2026-10-30\nmember,days\nAna,12\nBen,20\"\nloans <- read.csv(text = csv, skip = 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "loans is Ana 12, Ben 20",
+                "assertion": "is.data.frame(loans) && identical(names(loans), names(data.frame(member = c(\"Ana\", \"Ben\"), days = c(12L, 20L)))) && isTRUE(all.equal(as.list(loans), as.list(data.frame(member = c(\"Ana\", \"Ben\"), days = c(12L, 20L))), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"csv <- \\\"Library export 2026-10-30\\nmember,days\\nAna,12\\nBen,20\\\"\\n\", \"csv <- \\\"Library export 2026-10-30\\nmember,days\\nAna,13\\nBen,22\\\"\\n\", \"csv <- \\\"Library export 2026-10-30\\nmember,days\\nAna,12\\nBen,20\\\"\\nloans <- read.csv(text = csv, skip = 1)\", c(\"loans\"), output = FALSE)"
               }
             ]
           }
@@ -187,6 +251,40 @@
                 "id": "t1",
                 "label": "prices has tea 2.5 and cake 4.2",
                 "assertion": "is.data.frame(prices) && identical(names(prices), names(data.frame(item = c(\"tea\", \"cake\"), price = c(2.5, 4.2)))) && isTRUE(all.equal(as.list(prices), as.list(data.frame(item = c(\"tea\", \"cake\"), price = c(2.5, 4.2))), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"csv <- \\\"item;price\\ntea;2,50\\ncake;4,20\\\"\\n\", \"csv <- \\\"item;price\\ntea;3,52\\ncake;7,21\\\"\\n\", \"csv <- \\\"item;price\\ntea;2,50\\ncake;4,20\\\"\\nprices <- read.csv2(text = csv)\", c(\"prices\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-keep-the-zeros",
+          "title": "Expert: Keep the zeros",
+          "promptMarkdown": "The ids have leading zeros that matter. Read the CSV into `stock` so that `id` stays text, like `\"007\"`.",
+          "starterCode": "csv <- \"id,item\n007,tea\n012,cake\"\n",
+          "hint": "`colClasses = c(id = \"character\")` tells `read.csv()` the type of that column.",
+          "solution": "csv <- \"id,item\n007,tea\n012,cake\"\nstock <- read.csv(text = csv, colClasses = c(id = \"character\"))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "stock$id is \"007\", \"012\"",
+                "assertion": "identical(stock$id, c(\"007\", \"012\"))"
+              },
+              {
+                "id": "t2",
+                "label": "stock$item is tea, cake",
+                "assertion": "identical(stock$item, c(\"tea\", \"cake\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"csv <- \\\"id,item\\n007,tea\\n012,cake\\\"\\n\", \"csv <- \\\"id,item\\n008,tea\\n014,cake\\\"\\n\", \"csv <- \\\"id,item\\n007,tea\\n012,cake\\\"\\nstock <- read.csv(text = csv, colClasses = c(id = \\\"character\\\"))\", c(\"stock\"), output = FALSE)"
               }
             ]
           }
@@ -196,29 +294,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "reading_csv-q-1l7i6hc",
+            "id": "reading_csv-q-1yda2on",
             "type": "mcq",
-            "prompt": "What does CSV stand for?",
+            "prompt": "Why does `read.csv()` make a whole column text when one value is `\"20 days\"`?",
             "choices": [
               {
                 "id": "a",
-                "label": "Column style view"
+                "label": "Days are always text"
               },
               {
                 "id": "b",
-                "label": "Coded system values"
+                "label": "read.csv() reads everything as text"
               },
               {
                 "id": "c",
-                "label": "Clean sorted values"
+                "label": "A column has one type, and \"20 days\" can't be a number, so the column stays text"
               },
               {
                 "id": "d",
-                "label": "Comma-separated values"
+                "label": "It doesn't"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Values separated by commas, one row per line."
+            "correctChoiceId": "c",
+            "explanation": "Look at `str()` straight after reading to catch this."
           },
           {
             "id": "reading_csv-q-lj2513",
@@ -417,6 +515,16 @@
           "id": "rename_one",
           "label": "Rename one",
           "code": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members)[names(members) == \"E.mail\"] <- \"email\"\nnames(members)"
+        },
+        {
+          "id": "names_as_written",
+          "label": "Names as written",
+          "code": "read.csv(text = \"Member Name,Age (years)\\nAna,34\")\nread.csv(text = \"Member Name,Age (years)\\nAna,34\", check.names = FALSE)"
+        },
+        {
+          "id": "rename_with_a_lookup",
+          "label": "Rename with a lookup",
+          "code": "df <- data.frame(Member.Name = \"Ana\", E.mail = \"a@example.org\")\nnew_names <- c(Member.Name = \"name\", E.mail = \"email\")\nnames(df) <- new_names[names(df)]\nnames(df)"
         }
       ],
       "intro": {
@@ -464,6 +572,11 @@
                 "id": "t1",
                 "label": "The names are name, email, age, joined",
                 "assertion": "identical(names(members), c(\"name\", \"email\", \"age\", \"joined\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,35,2026-09-01\\nBen Okafor,ben@example.org,43,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nnames(members) <- c(\\\"name\\\", \\\"email\\\", \\\"age\\\", \\\"joined\\\")\", c(\"members\"), output = FALSE)"
               }
             ]
           }
@@ -483,6 +596,35 @@
                 "id": "t1",
                 "label": "The third name is age, the others unchanged",
                 "assertion": "identical(names(members), c(\"Member.Name\", \"E.mail\", \"age\", \"Joined.On\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,35,2026-09-01\\nBen Okafor,ben@example.org,43,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nnames(members)[3] <- \\\"age\\\"\", c(\"members\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-is-there-an-email-column",
+          "title": "Easy: Is there an email column",
+          "promptMarkdown": "Make `has_email` TRUE if the table has a column called `E.mail`, and FALSE if not.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "`\"E.mail\" %in% names(members)`",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nhas_email <- \"E.mail\" %in% names(members)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "has_email is TRUE",
+                "assertion": "identical(has_email, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"Name,Age\\\\nAna,34\\\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nhas_email <- \\\"E.mail\\\" %in% names(members)\", c(\"has_email\"), output = FALSE)"
               }
             ]
           }
@@ -507,6 +649,11 @@
                 "id": "t2",
                 "label": "Finds it by name",
                 "assertion": "grepl(\"== \\\"E.mail\\\"\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,35,2026-09-01\\nBen Okafor,ben@example.org,43,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nnames(members)[names(members) == \\\"E.mail\\\"] <- \\\"email\\\"\", c(\"members\"), output = FALSE)"
               }
             ]
           }
@@ -526,6 +673,11 @@
                 "id": "t1",
                 "label": "The names are lower case",
                 "assertion": "identical(names(members), c(\"member.name\", \"e.mail\", \"age..years.\", \"joined.on\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,35,2026-09-01\\nBen Okafor,ben@example.org,43,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nnames(members) <- tolower(names(members))\", c(\"members\"), output = FALSE)"
               }
             ]
           }
@@ -545,6 +697,11 @@
                 "id": "t1",
                 "label": "The names are member_name, e_mail, age_years, joined_on",
                 "assertion": "identical(names(members), c(\"member_name\", \"e_mail\", \"age_years\", \"joined_on\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,35,2026-09-01\\nBen Okafor,ben@example.org,43,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nn <- tolower(names(members))\\nn <- gsub(\\\"\\\\\\\\.+\\\", \\\"_\\\", n)\\nn <- gsub(\\\"^_|_$\\\", \\\"\\\", n)\\nnames(members) <- n\", c(\"members\"), output = FALSE)"
               }
             ]
           }
@@ -588,6 +745,40 @@
                 "id": "t2",
                 "label": "The names are tidy",
                 "assertion": "\"age_years\" %in% names(members)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,35,2026-09-01\\nBen Okafor,ben@example.org,43,2026-09-03\\n\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nn <- tolower(names(members))\\nn <- gsub(\\\"\\\\\\\\.+\\\", \\\"_\\\", n)\\nnames(members) <- gsub(\\\"^_|_$\\\", \\\"\\\", n)\\navg_age <- mean(members$age_years)\", c(\"members\", \"avg_age\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-rename-from-a-lookup",
+          "title": "Expert: Rename from a lookup",
+          "promptMarkdown": "Rename the columns listed in `new_names` (old name = new name), and leave the other columns as they are.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnew_names <- c(Member.Name = \"name\", E.mail = \"email\")\n",
+          "hint": "`hit <- names(members) %in% names(new_names)` marks the columns to rename. Then `names(members)[hit] <- new_names[names(members)[hit]]`.",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnew_names <- c(Member.Name = \"name\", E.mail = \"email\")\nhit <- names(members) %in% names(new_names)\nnames(members)[hit] <- new_names[names(members)[hit]]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The names are name, email, Age..years., Joined.On",
+                "assertion": "identical(unname(names(members)), c(\"name\", \"email\", \"Age..years.\", \"Joined.On\"))"
+              },
+              {
+                "id": "t2",
+                "label": "The data is unchanged",
+                "assertion": "identical(members[[1]], c(\"Ana Silva\", \"Ben Okafor\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nnew_names <- c(Member.Name = \\\"name\\\", E.mail = \\\"email\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,35,2026-09-01\\nBen Okafor,ben@example.org,43,2026-09-03\\n\\\")\\nnew_names <- c(Member.Name = \\\"name\\\", E.mail = \\\"email2\\\")\\n\", \"members <- read.csv(text = \\\"\\nMember Name,E-mail,Age (years),Joined On\\nAna Silva,ana@example.org,34,2026-09-01\\nBen Okafor,ben@example.org,41,2026-09-03\\n\\\")\\nnew_names <- c(Member.Name = \\\"name\\\", E.mail = \\\"email\\\")\\nhit <- names(members) %in% names(new_names)\\nnames(members)[hit] <- new_names[names(members)[hit]]\", c(\"members\"), output = FALSE)"
               }
             ]
           }
@@ -747,29 +938,29 @@
             "explanation": "`members$age` beats `members$Age..years.`."
           },
           {
-            "id": "column_names-q-12qjdcx",
+            "id": "column_names-q-1x294jz",
             "type": "mcq",
-            "prompt": "What does `tolower(\"Joined.On\")` give?",
+            "prompt": "Why does `read.csv()` turn `Member Name` into `Member.Name`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"joinedon\"`"
+                "label": "It keeps the space"
               },
               {
                 "id": "b",
-                "label": "`\"joined.on\"`"
+                "label": "Dots are quicker to type"
               },
               {
                 "id": "c",
-                "label": "`\"joined_on\"`"
+                "label": "It is a bug"
               },
               {
                 "id": "d",
-                "label": "`\"JOINED.ON\"`"
+                "label": "Column names must be valid R names, so spaces and symbols become dots"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Only the letters change."
+            "correctChoiceId": "d",
+            "explanation": "Add `check.names = FALSE` to keep the names exactly as written."
           },
           {
             "id": "column_names-q-1v0wjjz",
@@ -818,6 +1009,16 @@
           "id": "find_what_is_still_wrong",
           "label": "Find what is still wrong",
           "code": "x <- c(\"12\", \"8 kg\", \"15\", \"n/a\")\nnums <- suppressWarnings(as.numeric(x))\nx[is.na(nums)]"
+        },
+        {
+          "id": "brackets_for_minus",
+          "label": "Brackets for minus",
+          "code": "raw <- c(\"12.50\", \"(3.20)\")\nneg <- grepl(\"(\", raw, fixed = TRUE)\nx <- as.numeric(gsub(\"[()]\", \"\", raw))\nifelse(neg, -x, x)"
+        },
+        {
+          "id": "what_won_t_convert",
+          "label": "What won't convert",
+          "code": "raw <- c(\"12.4\", \"about 4\", \"9.8\")\nraw[is.na(suppressWarnings(as.numeric(raw)))]"
         }
       ],
       "intro": {
@@ -846,6 +1047,11 @@
                 "id": "t1",
                 "label": "price is 3.4, 12, 2.5",
                 "assertion": "is.numeric(price) && isTRUE(all.equal(price, c(3.4, 12, 2.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"$3.40\\\", \\\"$12.00\\\", \\\"$2.50\\\")\\n\", \"raw <- c(\\\"$3.40\\\", \\\"$12.00\\\", \\\"$2.502\\\")\\n\", \"raw <- c(\\\"$3.40\\\", \\\"$12.00\\\", \\\"$2.50\\\")\\nprice <- as.numeric(gsub(\\\"$\\\", \\\"\\\", raw, fixed = TRUE))\", c(\"price\"), output = FALSE)"
               }
             ]
           }
@@ -865,6 +1071,11 @@
                 "id": "t1",
                 "label": "visitors is 1250, 980, 12400",
                 "assertion": "is.numeric(visitors) && isTRUE(all.equal(visitors, c(1250, 980, 12400)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"1,250\\\", \\\"980\\\", \\\"12,400\\\")\\n\", \"raw <- c(\\\"1,250\\\", \\\"980\\\", \\\"12,4002\\\")\\n\", \"raw <- c(\\\"1,250\\\", \\\"980\\\", \\\"12,400\\\")\\nvisitors <- as.numeric(gsub(\\\",\\\", \\\"\\\", raw))\", c(\"visitors\"), output = FALSE)"
               }
             ]
           }
@@ -884,6 +1095,11 @@
                 "id": "t1",
                 "label": "kg is 12.4, 3.6, 9.8",
                 "assertion": "is.numeric(kg) && isTRUE(all.equal(kg, c(12.4, 3.6, 9.8)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"12.4 kg\\\", \\\"3.6 kg\\\", \\\"9.8 kg\\\")\\n\", \"raw <- c(\\\"12.4 kg\\\", \\\"3.6 kg\\\", \\\"9.8 kg2\\\")\\n\", \"raw <- c(\\\"12.4 kg\\\", \\\"3.6 kg\\\", \\\"9.8 kg\\\")\\nkg <- as.numeric(gsub(\\\" kg\\\", \\\"\\\", raw, fixed = TRUE))\", c(\"kg\"), output = FALSE)"
               }
             ]
           }
@@ -903,6 +1119,11 @@
                 "id": "t1",
                 "label": "price is 3.4, 12, 1250.5, 8",
                 "assertion": "is.numeric(price) && isTRUE(all.equal(price, c(3.4, 12, 1250.5, 8)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"$3.40\\\", \\\"$12.00\\\", \\\"$1,250.50\\\", \\\" $8 \\\")\\n\", \"raw <- c(\\\"$3.40\\\", \\\"$12.00\\\", \\\"$1,250.50\\\", \\\" $8 2\\\")\\n\", \"raw <- c(\\\"$3.40\\\", \\\"$12.00\\\", \\\"$1,250.50\\\", \\\" $8 \\\")\\nx <- gsub(\\\"$\\\", \\\"\\\", raw, fixed = TRUE)\\nx <- gsub(\\\",\\\", \\\"\\\", x, fixed = TRUE)\\nprice <- as.numeric(trimws(x))\", c(\"price\"), output = FALSE)"
               }
             ]
           }
@@ -922,6 +1143,11 @@
                 "id": "t1",
                 "label": "left_over is \"about 4\", \"-\", \"3.6kg\"",
                 "assertion": "identical(left_over, c(\"about 4\", \"-\", \"3.6kg\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"12.4 kg\\\", \\\"about 4\\\", \\\"9.8 kg\\\", \\\"-\\\", \\\"3.6kg\\\")\\n\", \"raw <- c(\\\"12.4 kg\\\", \\\"about 4\\\", \\\"9.8 kg\\\", \\\"-\\\", \\\"3.6kg2\\\")\\n\", \"raw <- c(\\\"12.4 kg\\\", \\\"about 4\\\", \\\"9.8 kg\\\", \\\"-\\\", \\\"3.6kg\\\")\\nnums <- suppressWarnings(as.numeric(gsub(\\\" kg\\\", \\\"\\\", raw, fixed = TRUE)))\\nleft_over <- raw[is.na(nums)]\", c(\"left_over\"), output = FALSE)"
               }
             ]
           }
@@ -941,6 +1167,11 @@
                 "id": "t1",
                 "label": "share is 0.45, 0.08, 1",
                 "assertion": "is.numeric(share) && isTRUE(all.equal(share, c(0.45, 0.08, 1)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"45%\\\", \\\"8%\\\", \\\"100%\\\")\\n\", \"raw <- c(\\\"45%\\\", \\\"8%\\\", \\\"100%2\\\")\\n\", \"raw <- c(\\\"45%\\\", \\\"8%\\\", \\\"100%\\\")\\nshare <- as.numeric(gsub(\\\"%\\\", \\\"\\\", raw)) / 100\", c(\"share\"), output = FALSE)"
               }
             ]
           }
@@ -960,6 +1191,35 @@
                 "id": "t1",
                 "label": "price is numeric 2.5, 4.2, 1250",
                 "assertion": "is.numeric(orders$price) && isTRUE(all.equal(orders$price, c(2.5, 4.2, 1250)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- read.csv(text = \\\"\\nitem,price\\ntea,$2.50\\ncake,$4.20\\nlunch,\\\\\\\"$1,250.00\\\\\\\"\\n\\\")\\n\", \"orders <- read.csv(text = \\\"\\nitem,price\\ntea,$2.51\\ncake,$4.22\\nlunch,\\\\\\\"$4,250.01\\\\\\\"\\n\\\")\\n\", \"orders <- read.csv(text = \\\"\\nitem,price\\ntea,$2.50\\ncake,$4.20\\nlunch,\\\\\\\"$1,250.00\\\\\\\"\\n\\\")\\norders$price <- as.numeric(gsub(\\\"[$,]\\\", \\\"\\\", orders$price))\", c(\"orders\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-brackets-mean-minus",
+          "title": "Hard: Brackets mean minus",
+          "promptMarkdown": "In this accounts file, a number in brackets is negative: `\"(3.20)\"` means -3.2. Make `amount` the numbers.",
+          "starterCode": "raw <- c(\"12.50\", \"(3.20)\", \"8.00\", \"(0.75)\")\n",
+          "hint": "Mark the bracketed ones with `grepl(\"(\", raw, fixed = TRUE)`, remove the brackets with `gsub(\"[()]\", \"\", raw)`, then make those negative with `ifelse()`.",
+          "solution": "raw <- c(\"12.50\", \"(3.20)\", \"8.00\", \"(0.75)\")\nneg <- grepl(\"(\", raw, fixed = TRUE)\nx <- as.numeric(gsub(\"[()]\", \"\", raw))\namount <- ifelse(neg, -x, x)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "amount is 12.5, -3.2, 8, -0.75",
+                "assertion": "is.numeric(amount) && isTRUE(all.equal(amount, c(12.5, -3.2, 8, -0.75)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"12.50\\\", \\\"(3.20)\\\", \\\"8.00\\\", \\\"(0.75)\\\")\\n\", \"raw <- c(\\\"12.50\\\", \\\"(3.20)\\\", \\\"8.00\\\", \\\"(0.75)2\\\")\\n\", \"raw <- c(\\\"12.50\\\", \\\"(3.20)\\\", \\\"8.00\\\", \\\"(0.75)\\\")\\nneg <- grepl(\\\"(\\\", raw, fixed = TRUE)\\nx <- as.numeric(gsub(\\\"[()]\\\", \\\"\\\", raw))\\namount <- ifelse(neg, -x, x)\", c(\"amount\"), output = FALSE)"
               }
             ]
           }
@@ -979,6 +1239,35 @@
                 "id": "t1",
                 "label": "kg is 0.5, 1.2, 0.25, 2",
                 "assertion": "is.numeric(kg) && isTRUE(all.equal(kg, c(0.5, 1.2, 0.25, 2)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"500 g\\\", \\\"1.2 kg\\\", \\\"250 g\\\", \\\"2 kg\\\")\\n\", \"raw <- c(\\\"500 g\\\", \\\"1.2 kg\\\", \\\"250 g\\\", \\\"500 g\\\")\\n\", \"raw <- c(\\\"500 g\\\", \\\"1.2 kg\\\", \\\"250 g\\\", \\\"2 kg\\\")\\nn <- as.numeric(sub(\\\" .*\\\", \\\"\\\", raw))\\nkg <- ifelse(grepl(\\\"kg\\\", raw), n, n / 1000)\", c(\"kg\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-hours-and-minutes",
+          "title": "Expert: Hours and minutes",
+          "promptMarkdown": "Make `minutes` the length of each session in minutes, from texts like `\"1h 30m\"`, `\"45m\"` and `\"2h\"`.",
+          "starterCode": "raw <- c(\"1h 30m\", \"45m\", \"2h\", \"2h 15m\")\n",
+          "hint": "Hours: where there is an `h`, `as.numeric(sub(\"h.*\", \"\", raw))`, else 0. Minutes: `sub(\".*h ?\", \"\", raw)` leaves `\"30m\"`, `\"45m\"` or `\"\"`; remove the `m` and use 0 for the empty ones.",
+          "solution": "raw <- c(\"1h 30m\", \"45m\", \"2h\", \"2h 15m\")\nhours <- ifelse(grepl(\"h\", raw), as.numeric(sub(\"h.*\", \"\", raw)), 0)\nrest <- sub(\".*h ?\", \"\", raw)\nmins <- ifelse(rest == \"\", 0, as.numeric(sub(\"m\", \"\", rest)))\nminutes <- hours * 60 + mins",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "minutes is 90, 45, 120, 135",
+                "assertion": "is.numeric(minutes) && isTRUE(all.equal(minutes, c(90, 45, 120, 135)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"1h 30m\\\", \\\"45m\\\", \\\"2h\\\", \\\"2h 15m\\\")\\n\", \"raw <- c(\\\"1h 30m\\\", \\\"45m\\\", \\\"2h\\\", \\\"2h 15m2\\\")\\n\", \"raw <- c(\\\"1h 30m\\\", \\\"45m\\\", \\\"2h\\\", \\\"2h 15m\\\")\\nhours <- ifelse(grepl(\\\"h\\\", raw), as.numeric(sub(\\\"h.*\\\", \\\"\\\", raw)), 0)\\nrest <- sub(\\\".*h ?\\\", \\\"\\\", raw)\\nmins <- ifelse(rest == \\\"\\\", 0, as.numeric(sub(\\\"m\\\", \\\"\\\", rest)))\\nminutes <- hours * 60 + mins\", c(\"minutes\"), output = FALSE)"
               }
             ]
           }
@@ -1013,29 +1302,29 @@
             "explanation": "The `$` stops R reading it as a number."
           },
           {
-            "id": "numbers_as_text-q-vlisj3",
+            "id": "numbers_as_text-q-1kfhepc",
             "type": "mcq",
-            "prompt": "What does `gsub(\"$\", \"\", \"$3.40\")` give?",
+            "prompt": "Why does `gsub(\"$\", \"\", \"$3.40\")` leave the dollar sign in?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"3.40\"`"
+                "label": "It removes it"
               },
               {
                 "id": "b",
-                "label": "`\"$3.40\"`"
+                "label": "gsub() can't remove symbols"
               },
               {
                 "id": "c",
-                "label": "`\"\"`"
+                "label": "In a pattern, `$` means \"the end of the text\", not a dollar sign"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "The dollar is part of the number"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "In a pattern, `$` means \"end of text\", so nothing visible is removed. Add `fixed = TRUE`."
+            "correctChoiceId": "c",
+            "explanation": "Add `fixed = TRUE` to match a real `$`."
           },
           {
             "id": "numbers_as_text-q-1mu0z3c",
@@ -1209,6 +1498,16 @@
           "id": "title_case",
           "label": "Title case",
           "code": "tools::toTitleCase(c(\"ana silva\", \"ben okafor\"))"
+        },
+        {
+          "id": "see_the_variants",
+          "label": "See the variants",
+          "code": "crop <- c(\"Kale\", \"kale \", \"KALE\", \"beans\")\ntable(crop)\ntable(tolower(trimws(crop)))"
+        },
+        {
+          "id": "capital_first_letter",
+          "label": "Capital first letter",
+          "code": "x <- c(\"kale\", \"BEANS\")\npaste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))"
         }
       ],
       "intro": {
@@ -1237,6 +1536,11 @@
                 "id": "t1",
                 "label": "crop is kale kale kale beans beans",
                 "assertion": "identical(crop, c(\"kale\", \"kale\", \"kale\", \"beans\", \"beans\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crop <- c(\\\"Kale\\\", \\\"kale \\\", \\\"KALE\\\", \\\"beans\\\", \\\" Beans\\\")\\n\", \"crop <- c(\\\"Kale\\\", \\\"kale \\\", \\\"KALE\\\", \\\"beans\\\", \\\" Beans2\\\")\\n\", \"crop <- c(\\\"Kale\\\", \\\"kale \\\", \\\"KALE\\\", \\\"beans\\\", \\\" Beans\\\")\\ncrop <- tolower(trimws(crop))\", c(\"crop\"), output = FALSE)"
               }
             ]
           }
@@ -1256,6 +1560,11 @@
                 "id": "t1",
                 "label": "codes is A1, B2, A3",
                 "assertion": "identical(codes, c(\"A1\", \"B2\", \"A3\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\" a1\\\", \\\"b2 \\\", \\\"A3\\\")\\n\", \"codes <- c(\\\" a1\\\", \\\"b2 \\\", \\\"A32\\\")\\n\", \"codes <- c(\\\" a1\\\", \\\"b2 \\\", \\\"A3\\\")\\ncodes <- toupper(trimws(codes))\", c(\"codes\"), output = FALSE)"
               }
             ]
           }
@@ -1280,6 +1589,11 @@
                 "id": "t2",
                 "label": "n_clean is 2",
                 "assertion": "is.numeric(n_clean) && isTRUE(all.equal(n_clean, 2))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crop <- c(\\\"Kale\\\", \\\"kale \\\", \\\"KALE\\\", \\\"beans\\\", \\\" Beans\\\")\\n\", \"crop <- c(\\\"Kale\\\", \\\"kale \\\", \\\"KALE\\\", \\\"beans\\\", \\\" Beans2\\\")\\n\", \"crop <- c(\\\"Kale\\\", \\\"kale \\\", \\\"KALE\\\", \\\"beans\\\", \\\" Beans\\\")\\nn_variants <- length(unique(crop))\\nn_clean <- length(unique(tolower(trimws(crop))))\", c(\"n_variants\", \"n_clean\"), output = FALSE)"
               }
             ]
           }
@@ -1299,6 +1613,11 @@
                 "id": "t1",
                 "label": "names_clean is Ana Silva, Ben Okafor, Cy Li",
                 "assertion": "identical(names_clean, c(\"Ana Silva\", \"Ben Okafor\", \"Cy Li\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"names_in <- c(\\\"  Ana   Silva\\\", \\\"Ben  Okafor \\\", \\\"Cy Li\\\")\\n\", \"names_in <- c(\\\"  Ana   Silva\\\", \\\"Ben  Okafor \\\", \\\"Cy Li2\\\")\\n\", \"names_in <- c(\\\"  Ana   Silva\\\", \\\"Ben  Okafor \\\", \\\"Cy Li\\\")\\nnames_clean <- gsub(\\\" +\\\", \\\" \\\", trimws(names_in))\", c(\"names_clean\"), output = FALSE)"
               }
             ]
           }
@@ -1318,6 +1637,11 @@
                 "id": "t1",
                 "label": "display is Ana Silva, Ben Okafor, Cy Li",
                 "assertion": "identical(display, c(\"Ana Silva\", \"Ben Okafor\", \"Cy Li\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"names_in <- c(\\\"ana silva\\\", \\\"BEN OKAFOR\\\", \\\"cy li\\\")\\n\", \"names_in <- c(\\\"ana silva\\\", \\\"BEN OKAFOR\\\", \\\"cy li2\\\")\\n\", \"names_in <- c(\\\"ana silva\\\", \\\"BEN OKAFOR\\\", \\\"cy li\\\")\\ndisplay <- tools::toTitleCase(tolower(names_in))\", c(\"display\"), output = FALSE)"
               }
             ]
           }
@@ -1337,6 +1661,11 @@
                 "id": "t1",
                 "label": "crop is kale, kale, beans",
                 "assertion": "identical(harvest$crop, c(\"kale\", \"kale\", \"beans\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"harvest <- data.frame(crop = c(\\\"Kale\\\", \\\"kale \\\", \\\"Beans\\\"), kg = c(2.7, 2.3, 4.1))\\n\", \"harvest <- data.frame(crop = c(\\\"Kale\\\", \\\"kale \\\", \\\"Beans2\\\"), kg = c(4.4, 2.5, 2.8))\\n\", \"harvest <- data.frame(crop = c(\\\"Kale\\\", \\\"kale \\\", \\\"Beans\\\"), kg = c(2.7, 2.3, 4.1))\\nharvest$crop <- tolower(trimws(harvest$crop))\", c(\"harvest\"), output = FALSE)"
               }
             ]
           }
@@ -1356,6 +1685,35 @@
                 "id": "t1",
                 "label": "per_crop is beans 7, kale 5, tomatoes 12.4",
                 "assertion": "isTRUE(all.equal(as.vector(per_crop), c(7, 5, 12.4))) && identical(names(per_crop), c(\"beans\", \"kale\", \"tomatoes\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"harvest <- data.frame(crop = c(\\\"Kale\\\", \\\"kale \\\", \\\"Beans\\\", \\\"TOMATOES\\\", \\\"beans\\\"), kg = c(2.7, 2.3, 4.1, 12.4, 2.9))\\n\", \"harvest <- data.frame(crop = c(\\\"Kale\\\", \\\"kale \\\", \\\"Beans\\\", \\\"TOMATOES\\\", \\\"beans2\\\"), kg = c(3.1, 12.5, 4.4, 2.5, 2.8))\\n\", \"harvest <- data.frame(crop = c(\\\"Kale\\\", \\\"kale \\\", \\\"Beans\\\", \\\"TOMATOES\\\", \\\"beans\\\"), kg = c(2.7, 2.3, 4.1, 12.4, 2.9))\\nharvest$crop <- tolower(trimws(harvest$crop))\\nper_crop <- tapply(harvest$kg, harvest$crop, sum)\", c(\"per_crop\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-capital-first-letter-only",
+          "title": "Hard: Capital first letter only",
+          "promptMarkdown": "Make `tidy` each crop with a capital first letter and small letters after it, like `\"Tomatoes\"`.",
+          "starterCode": "crop <- c(\"kale\", \"BEANS\", \"tOMATOES\")\n",
+          "hint": "Take the first letter with `substr(crop, 1, 1)` and the rest with `substr(crop, 2, nchar(crop))`, change each, then `paste0()`.",
+          "solution": "crop <- c(\"kale\", \"BEANS\", \"tOMATOES\")\ntidy <- paste0(toupper(substr(crop, 1, 1)), tolower(substr(crop, 2, nchar(crop))))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tidy is Kale, Beans, Tomatoes",
+                "assertion": "identical(tidy, c(\"Kale\", \"Beans\", \"Tomatoes\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crop <- c(\\\"kale\\\", \\\"BEANS\\\", \\\"tOMATOES\\\")\\n\", \"crop <- c(\\\"kale\\\", \\\"BEANS\\\", \\\"tOMATOES2\\\")\\n\", \"crop <- c(\\\"kale\\\", \\\"BEANS\\\", \\\"tOMATOES\\\")\\ntidy <- paste0(toupper(substr(crop, 1, 1)), tolower(substr(crop, 2, nchar(crop))))\", c(\"tidy\"), output = FALSE)"
               }
             ]
           }
@@ -1380,6 +1738,35 @@
                 "id": "t2",
                 "label": "n_people is 3",
                 "assertion": "is.numeric(n_people) && isTRUE(all.equal(n_people, 3))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"emails <- c(\\\"Ana@Example.org\\\", \\\" ana@example.org\\\", \\\"BEN@example.org\\\", \\\"cy@example.org \\\")\\n\", \"emails <- c(\\\"Ana@Example.org\\\", \\\" ana@example.org\\\", \\\"BEN@example.org\\\", \\\"cy@example.org 2\\\")\\n\", \"emails <- c(\\\"Ana@Example.org\\\", \\\" ana@example.org\\\", \\\"BEN@example.org\\\", \\\"cy@example.org \\\")\\nemails <- tolower(trimws(emails))\\nn_people <- length(unique(emails))\", c(\"emails\", \"n_people\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-not-on-the-list",
+          "title": "Expert: Not on the list",
+          "promptMarkdown": "Clean the crops (spaces, small letters), then make `unknown` the cleaned values that aren't in `allowed`, each listed once.",
+          "starterCode": "crop <- c(\" Kale\", \"beans\", \"Courgette\", \"KALE\", \"bean\", \"courgette \")\nallowed <- c(\"kale\", \"beans\", \"courgettes\")\n",
+          "hint": "`cleaned <- tolower(trimws(crop))`, then `unique(cleaned[!cleaned %in% allowed])`.",
+          "solution": "crop <- c(\" Kale\", \"beans\", \"Courgette\", \"KALE\", \"bean\", \"courgette \")\nallowed <- c(\"kale\", \"beans\", \"courgettes\")\ncleaned <- tolower(trimws(crop))\nunknown <- unique(cleaned[!cleaned %in% allowed])",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "unknown is courgette, bean",
+                "assertion": "identical(unknown, c(\"courgette\", \"bean\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crop <- c(\\\" Kale\\\", \\\"beans\\\", \\\"Courgette\\\", \\\"KALE\\\", \\\"bean\\\", \\\"courgette \\\")\\nallowed <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes\\\")\\n\", \"crop <- c(\\\" Kale\\\", \\\"beans\\\", \\\"Courgette\\\", \\\"KALE\\\", \\\"bean\\\", \\\"courgette 2\\\")\\nallowed <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes2\\\")\\n\", \"crop <- c(\\\" Kale\\\", \\\"beans\\\", \\\"Courgette\\\", \\\"KALE\\\", \\\"bean\\\", \\\"courgette \\\")\\nallowed <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes\\\")\\ncleaned <- tolower(trimws(crop))\\nunknown <- unique(cleaned[!cleaned %in% allowed])\", c(\"unknown\"), output = FALSE)"
               }
             ]
           }
@@ -1489,29 +1876,29 @@
             "explanation": "`package::function` calls a function from a package without loading the whole package."
           },
           {
-            "id": "cleaning_text-q-6f96n4",
+            "id": "cleaning_text-q-13whiom",
             "type": "mcq",
-            "prompt": "What does `trimws(\"  a  b  \")` give?",
+            "prompt": "Why does `trimws(\"  a  b  \")` keep the spaces between a and b?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"a  b\"`"
+                "label": "It removes them all"
               },
               {
                 "id": "b",
-                "label": "`\"a b\"`"
+                "label": "It removes one space at a time"
               },
               {
                 "id": "c",
-                "label": "`\"  a  b  \"`"
+                "label": "trimws() only removes spaces at the start and the end"
               },
               {
                 "id": "d",
-                "label": "`\"ab\"`"
+                "label": "Spaces inside count as letters"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "`trimws()` only removes the spaces at the ends. Use `gsub(\" +\", \" \", x)` for the ones inside."
+            "correctChoiceId": "c",
+            "explanation": "Use `gsub(\" +\", \" \", x)` to squeeze the spaces inside."
           },
           {
             "id": "cleaning_text-q-1ohmt4k",
@@ -1610,6 +1997,16 @@
           "id": "fix_variants",
           "label": "Fix variants",
           "code": "crop <- c(\"courgettes\", \"zucchini\", \"kale\", \"courgette\")\ncrop[crop %in% c(\"courgette\", \"zucchini\")] <- \"courgettes\"\ncrop"
+        },
+        {
+          "id": "a_default_for_unknown_codes",
+          "label": "A default for unknown codes",
+          "code": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\nout <- unname(size_names[c(\"S\", \"XL\", \"L\")])\nout[is.na(out)] <- \"other\"\nout"
+        },
+        {
+          "id": "group_the_codes",
+          "label": "Group the codes",
+          "code": "groups <- c(\"1\" = \"unhappy\", \"2\" = \"unhappy\", \"3\" = \"neutral\", \"4\" = \"happy\", \"5\" = \"happy\")\nunname(groups[c(\"5\", \"1\", \"3\")])"
         }
       ],
       "intro": {
@@ -1638,6 +2035,11 @@
                 "id": "t1",
                 "label": "crop is courgettes courgettes kale courgettes",
                 "assertion": "identical(crop, c(\"courgettes\", \"courgettes\", \"kale\", \"courgettes\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crop <- c(\\\"courgettes\\\", \\\"zucchini\\\", \\\"kale\\\", \\\"zucchini\\\")\\n\", \"crop <- c(\\\"courgettes\\\", \\\"zucchini\\\", \\\"kale\\\", \\\"zucchini2\\\")\\n\", \"crop <- c(\\\"courgettes\\\", \\\"zucchini\\\", \\\"kale\\\", \\\"zucchini\\\")\\ncrop[crop == \\\"zucchini\\\"] <- \\\"courgettes\\\"\", c(\"crop\"), output = FALSE)"
               }
             ]
           }
@@ -1662,6 +2064,11 @@
                 "id": "t2",
                 "label": "Uses %in%",
                 "assertion": "grepl(\"%in%\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crop <- c(\\\"courgettes\\\", \\\"zucchini\\\", \\\"kale\\\", \\\"courgette\\\")\\n\", \"crop <- c(\\\"courgettes\\\", \\\"zucchini\\\", \\\"kale\\\", \\\"courgette2\\\")\\n\", \"crop <- c(\\\"courgettes\\\", \\\"zucchini\\\", \\\"kale\\\", \\\"courgette\\\")\\ncrop[crop %in% c(\\\"courgette\\\", \\\"zucchini\\\")] <- \\\"courgettes\\\"\", c(\"crop\"), output = FALSE)"
               }
             ]
           }
@@ -1681,6 +2088,11 @@
                 "id": "t1",
                 "label": "size_words is medium small medium large",
                 "assertion": "identical(size_words, c(\"medium\", \"small\", \"medium\", \"large\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\nsizes <- c(\\\"M\\\", \\\"S\\\", \\\"M\\\", \\\"L\\\")\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large2\\\")\\nsizes <- c(\\\"M\\\", \\\"S\\\", \\\"M\\\", \\\"L2\\\")\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\nsizes <- c(\\\"M\\\", \\\"S\\\", \\\"M\\\", \\\"L\\\")\\nsize_words <- unname(size_names[sizes])\", c(\"size_words\"), output = FALSE)"
               }
             ]
           }
@@ -1700,6 +2112,11 @@
                 "id": "t1",
                 "label": "unknown is XL, m",
                 "assertion": "identical(unknown, c(\"XL\", \"m\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\nsizes <- c(\\\"M\\\", \\\"XL\\\", \\\"S\\\", \\\"m\\\", \\\"L\\\")\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large2\\\")\\nsizes <- c(\\\"M\\\", \\\"XL\\\", \\\"S\\\", \\\"m\\\", \\\"L2\\\")\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\nsizes <- c(\\\"M\\\", \\\"XL\\\", \\\"S\\\", \\\"m\\\", \\\"L\\\")\\nunknown <- sizes[!sizes %in% names(size_names)]\", c(\"unknown\"), output = FALSE)"
               }
             ]
           }
@@ -1719,6 +2136,11 @@
                 "id": "t1",
                 "label": "agreed is TRUE FALSE TRUE TRUE FALSE FALSE",
                 "assertion": "identical(agreed, c(TRUE, FALSE, TRUE, TRUE, FALSE, FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"y\\\", \\\"1\\\", \\\"0\\\", \\\"maybe\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"y\\\", \\\"1\\\", \\\"0\\\", \\\"yes\\\")\\n\", \"answers <- c(\\\"yes\\\", \\\"no\\\", \\\"y\\\", \\\"1\\\", \\\"0\\\", \\\"maybe\\\")\\nagreed <- answers %in% c(\\\"yes\\\", \\\"y\\\", \\\"1\\\")\", c(\"agreed\"), output = FALSE)"
               }
             ]
           }
@@ -1738,6 +2160,11 @@
                 "id": "t1",
                 "label": "group is greens beans greens tomatoes greens",
                 "assertion": "identical(group, c(\"greens\", \"beans\", \"greens\", \"tomatoes\", \"greens\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crop <- c(\\\"kale\\\", \\\"beans\\\", \\\"chard\\\", \\\"tomatoes\\\", \\\"spinach\\\")\\n\", \"crop <- c(\\\"kale\\\", \\\"beans\\\", \\\"chard\\\", \\\"tomatoes\\\", \\\"spinach2\\\")\\n\", \"crop <- c(\\\"kale\\\", \\\"beans\\\", \\\"chard\\\", \\\"tomatoes\\\", \\\"spinach\\\")\\ngroup <- ifelse(crop %in% c(\\\"kale\\\", \\\"chard\\\", \\\"spinach\\\"), \\\"greens\\\", crop)\", c(\"group\"), output = FALSE)"
               }
             ]
           }
@@ -1757,6 +2184,35 @@
                 "id": "t1",
                 "label": "size_word is medium small large medium",
                 "assertion": "identical(orders$size_word, c(\"medium\", \"small\", \"large\", \"medium\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\norders <- data.frame(order = 1:4, size = c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\"))\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large2\\\")\\norders <- data.frame(order = 1:4, size = c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M2\\\"))\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\norders <- data.frame(order = 1:4, size = c(\\\"M\\\", \\\"S\\\", \\\"L\\\", \\\"M\\\"))\\norders$size_word <- unname(size_names[orders$size])\", c(\"orders\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-other-for-the-rest",
+          "title": "Hard: Other for the rest",
+          "promptMarkdown": "Make `named` the size words for `codes`, with `\"other\"` for any code the lookup doesn't have.",
+          "starterCode": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\ncodes <- c(\"S\", \"M\", \"XL\", \"L\")\n",
+          "hint": "`unname(size_names[codes])` gives NA for unknown codes; then `named[is.na(named)] <- \"other\"`.",
+          "solution": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\ncodes <- c(\"S\", \"M\", \"XL\", \"L\")\nnamed <- unname(size_names[codes])\nnamed[is.na(named)] <- \"other\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "named is small, medium, other, large",
+                "assertion": "identical(named, c(\"small\", \"medium\", \"other\", \"large\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\ncodes <- c(\\\"S\\\", \\\"M\\\", \\\"XL\\\", \\\"L\\\")\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large2\\\")\\ncodes <- c(\\\"S\\\", \\\"M\\\", \\\"XL\\\", \\\"L2\\\")\\n\", \"size_names <- c(S = \\\"small\\\", M = \\\"medium\\\", L = \\\"large\\\")\\ncodes <- c(\\\"S\\\", \\\"M\\\", \\\"XL\\\", \\\"L\\\")\\nnamed <- unname(size_names[codes])\\nnamed[is.na(named)] <- \\\"other\\\"\", c(\"named\"), output = FALSE)"
               }
             ]
           }
@@ -1776,6 +2232,35 @@
                 "id": "t1",
                 "label": "agreed is TRUE FALSE TRUE FALSE NA TRUE",
                 "assertion": "identical(agreed, c(TRUE, FALSE, TRUE, FALSE, NA, TRUE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(\\\" Yes\\\", \\\"N\\\", \\\"y\\\", \\\"NO \\\", \\\"maybe\\\", \\\"yes\\\")\\n\", \"answers <- c(\\\" Yes\\\", \\\"N\\\", \\\"y\\\", \\\"NO \\\", \\\"maybe\\\", \\\"yes2\\\")\\n\", \"answers <- c(\\\" Yes\\\", \\\"N\\\", \\\"y\\\", \\\"NO \\\", \\\"maybe\\\", \\\"yes\\\")\\nclean <- tolower(trimws(answers))\\nagreed <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[clean])\", c(\"agreed\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-moods-in-order",
+          "title": "Expert: Moods in order",
+          "promptMarkdown": "Ratings 1 and 2 are `\"unhappy\"`, 3 is `\"neutral\"`, 4 and 5 are `\"happy\"`. Make `mood_counts` the count of each mood, in the order unhappy, neutral, happy.",
+          "starterCode": "ratings <- c(\"1\", \"5\", \"3\", \"4\", \"2\", \"5\", \"4\")\n",
+          "hint": "A lookup: `groups <- c(\"1\" = \"unhappy\", \"2\" = \"unhappy\", \"3\" = \"neutral\", \"4\" = \"happy\", \"5\" = \"happy\")`. Then make a factor with your levels and `table()` it.",
+          "solution": "ratings <- c(\"1\", \"5\", \"3\", \"4\", \"2\", \"5\", \"4\")\ngroups <- c(\"1\" = \"unhappy\", \"2\" = \"unhappy\", \"3\" = \"neutral\", \"4\" = \"happy\", \"5\" = \"happy\")\nmood <- factor(unname(groups[ratings]), levels = c(\"unhappy\", \"neutral\", \"happy\"))\nmood_counts <- table(mood)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "mood_counts is unhappy 2, neutral 1, happy 4",
+                "assertion": "identical(as.vector(mood_counts), c(2L, 1L, 4L)) && identical(names(mood_counts), c(\"unhappy\", \"neutral\", \"happy\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ratings <- c(\\\"1\\\", \\\"5\\\", \\\"3\\\", \\\"4\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\")\\n\", \"ratings <- c(\\\"1\\\", \\\"5\\\", \\\"3\\\", \\\"4\\\", \\\"2\\\", \\\"5\\\", \\\"42\\\")\\n\", \"ratings <- c(\\\"1\\\", \\\"5\\\", \\\"3\\\", \\\"4\\\", \\\"2\\\", \\\"5\\\", \\\"4\\\")\\ngroups <- c(\\\"1\\\" = \\\"unhappy\\\", \\\"2\\\" = \\\"unhappy\\\", \\\"3\\\" = \\\"neutral\\\", \\\"4\\\" = \\\"happy\\\", \\\"5\\\" = \\\"happy\\\")\\nmood <- factor(unname(groups[ratings]), levels = c(\\\"unhappy\\\", \\\"neutral\\\", \\\"happy\\\"))\\nmood_counts <- table(mood)\", c(\"mood_counts\"), output = FALSE)"
               }
             ]
           }
@@ -1935,29 +2420,29 @@
             "explanation": "A lookup matches exact text."
           },
           {
-            "id": "recoding-q-1r40ae0",
+            "id": "recoding-q-k037w",
             "type": "mcq",
-            "prompt": "What is a lookup vector?",
+            "prompt": "Why recode with a lookup vector rather than one `ifelse()` per code?",
             "choices": [
               {
                 "id": "a",
-                "label": "A sorted vector"
+                "label": "ifelse() can't recode text"
               },
               {
                 "id": "b",
-                "label": "A named vector that maps codes (names) to meanings (values)"
+                "label": "One named vector handles every code at once and is easy to add to"
               },
               {
                 "id": "c",
-                "label": "A table"
+                "label": "A lookup is always faster"
               },
               {
                 "id": "d",
-                "label": "A list of NAs"
+                "label": "There is no difference"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "Indexing it by codes gives the meanings."
+            "explanation": "Codes it doesn't know come out as NA, so new codes stand out."
           },
           {
             "id": "recoding-q-1l9vq1y",
@@ -2006,6 +2491,16 @@
           "id": "every_copy",
           "label": "Every copy",
           "code": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\ne <- signups$email\nsignups[duplicated(e) | duplicated(e, fromLast = TRUE), ]"
+        },
+        {
+          "id": "how_many_each",
+          "label": "How many each",
+          "code": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\ntable(signups$email)"
+        },
+        {
+          "id": "latest_by_date",
+          "label": "Latest by date",
+          "code": "p <- data.frame(member = c(\"Ana\", \"Ben\", \"Ana\"), updated = as.Date(c(\"2026-10-05\", \"2026-09-01\", \"2026-08-20\")))\np <- p[order(p$updated), ]\np[!duplicated(p$member, fromLast = TRUE), ]"
         }
       ],
       "intro": {
@@ -2034,6 +2529,11 @@
                 "id": "t1",
                 "label": "again is FALSE FALSE TRUE FALSE",
                 "assertion": "identical(again, c(FALSE, FALSE, TRUE, FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"emails <- c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\")\\n\", \"emails <- c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"ana@example.org\\\")\\n\", \"emails <- c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\")\\nagain <- duplicated(emails)\", c(\"again\"), output = FALSE)"
               }
             ]
           }
@@ -2053,6 +2553,11 @@
                 "id": "t1",
                 "label": "n_extra is 3",
                 "assertion": "is.numeric(n_extra) && isTRUE(all.equal(n_extra, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-104\\\", \\\"HI-007\\\", \\\"FI-104\\\", \\\"SC-221\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-104\\\", \\\"HI-007\\\", \\\"FI-104\\\", \\\"SC-2212\\\")\\n\", \"codes <- c(\\\"FI-104\\\", \\\"SC-221\\\", \\\"FI-104\\\", \\\"HI-007\\\", \\\"FI-104\\\", \\\"SC-221\\\")\\nn_extra <- sum(duplicated(codes))\", c(\"n_extra\"), output = FALSE)"
               }
             ]
           }
@@ -2072,6 +2577,11 @@
                 "id": "t1",
                 "label": "clean has 4 rows",
                 "assertion": "is.data.frame(clean) && identical(names(clean), names(signups[c(1, 2, 4, 5), ])) && isTRUE(all.equal(as.list(clean), as.list(signups[c(1, 2, 4, 5), ]), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org2\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds2\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\nclean <- signups[!duplicated(signups), ]\", c(\"signups\", \"clean\"), output = FALSE)"
               }
             ]
           }
@@ -2091,6 +2601,11 @@
                 "id": "t1",
                 "label": "people is rows 1, 2 and 4",
                 "assertion": "is.data.frame(people) && identical(names(people), names(signups[c(1, 2, 4), ])) && isTRUE(all.equal(as.list(people), as.list(signups[c(1, 2, 4), ]), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org2\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds2\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\npeople <- signups[!duplicated(signups$email), ]\", c(\"signups\", \"people\"), output = FALSE)"
               }
             ]
           }
@@ -2110,6 +2625,11 @@
                 "id": "t1",
                 "label": "repeats is rows 1, 2, 3 and 5",
                 "assertion": "is.data.frame(repeats) && identical(names(repeats), names(signups[c(1, 2, 3, 5), ])) && isTRUE(all.equal(as.list(repeats), as.list(signups[c(1, 2, 3, 5), ]), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org2\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds2\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\ne <- signups$email\\nrepeats <- signups[duplicated(e) | duplicated(e, fromLast = TRUE), ]\", c(\"signups\", \"repeats\"), output = FALSE)"
               }
             ]
           }
@@ -2129,6 +2649,11 @@
                 "id": "t1",
                 "label": "twice is ana@example.org, ben@example.org",
                 "assertion": "identical(twice, c(\"ana@example.org\", \"ben@example.org\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org2\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds2\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\ntwice <- unique(signups$email[duplicated(signups$email)])\", c(\"twice\"), output = FALSE)"
               }
             ]
           }
@@ -2148,6 +2673,35 @@
                 "id": "t1",
                 "label": "n_people is 3",
                 "assertion": "is.numeric(n_people) && isTRUE(all.equal(n_people, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"emails <- c(\\\"Ana@Example.org\\\", \\\"ben@example.org\\\", \\\" ana@example.org\\\", \\\"BEN@EXAMPLE.ORG\\\", \\\"cy@example.org\\\")\\n\", \"emails <- c(\\\"Ana@Example.org\\\", \\\"ben@example.org\\\", \\\" ana@example.org\\\", \\\"BEN@EXAMPLE.ORG\\\", \\\"Ana@Example.org\\\")\\n\", \"emails <- c(\\\"Ana@Example.org\\\", \\\"ben@example.org\\\", \\\" ana@example.org\\\", \\\"BEN@EXAMPLE.ORG\\\", \\\"cy@example.org\\\")\\nclean <- tolower(trimws(emails))\\nn_people <- length(unique(clean))\", c(\"n_people\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-sign-ups-per-email",
+          "title": "Hard: Sign-ups per email",
+          "promptMarkdown": "Make `per_email` how many sign-ups each email has.",
+          "starterCode": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\n",
+          "hint": "`table(signups$email)` counts each email.",
+          "solution": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\nper_email <- table(signups$email)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "per_email is ana 2, ben 2, cy 1",
+                "assertion": "identical(as.vector(per_email), c(2L, 2L, 1L)) && identical(names(per_email), c(\"ana@example.org\", \"ben@example.org\", \"cy@example.org\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org2\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds2\\\")\\n)\\n\", \"signups <- data.frame(\\n  email = c(\\\"ana@example.org\\\", \\\"ben@example.org\\\", \\\"ana@example.org\\\", \\\"cy@example.org\\\", \\\"ben@example.org\\\"),\\n  workshop = c(\\\"compost\\\", \\\"compost\\\", \\\"compost\\\", \\\"seeds\\\", \\\"seeds\\\")\\n)\\nper_email <- table(signups$email)\", c(\"per_email\"), output = FALSE)"
               }
             ]
           }
@@ -2167,6 +2721,35 @@
                 "id": "t1",
                 "label": "latest is Ben 0222, Cy 0444, Ana 0555",
                 "assertion": "is.data.frame(latest) && identical(names(latest), names(phones[c(2, 4, 5), ])) && isTRUE(all.equal(as.list(latest), as.list(phones[c(2, 4, 5), ]), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"phones <- data.frame(member = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy\\\", \\\"Ana\\\"), phone = c(\\\"0111\\\", \\\"0222\\\", \\\"0333\\\", \\\"0444\\\", \\\"0555\\\"))\\n\", \"phones <- data.frame(member = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy\\\", \\\"Ana2\\\"), phone = c(\\\"0111\\\", \\\"0222\\\", \\\"0333\\\", \\\"0444\\\", \\\"05552\\\"))\\n\", \"phones <- data.frame(member = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy\\\", \\\"Ana\\\"), phone = c(\\\"0111\\\", \\\"0222\\\", \\\"0333\\\", \\\"0444\\\", \\\"0555\\\"))\\nlatest <- phones[!duplicated(phones$member, fromLast = TRUE), ]\", c(\"phones\", \"latest\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-latest-by-date",
+          "title": "Expert: Latest by date",
+          "promptMarkdown": "Make `latest` the most recently updated row for each member. The rows aren't in date order.",
+          "starterCode": "phones <- data.frame(member = c(\"Ana\", \"Ben\", \"Ana\", \"Cy\"), phone = c(\"0111\", \"0222\", \"0333\", \"0444\"), updated = as.Date(c(\"2026-10-05\", \"2026-09-01\", \"2026-08-20\", \"2026-10-01\")))\n",
+          "hint": "Sort by date first: `sorted <- phones[order(phones$updated), ]`. Then keep the last row of each member with `!duplicated(sorted$member, fromLast = TRUE)`.",
+          "solution": "phones <- data.frame(member = c(\"Ana\", \"Ben\", \"Ana\", \"Cy\"), phone = c(\"0111\", \"0222\", \"0333\", \"0444\"), updated = as.Date(c(\"2026-10-05\", \"2026-09-01\", \"2026-08-20\", \"2026-10-01\")))\nsorted <- phones[order(phones$updated), ]\nlatest <- sorted[!duplicated(sorted$member, fromLast = TRUE), ]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "latest is Ben 0222, Cy 0444, Ana 0111",
+                "assertion": "is.data.frame(latest) && identical(names(latest), names(phones[c(2, 4, 1), ])) && isTRUE(all.equal(as.list(latest), as.list(phones[c(2, 4, 1), ]), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"phones <- data.frame(member = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy\\\"), phone = c(\\\"0111\\\", \\\"0222\\\", \\\"0333\\\", \\\"0444\\\"), updated = as.Date(c(\\\"2026-10-05\\\", \\\"2026-09-01\\\", \\\"2026-08-20\\\", \\\"2026-10-01\\\")))\\n\", \"phones <- data.frame(member = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy2\\\"), phone = c(\\\"0111\\\", \\\"0222\\\", \\\"0333\\\", \\\"04442\\\"), updated = as.Date(c(\\\"2027-10-05\\\", \\\"2026-09-01\\\", \\\"2027-08-20\\\", \\\"2026-10-01\\\")))\\n\", \"phones <- data.frame(member = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Ana\\\", \\\"Cy\\\"), phone = c(\\\"0111\\\", \\\"0222\\\", \\\"0333\\\", \\\"0444\\\"), updated = as.Date(c(\\\"2026-10-05\\\", \\\"2026-09-01\\\", \\\"2026-08-20\\\", \\\"2026-10-01\\\")))\\nsorted <- phones[order(phones$updated), ]\\nlatest <- sorted[!duplicated(sorted$member, fromLast = TRUE), ]\", c(\"phones\", \"latest\"), output = FALSE)"
               }
             ]
           }
@@ -2251,29 +2834,29 @@
             "explanation": "Whole rows are compared."
           },
           {
-            "id": "duplicates-q-1iip2dp",
+            "id": "duplicates-q-1jds9ou",
             "type": "mcq",
-            "prompt": "What does `nrow(unique(data.frame(a = c(1, 1, 2), b = c(\"x\", \"x\", \"y\"))))` give?",
+            "prompt": "Why do duplicates make totals too big?",
             "choices": [
               {
                 "id": "a",
-                "label": "An error"
+                "label": "The same sale or sign-up is counted more than once"
               },
               {
                 "id": "b",
-                "label": "`2`"
+                "label": "R doubles repeated numbers"
               },
               {
                 "id": "c",
-                "label": "`3`"
+                "label": "They don't"
               },
               {
                 "id": "d",
-                "label": "`1`"
+                "label": "duplicated() adds values"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "The first two rows are the same."
+            "correctChoiceId": "a",
+            "explanation": "Count the extra copies with `sum(duplicated(x))` before you total."
           },
           {
             "id": "duplicates-q-1eptb6r",
@@ -2397,6 +2980,16 @@
           "id": "fill_with_the_median",
           "label": "Fill with the median",
           "code": "x <- c(34, NA, 58, 27, 41)\nx[is.na(x)] <- median(x, na.rm = TRUE)\nx"
+        },
+        {
+          "id": "count_before_and_after",
+          "label": "Count before and after",
+          "code": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$age[survey$age < 0] <- NA\nsum(is.na(survey$age))\nnrow(survey[!is.na(survey$age), ])"
+        },
+        {
+          "id": "flag_what_you_filled",
+          "label": "Flag what you filled",
+          "code": "x <- c(34, NA, 58, 27)\nwas_na <- is.na(x)\nx[was_na] <- median(x, na.rm = TRUE)\ndata.frame(x, was_na)"
         }
       ],
       "intro": {
@@ -2425,6 +3018,11 @@
                 "id": "t1",
                 "label": "rating is 5, 4, NA, 3, NA, 5",
                 "assertion": "is.numeric(survey$rating) && identical(survey$rating, c(5, 4, NA, 3, NA, 5))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n2,36,8,Lovely\\n3,,6,\\n6,59,N/A,Too busy\\n6,-4,4,ok\\n7,30,,\\n7,43,8,Great\\n\\\")\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\", c(\"survey\"), output = FALSE)"
               }
             ]
           }
@@ -2444,6 +3042,11 @@
                 "id": "t1",
                 "label": "age is 34, NA, 58, NA, 27, 41",
                 "assertion": "identical(as.numeric(survey$age), c(34, NA, 58, NA, 27, 41))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n2,36,8,Lovely\\n3,,6,\\n6,59,N/A,Too busy\\n6,-4,4,ok\\n7,30,,\\n7,43,8,Great\\n\\\")\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$age[survey$age < 0] <- NA\", c(\"survey\"), output = FALSE)"
               }
             ]
           }
@@ -2463,6 +3066,11 @@
                 "id": "t1",
                 "label": "n_missing_age is 2",
                 "assertion": "is.numeric(n_missing_age) && isTRUE(all.equal(n_missing_age, 2))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$age[survey$age < 0] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,30,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$age[survey$age < 0] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$age[survey$age < 0] <- NA\\nn_missing_age <- sum(is.na(survey$age))\", c(\"n_missing_age\"), output = FALSE)"
               }
             ]
           }
@@ -2482,6 +3090,11 @@
                 "id": "t1",
                 "label": "avg_age is 40",
                 "assertion": "is.numeric(avg_age) && isTRUE(all.equal(avg_age, 40))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$age[survey$age < 0] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n2,36,8,Lovely\\n3,,6,\\n6,59,N/A,Too busy\\n6,-4,4,ok\\n7,30,,\\n7,43,8,Great\\n\\\")\\nsurvey$age[survey$age < 0] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$age[survey$age < 0] <- NA\\navg_age <- round(mean(survey$age, na.rm = TRUE), 1)\", c(\"avg_age\"), output = FALSE)"
               }
             ]
           }
@@ -2501,6 +3114,11 @@
                 "id": "t1",
                 "label": "rated is visitors 1, 2, 4 and 6",
                 "assertion": "is.data.frame(rated) && identical(rated$visitor, c(1L, 2L, 4L, 6L))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n2,36,8,Lovely\\n3,,6,\\n6,59,N/A,Too busy\\n6,-4,4,ok\\n7,30,,\\n7,43,8,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A2\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nrated <- survey[!is.na(survey$rating), ]\", c(\"rated\"), output = FALSE)"
               }
             ]
           }
@@ -2520,6 +3138,11 @@
                 "id": "t1",
                 "label": "filled is 34, 37.5, 58, 37.5, 27, 41",
                 "assertion": "is.numeric(filled) && isTRUE(all.equal(filled, c(34, 37.5, 58, 37.5, 27, 41)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ages <- c(34, NA, 58, NA, 27, 41)\\n\", \"ages <- c(42, 30, NA, 60, NA, 35)\\n\", \"ages <- c(34, NA, 58, NA, 27, 41)\\nfilled <- ages\\nfilled[is.na(filled)] <- median(ages, na.rm = TRUE)\", c(\"filled\"), output = FALSE)"
               }
             ]
           }
@@ -2539,6 +3162,40 @@
                 "id": "t1",
                 "label": "rating is numeric with 3 NAs",
                 "assertion": "is.numeric(survey$rating) && sum(is.na(survey$rating)) == 3"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"csv <- \\\"visitor,rating\\n1,5\\n2,N/A\\n3,-\\n4,4\\n5,\\\"\\n\", \"csv <- \\\"visitor,rating\\n2,7\\n5,N/A\\n4,-\\n6,7\\n6,\\\"\\n\", \"csv <- \\\"visitor,rating\\n1,5\\n2,N/A\\n3,-\\n4,4\\n5,\\\"\\nsurvey <- read.csv(text = csv, na.strings = c(\\\"\\\", \\\"N/A\\\", \\\"-\\\"))\", c(\"survey\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-what-dropping-costs",
+          "title": "Hard: What dropping costs",
+          "promptMarkdown": "Make `known` the visitors with both an age and a rating, and `n_dropped` how many rows that leaves out.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\n",
+          "hint": "`survey[!is.na(survey$age) & !is.na(survey$rating), ]`, then compare the numbers of rows.",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\nknown <- survey[!is.na(survey$age) & !is.na(survey$rating), ]\nn_dropped <- nrow(survey) - nrow(known)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "known is visitors 1 and 6",
+                "assertion": "is.data.frame(known) && identical(known$visitor, c(1L, 6L))"
+              },
+              {
+                "id": "t2",
+                "label": "n_dropped is 4",
+                "assertion": "is.numeric(n_dropped) && isTRUE(all.equal(n_dropped, 4))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nsurvey$age[survey$age < 0] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n2,36,8,Lovely\\n3,,6,\\n6,59,N/A,Too busy\\n6,-4,4,ok\\n7,30,,\\n7,43,8,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A2\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nsurvey$age[survey$age < 0] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nsurvey$age[survey$age < 0] <- NA\\nknown <- survey[!is.na(survey$age) & !is.na(survey$rating), ]\\nn_dropped <- nrow(survey) - nrow(known)\", c(\"known\", \"n_dropped\"), output = FALSE)"
               }
             ]
           }
@@ -2558,6 +3215,40 @@
                 "id": "t1",
                 "label": "missing_pct is visitor 0, age 33, rating 33, comment 33",
                 "assertion": "isTRUE(all.equal(missing_pct, c(visitor = 0, age = 33, rating = 33, comment = 33)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nsurvey$age[survey$age < 0] <- NA\\nsurvey$comment[survey$comment == \\\"\\\"] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,30,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,4,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nsurvey$age[survey$age < 0] <- NA\\nsurvey$comment[survey$comment == \\\"\\\"] <- NA\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nsurvey$age[survey$age < 0] <- NA\\nsurvey$comment[survey$comment == \\\"\\\"] <- NA\\nmissing_pct <- round(colMeans(is.na(survey)) * 100)\", c(\"missing_pct\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-fill-and-flag",
+          "title": "Expert: Fill and flag",
+          "promptMarkdown": "Add `rating_filled`, the ratings with each NA replaced by the median rating, and `rating_was_na`, TRUE where a value was filled in.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\n",
+          "hint": "Make the flag first: `survey$rating_was_na <- is.na(survey$rating)`. Copy the column, then fill the copy where the flag is TRUE.",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$rating_was_na <- is.na(survey$rating)\nsurvey$rating_filled <- survey$rating\nsurvey$rating_filled[survey$rating_was_na] <- median(survey$rating, na.rm = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rating_filled is 5, 4, 4.5, 3, 4.5, 5",
+                "assertion": "is.numeric(survey$rating_filled) && isTRUE(all.equal(survey$rating_filled, c(5, 4, 4.5, 3, 4.5, 5)))"
+              },
+              {
+                "id": "t2",
+                "label": "rating_was_na marks visitors 3 and 5",
+                "assertion": "identical(survey$rating_was_na, c(FALSE, FALSE, TRUE, FALSE, TRUE, FALSE))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n2,36,8,Lovely\\n3,,6,\\n6,59,N/A,Too busy\\n6,-4,4,ok\\n7,30,,\\n7,43,8,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A2\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\n\", \"survey <- read.csv(text = \\\"\\nvisitor,age,rating,comment\\n1,34,5,Lovely\\n2,,4,\\n3,58,N/A,Too busy\\n4,-1,3,ok\\n5,27,,\\n6,41,5,Great\\n\\\")\\nsurvey$rating[survey$rating %in% c(\\\"\\\", \\\"N/A\\\")] <- NA\\nsurvey$rating <- as.numeric(survey$rating)\\nsurvey$rating_was_na <- is.na(survey$rating)\\nsurvey$rating_filled <- survey$rating\\nsurvey$rating_filled[survey$rating_was_na] <- median(survey$rating, na.rm = TRUE)\", c(\"survey\"), output = FALSE)"
               }
             ]
           }
@@ -2567,29 +3258,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "missing_strategies-q-1jvfffx",
+            "id": "missing_strategies-q-150nnnr",
             "type": "mcq",
-            "prompt": "Which of these is a missing value in disguise?",
+            "prompt": "Why make a `-1` age NA instead of deleting that row?",
             "choices": [
               {
                 "id": "a",
-                "label": "`-1` in an age column"
+                "label": "NA is smaller than -1"
               },
               {
                 "id": "b",
-                "label": "`34`"
+                "label": "R can't delete rows"
               },
               {
                 "id": "c",
-                "label": "`5`"
+                "label": "It makes the mean bigger"
               },
               {
                 "id": "d",
-                "label": "`\"Lovely\"`"
+                "label": "The rest of the row, like the rating, is still useful"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "An impossible value usually means \"not known\" or a typo."
+            "correctChoiceId": "d",
+            "explanation": "NA marks only the value that is unknown."
           },
           {
             "id": "missing_strategies-q-5iipi9",
@@ -2788,6 +3479,16 @@
           "id": "wrong_format_gives_na",
           "label": "Wrong format gives NA",
           "code": "as.Date(\"30/10/2026\")\nas.Date(\"30/10/2026\", format = \"%d/%m/%Y\")"
+        },
+        {
+          "id": "text_sorts_the_wrong_way",
+          "label": "Text sorts the wrong way",
+          "code": "x <- c(\"15/09/2026\", \"02/10/2026\")\nsort(x)\nsort(as.Date(x, format = \"%d/%m/%Y\"))"
+        },
+        {
+          "id": "days_between",
+          "label": "Days between",
+          "code": "start <- as.Date(\"02/09/2026\", format = \"%d/%m/%Y\")\nend <- as.Date(\"20/09/2026\", format = \"%d/%m/%Y\")\nas.numeric(end - start)"
         }
       ],
       "intro": {
@@ -2816,6 +3517,11 @@
                 "id": "t1",
                 "label": "d is 2026-09-02, 2026-09-15, 2026-10-03",
                 "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-09-02\", \"2026-09-15\", \"2026-10-03\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"02/09/2026\\\", \\\"15/09/2026\\\", \\\"03/10/2026\\\")\\n\", \"raw <- c(\\\"02/09/2027\\\", \\\"15/09/2026\\\", \\\"03/10/2027\\\")\\n\", \"raw <- c(\\\"02/09/2026\\\", \\\"15/09/2026\\\", \\\"03/10/2026\\\")\\nd <- as.Date(raw, format = \\\"%d/%m/%Y\\\")\", c(\"d\"), output = FALSE)"
               }
             ]
           }
@@ -2835,6 +3541,11 @@
                 "id": "t1",
                 "label": "d is 2026-09-02, 2026-10-31",
                 "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-09-02\", \"2026-10-31\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"09/02/2026\\\", \\\"10/31/2026\\\")\\n\", \"raw <- c(\\\"09/02/2027\\\", \\\"10/31/2026\\\")\\n\", \"raw <- c(\\\"09/02/2026\\\", \\\"10/31/2026\\\")\\nd <- as.Date(raw, format = \\\"%m/%d/%Y\\\")\", c(\"d\"), output = FALSE)"
               }
             ]
           }
@@ -2854,6 +3565,11 @@
                 "id": "t1",
                 "label": "d is 2026-10-30, 2026-11-04",
                 "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-10-30\", \"2026-11-04\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"30 Oct 2026\\\", \\\"4 Nov 2026\\\")\\n\", \"raw <- c(\\\"30 Oct 2027\\\", \\\"4 Nov 2026\\\")\\n\", \"raw <- c(\\\"30 Oct 2026\\\", \\\"4 Nov 2026\\\")\\nd <- as.Date(raw, format = \\\"%d %b %Y\\\")\", c(\"d\"), output = FALSE)"
               }
             ]
           }
@@ -2873,6 +3589,11 @@
                 "id": "t1",
                 "label": "bad is \"15/9/26\" and \"TBC\"",
                 "assertion": "identical(bad, c(\"15/9/26\", \"TBC\")) || identical(bad, \"TBC\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"02/09/2026\\\", \\\"15/9/26\\\", \\\"03/10/2026\\\", \\\"TBC\\\")\\n\", \"raw <- c(\\\"TBC\\\", \\\"15/09/2026\\\", \\\"n/a\\\", \\\"03/10/2026\\\")\\n\", \"raw <- c(\\\"02/09/2026\\\", \\\"15/9/26\\\", \\\"03/10/2026\\\", \\\"TBC\\\")\\nd <- as.Date(raw, format = \\\"%d/%m/%Y\\\")\\nbad <- raw[is.na(d)]\", c(\"bad\"), output = FALSE)"
               }
             ]
           }
@@ -2892,6 +3613,11 @@
                 "id": "t1",
                 "label": "month is 2026-09, 2026-09, 2026-10",
                 "assertion": "identical(month, c(\"2026-09\", \"2026-09\", \"2026-10\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"d <- as.Date(c(\\\"2026-09-02\\\", \\\"2026-09-15\\\", \\\"2026-10-03\\\"))\\n\", \"d <- as.Date(c(\\\"2027-09-02\\\", \\\"2026-09-15\\\", \\\"2027-10-03\\\"))\\n\", \"d <- as.Date(c(\\\"2026-09-02\\\", \\\"2026-09-15\\\", \\\"2026-10-03\\\"))\\nmonth <- format(d, \\\"%Y-%m\\\")\", c(\"month\"), output = FALSE)"
               }
             ]
           }
@@ -2911,6 +3637,11 @@
                 "id": "t1",
                 "label": "per_month is 2026-09 20.5, 2026-10 26.5",
                 "assertion": "isTRUE(all.equal(as.vector(per_month), c(20.5, 26.5))) && identical(names(per_month), c(\"2026-09\", \"2026-10\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- data.frame(date = c(\\\"02/09/2026\\\", \\\"15/09/2026\\\", \\\"03/10/2026\\\", \\\"21/10/2026\\\"), amount = c(12.5, 8, 20, 6.5))\\n\", \"sales <- data.frame(date = c(\\\"02/09/2027\\\", \\\"15/09/2026\\\", \\\"03/10/2027\\\", \\\"21/10/2026\\\"), amount = c(6.6, 23, 10, 12.6))\\n\", \"sales <- data.frame(date = c(\\\"02/09/2026\\\", \\\"15/09/2026\\\", \\\"03/10/2026\\\", \\\"21/10/2026\\\"), amount = c(12.5, 8, 20, 6.5))\\nd <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nper_month <- tapply(sales$amount, format(d, \\\"%Y-%m\\\"), sum)\", c(\"per_month\"), output = FALSE)"
               }
             ]
           }
@@ -2930,6 +3661,35 @@
                 "id": "t1",
                 "label": "d is 2026-10-30, 2026-11-01",
                 "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-10-30\", \"2026-11-01\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"30.10.26\\\", \\\"01.11.26\\\")\\n\", \"raw <- c(\\\"30.10.27\\\", \\\"01.11.26\\\")\\n\", \"raw <- c(\\\"30.10.26\\\", \\\"01.11.26\\\")\\nd <- as.Date(raw, format = \\\"%d.%m.%y\\\")\", c(\"d\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-days-between",
+          "title": "Hard: Days between",
+          "promptMarkdown": "Make `days` the number of days from each `start` to its `end`, as plain numbers. Both are written day first.",
+          "starterCode": "start <- c(\"02/09/2026\", \"15/09/2026\")\nend <- c(\"20/09/2026\", \"05/10/2026\")\n",
+          "hint": "Convert both with `format = \"%d/%m/%Y\"`, subtract, then `as.numeric()`.",
+          "solution": "start <- c(\"02/09/2026\", \"15/09/2026\")\nend <- c(\"20/09/2026\", \"05/10/2026\")\ndays <- as.numeric(as.Date(end, format = \"%d/%m/%Y\") - as.Date(start, format = \"%d/%m/%Y\"))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "days is 18, 20",
+                "assertion": "is.numeric(days) && isTRUE(all.equal(days, c(18, 20)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"start <- c(\\\"02/09/2026\\\", \\\"15/09/2026\\\")\\nend <- c(\\\"20/09/2026\\\", \\\"05/10/2026\\\")\\n\", \"start <- c(\\\"01/09/2026\\\", \\\"15/09/2026\\\")\\nend <- c(\\\"30/09/2026\\\", \\\"15/10/2026\\\")\\n\", \"start <- c(\\\"02/09/2026\\\", \\\"15/09/2026\\\")\\nend <- c(\\\"20/09/2026\\\", \\\"05/10/2026\\\")\\ndays <- as.numeric(as.Date(end, format = \\\"%d/%m/%Y\\\") - as.Date(start, format = \\\"%d/%m/%Y\\\"))\", c(\"days\"), output = FALSE)"
               }
             ]
           }
@@ -2949,6 +3709,35 @@
                 "id": "t1",
                 "label": "d is all four dates",
                 "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-09-02\", \"2026-09-15\", \"2026-10-03\", \"2026-10-21\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- c(\\\"2026-09-02\\\", \\\"15/09/2026\\\", \\\"2026-10-03\\\", \\\"21/10/2026\\\")\\n\", \"raw <- c(\\\"2027-09-02\\\", \\\"15/09/2026\\\", \\\"2027-10-03\\\", \\\"21/10/2026\\\")\\n\", \"raw <- c(\\\"2026-09-02\\\", \\\"15/09/2026\\\", \\\"2026-10-03\\\", \\\"21/10/2026\\\")\\nd <- as.Date(raw, format = \\\"%Y-%m-%d\\\")\\nd[is.na(d)] <- as.Date(raw[is.na(d)], format = \\\"%d/%m/%Y\\\")\", c(\"d\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-sales-per-weekday",
+          "title": "Expert: Sales per weekday",
+          "promptMarkdown": "Make `per_day` the total sales for each day of the week.",
+          "starterCode": "sales <- data.frame(date = c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\", \"21/10/2026\"), amount = c(12.5, 8, 20, 6.5))\n",
+          "hint": "Convert the dates, then group with `weekdays()`: `tapply(sales$amount, weekdays(d), sum)`.",
+          "solution": "sales <- data.frame(date = c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\", \"21/10/2026\"), amount = c(12.5, 8, 20, 6.5))\nd <- as.Date(sales$date, format = \"%d/%m/%Y\")\nper_day <- tapply(sales$amount, weekdays(d), sum)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "per_day is Saturday 20, Tuesday 8, Wednesday 19",
+                "assertion": "isTRUE(all.equal(as.vector(per_day), c(20, 8, 19))) && identical(names(per_day), c(\"Saturday\", \"Tuesday\", \"Wednesday\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- data.frame(date = c(\\\"02/09/2026\\\", \\\"15/09/2026\\\", \\\"03/10/2026\\\", \\\"21/10/2026\\\"), amount = c(12.5, 8, 20, 6.5))\\n\", \"sales <- data.frame(date = c(\\\"02/09/2027\\\", \\\"15/09/2026\\\", \\\"03/10/2027\\\", \\\"21/10/2026\\\"), amount = c(6.6, 23, 10, 12.6))\\n\", \"sales <- data.frame(date = c(\\\"02/09/2026\\\", \\\"15/09/2026\\\", \\\"03/10/2026\\\", \\\"21/10/2026\\\"), amount = c(12.5, 8, 20, 6.5))\\nd <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nper_day <- tapply(sales$amount, weekdays(d), sum)\", c(\"per_day\"), output = FALSE)"
               }
             ]
           }
@@ -3133,29 +3922,29 @@
             "explanation": "Assigning into `d[is.na(d)]` keeps the result a Date."
           },
           {
-            "id": "dates_from_text-q-9powq8",
+            "id": "dates_from_text-q-1394ucy",
             "type": "mcq",
-            "prompt": "What does `weekdays(as.Date(\"2026-11-01\"))` give?",
+            "prompt": "Why can't you sort day-first texts like `\"15/09/2026\"` to put them in date order?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"Monday\"`"
+                "label": "sort() needs numbers"
               },
               {
                 "id": "b",
-                "label": "`\"Sunday\"`"
+                "label": "You can"
               },
               {
                 "id": "c",
-                "label": "`\"Saturday\"`"
+                "label": "Texts can't be sorted"
               },
               {
                 "id": "d",
-                "label": "`\"November\"`"
+                "label": "Texts sort character by character, so the day decides the order, not the year and month"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "November 1, 2026 is a Sunday."
+            "correctChoiceId": "d",
+            "explanation": "Turn them into dates first; dates sort in time order."
           },
           {
             "id": "dates_from_text-q-3tpvsk",
@@ -3227,6 +4016,11 @@
                 "id": "t1",
                 "label": "email is cleaned",
                 "assertion": "identical(club$email, c(\"ana@example.org\", \"ben@example.org\", \"cy@example.org\", \"ana@example.org\", \"dee@example.org\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A2\\\"))\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\n\", c(\"club\"), output = FALSE)"
               }
             ]
           }
@@ -3246,6 +4040,11 @@
                 "id": "t1",
                 "label": "name is Ana Silva, Ben Okafor, Cy Li, Ana Silva, Dee Moss",
                 "assertion": "identical(club$name, c(\"Ana Silva\", \"Ben Okafor\", \"Cy Li\", \"Ana Silva\", \"Dee Moss\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A2\\\"))\\nclub$email <- tolower(trimws(club$email))\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\n\", c(\"club\"), output = FALSE)"
               }
             ]
           }
@@ -3265,6 +4064,11 @@
                 "id": "t1",
                 "label": "club has 4 rows, one per email",
                 "assertion": "nrow(club) == 4 && !any(duplicated(club$email))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A2\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\nclub <- club[!duplicated(club$email), ]\\n\", c(\"club\"), output = FALSE)"
               }
             ]
           }
@@ -3284,6 +4088,11 @@
                 "id": "t1",
                 "label": "paid is TRUE TRUE FALSE NA",
                 "assertion": "identical(unname(club$paid), c(TRUE, TRUE, FALSE, NA))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\nclub <- club[!duplicated(club$email), ]\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A2\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\nclub <- club[!duplicated(club$email), ]\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\nclub <- club[!duplicated(club$email), ]\\nclub$paid <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])\\n\", c(\"club\"), output = FALSE)"
               }
             ]
           }
@@ -3303,6 +4112,11 @@
                 "id": "t1",
                 "label": "Shows the summary",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"4 members, 2 paid, 1 not paid, 1 unknown\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\nclub <- club[!duplicated(club$email), ]\\nclub$paid <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,yes\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\nclub <- club[!duplicated(club$email), ]\\nclub$paid <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])\\n\", \"raw <- \\\"name,email,joined,paid\\n ana silva,Ana@Example.org,02/09/2026,yes\\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\\nCy Li,cy@example.org,N/A,no\\nana silva,ana@example.org,02/09/2026,yes\\nDee  Moss,dee@example.org,15/09/2026,N/A\\\"\\nclub <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"N/A\\\"))\\nclub$email <- tolower(trimws(club$email))\\nclub$name <- tools::toTitleCase(tolower(gsub(\\\" +\\\", \\\" \\\", trimws(club$name))))\\nclub <- club[!duplicated(club$email), ]\\nclub$paid <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])\\ncat(nrow(club), \\\" members, \\\", sum(club$paid, na.rm = TRUE), \\\" paid, \\\", sum(!club$paid, na.rm = TRUE), \\\" not paid, \\\", sum(is.na(club$paid)), \\\" unknown\\\\n\\\", sep = \\\"\\\")\", c(), output = TRUE)"
               }
             ]
           }
@@ -3482,6 +4296,11 @@
                 "id": "t1",
                 "label": "price is 8.5, 8.5, 12, 12, 5.25, 8.5",
                 "assertion": "is.numeric(sales$price) && isTRUE(all.equal(sales$price, c(8.5, 8.5, 12, 12, 5.25, 8.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.51,4\\n15/09/2026,mug,$8.53,2\\n20/09/2026,Tote bag,$12.02,4\\n03/10/2026,TOTE BAG,$12.01,5\\n21/10/2026,Poster,$5.28,5\\n28/10/2026,mug ,$8.52,5\\\")\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\n\", c(\"sales\"), output = FALSE)"
               }
             ]
           }
@@ -3501,6 +4320,11 @@
                 "id": "t1",
                 "label": "item is cleaned",
                 "assertion": "identical(sales$item, c(\"mug\", \"mug\", \"tote bag\", \"tote bag\", \"poster\", \"mug\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.51,4\\n15/09/2026,mug,$8.53,2\\n20/09/2026,Tote bag,$12.02,4\\n03/10/2026,TOTE BAG,$12.01,5\\n21/10/2026,Poster,$5.28,5\\n28/10/2026,mug ,$8.52,5\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\n\", c(\"sales\"), output = FALSE)"
               }
             ]
           }
@@ -3520,6 +4344,11 @@
                 "id": "t1",
                 "label": "date is real dates",
                 "assertion": "inherits(sales$date, \"Date\") && identical(format(sales$date), c(\"2026-09-02\", \"2026-09-15\", \"2026-09-20\", \"2026-10-03\", \"2026-10-21\", \"2026-10-28\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.51,4\\n15/09/2026,mug,$8.53,2\\n20/09/2026,Tote bag,$12.02,4\\n03/10/2026,TOTE BAG,$12.01,5\\n21/10/2026,Poster,$5.28,5\\n28/10/2026,mug ,$8.52,5\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\n\", c(\"sales\"), output = FALSE)"
               }
             ]
           }
@@ -3539,6 +4368,11 @@
                 "id": "t1",
                 "label": "total is 17, 8.5, 12, 36, 21, 17",
                 "assertion": "isTRUE(all.equal(sales$total, c(17, 8.5, 12, 36, 21, 17)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.51,4\\n15/09/2026,mug,$8.53,2\\n20/09/2026,Tote bag,$12.02,4\\n03/10/2026,TOTE BAG,$12.01,5\\n21/10/2026,Poster,$5.28,5\\n28/10/2026,mug ,$8.52,5\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nsales$total <- sales$price * sales$qty\\n\", c(\"sales\"), output = FALSE)"
               }
             ]
           }
@@ -3558,6 +4392,11 @@
                 "id": "t1",
                 "label": "per_month is 2026-09 37.5, 2026-10 74",
                 "assertion": "isTRUE(all.equal(as.vector(per_month), c(37.5, 74))) && identical(names(per_month), c(\"2026-09\", \"2026-10\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nsales$total <- sales$price * sales$qty\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.51,4\\n15/09/2026,mug,$8.53,2\\n20/09/2026,Tote bag,$12.02,4\\n03/10/2026,TOTE BAG,$12.01,5\\n21/10/2026,Poster,$5.28,5\\n28/10/2026,mug ,$8.52,5\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nsales$total <- sales$price * sales$qty\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nsales$total <- sales$price * sales$qty\\nper_month <- tapply(sales$total, format(sales$date, \\\"%Y-%m\\\"), sum)\", c(\"per_month\"), output = FALSE)"
               }
             ]
           }
@@ -3577,6 +4416,11 @@
                 "id": "t1",
                 "label": "per_item is tote bag 48, mug 42.5, poster 21",
                 "assertion": "isTRUE(all.equal(as.vector(per_item), c(48, 42.5, 21))) && identical(names(per_item), c(\"tote bag\", \"mug\", \"poster\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nsales$total <- sales$price * sales$qty\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.51,4\\n15/09/2026,mug,$8.53,2\\n20/09/2026,Tote bag,$12.02,4\\n03/10/2026,TOTE BAG,$12.01,5\\n21/10/2026,Poster,$5.28,5\\n28/10/2026,mug ,$8.52,5\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nsales$total <- sales$price * sales$qty\\n\", \"sales <- read.csv(text = \\\"date,item,price,qty\\n02/09/2026,Mug,$8.50,2\\n15/09/2026,mug,$8.50,1\\n20/09/2026,Tote bag,$12.00,1\\n03/10/2026,TOTE BAG,$12.00,3\\n21/10/2026,Poster,$5.25,4\\n28/10/2026,mug ,$8.50,2\\\")\\nsales$price <- as.numeric(gsub(\\\"$\\\", \\\"\\\", sales$price, fixed = TRUE))\\nsales$item <- tolower(trimws(sales$item))\\nsales$date <- as.Date(sales$date, format = \\\"%d/%m/%Y\\\")\\nsales$total <- sales$price * sales$qty\\nper_item <- sort(tapply(sales$total, sales$item, sum), decreasing = TRUE)\", c(\"per_item\"), output = FALSE)"
               }
             ]
           }
@@ -3756,6 +4600,11 @@
                 "id": "t1",
                 "label": "temp is numeric with 3 NAs",
                 "assertion": "is.data.frame(readings) && is.numeric(readings$temp) && sum(is.na(readings$temp)) == 3"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.3\\n2026-10-28 12:00,A,-1001\\n2026-10-28 16:00,A,21.7\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,23.0\\n2026-10-28 16:00,B,23.7\\n2026-10-29 08:00,A,17.9\\n2026-10-29 12:00,A,20.9\\n2026-10-29 16:00,A,61.2\\n2026-10-29 08:00,B,18.2\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.2\\\"\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\n\", c(\"readings\"), output = FALSE)"
               }
             ]
           }
@@ -3775,6 +4624,11 @@
                 "id": "t1",
                 "label": "day is 6 of 2026-10-28 then 6 of 2026-10-29",
                 "assertion": "inherits(readings$day, \"Date\") && identical(format(readings$day), rep(c(\"2026-10-28\", \"2026-10-29\"), each = 6))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.3\\n2026-10-28 12:00,A,-1001\\n2026-10-28 16:00,A,21.7\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,23.0\\n2026-10-28 16:00,B,23.7\\n2026-10-29 08:00,A,17.9\\n2026-10-29 12:00,A,20.9\\n2026-10-29 16:00,A,61.2\\n2026-10-29 08:00,B,18.2\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.2\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-9992\\\"))\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\n\", c(\"readings\"), output = FALSE)"
               }
             ]
           }
@@ -3794,6 +4648,11 @@
                 "id": "t1",
                 "label": "temp now has 4 NAs and nothing over 50",
                 "assertion": "sum(is.na(readings$temp)) == 4 && max(readings$temp, na.rm = TRUE) <= 50"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.3\\n2026-10-28 12:00,A,-1001\\n2026-10-28 16:00,A,21.7\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,23.0\\n2026-10-28 16:00,B,23.7\\n2026-10-29 08:00,A,17.9\\n2026-10-29 12:00,A,20.9\\n2026-10-29 16:00,A,61.2\\n2026-10-29 08:00,B,18.2\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.2\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-9992\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\n\", c(\"readings\"), output = FALSE)"
               }
             ]
           }
@@ -3813,6 +4672,11 @@
                 "id": "t1",
                 "label": "gaps is A 2, B 2",
                 "assertion": "isTRUE(all.equal(as.vector(gaps), c(2, 2))) && identical(names(gaps), c(\"A\", \"B\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.3\\n2026-10-28 12:00,A,-1001\\n2026-10-28 16:00,A,21.7\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,23.0\\n2026-10-28 16:00,B,23.7\\n2026-10-29 08:00,A,17.9\\n2026-10-29 12:00,A,20.9\\n2026-10-29 16:00,A,61.2\\n2026-10-29 08:00,B,18.2\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.2\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-9992\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\ngaps <- tapply(is.na(readings$temp), readings$sensor, sum)\", c(\"gaps\"), output = FALSE)"
               }
             ]
           }
@@ -3832,6 +4696,11 @@
                 "id": "t1",
                 "label": "daily is 21.5, 19.6",
                 "assertion": "isTRUE(all.equal(as.vector(daily), c(21.5, 19.6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.3\\n2026-10-28 12:00,A,-1001\\n2026-10-28 16:00,A,21.7\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,23.0\\n2026-10-28 16:00,B,23.7\\n2026-10-29 08:00,A,17.9\\n2026-10-29 12:00,A,20.9\\n2026-10-29 16:00,A,61.2\\n2026-10-29 08:00,B,18.2\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.2\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-9992\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\ndaily <- round(tapply(readings$temp, readings$day, mean, na.rm = TRUE), 1)\", c(\"daily\"), output = FALSE)"
               }
             ]
           }
@@ -3851,6 +4720,11 @@
                 "id": "t1",
                 "label": "Shows the report",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"2026-10-28: 4 readings, mean 21.5, max 23.5\", \"2026-10-29: 4 readings, mean 19.6, max 22.1\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.3\\n2026-10-28 12:00,A,-1001\\n2026-10-28 16:00,A,21.7\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,23.0\\n2026-10-28 16:00,B,23.7\\n2026-10-29 08:00,A,17.9\\n2026-10-29 12:00,A,20.9\\n2026-10-29 16:00,A,61.2\\n2026-10-29 08:00,B,18.2\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.2\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-9992\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\n\", \"raw <- \\\"time,sensor,temp\\n2026-10-28 08:00,A,18.2\\n2026-10-28 12:00,A,-999\\n2026-10-28 16:00,A,21.4\\n2026-10-28 08:00,B,error\\n2026-10-28 12:00,B,22.9\\n2026-10-28 16:00,B,23.5\\n2026-10-29 08:00,A,17.6\\n2026-10-29 12:00,A,20.8\\n2026-10-29 16:00,A,61.0\\n2026-10-29 08:00,B,17.9\\n2026-10-29 12:00,B,\\n2026-10-29 16:00,B,22.1\\\"\\nreadings <- read.csv(text = raw, na.strings = c(\\\"\\\", \\\"error\\\", \\\"-999\\\"))\\nreadings$day <- as.Date(substr(readings$time, 1, 10))\\nreadings$temp[readings$temp > 50] <- NA\\nfor (d in as.character(unique(readings$day))) {\\n  t <- readings$temp[readings$day == as.Date(d) & !is.na(readings$temp)]\\n  cat(d, \\\": \\\", length(t), \\\" readings, mean \\\", round(mean(t), 1), \\\", max \\\", max(t), \\\"\\\\n\\\", sep = \\\"\\\")\\n}\", c(\"readings\"), output = TRUE)"
               }
             ]
           }

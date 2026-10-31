@@ -20,6 +20,7 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('One bad value', 'x <- read.csv(text = "\nitem,price\ntea,2.5\ncake,N/A\n")\nstr(x)'),
     snippet('Tell R what missing looks like', 'x <- read.csv(text = "\nitem,price\ntea,2.5\ncake,N/A\n", na.strings = "N/A")\nstr(x)'),
+    snippet('Skip lines at the top', 'csv <- "Exported 2026-10-30\\nmember,days\\nAna,12\\nBen,20"\nread.csv(text = csv, skip = 1)'),
   ],
   readMore: { label: 'R documentation: read.csv()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/utils/html/read.table.html', source: 'R documentation' },
   challenges: [
@@ -72,6 +73,13 @@ export default makeTopic({
       solution: CSV + 'write.csv(loans, "loans_clean.csv", row.names = FALSE)\nagain <- read.csv("loans_clean.csv")',
       tests: [['again is the same as loans', sameFrame('again', 'loans')]],
     }),
+    task('hard', 'A note on top', {
+      prompt: 'The export starts with a note line before the column names. Make `loans` the data, read without that first line.',
+      starter: 'csv <- "Library export 2026-10-30\nmember,days\nAna,12\nBen,20"\n',
+      hint: '`skip = 1` tells `read.csv()` to ignore the first line: `read.csv(text = csv, skip = 1)`.',
+      solution: 'csv <- "Library export 2026-10-30\nmember,days\nAna,12\nBen,20"\nloans <- read.csv(text = csv, skip = 1)',
+      tests: [['loans is Ana 12, Ben 20', sameFrame('loans', 'data.frame(member = c("Ana", "Ben"), days = c(12L, 20L))')]],
+    }),
     task('expert', 'A semicolon file', {
       prompt: 'Some countries\' spreadsheets save CSV with `;` between values and `,` as the decimal point. Make `prices` by reading this text with `read.csv2()`, so `price` is numeric.',
       starter: 'csv <- "item;price\ntea;2,50\ncake;4,20"\n',
@@ -79,10 +87,17 @@ export default makeTopic({
       solution: 'csv <- "item;price\ntea;2,50\ncake;4,20"\nprices <- read.csv2(text = csv)',
       tests: [['prices has tea 2.5 and cake 4.2', sameFrame('prices', 'data.frame(item = c("tea", "cake"), price = c(2.5, 4.2))')]],
     }),
+    task('expert', 'Keep the zeros', {
+      prompt: 'The ids have leading zeros that matter. Read the CSV into `stock` so that `id` stays text, like `"007"`.',
+      starter: 'csv <- "id,item\n007,tea\n012,cake"\n',
+      hint: '`colClasses = c(id = "character")` tells `read.csv()` the type of that column.',
+      solution: 'csv <- "id,item\n007,tea\n012,cake"\nstock <- read.csv(text = csv, colClasses = c(id = "character"))',
+      tests: [['stock$id is "007", "012"', isTexts('stock$id', '007', '012')], ['stock$item is tea, cake', isTexts('stock$item', 'tea', 'cake')]],
+    }),
   ],
   questions: [
-    mc('What does CSV stand for?', ['Coded system values', 'Comma-separated values', 'Column style view', 'Clean sorted values'], 1,
-      'Values separated by commas, one row per line.'),
+    mc('Why does `read.csv()` make a whole column text when one value is `"20 days"`?', ['A column has one type, and "20 days" can\'t be a number, so the column stays text', 'read.csv() reads everything as text', 'Days are always text', 'It doesn\'t'], 0,
+      'Look at `str()` straight after reading to catch this.'),
     mc('What does `nrow(read.csv(text = "a,b\\n1,2\\n3,4"))` give?', ['`3`', '`2`', '`4`', '`1`'], 1,
       'The first line is the column names, so there are 2 rows of data.',
       { code: 'nrow(read.csv(text = "a,b\\n1,2\\n3,4"))', output: '[1] 2' }),

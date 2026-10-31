@@ -1,8 +1,9 @@
 import { useContext, useMemo } from 'react'
 import { highlightPython, highlightSql } from '../codeHighlight'
+import { highlightR } from '../highlightR'
 import { CodeLanguageContext } from '../codeLanguageContext'
 
-/** Code with syntax colours when the course is Python or SQL; plain text otherwise. */
+/** Code with syntax colours when the course is Python, SQL or R; plain text otherwise. */
 export function HighlightedCode({ code }: { code: string }) {
   const language = useContext(CodeLanguageContext)
   const tokens = useMemo(
@@ -11,7 +12,9 @@ export function HighlightedCode({ code }: { code: string }) {
         ? highlightPython(code)
         : language === 'sql'
           ? highlightSql(code)
-          : null,
+          : language === 'r'
+            ? highlightR(code)
+            : null,
     [code, language],
   )
   if (!tokens) return <code>{code}</code>

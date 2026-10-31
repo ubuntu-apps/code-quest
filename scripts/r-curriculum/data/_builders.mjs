@@ -13,6 +13,9 @@
  * that are R output are tested too. Checks are not published.
  */
 
+import { checkedVars, otherData, variationKey } from './_rerun.mjs'
+import { VARIATIONS } from './r-variations.mjs'
+
 /** Tag for R code: backslashes stay exactly as written. */
 export const r = String.raw
 
@@ -101,11 +104,30 @@ export function snippet(label, code) {
  *
  * @param {'easy'|'medium'|'hard'|'expert'} difficulty
  * @param {string} title
- * @param {{ prompt: string, starter?: string, hint: string, solution: string, tests: [string, string][], setup?: string }} spec
+ * Unless `typedOk` is set, a last check, "Works with other data too", reruns the learner's code
+ * with the starter's data changed (`alt`, else an entry in r-variations.mjs, else the default
+ * change in _rerun.mjs) and
+ * compares the results with the solution's, so an answer typed in as fixed values fails.
+ * `typedOk: true` is for challenges whose answer is a fixed value by nature ("make `latte`
+ * hold 3.4"); the checker then doesn't try typing it in.
+ *
+ * @param {{ prompt: string, starter?: string, hint: string, solution: string, tests: [string, string][], setup?: string, alt?: string | ((starter: string) => string), typedOk?: boolean }} spec
  */
-export function task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '' }) {
+export function task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '', alt, typedOk = false }) {
   const label = { easy: 'Easy', medium: 'Medium', hard: 'Hard', expert: 'Expert' }[difficulty]
+  let allTests = tests
+  if (!typedOk && starter) {
+    const given = typeof alt === 'function' ? alt(starter) : alt
+    const other = given ?? VARIATIONS[variationKey(starter, solution)]?.alt ?? otherData(starter)
+    const vars = checkedVars(solution, tests)
+    const output = tests.some(([, assertion]) => assertion.includes('._cq_stdout'))
+    if (other !== starter && (vars.length > 0 || output)) {
+      const varList = `c(${vars.map(rstr).join(', ')})`
+      allTests = [...tests, ['Works with other data too', `._cq_rerun(${rstr(starter)}, ${rstr(other)}, ${rstr(solution)}, ${varList}, output = ${output ? 'TRUE' : 'FALSE'})`]]
+    }
+  }
   return {
+    ...(typedOk ? { typedOk: true } : {}),
     title: `${label}: ${title}`,
     promptMarkdown: prompt,
     starterCode: starter,
@@ -114,7 +136,7 @@ export function task(difficulty, title, { prompt, starter = '', hint, solution, 
     validation: {
       mode: 'r_tests',
       setupCode: setup,
-      tests: tests.map(([testLabel, assertion], i) => ({ id: `t${i + 1}`, label: testLabel, assertion })),
+      tests: allTests.map(([testLabel, assertion], i) => ({ id: `t${i + 1}`, label: testLabel, assertion })),
     },
   }
 }

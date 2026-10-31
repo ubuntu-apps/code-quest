@@ -48,6 +48,7 @@ export default makeProject('medium', {
       tests: [['speed is 12', near('speed', 12)]],
     }),
     task('hard', 'A long ride?', {
+      alt: 'minutes <- 30\n',
       prompt: 'Rides over 45 minutes count as long. Make `long_ride` TRUE or FALSE for this ride.',
       starter: 'minutes <- 47\n',
       hint: '`long_ride <- minutes > 45`',

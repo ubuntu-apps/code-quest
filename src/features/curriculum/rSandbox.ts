@@ -1,8 +1,8 @@
 import type { RuntimeAssertionTest } from './types'
 import { explainRError, type FriendlyRError } from './rErrorHelper'
-export type { FriendlyRError } from './rErrorHelper'
-
 import { WEBR_CDN_BASE } from '../../runtimeVersions'
+import { CLEAR_GLOBALS, challengeWrapper, parseChallengeOutput } from './rHarness'
+export type { FriendlyRError } from './rErrorHelper'
 
 /** Pinned release (see runtimeVersions.ts): avoids `latest` drift and matches the documented API. */
 const WEBR_CDN = `${WEBR_CDN_BASE}webr.mjs`
@@ -25,11 +25,25 @@ type ShelterInstance = {
 type WebRInstance = {
   init: () => Promise<unknown>
   Shelter: new () => Promise<ShelterInstance>
+  close?: () => void
 }
 
 type WebRModule = {
   WebR: new (options?: { channelType?: number }) => WebRInstance
   ChannelType?: { PostMessage: number }
+}
+
+/** Lets a caller stop a run: Stop in the sandbox, or leaving the page. */
+export interface RRunOptions {
+  signal?: AbortSignal
+}
+
+class RRunStoppedError extends Error {}
+
+const STOPPED_ERROR: FriendlyRError = {
+  title: 'Stopped',
+  detail: 'You stopped the code before it finished.',
+  tip: 'If it seemed stuck, look for a loop whose condition never becomes FALSE.',
 }
 
 export interface SandboxRunResult {
@@ -52,8 +66,6 @@ export interface RChallengeRunResult {
   output: string
 }
 
-/** Separates the learner's output from the test results in a check's output. */
-const TESTS_MARKER = '<<codequest-tests>>'
 
 let loaderPromise: Promise<WebRInstance> | null = null
 
@@ -97,6 +109,17 @@ async function getWebR(): Promise<WebRInstance> {
     })
   }
   return loaderPromise
+}
+
+/**
+ * Throws away the R runtime, so a run that never ends (an endless loop) can't hold up the
+ * next one. webR can't interrupt code here, so the next run starts a fresh R (from the
+ * browser's cache, so it's quick after the first time).
+ */
+function discardWebR(): void {
+  const old = loaderPromise
+  loaderPromise = null
+  old?.then((webR) => webR.close?.()).catch(() => undefined)
 }
 
 /** Downloads and starts the R runtime (used by "Download for offline"). */
@@ -152,132 +175,67 @@ function errorTextFromCapture(output: CaptureOutput[]): string | null {
   return stderr || null
 }
 
-function escapeRDoubleQuoted(input: string): string {
-  return input.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
-}
-
-function testsToRList(tests: RuntimeAssertionTest[]): string {
-  const items = tests.map(
-    (t) =>
-      `list(id="${escapeRDoubleQuoted(t.id)}", label="${escapeRDoubleQuoted(t.label)}", assertion="${escapeRDoubleQuoted(t.assertion)}")`,
-  )
-  return `list(${items.join(', ')})`
-}
-
 async function captureRCode(
   code: string,
   options: CaptureOptions = {},
+  signal?: AbortSignal,
 ): Promise<{ output: string; error: FriendlyRError | null }> {
+  if (signal?.aborted) return { output: '', error: STOPPED_ERROR }
   const webR = await getWebR()
   const shelter = await new webR.Shelter()
+  let onAbort: (() => void) | undefined
+  const stopped = new Promise<never>((_, reject) => {
+    onAbort = () => reject(new RRunStoppedError())
+    signal?.addEventListener('abort', onAbort, { once: true })
+  })
   try {
-    const captured = await withTimeout(
-      shelter.captureR(code, { captureStreams: true, captureConditions: true, ...options }),
-      RUN_TIMEOUT_MS,
-      'R code took too long to run.',
-    )
+    const captured = await Promise.race([
+      withTimeout(
+        shelter.captureR(code, { captureStreams: true, captureConditions: true, ...options }),
+        RUN_TIMEOUT_MS,
+        'R code took too long to run, so it was stopped.',
+      ),
+      stopped,
+    ])
     const errorText = errorTextFromCapture(captured.output)
     if (errorText) {
       return { output: '', error: explainRError(errorText) }
     }
     return { output: await textFromCapture(captured.output), error: null }
   } catch (error: unknown) {
+    if (error instanceof RRunStoppedError) {
+      discardWebR()
+      return { output: '', error: STOPPED_ERROR }
+    }
     const detail = error instanceof Error ? error.message : 'Execution error'
+    // A run that timed out is probably still going, so start a fresh R for the next one.
+    if (detail.includes('took too long')) discardWebR()
     return { output: '', error: explainRError(detail) }
   } finally {
-    shelter.purge()
+    if (onAbort) signal?.removeEventListener('abort', onAbort)
+    try {
+      shelter.purge()
+    } catch {
+      // The runtime was thrown away.
+    }
   }
 }
 
-/** Clears variables left by earlier runs, so each run starts fresh, like a new R session. */
-const CLEAR_GLOBALS = 'rm(list = ls(envir = globalenv(), all.names = TRUE), envir = globalenv())'
-
 /** Runs code like the R console: each line's value is shown unless it is assigned. */
-export async function runRCode(source: string): Promise<SandboxRunResult> {
-  await captureRCode(CLEAR_GLOBALS)
-  return captureRCode(source, { withAutoprint: true })
+export async function runRCode(source: string, options: RRunOptions = {}): Promise<SandboxRunResult> {
+  await captureRCode(CLEAR_GLOBALS, {}, options.signal)
+  return captureRCode(source, { withAutoprint: true }, options.signal)
 }
 
 export async function runRChallengeTests(
   userCode: string,
   setupCode: string | undefined,
   tests: RuntimeAssertionTest[],
+  options: RRunOptions = {},
 ): Promise<RChallengeRunResult> {
-  const safeSetup = escapeRDoubleQuoted(setupCode ?? '')
-  const safeUser = escapeRDoubleQuoted(userCode)
-  const testsLiteral = testsToRList(tests)
-
-  const wrapped = `
-local({
-  # The learner's code runs in its own environment, which sees R's functions but not
-  # variables left in the global environment by the sandbox.
-  env <- new.env(parent = parent.env(globalenv()))
-  setup <- "${safeSetup}"
-  user <- "${safeUser}"
-  tests <- ${testsLiteral}
-  if (nzchar(trimws(setup))) {
-    eval(parse(text = setup), envir = env)
-  }
-  # Tests can look at the code itself (to check a function was used) and at its output.
-  env$._cq_code <- user
-  # Like the console: every top-level value is printed unless it is assigned.
-  env$._cq_stdout <- paste(capture.output({
-    for (expr in parse(text = user)) {
-      res <- withVisible(eval(expr, envir = env))
-      if (res$visible) print(res$value)
-    }
-  }), collapse = "\\n")
-  cat(env$._cq_stdout, "\\n${TESTS_MARKER}\\n", sep = "")
-  lines <- character(length(tests))
-  for (i in seq_along(tests)) {
-    t <- tests[[i]]
-    passed <- FALSE
-    detail <- ""
-    tryCatch({
-      # A failed check shows just its label; an error inside it (such as a variable the
-      # learner hasn't made yet, "object 'total' not found") is shown as the reason.
-      passed <- isTRUE(eval(parse(text = t$assertion), envir = env))
-    }, error = function(e) {
-      passed <<- FALSE
-      detail <<- conditionMessage(e)
-    })
-    status <- if (passed) "PASS" else "FAIL"
-    lines[i] <- paste0(t$id, "\\t", status, "\\t", detail)
-  }
-  cat(paste(lines, collapse = "\\n"))
-  invisible(NULL)
-})
-`
-
-  const result = await captureRCode(wrapped)
+  const result = await captureRCode(challengeWrapper(userCode, setupCode, tests), {}, options.signal)
   if (result.error) {
     return { passed: false, tests: [], error: result.error, output: '' }
   }
-
-  const markerAt = result.output.lastIndexOf(TESTS_MARKER)
-  const learnerOutput = markerAt >= 0 ? result.output.slice(0, markerAt).replace(/\n+$/, '') : ''
-  const parsed = result.output
-    .slice(markerAt >= 0 ? markerAt + TESTS_MARKER.length : 0)
-    .trim()
-    .split('\n')
-    .filter(Boolean)
-    .map((line) => {
-      const [id, status, ...detailParts] = line.split('\t')
-      const passed = status === 'PASS'
-      const detail = detailParts.join('\t').trim()
-      const test = tests.find((t) => t.id === id)
-      return {
-        id: id ?? 'unknown',
-        label: test?.label ?? id ?? 'Check',
-        passed,
-        detail: passed ? undefined : detail || undefined,
-      }
-    })
-
-  return {
-    passed: parsed.length > 0 && parsed.every((t) => t.passed),
-    tests: parsed,
-    error: null,
-    output: learnerOutput,
-  }
+  return { ...parseChallengeOutput(result.output, tests), error: null }
 }

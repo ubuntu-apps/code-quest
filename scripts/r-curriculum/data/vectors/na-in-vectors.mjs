@@ -1,5 +1,5 @@
 // Vectors: NA in vectors.
-import { R_INTRO, code, makeTopic, mc, near, qShort, same, snippet, task, uses } from '../_builders.mjs'
+import { R_INTRO, code, isTexts, makeTopic, mc, near, qShort, same, snippet, task, uses } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'na_in_vectors',
@@ -19,6 +19,7 @@ export default makeTopic({
     snippet('Fill the gaps', 'steps <- c(4200, NA, 6500, 9900, NA)\nsteps[is.na(steps)] <- 0\nsteps'),
     snippet('NA in a condition', 'steps <- c(4200, NA, 6500, 9900, NA)\nsteps > 5000\nsteps[steps > 5000]'),
     snippet('Share missing', 'answers <- c(4, NA, 5, 3, NA, NA, 4)\nmean(is.na(answers))'),
+    snippet('Say what you left out', 'x <- c(4, NA, 5, NA, 3)\nsum(is.na(x))\nmean(x, na.rm = TRUE)'),
   ],
   readMore: R_INTRO('Missing-values', 'An Introduction to R: missing values'),
   challenges: [
@@ -77,6 +78,13 @@ export default makeTopic({
       solution: 'steps <- c(4200, NA, 6500, 9900, NA)\nsteps[is.na(steps)] <- 0',
       tests: [['steps is 4200, 0, 6500, 9900, 0', same('steps', 'c(4200, 0, 6500, 9900, 0)')]],
     }),
+    task('hard', 'Range of the known', {
+      prompt: 'Make `spread` the highest known temperature minus the lowest known one.',
+      starter: 'temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\n',
+      hint: '`max()` and `min()` take `na.rm = TRUE` too.',
+      solution: 'temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\nspread <- max(temps, na.rm = TRUE) - min(temps, na.rm = TRUE)',
+      tests: [['spread is 2.8', near('spread', 2.8)]],
+    }),
     task('expert', 'Fix the average', {
       prompt: 'This should give the average of the known scores, 75, but it gives a different number. Fix the second line.',
       starter: 'scores <- c(70, NA, 80, NA)\navg <- sum(scores, na.rm = TRUE) / length(scores)',
@@ -84,10 +92,18 @@ export default makeTopic({
       solution: 'scores <- c(70, NA, 80, NA)\navg <- mean(scores, na.rm = TRUE)',
       tests: [['avg is 75', near('avg', 75)]],
     }),
+    task('expert', 'Where the gaps are', {
+      prompt: 'Make `no_data` the days with no step count, and `share_known` the share of days that have one.',
+      starter: 'days <- c("Mon", "Tue", "Wed", "Thu", "Fri")\nsteps <- c(4200, NA, 6500, NA, 3000)\n',
+      alt: 'days <- c("Mon", "Tue", "Wed", "Thu", "Fri")\nsteps <- c(NA, 5100, 6500, 7200, NA)\n',
+      hint: '`is.na(steps)` picks the days: `days[is.na(steps)]`. The mean of `!is.na(steps)` is the share known.',
+      solution: 'days <- c("Mon", "Tue", "Wed", "Thu", "Fri")\nsteps <- c(4200, NA, 6500, NA, 3000)\nno_data <- days[is.na(steps)]\nshare_known <- mean(!is.na(steps))',
+      tests: [['no_data is Tue, Thu', isTexts('no_data', 'Tue', 'Thu')], ['share_known is 0.6', near('share_known', 0.6)]],
+    }),
   ],
   questions: [
-    mc('What does `sum(c(1, NA, 3))` give?', ['`4`', '`NA`', '`0`', 'An error'], 1,
-      'One unknown value makes the total unknown.',
+    mc('Why does `sum(c(1, NA, 3))` give NA?', ['The missing value could be anything, so the total is unknown too', 'NA counts as 0', 'sum() can\'t add three numbers', 'It is a bug'], 0,
+      'Add `na.rm = TRUE` to total only the known values.',
       { code: 'sum(c(1, NA, 3))', output: '[1] NA' }),
     mc('What does `sum(c(1, NA, 3), na.rm = TRUE)` give?', ['`4`', '`NA`', '`3`', '`5`'], 0,
       '`na.rm = TRUE` leaves the NA out: 1 + 3.',

@@ -19,6 +19,7 @@ export default makeTopic({
     snippet('Is it a number?', 'is.numeric(42)\nis.numeric("42")\nis.character("42")'),
     snippet('Mixing types', 'c(1, TRUE, FALSE)\nc(1, "a", TRUE)'),
     snippet('Integers', 'class(5)\nclass(5L)\nclass(1:10)'),
+    snippet('Ask before you use it', 'x <- "18.5"\nclass(x)\nis.numeric(x)\nis.character(x)'),
   ],
   readMore: { label: 'R documentation: class()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/class.html', source: 'R documentation' },
   challenges: [
@@ -33,6 +34,7 @@ export default makeTopic({
       ],
     }),
     task('easy', 'A number, not text', {
+      typedOk: true,
       prompt: 'Make `price` the number 3.4 (not text), so that `class(price)` is `"numeric"`.',
       starter: 'price <- "3.4"\n',
       hint: 'Remove the quotes.',
@@ -56,6 +58,7 @@ export default makeTopic({
       ],
     }),
     task('medium', 'Types of three vectors', {
+      typedOk: true,
       prompt: 'Make `kinds` a vector of the classes of `weights`, `codes` and `heavy`, in that order.',
       starter: 'weights <- c(2, 4, 6)\ncodes <- c("2", "4")\nheavy <- weights > 3\n',
       hint: '`kinds <- c(class(weights), class(codes), class(heavy))`',
@@ -78,12 +81,28 @@ export default makeTopic({
         ['mixed_class is "character"', isText('mixed_class', 'character')],
       ],
     }),
+    task('hard', 'Total from text', {
+      prompt: 'The counts came in as text. Make `total` their sum as a number.',
+      starter: 'counts <- c("12", "7", "15")\n',
+      hint: 'Turn them into numbers first: `sum(as.numeric(counts))`.',
+      solution: 'counts <- c("12", "7", "15")\ntotal <- sum(as.numeric(counts))',
+      tests: [['total is 34', near('total', 34)]],
+    }),
     task('expert', 'Count the yes answers', {
+      alt: 'answers <- c(FALSE, FALSE, TRUE, FALSE, FALSE, TRUE)\n',
       prompt: 'Make `n_yes` the number of TRUE values in `answers`. Use `class()` in your head first: TRUE and FALSE count as 1 and 0.',
       starter: 'answers <- c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE)\n',
       hint: '`n_yes <- sum(answers)`',
       solution: 'answers <- c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE)\nn_yes <- sum(answers)',
       tests: [['n_yes is 4', near('n_yes', 4)]],
+    }),
+    task('expert', 'Name the types', {
+      prompt: 'Make `kinds` a vector with the class of `a`, then `b`, then `flag`.',
+      starter: 'a <- "4"\nb <- 2.5\nflag <- TRUE\n',
+      alt: 'a <- 4L\nb <- "2.5"\nflag <- 3\n',
+      hint: '`class()` gives one text each; put them together with `c()`.',
+      solution: 'a <- "4"\nb <- 2.5\nflag <- TRUE\nkinds <- c(class(a), class(b), class(flag))',
+      tests: [['kinds is character, numeric, logical', isTexts('kinds', 'character', 'numeric', 'logical')]],
     }),
   ],
   questions: [
@@ -99,8 +118,8 @@ export default makeTopic({
     mc('What does `class(3 > 2)` give?', ['`"logical"`', '`"numeric"`', '`"character"`', '`"TRUE"`'], 0,
       'A comparison gives TRUE or FALSE, which are logical values.',
       { code: 'class(3 > 2)', output: '[1] "logical"' }),
-    mc('What does `c(1, TRUE, FALSE)` give?', ['`[1] 1 TRUE FALSE`', '`[1] 1 1 0`', 'An error', '`[1] "1" "TRUE" "FALSE"`'], 1,
-      'Logical values become numbers when mixed with numbers: TRUE is 1, FALSE is 0.',
+    mc('Why does `c(1, TRUE, FALSE)` give `[1] 1 1 0`?', ['A vector has one type, so TRUE becomes 1 and FALSE becomes 0 to fit with the number', 'TRUE is short for 1', 'R rounds them', 'It is a bug'], 0,
+      'That is also why `sum()` of TRUE/FALSE values counts the TRUEs.',
       { code: 'c(1, TRUE, FALSE)', output: '[1] 1 1 0' }),
     mc('What does `class(c(2, "b"))` give?', ['`"numeric"`', '`"mixed"`', '`"character"`', 'An error'], 2,
       'Mixed with text, everything becomes text.',

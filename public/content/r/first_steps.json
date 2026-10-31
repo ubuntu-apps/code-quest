@@ -239,6 +239,30 @@
               }
             ]
           }
+        },
+        {
+          "id": "first_code-a-till-receipt",
+          "title": "Expert: A till receipt",
+          "promptMarkdown": "Cups cost `price` each, and loyal customers get `discount` off the whole order. Show one line like `Total: 12.5 for 3 cups`, letting R work out the total from the variables.",
+          "starterCode": "price <- 4.5\nqty <- 3\ndiscount <- 1\n",
+          "hint": "One `cat()` with text and sums in turn: `cat(\"Total:\", price * qty - discount, \"for\", qty, \"cups\\n\")`.",
+          "solution": "price <- 4.5\nqty <- 3\ndiscount <- 1\ncat(\"Total:\", price * qty - discount, \"for\", qty, \"cups\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Total: 12.5 for 3 cups",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Total: 12.5 for 3 cups\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"price <- 4.5\\nqty <- 3\\ndiscount <- 1\\n\", \"price <- 4.6\\nqty <- 5\\ndiscount <- 4\\n\", \"price <- 4.5\\nqty <- 3\\ndiscount <- 1\\ncat(\\\"Total:\\\", price * qty - discount, \\\"for\\\", qty, \\\"cups\\\\n\\\")\", c(), output = TRUE)"
+              }
+            ]
+          }
         }
       ],
       "test": {
@@ -320,29 +344,29 @@
             "explanation": "`cat()` shows just the text: no `[1]` and no quotes. `\\n` ends the line."
           },
           {
-            "id": "first_code-q-1s8znl4",
+            "id": "first_code-q-16ahwlq",
             "type": "mcq",
-            "prompt": "What does `\"2 + 3\"` show?",
+            "prompt": "Why does `\"2 + 3\"` show `[1] \"2 + 3\"` and not 5?",
             "choices": [
               {
                 "id": "a",
-                "label": "`5`"
+                "label": "The spaces stop the sum"
               },
               {
                 "id": "b",
-                "label": "`[1] 5`"
+                "label": "It needs `print()` first"
               },
               {
                 "id": "c",
-                "label": "`[1] \"2 + 3\"`"
+                "label": "The quotes make it text, so R shows it as it is"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "R can't add small numbers"
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "In quotes, `2 + 3` is just text, so R shows the text instead of working out the sum."
+            "explanation": "Without quotes, `2 + 3` is a sum; with them, it is just characters."
           },
           {
             "id": "first_code-q-zc6yq3",
@@ -704,6 +728,30 @@
               }
             ]
           }
+        },
+        {
+          "id": "arithmetic-hours-minutes-and-seconds",
+          "title": "Expert: Hours, minutes and seconds",
+          "promptMarkdown": "Show `seconds` as hours, minutes and seconds, like `2 h 3 min 4 s` for 7384 seconds, with one `cat()`.",
+          "starterCode": "seconds <- 7384\n",
+          "hint": "Whole hours: `seconds %/% 3600`. What is left after the hours, `seconds %% 3600`, gives the minutes with `%/% 60`; the seconds are `seconds %% 60`.",
+          "solution": "seconds <- 7384\ncat(seconds %/% 3600, \"h\", (seconds %% 3600) %/% 60, \"min\", seconds %% 60, \"s\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 2 h 3 min 4 s",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"2 h 3 min 4 s\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seconds <- 7384\\n\", \"seconds <- 7385\\n\", \"seconds <- 7384\\ncat(seconds %/% 3600, \\\"h\\\", (seconds %% 3600) %/% 60, \\\"min\\\", seconds %% 60, \\\"s\\\\n\\\")\", c(), output = TRUE)"
+              }
+            ]
+          }
         }
       ],
       "test": {
@@ -885,29 +933,29 @@
             "explanation": "The power is worked out before the minus sign, so it is −(2²) = −4. Write `(-2) ^ 2` to get 4."
           },
           {
-            "id": "arithmetic-q-19ed1yn",
+            "id": "arithmetic-q-nwp9il",
             "type": "mcq",
-            "prompt": "What number is `2e3`?",
+            "prompt": "A farm packs 50 eggs into boxes of 6. Why use `%/%` and `%%` rather than `/`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`6`"
+                "label": "`/` gives an error"
               },
               {
                 "id": "b",
-                "label": "`2.3`"
+                "label": "`%%` is faster"
               },
               {
                 "id": "c",
-                "label": "`23`"
+                "label": "`/` gives 8.33; `%/%` gives the 8 full boxes and `%%` the 2 eggs left over"
               },
               {
                 "id": "d",
-                "label": "`2000`"
+                "label": "They give the same answer"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "`e3` means \"times 10 to the power 3\", so 2e3 is 2 × 1000 = 2000."
+            "correctChoiceId": "c",
+            "explanation": "Whole-number division and remainder answer \"how many whole ones, and how many over?\"."
           },
           {
             "id": "arithmetic-q-k14u48",
@@ -1037,6 +1085,11 @@
                 "id": "t1",
                 "label": "Shows [1] 3",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 3\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"cups <- 3\\n\", \"cups <- 4\\n\", \"cups <- 3\\ncups\", c(), output = TRUE)"
               }
             ]
           }
@@ -1061,6 +1114,11 @@
                 "id": "t2",
                 "label": "Uses the variables",
                 "assertion": "grepl(\"price\\\\s*\\\\*\\\\s*cups|cups\\\\s*\\\\*\\\\s*price\", ._cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"price <- 4.5\\ncups <- 3\\n\", \"price <- 4.6\\ncups <- 5\\n\", \"price <- 4.5\\ncups <- 3\\ntotal <- price * cups\", c(\"price\", \"cups\", \"total\"), output = FALSE)"
               }
             ]
           }
@@ -1085,6 +1143,11 @@
                 "id": "t2",
                 "label": "Adds to the old value",
                 "assertion": "grepl(\"score <- score +\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"score <- 10\\n\", \"score <- 11\\n\", \"score <- 10\\nscore <- score + 5\", c(\"score\"), output = FALSE)"
               }
             ]
           }
@@ -1104,6 +1167,11 @@
                 "id": "t1",
                 "label": "Shows [1] 40",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 40\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"Total <- 20\\ntotal * 2\", \"Total <- 21\\ntotal * 2\", \"total <- 20\\ntotal * 2\", c(), output = TRUE)"
               }
             ]
           }
@@ -1128,6 +1196,11 @@
                 "id": "t2",
                 "label": "Shows [1] 150",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 150\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"hours <- 2.5\\n\", \"hours <- 2.6\\n\", \"hours <- 2.5\\nminutes <- hours * 60\\nminutes\", c(\"minutes\"), output = TRUE)"
               }
             ]
           }
@@ -1171,6 +1244,40 @@
                 "id": "t2",
                 "label": "Shows Total: 10.5",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Total: 10.5\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"coffee <- 3.2\\ncake <- 4.1\\n\", \"coffee <- 3.3\\ncake <- 4.3\\n\", \"coffee <- 3.2\\ncake <- 4.1\\ntotal <- 2 * coffee + cake\\ncat(\\\"Total:\\\", total, \\\"\\\\n\\\")\", c(\"total\"), output = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-swap-two-values",
+          "title": "Expert: Swap two values",
+          "promptMarkdown": "Swap the values of `a` and `b`, so `a` ends up with what `b` had and the other way round. Use a third variable to hold one of them while you swap.",
+          "starterCode": "a <- 3\nb <- 8\n",
+          "hint": "Save `a` first: `old_a <- a`, then `a <- b`, then `b <- old_a`.",
+          "solution": "a <- 3\nb <- 8\nold_a <- a\na <- b\nb <- old_a",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "a is now 8",
+                "assertion": "is.numeric(a) && isTRUE(all.equal(a, 8))"
+              },
+              {
+                "id": "t2",
+                "label": "b is now 3",
+                "assertion": "is.numeric(b) && isTRUE(all.equal(b, 3))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"a <- 3\\nb <- 8\\n\", \"a <- 4\\nb <- 10\\n\", \"a <- 3\\nb <- 8\\nold_a <- a\\na <- b\\nb <- old_a\", c(\"a\", \"b\"), output = FALSE)"
               }
             ]
           }
@@ -1305,29 +1412,29 @@
             "explanation": "`y` got 3 when it was worked out. Changing `x` afterwards doesn't change `y`."
           },
           {
-            "id": "variables-q-n96p73",
+            "id": "variables-q-15i45k6",
             "type": "mcq",
-            "prompt": "What does `(n <- 7)` show?",
+            "prompt": "Why give variables names like `total_price` instead of `x`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] TRUE`"
+                "label": "Short names aren't allowed"
               },
               {
                 "id": "b",
-                "label": "An error"
+                "label": "R runs them faster"
               },
               {
                 "id": "c",
-                "label": "`[1] 7`"
+                "label": "They say what the value is, so the code is easier to read and to check"
               },
               {
                 "id": "d",
-                "label": "Nothing"
+                "label": "R needs long names"
               }
             ],
             "correctChoiceId": "c",
-            "explanation": "Brackets around an assignment save the value and show it."
+            "explanation": "Code is read far more often than it is written, by you as well."
           },
           {
             "id": "variables-q-1282wdr",
@@ -1593,6 +1700,11 @@
                 "id": "t2",
                 "label": "Uses the cups variable",
                 "assertion": "grepl(\",\\\\s*cups\\\\s*,\", ._cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"cups <- 3\\n\", \"cups <- 4\\n\", \"cups <- 3\\nmessage <- paste(\\\"You ordered\\\", cups, \\\"cups\\\")\", c(\"cups\", \"message\"), output = FALSE)"
               }
             ]
           }
@@ -1636,6 +1748,35 @@
                 "id": "t2",
                 "label": "Uses toupper()",
                 "assertion": "grepl(\"toupper(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"item <- \\\"latte\\\"\\nquantity <- 2\\n\", \"item <- \\\"latte\\\"\\nquantity <- 3\\n\", \"item <- \\\"latte\\\"\\nquantity <- 2\\norder_code <- toupper(paste0(item, \\\"-\\\", quantity))\", c(\"order_code\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-a-name-label",
+          "title": "Expert: A name label",
+          "promptMarkdown": "Make `label` a text like `Name: Maya (4 letters)`, from the variable `first`, letting R count the letters.",
+          "starterCode": "first <- \"Maya\"\n",
+          "hint": "`paste0()` joins without spaces, so write the spaces yourself: `paste0(\"Name: \", first, \" (\", nchar(first), \" letters)\")`.",
+          "solution": "first <- \"Maya\"\nlabel <- paste0(\"Name: \", first, \" (\", nchar(first), \" letters)\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "label is Name: Maya (4 letters)",
+                "assertion": "identical(label, \"Name: Maya (4 letters)\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"first <- \\\"Maya\\\"\\n\", \"first <- \\\"Samuel\\\"\\n\", \"first <- \\\"Maya\\\"\\nlabel <- paste0(\\\"Name: \\\", first, \\\" (\\\", nchar(first), \\\" letters)\\\")\", c(\"label\"), output = FALSE)"
               }
             ]
           }
@@ -1770,29 +1911,29 @@
             "explanation": "`sep` replaces the space between the pieces."
           },
           {
-            "id": "text-q-sdgn2f",
+            "id": "text-q-1sstnwa",
             "type": "mcq",
-            "prompt": "What does `\"5\" + 1` give?",
+            "prompt": "Why does `\"5\" + 1` give an error?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] \"51\"`"
+                "label": "It needs `paste()`"
               },
               {
                 "id": "b",
-                "label": "`[1] \"6\"`"
+                "label": "R can't add 1"
               },
               {
                 "id": "c",
-                "label": "An error: non-numeric argument"
+                "label": "The number is too small"
               },
               {
                 "id": "d",
-                "label": "`[1] 6`"
+                "label": "`\"5\"` is text, and R can't do maths with text"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "`\"5\"` is text, and R can't do arithmetic with text."
+            "correctChoiceId": "d",
+            "explanation": "Leave the quotes off numbers you want to calculate with."
           },
           {
             "id": "text-q-1gqnk6s",
@@ -1876,6 +2017,11 @@
           "id": "true_counts_as_1",
           "label": "TRUE counts as 1",
           "code": "TRUE + TRUE + FALSE"
+        },
+        {
+          "id": "brackets_for_and_with_or",
+          "label": "Brackets for and with or",
+          "code": "age <- 70\nweekday <- FALSE\nage < 12 | age >= 65 & weekday\n(age < 12 | age >= 65) & weekday"
         }
       ],
       "intro": {
@@ -1981,6 +2127,11 @@
                 "id": "t2",
                 "label": "Uses >=",
                 "assertion": "grepl(\">=\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"age <- 17\\n\", \"age <- 18\\n\", \"age <- 17\\ncan_vote <- age >= 18\", c(\"can_vote\"), output = FALSE)"
               }
             ]
           }
@@ -2005,6 +2156,11 @@
                 "id": "t2",
                 "label": "Uses &",
                 "assertion": "grepl(\"&\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temperature <- 22\\nsunny <- TRUE\\n\", \"temperature <- 23\\nsunny <- TRUE\\n\", \"temperature <- 22\\nsunny <- TRUE\\npicnic <- temperature > 20 & sunny\", c(\"picnic\"), output = FALSE)"
               }
             ]
           }
@@ -2072,6 +2228,11 @@
                 "id": "t1",
                 "label": "Shows [1] TRUE",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] TRUE\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"x <- 5\\nx = 5\", \"x <- 6\\nx = 5\", \"x <- 5\\nx == 5\", c(), output = TRUE)"
               }
             ]
           }
@@ -2096,6 +2257,35 @@
                 "id": "t2",
                 "label": "Tests both limits",
                 "assertion": "grepl(\"70\", ._cq_code, fixed = TRUE) && grepl(\"80\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"score <- 74\\n\", \"score <- 75\\n\", \"score <- 74\\ngrade_b <- score >= 70 & score < 80\", c(\"grade_b\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-free-entry",
+          "title": "Expert: Free entry",
+          "promptMarkdown": "Entry is free for children under 12 or adults 65 and over, but only on weekdays. Make `free` the answer for the visitor in `age` on the day in `weekday`.",
+          "starterCode": "age <- 70\nweekday <- TRUE\n",
+          "hint": "Put the \"or\" part in brackets, then \"and\" it with the day: `(age < 12 | age >= 65) & weekday`.",
+          "solution": "age <- 70\nweekday <- TRUE\nfree <- (age < 12 | age >= 65) & weekday",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "free is TRUE",
+                "assertion": "identical(free, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"age <- 70\\nweekday <- TRUE\\n\", \"age <- 30\\nweekday <- TRUE\\n\", \"age <- 70\\nweekday <- TRUE\\nfree <- (age < 12 | age >= 65) & weekday\", c(\"free\"), output = FALSE)"
               }
             ]
           }
@@ -2155,29 +2345,29 @@
             "explanation": "`!=` asks \"not equal?\". 5 is equal to 5, so the answer is FALSE."
           },
           {
-            "id": "true_false-q-15la9s1",
+            "id": "true_false-q-1tbygwl",
             "type": "mcq",
-            "prompt": "What does `4 >= 4` give?",
+            "prompt": "Why does R compare with `==` and not `=`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`TRUE`"
+                "label": "There is no reason"
               },
               {
                 "id": "b",
-                "label": "An error"
+                "label": "`=` is slower"
               },
               {
                 "id": "c",
-                "label": "`4`"
+                "label": "A single `=` saves a value, like `<-`"
               },
               {
                 "id": "d",
-                "label": "`FALSE`"
+                "label": "`==` only works on text"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "`>=` is \"greater than or equal\". 4 is equal to 4."
+            "correctChoiceId": "c",
+            "explanation": "`x = 5` changes `x`; `x == 5` asks whether it is 5."
           },
           {
             "id": "true_false-q-qzgy3t",
@@ -2513,6 +2703,11 @@
                 "id": "t1",
                 "label": "taxis is 6",
                 "assertion": "is.numeric(taxis) && isTRUE(all.equal(taxis, 6))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"people <- 23\\n\", \"people <- 47\\n\", \"people <- 23\\ntaxis <- ceiling(people / 4)\", c(\"taxis\"), output = FALSE)"
               }
             ]
           }
@@ -2559,6 +2754,30 @@
               }
             ]
           }
+        },
+        {
+          "id": "functions-to-the-nearest-5",
+          "title": "Expert: To the nearest 5",
+          "promptMarkdown": "Prices are rounded to the nearest 5. Make `rounded` the value of `price` rounded that way (23.4 becomes 25).",
+          "starterCode": "price <- 23.4\n",
+          "hint": "Count in fives, round, then turn back into the price: `round(price / 5) * 5`.",
+          "solution": "price <- 23.4\nrounded <- round(price / 5) * 5",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rounded is 25",
+                "assertion": "is.numeric(rounded) && isTRUE(all.equal(rounded, 25))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"price <- 23.4\\n\", \"price <- 31\\n\", \"price <- 23.4\\nrounded <- round(price / 5) * 5\", c(\"rounded\"), output = FALSE)"
+              }
+            ]
+          }
         }
       ],
       "test": {
@@ -2590,29 +2809,29 @@
             "explanation": "One decimal place: 2.567 is nearer 2.6 than 2.5."
           },
           {
-            "id": "functions-q-h66h98",
+            "id": "functions-q-1u5bnfj",
             "type": "mcq",
-            "prompt": "What does `round(2.5)` give?",
+            "prompt": "Why does `round(2.5)` give 2 and not 3?",
             "choices": [
               {
                 "id": "a",
-                "label": "An error"
+                "label": "R rounds a 5 to the nearest even number, so rounding many values doesn't push the total up"
               },
               {
                 "id": "b",
-                "label": "`2.5`"
+                "label": "It is a bug"
               },
               {
                 "id": "c",
-                "label": "`3`"
+                "label": "R always rounds down"
               },
               {
                 "id": "d",
-                "label": "`2`"
+                "label": "2.5 is stored as 2.4"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "R rounds a 5 to the nearest even number: 2.5 becomes 2 (and 3.5 becomes 4)."
+            "correctChoiceId": "a",
+            "explanation": "So `round(3.5)` is 4 and `round(2.5)` is 2."
           },
           {
             "id": "functions-q-g286es",
@@ -2821,6 +3040,11 @@
           "id": "text_na",
           "label": "Text \"NA\"",
           "code": "is.na(NA)\nis.na(\"NA\")"
+        },
+        {
+          "id": "is_na_or",
+          "label": "is.na or ==",
+          "code": "x <- NA\nx == NA\nis.na(x)"
         }
       ],
       "intro": {
@@ -2940,6 +3164,11 @@
                 "id": "t2",
                 "label": "Uses !is.na()",
                 "assertion": "grepl(\"!is.na(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"reading <- 12\\n\", \"reading <- 13\\n\", \"reading <- 12\\nhas_value <- !is.na(reading)\", c(\"has_value\"), output = FALSE)"
               }
             ]
           }
@@ -3007,6 +3236,11 @@
                 "id": "t2",
                 "label": "Uses is.na()",
                 "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"mon <- NA\\ntue <- 7.5\\nwed <- NA\\n\", \"mon <- NA\\ntue <- 7.6\\nwed <- NA\\n\", \"mon <- NA\\ntue <- 7.5\\nwed <- NA\\nn_missing <- is.na(mon) + is.na(tue) + is.na(wed)\", c(\"n_missing\"), output = FALSE)"
               }
             ]
           }
@@ -3031,6 +3265,30 @@
                 "id": "t2",
                 "label": "Uses is.na()",
                 "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-how-many-are-known",
+          "title": "Expert: How many are known",
+          "promptMarkdown": "Three sensors sent `a`, `b` and `c`, and some readings are missing. Make `known` the number of readings that are not missing.",
+          "starterCode": "a <- 6\nb <- NA\nc <- 9\n",
+          "hint": "TRUE counts as 1, so add up three answers: `!is.na(a) + !is.na(b) + !is.na(c)`. Put each in brackets to be safe.",
+          "solution": "a <- 6\nb <- NA\nc <- 9\nknown <- (!is.na(a)) + (!is.na(b)) + (!is.na(c))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "known is 2",
+                "assertion": "is.numeric(known) && isTRUE(all.equal(known, 2))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"a <- 6\\nb <- NA\\nc <- 9\\n\", \"a <- NA\\nb <- NA\\nc <- 9\\n\", \"a <- 6\\nb <- NA\\nc <- 9\\nknown <- (!is.na(a)) + (!is.na(b)) + (!is.na(c))\", c(\"known\"), output = FALSE)"
               }
             ]
           }
@@ -3165,29 +3423,29 @@
             "explanation": "\"FALSE and anything\" is FALSE."
           },
           {
-            "id": "missing_values-q-gkl1a7",
+            "id": "missing_values-q-1wyfaga",
             "type": "mcq",
-            "prompt": "What does `TRUE & NA` give?",
+            "prompt": "Why can't you test for a missing value with `x == NA`?",
             "choices": [
               {
                 "id": "a",
-                "label": "An error"
+                "label": "NA is text"
               },
               {
                 "id": "b",
-                "label": "`TRUE`"
+                "label": "You can"
               },
               {
                 "id": "c",
-                "label": "`FALSE`"
+                "label": "`==` only works on numbers"
               },
               {
                 "id": "d",
-                "label": "`NA`"
+                "label": "Comparing with an unknown value gives NA, not TRUE or FALSE; use `is.na(x)`"
               }
             ],
             "correctChoiceId": "d",
-            "explanation": "Here the answer depends on the missing value, so it is unknown."
+            "explanation": "`NA == NA` is NA too: two unknowns might or might not be equal."
           },
           {
             "id": "missing_values-q-r129fs",
@@ -3309,6 +3567,11 @@
                 "id": "t1",
                 "label": "Shows [1] 24",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 24\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"total <- 12\\ntotl * 2\", \"total <- 13\\ntotl * 2\", \"total <- 12\\ntotal * 2\", c(), output = TRUE)"
               }
             ]
           }
@@ -3452,6 +3715,11 @@
                 "id": "t2",
                 "label": "Shows Total: 9",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Total: 9\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"apples <- 4\\npears <- 5\\ntotal <- apples + Pears\\ncat(\\\"Total:\\\" total, \\\"\\\\n\\\")\", \"apples <- 5\\npears <- 7\\ntotal <- apples + Pears\\ncat(\\\"Total:\\\" total, \\\"\\\\n\\\")\", \"apples <- 4\\npears <- 5\\ntotal <- apples + pears\\ncat(\\\"Total:\\\", total, \\\"\\\\n\\\")\", c(\"total\"), output = TRUE)"
               }
             ]
           }
@@ -3476,6 +3744,35 @@
                 "id": "t2",
                 "label": "Shows both lines",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Guests: 12\", \"Tables: 3\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"guests <- 12\\nper_table <- 4\\ntables <- ceiling(guest / per_table\\ncat(\\\"Guests:\\\", guests, \\\"\\\\n\\\")\\nCat(\\\"Tables:\\\", tables, \\\"\\\\n\\\")\", \"guests <- 13\\nper_table <- 6\\ntables <- ceiling(guest / per_table\\ncat(\\\"Guests:\\\", guests, \\\"\\\\n\\\")\\nCat(\\\"Tables:\\\", tables, \\\"\\\\n\\\")\", \"guests <- 12\\nper_table <- 4\\ntables <- ceiling(guests / per_table)\\ncat(\\\"Guests:\\\", guests, \\\"\\\\n\\\")\\ncat(\\\"Tables:\\\", tables, \\\"\\\\n\\\")\", c(\"tables\"), output = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-in-the-wrong-order",
+          "title": "Expert: In the wrong order",
+          "promptMarkdown": "This program gives an error because a line uses variables before they are made. Put the lines in an order that works, so it shows `Total: 10`.",
+          "starterCode": "total <- price * qty\nprice <- 2.5\nqty <- 4\ncat(\"Total:\", total, \"\\n\")\n",
+          "hint": "R runs the lines top to bottom. `price` and `qty` must exist before `total` is worked out from them.",
+          "solution": "price <- 2.5\nqty <- 4\ntotal <- price * qty\ncat(\"Total:\", total, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Total: 10",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Total: 10\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"total <- price * qty\\nprice <- 2.5\\nqty <- 4\\ncat(\\\"Total:\\\", total, \\\"\\\\n\\\")\\n\", \"total <- price * qty\\nprice <- 2.6\\nqty <- 6\\ncat(\\\"Total:\\\", total, \\\"\\\\n\\\")\\n\", \"price <- 2.5\\nqty <- 4\\ntotal <- price * qty\\ncat(\\\"Total:\\\", total, \\\"\\\\n\\\")\", c(), output = TRUE)"
               }
             ]
           }
@@ -3660,29 +3957,29 @@
             "explanation": "R stops at the first error, so fix it and run again to find the next."
           },
           {
-            "id": "errors-q-vbvpoc",
+            "id": "errors-q-1drxbgl",
             "type": "mcq",
-            "prompt": "Which error does `paste(\"a\" \"b\")` give?",
+            "prompt": "A program has three mistakes. Why fix the first one, then run it again?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] \"a b\"`"
+                "label": "It doesn't matter"
               },
               {
                 "id": "b",
-                "label": "`unexpected string constant`"
+                "label": "R only reports one error a day"
               },
               {
                 "id": "c",
-                "label": "`unexpected numeric constant`"
+                "label": "R stops at the first error, so the lines after it haven't been checked yet"
               },
               {
                 "id": "d",
-                "label": "`object not found`"
+                "label": "The others fix themselves"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "R finds the text `\"b\"` where it expected a comma."
+            "correctChoiceId": "c",
+            "explanation": "Each run shows the next problem; fix one thing at a time."
           },
           {
             "id": "errors-q-1f59kvx",
@@ -3764,6 +4061,11 @@
                 "id": "t2",
                 "label": "Uses the variables",
                 "assertion": "grepl(\"latte\", ._cq_code, fixed = TRUE) && grepl(\"croissant\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"latte <- 3.4\\ncroissant <- 2.8\\n\", \"latte <- 3.5\\ncroissant <- 3.0\\n\", \"latte <- 3.4\\ncroissant <- 2.8\\nsubtotal <- 2 * latte + croissant\", c(\"latte\", \"croissant\", \"subtotal\"), output = FALSE)"
               }
             ]
           }
@@ -3783,6 +4085,11 @@
                 "id": "t1",
                 "label": "tip is 0.96",
                 "assertion": "is.numeric(tip) && isTRUE(all.equal(tip, 0.96))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"subtotal <- 9.6\\n\", \"subtotal <- 9.7\\n\", \"subtotal <- 9.6\\ntip <- round(subtotal * 0.10, 2)\", c(\"tip\"), output = FALSE)"
               }
             ]
           }
@@ -3802,6 +4109,11 @@
                 "id": "t1",
                 "label": "total is 10.56",
                 "assertion": "is.numeric(total) && isTRUE(all.equal(total, 10.56))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"subtotal <- 9.6\\ntip <- 0.96\\n\", \"subtotal <- 9.7\\ntip <- 0.98\\n\", \"subtotal <- 9.6\\ntip <- 0.96\\ntotal <- subtotal + tip\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -3821,6 +4133,11 @@
                 "id": "t1",
                 "label": "each is 3.52",
                 "assertion": "is.numeric(each) && isTRUE(all.equal(each, 3.52))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"total <- 10.56\\n\", \"total <- 22.12\\n\", \"total <- 10.56\\neach <- round(total / 3, 2)\", c(\"each\"), output = FALSE)"
               }
             ]
           }
@@ -3845,6 +4162,11 @@
                 "id": "t2",
                 "label": "Shows the four lines",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Subtotal: 9.6\", \"Tip: 0.96\", \"Total: 10.56\", \"Each pays: 3.52\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"latte <- 3.4\\ncroissant <- 2.8\\n\", \"latte <- 3.5\\ncroissant <- 3.0\\n\", \"latte <- 3.4\\ncroissant <- 2.8\\nsubtotal <- 2 * latte + croissant\\ntip <- round(subtotal * 0.10, 2)\\ntotal <- subtotal + tip\\neach <- round(total / 3, 2)\\ncat(\\\"Subtotal:\\\", subtotal, \\\"\\\\n\\\")\\ncat(\\\"Tip:\\\", tip, \\\"\\\\n\\\")\\ncat(\\\"Total:\\\", total, \\\"\\\\n\\\")\\ncat(\\\"Each pays:\\\", each, \\\"\\\\n\\\")\", c(\"total\"), output = TRUE)"
               }
             ]
           }
@@ -4058,6 +4380,11 @@
                 "id": "t1",
                 "label": "minutes is 47",
                 "assertion": "is.numeric(minutes) && isTRUE(all.equal(minutes, 47))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"start <- 492\\nend <- 539\\n\", \"start <- 493\\nend <- 541\\n\", \"start <- 492\\nend <- 539\\nminutes <- end - start\", c(\"minutes\"), output = FALSE)"
               }
             ]
           }
@@ -4077,6 +4404,11 @@
                 "id": "t1",
                 "label": "cost is 8.05",
                 "assertion": "is.numeric(cost) && isTRUE(all.equal(cost, 8.05))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- 47\\n\", \"minutes <- 48\\n\", \"minutes <- 47\\ncost <- 1 + 0.15 * minutes\", c(\"cost\"), output = FALSE)"
               }
             ]
           }
@@ -4096,6 +4428,11 @@
                 "id": "t1",
                 "label": "speed is 12",
                 "assertion": "is.numeric(speed) && isTRUE(all.equal(speed, 12))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"km <- 9.4\\nminutes <- 47\\n\", \"km <- 9.5\\nminutes <- 49\\n\", \"km <- 9.4\\nminutes <- 47\\nspeed <- round(km / (minutes / 60), 1)\", c(\"speed\"), output = FALSE)"
               }
             ]
           }
@@ -4115,6 +4452,11 @@
                 "id": "t1",
                 "label": "long_ride is TRUE",
                 "assertion": "identical(long_ride, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- 47\\n\", \"minutes <- 30\\n\", \"minutes <- 47\\nlong_ride <- minutes > 45\", c(\"long_ride\"), output = FALSE)"
               }
             ]
           }
@@ -4139,6 +4481,11 @@
                 "id": "t2",
                 "label": "Shows the summary",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Ride: 47 min, 9.4 km\", \"Speed: 12 km/h\", \"Cost: 8.05\", \"Long ride: TRUE\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"start <- 8 * 60 + 12\\nend <- 8 * 60 + 59\\nkm <- 9.4\\n\", \"start <- 9 * 60 + 12\\nend <- 10 * 60 + 59\\nkm <- 9.7\\n\", \"start <- 8 * 60 + 12\\nend <- 8 * 60 + 59\\nkm <- 9.4\\nminutes <- end - start\\nspeed <- round(km / (minutes / 60), 1)\\ncost <- 1 + 0.15 * minutes\\nlong_ride <- minutes > 45\\ncat(\\\"Ride:\\\", minutes, \\\"min,\\\", km, \\\"km\\\\n\\\")\\ncat(\\\"Speed:\\\", speed, \\\"km/h\\\\n\\\")\\ncat(\\\"Cost:\\\", cost, \\\"\\\\n\\\")\\ncat(\\\"Long ride:\\\", long_ride, \\\"\\\\n\\\")\", c(\"km\", \"cost\"), output = TRUE)"
               }
             ]
           }
@@ -4401,6 +4748,11 @@
                 "id": "t1",
                 "label": "known_total is 21.15",
                 "assertion": "is.numeric(known_total) && isTRUE(all.equal(known_total, 21.15))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tomatoes <- 12.4\\ncourgettes <- 8.75\\nbeans <- NA\\n\", \"tomatoes <- 12.5\\ncourgettes <- 8.77\\nbeans <- NA\\n\", \"tomatoes <- 12.4\\ncourgettes <- 8.75\\nbeans <- NA\\nknown_total <- tomatoes + courgettes\", c(\"known_total\"), output = FALSE)"
               }
             ]
           }
@@ -4425,6 +4777,11 @@
                 "id": "t2",
                 "label": "total is 24.75",
                 "assertion": "is.numeric(total) && isTRUE(all.equal(total, 24.75))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tomatoes <- 12.4\\ncourgettes <- 8.75\\nbeans <- NA\\n\", \"tomatoes <- 12.5\\ncourgettes <- 8.77\\nbeans <- NA\\n\", \"tomatoes <- 12.4\\ncourgettes <- 8.75\\nbeans <- NA\\nbeans <- 3.6\\ntotal <- tomatoes + beans + courgettes\", c(\"beans\", \"total\"), output = FALSE)"
               }
             ]
           }
@@ -4449,6 +4806,11 @@
                 "id": "t2",
                 "label": "more_tomatoes is TRUE",
                 "assertion": "identical(more_tomatoes, TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tomatoes <- 12.4\\ncourgettes <- 8.75\\ntotal <- 24.75\\nfamilies <- 5\\n\", \"tomatoes <- 12.5\\ncourgettes <- 8.77\\ntotal <- 24.78\\nfamilies <- 6\\n\", \"tomatoes <- 12.4\\ncourgettes <- 8.75\\ntotal <- 24.75\\nfamilies <- 5\\nshare <- round(total / families, 2)\\nmore_tomatoes <- tomatoes > courgettes\", c(\"share\", \"more_tomatoes\"), output = FALSE)"
               }
             ]
           }
@@ -4473,6 +4835,11 @@
                 "id": "t2",
                 "label": "Shows the report",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Harvest: 24.75 kg\", \"Per family: 4.95 kg\", \"More tomatoes than courgettes: TRUE\", \"Top crop: TOMATOES\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"tomatoes <- 12.4\\ncourgettes <- 8.75\\nbeans <- 3.6\\nfamilies <- 5\\n\", \"tomatoes <- 12.5\\ncourgettes <- 8.77\\nbeans <- 3.9\\nfamilies <- 6\\n\", \"tomatoes <- 12.4\\ncourgettes <- 8.75\\nbeans <- 3.6\\nfamilies <- 5\\ntotal <- tomatoes + beans + courgettes\\nshare <- round(total / families, 2)\\nmore_tomatoes <- tomatoes > courgettes\\ntop_crop <- toupper(\\\"tomatoes\\\")\\ncat(\\\"Harvest:\\\", total, \\\"kg\\\\n\\\")\\ncat(\\\"Per family:\\\", share, \\\"kg\\\\n\\\")\\ncat(\\\"More tomatoes than courgettes:\\\", more_tomatoes, \\\"\\\\n\\\")\\ncat(\\\"Top crop:\\\", top_crop, \\\"\\\\n\\\")\", c(\"tomatoes\", \"courgettes\", \"top_crop\"), output = TRUE)"
               }
             ]
           }

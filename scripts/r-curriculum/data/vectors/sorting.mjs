@@ -19,6 +19,7 @@ export default makeTopic({
     snippet('Top three', 'scores <- c(71, 64, 88, 92, 57)\nhead(sort(scores, decreasing = TRUE), 3)'),
     snippet('Reverse', 'rev(c(1, 5, 3))\nrev(c("first", "second", "third"))'),
     snippet('Sort text', 'sort(c("pear", "apple", "fig", "Banana"))'),
+    snippet('order() for another vector', 'players <- c("Ana", "Ben", "Cy")\nscores <- c(71, 88, 64)\norder(scores)\nplayers[order(scores)]'),
   ],
   readMore: { label: 'R documentation: order()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/order.html', source: 'R documentation' },
   challenges: [
@@ -86,6 +87,13 @@ export default makeTopic({
         ['Uses order()', uses('order(')],
       ],
     }),
+    task('hard', 'Second fastest', {
+      prompt: 'Make `second` the second fastest (second smallest) lap time.',
+      starter: 'laps <- c(82, 80, 84, 79, 88)\n',
+      hint: 'Sort, then take position 2: `sort(laps)[2]`.',
+      solution: 'laps <- c(82, 80, 84, 79, 88)\nsecond <- sort(laps)[2]',
+      tests: [['second is 80', near('second', 80)]],
+    }),
     task('expert', 'The cheapest item', {
       prompt: 'Make `cheapest` the name of the cheapest item, working it out from the prices.',
       starter: 'items <- c("latte", "tea", "cake", "water")\nprices <- c(3.4, 2.5, 4.2, 1.8)\n',
@@ -95,6 +103,13 @@ export default makeTopic({
         ['cheapest is "water"', isText('cheapest', 'water')],
         ['Works it out from prices', uses('prices')],
       ],
+    }),
+    task('expert', 'The bottom two', {
+      prompt: 'Make `bottom2` the names of the two players with the lowest scores, lowest first.',
+      starter: 'players <- c("Ana", "Ben", "Cy", "Dee", "Eli")\nscores <- c(71, 64, 88, 92, 57)\n',
+      hint: '`order(scores)` puts the positions lowest first. Use them on `players`, then `head(..., 2)`.',
+      solution: 'players <- c("Ana", "Ben", "Cy", "Dee", "Eli")\nscores <- c(71, 64, 88, 92, 57)\nbottom2 <- head(players[order(scores)], 2)',
+      tests: [['bottom2 is Eli, Ben', isTexts('bottom2', 'Eli', 'Ben')]],
     }),
   ],
   questions: [
@@ -116,9 +131,9 @@ export default makeTopic({
     mc('After `n <- c("A", "B", "C")` and `s <- c(5, 9, 7)`, what does `n[order(s)]` give?', ['`[1] "A" "C" "B"`', '`[1] "B" "C" "A"`', '`[1] 5 7 9`', '`[1] 1 3 2`'], 0,
       '`order(s)` is 1 3 2, so the names come out as A, C, B: lowest score first.',
       { code: 'n <- c("A", "B", "C")\ns <- c(5, 9, 7)\nn[order(s)]', output: '[1] "A" "C" "B"' }),
-    mc('After `x <- c(3, 1, 2)` and `sort(x)`, what is `x`?', ['`[1] 1 2 3`', '`[1] 3 1 2`', '`NULL`', '`[1] 3 2 1`'], 1,
-      '`sort()` gives a sorted copy; `x` itself doesn\'t change unless you save the result.',
-      { code: 'x <- c(3, 1, 2)\ns <- sort(x)\nx', output: '[1] 3 1 2' }),
+    mc('Why is `x` still in its old order after running `sort(x)`?', ['sort() gives back a sorted copy; save it with `x <- sort(x)`', 'sort() only works on text', 'It needs `decreasing = TRUE`', 'R undoes it'], 0,
+      'R functions don\'t change the vectors you give them.',
+      { code: 'x <- c(3, 1, 2)\nsort(x)\nx', output: '[1] 1 2 3\n[1] 3 1 2' }),
     mc('What does `sort(c("kale", "beans", "apples"))` give?', ['`[1] "kale" "beans" "apples"`', '`[1] "apples" "beans" "kale"`', '`[1] "apples" "kale" "beans"`', '`[1] 3 2 1`'], 1,
       'Text is sorted alphabetically.',
       { code: 'sort(c("kale", "beans", "apples"))', output: '[1] "apples" "beans"  "kale"' }),

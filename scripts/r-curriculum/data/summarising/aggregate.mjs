@@ -1,5 +1,5 @@
 // Summarising data: Summary tables with aggregate().
-import { code, makeTopic, mc, near, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
+import { code, isTexts, makeTopic, mc, near, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
 import { DELIVERIES } from '../datasets.mjs'
 
 export default makeTopic({
@@ -15,7 +15,7 @@ export default makeTopic({
     'Formulas with `~` appear all over R\'s statistics, including the regression models in the Statistics quest, so it is worth getting used to reading them.',
   ],
   sandboxCode: DELIVERIES + 'aggregate(minutes ~ rider, data = deliveries, FUN = mean)\naggregate(minutes ~ rider + area, data = deliveries, FUN = mean)',
-  sandboxSnippets: [snippet('Sorted', DELIVERIES + 'res <- aggregate(minutes ~ rider, data = deliveries, FUN = median)\nres[order(res$minutes), ]')],
+  sandboxSnippets: [snippet('Sorted', DELIVERIES + 'res <- aggregate(minutes ~ rider, data = deliveries, FUN = median)\nres[order(res$minutes), ]'), snippet('Count per group', DELIVERIES + 'aggregate(minutes ~ rider, data = deliveries, FUN = length)'), snippet('Two groups at once', DELIVERIES + 'aggregate(minutes ~ rider + area, data = deliveries, FUN = median)')],
   readMore: { label: 'R documentation: aggregate()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/aggregate.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Mean per rider', {
@@ -67,12 +67,26 @@ export default makeTopic({
       solution: DELIVERIES + 'usual <- aggregate(minutes ~ rider, data = subset(deliveries, minutes < 60), FUN = mean)',
       tests: [['usual has Ola at 28', sameFrame('usual', 'data.frame(rider = c("Kit", "Ola", "Sam"), minutes = c(32, 28, 23.25))')]],
     }),
+    task('hard', 'Mean and count', {
+      prompt: 'Make `per_area` the mean minutes per area with `aggregate()`, then add a column `n` with the number of deliveries in each area.',
+      starter: DELIVERIES,
+      hint: 'A second `aggregate()` with `FUN = length` counts; take its `minutes` column for `per_area$n`.',
+      solution: DELIVERIES + 'per_area <- aggregate(minutes ~ area, data = deliveries, FUN = mean)\nper_area$n <- aggregate(minutes ~ area, data = deliveries, FUN = length)$minutes',
+      tests: [['per_area has the means and counts', sameFrame('per_area', 'data.frame(area = c("north", "south"), minutes = c(139 / 6, 40), n = c(6L, 6L))')]],
+    }),
     task('expert', 'The slowest combination', {
       prompt: 'Make `slowest` the row of the rider and area combination with the highest mean time.',
       starter: DELIVERIES,
       hint: 'Aggregate by `rider + area`, then pick the row with `which.max()` of the minutes column.',
       solution: DELIVERIES + 'both <- aggregate(minutes ~ rider + area, data = deliveries, FUN = mean)\nslowest <- both[which.max(both$minutes), ]',
       tests: [['slowest is Ola in the south', 'is.data.frame(slowest) && slowest$rider == "Ola" && slowest$area == "south" && slowest$minutes == 52.5']],
+    }),
+    task('expert', 'Riders with a quick median', {
+      prompt: 'Make `quick` the names of the riders whose median delivery is under 30 minutes.',
+      starter: DELIVERIES,
+      hint: 'Get the medians as a table first, then filter its `rider` column with its `minutes` column.',
+      solution: DELIVERIES + 'med <- aggregate(minutes ~ rider, data = deliveries, FUN = median)\nquick <- med$rider[med$minutes < 30]',
+      tests: [['quick is Ola and Sam', isTexts('quick', 'Ola', 'Sam')]],
     }),
   ],
   questions: [
@@ -89,8 +103,8 @@ export default makeTopic({
     mc('How many rows does `aggregate(x ~ g, data = data.frame(x = 1:6, g = c("a", "b", "c", "a", "b", "c")), FUN = mean)` have?', ['`6`', '`3`', '`2`', '`1`'], 1,
       'One row per group: a, b and c.',
       { code: 'nrow(aggregate(x ~ g, data = data.frame(x = 1:6, g = c("a", "b", "c", "a", "b", "c")), FUN = mean))', output: '[1] 3' }),
-    mc('Which renames the second column of `res` to `avg`?', ['`res$2 <- "avg"`', '`names(res)[2] <- "avg"`', '`rename(res, 2, "avg")`', '`res[2] <- "avg"`'], 1,
-      '`names()` can be assigned to, one position at a time.'),
+    mc('Why does `aggregate(minutes ~ rider + area, ...)` leave out some rider and area pairs?', ['It summarises the rows there are, so a pair with no deliveries gets no row', 'It drops the smallest groups', 'It needs `all = TRUE`', 'It doesn\'t'], 0,
+      'A two-way `table()` shows the missing pairs as 0.'),
     mc('Why use `aggregate()` instead of `tapply()`?', ['It is faster', 'Its result is a data frame you can sort, merge and print as a table', 'tapply() can\'t do means', 'There is no difference'], 1,
       'Both summarise by group; the shape of the result differs.'),
     mc('How do you leave some rows out of an `aggregate()`?', ['Add `na.rm = TRUE`', 'Give it a filtered table with `subset()`', 'Use `-` in the formula', 'You can\'t'], 1,

@@ -21,6 +21,11 @@
           "id": "add_to_a_vector",
           "label": "Add to a vector",
           "code": "cups <- c(3, 5, 2)\ncups <- c(cups, 4)\ncups\nlength(cups)"
+        },
+        {
+          "id": "one_type_per_vector",
+          "label": "One type per vector",
+          "code": "c(1, \"two\", 3)\nc(1, TRUE, 3)"
         }
       ],
       "intro": {
@@ -97,6 +102,11 @@
                 "id": "t2",
                 "label": "Uses length()",
                 "assertion": "grepl(\"length(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(12, 7, 15, 9, 11, 8, 14)\\n\", \"orders <- c(15, 11, 13, 10, 18, 9, 13)\\n\", \"orders <- c(12, 7, 15, 9, 11, 8, 14)\\nn <- length(orders)\", c(\"n\"), output = FALSE)"
               }
             ]
           }
@@ -145,6 +155,11 @@
                 "id": "t2",
                 "label": "Adds to the old vector",
                 "assertion": "grepl(\"c(steps\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 8100, 6500, 9900, 3000)\\n\", \"steps <- c(3002, 9901, 6503, 8102, 4201)\\n\", \"steps <- c(4200, 8100, 6500, 9900, 3000)\\nsteps <- c(steps, 7600)\", c(\"steps\"), output = FALSE)"
               }
             ]
           }
@@ -169,6 +184,11 @@
                 "id": "t2",
                 "label": "Joins the two vectors",
                 "assertion": "grepl(\"morning\", ._cq_code, fixed = TRUE) && grepl(\"afternoon\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"morning <- c(14, 18, 11)\\nafternoon <- c(16, 20)\\n\", \"morning <- c(14, 20, 15)\\nafternoon <- c(22, 17)\\n\", \"morning <- c(14, 18, 11)\\nafternoon <- c(16, 20)\\nall_scores <- c(morning, afternoon)\", c(\"morning\", \"afternoon\", \"all_scores\"), output = FALSE)"
               }
             ]
           }
@@ -188,6 +208,40 @@
                 "id": "t1",
                 "label": "cups is 3, 5, 2",
                 "assertion": "is.numeric(cups) && isTRUE(all.equal(cups, c(3, 5, 2)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"cups <- c(3, 5 2)\", \"cups <- c(4, 7 5)\", \"cups <- c(3, 5, 2)\", c(\"cups\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "making_vectors-a-shopping-list",
+          "title": "Hard: A shopping list",
+          "promptMarkdown": "Make `basket` one vector with the fruit first and then the veg, and `n_items` the number of items in it.",
+          "starterCode": "fruit <- c(\"apples\", \"pears\")\nveg <- c(\"kale\", \"leeks\", \"beans\")\n",
+          "hint": "`c()` joins vectors too: `basket <- c(fruit, veg)`, then `length(basket)`.",
+          "solution": "fruit <- c(\"apples\", \"pears\")\nveg <- c(\"kale\", \"leeks\", \"beans\")\nbasket <- c(fruit, veg)\nn_items <- length(basket)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "basket is apples, pears, kale, leeks, beans",
+                "assertion": "identical(basket, c(\"apples\", \"pears\", \"kale\", \"leeks\", \"beans\"))"
+              },
+              {
+                "id": "t2",
+                "label": "n_items is 5",
+                "assertion": "is.numeric(n_items) && isTRUE(all.equal(n_items, 5))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"fruit <- c(\\\"apples\\\", \\\"pears\\\")\\nveg <- c(\\\"kale\\\", \\\"leeks\\\", \\\"beans\\\")\\n\", \"fruit <- c(\\\"apples\\\", \\\"pears2\\\")\\nveg <- c(\\\"kale\\\", \\\"leeks\\\", \\\"beans2\\\")\\n\", \"fruit <- c(\\\"apples\\\", \\\"pears\\\")\\nveg <- c(\\\"kale\\\", \\\"leeks\\\", \\\"beans\\\")\\nbasket <- c(fruit, veg)\\nn_items <- length(basket)\", c(\"basket\", \"n_items\"), output = FALSE)"
               }
             ]
           }
@@ -207,6 +261,35 @@
                 "id": "t1",
                 "label": "weights is numbers: 1.2, 0.8, 2.5",
                 "assertion": "is.numeric(weights) && isTRUE(all.equal(weights, c(1.2, 0.8, 2.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"weights <- c(1.2, \\\"0.8\\\", 2.5)\\nweights\", \"weights <- c(1.3, \\\"0.8\\\", 2.7)\\nweights\", \"weights <- c(1.2, 0.8, 2.5)\\nweights\", c(\"weights\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "making_vectors-front-and-back-of-the-queue",
+          "title": "Expert: Front and back of the queue",
+          "promptMarkdown": "Ana has just arrived first and Dee last. Make `queue` start with `\"Ana\"`, then the people already in it, then `\"Dee\"`.",
+          "starterCode": "queue <- c(\"Ben\", \"Cy\")\n",
+          "hint": "Put the old vector in the middle of a new one: `queue <- c(\"Ana\", queue, \"Dee\")`.",
+          "solution": "queue <- c(\"Ben\", \"Cy\")\nqueue <- c(\"Ana\", queue, \"Dee\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "queue is Ana, Ben, Cy, Dee",
+                "assertion": "identical(queue, c(\"Ana\", \"Ben\", \"Cy\", \"Dee\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"queue <- c(\\\"Ben\\\", \\\"Cy\\\")\\n\", \"queue <- c(\\\"Ben\\\", \\\"Cy2\\\")\\n\", \"queue <- c(\\\"Ben\\\", \\\"Cy\\\")\\nqueue <- c(\\\"Ana\\\", queue, \\\"Dee\\\")\", c(\"queue\"), output = FALSE)"
               }
             ]
           }
@@ -291,29 +374,29 @@
             "explanation": "A single value is a vector of length 1."
           },
           {
-            "id": "making_vectors-q-1l24jdq",
+            "id": "making_vectors-q-140dan7",
             "type": "mcq",
-            "prompt": "What does `c(1, \"two\", 3)` give?",
+            "prompt": "Why does `c(1, \"two\", 3)` turn every value into text?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] 1 2 3`"
+                "label": "R sorts the values first"
               },
               {
                 "id": "b",
-                "label": "An error"
+                "label": "It is a bug"
               },
               {
                 "id": "c",
-                "label": "`[1] \"1\" \"two\" \"3\"`"
+                "label": "Numbers can't go in vectors"
               },
               {
                 "id": "d",
-                "label": "`[1] 1 \"two\" 3`"
+                "label": "A vector holds one type of value, so R picks the type that can hold them all"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "A vector holds one kind of value. One text value turns them all into text."
+            "correctChoiceId": "d",
+            "explanation": "Any number can be written as text, but not every text is a number."
           },
           {
             "id": "making_vectors-q-1dwazl2",
@@ -447,6 +530,11 @@
           "id": "colon_and_maths",
           "label": "Colon and maths",
           "code": "1:3 + 1\n1:(3 + 1)"
+        },
+        {
+          "id": "counting_down",
+          "label": "Counting down",
+          "code": "seq(10, 0, by = -2)\n10:1"
         }
       ],
       "intro": {
@@ -619,6 +707,30 @@
           }
         },
         {
+          "id": "sequences-every-other-month",
+          "title": "Hard: Every other month",
+          "promptMarkdown": "Make `months` the numbers 1, 3, 5, 7, 9 and 11 with `seq()`.",
+          "starterCode": "",
+          "hint": "Start, end and step: `seq(1, 11, by = 2)`.",
+          "solution": "months <- seq(1, 11, by = 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "months is 1, 3, 5, 7, 9, 11",
+                "assertion": "is.numeric(months) && isTRUE(all.equal(months, c(1, 3, 5, 7, 9, 11)))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses seq()",
+                "assertion": "grepl(\"seq(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
           "id": "sequences-fix-the-range",
           "title": "Expert: Fix the range",
           "promptMarkdown": "This should give the numbers 1 to 6, but it gives 2 to 6 instead. Fix it with brackets, keeping `n + 1` in the code.",
@@ -638,6 +750,35 @@
                 "id": "t2",
                 "label": "Keeps n + 1",
                 "assertion": "grepl(\"n + 1\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"n <- 5\\nseats <- 1:n + 1\\nseats\", \"n <- 6\\nseats <- 1:n + 1\\nseats\", \"n <- 5\\nseats <- 1:(n + 1)\\nseats\", c(\"n\", \"seats\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sequences-a-shift-rota",
+          "title": "Expert: A shift rota",
+          "promptMarkdown": "Ana, Ben and Cy work two days each in turn. Make `rota` for two rounds: `\"Ana\" \"Ana\" \"Ben\" \"Ben\" \"Cy\" \"Cy\"` and then the same again (12 values).",
+          "starterCode": "",
+          "hint": "Repeat each name twice, then repeat that whole vector: `rep(rep(c(\"Ana\", \"Ben\", \"Cy\"), each = 2), times = 2)`.",
+          "solution": "rota <- rep(rep(c(\"Ana\", \"Ben\", \"Cy\"), each = 2), times = 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rota has the two rounds",
+                "assertion": "identical(rota, c(\"Ana\", \"Ana\", \"Ben\", \"Ben\", \"Cy\", \"Cy\", \"Ana\", \"Ana\", \"Ben\", \"Ben\", \"Cy\", \"Cy\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses rep()",
+                "assertion": "grepl(\"rep(\", ._cq_code, fixed = TRUE)"
               }
             ]
           }
@@ -772,29 +913,29 @@
             "explanation": "`each` repeats every value before moving on."
           },
           {
-            "id": "sequences-q-1s452zs",
+            "id": "sequences-q-5nm7e1",
             "type": "mcq",
-            "prompt": "What does `1:3 + 1` give?",
+            "prompt": "Why does `1:n + 1` not give the numbers 1 to n + 1?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] 1 2 4`"
+                "label": "`n` must be in quotes"
               },
               {
                 "id": "b",
-                "label": "`[1] 1 2 3 4`"
+                "label": "It does"
               },
               {
                 "id": "c",
-                "label": "`[1] 2 3 4`"
+                "label": "`+` only works on single numbers"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "`:` is worked out before `+`, so R makes 1 to n and then adds 1 to each"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "The colon goes first, making 1 2 3, then 1 is added to each."
+            "correctChoiceId": "d",
+            "explanation": "Brackets fix it: `1:(n + 1)`."
           },
           {
             "id": "sequences-q-82ybx7",
@@ -878,6 +1019,11 @@
           "id": "comparing_a_vector",
           "label": "Comparing a vector",
           "code": "c(4, 9, 6) > 5"
+        },
+        {
+          "id": "reusing_the_shorter_vector",
+          "label": "Reusing the shorter vector",
+          "code": "c(1, 2, 3, 4) * c(1, 10)\nc(1, 2, 3) * 2"
         }
       ],
       "intro": {
@@ -911,6 +1057,11 @@
                 "id": "t2",
                 "label": "Works on the whole vector",
                 "assertion": "grepl(\"grams\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"grams <- c(250, 100, 3, 180)\\n\", \"grams <- c(181, 6, 102, 251)\\n\", \"grams <- c(250, 100, 3, 180)\\ndoubled <- grams * 2\", c(\"grams\", \"doubled\"), output = FALSE)"
               }
             ]
           }
@@ -930,6 +1081,11 @@
                 "id": "t1",
                 "label": "new_prices is 2.7, 3.2, 3.6",
                 "assertion": "is.numeric(new_prices) && isTRUE(all.equal(new_prices, c(2.7, 3.2, 3.6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(2.5, 3, 3.4)\\n\", \"prices <- c(3.7, 5, 2.6)\\n\", \"prices <- c(2.5, 3, 3.4)\\nnew_prices <- prices + 0.2\", c(\"new_prices\"), output = FALSE)"
               }
             ]
           }
@@ -949,6 +1105,11 @@
                 "id": "t1",
                 "label": "metres is 2400, 9400, 800",
                 "assertion": "is.numeric(metres) && isTRUE(all.equal(metres, c(2400, 9400, 800)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"km <- c(2.4, 9.4, 0.8)\\n\", \"km <- c(1.1, 9.6, 2.5)\\n\", \"km <- c(2.4, 9.4, 0.8)\\nmetres <- km * 1000\", c(\"metres\"), output = FALSE)"
               }
             ]
           }
@@ -968,6 +1129,11 @@
                 "id": "t1",
                 "label": "cost is 7.5, 15, 8.5",
                 "assertion": "is.numeric(cost) && isTRUE(all.equal(cost, c(7.5, 15, 8.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"cups <- c(3, 5, 2)\\nprice <- c(2.5, 3, 4.25)\\n\", \"cups <- c(5, 7, 4)\\nprice <- c(4.28, 5, 2.6)\\n\", \"cups <- c(3, 5, 2)\\nprice <- c(2.5, 3, 4.25)\\ncost <- cups * price\", c(\"cost\"), output = FALSE)"
               }
             ]
           }
@@ -992,6 +1158,11 @@
                 "id": "t2",
                 "label": "Uses round()",
                 "assertion": "grepl(\"round(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(18.46, 21.03, 19.95)\\n\", \"temps <- c(19.98, 21.05, 18.47)\\n\", \"temps <- c(18.46, 21.03, 19.95)\\nrounded <- round(temps, 1)\", c(\"rounded\"), output = FALSE)"
               }
             ]
           }
@@ -1011,6 +1182,11 @@
                 "id": "t1",
                 "label": "change is 2, 0, 3, 3",
                 "assertion": "is.numeric(change) && isTRUE(all.equal(change, c(2, 0, 3, 3)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"last_week <- c(12, 15, 9, 20)\\nthis_week <- c(14, 15, 12, 23)\\n\", \"last_week <- c(21, 12, 17, 13)\\nthis_week <- c(25, 13, 18, 16)\\n\", \"last_week <- c(12, 15, 9, 20)\\nthis_week <- c(14, 15, 12, 23)\\nchange <- this_week - last_week\", c(\"change\"), output = FALSE)"
               }
             ]
           }
@@ -1030,6 +1206,35 @@
                 "id": "t1",
                 "label": "bill is 14, 10.25, 23",
                 "assertion": "is.numeric(bill) && isTRUE(all.equal(bill, c(14, 10.25, 23)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"texts <- c(120, 45, 300)\\n\", \"texts <- c(303, 47, 121)\\n\", \"texts <- c(120, 45, 300)\\nbill <- 8 + 0.05 * texts\", c(\"bill\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "vector_maths-speed-of-each-ride",
+          "title": "Hard: Speed of each ride",
+          "promptMarkdown": "Make `kmh` the speed of each ride in kilometres per hour, rounded to 1 decimal place.",
+          "starterCode": "km <- c(5.2, 3.8, 7.0)\nminutes <- c(26, 20, 35)\n",
+          "hint": "Turn minutes into hours first: `km / (minutes / 60)`, then `round(..., 1)`.",
+          "solution": "km <- c(5.2, 3.8, 7.0)\nminutes <- c(26, 20, 35)\nkmh <- round(km / (minutes / 60), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "kmh is 12, 11.4, 12",
+                "assertion": "is.numeric(kmh) && isTRUE(all.equal(kmh, c(12, 11.4, 12)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"km <- c(5.2, 3.8, 7.0)\\nminutes <- c(26, 20, 35)\\n\", \"km <- c(7.3, 4.0, 5.3)\\nminutes <- c(38, 22, 27)\\n\", \"km <- c(5.2, 3.8, 7.0)\\nminutes <- c(26, 20, 35)\\nkmh <- round(km / (minutes / 60), 1)\", c(\"kmh\"), output = FALSE)"
               }
             ]
           }
@@ -1049,6 +1254,40 @@
                 "id": "t1",
                 "label": "percent is 82, 85, 120",
                 "assertion": "is.numeric(percent) && isTRUE(all.equal(percent, c(82, 85, 120)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(8200, 5100, 12000)\\ntarget <- c(10000, 6000, 10000)\\n\", \"steps <- c(12003, 5102, 8201)\\ntarget <- c(10003, 6002, 10001)\\n\", \"steps <- c(8200, 5100, 12000)\\ntarget <- c(10000, 6000, 10000)\\npercent <- round(steps / target * 100)\", c(\"percent\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "vector_maths-split-the-bills",
+          "title": "Expert: Split the bills",
+          "promptMarkdown": "Three tables shared their bills. Make `each` what one person pays at each table, and `most` the largest of those.",
+          "starterCode": "bills <- c(24, 18, 30)\npeople <- c(3, 2, 4)\n",
+          "hint": "Divide one vector by the other, value by value: `each <- bills / people`, then `max(each)`.",
+          "solution": "bills <- c(24, 18, 30)\npeople <- c(3, 2, 4)\neach <- bills / people\nmost <- max(each)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "each is 8, 9, 7.5",
+                "assertion": "is.numeric(each) && isTRUE(all.equal(each, c(8, 9, 7.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "most is 9",
+                "assertion": "is.numeric(most) && isTRUE(all.equal(most, 9))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"bills <- c(24, 18, 30)\\npeople <- c(3, 2, 4)\\n\", \"bills <- c(33, 20, 25)\\npeople <- c(7, 4, 4)\\n\", \"bills <- c(24, 18, 30)\\npeople <- c(3, 2, 4)\\neach <- bills / people\\nmost <- max(each)\", c(\"each\", \"most\"), output = FALSE)"
               }
             ]
           }
@@ -1183,29 +1422,29 @@
             "explanation": "A comparison on a vector gives one TRUE or FALSE per value."
           },
           {
-            "id": "vector_maths-q-bhtwz5",
+            "id": "vector_maths-q-1k24g7r",
             "type": "mcq",
-            "prompt": "What happens with `c(1, 2, 3) * c(10, 100)`?",
+            "prompt": "Why does `c(1, 2, 3) * c(10, 100)` give a warning?",
             "choices": [
               {
                 "id": "a",
-                "label": "It gives `[1] 10 200`"
+                "label": "The numbers are too big"
               },
               {
                 "id": "b",
-                "label": "It works, with a warning that the lengths don't match"
+                "label": "It needs brackets"
               },
               {
                 "id": "c",
-                "label": "It gives 6 values"
+                "label": "3 isn't a multiple of 2, so the shorter vector doesn't fit evenly when it is reused"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "You can't multiply vectors"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "R recycles the shorter vector and warns, because 3 isn't a multiple of 2. The result is 10 200 30."
+            "correctChoiceId": "c",
+            "explanation": "R still reuses the shorter vector, but warns because it is usually a mistake."
           },
           {
             "id": "vector_maths-q-k1p70u",
@@ -1289,6 +1528,11 @@
           "id": "any_order",
           "label": "Any order",
           "code": "days <- c(\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\")\ndays[c(5, 1, 3)]"
+        },
+        {
+          "id": "from_the_end",
+          "label": "From the end",
+          "code": "x <- c(4, 8, 15, 16, 23)\nx[length(x)]\nx[(length(x) - 1):length(x)]"
         }
       ],
       "intro": {
@@ -1322,6 +1566,11 @@
                 "id": "t2",
                 "label": "Uses [ ]",
                 "assertion": "grepl(\"days[\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri2\\\")\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nfirst_day <- days[1]\", c(\"days\", \"first_day\"), output = FALSE)"
               }
             ]
           }
@@ -1346,6 +1595,11 @@
                 "id": "t2",
                 "label": "Uses [ ]",
                 "assertion": "grepl(\"scores[\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 64, 88, 92, 57)\\n\", \"scores <- c(59, 93, 91, 66, 72)\\n\", \"scores <- c(71, 64, 88, 92, 57)\\nscores[3]\", c(\"scores\"), output = TRUE)"
               }
             ]
           }
@@ -1370,6 +1624,11 @@
                 "id": "t2",
                 "label": "Uses :",
                 "assertion": "grepl(\"2:4\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri2\\\")\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nmidweek <- days[2:4]\", c(\"midweek\"), output = FALSE)"
               }
             ]
           }
@@ -1389,6 +1648,11 @@
                 "id": "t1",
                 "label": "ends is 16.2, 17.5",
                 "assertion": "is.numeric(ends) && isTRUE(all.equal(ends, c(16.2, 17.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(16.2, 18.4, 21.0, 19.7, 17.5)\\n\", \"temps <- c(17.7, 19.8, 21.3, 18.6, 16.3)\\n\", \"temps <- c(16.2, 18.4, 21.0, 19.7, 17.5)\\nends <- temps[c(1, length(temps))]\", c(\"ends\"), output = FALSE)"
               }
             ]
           }
@@ -1413,6 +1677,11 @@
                 "id": "t2",
                 "label": "Uses -1",
                 "assertion": "grepl(\"[-1]\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"laps <- c(95, 82, 80, 84, 79)\\n\", \"laps <- c(81, 85, 83, 84, 96)\\n\", \"laps <- c(95, 82, 80, 84, 79)\\nreal_laps <- laps[-1]\", c(\"real_laps\"), output = FALSE)"
               }
             ]
           }
@@ -1437,6 +1706,11 @@
                 "id": "t2",
                 "label": "Changes position 2",
                 "assertion": "grepl(\"steps[2]\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 830, 6500, 9900)\\n\", \"steps <- c(9901, 6503, 832, 4201)\\n\", \"steps <- c(4200, 830, 6500, 9900)\\nsteps[2] <- 8300\", c(\"steps\"), output = FALSE)"
               }
             ]
           }
@@ -1461,6 +1735,35 @@
                 "id": "t2",
                 "label": "Uses length()",
                 "assertion": "grepl(\"length(readings)\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\\n\", \"readings <- c(5.2, 4.6, 5.1, 4.9, 4.0, 4.2)\\n\", \"readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\\nlatest <- readings[length(readings)]\", c(\"readings\", \"latest\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "by_position-every-other-reading",
+          "title": "Hard: Every other reading",
+          "promptMarkdown": "Make `odd` the 1st, 3rd and 5th readings.",
+          "starterCode": "readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\n",
+          "hint": "Give several positions at once: `readings[c(1, 3, 5)]`.",
+          "solution": "readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\nodd <- readings[c(1, 3, 5)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "odd is 4.1, 4.6, 4.4",
+                "assertion": "is.numeric(odd) && isTRUE(all.equal(odd, c(4.1, 4.6, 4.4)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\\n\", \"readings <- c(5.2, 4.6, 5.1, 4.9, 4.0, 4.2)\\n\", \"readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\\nodd <- readings[c(1, 3, 5)]\", c(\"odd\"), output = FALSE)"
               }
             ]
           }
@@ -1485,6 +1788,35 @@
                 "id": "t2",
                 "label": "Uses length()",
                 "assertion": "grepl(\"length(scores)\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(6.5, 8.0, 7.5, 9.0, 7.0, 5.5)\\n\", \"scores <- c(5.8, 7.2, 9.1, 7.8, 8.2, 6.6)\\n\", \"scores <- c(6.5, 8.0, 7.5, 9.0, 7.0, 5.5)\\nkept <- scores[-c(1, length(scores))]\", c(\"scores\", \"kept\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "by_position-the-last-three",
+          "title": "Expert: The last three",
+          "promptMarkdown": "Make `last3` the last three values of `steps`. It should still work when the vector is a different length.",
+          "starterCode": "steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\n",
+          "hint": "`length(steps)` is the last position. Brackets matter: `steps[(length(steps) - 2):length(steps)]`.",
+          "solution": "steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\nlast3 <- steps[(length(steps) - 2):length(steps)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "last3 is 3000, 7600, 5400",
+                "assertion": "is.numeric(last3) && isTRUE(all.equal(last3, c(3000, 7600, 5400)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\\n\", \"steps <- c(5000, 6000, 7000, 8000)\\n\", \"steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\\nlast3 <- steps[(length(steps) - 2):length(steps)]\", c(\"last3\"), output = FALSE)"
               }
             ]
           }
@@ -1544,29 +1876,29 @@
             "explanation": "A minus leaves that position out."
           },
           {
-            "id": "by_position-q-q4670a",
+            "id": "by_position-q-17sa1y8",
             "type": "mcq",
-            "prompt": "After `x <- c(10, 20, 30)`, what does `x[5]` give?",
+            "prompt": "Why does `x[5]` give NA when `x` has only three values?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] 30`"
+                "label": "R counts from 0"
               },
               {
                 "id": "b",
-                "label": "An error"
+                "label": "The 5th value was deleted"
               },
               {
                 "id": "c",
-                "label": "`[1] 0`"
+                "label": "There is no 5th value, so R says it is unknown instead of stopping with an error"
               },
               {
                 "id": "d",
-                "label": "`[1] NA`"
+                "label": "It gives an error"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "There is no fifth value, so R gives NA."
+            "correctChoiceId": "c",
+            "explanation": "Check `length(x)` when you aren't sure how long a vector is."
           },
           {
             "id": "by_position-q-bii7qz",
@@ -1725,6 +2057,11 @@
           "id": "change_matching_values",
           "label": "Change matching values",
           "code": "temps <- c(18, -999, 21, -999)\ntemps[temps == -999] <- NA\ntemps"
+        },
+        {
+          "id": "change_the_matching_values",
+          "label": "Change the matching values",
+          "code": "x <- c(5, -1, 7, -3)\nx[x < 0] <- 0\nx"
         }
       ],
       "intro": {
@@ -1758,6 +2095,11 @@
                 "id": "t2",
                 "label": "Uses a condition in [ ]",
                 "assertion": "grepl(\"[steps >\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 8100, 6500, 9900, 3000)\\n\", \"steps <- c(3002, 9901, 6503, 8102, 4201)\\n\", \"steps <- c(4200, 8100, 6500, 9900, 3000)\\nbusy <- steps[steps > 8000]\", c(\"steps\", \"busy\"), output = FALSE)"
               }
             ]
           }
@@ -1777,6 +2119,11 @@
                 "id": "t1",
                 "label": "passed is TRUE FALSE TRUE TRUE FALSE",
                 "assertion": "isTRUE(all.equal(passed, c(TRUE, FALSE, TRUE, TRUE, FALSE)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 44, 88, 50, 39)\\n\", \"scores <- c(41, 51, 91, 46, 72)\\n\", \"scores <- c(71, 44, 88, 50, 39)\\npassed <- scores >= 50\", c(\"passed\"), output = FALSE)"
               }
             ]
           }
@@ -1796,6 +2143,11 @@
                 "id": "t1",
                 "label": "cheap is 2.5, 1.8, 2.9",
                 "assertion": "is.numeric(cheap) && isTRUE(all.equal(cheap, c(2.5, 1.8, 2.9)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(2.5, 3.4, 1.8, 4.2, 2.9)\\n\", \"prices <- c(3.1, 4.3, 2.1, 3.6, 2.6)\\n\", \"prices <- c(2.5, 3.4, 1.8, 4.2, 2.9)\\ncheap <- prices[prices < 3]\", c(\"cheap\"), output = FALSE)"
               }
             ]
           }
@@ -1815,6 +2167,11 @@
                 "id": "t1",
                 "label": "busy_days is \"Tue\" \"Thu\"",
                 "assertion": "identical(busy_days, c(\"Tue\", \"Thu\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 8100, 6500, 9900, 3000)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\n\", \"steps <- c(6001, 19802, 13001, 16202, 8401)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Mon\\\")\\n\", \"steps <- c(4200, 8100, 6500, 9900, 3000)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nbusy_days <- days[steps > 8000]\", c(\"busy_days\"), output = FALSE)"
               }
             ]
           }
@@ -1839,6 +2196,11 @@
                 "id": "t2",
                 "label": "Uses sum()",
                 "assertion": "grepl(\"sum(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 44, 88, 50, 39, 62)\\n\", \"scores <- c(65, 41, 51, 91, 46, 72)\\n\", \"scores <- c(71, 44, 88, 50, 39, 62)\\nn_passed <- sum(scores >= 50)\", c(\"n_passed\"), output = FALSE)"
               }
             ]
           }
@@ -1858,6 +2220,11 @@
                 "id": "t1",
                 "label": "comfy is 18, 21.4, 22, 19.8",
                 "assertion": "is.numeric(comfy) && isTRUE(all.equal(comfy, c(18, 21.4, 22, 19.8)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(16.5, 18, 21.4, 23.1, 22, 19.8)\\n\", \"temps <- c(20.1, 24, 23.2, 21.7, 20, 16.6)\\n\", \"temps <- c(16.5, 18, 21.4, 23.1, 22, 19.8)\\ncomfy <- temps[temps >= 18 & temps <= 22]\", c(\"comfy\"), output = FALSE)"
               }
             ]
           }
@@ -1877,6 +2244,35 @@
                 "id": "t1",
                 "label": "share_long is 0.5",
                 "assertion": "is.numeric(share_long) && isTRUE(all.equal(share_long, 0.5))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(12, 47, 30, 55, 8, 33, 21, 40)\\n\", \"minutes <- c(42, 22, 36, 10, 56, 33, 49, 13)\\n\", \"minutes <- c(12, 47, 30, 55, 8, 33, 21, 40)\\nshare_long <- mean(minutes > 30)\", c(\"share_long\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "by_condition-cap-the-scores",
+          "title": "Hard: Cap the scores",
+          "promptMarkdown": "Scores over 100 are typing slips. Set every score over 100 to 100, and keep the others as they are.",
+          "starterCode": "scores <- c(104, 88, 97, 112, 75)\n",
+          "hint": "Pick the values with a condition on the left of `<-`: `scores[scores > 100] <- 100`.",
+          "solution": "scores <- c(104, 88, 97, 112, 75)\nscores[scores > 100] <- 100",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "scores is 100, 88, 97, 100, 75",
+                "assertion": "is.numeric(scores) && isTRUE(all.equal(scores, c(100, 88, 97, 100, 75)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(104, 88, 97, 112, 75)\\n\", \"scores <- c(77, 113, 100, 90, 105)\\n\", \"scores <- c(104, 88, 97, 112, 75)\\nscores[scores > 100] <- 100\", c(\"scores\"), output = FALSE)"
               }
             ]
           }
@@ -1896,6 +2292,35 @@
                 "id": "t1",
                 "label": "temps is 18.2, NA, 21, 19.4, NA",
                 "assertion": "isTRUE(all.equal(temps, c(18.2, NA, 21.0, 19.4, NA)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(18.2, -999, 21.0, 19.4, -999)\\n\", \"temps <- c(-1001, 19.5, 21.3, -1001, 18.3)\\n\", \"temps <- c(18.2, -999, 21.0, 19.4, -999)\\ntemps[temps == -999] <- NA\", c(\"temps\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "by_condition-better-than-average",
+          "title": "Expert: Better than average",
+          "promptMarkdown": "Make `good_days` the names of the days with more steps than the week's average.",
+          "starterCode": "steps <- c(4200, 8100, 6500, 9900, 3000)\ndays <- c(\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\")\n",
+          "hint": "Work out the condition on `steps`, then use it to pick from `days`: `days[steps > mean(steps)]`.",
+          "solution": "steps <- c(4200, 8100, 6500, 9900, 3000)\ndays <- c(\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\")\ngood_days <- days[steps > mean(steps)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "good_days is Tue, Wed, Thu",
+                "assertion": "identical(good_days, c(\"Tue\", \"Wed\", \"Thu\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 8100, 6500, 9900, 3000)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\n\", \"steps <- c(9000, 2000, 7000, 3000, 8000)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\n\", \"steps <- c(4200, 8100, 6500, 9900, 3000)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\ngood_days <- days[steps > mean(steps)]\", c(\"good_days\"), output = FALSE)"
               }
             ]
           }
@@ -1980,29 +2405,29 @@
             "explanation": "TRUE counts as 1, so the sum counts the values over 5."
           },
           {
-            "id": "by_condition-q-106r40b",
+            "id": "by_condition-q-25841j",
             "type": "mcq",
-            "prompt": "After `x <- c(3, 8, 1, 9)`, what does `mean(x > 5)` give?",
+            "prompt": "Why does `mean(x > 5)` give the share of values over 5?",
             "choices": [
               {
                 "id": "a",
-                "label": "`5.25`"
+                "label": "It gives the mean of the big values"
               },
               {
                 "id": "b",
-                "label": "`2`"
+                "label": "TRUE counts as 1 and FALSE as 0, so the mean is the share that are TRUE"
               },
               {
                 "id": "c",
-                "label": "`8.5`"
+                "label": "It doesn't"
               },
               {
                 "id": "d",
-                "label": "`0.5`"
+                "label": "mean() counts the values"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "Two of the four values are over 5: a share of 0.5."
+            "correctChoiceId": "b",
+            "explanation": "With `x <- c(3, 8, 1, 9)`, two of the four are over 5."
           },
           {
             "id": "by_condition-q-441ai1",
@@ -2136,6 +2561,11 @@
           "id": "summary_of_a_selection",
           "label": "Summary of a selection",
           "code": "steps <- c(4200, 8100, 6500, 9900, 3000)\nsum(steps[steps > 8000])\nmean(steps[steps > 8000])"
+        },
+        {
+          "id": "a_quick_summary",
+          "label": "A quick summary",
+          "code": "steps <- c(4200, 8100, 6500, 9900, 3000)\nsummary(steps)"
         }
       ],
       "intro": {
@@ -2169,6 +2599,11 @@
                 "id": "t2",
                 "label": "Uses sum()",
                 "assertion": "grepl(\"sum(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\\n\", \"steps <- c(5401, 7603, 3002, 9901, 6503, 8102, 4201)\\n\", \"steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\\ntotal <- sum(steps)\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -2193,6 +2628,11 @@
                 "id": "t2",
                 "label": "Uses mean()",
                 "assertion": "grepl(\"mean(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 64, 88, 92, 57, 70)\\n\", \"scores <- c(73, 59, 93, 91, 66, 72)\\n\", \"scores <- c(71, 64, 88, 92, 57, 70)\\navg <- mean(scores)\", c(\"avg\"), output = FALSE)"
               }
             ]
           }
@@ -2217,6 +2657,11 @@
                 "id": "t2",
                 "label": "coldest is 14.9",
                 "assertion": "is.numeric(coldest) && isTRUE(all.equal(coldest, 14.9))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(16.2, 18.4, 21.0, 19.7, 14.9, 17.5)\\n\", \"temps <- c(17.8, 15.1, 19.8, 21.3, 18.6, 16.3)\\n\", \"temps <- c(16.2, 18.4, 21.0, 19.7, 14.9, 17.5)\\nhottest <- max(temps)\\ncoldest <- min(temps)\", c(\"hottest\", \"coldest\"), output = FALSE)"
               }
             ]
           }
@@ -2241,6 +2686,11 @@
                 "id": "t2",
                 "label": "Uses median()",
                 "assertion": "grepl(\"median(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(12, 7, 15, 9, 11, 8, 120)\\n\", \"orders <- c(121, 11, 13, 10, 18, 9, 13)\\n\", \"orders <- c(12, 7, 15, 9, 11, 8, 120)\\ntypical <- median(orders)\", c(\"typical\"), output = FALSE)"
               }
             ]
           }
@@ -2265,6 +2715,11 @@
                 "id": "t2",
                 "label": "Uses cumsum()",
                 "assertion": "grepl(\"cumsum(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"km <- c(5.2, 3.8, 7.0, 4.5)\\n\", \"km <- c(4.6, 7.3, 4.0, 5.3)\\n\", \"km <- c(5.2, 3.8, 7.0, 4.5)\\nso_far <- cumsum(km)\", c(\"so_far\"), output = FALSE)"
               }
             ]
           }
@@ -2284,6 +2739,11 @@
                 "id": "t1",
                 "label": "big_total is 251",
                 "assertion": "is.numeric(big_total) && isTRUE(all.equal(big_total, 251))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sales <- c(23, 75, 41, 120, 18, 56)\\n\", \"sales <- c(59, 20, 121, 44, 77, 24)\\n\", \"sales <- c(23, 75, 41, 120, 18, 56)\\nbig_total <- sum(sales[sales >= 50])\", c(\"big_total\"), output = FALSE)"
               }
             ]
           }
@@ -2303,6 +2763,35 @@
                 "id": "t1",
                 "label": "spread is 9",
                 "assertion": "is.numeric(spread) && isTRUE(all.equal(spread, 9))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"laps <- c(82, 80, 84, 79, 88)\\n\", \"laps <- c(90, 80, 87, 82, 83)\\n\", \"laps <- c(82, 80, 84, 79, 88)\\nspread <- max(laps) - min(laps)\", c(\"spread\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "summaries-mean-against-median",
+          "title": "Hard: Mean against median",
+          "promptMarkdown": "One huge order pulls the mean up. Make `gap` the mean minus the median of `orders`, rounded to 1 decimal place.",
+          "starterCode": "orders <- c(12, 7, 15, 9, 11, 8, 120)\n",
+          "hint": "`round(mean(orders) - median(orders), 1)`",
+          "solution": "orders <- c(12, 7, 15, 9, 11, 8, 120)\ngap <- round(mean(orders) - median(orders), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "gap is 15",
+                "assertion": "is.numeric(gap) && isTRUE(all.equal(gap, 15))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"orders <- c(12, 7, 15, 9, 11, 8, 120)\\n\", \"orders <- c(121, 11, 13, 10, 18, 9, 13)\\n\", \"orders <- c(12, 7, 15, 9, 11, 8, 120)\\ngap <- round(mean(orders) - median(orders), 1)\", c(\"gap\"), output = FALSE)"
               }
             ]
           }
@@ -2327,6 +2816,35 @@
                 "id": "t2",
                 "label": "Uses sum() and mean()",
                 "assertion": "grepl(\"sum(\", ._cq_code, fixed = TRUE) && grepl(\"mean(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\\n\", \"steps <- c(5401, 7603, 3002, 9901, 6503, 8102, 4201)\\n\", \"steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\\ncat(\\\"Total:\\\", sum(steps), \\\"steps\\\\n\\\")\\ncat(\\\"Average:\\\", round(mean(steps)), \\\"a day\\\\n\\\")\", c(\"steps\"), output = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "summaries-saving-up",
+          "title": "Expert: Saving up",
+          "promptMarkdown": "Each value is one week's savings. Make `weeks_short` the number of weeks when the running total was still under 100.",
+          "starterCode": "savings <- c(20, 35, 10, 40, 30)\n",
+          "hint": "`cumsum(savings)` gives the running totals. Compare them with 100 and count the TRUEs with `sum()`.",
+          "solution": "savings <- c(20, 35, 10, 40, 30)\nweeks_short <- sum(cumsum(savings) < 100)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "weeks_short is 3",
+                "assertion": "is.numeric(weeks_short) && isTRUE(all.equal(weeks_short, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"savings <- c(20, 35, 10, 40, 30)\\n\", \"savings <- c(60, 45, 10, 20)\\n\", \"savings <- c(20, 35, 10, 40, 30)\\nweeks_short <- sum(cumsum(savings) < 100)\", c(\"weeks_short\"), output = FALSE)"
               }
             ]
           }
@@ -2436,29 +2954,29 @@
             "explanation": "`range()` gives the smallest and the largest value."
           },
           {
-            "id": "summaries-q-1rnf1nx",
+            "id": "summaries-q-acsuve",
             "type": "mcq",
-            "prompt": "What does `cumsum(c(1, 2, 3))` give?",
+            "prompt": "Why does `cumsum()` give back as many values as it gets, while `sum()` gives one?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] 1 3 6`"
+                "label": "sum() drops values"
               },
               {
                 "id": "b",
-                "label": "`[1] 1 2 3`"
+                "label": "They give the same"
               },
               {
                 "id": "c",
-                "label": "`[1] 3 2 1`"
+                "label": "cumsum() repeats the sum"
               },
               {
                 "id": "d",
-                "label": "`[1] 6`"
+                "label": "cumsum() gives the total so far at each position"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "A running total: 1, then 1 + 2, then 1 + 2 + 3."
+            "correctChoiceId": "d",
+            "explanation": "The last value of `cumsum(x)` is `sum(x)`."
           },
           {
             "id": "summaries-q-1vndhs5",
@@ -2567,6 +3085,11 @@
           "id": "sort_text",
           "label": "Sort text",
           "code": "sort(c(\"pear\", \"apple\", \"fig\", \"Banana\"))"
+        },
+        {
+          "id": "order_for_another_vector",
+          "label": "order() for another vector",
+          "code": "players <- c(\"Ana\", \"Ben\", \"Cy\")\nscores <- c(71, 88, 64)\norder(scores)\nplayers[order(scores)]"
         }
       ],
       "intro": {
@@ -2600,6 +3123,11 @@
                 "id": "t2",
                 "label": "Uses sort()",
                 "assertion": "grepl(\"sort(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"laps <- c(82, 80, 84, 79, 88)\\n\", \"laps <- c(90, 80, 87, 82, 83)\\n\", \"laps <- c(82, 80, 84, 79, 88)\\nsorted <- sort(laps)\", c(\"sorted\"), output = FALSE)"
               }
             ]
           }
@@ -2624,6 +3152,11 @@
                 "id": "t2",
                 "label": "Uses decreasing",
                 "assertion": "grepl(\"decreasing\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 64, 88, 92, 57)\\n\", \"scores <- c(59, 93, 91, 66, 72)\\n\", \"scores <- c(71, 64, 88, 92, 57)\\nranked <- sort(scores, decreasing = TRUE)\", c(\"ranked\"), output = FALSE)"
               }
             ]
           }
@@ -2643,6 +3176,11 @@
                 "id": "t1",
                 "label": "crops is beans, courgettes, kale, tomatoes",
                 "assertion": "identical(crops, c(\"beans\", \"courgettes\", \"kale\", \"tomatoes\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crops <- c(\\\"tomatoes\\\", \\\"beans\\\", \\\"kale\\\", \\\"courgettes\\\")\\n\", \"crops <- c(\\\"tomatoes\\\", \\\"beans\\\", \\\"kale\\\", \\\"courgettes2\\\")\\n\", \"crops <- c(\\\"tomatoes\\\", \\\"beans\\\", \\\"kale\\\", \\\"courgettes\\\")\\ncrops <- sort(crops)\", c(\"crops\"), output = FALSE)"
               }
             ]
           }
@@ -2667,6 +3205,11 @@
                 "id": "t2",
                 "label": "Uses rev()",
                 "assertion": "grepl(\"rev(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"readings <- c(4.1, 3.8, 4.6, 5.0, 4.4)\\n\", \"readings <- c(4.6, 5.1, 4.9, 4.0, 4.2)\\n\", \"readings <- c(4.1, 3.8, 4.6, 5.0, 4.4)\\nnewest_first <- rev(readings)\", c(\"newest_first\"), output = FALSE)"
               }
             ]
           }
@@ -2686,6 +3229,11 @@
                 "id": "t1",
                 "label": "top3 is 92, 88, 80",
                 "assertion": "is.numeric(top3) && isTRUE(all.equal(top3, c(92, 88, 80)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 64, 88, 92, 57, 80)\\n\", \"scores <- c(83, 59, 93, 91, 66, 72)\\n\", \"scores <- c(71, 64, 88, 92, 57, 80)\\ntop3 <- head(sort(scores, decreasing = TRUE), 3)\", c(\"top3\"), output = FALSE)"
               }
             ]
           }
@@ -2710,6 +3258,11 @@
                 "id": "t2",
                 "label": "Uses order()",
                 "assertion": "grepl(\"order(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(3.4, 2.5, 4.2, 1.8)\\n\", \"prices <- c(1.9, 4.5, 2.7, 3.5)\\n\", \"prices <- c(3.4, 2.5, 4.2, 1.8)\\npositions <- order(prices)\", c(\"positions\"), output = FALSE)"
               }
             ]
           }
@@ -2734,6 +3287,35 @@
                 "id": "t2",
                 "label": "Uses order()",
                 "assertion": "grepl(\"order(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"players <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\")\\nscores <- c(71, 64, 88, 92, 57)\\n\", \"players <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli2\\\")\\nscores <- c(59, 93, 91, 66, 72)\\n\", \"players <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\")\\nscores <- c(71, 64, 88, 92, 57)\\npodium <- players[order(scores, decreasing = TRUE)]\", c(\"podium\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sorting-second-fastest",
+          "title": "Hard: Second fastest",
+          "promptMarkdown": "Make `second` the second fastest (second smallest) lap time.",
+          "starterCode": "laps <- c(82, 80, 84, 79, 88)\n",
+          "hint": "Sort, then take position 2: `sort(laps)[2]`.",
+          "solution": "laps <- c(82, 80, 84, 79, 88)\nsecond <- sort(laps)[2]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "second is 80",
+                "assertion": "is.numeric(second) && isTRUE(all.equal(second, 80))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"laps <- c(82, 80, 84, 79, 88)\\n\", \"laps <- c(90, 80, 87, 82, 83)\\n\", \"laps <- c(82, 80, 84, 79, 88)\\nsecond <- sort(laps)[2]\", c(\"second\"), output = FALSE)"
               }
             ]
           }
@@ -2758,6 +3340,35 @@
                 "id": "t2",
                 "label": "Works it out from prices",
                 "assertion": "grepl(\"prices\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"items <- c(\\\"latte\\\", \\\"tea\\\", \\\"cake\\\", \\\"water\\\")\\nprices <- c(3.4, 2.5, 4.2, 1.8)\\n\", \"items <- c(\\\"latte\\\", \\\"tea\\\", \\\"cake\\\", \\\"water2\\\")\\nprices <- c(1.9, 4.5, 2.7, 3.5)\\n\", \"items <- c(\\\"latte\\\", \\\"tea\\\", \\\"cake\\\", \\\"water\\\")\\nprices <- c(3.4, 2.5, 4.2, 1.8)\\ncheapest <- items[order(prices)][1]\", c(\"prices\", \"cheapest\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sorting-the-bottom-two",
+          "title": "Expert: The bottom two",
+          "promptMarkdown": "Make `bottom2` the names of the two players with the lowest scores, lowest first.",
+          "starterCode": "players <- c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\")\nscores <- c(71, 64, 88, 92, 57)\n",
+          "hint": "`order(scores)` puts the positions lowest first. Use them on `players`, then `head(..., 2)`.",
+          "solution": "players <- c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\")\nscores <- c(71, 64, 88, 92, 57)\nbottom2 <- head(players[order(scores)], 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "bottom2 is Eli, Ben",
+                "assertion": "identical(bottom2, c(\"Eli\", \"Ben\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"players <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\")\\nscores <- c(71, 64, 88, 92, 57)\\n\", \"players <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli2\\\")\\nscores <- c(59, 93, 91, 66, 72)\\n\", \"players <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\")\\nscores <- c(71, 64, 88, 92, 57)\\nbottom2 <- head(players[order(scores)], 2)\", c(\"bottom2\"), output = FALSE)"
               }
             ]
           }
@@ -2917,29 +3528,29 @@
             "explanation": "`order(s)` is 1 3 2, so the names come out as A, C, B: lowest score first."
           },
           {
-            "id": "sorting-q-1y4ze8b",
+            "id": "sorting-q-1gpx01k",
             "type": "mcq",
-            "prompt": "After `x <- c(3, 1, 2)` and `sort(x)`, what is `x`?",
+            "prompt": "Why is `x` still in its old order after running `sort(x)`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`NULL`"
+                "label": "R undoes it"
               },
               {
                 "id": "b",
-                "label": "`[1] 3 2 1`"
+                "label": "sort() only works on text"
               },
               {
                 "id": "c",
-                "label": "`[1] 1 2 3`"
+                "label": "It needs `decreasing = TRUE`"
               },
               {
                 "id": "d",
-                "label": "`[1] 3 1 2`"
+                "label": "sort() gives back a sorted copy; save it with `x <- sort(x)`"
               }
             ],
             "correctChoiceId": "d",
-            "explanation": "`sort()` gives a sorted copy; `x` itself doesn't change unless you save the result."
+            "explanation": "R functions don't change the vectors you give them."
           },
           {
             "id": "sorting-q-805tc4",
@@ -2998,6 +3609,11 @@
           "id": "share_missing",
           "label": "Share missing",
           "code": "answers <- c(4, NA, 5, 3, NA, NA, 4)\nmean(is.na(answers))"
+        },
+        {
+          "id": "say_what_you_left_out",
+          "label": "Say what you left out",
+          "code": "x <- c(4, NA, 5, NA, 3)\nsum(is.na(x))\nmean(x, na.rm = TRUE)"
         }
       ],
       "intro": {
@@ -3031,6 +3647,11 @@
                 "id": "t2",
                 "label": "Uses na.rm",
                 "assertion": "grepl(\"na.rm\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, NA, 6500, 9900, NA)\\n\", \"steps <- c(NA, 9903, 6502, NA, 4201)\\n\", \"steps <- c(4200, NA, 6500, 9900, NA)\\ntotal <- sum(steps, na.rm = TRUE)\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -3050,6 +3671,11 @@
                 "id": "t1",
                 "label": "avg is 4",
                 "assertion": "is.numeric(avg) && isTRUE(all.equal(avg, 4))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ratings <- c(4, NA, 5, 3, 4, NA)\\n\", \"ratings <- c(NA, 5, 6, 7, NA, 5)\\n\", \"ratings <- c(4, NA, 5, 3, 4, NA)\\navg <- round(mean(ratings, na.rm = TRUE), 1)\", c(\"avg\"), output = FALSE)"
               }
             ]
           }
@@ -3074,6 +3700,11 @@
                 "id": "t2",
                 "label": "Uses is.na()",
                 "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ratings <- c(4, NA, 5, 3, 4, NA, NA)\\n\", \"ratings <- c(NA, NA, 5, 6, 7, NA, 5)\\n\", \"ratings <- c(4, NA, 5, 3, 4, NA, NA)\\nn_missing <- sum(is.na(ratings))\", c(\"n_missing\"), output = FALSE)"
               }
             ]
           }
@@ -3093,6 +3724,11 @@
                 "id": "t1",
                 "label": "known is 4, 5, 3, 4",
                 "assertion": "is.numeric(known) && isTRUE(all.equal(known, c(4, 5, 3, 4)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ratings <- c(4, NA, 5, 3, 4, NA)\\n\", \"ratings <- c(NA, 5, 6, 7, NA, 5)\\n\", \"ratings <- c(4, NA, 5, 3, 4, NA)\\nknown <- ratings[!is.na(ratings)]\", c(\"known\"), output = FALSE)"
               }
             ]
           }
@@ -3112,6 +3748,11 @@
                 "id": "t1",
                 "label": "highest is 21",
                 "assertion": "is.numeric(highest) && isTRUE(all.equal(highest, 21))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\\n\", \"temps <- c(20.7, NA, 19.7, 21.2, NA, 18.3)\\n\", \"temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\\nhighest <- max(temps, na.rm = TRUE)\", c(\"highest\"), output = FALSE)"
               }
             ]
           }
@@ -3131,6 +3772,11 @@
                 "id": "t1",
                 "label": "share_missing is 0.375",
                 "assertion": "is.numeric(share_missing) && isTRUE(all.equal(share_missing, 0.375))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"answers <- c(4, NA, 5, 3, NA, NA, 4, 2)\\n\", \"answers <- c(NA, NA, 5, 3, NA, NA, 4, 2)\\n\", \"answers <- c(4, NA, 5, 3, NA, NA, 4, 2)\\nshare_missing <- mean(is.na(answers))\", c(\"share_missing\"), output = FALSE)"
               }
             ]
           }
@@ -3150,6 +3796,35 @@
                 "id": "t1",
                 "label": "steps is 4200, 0, 6500, 9900, 0",
                 "assertion": "isTRUE(all.equal(steps, c(4200, 0, 6500, 9900, 0)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(4200, NA, 6500, 9900, NA)\\n\", \"steps <- c(NA, 9903, 6502, NA, 4201)\\n\", \"steps <- c(4200, NA, 6500, 9900, NA)\\nsteps[is.na(steps)] <- 0\", c(\"steps\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "na_in_vectors-range-of-the-known",
+          "title": "Hard: Range of the known",
+          "promptMarkdown": "Make `spread` the highest known temperature minus the lowest known one.",
+          "starterCode": "temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\n",
+          "hint": "`max()` and `min()` take `na.rm = TRUE` too.",
+          "solution": "temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\nspread <- max(temps, na.rm = TRUE) - min(temps, na.rm = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "spread is 2.8",
+                "assertion": "is.numeric(spread) && isTRUE(all.equal(spread, 2.8))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\\n\", \"temps <- c(20.7, NA, 19.7, 21.2, NA, 18.3)\\n\", \"temps <- c(18.2, NA, 21.0, 19.4, NA, 20.6)\\nspread <- max(temps, na.rm = TRUE) - min(temps, na.rm = TRUE)\", c(\"spread\"), output = FALSE)"
               }
             ]
           }
@@ -3169,6 +3844,40 @@
                 "id": "t1",
                 "label": "avg is 75",
                 "assertion": "is.numeric(avg) && isTRUE(all.equal(avg, 75))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(70, NA, 80, NA)\\navg <- sum(scores, na.rm = TRUE) / length(scores)\", \"scores <- c(NA, 82, NA, 71)\\navg <- sum(scores, na.rm = TRUE) / length(scores)\", \"scores <- c(70, NA, 80, NA)\\navg <- mean(scores, na.rm = TRUE)\", c(\"avg\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "na_in_vectors-where-the-gaps-are",
+          "title": "Expert: Where the gaps are",
+          "promptMarkdown": "Make `no_data` the days with no step count, and `share_known` the share of days that have one.",
+          "starterCode": "days <- c(\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\")\nsteps <- c(4200, NA, 6500, NA, 3000)\n",
+          "hint": "`is.na(steps)` picks the days: `days[is.na(steps)]`. The mean of `!is.na(steps)` is the share known.",
+          "solution": "days <- c(\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\")\nsteps <- c(4200, NA, 6500, NA, 3000)\nno_data <- days[is.na(steps)]\nshare_known <- mean(!is.na(steps))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "no_data is Tue, Thu",
+                "assertion": "identical(no_data, c(\"Tue\", \"Thu\"))"
+              },
+              {
+                "id": "t2",
+                "label": "share_known is 0.6",
+                "assertion": "is.numeric(share_known) && isTRUE(all.equal(share_known, 0.6))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nsteps <- c(4200, NA, 6500, NA, 3000)\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nsteps <- c(NA, 5100, 6500, 7200, NA)\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nsteps <- c(4200, NA, 6500, NA, 3000)\\nno_data <- days[is.na(steps)]\\nshare_known <- mean(!is.na(steps))\", c(\"no_data\", \"share_known\"), output = FALSE)"
               }
             ]
           }
@@ -3178,29 +3887,29 @@
         "passingScorePercent": 70,
         "questions": [
           {
-            "id": "na_in_vectors-q-18be8bv",
+            "id": "na_in_vectors-q-12ykz32",
             "type": "mcq",
-            "prompt": "What does `sum(c(1, NA, 3))` give?",
+            "prompt": "Why does `sum(c(1, NA, 3))` give NA?",
             "choices": [
               {
                 "id": "a",
-                "label": "`NA`"
+                "label": "NA counts as 0"
               },
               {
                 "id": "b",
-                "label": "`4`"
+                "label": "The missing value could be anything, so the total is unknown too"
               },
               {
                 "id": "c",
-                "label": "An error"
+                "label": "sum() can't add three numbers"
               },
               {
                 "id": "d",
-                "label": "`0`"
+                "label": "It is a bug"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "One unknown value makes the total unknown."
+            "correctChoiceId": "b",
+            "explanation": "Add `na.rm = TRUE` to total only the known values."
           },
           {
             "id": "na_in_vectors-q-urkk9q",
@@ -3409,6 +4118,11 @@
           "id": "which_skips_na",
           "label": "which skips NA",
           "code": "x <- c(5, NA, 9)\nx[x > 6]\nx[which(x > 6)]"
+        },
+        {
+          "id": "which_keeps_names",
+          "label": "which() keeps names",
+          "code": "steps <- c(Mon = 4200, Tue = 8100, Wed = 9900)\nwhich(steps > 5000)"
         }
       ],
       "intro": {
@@ -3442,6 +4156,11 @@
                 "id": "t2",
                 "label": "Uses which()",
                 "assertion": "grepl(\"which(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(25, 41, 18, 33, 29, 52)\\n\", \"minutes <- c(55, 31, 34, 21, 43, 26)\\n\", \"minutes <- c(25, 41, 18, 33, 29, 52)\\nlate <- which(minutes > 30)\", c(\"late\"), output = FALSE)"
               }
             ]
           }
@@ -3466,6 +4185,11 @@
                 "id": "t2",
                 "label": "Uses any()",
                 "assertion": "grepl(\"any(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(24.5, 28.1, 31.2, 27.0)\\n\", \"temps <- c(27.1, 31.5, 28.3, 24.6)\\n\", \"temps <- c(24.5, 28.1, 31.2, 27.0)\\ntoo_hot <- any(temps > 30)\", c(\"too_hot\"), output = FALSE)"
               }
             ]
           }
@@ -3490,6 +4214,11 @@
                 "id": "t2",
                 "label": "Uses all()",
                 "assertion": "grepl(\"all(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 64, 48, 92, 57)\\n\", \"scores <- c(59, 93, 51, 66, 72)\\n\", \"scores <- c(71, 64, 48, 92, 57)\\neveryone_passed <- all(scores >= 50)\", c(\"everyone_passed\"), output = FALSE)"
               }
             ]
           }
@@ -3514,6 +4243,11 @@
                 "id": "t2",
                 "label": "Uses which.max()",
                 "assertion": "grepl(\"which.max(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nsteps <- c(4200, 8100, 9900, 6500, 3000)\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri2\\\")\\nsteps <- c(3002, 6501, 9903, 8102, 4201)\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\")\\nsteps <- c(4200, 8100, 9900, 6500, 3000)\\nbest_day <- days[which.max(steps)]\", c(\"best_day\"), output = FALSE)"
               }
             ]
           }
@@ -3538,6 +4272,11 @@
                 "id": "t2",
                 "label": "Uses %in%",
                 "assertion": "grepl(\"%in%\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"chard\\\", \\\"mint\\\", \\\"spinach\\\", \\\"tomatoes\\\")\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"chard\\\", \\\"mint\\\", \\\"spinach\\\", \\\"tomatoes2\\\")\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"chard\\\", \\\"mint\\\", \\\"spinach\\\", \\\"tomatoes\\\")\\ngreens <- crops[crops %in% c(\\\"kale\\\", \\\"chard\\\", \\\"spinach\\\")]\", c(\"greens\"), output = FALSE)"
               }
             ]
           }
@@ -3557,6 +4296,11 @@
                 "id": "t1",
                 "label": "weekend is FALSE FALSE TRUE TRUE FALSE",
                 "assertion": "isTRUE(all.equal(weekend, c(FALSE, FALSE, TRUE, TRUE, FALSE)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days <- c(\\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\", \\\"Mon\\\")\\n\", \"days <- c(\\\"Mon\\\", \\\"Sun\\\", \\\"Sat\\\", \\\"Fri\\\", \\\"Thu\\\")\\n\", \"days <- c(\\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\", \\\"Mon\\\")\\nweekend <- days %in% c(\\\"Sat\\\", \\\"Sun\\\")\", c(\"weekend\"), output = FALSE)"
               }
             ]
           }
@@ -3576,6 +4320,35 @@
                 "id": "t1",
                 "label": "high is 21, 22.6",
                 "assertion": "is.numeric(high) && isTRUE(all.equal(high, c(21, 22.6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"readings <- c(18.2, NA, 21.0, 19.4, NA, 22.6)\\n\", \"readings <- c(22.7, NA, 19.7, 21.2, NA, 18.3)\\n\", \"readings <- c(18.2, NA, 21.0, 19.4, NA, 22.6)\\nhigh <- readings[which(readings > 20)]\", c(\"high\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "which_any_all-first-over-the-limit",
+          "title": "Hard: First over the limit",
+          "promptMarkdown": "Make `first_hot` the position of the first reading over 30.",
+          "starterCode": "temps <- c(24.5, 28.1, 31.2, 27.0, 32.4)\n",
+          "hint": "`which()` gives all the positions; take the first with `[1]`.",
+          "solution": "temps <- c(24.5, 28.1, 31.2, 27.0, 32.4)\nfirst_hot <- which(temps > 30)[1]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "first_hot is 3",
+                "assertion": "is.numeric(first_hot) && isTRUE(all.equal(first_hot, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(24.5, 28.1, 31.2, 27.0, 32.4)\\n\", \"temps <- c(32.6, 27.1, 31.5, 28.3, 24.6)\\n\", \"temps <- c(24.5, 28.1, 31.2, 27.0, 32.4)\\nfirst_hot <- which(temps > 30)[1]\", c(\"first_hot\"), output = FALSE)"
               }
             ]
           }
@@ -3595,6 +4368,40 @@
                 "id": "t1",
                 "label": "unknown is \"Z9\" \"X7\"",
                 "assertion": "identical(unknown, c(\"Z9\", \"X7\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"codes <- c(\\\"A1\\\", \\\"B2\\\", \\\"Z9\\\", \\\"C3\\\", \\\"A1\\\", \\\"X7\\\")\\nvalid <- c(\\\"A1\\\", \\\"B2\\\", \\\"C3\\\")\\n\", \"codes <- c(\\\"A1\\\", \\\"B2\\\", \\\"Z9\\\", \\\"C3\\\", \\\"A1\\\", \\\"X72\\\")\\nvalid <- c(\\\"A1\\\", \\\"B2\\\", \\\"C32\\\")\\n\", \"codes <- c(\\\"A1\\\", \\\"B2\\\", \\\"Z9\\\", \\\"C3\\\", \\\"A1\\\", \\\"X7\\\")\\nvalid <- c(\\\"A1\\\", \\\"B2\\\", \\\"C3\\\")\\nunknown <- codes[!codes %in% valid]\", c(\"unknown\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "which_any_all-check-the-order",
+          "title": "Expert: Check the order",
+          "promptMarkdown": "Make `ok` TRUE only if every item in `ordered` is on the menu, and `missing` the items that aren't.",
+          "starterCode": "ordered <- c(\"tea\", \"cake\", \"soup\")\nmenu <- c(\"tea\", \"latte\", \"cake\", \"scone\")\n",
+          "hint": "`ordered %in% menu` is TRUE for each item on the menu. `all()` checks them all; `!` picks the others.",
+          "solution": "ordered <- c(\"tea\", \"cake\", \"soup\")\nmenu <- c(\"tea\", \"latte\", \"cake\", \"scone\")\nok <- all(ordered %in% menu)\nmissing <- ordered[!ordered %in% menu]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ok is FALSE",
+                "assertion": "identical(ok, FALSE)"
+              },
+              {
+                "id": "t2",
+                "label": "missing is soup",
+                "assertion": "identical(missing, c(\"soup\"))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ordered <- c(\\\"tea\\\", \\\"cake\\\", \\\"soup\\\")\\nmenu <- c(\\\"tea\\\", \\\"latte\\\", \\\"cake\\\", \\\"scone\\\")\\n\", \"ordered <- c(\\\"tea\\\", \\\"cake\\\", \\\"soup2\\\")\\nmenu <- c(\\\"tea\\\", \\\"latte\\\", \\\"cake\\\", \\\"scone2\\\")\\n\", \"ordered <- c(\\\"tea\\\", \\\"cake\\\", \\\"soup\\\")\\nmenu <- c(\\\"tea\\\", \\\"latte\\\", \\\"cake\\\", \\\"scone\\\")\\nok <- all(ordered %in% menu)\\nmissing <- ordered[!ordered %in% menu]\", c(\"ok\", \"missing\"), output = FALSE)"
               }
             ]
           }
@@ -3754,29 +4561,29 @@
             "explanation": "`which()` skips the NA, so only the 9 is picked."
           },
           {
-            "id": "which_any_all-q-6gj0ku",
+            "id": "which_any_all-q-ek9izd",
             "type": "mcq",
-            "prompt": "What does `all(c(4, NA, 6) > 3)` give?",
+            "prompt": "Why does `all(c(4, NA, 6) > 3)` give NA and not TRUE?",
             "choices": [
               {
                 "id": "a",
-                "label": "`FALSE`"
+                "label": "all() ignores numbers"
               },
               {
                 "id": "b",
-                "label": "`TRUE`"
+                "label": "It is a bug"
               },
               {
                 "id": "c",
-                "label": "An error"
+                "label": "NA counts as FALSE"
               },
               {
                 "id": "d",
-                "label": "`NA`"
+                "label": "The missing value might not be over 3, so R can't be sure"
               }
             ],
             "correctChoiceId": "d",
-            "explanation": "R can't tell whether the missing value is over 3. Add `na.rm = TRUE` to check only the known ones."
+            "explanation": "Add `na.rm = TRUE` to judge only the known values."
           },
           {
             "id": "which_any_all-q-jqbx35",
@@ -3835,6 +4642,11 @@
           "id": "drop_the_names",
           "label": "Drop the names",
           "code": "prices <- c(latte = 3.4, tea = 2.5)\nunname(prices)"
+        },
+        {
+          "id": "names_stay_through_maths",
+          "label": "Names stay through maths",
+          "code": "prices <- c(latte = 3.4, tea = 2.5)\nprices * 2\nround(prices * 1.1, 2)"
         }
       ],
       "intro": {
@@ -3887,6 +4699,11 @@
                 "id": "t2",
                 "label": "Picks by name",
                 "assertion": "grepl(\"\\\"tea\\\"\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\n\", \"prices <- c(latte = 4.5, tea = 2.7, cake = 3.5)\\n\", \"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\nprices[\\\"tea\\\"]\", c(), output = TRUE)"
               }
             ]
           }
@@ -3906,6 +4723,11 @@
                 "id": "t1",
                 "label": "items is latte, tea, cake",
                 "assertion": "identical(items, c(\"latte\", \"tea\", \"cake\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\n\", \"prices <- c(mocha = 3.4, chai = 2.5, scone = 4.2)\\n\", \"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\nitems <- names(prices)\", c(\"items\"), output = FALSE)"
               }
             ]
           }
@@ -3930,6 +4752,11 @@
                 "id": "t2",
                 "label": "Uses names()",
                 "assertion": "grepl(\"names(rain)\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"rain <- c(0, 4.5, 12.2, 1.0)\\n\", \"rain <- c(1.1, 12.5, 4.7, 1)\\n\", \"rain <- c(0, 4.5, 12.2, 1.0)\\nnames(rain) <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\")\", c(\"rain\"), output = FALSE)"
               }
             ]
           }
@@ -3949,6 +4776,11 @@
                 "id": "t1",
                 "label": "pair is cake 4.2, latte 3.4",
                 "assertion": "isTRUE(all.equal(pair, c(cake = 4.2, latte = 3.4)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\n\", \"prices <- c(latte = 4.5, tea = 2.7, cake = 3.5)\\n\", \"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\npair <- prices[c(\\\"cake\\\", \\\"latte\\\")]\", c(\"pair\"), output = FALSE)"
               }
             ]
           }
@@ -3973,6 +4805,11 @@
                 "id": "t2",
                 "label": "Works it out from rain",
                 "assertion": "grepl(\"rain\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"rain <- c(Mon = 0, Tue = 4.5, Wed = 12.2, Thu = 1.0)\\n\", \"rain <- c(Mon = 1.1, Tue = 12.5, Wed = 4.7, Thu = 1)\\n\", \"rain <- c(Mon = 0, Tue = 4.5, Wed = 12.2, Thu = 1.0)\\nwettest <- names(which.max(rain))\", c(\"rain\", \"wettest\"), output = FALSE)"
               }
             ]
           }
@@ -3992,6 +4829,35 @@
                 "id": "t1",
                 "label": "dry_days is Mon, Thu, Fri",
                 "assertion": "identical(dry_days, c(\"Mon\", \"Thu\", \"Fri\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"rain <- c(Mon = 0, Tue = 4.5, Wed = 12.2, Thu = 1.0, Fri = 0.4)\\n\", \"rain <- c(Mon = 0.6, Tue = 1.1, Wed = 12.5, Thu = 4.7, Fri = 1)\\n\", \"rain <- c(Mon = 0, Tue = 4.5, Wed = 12.2, Thu = 1.0, Fri = 0.4)\\ndry_days <- names(rain[rain < 2])\", c(\"dry_days\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "named_vectors-sale-prices",
+          "title": "Hard: Sale prices",
+          "promptMarkdown": "Make `sale` the prices 10% lower, rounded to 2 decimal places, keeping the names.",
+          "starterCode": "prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\n",
+          "hint": "Maths keeps the names: `round(prices * 0.9, 2)`.",
+          "solution": "prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nsale <- round(prices * 0.9, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "sale is latte 3.06, tea 2.25, cake 3.78",
+                "assertion": "isTRUE(all.equal(sale, c(latte = 3.06, tea = 2.25, cake = 3.78)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\n\", \"prices <- c(latte = 4.5, tea = 2.7, cake = 3.5)\\n\", \"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\nsale <- round(prices * 0.9, 2)\", c(\"sale\"), output = FALSE)"
               }
             ]
           }
@@ -4016,6 +4882,35 @@
                 "id": "t2",
                 "label": "menu is water, tea, latte, cake",
                 "assertion": "isTRUE(all.equal(menu, c(water = 1.8, tea = 2.7, latte = 3.4, cake = 4.2)))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2, water = 1.8)\\n\", \"prices <- c(latte = 1.9, tea = 4.5, cake = 2.7, water = 3.5)\\n\", \"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2, water = 1.8)\\nprices[\\\"tea\\\"] <- 2.7\\nmenu <- sort(prices)\", c(\"prices\", \"menu\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "named_vectors-price-an-order",
+          "title": "Expert: Price an order",
+          "promptMarkdown": "Make `total` the cost of everything in `ordered`, looking each item up in `prices` by name.",
+          "starterCode": "prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nordered <- c(\"tea\", \"cake\", \"tea\")\n",
+          "hint": "A vector of names picks several values, repeats too: `prices[ordered]`. Then `sum()`.",
+          "solution": "prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nordered <- c(\"tea\", \"cake\", \"tea\")\ntotal <- sum(prices[ordered])",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 9.2",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 9.2))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\nordered <- c(\\\"tea\\\", \\\"cake\\\", \\\"tea\\\")\\n\", \"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\nordered <- c(\\\"latte\\\", \\\"cake\\\")\\n\", \"prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\\nordered <- c(\\\"tea\\\", \\\"cake\\\", \\\"tea\\\")\\ntotal <- sum(prices[ordered])\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -4150,29 +5045,29 @@
             "explanation": "A vector made without names has none, so `names()` gives `NULL`."
           },
           {
-            "id": "named_vectors-q-1ds2t0",
+            "id": "named_vectors-q-1yz5ka4",
             "type": "mcq",
-            "prompt": "After `x <- c(a = 1, b = 2)`, what does `x[\"c\"]` give?",
+            "prompt": "Why does `x[\"c\"]` give NA when `x` has no value called \"c\"?",
             "choices": [
               {
                 "id": "a",
-                "label": "`NA`, named `<NA>`"
+                "label": "Names ignore small and capital letters"
               },
               {
                 "id": "b",
-                "label": "`0`"
+                "label": "It makes a new value"
               },
               {
                 "id": "c",
-                "label": "`[1] \"c\"`"
+                "label": "It gives an error"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "R can't find that name, so it says the value is unknown"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "There is no value called \"c\", so R gives NA."
+            "correctChoiceId": "d",
+            "explanation": "A typo in a name gives NA, not an error, so check with `names(x)`."
           },
           {
             "id": "named_vectors-q-19oztcz",
@@ -4304,6 +5199,11 @@
                 "id": "t2",
                 "label": "average is 7657",
                 "assertion": "is.numeric(average) && isTRUE(all.equal(average, 7657))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\n\", \"steps <- c(3901, 12103, 7602, 10301, 5103, 8402, 6201)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun2\\\")\\n\", \"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\ntotal <- sum(steps)\\naverage <- round(mean(steps))\", c(\"total\", \"average\"), output = FALSE)"
               }
             ]
           }
@@ -4323,6 +5223,11 @@
                 "id": "t1",
                 "label": "goal_days is 3",
                 "assertion": "is.numeric(goal_days) && isTRUE(all.equal(goal_days, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\n\", \"steps <- c(7801, 24202, 15201, 20602, 10201, 16802, 12401)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Mon\\\")\\n\", \"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\ngoal_days <- sum(steps >= 8000)\", c(\"goal_days\"), output = FALSE)"
               }
             ]
           }
@@ -4347,6 +5252,11 @@
                 "id": "t2",
                 "label": "worst is \"Sun\"",
                 "assertion": "identical(worst, \"Sun\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\n\", \"steps <- c(3901, 12103, 7602, 10301, 5103, 8402, 6201)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun2\\\")\\n\", \"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\nbest <- days[which.max(steps)]\\nworst <- days[which.min(steps)]\", c(\"best\", \"worst\"), output = FALSE)"
               }
             ]
           }
@@ -4366,6 +5276,11 @@
                 "id": "t1",
                 "label": "short_by is 1800, 2900, 400, 4100",
                 "assertion": "is.numeric(short_by) && isTRUE(all.equal(short_by, c(1800, 2900, 400, 4100)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\n\", \"steps <- c(3901, 12103, 7602, 10301, 5103, 8402, 6201)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun2\\\")\\n\", \"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\nshort_by <- 8000 - steps[steps < 8000]\", c(\"short_by\"), output = FALSE)"
               }
             ]
           }
@@ -4390,6 +5305,11 @@
                 "id": "t2",
                 "label": "Works out the best day",
                 "assertion": "grepl(\"which.max(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\n\", \"steps <- c(3901, 12103, 7602, 10301, 5103, 8402, 6201)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun2\\\")\\n\", \"steps <- c(6200, 8400, 5100, 10300, 7600, 12100, 3900)\\ndays <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\", \\\"Thu\\\", \\\"Fri\\\", \\\"Sat\\\", \\\"Sun\\\")\\ncat(\\\"Total:\\\", sum(steps), \\\"\\\\n\\\")\\ncat(\\\"Average:\\\", round(mean(steps)), \\\"\\\\n\\\")\\ncat(\\\"Goal met on\\\", sum(steps >= 8000), \\\"days\\\\n\\\")\\ncat(\\\"Best day:\\\", days[which.max(steps)], \\\"\\\\n\\\")\", c(\"days\"), output = TRUE)"
               }
             ]
           }
@@ -4574,6 +5494,11 @@
                 "id": "t1",
                 "label": "n_present is 6",
                 "assertion": "is.numeric(n_present) && isTRUE(all.equal(n_present, 6))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(NA, 27, NA, 38, 19, 35, NA, 24)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\nn_present <- sum(!is.na(scores))\", c(\"n_present\"), output = FALSE)"
               }
             ]
           }
@@ -4593,6 +5518,11 @@
                 "id": "t1",
                 "label": "average is 29.2",
                 "assertion": "is.numeric(average) && isTRUE(all.equal(average, 29.2))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\")\\nscores <- c(27, NA, 37, 20, 41, NA, 29, 33)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\naverage <- round(mean(scores, na.rm = TRUE), 1)\", c(\"average\"), output = FALSE)"
               }
             ]
           }
@@ -4612,6 +5542,11 @@
                 "id": "t1",
                 "label": "percent is 80, 68, NA, 95, 48, 88, NA, 60",
                 "assertion": "isTRUE(all.equal(percent, c(80, 68, NA, 95, 48, 88, NA, 60)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\")\\nscores <- c(27, NA, 37, 20, 41, NA, 29, 33)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\npercent <- round(scores / 40 * 100)\", c(\"percent\"), output = FALSE)"
               }
             ]
           }
@@ -4631,6 +5566,11 @@
                 "id": "t1",
                 "label": "winner is \"Dee\"",
                 "assertion": "identical(winner, \"Dee\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\")\\nscores <- c(27, NA, 37, 20, 41, NA, 29, 33)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\nwinner <- members[which.max(scores)]\", c(\"winner\"), output = FALSE)"
               }
             ]
           }
@@ -4650,6 +5590,11 @@
                 "id": "t1",
                 "label": "passed is Ana, Ben, Dee, Fay",
                 "assertion": "identical(passed, c(\"Ana\", \"Ben\", \"Dee\", \"Fay\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\")\\nscores <- c(27, NA, 37, 20, 41, NA, 29, 33)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\npassed <- members[which(scores >= 25)]\", c(\"passed\"), output = FALSE)"
               }
             ]
           }
@@ -4669,6 +5614,11 @@
                 "id": "t1",
                 "label": "podium is Dee, Fay, Ana",
                 "assertion": "identical(podium, c(\"Dee\", \"Fay\", \"Ana\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\")\\nscores <- c(27, NA, 37, 20, 41, NA, 29, 33)\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nscores <- c(32, 27, NA, 38, 19, 35, NA, 24)\\npodium <- head(members[order(scores, decreasing = TRUE)], 3)\", c(\"podium\"), output = FALSE)"
               }
             ]
           }
@@ -4897,6 +5847,11 @@
                 "id": "t1",
                 "label": "temps has NA where the sensor failed",
                 "assertion": "isTRUE(all.equal(temps, c(14.2, 15.0, NA, 17.8, 21.5, 24.9, 27.3, NA, 26.1, 22.4, 19.0, 16.6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(14.2, 15.0, -999, 17.8, 21.5, 24.9, 27.3, -999, 26.1, 22.4, 19.0, 16.6)\\n\", \"temps <- c(16.9, 19.2, 22.5, 26.4, -1001, 27.4, 25.2, 21.7, 17.9, -1002, 15.2, 14.3)\\n\", \"temps <- c(14.2, 15.0, -999, 17.8, 21.5, 24.9, 27.3, -999, 26.1, 22.4, 19.0, 16.6)\\ntemps[temps == -999] <- NA\", c(\"temps\"), output = FALSE)"
               }
             ]
           }
@@ -4921,6 +5876,11 @@
                 "id": "t2",
                 "label": "average is 20.5",
                 "assertion": "is.numeric(average) && isTRUE(all.equal(average, 20.5))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(14.2, 15.0, NA, 17.8, 21.5, 24.9, 27.3, NA, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\n\", \"temps <- c(16.7, 19.3, 22.6, 26.2, NA, 27.6, 25.1, 21.6, 18.1, NA, 15.2, 14.3)\\nhours <- 6:17\\n\", \"temps <- c(14.2, 15.0, NA, 17.8, 21.5, 24.9, 27.3, NA, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\nn_readings <- sum(!is.na(temps))\\naverage <- round(mean(temps, na.rm = TRUE), 1)\", c(\"n_readings\", \"average\"), output = FALSE)"
               }
             ]
           }
@@ -4940,6 +5900,11 @@
                 "id": "t1",
                 "label": "warmest_hour is 12",
                 "assertion": "is.numeric(warmest_hour) && isTRUE(all.equal(warmest_hour, 12))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(14.2, 15.0, NA, 17.8, 21.5, 24.9, 27.3, NA, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\n\", \"temps <- c(16.7, 19.3, 22.6, 26.2, NA, 27.6, 25.1, 21.6, 18.1, NA, 15.2, 14.3)\\nhours <- 6:17\\n\", \"temps <- c(14.2, 15.0, NA, 17.8, 21.5, 24.9, 27.3, NA, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\nwarmest_hour <- hours[which.max(temps)]\", c(\"warmest_hour\"), output = FALSE)"
               }
             ]
           }
@@ -4959,6 +5924,11 @@
                 "id": "t1",
                 "label": "hot_hours is 12, 14",
                 "assertion": "is.numeric(hot_hours) && isTRUE(all.equal(hot_hours, c(12, 14)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(14.2, 15.0, NA, 17.8, 21.5, 24.9, 27.3, NA, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\n\", \"temps <- c(16.7, 19.3, 22.6, 26.2, NA, 27.6, 25.1, 21.6, 18.1, NA, 15.2, 14.3)\\nhours <- 6:17\\n\", \"temps <- c(14.2, 15.0, NA, 17.8, 21.5, 24.9, 27.3, NA, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\nhot_hours <- hours[which(temps > 25)]\", c(\"hot_hours\"), output = FALSE)"
               }
             ]
           }
@@ -4983,6 +5953,11 @@
                 "id": "t2",
                 "label": "Cleans the -999s in R",
                 "assertion": "grepl(\"-999\", ._cq_code, fixed = TRUE) && grepl(\"NA\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(14.2, 15.0, -999, 17.8, 21.5, 24.9, 27.3, -999, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\n\", \"temps <- c(16.9, 19.2, 22.5, 26.4, -1001, 27.4, 25.2, 21.7, 17.9, -1002, 15.2, 14.3)\\nhours <- 6:17\\n\", \"temps <- c(14.2, 15.0, -999, 17.8, 21.5, 24.9, 27.3, -999, 26.1, 22.4, 19.0, 16.6)\\nhours <- 6:17\\ntemps[temps == -999] <- NA\\nlow_high <- range(temps, na.rm = TRUE)\\ncat(\\\"Readings:\\\", sum(!is.na(temps)), \\\"of\\\", length(temps), \\\"\\\\n\\\")\\ncat(\\\"Average:\\\", round(mean(temps, na.rm = TRUE), 1), \\\"C\\\\n\\\")\\ncat(\\\"Range:\\\", low_high[1], \\\"to\\\", low_high[2], \\\"C\\\\n\\\")\\ncat(\\\"Over 25 C at:\\\", hours[which(temps > 25)], \\\"\\\\n\\\")\", c(), output = TRUE)"
               }
             ]
           }

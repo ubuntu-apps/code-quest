@@ -16,6 +16,16 @@
           "id": "any_and_all",
           "label": "any() and all()",
           "code": "temps <- c(25, 35, 28)\nif (any(temps > 30)) cat(\"At least one hot day\\n\")\nif (all(temps > 20)) cat(\"Every day was warm\\n\")"
+        },
+        {
+          "id": "an_else_if_chain",
+          "label": "An else if chain",
+          "code": "temp <- 24\nif (temp >= 30) \"hot\" else if (temp >= 18) \"mild\" else \"cold\""
+        },
+        {
+          "id": "one_answer_for_a_vector",
+          "label": "One answer for a vector",
+          "code": "scores <- c(71, 44, 88)\nif (all(scores >= 50)) \"everyone passed\" else \"some failed\""
         }
       ],
       "intro": {
@@ -49,6 +59,11 @@
                 "id": "t2",
                 "label": "Uses if",
                 "assertion": "grepl(\"if (\", ._cq_code, fixed = TRUE) || grepl(\"if(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temperature <- 34\\n\", \"temperature <- 35\\n\", \"temperature <- 34\\nif (temperature > 30) {\\n  cat(\\\"Hot day!\\\\n\\\")\\n}\", c(), output = TRUE)"
               }
             ]
           }
@@ -73,6 +88,11 @@
                 "id": "t2",
                 "label": "Uses else",
                 "assertion": "grepl(\"else\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"score <- 47\\n\", \"score <- 48\\n\", \"score <- 47\\nif (score >= 50) {\\n  result <- \\\"pass\\\"\\n} else {\\n  result <- \\\"fail\\\"\\n}\", c(\"result\"), output = FALSE)"
               }
             ]
           }
@@ -92,6 +112,11 @@
                 "id": "t1",
                 "label": "delivery is 0",
                 "assertion": "is.numeric(delivery) && isTRUE(all.equal(delivery, 0))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"order_total <- 42\\n\", \"order_total <- 12\\n\", \"order_total <- 42\\nif (order_total >= 30) {\\n  delivery <- 0\\n} else {\\n  delivery <- 3.5\\n}\", c(\"delivery\"), output = FALSE)"
               }
             ]
           }
@@ -116,6 +141,11 @@
                 "id": "t2",
                 "label": "Uses else if",
                 "assertion": "grepl(\"else if\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temperature <- 24\\n\", \"temperature <- 25\\n\", \"temperature <- 24\\nif (temperature > 30) {\\n  advice <- \\\"water twice\\\"\\n} else if (temperature > 20) {\\n  advice <- \\\"water once\\\"\\n} else {\\n  advice <- \\\"no watering\\\"\\n}\", c(\"advice\"), output = FALSE)"
               }
             ]
           }
@@ -140,6 +170,11 @@
                 "id": "t2",
                 "label": "Uses any()",
                 "assertion": "grepl(\"any(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(24, 19, 35, 27)\\n\", \"minutes <- c(28, 38, 21, 25)\\n\", \"minutes <- c(24, 19, 35, 27)\\nif (any(minutes > 30)) {\\n  cat(\\\"Some deliveries were late\\\\n\\\")\\n} else {\\n  cat(\\\"All on time\\\\n\\\")\\n}\", c(), output = TRUE)"
               }
             ]
           }
@@ -159,6 +194,11 @@
                 "id": "t1",
                 "label": "Shows Everyone passed",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Everyone passed\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(71, 64, 88, 52)\\nif (scores >= 50) {\\n  cat(\\\"Everyone passed\\\\n\\\")\\n}\", \"scores <- c(53, 91, 66, 72)\\nif (scores >= 50) {\\n  cat(\\\"Everyone passed\\\\n\\\")\\n}\", \"scores <- c(71, 64, 88, 52)\\nif (all(scores >= 50)) {\\n  cat(\\\"Everyone passed\\\\n\\\")\\n}\", c(), output = TRUE)"
               }
             ]
           }
@@ -178,6 +218,35 @@
                 "id": "t1",
                 "label": "status is \"missing\"",
                 "assertion": "identical(status, \"missing\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"reading <- NA\\n\", \"reading <- 30\\n\", \"reading <- NA\\nif (is.na(reading)) {\\n  status <- \\\"missing\\\"\\n} else if (reading > 25) {\\n  status <- \\\"high\\\"\\n} else {\\n  status <- \\\"ok\\\"\\n}\", c(\"status\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-parking-charge",
+          "title": "Hard: Parking charge",
+          "promptMarkdown": "Parking is free for up to 1 hour, 2.50 for up to 3 hours, and 5 for longer. Make `charge` the price for `hours`.",
+          "starterCode": "hours <- 3.5\n",
+          "hint": "Check from the smallest band up: `if (hours <= 1) 0 else if (hours <= 3) 2.5 else 5`.",
+          "solution": "hours <- 3.5\ncharge <- if (hours <= 1) 0 else if (hours <= 3) 2.5 else 5",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "charge is 5",
+                "assertion": "is.numeric(charge) && isTRUE(all.equal(charge, 5))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"hours <- 3.5\\n\", \"hours <- 2\\n\", \"hours <- 3.5\\ncharge <- if (hours <= 1) 0 else if (hours <= 3) 2.5 else 5\", c(\"charge\"), output = FALSE)"
               }
             ]
           }
@@ -202,6 +271,35 @@
                 "id": "t2",
                 "label": "Uses else if",
                 "assertion": "grepl(\"else if\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"age <- 70\\n\", \"age <- 71\\n\", \"age <- 70\\nif (age < 5) {\\n  price <- 0\\n} else if (age < 18) {\\n  price <- 6\\n} else if (age >= 65) {\\n  price <- 4\\n} else {\\n  price <- 12\\n}\", c(\"price\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-leap-year",
+          "title": "Expert: Leap year",
+          "promptMarkdown": "A year is a leap year if it divides by 4, except century years (dividing by 100), which must also divide by 400. Make `leap` TRUE or FALSE for `year`.",
+          "starterCode": "year <- 2028\n",
+          "hint": "`%%` gives the remainder. Put it together: `(year %% 4 == 0 && year %% 100 != 0) || year %% 400 == 0`.",
+          "solution": "year <- 2028\nleap <- (year %% 4 == 0 && year %% 100 != 0) || year %% 400 == 0",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "leap is TRUE",
+                "assertion": "identical(leap, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"year <- 2028\\n\", \"year <- 1900\\n\", \"year <- 2028\\nleap <- (year %% 4 == 0 && year %% 100 != 0) || year %% 400 == 0\", c(\"leap\"), output = FALSE)"
               }
             ]
           }
@@ -361,29 +459,29 @@
             "explanation": "`any()` turns the two answers into one TRUE."
           },
           {
-            "id": "if_else-q-1le4bmq",
+            "id": "if_else-q-1y1jral",
             "type": "mcq",
-            "prompt": "What does `if (FALSE) \"a\"` give?",
+            "prompt": "Why does `if (scores >= 50)` give an error when `scores` has several values?",
             "choices": [
               {
                 "id": "a",
-                "label": "An error"
+                "label": "`if` needs one TRUE or FALSE; use `all()`, `any()` or `ifelse()` for a vector"
               },
               {
                 "id": "b",
-                "label": "Nothing (NULL)"
+                "label": "`scores` must be text"
               },
               {
                 "id": "c",
-                "label": "`FALSE`"
+                "label": "`>=` doesn't work on vectors"
               },
               {
                 "id": "d",
-                "label": "`\"a\"`"
+                "label": "It doesn't"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "With no `else`, nothing is run and nothing is shown."
+            "correctChoiceId": "a",
+            "explanation": "Since R 4.2, a condition longer than one is an error."
           },
           {
             "id": "if_else-q-1yw40h0",
@@ -437,6 +535,16 @@
           "id": "position_and_value",
           "label": "Position and value",
           "code": "days <- c(\"Mon\", \"Tue\", \"Wed\")\nfor (i in seq_along(days)) {\n  cat(i, days[i], \"\\n\")\n}"
+        },
+        {
+          "id": "loop_over_positions",
+          "label": "Loop over positions",
+          "code": "days <- c(\"Mon\", \"Tue\", \"Wed\")\nfor (i in seq_along(days)) {\n  cat(i, days[i], \"\\n\")\n}"
+        },
+        {
+          "id": "grow_a_balance",
+          "label": "Grow a balance",
+          "code": "balance <- 200\nfor (year in 1:3) {\n  balance <- balance * 1.1\n  cat(\"Year\", year, \":\", balance, \"\\n\")\n}"
         }
       ],
       "intro": {
@@ -470,6 +578,11 @@
                 "id": "t2",
                 "label": "Uses for",
                 "assertion": "grepl(\"for (\", ._cq_code, fixed = TRUE) || grepl(\"for(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\")\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy2\\\")\\n\", \"members <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\")\\nfor (m in members) {\\n  cat(\\\"Hello,\\\", m, \\\"\\\\n\\\")\\n}\", c(), output = TRUE)"
               }
             ]
           }
@@ -518,6 +631,11 @@
                 "id": "t2",
                 "label": "Uses a loop",
                 "assertion": "grepl(\"for\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"rain <- c(2.4, 0, 5.1, 1.2)\\ntotal <- 0\\n\", \"rain <- c(1.3, 5.4, 2, 2.5)\\ntotal <- 2\\n\", \"rain <- c(2.4, 0, 5.1, 1.2)\\ntotal <- 0\\nfor (mm in rain) {\\n  total <- total + mm\\n}\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -542,6 +660,11 @@
                 "id": "t2",
                 "label": "Uses seq_along()",
                 "assertion": "grepl(\"seq_along(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\")\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed2\\\")\\n\", \"days <- c(\\\"Mon\\\", \\\"Tue\\\", \\\"Wed\\\")\\nfor (i in seq_along(days)) {\\n  cat(i, \\\". \\\", days[i], \\\"\\\\n\\\", sep = \\\"\\\")\\n}\", c(), output = TRUE)"
               }
             ]
           }
@@ -561,6 +684,11 @@
                 "id": "t1",
                 "label": "lengths_of is 4, 5, 10",
                 "assertion": "is.numeric(lengths_of) && isTRUE(all.equal(lengths_of, c(4, 5, 10)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes\\\")\\nlengths_of <- numeric(length(crops))\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes2\\\")\\nlengths_of <- numeric(length(crops))\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes\\\")\\nlengths_of <- numeric(length(crops))\\nfor (i in seq_along(crops)) {\\n  lengths_of[i] <- nchar(crops[i])\\n}\", c(\"lengths_of\"), output = FALSE)"
               }
             ]
           }
@@ -585,6 +713,11 @@
                 "id": "t2",
                 "label": "Uses if in the loop",
                 "assertion": "grepl(\"if\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"temps <- c(22, 27, 31, 24, 26)\\nhot_days <- 0\\n\", \"temps <- c(28, 25, 34, 29, 23)\\nhot_days <- 3\\n\", \"temps <- c(22, 27, 31, 24, 26)\\nhot_days <- 0\\nfor (t in temps) {\\n  if (t > 25) {\\n    hot_days <- hot_days + 1\\n  }\\n}\", c(\"hot_days\"), output = FALSE)"
               }
             ]
           }
@@ -604,6 +737,40 @@
                 "id": "t1",
                 "label": "saved is 300",
                 "assertion": "is.numeric(saved) && isTRUE(all.equal(saved, 300))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"saved <- 0\\nthis_week <- 20\\n\", \"saved <- 1\\nthis_week <- 22\\n\", \"saved <- 0\\nthis_week <- 20\\nfor (week in 1:8) {\\n  saved <- saved + this_week\\n  this_week <- this_week + 5\\n}\", c(\"saved\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-the-longest-name",
+          "title": "Hard: The longest name",
+          "promptMarkdown": "With a `for` loop, make `longest` the longest name in `members` (the first one, if two are equally long).",
+          "starterCode": "members <- c(\"Ana\", \"Benedict\", \"Cy\", \"Dorothy\")\n",
+          "hint": "Start with `longest <- \"\"`. In the loop, keep the name when `nchar(name) > nchar(longest)`.",
+          "solution": "members <- c(\"Ana\", \"Benedict\", \"Cy\", \"Dorothy\")\nlongest <- \"\"\nfor (name in members) {\n  if (nchar(name) > nchar(longest)) longest <- name\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "longest is Benedict",
+                "assertion": "identical(longest, \"Benedict\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses for",
+                "assertion": "grepl(\"for\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"members <- c(\\\"Ana\\\", \\\"Benedict\\\", \\\"Cy\\\", \\\"Dorothy\\\")\\n\", \"members <- c(\\\"Kim\\\", \\\"Alexandra\\\", \\\"Jo\\\")\\n\", \"members <- c(\\\"Ana\\\", \\\"Benedict\\\", \\\"Cy\\\", \\\"Dorothy\\\")\\nlongest <- \\\"\\\"\\nfor (name in members) {\\n  if (nchar(name) > nchar(longest)) longest <- name\\n}\", c(\"longest\"), output = FALSE)"
               }
             ]
           }
@@ -623,6 +790,40 @@
                 "id": "t1",
                 "label": "best_so_far is 12, 18, 18, 22, 22",
                 "assertion": "is.numeric(best_so_far) && isTRUE(all.equal(best_so_far, c(12, 18, 18, 22, 22)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(12, 18, 15, 22, 20)\\nbest_so_far <- numeric(length(scores))\\n\", \"scores <- c(22, 23, 18, 20, 13)\\nbest_so_far <- numeric(length(scores))\\n\", \"scores <- c(12, 18, 15, 22, 20)\\nbest_so_far <- numeric(length(scores))\\nbest_so_far[1] <- scores[1]\\nfor (i in 2:length(scores)) {\\n  best_so_far[i] <- max(best_so_far[i - 1], scores[i])\\n}\", c(\"best_so_far\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-growing-savings",
+          "title": "Expert: Growing savings",
+          "promptMarkdown": "Savings grow by `rate` each year. Make `history` the balance at the end of each of the `years`, using a loop.",
+          "starterCode": "balance <- 200\nrate <- 0.1\nyears <- 4\n",
+          "hint": "Make `history <- numeric(years)` first. Each time round: `balance <- balance * (1 + rate)`, then `history[y] <- balance`.",
+          "solution": "balance <- 200\nrate <- 0.1\nyears <- 4\nhistory <- numeric(years)\nfor (y in 1:years) {\n  balance <- balance * (1 + rate)\n  history[y] <- balance\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "history is 220, 242, 266.2, 292.82",
+                "assertion": "is.numeric(history) && isTRUE(all.equal(history, c(220, 242, 266.2, 292.82)))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses for",
+                "assertion": "grepl(\"for\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"balance <- 200\\nrate <- 0.1\\nyears <- 4\\n\", \"balance <- 201\\nrate <- 0.3\\nyears <- 7\\n\", \"balance <- 200\\nrate <- 0.1\\nyears <- 4\\nhistory <- numeric(years)\\nfor (y in 1:years) {\\n  balance <- balance * (1 + rate)\\n  history[y] <- balance\\n}\", c(\"history\"), output = FALSE)"
               }
             ]
           }
@@ -757,29 +958,29 @@
             "explanation": "Without it, `total + mm` fails the first time: total doesn't exist yet."
           },
           {
-            "id": "for_loops-q-7ywvwp",
+            "id": "for_loops-q-q5jyuh",
             "type": "mcq",
-            "prompt": "What does `numeric(3)` give?",
+            "prompt": "Why make the result with `numeric(length(x))` before the loop?",
             "choices": [
               {
                 "id": "a",
-                "label": "`[1] 1 2 3`"
+                "label": "It makes the loop shorter to type"
               },
               {
                 "id": "b",
-                "label": "`[1] 0 0 0`"
+                "label": "The vector has the right length already, and the loop fills one position each time"
               },
               {
                 "id": "c",
-                "label": "`[1] 3`"
+                "label": "Loops need numbers"
               },
               {
                 "id": "d",
-                "label": "`NULL`"
+                "label": "R requires it"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "An empty vector of three zeros, ready to fill in."
+            "explanation": "`numeric(3)` is `[1] 0 0 0`, ready to be filled."
           },
           {
             "id": "for_loops-q-ttufng",
@@ -853,11 +1054,21 @@
           "id": "next_and_break",
           "label": "next and break",
           "code": "for (t in c(22, NA, 27, 31, 24)) {\n  if (is.na(t)) next\n  if (t > 30) break\n  cat(t, \"\\n\")\n}"
+        },
+        {
+          "id": "break_out_of_a_loop",
+          "label": "break out of a loop",
+          "code": "n <- 0\nwhile (TRUE) {\n  n <- n + 1\n  if (n^2 > 50) break\n}\nn"
+        },
+        {
+          "id": "next_skips_one_value",
+          "label": "next skips one value",
+          "code": "for (v in c(4, NA, 7, NA, 2)) {\n  if (is.na(v)) next\n  cat(v, \"\\n\")\n}"
         }
       ],
       "intro": {
         "title": "while loops",
-        "bodyMarkdown": "A `for` loop runs a known number of times. A `while` loop keeps going **as long as** a condition is TRUE, which suits questions like \"how many weeks until I have saved 500?\":\n\n```\nsaved <- 0\nweeks <- 0\nwhile (saved < 500) {\n  saved <- saved + 45\n  weeks <- weeks + 1\n}\nweeks    # 12\n```\n\nEach time round, R checks the condition first. When it becomes FALSE, the loop stops and the code after it runs.\n\nSomething inside the loop **must** change the condition, or it runs forever. If your code seems stuck, that's usually why: reload the page to stop it.\n\nTwo keywords control any loop. `break` stops the loop straight away. `next` skips the rest of this time round and goes on to the next:\n\n```\nfor (t in c(22, NA, 27, 31)) {\n  if (is.na(t)) next          # skip missing readings\n  if (t > 30) break           # stop at the first very hot one\n  cat(t, \"\\n\")\n}\n```",
+        "bodyMarkdown": "A `for` loop runs a known number of times. A `while` loop keeps going **as long as** a condition is TRUE, which suits questions like \"how many weeks until I have saved 500?\":\n\n```\nsaved <- 0\nweeks <- 0\nwhile (saved < 500) {\n  saved <- saved + 45\n  weeks <- weeks + 1\n}\nweeks    # 12\n```\n\nEach time round, R checks the condition first. When it becomes FALSE, the loop stops and the code after it runs.\n\nSomething inside the loop **must** change the condition, or it runs forever. If your code seems stuck, that's usually why: press **Stop** to end it.\n\nTwo keywords control any loop. `break` stops the loop straight away. `next` skips the rest of this time round and goes on to the next:\n\n```\nfor (t in c(22, NA, 27, 31)) {\n  if (is.na(t)) next          # skip missing readings\n  if (t > 30) break           # stop at the first very hot one\n  cat(t, \"\\n\")\n}\n```",
         "sandboxCode": "saved <- 0\nweeks <- 0\nwhile (saved < 500) {\n  saved <- saved + 45\n  weeks <- weeks + 1\n}\nweeks\nsaved",
         "readMore": {
           "label": "R documentation: Control flow",
@@ -886,6 +1097,11 @@
                 "id": "t2",
                 "label": "Uses while",
                 "assertion": "grepl(\"while\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"saved <- 0\\nweeks <- 0\\n\", \"saved <- 1\\nweeks <- 2\\n\", \"saved <- 0\\nweeks <- 0\\nwhile (saved < 500) {\\n  saved <- saved + 45\\n  weeks <- weeks + 1\\n}\", c(\"weeks\"), output = FALSE)"
               }
             ]
           }
@@ -905,6 +1121,40 @@
                 "id": "t1",
                 "label": "steps is 7",
                 "assertion": "is.numeric(steps) && isTRUE(all.equal(steps, 7))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"n <- 100\\nsteps <- 0\\n\", \"n <- 101\\nsteps <- 2\\n\", \"n <- 100\\nsteps <- 0\\nwhile (n > 1) {\\n  n <- n / 2\\n  steps <- steps + 1\\n}\", c(\"steps\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-count-down",
+          "title": "Easy: Count down",
+          "promptMarkdown": "With a `while` loop, show `n`, then take 1 off it, for as long as `n` is above 0. For 5 that shows 5, 4, 3, 2, 1, one per line.",
+          "starterCode": "n <- 5\n",
+          "hint": "`while (n > 0) { cat(n, \"\\n\"); n <- n - 1 }`",
+          "solution": "n <- 5\nwhile (n > 0) {\n  cat(n, \"\\n\")\n  n <- n - 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 5, 4, 3, 2, 1",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"5\", \"4\", \"3\", \"2\", \"1\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses while",
+                "assertion": "grepl(\"while\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"n <- 5\\n\", \"n <- 6\\n\", \"n <- 5\\nwhile (n > 0) {\\n  cat(n, \\\"\\\\n\\\")\\n  n <- n - 1\\n}\", c(\"n\"), output = TRUE)"
               }
             ]
           }
@@ -924,6 +1174,11 @@
                 "id": "t1",
                 "label": "months is 6",
                 "assertion": "is.numeric(months) && isTRUE(all.equal(months, 6))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"area <- 0.1\\nmonths <- 0\\n\", \"area <- 0.2\\nmonths <- 2\\n\", \"area <- 0.1\\nmonths <- 0\\nwhile (area < 5) {\\n  area <- area * 2\\n  months <- months + 1\\n}\", c(\"months\"), output = FALSE)"
               }
             ]
           }
@@ -948,6 +1203,11 @@
                 "id": "t2",
                 "label": "Uses next",
                 "assertion": "grepl(\"next\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"readings <- c(2.4, NA, 5.1, NA, 1.2)\\ntotal <- 0\\n\", \"readings <- c(1.5, NA, 5.3, NA, 2.5)\\ntotal <- 1\\n\", \"readings <- c(2.4, NA, 5.1, NA, 1.2)\\ntotal <- 0\\nfor (r in readings) {\\n  if (is.na(r)) next\\n  total <- total + r\\n}\", c(\"total\"), output = FALSE)"
               }
             ]
           }
@@ -972,6 +1232,11 @@
                 "id": "t2",
                 "label": "Uses break",
                 "assertion": "grepl(\"break\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(24, 19, 35, 27, 41)\\nfirst_late <- NA\\n\", \"minutes <- c(43, 28, 38, 21, 25)\\nfirst_late <- NA\\n\", \"minutes <- c(24, 19, 35, 27, 41)\\nfirst_late <- NA\\nfor (m in minutes) {\\n  if (m > 30) {\\n    first_late <- m\\n    break\\n  }\\n}\", c(\"first_late\"), output = FALSE)"
               }
             ]
           }
@@ -991,6 +1256,11 @@
                 "id": "t1",
                 "label": "Shows 1, 2, 3",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"1\", \"2\", \"3\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"count <- 1\\nwhile (count <= 3) {\\n  count <- count + 1\\n  cat(count, \\\"\\\\n\\\")\\n}\", \"count <- 2\\nwhile (count <= 3) {\\n  count <- count + 1\\n  cat(count, \\\"\\\\n\\\")\\n}\", \"count <- 1\\nwhile (count <= 3) {\\n  cat(count, \\\"\\\\n\\\")\\n  count <- count + 1\\n}\", c(), output = TRUE)"
               }
             ]
           }
@@ -1010,6 +1280,40 @@
                 "id": "t1",
                 "label": "rolls is right for seed 7",
                 "assertion": "local({ set.seed(7); n <- 0; x <- 0; while (x != 6) { x <- sample(1:6, 1); n <- n + 1 }; isTRUE(all.equal(rolls, n)) })"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"set.seed(7)\\nrolls <- 0\\nroll <- 0\\n\", \"set.seed(8)\\nrolls <- 2\\nroll <- 3\\n\", \"set.seed(7)\\nrolls <- 0\\nroll <- 0\\nwhile (roll != 6) {\\n  roll <- sample(1:6, 1)\\n  rolls <- rolls + 1\\n}\", c(\"rolls\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-fill-the-tank",
+          "title": "Hard: Fill the tank",
+          "promptMarkdown": "A pump adds 7 litres a minute, but the tank holds only `capacity`. Make `minutes` the minutes until the tank is full, and keep `litres` from going over the capacity.",
+          "starterCode": "litres <- 12\ncapacity <- 50\nminutes <- 0\n",
+          "hint": "While `litres < capacity`: `litres <- min(litres + 7, capacity)` and add 1 to `minutes`.",
+          "solution": "litres <- 12\ncapacity <- 50\nminutes <- 0\nwhile (litres < capacity) {\n  litres <- min(litres + 7, capacity)\n  minutes <- minutes + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "minutes is 6",
+                "assertion": "is.numeric(minutes) && isTRUE(all.equal(minutes, 6))"
+              },
+              {
+                "id": "t2",
+                "label": "litres is 50",
+                "assertion": "is.numeric(litres) && isTRUE(all.equal(litres, 50))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"litres <- 12\\ncapacity <- 50\\nminutes <- 0\\n\", \"litres <- 13\\ncapacity <- 52\\nminutes <- 3\\n\", \"litres <- 12\\ncapacity <- 50\\nminutes <- 0\\nwhile (litres < capacity) {\\n  litres <- min(litres + 7, capacity)\\n  minutes <- minutes + 1\\n}\", c(\"litres\", \"minutes\"), output = FALSE)"
               }
             ]
           }
@@ -1029,6 +1333,35 @@
                 "id": "t1",
                 "label": "months is 9",
                 "assertion": "is.numeric(months) && isTRUE(all.equal(months, 9))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"balance <- 1000\\nmonths <- 0\\n\", \"balance <- 1001\\nmonths <- 2\\n\", \"balance <- 1000\\nmonths <- 0\\nwhile (balance > 0) {\\n  balance <- balance * 1.01 - 120\\n  months <- months + 1\\n}\", c(\"months\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-guess-by-halves",
+          "title": "Expert: Guess by halves",
+          "promptMarkdown": "Guess `target` between `low` and `high` by always guessing the middle (`(low + high) %/% 2`). If the guess is too small, `low` becomes guess + 1; if too big, `high` becomes guess - 1. Make `guesses` the number of guesses it takes.",
+          "starterCode": "target <- 37\nlow <- 1\nhigh <- 100\nguesses <- 0\n",
+          "hint": "Start with `guess <- 0`. While `guess != target`: make a guess, add 1 to `guesses`, then move `low` or `high`.",
+          "solution": "target <- 37\nlow <- 1\nhigh <- 100\nguesses <- 0\nguess <- 0\nwhile (guess != target) {\n  guess <- (low + high) %/% 2\n  guesses <- guesses + 1\n  if (guess < target) low <- guess + 1 else if (guess > target) high <- guess - 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "guesses is 3",
+                "assertion": "is.numeric(guesses) && isTRUE(all.equal(guesses, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"target <- 37\\nlow <- 1\\nhigh <- 100\\nguesses <- 0\\n\", \"target <- 90\\nlow <- 1\\nhigh <- 100\\nguesses <- 0\\n\", \"target <- 37\\nlow <- 1\\nhigh <- 100\\nguesses <- 0\\nguess <- 0\\nwhile (guess != target) {\\n  guess <- (low + high) %/% 2\\n  guesses <- guesses + 1\\n  if (guess < target) low <- guess + 1 else if (guess > target) high <- guess - 1\\n}\", c(\"guesses\"), output = FALSE)"
               }
             ]
           }
@@ -1088,29 +1421,29 @@
             "explanation": "1, 3, 9, 27: 27 is the first value that isn't under 20."
           },
           {
-            "id": "while_loops-q-s85xh3",
+            "id": "while_loops-q-eet8kt",
             "type": "mcq",
-            "prompt": "What happens with `x <- 1; while (x > 0) { cat(x) }`?",
+            "prompt": "Why does `x <- 1; while (x > 0) { cat(x) }` never stop?",
             "choices": [
               {
                 "id": "a",
-                "label": "Nothing"
+                "label": "cat() starts the loop again"
               },
               {
                 "id": "b",
-                "label": "It runs forever: x never changes"
+                "label": "Nothing in the loop changes `x`, so the condition stays TRUE"
               },
               {
                 "id": "c",
-                "label": "It prints 1 once"
+                "label": "while loops always run for ever"
               },
               {
                 "id": "d",
-                "label": "An error"
+                "label": "It stops after 100 runs"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "Something in the loop must make the condition FALSE."
+            "explanation": "Every while loop needs a line that moves it towards the end. Press **Stop** if one runs away."
           },
           {
             "id": "while_loops-q-13k8v1p",
@@ -1264,6 +1597,16 @@
           "id": "several_lines",
           "label": "Several lines",
           "code": "tidy_name <- function(x) {\n  x <- trimws(x)\n  x <- tolower(x)\n  x\n}\ntidy_name(\"  ANA Silva \")"
+        },
+        {
+          "id": "a_function_on_a_vector",
+          "label": "A function on a vector",
+          "code": "sq <- function(x) {\n  x * x\n}\nsq(4)\nsq(c(1, 2, 3))"
+        },
+        {
+          "id": "variables_stay_inside",
+          "label": "Variables stay inside",
+          "code": "y <- 10\nf <- function(x) {\n  y <- x * 2\n  y\n}\nf(3)\ny"
         }
       ],
       "intro": {
@@ -1350,6 +1693,11 @@
                 "id": "t2",
                 "label": "Uses ride_cost()",
                 "assertion": "grepl(\"ride_cost(minutes)\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"ride_cost <- function(minutes) {\\n  1 + 0.15 * minutes\\n}\\nminutes <- c(12, 47, 30)\\n\", \"ride_cost <- function(minutes) {\\n  1 + 0.15 * minutes\\n}\\nminutes <- c(33, 49, 13)\\n\", \"ride_cost <- function(minutes) {\\n  1 + 0.15 * minutes\\n}\\nminutes <- c(12, 47, 30)\\ncosts <- ride_cost(minutes)\", c(\"minutes\", \"costs\"), output = FALSE)"
               }
             ]
           }
@@ -1446,6 +1794,30 @@
           }
         },
         {
+          "id": "writing_functions-mean-without-the-extremes",
+          "title": "Hard: Mean without the extremes",
+          "promptMarkdown": "Write `middle_mean(x)`: the mean of `x` after leaving out its smallest and its largest value.",
+          "starterCode": "",
+          "hint": "Sort, then drop the first and last positions: `mean(sort(x)[-c(1, length(x))])`.",
+          "solution": "middle_mean <- function(x) {\n  mean(sort(x)[-c(1, length(x))])\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "middle_mean(c(1, 5, 6, 7, 100)) is 6",
+                "assertion": "is.function(middle_mean) && isTRUE(all.equal(middle_mean(c(1, 5, 6, 7, 100)), 6))"
+              },
+              {
+                "id": "t2",
+                "label": "middle_mean(c(8, 2, 6, 4)) is 5",
+                "assertion": "isTRUE(all.equal(middle_mean(c(8, 2, 6, 4)), 5))"
+              }
+            ]
+          }
+        },
+        {
           "id": "writing_functions-grade-letter",
           "title": "Expert: Grade letter",
           "promptMarkdown": "Write `grade(score)` for **one** score: `\"A\"` for 80 or more, `\"B\"` for 65 or more, `\"C\"` for 50 or more, and `\"F\"` otherwise.",
@@ -1470,6 +1842,35 @@
                 "id": "t3",
                 "label": "grade(50) is \"C\" and grade(49) is \"F\"",
                 "assertion": "identical(grade(50), \"C\") && identical(grade(49), \"F\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-coins-for-change",
+          "title": "Expert: Coins for change",
+          "promptMarkdown": "Write `coins(amount)` for a whole number of pence. It gives how many 50, 20, 10, 5, 2 and 1 coins make the amount, using the biggest coins first, as a vector in that order.",
+          "starterCode": "",
+          "hint": "Loop over `c(50, 20, 10, 5, 2, 1)`: `amount %/% v` coins of each, then `amount <- amount %% v` is what is left.",
+          "solution": "coins <- function(amount) {\n  out <- c()\n  for (v in c(50, 20, 10, 5, 2, 1)) {\n    out <- c(out, amount %/% v)\n    amount <- amount %% v\n  }\n  out\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "coins(88) is one of each",
+                "assertion": "is.function(coins) && isTRUE(all.equal(unname(coins(88)), c(1, 1, 1, 1, 1, 1)))"
+              },
+              {
+                "id": "t2",
+                "label": "coins(40) is two 20s",
+                "assertion": "isTRUE(all.equal(unname(coins(40)), c(0, 2, 0, 0, 0, 0)))"
+              },
+              {
+                "id": "t3",
+                "label": "coins(7) is a 5 and a 2",
+                "assertion": "isTRUE(all.equal(unname(coins(7)), c(0, 0, 0, 1, 1, 0)))"
               }
             ]
           }
@@ -1604,29 +2005,29 @@
             "explanation": "It takes the value the function is called with."
           },
           {
-            "id": "writing_functions-q-ke8taw",
+            "id": "writing_functions-q-l3q311",
             "type": "mcq",
-            "prompt": "What does `class(function(x) x)` give?",
+            "prompt": "Why is the last line of a function its answer?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"code\"`"
+                "label": "The last line is printed"
               },
               {
                 "id": "b",
-                "label": "`\"list\"`"
+                "label": "Only the last line runs"
               },
               {
                 "id": "c",
-                "label": "`\"numeric\"`"
+                "label": "R gives back the value of the last thing worked out in the body, unless `return()` comes first"
               },
               {
                 "id": "d",
-                "label": "`\"function\"`"
+                "label": "It isn't"
               }
             ],
-            "correctChoiceId": "d",
-            "explanation": "A function is a value like any other."
+            "correctChoiceId": "c",
+            "explanation": "So `function(x) { y <- x + 1; y * 2 }` gives `y * 2`."
           },
           {
             "id": "writing_functions-q-1n959fy",
@@ -1700,6 +2101,16 @@
           "id": "missing_argument",
           "label": "Missing argument",
           "code": "# Run it and read the error\nride_cost <- function(minutes, rate) {\n  1 + rate * minutes\n}\nride_cost(47)"
+        },
+        {
+          "id": "defaults_and_names",
+          "label": "Defaults and names",
+          "code": "tip <- function(bill, rate = 0.1) bill * rate\ntip(40)\ntip(40, 0.15)\ntip(rate = 0.2, bill = 40)"
+        },
+        {
+          "id": "pass_options_on_with",
+          "label": "Pass options on with ...",
+          "code": "my_mean <- function(x, ...) round(mean(x, ...), 1)\nmy_mean(c(2.25, NA, 4.5), na.rm = TRUE)"
         }
       ],
       "intro": {
@@ -1877,6 +2288,35 @@
           }
         },
         {
+          "id": "arguments-split-the-bill",
+          "title": "Hard: Split the bill",
+          "promptMarkdown": "Write `split_bill(total, people = 2, tip = 0.1)`: the total plus the tip, shared between the people, rounded to 2 decimal places.",
+          "starterCode": "",
+          "hint": "`round(total * (1 + tip) / people, 2)`",
+          "solution": "split_bill <- function(total, people = 2, tip = 0.1) {\n  round(total * (1 + tip) / people, 2)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "split_bill(50) is 27.5",
+                "assertion": "is.function(split_bill) && isTRUE(all.equal(split_bill(50), 27.5))"
+              },
+              {
+                "id": "t2",
+                "label": "split_bill(60, 3, tip = 0) is 20",
+                "assertion": "isTRUE(all.equal(split_bill(60, 3, tip = 0), 20))"
+              },
+              {
+                "id": "t3",
+                "label": "split_bill(40, people = 4) is 11",
+                "assertion": "isTRUE(all.equal(split_bill(40, people = 4), 11))"
+              }
+            ]
+          }
+        },
+        {
           "id": "arguments-fix-the-missing-argument",
           "title": "Expert: Fix the missing argument",
           "promptMarkdown": "Calling `fine(9)` gives the error \"argument \\\"per_day\\\" is missing\". Give `per_day` a default of 0.25 so `fine(9)` works and gives 2.25.",
@@ -1896,6 +2336,35 @@
                 "id": "t2",
                 "label": "fine(9, 0.5) is 4.5",
                 "assertion": "isTRUE(all.equal(fine(9, 0.5), 4.5))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-either-way-round",
+          "title": "Expert: Either way round",
+          "promptMarkdown": "Write `convert(x, to = \"F\")`. With `to = \"F\"` it turns Celsius into Fahrenheit (`x * 9 / 5 + 32`), with `to = \"C\"` Fahrenheit into Celsius (`(x - 32) * 5 / 9`), and anything else stops with an error.",
+          "starterCode": "",
+          "hint": "Use `if (to == \"F\") ... else if (to == \"C\") ... else stop(\"to must be F or C\")`.",
+          "solution": "convert <- function(x, to = \"F\") {\n  if (to == \"F\") {\n    x * 9 / 5 + 32\n  } else if (to == \"C\") {\n    (x - 32) * 5 / 9\n  } else {\n    stop(\"to must be F or C\")\n  }\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "convert(100) is 212",
+                "assertion": "is.function(convert) && isTRUE(all.equal(convert(100), 212))"
+              },
+              {
+                "id": "t2",
+                "label": "convert(212, to = \"C\") is 100",
+                "assertion": "isTRUE(all.equal(convert(212, to = \"C\"), 100))"
+              },
+              {
+                "id": "t3",
+                "label": "convert(5, to = \"K\") is an error",
+                "assertion": "inherits(tryCatch(convert(5, to = \"K\"), error = function(e) e), \"error\")"
               }
             ]
           }
@@ -2030,29 +2499,29 @@
             "explanation": "Required ones first without defaults; optional ones after, with defaults."
           },
           {
-            "id": "arguments-q-1ivjzw4",
+            "id": "arguments-q-7rvkdz",
             "type": "mcq",
-            "prompt": "What is the default of `na.rm` in `mean()`?",
+            "prompt": "Why is `na.rm = FALSE` the default in `mean()`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`NA`"
+                "label": "So missing values aren't dropped without you noticing; you have to ask"
               },
               {
                 "id": "b",
-                "label": "`TRUE`"
+                "label": "NA can't be removed"
               },
               {
                 "id": "c",
-                "label": "`FALSE`"
+                "label": "It is faster"
               },
               {
                 "id": "d",
-                "label": "There is none"
+                "label": "It was a mistake"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "That's why `mean(c(1, NA))` is NA unless you say `na.rm = TRUE`."
+            "correctChoiceId": "a",
+            "explanation": "An NA result tells you there are gaps to think about."
           },
           {
             "id": "arguments-q-19uwn61",
@@ -2131,6 +2600,11 @@
           "id": "stopifnot",
           "label": "stopifnot",
           "code": "# Run it and read the error\nsafe_mean <- function(x) {\n  stopifnot(is.numeric(x))\n  mean(x)\n}\nsafe_mean(\"12\")"
+        },
+        {
+          "id": "what_stopifnot_says",
+          "label": "What stopifnot() says",
+          "code": "# Run it and read the error\nx <- -3\nstopifnot(is.numeric(x), x >= 0)"
         }
       ],
       "intro": {
@@ -2188,6 +2662,35 @@
                 "id": "t2",
                 "label": "safe_mean(\"12\") is an error",
                 "assertion": "inherits(tryCatch(safe_mean(\"12\"), error = function(e) e), \"error\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-one-size-each",
+          "title": "Easy: One size each",
+          "promptMarkdown": "Add a check to `area()` so it stops with an error unless `w` and `h` are single values. Without it, `area(c(2, 3), 4)` quietly gives two answers.",
+          "starterCode": "area <- function(w, h) {\n  w * h\n}\n",
+          "hint": "Put `stopifnot(length(w) == 1, length(h) == 1)` as the first line of the body.",
+          "solution": "area <- function(w, h) {\n  stopifnot(length(w) == 1, length(h) == 1)\n  w * h\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "area(2, 3) is 6",
+                "assertion": "is.function(area) && isTRUE(all.equal(area(2, 3), 6))"
+              },
+              {
+                "id": "t2",
+                "label": "area(c(2, 3), 4) is an error",
+                "assertion": "inherits(tryCatch(area(c(2, 3), 4), error = function(e) e), \"error\")"
+              },
+              {
+                "id": "t3",
+                "label": "area(2, 3:4) is an error",
+                "assertion": "inherits(tryCatch(area(2, 3:4), error = function(e) e), \"error\")"
               }
             ]
           }
@@ -2345,6 +2848,35 @@
               }
             ]
           }
+        },
+        {
+          "id": "checking_inputs-a-safe-divide",
+          "title": "Expert: A safe divide",
+          "promptMarkdown": "Write `safe_divide(a, b)`. It stops with an error if either isn't a number. If `b` is 0 it gives a warning `\"dividing by zero\"` and returns NA; otherwise it gives `a / b`.",
+          "starterCode": "",
+          "hint": "First `stopifnot(...)`. Then `if (b == 0) { warning(\"dividing by zero\"); return(NA) }`, and `a / b` last.",
+          "solution": "safe_divide <- function(a, b) {\n  stopifnot(is.numeric(a), is.numeric(b))\n  if (b == 0) {\n    warning(\"dividing by zero\")\n    return(NA)\n  }\n  a / b\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "safe_divide(6, 3) is 2",
+                "assertion": "is.function(safe_divide) && isTRUE(all.equal(safe_divide(6, 3), 2))"
+              },
+              {
+                "id": "t2",
+                "label": "safe_divide(1, 0) warns and gives NA",
+                "assertion": "inherits(tryCatch(safe_divide(1, 0), warning = function(w) w), \"warning\") && is.na(suppressWarnings(safe_divide(1, 0)))"
+              },
+              {
+                "id": "t3",
+                "label": "safe_divide(\"6\", 3) is an error",
+                "assertion": "inherits(tryCatch(safe_divide(\"6\", 3), error = function(e) e), \"error\")"
+              }
+            ]
+          }
         }
       ],
       "test": {
@@ -2476,29 +3008,29 @@
             "explanation": "Wrong answers can spread through a whole analysis unnoticed."
           },
           {
-            "id": "checking_inputs-q-1diaih1",
+            "id": "checking_inputs-q-ridymg",
             "type": "mcq",
-            "prompt": "What does `if (5 < 0 || 5 > 120) \"bad\" else \"ok\"` give?",
+            "prompt": "Why use `||` rather than `|` in an `if` condition?",
             "choices": [
               {
                 "id": "a",
-                "label": "`\"ok\"`"
+                "label": "There is no difference"
               },
               {
                 "id": "b",
-                "label": "`TRUE`"
+                "label": "`|` is slower to type"
               },
               {
                 "id": "c",
-                "label": "An error"
+                "label": "`||` works on single TRUE/FALSE values and stops as soon as the answer is known"
               },
               {
                 "id": "d",
-                "label": "`\"bad\"`"
+                "label": "`||` works on vectors"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "Neither condition is TRUE. `||` is the single-value \"or\" used in `if`."
+            "correctChoiceId": "c",
+            "explanation": "If the first part is TRUE, `||` doesn't look at the second."
           },
           {
             "id": "checking_inputs-q-18mvwd",
@@ -2577,6 +3109,16 @@
           "id": "over_a_list",
           "label": "Over a list",
           "code": "scores <- list(ana = c(72, 78), ben = c(65, NA), cy = c(88, 85))\nsapply(scores, mean, na.rm = TRUE)"
+        },
+        {
+          "id": "sapply_or_lapply",
+          "label": "sapply or lapply",
+          "code": "scores <- list(ana = c(72, 78), ben = c(65, 70, 61))\nsapply(scores, mean)\nlapply(scores, range)"
+        },
+        {
+          "id": "a_function_in_place",
+          "label": "A function in place",
+          "code": "sapply(c(4, 9, 16), function(x) sqrt(x) + 1)"
         }
       ],
       "intro": {
@@ -2610,6 +3152,11 @@
                 "id": "t2",
                 "label": "Uses sapply()",
                 "assertion": "grepl(\"sapply(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"grade <- function(score) if (score >= 50) \\\"pass\\\" else \\\"fail\\\"\\nscores <- c(71, 44, 88, 50)\\n\", \"grade <- function(score) if (score >= 50) \\\"pass\\\" else \\\"fail\\\"\\nscores <- c(51, 91, 46, 72)\\n\", \"grade <- function(score) if (score >= 50) \\\"pass\\\" else \\\"fail\\\"\\nscores <- c(71, 44, 88, 50)\\nresults <- sapply(scores, grade)\", c(\"results\"), output = FALSE)"
               }
             ]
           }
@@ -2653,6 +3200,11 @@
                 "id": "t1",
                 "label": "avgs is ana 75, ben 65, cy 86.5",
                 "assertion": "isTRUE(all.equal(avgs, c(ana = 75, ben = 65, cy = 86.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- list(ana = c(72, 78), ben = c(65, NA), cy = c(88, 85))\\n\", \"scores <- list(ana = c(80, 73), ben = c(NA, 68), cy = c(87, 89))\\n\", \"scores <- list(ana = c(72, 78), ben = c(65, NA), cy = c(88, 85))\\navgs <- sapply(scores, mean, na.rm = TRUE)\", c(\"avgs\"), output = FALSE)"
               }
             ]
           }
@@ -2672,6 +3224,11 @@
                 "id": "t1",
                 "label": "n_scores is ana 3, ben 1, cy 2",
                 "assertion": "isTRUE(all.equal(n_scores, c(ana = 3L, ben = 1L, cy = 2L)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- list(ana = c(72, 78, 80), ben = c(65), cy = c(88, 85))\\n\", \"scores <- list(ana = c(72), ben = c(65, 70, 71, 60), cy = c(88))\\n\", \"scores <- list(ana = c(72, 78, 80), ben = c(65), cy = c(88, 85))\\nn_scores <- sapply(scores, length)\", c(\"n_scores\"), output = FALSE)"
               }
             ]
           }
@@ -2691,6 +3248,11 @@
                 "id": "t1",
                 "label": "nice is Kale, Beans, Mint",
                 "assertion": "identical(nice, c(\"Kale\", \"Beans\", \"Mint\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"mint\\\")\\ncap <- function(w) paste0(toupper(substr(w, 1, 1)), substr(w, 2, nchar(w)))\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"mint2\\\")\\ncap <- function(w) paste0(toupper(substr(w, 1, 1)), substr(w, 2, nchar(w)))\\n\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"mint\\\")\\ncap <- function(w) paste0(toupper(substr(w, 1, 1)), substr(w, 2, nchar(w)))\\nnice <- unname(sapply(crops, cap))\", c(\"nice\"), output = FALSE)"
               }
             ]
           }
@@ -2739,6 +3301,40 @@
                 "id": "t2",
                 "label": "No loop",
                 "assertion": "!grepl(\"for\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes\\\")\\nlengths_of <- numeric(length(crops))\\nfor (i in seq_along(crops)) {\\n  lengths_of[i] <- nchar(crops[i])\\n}\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes2\\\")\\nlengths_of <- numeric(length(crops))\\nfor (i in seq_along(crops)) {\\n  lengths_of[i] <- nchar(crops[i])\\n}\", \"crops <- c(\\\"kale\\\", \\\"beans\\\", \\\"courgettes\\\")\\nlengths_of <- unname(sapply(crops, nchar))\", c(\"lengths_of\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-range-per-person",
+          "title": "Hard: Range per person",
+          "promptMarkdown": "Make `ranges` each person's best score minus their worst, using `sapply()`.",
+          "starterCode": "scores <- list(ana = c(72, 78, 80), ben = c(65, 70), cy = c(88, 85))\n",
+          "hint": "Give `sapply()` a function of your own: `sapply(scores, function(s) max(s) - min(s))`.",
+          "solution": "scores <- list(ana = c(72, 78, 80), ben = c(65, 70), cy = c(88, 85))\nranges <- sapply(scores, function(s) max(s) - min(s))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ranges is ana 8, ben 5, cy 3",
+                "assertion": "isTRUE(all.equal(ranges, c(ana = 8, ben = 5, cy = 3)))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses sapply()",
+                "assertion": "grepl(\"sapply(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- list(ana = c(72, 78, 80), ben = c(65, 70), cy = c(88, 85))\\n\", \"scores <- list(ana = c(83, 80, 73), ben = c(72, 66), cy = c(86, 91))\\n\", \"scores <- list(ana = c(72, 78, 80), ben = c(65, 70), cy = c(88, 85))\\nranges <- sapply(scores, function(s) max(s) - min(s))\", c(\"ranges\"), output = FALSE)"
               }
             ]
           }
@@ -2758,6 +3354,35 @@
                 "id": "t1",
                 "label": "letters_out is A B C F B",
                 "assertion": "identical(letters_out, c(\"A\", \"B\", \"C\", \"F\", \"B\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"scores <- c(91, 65, 50, 49, 72)\\n\", \"scores <- c(74, 50, 53, 67, 92)\\n\", \"scores <- c(91, 65, 50, 49, 72)\\ngrade <- function(s) {\\n  if (s >= 80) \\\"A\\\" else if (s >= 65) \\\"B\\\" else if (s >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\nletters_out <- sapply(scores, grade)\", c(\"letters_out\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-words-per-sentence",
+          "title": "Expert: Words per sentence",
+          "promptMarkdown": "Make `n_words` the number of words in each sentence. The words are separated by single spaces.",
+          "starterCode": "sentences <- c(\"seeds need water\", \"kale grows fast in cold weather\")\n",
+          "hint": "`strsplit(sentences, \" \")` gives a list with one vector of words per sentence; `sapply(..., length)` counts each.",
+          "solution": "sentences <- c(\"seeds need water\", \"kale grows fast in cold weather\")\nn_words <- sapply(strsplit(sentences, \" \"), length)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_words is 3, 6",
+                "assertion": "is.numeric(n_words) && isTRUE(all.equal(n_words, c(3, 6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"sentences <- c(\\\"seeds need water\\\", \\\"kale grows fast in cold weather\\\")\\n\", \"sentences <- c(\\\"one\\\", \\\"two words\\\", \\\"and now three\\\")\\n\", \"sentences <- c(\\\"seeds need water\\\", \\\"kale grows fast in cold weather\\\")\\nn_words <- sapply(strsplit(sentences, \\\" \\\"), length)\", c(\"n_words\"), output = FALSE)"
               }
             ]
           }
@@ -2892,29 +3517,29 @@
             "explanation": "That is exactly when `sapply()` helps: it calls the function once per value."
           },
           {
-            "id": "apply_family-q-1ce7c8u",
+            "id": "apply_family-q-l7zyyu",
             "type": "mcq",
-            "prompt": "Where do extra arguments go, as in `na.rm = TRUE`?",
+            "prompt": "Why does `sapply()` sometimes give a list instead of a vector?",
             "choices": [
               {
                 "id": "a",
-                "label": "They can't be used"
+                "label": "When the results have different lengths, they can't be put side by side"
               },
               {
                 "id": "b",
-                "label": "Inside the function name"
+                "label": "It depends on the names"
               },
               {
                 "id": "c",
-                "label": "After the function: `sapply(x, mean, na.rm = TRUE)`"
+                "label": "sapply() always gives a list"
               },
               {
                 "id": "d",
-                "label": "Before the vector"
+                "label": "Never"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "They are passed on to the function each time."
+            "correctChoiceId": "a",
+            "explanation": "Use `lapply()` when you always want a list."
           },
           {
             "id": "apply_family-q-1zfza5",
@@ -2988,6 +3613,16 @@
           "id": "a_function_as_fun",
           "label": "A function as FUN",
           "code": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\npct_pass <- function(x) round(mean(x >= 60) * 100)\naggregate(test1 ~ group, data = class_results, FUN = pct_pass)"
+        },
+        {
+          "id": "one_function_every_column",
+          "label": "One function, every column",
+          "code": "harvest <- data.frame(\n  plot = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\", \"D\", \"D\"),\n  crop = c(\"tomatoes\", \"beans\", \"tomatoes\", \"kale\", \"beans\", \"kale\", \"tomatoes\", \"beans\"),\n  kg = c(12.4, 3.6, 9.8, NA, 4.1, 2.7, 14.2, 2.9),\n  family = c(\"Silva\", \"Silva\", \"Okafor\", \"Okafor\", \"Li\", \"Li\", \"Mensah\", \"Mensah\")\n)\ncount_na <- function(x) sum(is.na(x))\nsapply(harvest, count_na)"
+        },
+        {
+          "id": "only_the_number_columns",
+          "label": "Only the number columns",
+          "code": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nnums <- sapply(class_results, is.numeric)\ncolMeans(class_results[nums], na.rm = TRUE)"
         }
       ],
       "intro": {
@@ -3035,6 +3670,40 @@
                 "id": "t1",
                 "label": "gaps is plot 0, crop 0, kg 1, family 0",
                 "assertion": "isTRUE(all.equal(gaps, c(plot = 0L, crop = 0L, kg = 1L, family = 0L)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"harvest <- data.frame(\\n  plot = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C\\\", \\\"D\\\", \\\"D\\\"),\\n  crop = c(\\\"tomatoes\\\", \\\"beans\\\", \\\"tomatoes\\\", \\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"tomatoes\\\", \\\"beans\\\"),\\n  kg = c(12.4, 3.6, 9.8, NA, 4.1, 2.7, 14.2, 2.9),\\n  family = c(\\\"Silva\\\", \\\"Silva\\\", \\\"Okafor\\\", \\\"Okafor\\\", \\\"Li\\\", \\\"Li\\\", \\\"Mensah\\\", \\\"Mensah\\\")\\n)\\n\", \"harvest <- data.frame(\\n  plot = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C\\\", \\\"D\\\", \\\"D\\\"),\\n  crop = c(\\\"tomatoes\\\", \\\"beans\\\", \\\"tomatoes\\\", \\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"tomatoes\\\", \\\"beans\\\"),\\n  kg = c(NA, 3.6, 9.8, NA, 4.1, 2.7, 14.2, 2.9),\\n  family = c(\\\"Silva\\\", \\\"Silva\\\", \\\"Okafor\\\", \\\"Okafor\\\", \\\"Li\\\", \\\"Li\\\", \\\"Mensah\\\", \\\"Mensah\\\")\\n)\\n\", \"harvest <- data.frame(\\n  plot = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C\\\", \\\"D\\\", \\\"D\\\"),\\n  crop = c(\\\"tomatoes\\\", \\\"beans\\\", \\\"tomatoes\\\", \\\"kale\\\", \\\"beans\\\", \\\"kale\\\", \\\"tomatoes\\\", \\\"beans\\\"),\\n  kg = c(12.4, 3.6, 9.8, NA, 4.1, 2.7, 14.2, 2.9),\\n  family = c(\\\"Silva\\\", \\\"Silva\\\", \\\"Okafor\\\", \\\"Okafor\\\", \\\"Li\\\", \\\"Li\\\", \\\"Mensah\\\", \\\"Mensah\\\")\\n)\\ngaps <- sapply(harvest, \\\\(col) sum(is.na(col)))\", c(\"gaps\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-count-the-rows",
+          "title": "Easy: Count the rows",
+          "promptMarkdown": "Write `n_rows(df)` that gives the number of rows of any data frame, then make `n` its answer for `class_results`.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+          "hint": "`n_rows <- function(df) nrow(df)`, then `n <- n_rows(class_results)`.",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nn_rows <- function(df) nrow(df)\nn <- n_rows(class_results)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_rows is a function",
+                "assertion": "is.function(n_rows)"
+              },
+              {
+                "id": "t2",
+                "label": "n is 12",
+                "assertion": "is.numeric(n) && isTRUE(all.equal(n, 12))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\n\", \"class_results <- data.frame(student = c(\\\"Ana\\\", \\\"Ben\\\"), test1 = c(50, 60))\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\nn_rows <- function(df) nrow(df)\\nn <- n_rows(class_results)\", c(\"n\"), output = FALSE)"
               }
             ]
           }
@@ -3054,6 +3723,11 @@
                 "id": "t1",
                 "label": "test_means is test1 71.8, test2 77.5",
                 "assertion": "isTRUE(all.equal(test_means, c(test1 = 71.8, test2 = 77.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ntest_means <- round(sapply(class_results[, c(\\\"test1\\\", \\\"test2\\\")], mean, na.rm = TRUE), 1)\", c(\"test_means\"), output = FALSE)"
               }
             ]
           }
@@ -3078,6 +3752,11 @@
                 "id": "t2",
                 "label": "pass_rate(class_results, \"test2\", pass = 70) is 73",
                 "assertion": "isTRUE(all.equal(pass_rate(class_results, \"test2\", pass = 70), 73))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\npass_rate <- function(df, column, pass = 50) {\\n  round(mean(df[[column]] >= pass, na.rm = TRUE) * 100)\\n}\", c(\"class_results\"), output = FALSE)"
               }
             ]
           }
@@ -3097,6 +3776,11 @@
                 "id": "t1",
                 "label": "per_group is A 27, B 48",
                 "assertion": "is.data.frame(per_group) && identical(names(per_group), names(data.frame(group = c(\"A\", \"B\"), test1 = c(27, 48)))) && isTRUE(all.equal(as.list(per_group), as.list(data.frame(group = c(\"A\", \"B\"), test1 = c(27, 48))), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\nspread <- function(x) max(x) - min(x)\\nper_group <- aggregate(test1 ~ group, data = class_results, FUN = spread)\", c(\"per_group\"), output = FALSE)"
               }
             ]
           }
@@ -3135,6 +3819,11 @@
                 "id": "t1",
                 "label": "overview is test1 71.8, test2 77.5",
                 "assertion": "isTRUE(all.equal(overview, c(test1 = 71.8, test2 = 77.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\nnums <- class_results[, sapply(class_results, is.numeric)]\\noverview <- round(sapply(nums, mean, na.rm = TRUE), 1)\", c(\"overview\"), output = FALSE)"
               }
             ]
           }
@@ -3154,6 +3843,30 @@
                 "id": "t1",
                 "label": "describe() works on a small table",
                 "assertion": "is.function(describe) && isTRUE(all.equal(describe(data.frame(a = c(1, NA), b = c(\"x\", \"y\"))), data.frame(column = c(\"a\", \"b\"), type = c(\"numeric\", \"character\"), missing = c(1L, 0L)), check.attributes = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-top-of-any-column",
+          "title": "Expert: Top of any column",
+          "promptMarkdown": "Write `top_in(df, column)` that gives the `student` with the highest value in the column named in `column`.",
+          "starterCode": "",
+          "hint": "Inside a function, use `df[[column]]` for the column: `df$student[which.max(df[[column]])]`.",
+          "solution": "top_in <- function(df, column) {\n  df$student[which.max(df[[column]])]\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "top_in(class_results, \"test1\") is Lea",
+                "assertion": "is.function(top_in) && identical(top_in(class_results, \"test1\"), \"Lea\")"
+              },
+              {
+                "id": "t2",
+                "label": "It works on other tables too",
+                "assertion": "identical(top_in(class_results[1:6, ], \"test1\"), \"Eli\") && identical(top_in(data.frame(student = c(\"x\", \"y\"), s = c(1, 5)), \"s\"), \"y\")"
               }
             ]
           }
@@ -3263,29 +3976,29 @@
             "explanation": "One TRUE or FALSE per column, handy for picking the numeric ones."
           },
           {
-            "id": "functions_on_data-q-1if4by7",
+            "id": "functions_on_data-q-30u0s0",
             "type": "mcq",
-            "prompt": "Can your own function be the `FUN` of `aggregate()`?",
+            "prompt": "Why can `sapply()` go through the columns of a data frame?",
             "choices": [
               {
                 "id": "a",
-                "label": "No, only R's"
+                "label": "Data frames are vectors"
               },
               {
                 "id": "b",
-                "label": "Yes, any function that turns a vector into a value"
+                "label": "sapply() reads rows"
               },
               {
                 "id": "c",
-                "label": "Only with sapply"
+                "label": "A data frame is a list of columns, so sapply() visits each column in turn"
               },
               {
                 "id": "d",
-                "label": "Only for means"
+                "label": "It can't"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "`aggregate(x ~ g, data = df, FUN = my_function)`"
+            "correctChoiceId": "c",
+            "explanation": "That is why `sapply(df, class)` gives one type per column."
           },
           {
             "id": "functions_on_data-q-1fc1aon",
@@ -3446,6 +4159,11 @@
                 "id": "t1",
                 "label": "n_six counts the sixes",
                 "assertion": "isTRUE(all.equal(n_six, sum(rolls == 6))) && !identical(n_six, NULL)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"set.seed(42)\\nrolls <- sample(1:6, 20, replace = TRUE)\\n\", \"set.seed(43)\\nrolls <- sample(1:6, 20, replace = TRUE)\\n\", \"set.seed(42)\\nrolls <- sample(1:6, 20, replace = TRUE)\\nn_six <- sum(rolls == 6)\", c(\"rolls\", \"n_six\"), output = FALSE)"
               }
             ]
           }
@@ -3489,6 +4207,11 @@
                 "id": "t2",
                 "label": "Uses while",
                 "assertion": "grepl(\"while\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"set.seed(3)\\ntotal <- 0\\nturns <- 0\\n\", \"set.seed(4)\\ntotal <- 2\\nturns <- 3\\n\", \"set.seed(3)\\ntotal <- 0\\nturns <- 0\\nwhile (total < 20) {\\n  total <- total + sample(1:6, 1)\\n  turns <- turns + 1\\n}\", c(\"turns\"), output = FALSE)"
               }
             ]
           }
@@ -3513,6 +4236,11 @@
                 "id": "t2",
                 "label": "summarise_rolls is a function",
                 "assertion": "is.function(summarise_rolls)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"rolls <- c(3, 6, 2, 6, 5, 1, 6, 4)\\n\", \"rolls <- c(6, 7, 4, 7, 7, 5, 8, 4)\\n\", \"rolls <- c(3, 6, 2, 6, 5, 1, 6, 4)\\nsummarise_rolls <- function(rolls) {\\n  cat(\\\"Rolls:\\\", length(rolls), \\\"\\\\n\\\")\\n  cat(\\\"Sixes:\\\", sum(rolls == 6), \\\"\\\\n\\\")\\n  cat(\\\"Average:\\\", round(mean(rolls), 1), \\\"\\\\n\\\")\\n}\\nsummarise_rolls(rolls)\", c(), output = TRUE)"
               }
             ]
           }
@@ -3716,6 +4444,11 @@
                 "id": "t1",
                 "label": "grades is right for every student",
                 "assertion": "identical(unname(grades), c(\"B\", \"B\", \"A\", \"C\", \"A\", NA, \"A\", \"B\", \"A\", \"C\", \"B\", \"A\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\ngrades <- sapply(class_results$test2, grade)\", c(\"grades\"), output = FALSE)"
               }
             ]
           }
@@ -3754,6 +4487,11 @@
                 "id": "t1",
                 "label": "add_grades() adds the grade2 column",
                 "assertion": "is.function(add_grades) && local({ g <- add_grades(class_results); identical(names(g), c(names(class_results), \"grade2\")) && identical(unname(g$grade2), c(\"B\", \"B\", \"A\", \"C\", \"A\", NA, \"A\", \"B\", \"A\", \"C\", \"B\", \"A\")) })"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\nadd_grades <- function(df) {\\n  df$grade2 <- sapply(df$test2, grade)\\n  df\\n}\", c(\"class_results\"), output = FALSE)"
               }
             ]
           }
@@ -3773,6 +4511,11 @@
                 "id": "t1",
                 "label": "counts is A 5, B 4, C 2, F 0",
                 "assertion": "identical(as.vector(counts), c(5L, 4L, 2L, 0L)) && identical(names(counts), c(\"A\", \"B\", \"C\", \"F\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\ngrades <- sapply(class_results$test2, grade)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\ngrades <- sapply(class_results$test2, grade)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\ngrades <- sapply(class_results$test2, grade)\\ncounts <- table(factor(grades, levels = c(\\\"A\\\", \\\"B\\\", \\\"C\\\", \\\"F\\\")))\", c(\"counts\"), output = FALSE)"
               }
             ]
           }
@@ -3797,6 +4540,11 @@
                 "id": "t2",
                 "label": "grade_summary is a function",
                 "assertion": "is.function(grade_summary)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\ngrade <- function(score) {\\n  if (is.na(score)) return(NA)\\n  if (score >= 80) \\\"A\\\" else if (score >= 65) \\\"B\\\" else if (score >= 50) \\\"C\\\" else \\\"F\\\"\\n}\\ngrade_summary <- function(scores) {\\n  grades <- sapply(scores, grade)\\n  counts <- table(factor(grades, levels = c(\\\"A\\\", \\\"B\\\", \\\"C\\\", \\\"F\\\")))\\n  cat(sprintf(\\\"%s: %d\\\\n\\\", names(counts), as.integer(counts)), sep = \\\"\\\")\\n  cat(\\\"Absent:\\\", sum(is.na(scores)), \\\"\\\\n\\\")\\n}\\ngrade_summary(class_results$test2)\", c(), output = TRUE)"
               }
             ]
           }
@@ -4052,6 +4800,11 @@
                 "id": "t1",
                 "label": "check_table(readings, …) finds the problems",
                 "assertion": "is.function(check_table) && is.data.frame(check_table(readings, list(temp = c(0, 50), humidity = c(0, 100)))) && identical(names(check_table(readings, list(temp = c(0, 50), humidity = c(0, 100)))), names(data.frame(column = c(\"temp\", \"humidity\"), missing = c(1, 1), outside = c(2, 1)))) && isTRUE(all.equal(as.list(check_table(readings, list(temp = c(0, 50), humidity = c(0, 100)))), as.list(data.frame(column = c(\"temp\", \"humidity\"), missing = c(1, 1), outside = c(2, 1))), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"readings <- data.frame(\\n  sensor = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C\\\"),\\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\\n  humidity = c(55, 61, NA, 58, 140, 52)\\n)\\ncheck_column <- function(x, low, high) c(missing = sum(is.na(x)), outside = sum(x < low | x > high, na.rm = TRUE))\\n\", \"readings <- data.frame(\\n  sensor = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C2\\\"),\\n  temp = c(-42, 21.9, 85.3, 22.2, NA, 21.5),\\n  humidity = c(53, 143, 60, NA, 62, 58)\\n)\\ncheck_column <- function(x, low, high) c(missing = sum(is.na(x)), outside = sum(x < low | x > high, na.rm = TRUE))\\n\", \"readings <- data.frame(\\n  sensor = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C\\\"),\\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\\n  humidity = c(55, 61, NA, 58, 140, 52)\\n)\\ncheck_column <- function(x, low, high) c(missing = sum(is.na(x)), outside = sum(x < low | x > high, na.rm = TRUE))\\ncheck_table <- function(df, limits) {\\n  cols <- names(limits)\\n  res <- sapply(cols, function(col) check_column(df[[col]], limits[[col]][1], limits[[col]][2]))\\n  data.frame(column = cols, missing = unname(res[\\\"missing\\\", ]), outside = unname(res[\\\"outside\\\", ]))\\n}\", c(\"readings\"), output = FALSE)"
               }
             ]
           }
@@ -4076,6 +4829,11 @@
                 "id": "t2",
                 "label": "report is a function",
                 "assertion": "is.function(report)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"readings <- data.frame(\\n  sensor = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C\\\"),\\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\\n  humidity = c(55, 61, NA, 58, 140, 52)\\n)\\n\", \"readings <- data.frame(\\n  sensor = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C2\\\"),\\n  temp = c(-42, 21.9, 85.3, 22.2, NA, 21.5),\\n  humidity = c(53, 143, 60, NA, 62, 58)\\n)\\n\", \"readings <- data.frame(\\n  sensor = c(\\\"A\\\", \\\"A\\\", \\\"B\\\", \\\"B\\\", \\\"C\\\", \\\"C\\\"),\\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\\n  humidity = c(55, 61, NA, 58, 140, 52)\\n)\\nreport <- function(df, limits) {\\n  for (col in names(limits)) {\\n    x <- df[[col]]\\n    low <- limits[[col]][1]\\n    high <- limits[[col]][2]\\n    n_na <- sum(is.na(x))\\n    n_out <- sum(x < low | x > high, na.rm = TRUE)\\n    cat(col, \\\": \\\", n_na, \\\" missing, \\\", n_out, \\\" out of range\\\\n\\\", sep = \\\"\\\")\\n  }\\n}\\nreport(readings, list(temp = c(0, 50), humidity = c(0, 100)))\", c(), output = TRUE)"
               }
             ]
           }

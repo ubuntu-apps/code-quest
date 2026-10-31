@@ -20,6 +20,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('A condition on a column', TRIPS + 'trips$station[trips$minutes > 40]\nsum(trips$member)'),
     snippet('Remove a column', TRIPS + 'trips$km <- NULL\nnames(trips)'),
+    snippet('A column named in a variable', TRIPS + 'col <- "km"\ntrips[[col]]\nsum(trips[[col]])'),
+    snippet('Remove a column', TRIPS + 'trips$member <- NULL\nnames(trips)'),
   ],
   readMore: { label: 'R documentation: Extract ($ and [[ ]])', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extract.data.frame.html', source: 'R documentation' },
   challenges: [
@@ -38,6 +40,7 @@ export default makeTopic({
       tests: [['total_km is 41.1', near('total_km', 41.1)]],
     }),
     task('easy', 'How many members', {
+      alt: (s) => s.replace('member = c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE)', 'member = c(FALSE, FALSE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE)'),
       prompt: 'Make `n_members` the number of trips made by members (the `member` column is TRUE/FALSE).',
       starter: TRIPS,
       hint: 'TRUE counts as 1: `n_members <- sum(trips$member)`.',
@@ -72,6 +75,13 @@ export default makeTopic({
       solution: TRIPS + 'trips$rider <- ifelse(trips$member, "member", "visitor")',
       tests: [['rider is right for every trip', 'identical(trips$rider, c("member", "visitor", "member", "member", "visitor", "member", "visitor", "member"))']],
     }),
+    task('hard', 'Minutes per kilometre', {
+      prompt: 'Add a column `per_km`: the minutes per kilometre, rounded to 1 decimal place. Then make `slowest` the id of the trip with the most minutes per kilometre.',
+      starter: TRIPS,
+      hint: '`trips$per_km <- round(trips$minutes / trips$km, 1)`, then `trips$id[which.max(trips$per_km)]`.',
+      solution: TRIPS + 'trips$per_km <- round(trips$minutes / trips$km, 1)\nslowest <- trips$id[which.max(trips$per_km)]',
+      tests: [['per_km is right', near('trips$per_km', 'c(5, 5, 5.9, 6.7, 5.3, 5.2, 5.8, 5.8)')], ['slowest is 4', near('slowest', 4)]],
+    }),
     task('expert', 'Tidy up the columns', {
       prompt: 'Make `station` a factor with the levels `Park`, `River`, `Market`, and remove the `id` column.',
       starter: TRIPS,
@@ -81,6 +91,14 @@ export default makeTopic({
         ['station is a factor with levels Park, River, Market', 'is.factor(trips$station) && identical(levels(trips$station), c("Park", "River", "Market"))'],
         ['id is gone', 'identical(names(trips), c("station", "minutes", "km", "member"))'],
       ],
+    }),
+    task('expert', 'Whichever column', {
+      prompt: 'The column to add up is named in `col`. Make `total` the sum of that column, so the code works whatever `col` says.',
+      starter: TRIPS + 'col <- "km"\n',
+      alt: TRIPS + 'col <- "minutes"\n',
+      hint: '`$` needs the name written out. With the name in a variable, use double brackets: `trips[[col]]`.',
+      solution: TRIPS + 'col <- "km"\ntotal <- sum(trips[[col]])',
+      tests: [['total is 41.1', near('total', 41.1)]],
     }),
   ],
   questions: [
@@ -99,9 +117,9 @@ export default makeTopic({
     mc('After `df <- data.frame(km = c(5, 12))` and `col <- "km"`, what does `df[[col]]` give?', ['`[1] 5 12`', '`NULL`', '`"km"`', 'An error'], 0,
       '`[[ ]]` takes the column name from a variable.',
       { code: 'df <- data.frame(km = c(5, 12))\ncol <- "km"\ndf[[col]]', output: '[1]  5 12' }),
-    mc('What does `df$colour` give when there is no column `colour`?', ['An error', '`NULL`', '`NA`', '`""`'], 1,
-      'A missing column gives NULL, without an error, so check the spelling of column names.',
-      { code: 'df <- data.frame(x = 1)\ndf$colour', output: 'NULL' }),
+    mc('Why is a typo like `df$colour` easy to miss?', ['A missing column gives NULL, not an error, so the code carries on', 'R fixes the name', 'It gives an error straight away', 'Column names can\'t be misspelt'], 0,
+      'Check with `names(df)` when a result is unexpectedly empty.',
+      { code: 'df <- data.frame(color = "red")\ndf$colour', output: 'NULL' }),
     mc('After `df <- data.frame(m = c(10, 40))`, what does `df$m[df$m > 20]` give?', ['`[1] 40`', '`[1] FALSE TRUE`', '`[1] 10`', 'The second row'], 0,
       'The column is a vector, picked with a condition as usual.',
       { code: 'df <- data.frame(m = c(10, 40))\ndf$m[df$m > 20]', output: '[1] 40' }),

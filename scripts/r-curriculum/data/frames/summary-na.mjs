@@ -1,5 +1,5 @@
 // Data frames: Summaries and missing values.
-import { code, isTexts, makeTopic, mc, near, qShort, same, sameFrame, snippet, task, uses } from '../_builders.mjs'
+import { code, isText, isTexts, makeTopic, mc, near, qShort, same, sameFrame, snippet, task, uses } from '../_builders.mjs'
 import { HARVEST } from '../datasets.mjs'
 
 export default makeTopic({
@@ -19,6 +19,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('Summary of everything', HARVEST + 'summary(harvest)'),
     snippet('Drop incomplete rows', HARVEST + 'nrow(harvest)\nnrow(na.omit(harvest))'),
+    snippet('Rows with gaps', HARVEST + 'harvest[!complete.cases(harvest), ]'),
+    snippet('Percent missing per column', HARVEST + 'round(colMeans(is.na(harvest)) * 100, 1)'),
   ],
   readMore: { label: 'R documentation: summary()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/summary.html', source: 'R documentation' },
   challenges: [
@@ -71,12 +73,28 @@ export default makeTopic({
       solution: HARVEST + 'tomato_avg <- round(mean(subset(harvest, crop == "tomatoes")$kg), 1)',
       tests: [['tomato_avg is 12.1', near('tomato_avg', 12.1)]],
     }),
+    task('hard', 'Percent missing', {
+      prompt: 'Make `pct_missing` the percentage of `kg` values that are missing, rounded to 1 decimal place.',
+      starter: HARVEST,
+      alt: (s) => s.replace('2.7', 'NA'),
+      hint: 'The mean of `is.na(harvest$kg)` is the share missing; times 100.',
+      solution: HARVEST + 'pct_missing <- round(mean(is.na(harvest$kg)) * 100, 1)',
+      tests: [['pct_missing is 12.5', near('pct_missing', 12.5)]],
+    }),
     task('expert', 'Fill the gap', {
       prompt: 'The Okafors\' kale was weighed after all: 2.3 kg. Put the weight into the missing cell, picking it with `is.na()`, then make `total_kg` the total.',
       starter: HARVEST,
       hint: '`harvest$kg[is.na(harvest$kg)] <- 2.3`, then `total_kg <- sum(harvest$kg)`.',
       solution: HARVEST + 'harvest$kg[is.na(harvest$kg)] <- 2.3\ntotal_kg <- sum(harvest$kg)',
       tests: [['The kale weight is 2.3', 'isTRUE(all.equal(harvest$kg[4], 2.3))'], ['total_kg is 52', near('total_kg', 52)]],
+    }),
+    task('expert', 'Name the gap', {
+      prompt: 'Make `gap` a text like `"Plot B, kale"` for the row whose weight is missing, picking the plot and crop with R.',
+      starter: HARVEST,
+      alt: (s) => s.replace('NA', '9.1').replace('2.9)', 'NA)'),
+      hint: '`gone <- is.na(harvest$kg)` marks the row. Then `paste0("Plot ", harvest$plot[gone], ", ", harvest$crop[gone])`.',
+      solution: HARVEST + 'gone <- is.na(harvest$kg)\ngap <- paste0("Plot ", harvest$plot[gone], ", ", harvest$crop[gone])',
+      tests: [['gap is Plot B, kale', isText('gap', 'Plot B, kale')]],
     }),
   ],
   questions: [
@@ -96,9 +114,9 @@ export default makeTopic({
       'It is a quick overview of the column.'),
     mc('Why can `na.omit()` throw away more than you want?', ['It removes duplicate rows', 'It drops a whole row when any one column is missing', 'It sorts the rows', 'It removes zeros'], 1,
       'Use `na.rm = TRUE` in the summary instead when you only need one column.'),
-    mc('What does `colMeans(data.frame(a = c(2, 4), b = c(10, 20)))` give?', ['`a 3, b 15`', '`[1] 9`', '`a 6, b 30`', 'An error'], 0,
-      'The mean of every column.',
-      { code: 'as.vector(colMeans(data.frame(a = c(2, 4), b = c(10, 20))))', output: '[1]  3 15' }),
+    mc('Why does `colMeans()` give an error on a table with text columns?', ['You can\'t take the mean of text; pick the number columns first', 'colMeans() needs `na.rm`', 'Text columns are always NA', 'It doesn\'t'], 0,
+      'For example `colMeans(harvest["kg"], na.rm = TRUE)`.',
+      { code: 'colMeans(data.frame(a = 1:2, b = c("x", "y")))', error: 'must be numeric' }),
     mc('After `df <- data.frame(x = c(1, NA))` and `df$x[is.na(df$x)] <- 0`, what is `df$x`?', ['`[1] 1 NA`', '`[1] 1 0`', '`[1] 0 0`', '`[1] 0 NA`'], 1,
       'Only the missing value is replaced.',
       { code: 'df <- data.frame(x = c(1, NA))\ndf$x[is.na(df$x)] <- 0\ndf$x', output: '[1] 1 0' }),

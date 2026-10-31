@@ -21,6 +21,12 @@
  * real query from a typed-in one. Lesson sandbox code, samples and "Try it" blocks must run,
  * except samples that show an error on purpose (they start with "-- This gives an error").
  *
+ * Quiz answers: a multiple-choice question that asks what some Python or SQL gives ("What does
+ * `len("hi")` give?", "After `x = [1]`, what is `x * 2`?") is run, and the answer marked correct
+ * must be what it really gives. Questions whose result matches none of the choices can't be
+ * checked this way and are left alone. Python "Try it" blocks (which load on their own) must run,
+ * except ones that show an error on purpose (a comment that mentions the error).
+ *
  * Sections listed in scripts/curriculum-check.json ("strictSections") must be
  * clean or the script exits with code 1. Other sections are reported only.
  *
@@ -58,6 +64,8 @@ const RULES = {
   'empty-result': 'Solution returns no rows on the lesson data (nothing to compare)',
   'alt-same': 'Solution gives the same result on the other rows, so a typed-in answer could pass',
   'sandbox-error': 'Lesson SQL (sandbox, sample or "Try it" block) stops with an error',
+  'quiz-wrong-answer': 'The quiz answer marked correct is not what the code gives (another choice is)',
+  'python-try-error': 'A Python "Try it" block stops with an error',
   'order-ties': 'Rows that tie in the ORDER BY can come in either order, so a correct answer may fail the order check (add a tie-breaker)',
 }
 
@@ -277,6 +285,163 @@ function findPython() {
   throw new Error('Python 3 not found. Install it or set CQ_PYTHON.')
 }
 
+const QUIZ_RUNNER = String.raw`
+import builtins, io, json, os, signal, sys, tempfile
+helpers = sys.argv[1]
+exec(helpers, globals())
+data = json.load(sys.stdin)
+result_channel = sys.stdout
+class Timeout(Exception):
+    pass
+def on_alarm(signum, frame):
+    raise Timeout()
+has_alarm = hasattr(signal, "alarm")
+if has_alarm:
+    signal.signal(signal.SIGALRM, on_alarm)
+home = os.getcwd()
+
+def isolated(fn):
+    # Fresh folder, no keyboard, output captured, and a time limit.
+    buf = io.StringIO()
+    old_out, old_err, old_input = sys.stdout, sys.stderr, builtins.input
+    sys.stdout = sys.stderr = buf
+    builtins.input = lambda *a: "1"
+    os.chdir(tempfile.mkdtemp(prefix="cq-quiz-"))
+    try:
+        if has_alarm:
+            signal.alarm(5)
+        return fn(buf)
+    finally:
+        if has_alarm:
+            signal.alarm(0)
+        sys.stdout, sys.stderr, builtins.input = old_out, old_err, old_input
+        os.chdir(home)
+
+def py_values(prelude, expr):
+    def run(buf):
+        ns = {"__name__": "__main__"}
+        if prelude:
+            exec(compile(prelude, "<prelude>", "exec"), ns)
+        start = len(buf.getvalue())
+        try:
+            code = compile(expr, "<question>", "eval")
+        except SyntaxError:
+            exec(compile(expr, "<question>", "exec"), ns)
+            return [buf.getvalue()[start:].rstrip("\n")]
+        value = eval(code, ns)
+        printed = buf.getvalue()[start:].rstrip("\n")
+        values = [repr(value), str(value)]
+        return ([printed] if printed else []) + values
+    try:
+        return isolated(run)
+    except BaseException:
+        return None
+
+def sql_values(setup, sql):
+    try:
+        con = _cq_sql_db(setup)
+        try:
+            res = _cq_sql_last_rows(_cq_sql_exec(con, sql))
+        finally:
+            con.close()
+    except BaseException:
+        return None
+    if not res:
+        return None
+    cols, rows = res
+    if len(rows) == 1 and len(cols) == 1:
+        v = rows[0][0]
+        return ["NULL" if v is None else str(v), repr(v), "'" + str(v) + "'"]
+    return None
+
+def try_block(code, folder):
+    def run(buf):
+        os.chdir(folder)
+        exec(compile(code, "<try it>", "exec"), {"__name__": "__main__"})
+        return None
+    try:
+        return isolated(run)
+    except Timeout:
+        return "timed out"
+    except BaseException as e:
+        return type(e).__name__ + ": " + str(e)[:160]
+
+out = {"quiz": [], "tries": []}
+for case in data["quiz"]:
+    out["quiz"].append(py_values(case["prelude"], case["expr"]) if case["lang"] == "python" else sql_values(case["setup"], case["expr"]))
+# A lesson's blocks share a folder, like the app's sandbox, which keeps files between runs.
+folders = {}
+for t in data["tries"]:
+    folder = folders.setdefault(t["lesson"], tempfile.mkdtemp(prefix="cq-try-"))
+    out["tries"].append(try_block(t["code"], folder))
+json.dump(out, result_channel)
+`
+
+/**
+ * A quiz question that asks what a piece of code gives, as { prelude, expr }: "What does
+ * `x` give?" or "After `a` (and `b`), what is `x`?". Other questions give null.
+ */
+const QUIZ_WHAT = /^What (?:does|is|will) `([^`]+)`(?: (?:give|show|print|return|output|evaluate to|be|display))?\??$/
+const QUIZ_AFTER = /^After `([^`]+)`(?:,? and (?:then )?`([^`]+)`)?, what (?:does|is|will) `([^`]+)`(?: (?:give|show|print|return|output|be|hold|contain))?\??$/
+function quizCode(prompt) {
+  const what = QUIZ_WHAT.exec(prompt.trim())
+  if (what) return { prelude: '', expr: what[1] }
+  const after = QUIZ_AFTER.exec(prompt.trim())
+  if (after) return { prelude: [after[1], after[2]].filter(Boolean).join('\n'), expr: after[3] }
+  return null
+}
+
+/** A choice or a result, compared loosely: no backticks, one kind of quote, single spaces. */
+const quizNorm = (text) =>
+  String(text)
+    .trim()
+    .replace(/^`([\s\S]*)`$/, '$1')
+    .replace(/"/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/** Mirrors looksLikePython in src/features/curriculum/codeHighlight.ts (which "Try it" uses). */
+const PY_CODE_LINE = [
+  /^\s*(import|from|def|class|for|while|if|elif|else|try|except|finally|with|return|raise|assert|match|case|async|lambda|print)\b/,
+  /^\s*@\w/,
+  /^\s*[A-Za-z_][\w.[\]'"]*(\s*,\s*[A-Za-z_][\w.[\]]*)*\s*(\*\*|\/\/|[+\-*/%])?=(?!=)/,
+  /^\s*[A-Za-z_][\w.]*\(/,
+]
+const PY_NOT_CODE_LINE = [/^(>|\$|>>>) /, /^\s*(python|pip|py|npm|cd|source)\s/, /^[A-Za-z][\w%]*( [\w%()]+)+: /, /^[A-Z][a-z]+: /]
+function looksLikePython(code) {
+  const lines = code.split('\n').filter((l) => l.trim() !== '' && !l.trim().startsWith('#'))
+  if (lines.length === 0) return false
+  if (lines.some((l) => PY_NOT_CODE_LINE.some((re) => re.test(l)))) return false
+  return lines.some((l) => PY_CODE_LINE.some((re) => re.test(l)))
+}
+
+/** A Python lesson's "Try it" blocks; ones that show an error on purpose say so in a comment. */
+function pythonTryBlocks(level) {
+  const blocks = []
+  for (const match of (level.intro.bodyMarkdown ?? '').matchAll(/```(\w*)\n([\s\S]*?)```/g)) {
+    const [, info, code] = match
+    if (info === 'text' || info === 'output' || !looksLikePython(code)) continue
+    // Ones that show an error on purpose name it in a comment (# ValueError: …). Ones that
+    // read the keyboard can't be run here,
+    // and ones that go online (urlopen) need a network the check doesn't have.
+    if (/#.*(error|raise|traceback|exception)/i.test(code) || /\b(input|urlopen)\s*\(/.test(code)) continue
+    blocks.push(code)
+  }
+  return blocks
+}
+
+function runQuiz(python, helpers, data) {
+  if (data.quiz.length === 0 && data.tries.length === 0) return { quiz: [], tries: [] }
+  const r = spawnSync(python, ['-c', QUIZ_RUNNER, helpers], {
+    input: JSON.stringify(data),
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+    timeout: 15 * 60 * 1000,
+  })
+  if (r.status !== 0) throw new Error(`Quiz runner failed:\n${r.stderr}`)
+  return JSON.parse(r.stdout)
+}
+
 function runPython(python, helpers, cases) {
   if (cases.length === 0) return []
   const r = spawnSync(python, ['-c', RUNNER, helpers], {
@@ -346,6 +511,9 @@ for (const lang of rootIndex.languages) {
     const sqlData = { cases: [], runs: [] }
     const sqlRefs = []
     const runRefs = []
+    const quizData = { quiz: [], tries: [] }
+    const quizRefs = []
+    const tryRefs = []
     let challengeCount = 0
 
     for (const level of file.levels) {
@@ -394,6 +562,17 @@ for (const lang of rootIndex.languages) {
       for (const q of level.test?.questions ?? []) {
         const problem = checkQuiz(q)
         if (problem) sectionIssues.push({ section: sectionKey, level: level.id, item: q.prompt, rule: 'bad-quiz', detail: problem })
+        const asked = q.type === 'mcq' && (lang.id === 'python' || lang.id === 'sql') ? quizCode(q.prompt) : null
+        if (asked && (lang.id === 'python' || /^\s*(SELECT|WITH)\b/i.test(asked.expr))) {
+          quizData.quiz.push({ lang: lang.id, setup: level.database?.setupSql ?? '', ...asked })
+          quizRefs.push({ where: { section: sectionKey, level: level.id, item: q.prompt }, q })
+        }
+      }
+      if (lang.id === 'python') {
+        for (const code of pythonTryBlocks(level)) {
+          quizData.tries.push({ lesson: `${sectionKey}/${level.id}`, code })
+          tryRefs.push({ section: sectionKey, level: level.id, item: `"Try it" block: ${code.trim().split('\n')[0].slice(0, 50)}` })
+        }
       }
     }
 
@@ -422,6 +601,20 @@ for (const lang of rootIndex.languages) {
     })
     sql.runs.forEach((message, i) => {
       if (message) sectionIssues.push({ ...runRefs[i], rule: 'sandbox-error', detail: message })
+    })
+
+    const quiz = runQuiz(python, helpers, quizData)
+    quiz.quiz.forEach((values, i) => {
+      if (!values) return
+      const { where, q } = quizRefs[i]
+      const results = new Set(values.map(quizNorm))
+      const matching = q.choices.filter((c) => results.has(quizNorm(c.label)))
+      if (matching.length > 0 && !matching.some((c) => c.id === q.correctChoiceId)) {
+        sectionIssues.push({ ...where, rule: 'quiz-wrong-answer', detail: `it gives ${values[0]}` })
+      }
+    })
+    quiz.tries.forEach((message, i) => {
+      if (message) sectionIssues.push({ ...tryRefs[i], rule: 'python-try-error', detail: message })
     })
 
     const strict = allStrict || strictSections.has(sectionKey)

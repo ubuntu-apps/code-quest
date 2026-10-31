@@ -18,10 +18,11 @@ export default makeTopic({
     'Your functions also work as the `FUN` of `tapply()` and `aggregate()`, so any summary you can write, you can get per group.',
   ],
   sandboxCode: CLASS + 'sapply(class_results, class)\nsapply(class_results, \\(col) sum(is.na(col)))',
-  sandboxSnippets: [snippet('A function as FUN', CLASS + 'pct_pass <- function(x) round(mean(x >= 60) * 100)\naggregate(test1 ~ group, data = class_results, FUN = pct_pass)')],
+  sandboxSnippets: [snippet('A function as FUN', CLASS + 'pct_pass <- function(x) round(mean(x >= 60) * 100)\naggregate(test1 ~ group, data = class_results, FUN = pct_pass)'), snippet('One function, every column', HARVEST + 'count_na <- function(x) sum(is.na(x))\nsapply(harvest, count_na)'), snippet('Only the number columns', CLASS + 'nums <- sapply(class_results, is.numeric)\ncolMeans(class_results[nums], na.rm = TRUE)')],
   readMore: { label: 'R documentation: lapply() and sapply()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/lapply.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Every column\'s type', {
+      typedOk: true,
       prompt: 'Make `types` the class of every column, using `sapply()`.',
       starter: CLASS,
       hint: '`types <- sapply(class_results, class)`',
@@ -34,6 +35,14 @@ export default makeTopic({
       hint: '`gaps <- sapply(harvest, \\(col) sum(is.na(col)))`',
       solution: HARVEST + 'gaps <- sapply(harvest, \\(col) sum(is.na(col)))',
       tests: [['gaps is plot 0, crop 0, kg 1, family 0', same('gaps', 'c(plot = 0L, crop = 0L, kg = 1L, family = 0L)')]],
+    }),
+    task('easy', 'Count the rows', {
+      prompt: 'Write `n_rows(df)` that gives the number of rows of any data frame, then make `n` its answer for `class_results`.',
+      starter: CLASS,
+      alt: 'class_results <- data.frame(student = c("Ana", "Ben"), test1 = c(50, 60))\n',
+      hint: '`n_rows <- function(df) nrow(df)`, then `n <- n_rows(class_results)`.',
+      solution: CLASS + 'n_rows <- function(df) nrow(df)\nn <- n_rows(class_results)',
+      tests: [['n_rows is a function', isFn('n_rows')], ['n is 12', near('n', 12)]],
     }),
     task('medium', 'Means of the test columns', {
       prompt: 'Make `test_means` the mean of `test1` and `test2`, ignoring NAs, rounded to 1 decimal place.',
@@ -75,6 +84,13 @@ export default makeTopic({
       solution: 'describe <- function(df) {\n  data.frame(\n    column = names(df),\n    type = unname(sapply(df, class)),\n    missing = unname(sapply(df, \\(x) sum(is.na(x))))\n  )\n}',
       tests: [['describe() works on a small table', isFn('describe') + ' && ' + 'isTRUE(all.equal(describe(data.frame(a = c(1, NA), b = c("x", "y"))), data.frame(column = c("a", "b"), type = c("numeric", "character"), missing = c(1L, 0L)), check.attributes = FALSE))']],
     }),
+    task('expert', 'Top of any column', {
+      prompt: 'Write `top_in(df, column)` that gives the `student` with the highest value in the column named in `column`.',
+      setup: CLASS,
+      hint: 'Inside a function, use `df[[column]]` for the column: `df$student[which.max(df[[column]])]`.',
+      solution: 'top_in <- function(df, column) {\n  df$student[which.max(df[[column]])]\n}',
+      tests: [['top_in(class_results, "test1") is Lea', isFn('top_in') + ' && identical(top_in(class_results, "test1"), "Lea")'], ['It works on other tables too', 'identical(top_in(class_results[1:6, ], "test1"), "Eli") && identical(top_in(data.frame(student = c("x", "y"), s = c(1, 5)), "s"), "y")']],
+    }),
   ],
   questions: [
     mc('What does `sapply(data.frame(a = 1:3, b = 4:6), sum)` give?', ['`a 6, b 15`', '`[1] 21`', 'A data frame', '`[1] 3 3`'], 0,
@@ -89,8 +105,8 @@ export default makeTopic({
     mc('What does `sapply(data.frame(a = 1, b = "x"), is.numeric)` give?', ['`a TRUE, b FALSE`', '`TRUE`', '`FALSE`', 'An error'], 0,
       'One TRUE or FALSE per column, handy for picking the numeric ones.',
       { code: 'as.vector(sapply(data.frame(a = 1, b = "x"), is.numeric))', output: '[1]  TRUE FALSE' }),
-    mc('Can your own function be the `FUN` of `aggregate()`?', ['No, only R\'s', 'Yes, any function that turns a vector into a value', 'Only with sapply', 'Only for means'], 1,
-      '`aggregate(x ~ g, data = df, FUN = my_function)`'),
+    mc('Why can `sapply()` go through the columns of a data frame?', ['A data frame is a list of columns, so sapply() visits each column in turn', 'sapply() reads rows', 'Data frames are vectors', 'It can\'t'], 0,
+      'That is why `sapply(df, class)` gives one type per column.'),
     mc('If a function changes `df` inside its body, what happens to the data frame you passed in?', ['It changes too', 'It stays as it was; only the returned copy is changed', 'It is deleted', 'An error'], 1,
       'R works on a copy. Save the result: `cleaned <- clean_text(raw)`.',
       { code: 'f <- function(df) { df$x <- 0; df }\nd <- data.frame(x = 5)\ninvisible(f(d))\nd$x', output: '[1] 5' }),

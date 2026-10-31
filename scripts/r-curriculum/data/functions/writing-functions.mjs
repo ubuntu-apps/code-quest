@@ -18,6 +18,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('Inside stays inside', 'total <- 100\nadd_tip <- function(bill) {\n  total <- bill * 1.1\n  total\n}\nadd_tip(20)\ntotal'),
     snippet('Several lines', 'tidy_name <- function(x) {\n  x <- trimws(x)\n  x <- tolower(x)\n  x\n}\ntidy_name("  ANA Silva ")'),
+    snippet('A function on a vector', 'sq <- function(x) {\n  x * x\n}\nsq(4)\nsq(c(1, 2, 3))'),
+    snippet('Variables stay inside', 'y <- 10\nf <- function(x) {\n  y <- x * 2\n  y\n}\nf(3)\ny'),
   ],
   readMore: { label: 'An Introduction to R: writing your own functions', url: 'https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions', source: 'R manuals' },
   challenges: [
@@ -65,11 +67,23 @@ export default makeTopic({
       solution: 'spread <- function(x) {\n  max(x, na.rm = TRUE) - min(x, na.rm = TRUE)\n}',
       tests: [['spread(c(4, 9, 2)) is 7', isFn('spread') + ' && isTRUE(all.equal(spread(c(4, 9, 2)), 7))'], ['spread(c(4, NA, 10)) is 6', 'isTRUE(all.equal(spread(c(4, NA, 10)), 6))']],
     }),
+    task('hard', 'Mean without the extremes', {
+      prompt: 'Write `middle_mean(x)`: the mean of `x` after leaving out its smallest and its largest value.',
+      hint: 'Sort, then drop the first and last positions: `mean(sort(x)[-c(1, length(x))])`.',
+      solution: 'middle_mean <- function(x) {\n  mean(sort(x)[-c(1, length(x))])\n}',
+      tests: [['middle_mean(c(1, 5, 6, 7, 100)) is 6', 'is.function(middle_mean) && isTRUE(all.equal(middle_mean(c(1, 5, 6, 7, 100)), 6))'], ['middle_mean(c(8, 2, 6, 4)) is 5', 'isTRUE(all.equal(middle_mean(c(8, 2, 6, 4)), 5))']],
+    }),
     task('expert', 'Grade letter', {
       prompt: 'Write `grade(score)` for **one** score: `"A"` for 80 or more, `"B"` for 65 or more, `"C"` for 50 or more, and `"F"` otherwise.',
       hint: 'Use `if`, `else if` and `else` in the body. Each branch\'s value is the result, so the whole `if` can be the last line.',
       solution: 'grade <- function(score) {\n  if (score >= 80) {\n    "A"\n  } else if (score >= 65) {\n    "B"\n  } else if (score >= 50) {\n    "C"\n  } else {\n    "F"\n  }\n}',
       tests: [['grade(91) is "A"', isFn('grade') + ' && identical(grade(91), "A")'], ['grade(65) is "B"', 'identical(grade(65), "B")'], ['grade(50) is "C" and grade(49) is "F"', 'identical(grade(50), "C") && identical(grade(49), "F")']],
+    }),
+    task('expert', 'Coins for change', {
+      prompt: 'Write `coins(amount)` for a whole number of pence. It gives how many 50, 20, 10, 5, 2 and 1 coins make the amount, using the biggest coins first, as a vector in that order.',
+      hint: 'Loop over `c(50, 20, 10, 5, 2, 1)`: `amount %/% v` coins of each, then `amount <- amount %% v` is what is left.',
+      solution: 'coins <- function(amount) {\n  out <- c()\n  for (v in c(50, 20, 10, 5, 2, 1)) {\n    out <- c(out, amount %/% v)\n    amount <- amount %% v\n  }\n  out\n}',
+      tests: [['coins(88) is one of each', 'is.function(coins) && isTRUE(all.equal(unname(coins(88)), c(1, 1, 1, 1, 1, 1)))'], ['coins(40) is two 20s', 'isTRUE(all.equal(unname(coins(40)), c(0, 2, 0, 0, 0, 0)))'], ['coins(7) is a 5 and a 2', 'isTRUE(all.equal(unname(coins(7)), c(0, 0, 0, 1, 1, 0)))']],
     }),
   ],
   questions: [
@@ -87,9 +101,8 @@ export default makeTopic({
       { code: 'sq <- function(x) { x * x }\nsq(c(1, 2, 3))', output: '[1] 1 4 9' }),
     mc('In `function(minutes) { … }`, what is `minutes`?', ['The result', 'The argument: a name for the value passed in', 'A global variable', 'The function\'s name'], 1,
       'It takes the value the function is called with.'),
-    mc('What does `class(function(x) x)` give?', ['`"function"`', '`"numeric"`', '`"code"`', '`"list"`'], 0,
-      'A function is a value like any other.',
-      { code: 'class(function(x) x)', output: '[1] "function"' }),
+    mc('Why is the last line of a function its answer?', ['R gives back the value of the last thing worked out in the body, unless `return()` comes first', 'The last line is printed', 'Only the last line runs', 'It isn\'t'], 0,
+      'So `function(x) { y <- x + 1; y * 2 }` gives `y * 2`.'),
     mc('After `f <- function(x) { x * 2 }`, what does `f` (without brackets) show?', ['`2`', 'The function\'s code', 'An error', '`NULL`'], 1,
       'Without brackets you see the function itself; with them, you call it.'),
     mc('Why write a function?', ['R needs them', 'To reuse a calculation without copying it, and give it a clear name', 'It is faster', 'To hide errors'], 1,

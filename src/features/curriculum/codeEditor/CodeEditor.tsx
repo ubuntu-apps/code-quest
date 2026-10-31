@@ -29,7 +29,7 @@ export interface CodeEditorProps {
   id: string
   value: string
   onChange: (value: string) => void
-  language?: 'python' | 'sql' | 'plain'
+  language?: 'python' | 'sql' | 'r' | 'plain'
   /** Starting height in lines. */
   rows?: number
   /** Extra classes for the plain text box (e.g. pass/fail borders). */
@@ -143,7 +143,7 @@ export function CodeEditor({
         errorTitle={errorTitle}
         errorColumn={errorColumn}
         errorUiEpoch={errorUiEpoch}
-        keyLanguage={language === 'sql' ? 'sql' : 'python'}
+        keyLanguage={language === 'sql' ? 'sql' : language === 'r' ? 'r' : 'python'}
       />
     </div>
   )
@@ -172,7 +172,7 @@ export function CodeEditor({
         Tab indents. Press Escape, then Tab, to move to the next control.
       </span>
       {touch && focused ? (
-        <CodeKeyBar target={() => targetRef.current} language={language === 'sql' ? 'sql' : 'python'} />
+        <CodeKeyBar target={() => targetRef.current} language={language === 'sql' ? 'sql' : language === 'r' ? 'r' : 'python'} />
       ) : null}
     </>
   )

@@ -61,9 +61,8 @@ export function PythonSandboxSection({
 }: PythonSandboxSectionProps) {
   const [expanded, setExpanded] = useState(false)
   const [stdin, setStdin] = useState('')
-  // Input is Python-only, and Stop works for the worker (Python and SQL), not for R.
+  // Input is Python-only. Stop works for every language (for R it restarts the runtime).
   const isPython = languageId === 'python'
-  const canStop = languageId !== 'r'
   const suggestNames = languageId === 'sql' ? sqlTableNames(tables) : undefined
   // Only show the Input box when the code asks for input.
   const usesInput = isPython && /\binput\s*\(/.test(code)
@@ -113,7 +112,7 @@ export function PythonSandboxSection({
       <CodeEditor
         id={`${languageId}-sandbox-input`}
         labelId={`${languageId}-sandbox-label`}
-        language={languageId === 'r' ? 'plain' : languageId}
+        language={languageId}
         suggestNames={suggestNames}
         sqlTables={languageId === 'sql' ? tables : undefined}
         className="cq-sandbox-input"
@@ -158,7 +157,7 @@ export function PythonSandboxSection({
         >
           {running ? 'Running...' : 'Run code'}
         </button>
-        {running && canStop && onStop ? (
+        {running && onStop ? (
           <button type="button" className="cq-btn" onClick={onStop}>
             Stop
           </button>

@@ -20,6 +20,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('Stack two days', 'monday  <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), qty = c(3, 1))\nrbind(monday, tuesday)'),
     snippet('Names must match', '# Run it and read the error\na <- data.frame(item = "tea", qty = 1)\nb <- data.frame(item = "cake", amount = 2)\nrbind(a, b)'),
+    snippet('Keep every sale', SALES + MENU + 'merge(sales, menu, by = "item", all.x = TRUE)'),
+    snippet('What never sold', SALES + MENU + 'menu$item[!menu$item %in% sales$item]'),
   ],
   readMore: { label: 'R documentation: merge()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/merge.html', source: 'R documentation' },
   challenges: [
@@ -72,12 +74,26 @@ export default makeTopic({
       solution: 'monday <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), amount = c(3, 1))\nnames(tuesday) <- c("item", "qty")\nboth <- rbind(monday, tuesday)',
       tests: [['both has the 4 sales', sameFrame('both', 'data.frame(item = c("latte", "tea", "cake", "latte"), qty = c(2, 1, 3, 1))')]],
     }),
+    task('hard', 'Say which day', {
+      prompt: 'Give each table a `day` column (`"Mon"` and `"Tue"`), then make `week` the two stacked.',
+      starter: 'monday <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), qty = c(3, 1))\n',
+      hint: '`monday$day <- "Mon"` fills the whole column. Do the same for Tuesday, then `rbind()`.',
+      solution: 'monday <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), qty = c(3, 1))\nmonday$day <- "Mon"\ntuesday$day <- "Tue"\nweek <- rbind(monday, tuesday)',
+      tests: [['week has the four sales with their day', sameFrame('week', 'data.frame(item = c("latte", "tea", "cake", "latte"), qty = c(2, 1, 3, 1), day = c("Mon", "Mon", "Tue", "Tue"))')]],
+    }),
     task('expert', 'The day\'s takings', {
       prompt: 'Make `takings` the total money taken for the sales that are on the menu.',
       starter: SALES + MENU,
       hint: 'Merge, then `sum(priced$qty * priced$price)`.',
       solution: SALES + MENU + 'priced <- merge(sales, menu, by = "item")\ntakings <- sum(priced$qty * priced$price)',
       tests: [['takings is 25.3', near('takings', 25.3)]],
+    }),
+    task('expert', 'Never sold', {
+      prompt: 'Make `unsold` the menu items that don\'t appear in the sales at all.',
+      starter: SALES + MENU,
+      hint: '`menu$item %in% sales$item` is TRUE for items that sold. Keep the others with `!`.',
+      solution: SALES + MENU + 'unsold <- menu$item[!menu$item %in% sales$item]',
+      tests: [['unsold is chai', isTexts('unsold', 'chai')]],
     }),
   ],
   questions: [
@@ -99,8 +115,8 @@ export default makeTopic({
       { code: 'rbind(data.frame(a = 1), data.frame(b = 2))', error: 'names do not match' }),
     mc('A sale\'s item isn\'t on the menu. With a plain `merge()`, what happens to that sale?', ['It gets price 0', 'It is dropped from the result', 'It gets price NA', 'An error'], 1,
       'Only matching rows are kept unless you add `all.x = TRUE`.'),
-    mc('What does `merge()` sort the result by?', ['Nothing: original order', 'The key column', 'The last column', 'The number of rows'], 1,
-      'The merged table comes out sorted by the key.'),
+    mc('Why can `merge()` give fewer rows than the sales table had?', ['A plain merge keeps only rows whose key is in both tables', 'merge() removes repeats', 'It keeps only the first match', 'It never does'], 0,
+      'Add `all.x = TRUE` to keep every sale, with NA where nothing matched.'),
     qShort('Which function stacks the rows of two tables with the same columns?', 'rbind',
       '`rbind()` means "row bind".'),
   ],

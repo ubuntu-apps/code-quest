@@ -19,6 +19,7 @@ export default makeTopic({
     snippet('Add names', 'prices <- c(3.4, 2.5, 4.2)\nnames(prices) <- c("latte", "tea", "cake")\nprices'),
     snippet('Names survive', 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nprices * 2\nprices[prices > 3]\nsort(prices)'),
     snippet('Drop the names', 'prices <- c(latte = 3.4, tea = 2.5)\nunname(prices)'),
+    snippet('Names stay through maths', 'prices <- c(latte = 3.4, tea = 2.5)\nprices * 2\nround(prices * 1.1, 2)'),
   ],
   readMore: { label: 'R documentation: names()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/names.html', source: 'R documentation' },
   challenges: [
@@ -39,6 +40,7 @@ export default makeTopic({
       ],
     }),
     task('easy', 'Read the names', {
+      alt: 'prices <- c(mocha = 3.4, chai = 2.5, scone = 4.2)\n',
       prompt: 'Make `items` the names of the `prices` vector.',
       starter: 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\n',
       hint: '`items <- names(prices)`',
@@ -79,6 +81,13 @@ export default makeTopic({
       solution: 'rain <- c(Mon = 0, Tue = 4.5, Wed = 12.2, Thu = 1.0, Fri = 0.4)\ndry_days <- names(rain[rain < 2])',
       tests: [['dry_days is Mon, Thu, Fri', isTexts('dry_days', 'Mon', 'Thu', 'Fri')]],
     }),
+    task('hard', 'Sale prices', {
+      prompt: 'Make `sale` the prices 10% lower, rounded to 2 decimal places, keeping the names.',
+      starter: 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\n',
+      hint: 'Maths keeps the names: `round(prices * 0.9, 2)`.',
+      solution: 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nsale <- round(prices * 0.9, 2)',
+      tests: [['sale is latte 3.06, tea 2.25, cake 3.78', same('sale', 'c(latte = 3.06, tea = 2.25, cake = 3.78)')]],
+    }),
     task('expert', 'A price change', {
       prompt: 'Tea goes up to 2.7. Change it by name, then make `menu` the prices sorted from cheapest to dearest, keeping the names.',
       starter: 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2, water = 1.8)\n',
@@ -88,6 +97,14 @@ export default makeTopic({
         ['tea is now 2.7', 'isTRUE(all.equal(unname(prices["tea"]), 2.7))'],
         ['menu is water, tea, latte, cake', same('menu', 'c(water = 1.8, tea = 2.7, latte = 3.4, cake = 4.2)')],
       ],
+    }),
+    task('expert', 'Price an order', {
+      prompt: 'Make `total` the cost of everything in `ordered`, looking each item up in `prices` by name.',
+      starter: 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nordered <- c("tea", "cake", "tea")\n',
+      alt: 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nordered <- c("latte", "cake")\n',
+      hint: 'A vector of names picks several values, repeats too: `prices[ordered]`. Then `sum()`.',
+      solution: 'prices <- c(latte = 3.4, tea = 2.5, cake = 4.2)\nordered <- c("tea", "cake", "tea")\ntotal <- sum(prices[ordered])',
+      tests: [['total is 9.2', near('total', 9.2)]],
     }),
   ],
   questions: [
@@ -106,9 +123,8 @@ export default makeTopic({
     mc('What does `names(c(5, 6))` give?', ['`NULL`: there are no names', '`[1] "" ""`', '`[1] 1 2`', 'An error'], 0,
       'A vector made without names has none, so `names()` gives `NULL`.',
       { code: 'names(c(5, 6))', output: 'NULL' }),
-    mc('After `x <- c(a = 1, b = 2)`, what does `x["c"]` give?', ['An error', '`NA`, named `<NA>`', '`0`', '`[1] "c"`'], 1,
-      'There is no value called "c", so R gives NA.',
-      { code: 'x <- c(a = 1, b = 2)\nx["c"]', output: '<NA> \n  NA' }),
+    mc('Why does `x["c"]` give NA when `x` has no value called "c"?', ['R can\'t find that name, so it says the value is unknown', 'It makes a new value', 'Names ignore small and capital letters', 'It gives an error'], 0,
+      'A typo in a name gives NA, not an error, so check with `names(x)`.'),
     mc('Why pick by name, like `prices["tea"]`, instead of `prices[2]`?', ['It is faster', 'It still works when the order of the values changes', 'Positions don\'t work on named vectors', 'It removes the name'], 1,
       'A name stays with its value; a position depends on the order.'),
     mc('Which drops the names and keeps the values?', ['`names(x) <- 0`', '`unname(x)`', '`x[-names]`', '`c(x)`'], 1,

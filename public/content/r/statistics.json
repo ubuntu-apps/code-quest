@@ -11,6 +11,16 @@
           "id": "a_thousand_experiments",
           "label": "A thousand experiments",
           "code": "set.seed(1)\nmeans <- replicate(1000, mean(sample(1:6, 10, replace = TRUE)))\nround(c(mean = mean(means), sd = sd(means)), 2)"
+        },
+        {
+          "id": "shuffle_and_split",
+          "label": "Shuffle and split",
+          "code": "set.seed(3)\nshuffled <- sample(c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\"))\nshuffled[1:3]\nshuffled[4:6]"
+        },
+        {
+          "id": "a_thousand_rolls",
+          "label": "A thousand rolls",
+          "code": "set.seed(1)\nrolls <- sample(1:6, 1000, replace = TRUE)\ntable(rolls)\nmean(rolls)"
         }
       ],
       "intro": {
@@ -58,6 +68,11 @@
                 "id": "t1",
                 "label": "chosen is the four names for seed 3",
                 "assertion": "identical(chosen, local({ set.seed(3); sample(students, 4) }))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"students <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\n\", \"students <- c(\\\"Hal\\\", \\\"Gus\\\", \\\"Fay\\\", \\\"Eli\\\", \\\"Dee\\\", \\\"Cy\\\", \\\"Ben\\\", \\\"Ana\\\")\\n\", \"students <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nset.seed(3)\\nchosen <- sample(students, 4)\", c(\"students\", \"chosen\"), output = FALSE)"
               }
             ]
           }
@@ -173,6 +188,30 @@
           }
         },
         {
+          "id": "random_samples-rolling-doubles",
+          "title": "Hard: Rolling doubles",
+          "promptMarkdown": "Roll two dice 1000 times each (`a` and `b`). Make `share` the share of throws where both dice show the same number.",
+          "starterCode": "set.seed(5)\n",
+          "hint": "Two vectors of rolls with `sample(1:6, 1000, replace = TRUE)`, then `mean(a == b)`.",
+          "solution": "set.seed(5)\na <- sample(1:6, 1000, replace = TRUE)\nb <- sample(1:6, 1000, replace = TRUE)\nshare <- mean(a == b)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "share is right for seed 5 (about 1/6)",
+                "assertion": "local({ set.seed(5); a <- sample(1:6, 1000, replace = TRUE); b <- sample(1:6, 1000, replace = TRUE); isTRUE(all.equal(share, mean(a == b))) })"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"set.seed(5)\\n\", \"set.seed(6)\\n\", \"set.seed(5)\\na <- sample(1:6, 1000, replace = TRUE)\\nb <- sample(1:6, 1000, replace = TRUE)\\nshare <- mean(a == b)\", c(\"a\", \"b\", \"share\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
           "id": "random_samples-bigger-samples-wobble-less",
           "title": "Expert: Bigger samples wobble less",
           "promptMarkdown": "Set the seed to 1. Make `sd_10` the standard deviation of 1000 means of 10 rolls, then (without setting the seed again) `sd_100` the same for means of 100 rolls. Both rounded to 2 decimal places. Which is smaller?",
@@ -192,6 +231,35 @@
                 "id": "t2",
                 "label": "sd_100 is smaller",
                 "assertion": "sd_100 < sd_10"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-two-random-teams",
+          "title": "Expert: Two random teams",
+          "promptMarkdown": "Shuffle the students once with `sample()`, then make `team_a` the first four and `team_b` the other four.",
+          "starterCode": "set.seed(3)\nstudents <- c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\")\n",
+          "hint": "`shuffled <- sample(students)` puts them in a random order; then take positions 1 to 4 and 5 to 8.",
+          "solution": "set.seed(3)\nstudents <- c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\")\nshuffled <- sample(students)\nteam_a <- shuffled[1:4]\nteam_b <- shuffled[5:8]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Everyone is in exactly one team",
+                "assertion": "identical(sort(c(team_a, team_b)), sort(students)) && length(team_a) == 4"
+              },
+              {
+                "id": "t2",
+                "label": "The teams are right for seed 3",
+                "assertion": "local({ set.seed(3); s <- sample(c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\")); identical(team_a, s[1:4]) })"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"set.seed(3)\\nstudents <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\n\", \"set.seed(4)\\nstudents <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\")\\n\", \"set.seed(3)\\nstudents <- c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\")\\nshuffled <- sample(students)\\nteam_a <- shuffled[1:4]\\nteam_b <- shuffled[5:8]\", c(\"students\", \"team_a\", \"team_b\"), output = FALSE)"
               }
             ]
           }
@@ -251,29 +319,29 @@
             "explanation": "Ten picks, whatever they are."
           },
           {
-            "id": "random_samples-q-1cty5k4",
+            "id": "random_samples-q-1hfsz6e",
             "type": "mcq",
-            "prompt": "What does `sample(1:6, 10)` (without replace) do?",
+            "prompt": "Why does `sample(1:6, 10)` give an error?",
             "choices": [
               {
                 "id": "a",
-                "label": "An error: it can't pick 10 different values from 6"
+                "label": "Without `replace = TRUE`, each value can be drawn only once, and there are only 6"
               },
               {
                 "id": "b",
-                "label": "Six values"
+                "label": "It doesn't"
               },
               {
                 "id": "c",
-                "label": "Ten rolls"
+                "label": "sample() can't draw 10"
               },
               {
                 "id": "d",
-                "label": "Ten zeros"
+                "label": "It needs set.seed() first"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "Without replacement there are only six values to take."
+            "explanation": "Like drawing cards from a pack without putting them back."
           },
           {
             "id": "random_samples-q-80n88v",
@@ -422,6 +490,16 @@
           "id": "the_68_95_rule",
           "label": "The 68–95 rule",
           "code": "pnorm(1) - pnorm(-1)\npnorm(2) - pnorm(-2)\npnorm(3) - pnorm(-3)"
+        },
+        {
+          "id": "below_above_and_between",
+          "label": "Below, above and between",
+          "code": "pnorm(490, 500, 6)\n1 - pnorm(510, 500, 6)\npnorm(510, 500, 6) - pnorm(490, 500, 6)"
+        },
+        {
+          "id": "from_a_share_back_to_a_weight",
+          "label": "From a share back to a weight",
+          "code": "qnorm(0.05, 500, 6)\nqnorm(c(0.05, 0.95), 500, 6)"
         }
       ],
       "intro": {
@@ -569,6 +647,25 @@
           }
         },
         {
+          "id": "normal_distribution-the-middle-90",
+          "title": "Hard: The middle 90%",
+          "promptMarkdown": "Loaf weights are normal with mean 500 g and sd 6 g. Make `limits` the two weights between which the middle 90% of loaves fall.",
+          "starterCode": "",
+          "hint": "The middle 90% leaves 5% at each end: `qnorm(c(0.05, 0.95), 500, 6)`.",
+          "solution": "limits <- qnorm(c(0.05, 0.95), 500, 6)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "limits is about 490.1 and 509.9",
+                "assertion": "is.numeric(limits) && isTRUE(all.equal(limits, qnorm(c(0.05, 0.95), 500, 6)))"
+              }
+            ]
+          }
+        },
+        {
           "id": "normal_distribution-check-by-simulation",
           "title": "Expert: Check by simulation",
           "promptMarkdown": "Set the seed to 9, simulate 10,000 loaves with `rnorm()`, and make `sim_share` the share under 490 g. It should be close to `pnorm(490, 500, 6)`.",
@@ -588,6 +685,30 @@
                 "id": "t2",
                 "label": "It is close to pnorm()",
                 "assertion": "abs(sim_share - pnorm(490, 500, 6)) < 0.01"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-set-the-machine",
+          "title": "Expert: Set the machine",
+          "promptMarkdown": "The sd stays 6 g, but the bakery can change the mean. Make `target` the mean that leaves only 2% of loaves under 490 g.",
+          "starterCode": "",
+          "hint": "490 must be the 2% point: `490 = target + qnorm(0.02) * 6`. Solve for `target`.",
+          "solution": "target <- 490 - qnorm(0.02) * 6",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "target is about 502.3",
+                "assertion": "is.numeric(target) && isTRUE(all.equal(target, 490 - qnorm(0.02) * 6))"
+              },
+              {
+                "id": "t2",
+                "label": "Only 2% are under 490 then",
+                "assertion": "isTRUE(all.equal(pnorm(490, target, 6), 0.02))"
               }
             ]
           }
@@ -622,29 +743,29 @@
             "explanation": "The 68–95–99.7 rule."
           },
           {
-            "id": "normal_distribution-q-yq2g1",
+            "id": "normal_distribution-q-1p3uf14",
             "type": "mcq",
-            "prompt": "What does `pnorm(0)` give?",
+            "prompt": "Why does `pnorm(0)` give 0.5?",
             "choices": [
               {
                 "id": "a",
-                "label": "`NA`"
+                "label": "It gives 0"
               },
               {
                 "id": "b",
-                "label": "`0.5`"
+                "label": "pnorm() halves its input"
               },
               {
                 "id": "c",
-                "label": "`1`"
+                "label": "A standard normal is centred on 0, so half of it lies below 0"
               },
               {
                 "id": "d",
-                "label": "`0`"
+                "label": "0 is the most common value"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Half of a normal distribution is below its mean."
+            "correctChoiceId": "c",
+            "explanation": "The normal curve is symmetric around its mean."
           },
           {
             "id": "normal_distribution-q-pqx62i",
@@ -818,6 +939,16 @@
           "id": "one_outlier",
           "label": "One outlier",
           "code": "x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\ncor(x, y)\ny[6] <- 30\ncor(x, y)\ncor(x, y, method = \"spearman\")"
+        },
+        {
+          "id": "every_pair",
+          "label": "Every pair",
+          "code": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nround(cor(study[c(\"hours\", \"phone\", \"sleep\", \"score\")]), 2)"
+        },
+        {
+          "id": "one_point_matters",
+          "label": "One point matters",
+          "code": "x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\ncor(x, y)\ncor(c(x, 20), c(y, 0))"
         }
       ],
       "intro": {
@@ -846,6 +977,11 @@
                 "id": "t1",
                 "label": "r_hours is 0.93",
                 "assertion": "is.numeric(r_hours) && isTRUE(all.equal(r_hours, 0.93))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nr_hours <- round(cor(study$hours, study$score), 2)\", c(\"r_hours\"), output = FALSE)"
               }
             ]
           }
@@ -865,6 +1001,11 @@
                 "id": "t1",
                 "label": "r_phone is -0.91",
                 "assertion": "is.numeric(r_phone) && isTRUE(all.equal(r_phone, -0.91))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nr_phone <- round(cor(study$phone, study$score), 2)\", c(\"r_phone\"), output = FALSE)"
               }
             ]
           }
@@ -884,6 +1025,11 @@
                 "id": "t1",
                 "label": "r_sleep is 0.2",
                 "assertion": "is.numeric(r_sleep) && isTRUE(all.equal(r_sleep, 0.2))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nr_sleep <- round(cor(study$sleep, study$score), 2)\", c(\"r_sleep\"), output = FALSE)"
               }
             ]
           }
@@ -903,6 +1049,11 @@
                 "id": "t1",
                 "label": "m is the 4 by 4 correlation matrix",
                 "assertion": "is.matrix(m) && isTRUE(all.equal(m, round(cor(study[, c(\"hours\", \"phone\", \"sleep\", \"score\")]), 2)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nm <- round(cor(study[, c(\\\"hours\\\", \\\"phone\\\", \\\"sleep\\\", \\\"score\\\")]), 2)\", c(\"study\", \"m\"), output = FALSE)"
               }
             ]
           }
@@ -922,6 +1073,11 @@
                 "id": "t1",
                 "label": "strongest is \"hours\"",
                 "assertion": "identical(strongest, \"hours\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Ana\\\"),\\n  hours = c(6, 15, 8, 13, 10, 3, 12, 5),\\n  phone = c(8, 3, 10, 3, 6, 13, 6, 11),\\n  sleep = c(14, 15, 20, 17, 16, 13, 18, 15),\\n  score = c(126, 169, 118, 159, 152, 105, 144, 129)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nr <- c(hours = cor(study$hours, study$score), phone = cor(study$phone, study$score), sleep = cor(study$sleep, study$score))\\nstrongest <- names(which.max(abs(r)))\", c(\"strongest\"), output = FALSE)"
               }
             ]
           }
@@ -941,6 +1097,11 @@
                 "id": "t1",
                 "label": "rho is 0.9",
                 "assertion": "is.numeric(rho) && isTRUE(all.equal(rho, 0.9))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nrho <- round(cor(study$hours, study$score, method = \\\"spearman\\\"), 2)\", c(\"rho\"), output = FALSE)"
               }
             ]
           }
@@ -965,6 +1126,35 @@
                 "id": "t2",
                 "label": "after is 0.71",
                 "assertion": "is.numeric(after) && isTRUE(all.equal(after, 0.71))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"x <- c(1, 2, 3, 4, 5, 6)\\ny <- c(2, 4, 5, 4, 5, 6)\\n\", \"x <- c(9, 7, 5, 6, 4, 2)\\ny <- c(9, 7, 5, 8, 6, 3)\\n\", \"x <- c(1, 2, 3, 4, 5, 6)\\ny <- c(2, 4, 5, 4, 5, 6)\\nbefore <- round(cor(x, y), 2)\\ny[6] <- 30\\nafter <- round(cor(x, y), 2)\", c(\"before\", \"after\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-without-one-student",
+          "title": "Hard: Without one student",
+          "promptMarkdown": "Make `r_without` the correlation between `hours` and `score` with Cy left out.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "Keep the other rows first: `sub <- study[study$student != \"Cy\", ]`, then `cor(sub$hours, sub$score)`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nsub <- study[study$student != \"Cy\", ]\nr_without <- cor(sub$hours, sub$score)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r_without is right",
+                "assertion": "is.numeric(r_without) && isTRUE(all.equal(r_without, cor(study$hours[study$student != \"Cy\"], study$score[study$student != \"Cy\"])))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nsub <- study[study$student != \\\"Cy\\\", ]\\nr_without <- cor(sub$hours, sub$score)\", c(\"study\", \"r_without\"), output = FALSE)"
               }
             ]
           }
@@ -984,6 +1174,35 @@
                 "id": "t1",
                 "label": "p is 0.0009",
                 "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.0009))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\np <- round(cor.test(study$hours, study$score)$p.value, 4)\", c(\"p\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-strongest-link-first",
+          "title": "Expert: Strongest link first",
+          "promptMarkdown": "Make `links` the correlations of `score` with `hours`, `phone` and `sleep`, named, with the strongest (largest in size, plus or minus) first.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`r <- cor(study[c(\"hours\", \"phone\", \"sleep\")], study$score)[, 1]` gives the three, named. Sort them with `r[order(-abs(r))]`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nr <- cor(study[c(\"hours\", \"phone\", \"sleep\")], study$score)[, 1]\nlinks <- r[order(-abs(r))]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "links is in order of strength, with names",
+                "assertion": "isTRUE(all.equal(links, local({ r <- sapply(c(\"hours\", \"phone\", \"sleep\"), function(v) cor(study[[v]], study$score)); r[order(-abs(r))] })))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nr <- cor(study[c(\\\"hours\\\", \\\"phone\\\", \\\"sleep\\\")], study$score)[, 1]\\nlinks <- r[order(-abs(r))]\", c(\"study\", \"r\", \"links\"), output = FALSE)"
               }
             ]
           }
@@ -1043,29 +1262,29 @@
             "explanation": "A perfect straight line going up."
           },
           {
-            "id": "correlation-q-h2kbwv",
+            "id": "correlation-q-1d9qljz",
             "type": "mcq",
-            "prompt": "What does `cor(c(1, 2, 3), c(6, 4, 2))` give?",
+            "prompt": "Why can one unusual point change a correlation a lot in a small sample?",
             "choices": [
               {
                 "id": "a",
-                "label": "`-2`"
+                "label": "It can't"
               },
               {
                 "id": "b",
-                "label": "`-1`"
+                "label": "With few points, each one carries a big share of the calculation"
               },
               {
                 "id": "c",
-                "label": "`1`"
+                "label": "cor() ignores the others"
               },
               {
                 "id": "d",
-                "label": "`0`"
+                "label": "Outliers are counted twice"
               }
             ],
             "correctChoiceId": "b",
-            "explanation": "A perfect straight line going down."
+            "explanation": "Plot the data, or compare with `method = \"spearman\"`."
           },
           {
             "id": "correlation-q-1w7ysid",
@@ -1214,6 +1433,16 @@
           "id": "by_hand",
           "label": "By hand",
           "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nse <- sd(loaf) / sqrt(length(loaf))\nmean(loaf) + c(-1, 1) * qt(0.975, df = 9) * se"
+        },
+        {
+          "id": "the_interval_by_hand",
+          "label": "The interval by hand",
+          "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nse <- sd(loaf) / sqrt(length(loaf))\nmean(loaf) + c(-1, 1) * qt(0.975, df = length(loaf) - 1) * se\nt.test(loaf)$conf.int"
+        },
+        {
+          "id": "wider_for_more_confidence",
+          "label": "Wider for more confidence",
+          "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nt.test(loaf, conf.level = 0.90)$conf.int\nt.test(loaf, conf.level = 0.99)$conf.int"
         }
       ],
       "intro": {
@@ -1242,6 +1471,11 @@
                 "id": "t1",
                 "label": "se is 1.68",
                 "assertion": "is.numeric(se) && isTRUE(all.equal(se, 1.68))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nse <- round(sd(loaf) / sqrt(length(loaf)), 2)\", c(\"se\"), output = FALSE)"
               }
             ]
           }
@@ -1261,6 +1495,11 @@
                 "id": "t1",
                 "label": "ci is 492 to 499.6",
                 "assertion": "isTRUE(all.equal(as.vector(ci), c(492, 499.6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nci <- round(t.test(loaf)$conf.int, 1)\", c(\"ci\"), output = FALSE)"
               }
             ]
           }
@@ -1280,6 +1519,11 @@
                 "id": "t1",
                 "label": "est is 495.8",
                 "assertion": "is.numeric(est) && isTRUE(all.equal(est, 495.8))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nest <- unname(t.test(loaf)$estimate)\", c(\"est\"), output = FALSE)"
               }
             ]
           }
@@ -1299,6 +1543,11 @@
                 "id": "t1",
                 "label": "ci_hand is 492 to 499.6",
                 "assertion": "isTRUE(all.equal(ci_hand, c(492, 499.6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nse <- sd(loaf) / sqrt(10)\\nci_hand <- round(mean(loaf) + c(-1, 1) * qt(0.975, df = 9) * se, 1)\", c(\"ci_hand\"), output = FALSE)"
               }
             ]
           }
@@ -1318,6 +1567,11 @@
                 "id": "t1",
                 "label": "ci90 is 492.7 to 498.9",
                 "assertion": "isTRUE(all.equal(as.vector(ci90), c(492.7, 498.9)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nci90 <- round(t.test(loaf, conf.level = 0.90)$conf.int, 1)\", c(\"ci90\"), output = FALSE)"
               }
             ]
           }
@@ -1337,6 +1591,11 @@
                 "id": "t1",
                 "label": "inside is FALSE",
                 "assertion": "identical(inside, FALSE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nci <- t.test(loaf)$conf.int\\ninside <- 500 >= ci[1] & 500 <= ci[2]\", c(\"inside\"), output = FALSE)"
               }
             ]
           }
@@ -1356,6 +1615,35 @@
                 "id": "t1",
                 "label": "width is 7.6",
                 "assertion": "is.numeric(width) && isTRUE(all.equal(width, 7.6))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nci <- t.test(loaf)$conf.int\\nwidth <- round(ci[2] - ci[1], 1)\", c(\"width\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-how-many-loaves",
+          "title": "Hard: How many loaves",
+          "promptMarkdown": "Roughly, a 95% interval is `2 * 1.96 * sd / sqrt(n)` wide. Make `n_needed` the smallest whole number of loaves that would make it 4 g wide or less, using the sd of this sample.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "Solve `2 * 1.96 * sd / sqrt(n) = 4` for n: `n = (2 * 1.96 * sd(loaf) / 4)^2`. Round up with `ceiling()`.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nn_needed <- ceiling((2 * 1.96 * sd(loaf) / 4)^2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_needed is 28",
+                "assertion": "is.numeric(n_needed) && isTRUE(all.equal(n_needed, 28))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 510, 485, 505, 498, 502)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nn_needed <- ceiling((2 * 1.96 * sd(loaf) / 4)^2)\", c(\"n_needed\"), output = FALSE)"
               }
             ]
           }
@@ -1380,6 +1668,30 @@
                 "id": "t2",
                 "label": "It is near 0.95",
                 "assertion": "abs(caught - 0.95) < 0.03"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-a-bootstrap-interval",
+          "title": "Expert: A bootstrap interval",
+          "promptMarkdown": "Resample the loaves 2000 times (with replacement) and keep each mean. Make `boot` the 2.5% and 97.5% quantiles of those means.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nset.seed(1)\n",
+          "hint": "`means <- replicate(2000, mean(sample(loaf, replace = TRUE)))`, then `quantile(means, c(0.025, 0.975))`.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nset.seed(1)\nmeans <- replicate(2000, mean(sample(loaf, replace = TRUE)))\nboot <- quantile(means, c(0.025, 0.975))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "boot is right for seed 1",
+                "assertion": "local({ set.seed(1); m <- replicate(2000, mean(sample(loaf, replace = TRUE))); isTRUE(all.equal(unname(boot), unname(quantile(m, c(0.025, 0.975))))) })"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nset.seed(1)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\nset.seed(3)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nset.seed(1)\\nmeans <- replicate(2000, mean(sample(loaf, replace = TRUE)))\\nboot <- quantile(means, c(0.025, 0.975))\", c(\"loaf\", \"boot\"), output = FALSE)"
               }
             ]
           }
@@ -1539,29 +1851,29 @@
             "explanation": "`$estimate` is the mean; `$p.value` comes in the next stage."
           },
           {
-            "id": "confidence_intervals-q-scsnui",
+            "id": "confidence_intervals-q-1he4lg8",
             "type": "mcq",
-            "prompt": "What does `round(qt(0.975, df = 9), 2)` give?",
+            "prompt": "Why does a 95% interval use `qt(0.975, ...)` and not `qt(0.95, ...)`?",
             "choices": [
               {
                 "id": "a",
-                "label": "`1.96`"
+                "label": "0.975 is more accurate"
               },
               {
                 "id": "b",
-                "label": "`2.26`"
+                "label": "qt() needs it"
               },
               {
                 "id": "c",
-                "label": "`9`"
+                "label": "It uses 0.95"
               },
               {
                 "id": "d",
-                "label": "`0.98`"
+                "label": "The 5% left over is split between the two ends, 2.5% each"
               }
             ],
-            "correctChoiceId": "b",
-            "explanation": "Bigger than 1.96: small samples need a wider interval."
+            "correctChoiceId": "d",
+            "explanation": "So 97.5% of the t distribution lies below that value, and 2.5% above it."
           },
           {
             "id": "confidence_intervals-q-rveif9",
@@ -1610,6 +1922,16 @@
           "id": "just_the_numbers",
           "label": "Just the numbers",
           "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nres <- t.test(loaf, mu = 500)\nround(c(t = unname(res$statistic), p = res$p.value), 3)"
+        },
+        {
+          "id": "one_side_or_two",
+          "label": "One side or two",
+          "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nt.test(loaf, mu = 500)$p.value\nt.test(loaf, mu = 500, alternative = \"less\")$p.value"
+        },
+        {
+          "id": "many_claims_at_once",
+          "label": "Many claims at once",
+          "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nclaims <- c(490, 495, 500)\nsapply(claims, function(m) t.test(loaf, mu = m)$p.value)"
         }
       ],
       "intro": {
@@ -1638,6 +1960,11 @@
                 "id": "t1",
                 "label": "p is 0.034",
                 "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.034))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\np <- round(t.test(loaf, mu = 500)$p.value, 3)\", c(\"p\"), output = FALSE)"
               }
             ]
           }
@@ -1657,6 +1984,11 @@
                 "id": "t1",
                 "label": "significant is TRUE",
                 "assertion": "identical(significant, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nsignificant <- t.test(loaf, mu = 500)$p.value < 0.05\", c(\"significant\"), output = FALSE)"
               }
             ]
           }
@@ -1676,6 +2008,11 @@
                 "id": "t1",
                 "label": "t_value is -2.5",
                 "assertion": "is.numeric(t_value) && isTRUE(all.equal(t_value, -2.5))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nt_value <- round(unname(t.test(loaf, mu = 500)$statistic), 2)\", c(\"t_value\"), output = FALSE)"
               }
             ]
           }
@@ -1695,6 +2032,11 @@
                 "id": "t1",
                 "label": "p_less is 0.017",
                 "assertion": "is.numeric(p_less) && isTRUE(all.equal(p_less, 0.017))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\np_less <- round(t.test(loaf, mu = 500, alternative = \\\"less\\\")$p.value, 3)\", c(\"p_less\"), output = FALSE)"
               }
             ]
           }
@@ -1714,6 +2056,11 @@
                 "id": "t1",
                 "label": "p_495 is 0.65",
                 "assertion": "is.numeric(p_495) && isTRUE(all.equal(p_495, 0.65))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\np_495 <- round(t.test(loaf, mu = 495)$p.value, 2)\", c(\"p_495\"), output = FALSE)"
               }
             ]
           }
@@ -1733,6 +2080,11 @@
                 "id": "t1",
                 "label": "p_del is 0.71",
                 "assertion": "is.numeric(p_del) && isTRUE(all.equal(p_del, 0.71))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\\n\", \"minutes <- c(41, 28, 22, 36, 76, 23, 32, 37, 28, 22, 33, 25)\\n\", \"minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\\np_del <- round(t.test(minutes, mu = 30)$p.value, 2)\", c(\"p_del\"), output = FALSE)"
               }
             ]
           }
@@ -1752,6 +2104,35 @@
                 "id": "t1",
                 "label": "Shows the line",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"mean 495.8 g, p = 0.034\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nres <- t.test(loaf, mu = 500)\\ncat(\\\"mean \\\", round(mean(loaf), 1), \\\" g, p = \\\", round(res$p.value, 3), \\\"\\\\n\\\", sep = \\\"\\\")\", c(), output = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-without-the-outlier",
+          "title": "Hard: Without the outlier",
+          "promptMarkdown": "The firm promises a mean of 30 minutes. Make `p_clean` the p-value of a t-test of that promise, leaving out deliveries of an hour or more.",
+          "starterCode": "minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\n",
+          "hint": "`t.test(minutes[minutes < 60], mu = 30)$p.value`",
+          "solution": "minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\np_clean <- t.test(minutes[minutes < 60], mu = 30)$p.value",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_clean is right",
+                "assertion": "is.numeric(p_clean) && isTRUE(all.equal(p_clean, t.test(minutes[minutes < 60], mu = 30)$p.value))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\\n\", \"minutes <- c(41, 28, 22, 36, 76, 23, 32, 37, 28, 22, 33, 25)\\n\", \"minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\\np_clean <- t.test(minutes[minutes < 60], mu = 30)$p.value\", c(\"minutes\", \"p_clean\"), output = FALSE)"
               }
             ]
           }
@@ -1776,6 +2157,30 @@
                 "id": "t2",
                 "label": "It is near 0.05",
                 "assertion": "abs(false_alarms - 0.05) < 0.025"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-which-claims-fit",
+          "title": "Expert: Which claims fit",
+          "promptMarkdown": "Make `fits` the claimed means in `claims` that a t-test does **not** reject at the 5% level (p of 0.05 or more).",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nclaims <- c(490, 495, 500, 505)\n",
+          "hint": "`p <- sapply(claims, function(m) t.test(loaf, mu = m)$p.value)`, then `claims[p >= 0.05]`.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nclaims <- c(490, 495, 500, 505)\np <- sapply(claims, function(m) t.test(loaf, mu = m)$p.value)\nfits <- claims[p >= 0.05]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "fits is 495",
+                "assertion": "is.numeric(fits) && isTRUE(all.equal(fits, 495))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nclaims <- c(490, 495, 500, 505)\\n\", \"loaf <- c(490, 503, 496, 496, 505, 490, 500, 494, 505, 498)\\nclaims <- c(507, 501, 498, 492)\\n\", \"loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\\nclaims <- c(490, 495, 500, 505)\\np <- sapply(claims, function(m) t.test(loaf, mu = m)$p.value)\\nfits <- claims[p >= 0.05]\", c(\"fits\"), output = FALSE)"
               }
             ]
           }
@@ -1860,29 +2265,29 @@
             "explanation": "A large p-value is not proof."
           },
           {
-            "id": "one_sample_t-q-ciguu1",
+            "id": "one_sample_t-q-h3mlli",
             "type": "mcq",
-            "prompt": "Which is the usual convention for \"statistically significant\"?",
+            "prompt": "Why use `t.test()` instead of just checking whether the mean is below 500?",
             "choices": [
               {
                 "id": "a",
-                "label": "p < 0.05"
+                "label": "The mean can't be worked out"
               },
               {
                 "id": "b",
-                "label": "p = 1"
+                "label": "A sample mean wobbles from sample to sample; the test says whether the gap is bigger than that wobble"
               },
               {
                 "id": "c",
-                "label": "p < 0.5"
+                "label": "There is no reason"
               },
               {
                 "id": "d",
-                "label": "p > 0.05"
+                "label": "t.test() is shorter to type"
               }
             ],
-            "correctChoiceId": "a",
-            "explanation": "A convention, not a law of nature: 0.049 and 0.051 are about equally strong."
+            "correctChoiceId": "b",
+            "explanation": "A mean of 495.8 from 10 loaves could happen even if the true mean were 500."
           },
           {
             "id": "one_sample_t-q-1atcz15",
@@ -2006,6 +2411,16 @@
           "id": "paired",
           "label": "Paired",
           "code": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nt.test(class_results$test2, class_results$test1, paired = TRUE)$p.value"
+        },
+        {
+          "id": "means_and_the_test",
+          "label": "Means and the test",
+          "code": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\ntapply(two$height_cm, two$compost, mean)\nt.test(height_cm ~ compost, data = two)"
+        },
+        {
+          "id": "the_same_students_twice",
+          "label": "The same students twice",
+          "code": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nok <- !is.na(class_results$test2)\nt.test(class_results$test2[ok], class_results$test1[ok], paired = TRUE)$p.value"
         }
       ],
       "intro": {
@@ -2034,6 +2449,11 @@
                 "id": "t1",
                 "label": "two has the 8 peat and leaf trays",
                 "assertion": "is.data.frame(two) && nrow(two) == 8 && all(two$compost %in% c(\"peat\", \"leaf\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home2\\\"),\\n  height_cm = c(7.9, 7.1, 12.9, 7.4, 11.1, 9.9, 11.5, 10.6, 8.1, 9.4, 7.7, 8.3),\\n  leaves = c(8, 6, 10, 8, 10, 8, 12, 10, 7, 10, 7, 7)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", c(\"two\"), output = FALSE)"
               }
             ]
           }
@@ -2058,6 +2478,11 @@
                 "id": "t2",
                 "label": "Uses a formula",
                 "assertion": "grepl(\"~\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(NA, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(NA, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\np <- round(t.test(height_cm ~ compost, data = two)$p.value, 3)\", c(\"p\"), output = FALSE)"
               }
             ]
           }
@@ -2077,6 +2502,11 @@
                 "id": "t1",
                 "label": "means is leaf 10.6, peat 8.2",
                 "assertion": "isTRUE(all.equal(means, c(10.6, 8.2)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(7.9, 7.1, 12.9, 7.4, 11.1, 9.9, 11.5, 10.6, 8.1, 9.4, 7.7, 8.3),\\n  leaves = c(8, 6, 10, 8, 10, 8, 12, 10, 7, 10, 7, 7)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\nmeans <- round(unname(t.test(height_cm ~ compost, data = two)$estimate), 1)\", c(\"means\"), output = FALSE)"
               }
             ]
           }
@@ -2096,6 +2526,11 @@
                 "id": "t1",
                 "label": "gap_ci is 1.3 to 3.5",
                 "assertion": "isTRUE(all.equal(as.vector(gap_ci), c(1.3, 3.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(NA, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(NA, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\ngap_ci <- round(t.test(height_cm ~ compost, data = two)$conf.int, 1)\", c(\"gap_ci\"), output = FALSE)"
               }
             ]
           }
@@ -2115,6 +2550,11 @@
                 "id": "t1",
                 "label": "p_home is 0.8",
                 "assertion": "is.numeric(p_home) && isTRUE(all.equal(p_home, 0.8))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home2\\\"),\\n  height_cm = c(7.9, 7.1, 12.9, 7.4, 11.1, 9.9, 11.5, 10.6, 8.1, 9.4, 7.7, 8.3),\\n  leaves = c(8, 6, 10, 8, 10, 8, 12, 10, 7, 10, 7, 7)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\nhp <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"home\\\"), ]\\np_home <- round(t.test(height_cm ~ compost, data = hp)$p.value, 2)\", c(\"p_home\"), output = FALSE)"
               }
             ]
           }
@@ -2134,6 +2574,11 @@
                 "id": "t1",
                 "label": "p_area is 0.059",
                 "assertion": "is.numeric(p_area) && isTRUE(all.equal(p_area, 0.059))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"deliveries <- data.frame(\\n  rider = c(\\\"Sam\\\", \\\"Ola\\\", \\\"Sam\\\", \\\"Ola\\\", \\\"Kit\\\", \\\"Sam\\\", \\\"Kit\\\", \\\"Ola\\\", \\\"Kit\\\", \\\"Sam\\\", \\\"Ola\\\", \\\"Kit\\\"),\\n  area = c(\\\"north\\\", \\\"south\\\", \\\"north\\\", \\\"north\\\", \\\"south\\\", \\\"south\\\", \\\"north\\\", \\\"south\\\", \\\"south\\\", \\\"north\\\", \\\"north\\\", \\\"south\\\"),\\n  minutes = c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\\n)\\n\", \"deliveries <- data.frame(\\n  rider = c(\\\"Sam\\\", \\\"Ola\\\", \\\"Sam\\\", \\\"Ola\\\", \\\"Kit\\\", \\\"Sam\\\", \\\"Kit\\\", \\\"Ola\\\", \\\"Kit\\\", \\\"Sam\\\", \\\"Ola\\\", \\\"Sam\\\"),\\n  area = c(\\\"north\\\", \\\"south\\\", \\\"north\\\", \\\"north\\\", \\\"south\\\", \\\"south\\\", \\\"north\\\", \\\"south\\\", \\\"south\\\", \\\"north\\\", \\\"north\\\", \\\"north\\\"),\\n  minutes = c(78, 53, 44, 67, 150, 45, 60, 71, 56, 39, 64, 49)\\n)\\n\", \"deliveries <- data.frame(\\n  rider = c(\\\"Sam\\\", \\\"Ola\\\", \\\"Sam\\\", \\\"Ola\\\", \\\"Kit\\\", \\\"Sam\\\", \\\"Kit\\\", \\\"Ola\\\", \\\"Kit\\\", \\\"Sam\\\", \\\"Ola\\\", \\\"Kit\\\"),\\n  area = c(\\\"north\\\", \\\"south\\\", \\\"north\\\", \\\"north\\\", \\\"south\\\", \\\"south\\\", \\\"north\\\", \\\"south\\\", \\\"south\\\", \\\"north\\\", \\\"north\\\", \\\"south\\\"),\\n  minutes = c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\\n)\\np_area <- round(t.test(minutes ~ area, data = deliveries)$p.value, 3)\", c(\"p_area\"), output = FALSE)"
               }
             ]
           }
@@ -2158,6 +2603,35 @@
                 "id": "t2",
                 "label": "Uses paired = TRUE",
                 "assertion": "grepl(\"paired\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea2\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B2\\\"),\\n  test1 = c(98, 66, 59, 86, 71, 77, 50, 93, 55, 91, 67, 73),\\n  test2 = c(99, 72, 65, 90, 67, 83, NA, 96, 62, 88, 72, 79)\\n)\\n\", \"class_results <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\", \\\"Ivy\\\", \\\"Jo\\\", \\\"Kai\\\", \\\"Lea\\\"),\\n  group = c(\\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\", \\\"A\\\", \\\"B\\\"),\\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\\n)\\np_paired <- round(t.test(class_results$test2, class_results$test1, paired = TRUE)$p.value, 3)\", c(\"p_paired\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-leaf-against-home",
+          "title": "Hard: Leaf against home",
+          "promptMarkdown": "Make `p_home` the p-value of a two-sample t-test of height, leaf compost against home compost.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\n",
+          "hint": "Keep the two groups first: `seedlings[seedlings$compost %in% c(\"leaf\", \"home\"), ]`, then `t.test(height_cm ~ compost, data = ...)$p.value`.",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\nlh <- seedlings[seedlings$compost %in% c(\"leaf\", \"home\"), ]\np_home <- t.test(height_cm ~ compost, data = lh)$p.value",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_home is right",
+                "assertion": "is.numeric(p_home) && isTRUE(all.equal(p_home, t.test(height_cm ~ compost, data = seedlings[seedlings$compost %in% c(\"leaf\", \"home\"), ])$p.value))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home2\\\"),\\n  height_cm = c(7.9, 7.1, 12.9, 7.4, 11.1, 9.9, 11.5, 10.6, 8.1, 9.4, 7.7, 8.3),\\n  leaves = c(8, 6, 10, 8, 10, 8, 12, 10, 7, 10, 7, 7)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\nlh <- seedlings[seedlings$compost %in% c(\\\"leaf\\\", \\\"home\\\"), ]\\np_home <- t.test(height_cm ~ compost, data = lh)$p.value\", c(\"seedlings\", \"p_home\"), output = FALSE)"
               }
             ]
           }
@@ -2177,6 +2651,35 @@
                 "id": "t1",
                 "label": "Shows the line",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"leaf 10.6 cm vs peat 8.2 cm, p = 0.002\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(NA, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(NA, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\ntwo <- seedlings[seedlings$compost %in% c(\\\"peat\\\", \\\"leaf\\\"), ]\\nres <- t.test(height_cm ~ compost, data = two)\\nm <- round(unname(res$estimate), 1)\\ncat(\\\"leaf \\\", m[1], \\\" cm vs peat \\\", m[2], \\\" cm, p = \\\", round(res$p.value, 3), \\\"\\\\n\\\", sep = \\\"\\\")\", c(), output = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-how-big-is-the-effect",
+          "title": "Expert: How big is the effect",
+          "promptMarkdown": "A p-value doesn't say how big a difference is. Make `d` the effect size for leaf against peat: the difference in means divided by `sqrt((var(leaf) + var(peat)) / 2)`.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\n",
+          "hint": "Pull out the two height vectors first, for example `leaf <- seedlings$height_cm[seedlings$compost == \"leaf\"]`.",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\nleaf <- seedlings$height_cm[seedlings$compost == \"leaf\"]\npeat <- seedlings$height_cm[seedlings$compost == \"peat\"]\nd <- (mean(leaf) - mean(peat)) / sqrt((var(leaf) + var(peat)) / 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "d is right",
+                "assertion": "is.numeric(d) && isTRUE(all.equal(d, local({ h <- seedlings$height_cm; g <- seedlings$compost; (mean(h[g == \"leaf\"]) - mean(h[g == \"peat\"])) / sqrt((var(h[g == \"leaf\"]) + var(h[g == \"peat\"])) / 2) })))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home2\\\"),\\n  height_cm = c(7.9, 7.1, 12.9, 7.4, 11.1, 9.9, 11.5, 10.6, 8.1, 9.4, 7.7, 8.3),\\n  leaves = c(8, 6, 10, 8, 10, 8, 12, 10, 7, 10, 7, 7)\\n)\\n\", \"seedlings <- data.frame(\\n  tray = 1:12,\\n  compost = c(\\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"peat\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"leaf\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\", \\\"home\\\"),\\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\\n)\\nleaf <- seedlings$height_cm[seedlings$compost == \\\"leaf\\\"]\\npeat <- seedlings$height_cm[seedlings$compost == \\\"peat\\\"]\\nd <- (mean(leaf) - mean(peat)) / sqrt((var(leaf) + var(peat)) / 2)\", c(\"seedlings\", \"leaf\", \"peat\", \"d\"), output = FALSE)"
               }
             ]
           }
@@ -2311,29 +2814,29 @@
             "explanation": "Pairing removes the differences between students, so the test is sharper."
           },
           {
-            "id": "two_sample_t-q-gorq8n",
+            "id": "two_sample_t-q-1j3r34v",
             "type": "mcq",
-            "prompt": "What does R use by default for two groups?",
+            "prompt": "Why does R use the Welch test by default for two groups?",
             "choices": [
               {
                 "id": "a",
-                "label": "The Welch test, which doesn't assume equal spreads"
+                "label": "It doesn't assume the two groups have the same spread, which is safer"
               },
               {
                 "id": "b",
-                "label": "A test assuming equal spreads"
+                "label": "It always gives smaller p-values"
               },
               {
                 "id": "c",
-                "label": "A chi-squared test"
+                "label": "It needs fewer values"
               },
               {
                 "id": "d",
-                "label": "A paired test"
+                "label": "It is faster"
               }
             ],
             "correctChoiceId": "a",
-            "explanation": "`var.equal = TRUE` switches to the classic version."
+            "explanation": "Add `var.equal = TRUE` only when you have good reason to think the spreads match."
           },
           {
             "id": "two_sample_t-q-m48ibp",
@@ -2407,6 +2910,16 @@
           "id": "fair_dice",
           "label": "Fair dice?",
           "code": "rolls <- c(15, 22, 18, 25, 17, 23)\nchisq.test(rolls)"
+        },
+        {
+          "id": "observed_and_expected",
+          "label": "Observed and expected",
+          "code": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\ntab\nround(chisq.test(tab)$expected, 1)"
+        },
+        {
+          "id": "small_counts",
+          "label": "Small counts",
+          "code": "m <- matrix(c(3, 7, 6, 4), nrow = 2)\nchisq.test(m)$expected\nfisher.test(m)$p.value"
         }
       ],
       "intro": {
@@ -2435,6 +2948,11 @@
                 "id": "t1",
                 "label": "tab has Y7 30 15 and Y8 20 35",
                 "assertion": "inherits(tab, \"table\") && identical(as.vector(tab), c(30L, 20L, 15L, 35L))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(50, 50)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)))\\n)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", c(\"tab\"), output = FALSE)"
               }
             ]
           }
@@ -2454,6 +2972,11 @@
                 "id": "t1",
                 "label": "p is 0.005",
                 "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.005))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(50, 50)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\np <- round(chisq.test(tab)$p.value, 3)\", c(\"p\"), output = FALSE)"
               }
             ]
           }
@@ -2473,6 +2996,11 @@
                 "id": "t1",
                 "label": "expected is 22.5, 27.5, 22.5, 27.5",
                 "assertion": "isTRUE(all.equal(as.vector(expected), c(22.5, 27.5, 22.5, 27.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(50, 50)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\nexpected <- chisq.test(tab)$expected\", c(\"expected\"), output = FALSE)"
               }
             ]
           }
@@ -2492,6 +3020,11 @@
                 "id": "t1",
                 "label": "shares is Y7 0.67 0.33, Y8 0.36 0.64",
                 "assertion": "isTRUE(all.equal(as.vector(shares), c(0.67, 0.36, 0.33, 0.64)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(50, 50)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\nshares <- round(prop.table(tab, 1), 2)\", c(\"shares\"), output = FALSE)"
               }
             ]
           }
@@ -2511,6 +3044,11 @@
                 "id": "t1",
                 "label": "x2 is 7.92",
                 "assertion": "is.numeric(x2) && isTRUE(all.equal(x2, 7.92))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(50, 50)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\nx2 <- round(unname(chisq.test(tab)$statistic), 2)\", c(\"x2\"), output = FALSE)"
               }
             ]
           }
@@ -2530,6 +3068,11 @@
                 "id": "t1",
                 "label": "p_dice is 0.58",
                 "assertion": "is.numeric(p_dice) && isTRUE(all.equal(p_dice, 0.58))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"rolls <- c(15, 22, 18, 25, 17, 23)\\n\", \"rolls <- c(26, 19, 26, 21, 24, 16)\\n\", \"rolls <- c(15, 22, 18, 25, 17, 23)\\np_dice <- round(chisq.test(rolls)$p.value, 2)\", c(\"p_dice\"), output = FALSE)"
               }
             ]
           }
@@ -2549,6 +3092,35 @@
                 "id": "t1",
                 "label": "p_mix is 0.082",
                 "assertion": "is.numeric(p_mix) && isTRUE(all.equal(p_mix, 0.082))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"flowers <- c(red = 30, yellow = 50, white = 20)\\n\", \"flowers <- c(red = 23, yellow = 52, white = 31)\\n\", \"flowers <- c(red = 30, yellow = 50, white = 20)\\np_mix <- round(chisq.test(flowers, p = c(0.4, 0.4, 0.2))$p.value, 3)\", c(\"p_mix\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-more-than-expected",
+          "title": "Hard: More than expected",
+          "promptMarkdown": "Make `gap` the observed counts minus the counts expected if year and lunch weren't linked.",
+          "starterCode": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\n",
+          "hint": "`chisq.test(tab)$expected` has the same shape as `tab`, so you can subtract it.",
+          "solution": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\ngap <- tab - chisq.test(tab)$expected",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Y7 hot is 7.5 more than expected",
+                "assertion": "isTRUE(all.equal(gap[\"Y7\", \"hot\"], 7.5)) && isTRUE(all.equal(as.vector(gap), as.vector(tab - chisq.test(tab)$expected)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(50, 50)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(25, 25)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\n\", \"lunch <- data.frame(\\n  year = rep(c(\\\"Y7\\\", \\\"Y8\\\"), c(45, 55)),\\n  choice = c(rep(c(\\\"hot\\\", \\\"packed\\\"), c(30, 15)), rep(c(\\\"hot\\\", \\\"packed\\\"), c(20, 35)))\\n)\\ntab <- table(lunch$year, lunch$choice)\\ngap <- tab - chisq.test(tab)$expected\", c(\"tab\", \"gap\"), output = FALSE)"
               }
             ]
           }
@@ -2573,6 +3145,35 @@
                 "id": "t2",
                 "label": "p_m is 0.005",
                 "assertion": "is.numeric(p_m) && isTRUE(all.equal(p_m, 0.005))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-is-the-test-safe",
+          "title": "Expert: Is the test safe",
+          "promptMarkdown": "Make `safe` TRUE if every expected count in `m` is at least 5, and `p` the chi-squared p-value.",
+          "starterCode": "m <- matrix(c(3, 7, 6, 4), nrow = 2)\n",
+          "hint": "Save the test once: `res <- chisq.test(m)`. Then `all(res$expected >= 5)` and `res$p.value`.",
+          "solution": "m <- matrix(c(3, 7, 6, 4), nrow = 2)\nres <- chisq.test(m)\nsafe <- all(res$expected >= 5)\np <- res$p.value",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "safe is FALSE",
+                "assertion": "identical(safe, FALSE)"
+              },
+              {
+                "id": "t2",
+                "label": "p is right",
+                "assertion": "is.numeric(p) && isTRUE(all.equal(p, suppressWarnings(chisq.test(m))$p.value))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"m <- matrix(c(3, 7, 6, 4), nrow = 2)\\n\", \"m <- matrix(c(30, 70, 60, 40), nrow = 2)\\n\", \"m <- matrix(c(3, 7, 6, 4), nrow = 2)\\nres <- chisq.test(m)\\nsafe <- all(res$expected >= 5)\\np <- res$p.value\", c(\"m\", \"safe\", \"p\"), output = FALSE)"
               }
             ]
           }
@@ -2682,29 +3283,29 @@
             "explanation": "A link, not a cause."
           },
           {
-            "id": "chi_squared-q-14wqs00",
+            "id": "chi_squared-q-e96az",
             "type": "mcq",
-            "prompt": "What does `prop.table(tab, 1)` give?",
+            "prompt": "Why compare with expected counts rather than the raw counts?",
             "choices": [
               {
                 "id": "a",
-                "label": "The counts"
+                "label": "There is no reason"
               },
               {
                 "id": "b",
-                "label": "Shares of the whole table"
+                "label": "The groups are different sizes, so equal counts aren't what \"no link\" looks like"
               },
               {
                 "id": "c",
-                "label": "Shares within each row"
+                "label": "Raw counts are always wrong"
               },
               {
                 "id": "d",
-                "label": "Shares within each column"
+                "label": "chisq.test() can't read counts"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "`1` is rows, `2` is columns."
+            "correctChoiceId": "b",
+            "explanation": "Expected counts say what each cell would hold if year and lunch weren't linked."
           },
           {
             "id": "chi_squared-q-12zt3op",
@@ -2803,6 +3404,16 @@
           "id": "the_whole_summary",
           "label": "The whole summary",
           "code": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nsummary(model)"
+        },
+        {
+          "id": "what_summary_holds",
+          "label": "What summary() holds",
+          "code": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nsummary(model)$coefficients\nsummary(model)$r.squared"
+        },
+        {
+          "id": "intervals_for_the_line",
+          "label": "Intervals for the line",
+          "code": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nconfint(model)"
         }
       ],
       "intro": {
@@ -2831,6 +3442,11 @@
                 "id": "t1",
                 "label": "model is an lm of score on hours",
                 "assertion": "inherits(model, \"lm\") && isTRUE(all.equal(unname(coef(model)), unname(coef(lm(score ~ hours, data = study)))))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", c(\"study\", \"model\"), output = FALSE)"
               }
             ]
           }
@@ -2850,6 +3466,11 @@
                 "id": "t1",
                 "label": "slope is 4.8",
                 "assertion": "is.numeric(slope) && isTRUE(all.equal(slope, 4.8))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\nslope <- round(unname(coef(model)[2]), 2)\", c(\"slope\"), output = FALSE)"
               }
             ]
           }
@@ -2869,6 +3490,11 @@
                 "id": "t1",
                 "label": "intercept is 50.1",
                 "assertion": "is.numeric(intercept) && isTRUE(all.equal(intercept, 50.1))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\nintercept <- round(unname(coef(model)[1]), 1)\", c(\"intercept\"), output = FALSE)"
               }
             ]
           }
@@ -2888,6 +3514,11 @@
                 "id": "t1",
                 "label": "r2 is 0.86",
                 "assertion": "is.numeric(r2) && isTRUE(all.equal(r2, 0.86))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\nr2 <- round(summary(model)$r.squared, 2)\", c(\"r2\"), output = FALSE)"
               }
             ]
           }
@@ -2912,6 +3543,11 @@
                 "id": "t2",
                 "label": "Uses predict()",
                 "assertion": "grepl(\"predict(\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\npred <- round(unname(predict(model, newdata = data.frame(hours = c(4.5, 8)))), 1)\", c(\"pred\"), output = FALSE)"
               }
             ]
           }
@@ -2931,6 +3567,11 @@
                 "id": "t1",
                 "label": "by_hand is 71.7",
                 "assertion": "is.numeric(by_hand) && isTRUE(all.equal(by_hand, 71.7))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\nb <- coef(model)\\nby_hand <- round(unname(b[1] + b[2] * 4.5), 1)\", c(\"by_hand\"), output = FALSE)"
               }
             ]
           }
@@ -2950,6 +3591,35 @@
                 "id": "t1",
                 "label": "beat_line is Ana, Dee, Eli, Gus, Hal",
                 "assertion": "identical(beat_line, c(\"Ana\", \"Dee\", \"Eli\", \"Gus\", \"Hal\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\nbeat_line <- study$student[residuals(model) > 0]\", c(\"beat_line\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-add-a-predictor",
+          "title": "Hard: Add a predictor",
+          "promptMarkdown": "Fit `model2` with both `hours` and `sleep`. Make `r2_gain` how much R² goes up compared with hours alone.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "`lm(score ~ hours + sleep, data = study)`. R² is `summary(...)$r.squared`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nmodel2 <- lm(score ~ hours + sleep, data = study)\nr2_gain <- summary(model2)$r.squared - summary(model)$r.squared",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r2_gain is right",
+                "assertion": "is.numeric(r2_gain) && isTRUE(all.equal(r2_gain, summary(lm(score ~ hours + sleep, data = study))$r.squared - summary(lm(score ~ hours, data = study))$r.squared))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\nmodel2 <- lm(score ~ hours + sleep, data = study)\\nr2_gain <- summary(model2)$r.squared - summary(model)$r.squared\", c(\"study\", \"r2_gain\"), output = FALSE)"
               }
             ]
           }
@@ -2974,6 +3644,40 @@
                 "id": "t2",
                 "label": "r2_2 is 0.84",
                 "assertion": "is.numeric(r2_2) && isTRUE(all.equal(r2_2, 0.84))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel2 <- lm(score ~ phone, data = study)\\nslope2 <- round(unname(coef(model2)[2]), 2)\\nr2_2 <- round(summary(model2)$r.squared, 2)\", c(\"study\", \"slope2\", \"r2_2\"), output = FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-how-sure-is-the-slope",
+          "title": "Expert: How sure is the slope",
+          "promptMarkdown": "Make `p_slope` the p-value for the `hours` slope, and `ci_slope` its 95% confidence interval (two numbers).",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "`summary(model)$coefficients[\"hours\", \"Pr(>|t|)\"]` is the p-value; `confint(model)[\"hours\", ]` the interval.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\np_slope <- summary(model)$coefficients[\"hours\", \"Pr(>|t|)\"]\nci_slope <- confint(model)[\"hours\", ]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_slope is right",
+                "assertion": "is.numeric(p_slope) && isTRUE(all.equal(p_slope, summary(model)$coefficients[\"hours\", 4]))"
+              },
+              {
+                "id": "t2",
+                "label": "ci_slope is right",
+                "assertion": "isTRUE(all.equal(unname(ci_slope), unname(confint(lm(score ~ hours, data = study))[2, ])))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal2\\\"),\\n  hours = c(4, 8, 6, 8, 5, 4, 7, 3),\\n  phone = c(4, 4, 6, 2, 5, 8, 3, 8),\\n  sleep = c(9, 9, 10, 11, 9, 7, 11, 9),\\n  score = c(64, 85, 61, 81, 76, 55, 73, 65)\\n)\\nmodel <- lm(score ~ hours, data = study)\\n\", \"study <- data.frame(\\n  student = c(\\\"Ana\\\", \\\"Ben\\\", \\\"Cy\\\", \\\"Dee\\\", \\\"Eli\\\", \\\"Fay\\\", \\\"Gus\\\", \\\"Hal\\\"),\\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\\n)\\nmodel <- lm(score ~ hours, data = study)\\np_slope <- summary(model)$coefficients[\\\"hours\\\", \\\"Pr(>|t|)\\\"]\\nci_slope <- confint(model)[\\\"hours\\\", ]\", c(\"study\", \"model\", \"p_slope\", \"ci_slope\"), output = FALSE)"
               }
             ]
           }
@@ -3133,29 +3837,29 @@
             "explanation": "The line gives 146, an impossible score."
           },
           {
-            "id": "linear_regression-q-13m6pu8",
+            "id": "linear_regression-q-1el5wke",
             "type": "mcq",
-            "prompt": "What does `predict()` need in `newdata`?",
+            "prompt": "Why does R² go up whenever you add a predictor, even a useless one?",
             "choices": [
               {
                 "id": "a",
-                "label": "The old data"
+                "label": "It doesn't"
               },
               {
                 "id": "b",
-                "label": "A vector"
+                "label": "An extra term can always fit the sample a little closer, even by chance"
               },
               {
                 "id": "c",
-                "label": "A data frame with a column of the same name as the predictor"
+                "label": "R² counts the predictors"
               },
               {
                 "id": "d",
-                "label": "Nothing"
+                "label": "Useless predictors improve the model"
               }
             ],
-            "correctChoiceId": "c",
-            "explanation": "`data.frame(hours = 4.5)`."
+            "correctChoiceId": "b",
+            "explanation": "Adjusted R² (`summary(model)$adj.r.squared`) allows for the number of predictors."
           },
           {
             "id": "linear_regression-q-1um8rr9",
@@ -3252,6 +3956,11 @@
                 "id": "t2",
                 "label": "share is heads / 100",
                 "assertion": "is.numeric(share) && isTRUE(all.equal(share, sum(flips == \"H\") / 100))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"set.seed(10)\\nflips <- sample(c(\\\"H\\\", \\\"T\\\"), 100, replace = TRUE)\\n\", \"set.seed(11)\\nflips <- sample(c(\\\"H\\\", \\\"T2\\\"), 100, replace = TRUE)\\n\", \"set.seed(10)\\nflips <- sample(c(\\\"H\\\", \\\"T\\\"), 100, replace = TRUE)\\nheads <- sum(flips == \\\"H\\\")\\nshare <- mean(flips == \\\"H\\\")\", c(\"flips\", \"heads\", \"share\"), output = FALSE)"
               }
             ]
           }
@@ -3295,6 +4004,11 @@
                 "id": "t2",
                 "label": "It is small, about 0.035",
                 "assertion": "as_extreme < 0.07"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"set.seed(10)\\ncounts <- replicate(1000, sum(sample(c(\\\"H\\\", \\\"T\\\"), 100, replace = TRUE) == \\\"H\\\"))\\n\", \"set.seed(11)\\ncounts <- replicate(1000, sum(sample(c(\\\"H\\\", \\\"T2\\\"), 100, replace = TRUE) == \\\"H\\\"))\\n\", \"set.seed(10)\\ncounts <- replicate(1000, sum(sample(c(\\\"H\\\", \\\"T\\\"), 100, replace = TRUE) == \\\"H\\\"))\\nas_extreme <- mean(counts >= 61 | counts <= 39)\", c(\"counts\", \"as_extreme\"), output = FALSE)"
               }
             ]
           }
@@ -3512,6 +4226,11 @@
                 "id": "t1",
                 "label": "means is flashcards 81.6, rereading 72",
                 "assertion": "isTRUE(all.equal(as.vector(means), c(81.6, 72))) && identical(names(means), c(\"flashcards\", \"rereading\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading2\\\"), each = 8),\\n  score = c(72, 80, 70, 73, 68, 81, 75, 73, 85, 89, 79, 83, 91, 75, 87, 79)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\nmeans <- round(tapply(trial$score, trial$method, mean), 1)\", c(\"means\"), output = FALSE)"
               }
             ]
           }
@@ -3531,6 +4250,11 @@
                 "id": "t1",
                 "label": "sds is flashcards 6.1, rereading 4.6",
                 "assertion": "isTRUE(all.equal(as.vector(sds), c(6.1, 4.6)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading2\\\"), each = 8),\\n  score = c(72, 80, 70, 73, 68, 81, 75, 73, 85, 89, 79, 83, 91, 75, 87, 79)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\nsds <- round(tapply(trial$score, trial$method, sd), 1)\", c(\"sds\"), output = FALSE)"
               }
             ]
           }
@@ -3550,6 +4274,11 @@
                 "id": "t1",
                 "label": "p is 0.004",
                 "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.004))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading2\\\"), each = 8),\\n  score = c(72, 80, 70, 73, 68, 81, 75, 73, 85, 89, 79, 83, 91, 75, 87, 79)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\np <- round(t.test(score ~ method, data = trial)$p.value, 3)\", c(\"p\"), output = FALSE)"
               }
             ]
           }
@@ -3569,6 +4298,11 @@
                 "id": "t1",
                 "label": "gain_ci is 3.8 to 15.5",
                 "assertion": "isTRUE(all.equal(as.vector(gain_ci), c(3.8, 15.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading2\\\"), each = 8),\\n  score = c(72, 80, 70, 73, 68, 81, 75, 73, 85, 89, 79, 83, 91, 75, 87, 79)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\ngain_ci <- round(t.test(score ~ method, data = trial)$conf.int, 1)\", c(\"gain_ci\"), output = FALSE)"
               }
             ]
           }
@@ -3588,6 +4322,11 @@
                 "id": "t1",
                 "label": "beat is 0.875",
                 "assertion": "is.numeric(beat) && isTRUE(all.equal(beat, 0.875))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading2\\\"), each = 8),\\n  score = c(72, 80, 70, 73, 68, 81, 75, 73, 85, 89, 79, 83, 91, 75, 87, 79)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\nflash <- trial$score[trial$method == \\\"flashcards\\\"]\\nreread <- trial$score[trial$method == \\\"rereading\\\"]\\nbeat <- mean(flash > mean(reread))\", c(\"beat\"), output = FALSE)"
               }
             ]
           }
@@ -3607,6 +4346,11 @@
                 "id": "t1",
                 "label": "Shows the finding",
                 "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"flashcards 81.6 vs rereading 72, p = 0.004\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading2\\\"), each = 8),\\n  score = c(72, 80, 70, 73, 68, 81, 75, 73, 85, 89, 79, 83, 91, 75, 87, 79)\\n)\\n\", \"trial <- data.frame(\\n  method = rep(c(\\\"flashcards\\\", \\\"rereading\\\"), each = 8),\\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\\n)\\nres <- t.test(score ~ method, data = trial)\\nm <- round(unname(res$estimate), 1)\\ncat(\\\"flashcards \\\", m[1], \\\" vs rereading \\\", m[2], \\\", p = \\\", round(res$p.value, 3), \\\"\\\\n\\\", sep = \\\"\\\")\", c(), output = TRUE)"
               }
             ]
           }
@@ -3786,6 +4530,11 @@
                 "id": "t1",
                 "label": "r is 0.96",
                 "assertion": "is.numeric(r) && isTRUE(all.equal(r, 0.96))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(30, 25, 20, 33, 30, 27, 27, 24, 21, 21, 18, 15),\\n  sales = c(251, 223, 171, 287, 294, 232, 243, 185, 197, 144, 154, 119)\\n)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nr <- round(cor(kiosk$temp, kiosk$sales), 2)\", c(\"r\"), output = FALSE)"
               }
             ]
           }
@@ -3810,6 +4559,11 @@
                 "id": "t2",
                 "label": "per_degree is 10.75",
                 "assertion": "is.numeric(per_degree) && isTRUE(all.equal(per_degree, 10.75))"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(30, 25, 20, 33, 30, 27, 27, 24, 21, 21, 18, 15),\\n  sales = c(251, 223, 171, 287, 294, 232, 243, 185, 197, 144, 154, 119)\\n)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\nper_degree <- round(unname(coef(model)[2]), 2)\", c(\"model\", \"per_degree\"), output = FALSE)"
               }
             ]
           }
@@ -3829,6 +4583,11 @@
                 "id": "t1",
                 "label": "r2 is 0.93",
                 "assertion": "is.numeric(r2) && isTRUE(all.equal(r2, 0.93))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(30, 25, 20, 33, 30, 27, 27, 24, 21, 21, 18, 15),\\n  sales = c(251, 223, 171, 287, 294, 232, 243, 185, 197, 144, 154, 119)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\nr2 <- round(summary(model)$r.squared, 2)\", c(\"r2\"), output = FALSE)"
               }
             ]
           }
@@ -3848,6 +4607,11 @@
                 "id": "t1",
                 "label": "to_order is 236",
                 "assertion": "is.numeric(to_order) && isTRUE(all.equal(to_order, 236))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(30, 25, 20, 33, 30, 27, 27, 24, 21, 21, 18, 15),\\n  sales = c(251, 223, 171, 287, 294, 232, 243, 185, 197, 144, 154, 119)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\nto_order <- round(unname(predict(model, newdata = data.frame(temp = 25))))\", c(\"to_order\"), output = FALSE)"
               }
             ]
           }
@@ -3867,6 +4631,11 @@
                 "id": "t1",
                 "label": "odd_day is 8",
                 "assertion": "is.numeric(odd_day) && isTRUE(all.equal(odd_day, 8))"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "._cq_rerun(\"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(30, 25, 20, 33, 30, 27, 27, 24, 21, 21, 18, 15),\\n  sales = c(251, 223, 171, 287, 294, 232, 243, 185, 197, 144, 154, 119)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\n\", \"kiosk <- data.frame(\\n  day = 1:12,\\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\\n)\\nmodel <- lm(sales ~ temp, data = kiosk)\\nodd_day <- kiosk$day[which.max(abs(residuals(model)))]\", c(\"odd_day\"), output = FALSE)"
               }
             ]
           }

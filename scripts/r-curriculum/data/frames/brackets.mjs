@@ -19,6 +19,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('One value', ORDERS + 'orders[2, "drink"]\norders[2, "price"] <- 2.7\norders[2, ]'),
     snippet('Mind the comma', ORDERS + 'head(orders[1])\norders[1, ]'),
+    snippet('Change values in place', ORDERS + 'orders[orders$size == "L", "price"] <- 5\nhead(orders)'),
+    snippet('Rows by position', ORDERS + 'orders[c(1, 3, 5), ]\norders[-(1:7), ]'),
   ],
   readMore: { label: 'R documentation: Extract.data.frame', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extract.data.frame.html', source: 'R documentation' },
   challenges: [
@@ -71,6 +73,14 @@ export default makeTopic({
       solution: ORDERS + 'lattes <- orders[orders$drink == "latte", c("day", "price")]',
       tests: [['lattes is day and price of the 4 lattes', sameFrame('lattes', 'data.frame(day = c("Mon", "Tue", "Tue", "Thu"), price = c(3.4, 3.4, 2.9, 3.9))')]],
     }),
+    task('hard', 'Every other order', {
+      prompt: 'Make `picked` the 1st, 3rd, 5th, 7th and 9th orders, with only the `order` and `drink` columns.',
+      starter: ORDERS,
+      alt: (s) => s.replace('"latte", "tea", "mocha"', '"tea", "mocha", "latte"'),
+      hint: 'Rows before the comma, columns after: `orders[c(1, 3, 5, 7, 9), c("order", "drink")]`. `seq(1, 9, by = 2)` makes the rows too.',
+      solution: ORDERS + 'picked <- orders[seq(1, 9, by = 2), c("order", "drink")]',
+      tests: [['picked is the right rows and columns', sameFrame('picked', 'orders[c(1, 3, 5, 7, 9), c("order", "drink")]')]],
+    }),
     task('expert', 'Mind the comma', {
       prompt: 'This should give the first row, but it gives the first column. Fix it, so `first` is the first order.',
       starter: ORDERS + 'first <- orders[1]',
@@ -78,10 +88,17 @@ export default makeTopic({
       solution: ORDERS + 'first <- orders[1, ]',
       tests: [['first is the first order', sameFrame('first', 'orders[1, ]')]],
     }),
+    task('expert', 'Large drinks cost more', {
+      prompt: 'Large drinks go up by 0.30. Add 0.3 to the price of every `L` order, in the table itself.',
+      starter: ORDERS,
+      hint: 'Pick the cells with `orders[orders$size == "L", "price"]` on both sides of `<-`.',
+      solution: ORDERS + 'large <- orders$size == "L"\norders[large, "price"] <- orders[large, "price"] + 0.3',
+      tests: [['The L prices went up by 0.3', near('orders$price', 'c(3.4, 2.5, 4.5, 3.4, 2.9, 2.5, 4.1, 4.2, 4.2, 2.2)')]],
+    }),
   ],
   questions: [
-    mc('In `df[2, 3]`, what is the 2?', ['The column', 'The row', 'The number of rows', 'The value'], 1,
-      'Rows come first, then columns.'),
+    mc('Why does `df[df$x > 5, ]` need the comma?', ['Before the comma picks rows and after it columns; without it R picks columns', 'The comma is optional', 'It separates two tables', 'It stops NA'], 0,
+      'With nothing after the comma, every column is kept.'),
     mc('What does `df[, "x"]` give?', ['The first row', 'The column x, as a vector', 'A one-row table', 'An error'], 1,
       'An empty rows part means every row.',
       { code: 'df <- data.frame(x = c(5, 6), y = 1:2)\ndf[, "x"]', output: '[1] 5 6' }),

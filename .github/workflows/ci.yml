@@ -41,3 +41,10 @@ jobs:
           # Pyodide 0.27.2 ships pandas 2.2; match it so the check sees what the app runs.
           pip install "pandas==2.2.*"
           npm run check:content
+
+      # Runs every R challenge's solution, starter and typed-in answer in webR (see scripts/r-curriculum/check-core.mjs).
+      # webR isn't an app dependency (the app loads it from a CDN), so it is installed here, at the version in src/runtimeVersions.ts.
+      - name: Check R lesson content
+        run: |
+          npm install --no-save --no-audit --no-fund webr@0.4.2
+          npm run check:r

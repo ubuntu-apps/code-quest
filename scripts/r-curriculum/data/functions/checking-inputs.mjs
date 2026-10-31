@@ -21,6 +21,7 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('A clear error', '# Run it and read the error\nride_cost <- function(minutes) {\n  if (minutes < 0) stop("minutes can\'t be negative")\n  1 + 0.15 * minutes\n}\nride_cost(-5)'),
     snippet('stopifnot', '# Run it and read the error\nsafe_mean <- function(x) {\n  stopifnot(is.numeric(x))\n  mean(x)\n}\nsafe_mean("12")'),
+    snippet('What stopifnot() says', '# Run it and read the error\nx <- -3\nstopifnot(is.numeric(x), x >= 0)'),
   ],
   readMore: { label: 'R documentation: stop()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/stop.html', source: 'R documentation' },
   challenges: [
@@ -37,6 +38,14 @@ export default makeTopic({
       hint: 'First line of the body: `stopifnot(is.numeric(x))`.',
       solution: 'safe_mean <- function(x) {\n  stopifnot(is.numeric(x))\n  mean(x)\n}',
       tests: [['safe_mean(c(2, 4)) is 3', isFn('safe_mean') + ' && isTRUE(all.equal(safe_mean(c(2, 4)), 3))'], ['safe_mean("12") is an error', fails('safe_mean("12")')]],
+    }),
+    task('easy', 'One size each', {
+      prompt: 'Add a check to `area()` so it stops with an error unless `w` and `h` are single values. Without it, `area(c(2, 3), 4)` quietly gives two answers.',
+      starter: 'area <- function(w, h) {\n  w * h\n}\n',
+      typedOk: true,
+      hint: 'Put `stopifnot(length(w) == 1, length(h) == 1)` as the first line of the body.',
+      solution: 'area <- function(w, h) {\n  stopifnot(length(w) == 1, length(h) == 1)\n  w * h\n}',
+      tests: [['area(2, 3) is 6', isFn('area') + ' && isTRUE(all.equal(area(2, 3), 6))'], ['area(c(2, 3), 4) is an error', fails('area(c(2, 3), 4)')], ['area(2, 3:4) is an error', fails('area(2, 3:4)')]],
     }),
     task('medium', 'Empty input', {
       prompt: 'Make `average(x)` give `NA` straight away when `x` is empty, using `return()`.',
@@ -76,6 +85,12 @@ export default makeTopic({
       solution: 'grade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score < 0 || score > 100) stop("score must be between 0 and 100")\n  if (score >= 50) "pass" else "fail"\n}',
       tests: [['grade(72) is "pass", grade(31) is "fail"', isFn('grade') + ' && identical(grade(72), "pass") && identical(grade(31), "fail")'], ['grade(NA) is NA', 'identical(grade(NA), NA)'], ['grade(140) is an error', fails('grade(140)')]],
     }),
+    task('expert', 'A safe divide', {
+      prompt: 'Write `safe_divide(a, b)`. It stops with an error if either isn\'t a number. If `b` is 0 it gives a warning `"dividing by zero"` and returns NA; otherwise it gives `a / b`.',
+      hint: 'First `stopifnot(...)`. Then `if (b == 0) { warning("dividing by zero"); return(NA) }`, and `a / b` last.',
+      solution: 'safe_divide <- function(a, b) {\n  stopifnot(is.numeric(a), is.numeric(b))\n  if (b == 0) {\n    warning("dividing by zero")\n    return(NA)\n  }\n  a / b\n}',
+      tests: [['safe_divide(6, 3) is 2', isFn('safe_divide') + ' && isTRUE(all.equal(safe_divide(6, 3), 2))'], ['safe_divide(1, 0) warns and gives NA', 'inherits(tryCatch(safe_divide(1, 0), warning = function(w) w), "warning") && is.na(suppressWarnings(safe_divide(1, 0)))'], ['safe_divide("6", 3) is an error', fails('safe_divide("6", 3)')]],
+    }),
   ],
   questions: [
     mc('What does `stop("too big")` do?', ['Prints a message and carries on', 'Ends with an error showing "too big"', 'Pauses R', 'Returns "too big"'], 1,
@@ -91,9 +106,8 @@ export default makeTopic({
       'Use `warning()` when the answer is still usable.'),
     mc('Why check inputs at the start of a function?', ['It is faster', 'A clear error now is better than a quietly wrong answer later', 'R needs it', 'To make the function shorter'], 1,
       'Wrong answers can spread through a whole analysis unnoticed.'),
-    mc('What does `if (5 < 0 || 5 > 120) "bad" else "ok"` give?', ['`"bad"`', '`"ok"`', 'An error', '`TRUE`'], 1,
-      'Neither condition is TRUE. `||` is the single-value "or" used in `if`.',
-      { code: 'if (5 < 0 || 5 > 120) "bad" else "ok"', output: '[1] "ok"' }),
+    mc('Why use `||` rather than `|` in an `if` condition?', ['`||` works on single TRUE/FALSE values and stops as soon as the answer is known', '`|` is slower to type', '`||` works on vectors', 'There is no difference'], 0,
+      'If the first part is TRUE, `||` doesn\'t look at the second.'),
     mc('Which gives a function\'s answer early, skipping the rest of the body?', ['`stop()`', '`return()`', '`break`', '`next`'], 1,
       '`break` and `next` are for loops; `return()` is for functions.'),
     mc('What does `length(numeric(0))` give?', ['`1`', '`0`', '`NA`', 'An error'], 1,

@@ -19,6 +19,7 @@ export default makeTopic({
     snippet('A long vector wraps', 'c(101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125)'),
     snippet('Mixing kinds', 'c(1, "two", 3)\nc(1, TRUE, FALSE)'),
     snippet('Add to a vector', 'cups <- c(3, 5, 2)\ncups <- c(cups, 4)\ncups\nlength(cups)'),
+    snippet('One type per vector', 'c(1, "two", 3)\nc(1, TRUE, 3)'),
   ],
   readMore: R_INTRO('Vectors-and-assignment', 'An Introduction to R: vectors'),
   challenges: [
@@ -83,6 +84,13 @@ export default makeTopic({
       solution: 'cups <- c(3, 5, 2)',
       tests: [['cups is 3, 5, 2', near('cups', 'c(3, 5, 2)')]],
     }),
+    task('hard', 'A shopping list', {
+      prompt: 'Make `basket` one vector with the fruit first and then the veg, and `n_items` the number of items in it.',
+      starter: 'fruit <- c("apples", "pears")\nveg <- c("kale", "leeks", "beans")\n',
+      hint: '`c()` joins vectors too: `basket <- c(fruit, veg)`, then `length(basket)`.',
+      solution: 'fruit <- c("apples", "pears")\nveg <- c("kale", "leeks", "beans")\nbasket <- c(fruit, veg)\nn_items <- length(basket)',
+      tests: [['basket is apples, pears, kale, leeks, beans', isTexts('basket', 'apples', 'pears', 'kale', 'leeks', 'beans')], ['n_items is 5', near('n_items', 5)]],
+    }),
     task('expert', 'Numbers, not text', {
       prompt: 'One value was typed in quotes, so the whole vector became text. Fix it so `weights` is a vector of numbers: 1.2, 0.8 and 2.5.',
       starter: 'weights <- c(1.2, "0.8", 2.5)\nweights',
@@ -91,6 +99,13 @@ export default makeTopic({
       tests: [
         ['weights is numbers: 1.2, 0.8, 2.5', near('weights', 'c(1.2, 0.8, 2.5)')],
       ],
+    }),
+    task('expert', 'Front and back of the queue', {
+      prompt: 'Ana has just arrived first and Dee last. Make `queue` start with `"Ana"`, then the people already in it, then `"Dee"`.',
+      starter: 'queue <- c("Ben", "Cy")\n',
+      hint: 'Put the old vector in the middle of a new one: `queue <- c("Ana", queue, "Dee")`.',
+      solution: 'queue <- c("Ben", "Cy")\nqueue <- c("Ana", queue, "Dee")',
+      tests: [['queue is Ana, Ben, Cy, Dee', isTexts('queue', 'Ana', 'Ben', 'Cy', 'Dee')]],
     }),
   ],
   questions: [
@@ -103,9 +118,8 @@ export default makeTopic({
     mc('What does `length(42)` give?', ['`0`', '`2`', '`1`', '`42`'], 2,
       'A single value is a vector of length 1.',
       { code: 'length(42)', output: '[1] 1' }),
-    mc('What does `c(1, "two", 3)` give?', ['An error', '`[1] 1 2 3`', '`[1] "1" "two" "3"`', '`[1] 1 "two" 3`'], 2,
-      'A vector holds one kind of value. One text value turns them all into text.',
-      { code: 'c(1, "two", 3)', output: '[1] "1"   "two" "3"' }),
+    mc('Why does `c(1, "two", 3)` turn every value into text?', ['A vector holds one type of value, so R picks the type that can hold them all', 'R sorts the values first', 'Numbers can\'t go in vectors', 'It is a bug'], 0,
+      'Any number can be written as text, but not every text is a number.'),
     mc('What does `c(c(1, 2), c(3, 4))` give?', ['`[1] 1 2 3 4`', 'Two vectors', 'An error', '`[1] 3 7`'], 0,
       '`c()` joins vectors into one longer vector.',
       { code: 'c(c(1, 2), c(3, 4))', output: '[1] 1 2 3 4' }),

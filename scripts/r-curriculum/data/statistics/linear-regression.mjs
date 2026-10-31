@@ -18,7 +18,7 @@ export default makeTopic({
     '`residuals(model)` are the gaps between each real score and the line: positive if the student did better than the line predicts.',
   ],
   sandboxCode: STUDY + MODEL + 'coef(model)\nsummary(model)$r.squared\npredict(model, newdata = data.frame(hours = c(4.5, 8)))',
-  sandboxSnippets: [snippet('The whole summary', STUDY + MODEL + 'summary(model)')],
+  sandboxSnippets: [snippet('The whole summary', STUDY + MODEL + 'summary(model)'), snippet('What summary() holds', STUDY + MODEL + 'summary(model)$coefficients\nsummary(model)$r.squared'), snippet('Intervals for the line', STUDY + MODEL + 'confint(model)')],
   readMore: { label: 'R documentation: lm()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Fit the line', {
@@ -70,12 +70,26 @@ export default makeTopic({
       solution: STUDY + MODEL + 'beat_line <- study$student[residuals(model) > 0]',
       tests: [['beat_line is Ana, Dee, Eli, Gus, Hal', 'identical(beat_line, c("Ana", "Dee", "Eli", "Gus", "Hal"))']],
     }),
+    task('hard', 'Add a predictor', {
+      prompt: 'Fit `model2` with both `hours` and `sleep`. Make `r2_gain` how much R² goes up compared with hours alone.',
+      starter: STUDY + MODEL,
+      hint: '`lm(score ~ hours + sleep, data = study)`. R² is `summary(...)$r.squared`.',
+      solution: STUDY + MODEL + 'model2 <- lm(score ~ hours + sleep, data = study)\nr2_gain <- summary(model2)$r.squared - summary(model)$r.squared',
+      tests: [['r2_gain is right', near('r2_gain', 'summary(lm(score ~ hours + sleep, data = study))$r.squared - summary(lm(score ~ hours, data = study))$r.squared')]],
+    }),
     task('expert', 'Phones instead', {
       prompt: 'Fit `model2`, score explained by phone hours. Make `slope2` its slope and `r2_2` its R-squared, both rounded to 2 decimal places. Which model fits better?',
       starter: STUDY,
       hint: '`model2 <- lm(score ~ phone, data = study)`, then the same two numbers as before.',
       solution: STUDY + 'model2 <- lm(score ~ phone, data = study)\nslope2 <- round(unname(coef(model2)[2]), 2)\nr2_2 <- round(summary(model2)$r.squared, 2)',
       tests: [['slope2 matches the phone model', near('slope2', 'round(unname(coef(lm(score ~ phone, data = study))[2]), 2)')], ['r2_2 is 0.84', near('r2_2', 0.84)]],
+    }),
+    task('expert', 'How sure is the slope', {
+      prompt: 'Make `p_slope` the p-value for the `hours` slope, and `ci_slope` its 95% confidence interval (two numbers).',
+      starter: STUDY + MODEL,
+      hint: '`summary(model)$coefficients["hours", "Pr(>|t|)"]` is the p-value; `confint(model)["hours", ]` the interval.',
+      solution: STUDY + MODEL + 'p_slope <- summary(model)$coefficients["hours", "Pr(>|t|)"]\nci_slope <- confint(model)["hours", ]',
+      tests: [['p_slope is right', near('p_slope', 'summary(model)$coefficients["hours", 4]')], ['ci_slope is right', 'isTRUE(all.equal(unname(ci_slope), unname(confint(lm(score ~ hours, data = study))[2, ])))']],
     }),
   ],
   questions: [
@@ -93,8 +107,8 @@ export default makeTopic({
     mc('Why is predicting the score for 20 hours risky?', ['It isn\'t', 'No student revised anywhere near 20 hours, so the straight line is a guess there (extrapolation)', 'predict() can\'t do it', 'It gives NA'], 1,
       'The line gives 146, an impossible score.',
       { code: 'model <- lm(score ~ hours, data = data.frame(hours = c(2, 5, 1, 4, 6, 3, 7, 2), score = c(64, 71, 52, 75, 79, 58, 84, 62)))\nround(unname(predict(model, newdata = data.frame(hours = 20))))', output: '[1] 146' }),
-    mc('What does `predict()` need in `newdata`?', ['A vector', 'A data frame with a column of the same name as the predictor', 'The old data', 'Nothing'], 1,
-      '`data.frame(hours = 4.5)`.'),
+    mc('Why does R² go up whenever you add a predictor, even a useless one?', ['An extra term can always fit the sample a little closer, even by chance', 'R² counts the predictors', 'Useless predictors improve the model', 'It doesn\'t'], 0,
+      'Adjusted R² (`summary(model)$adj.r.squared`) allows for the number of predictors.'),
     mc('A student has a residual of −6.5. What does that mean?', ['They revised 6.5 hours less', 'They scored 6.5 points below what the line predicts', 'An error', 'They scored 6.5'], 1,
       'Residual = real value − predicted value.'),
     qShort('Which function fits a linear model?', 'lm',

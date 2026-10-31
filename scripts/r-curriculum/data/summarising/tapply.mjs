@@ -16,7 +16,7 @@ export default makeTopic({
     'Look at the home compost: its mean is 8.6 but its median is only 7.35, because one tray grew to 12.8 cm. Comparing groups by their median as well as their mean helps you spot that.',
   ],
   sandboxCode: SEEDLINGS + 'tapply(seedlings$height_cm, seedlings$compost, mean)\ntapply(seedlings$height_cm, seedlings$compost, median)',
-  sandboxSnippets: [snippet('Count and spread', SEEDLINGS + 'tapply(seedlings$height_cm, seedlings$compost, length)\nround(tapply(seedlings$height_cm, seedlings$compost, sd), 2)')],
+  sandboxSnippets: [snippet('Count and spread', SEEDLINGS + 'tapply(seedlings$height_cm, seedlings$compost, length)\nround(tapply(seedlings$height_cm, seedlings$compost, sd), 2)'), snippet('Several summaries per group', SEEDLINGS + 'h <- seedlings$height_cm\ng <- seedlings$compost\ntapply(h, g, mean)\ntapply(h, g, median)\ntapply(h, g, max) - tapply(h, g, min)'), snippet('Groups in your own order', SEEDLINGS + 'g <- factor(seedlings$compost, levels = c("peat", "leaf", "home"))\ntapply(seedlings$height_cm, g, mean)')],
   readMore: { label: 'R documentation: tapply()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/tapply.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Mean height per compost', {
@@ -48,6 +48,7 @@ export default makeTopic({
       tests: [['tallest is home 12.8, leaf 11.2, peat 9.1', 'isTRUE(all.equal(as.vector(tallest), c(12.8, 11.2, 9.1)))']],
     }),
     task('medium', 'The winner', {
+      alt: (s) => s.replace('height_cm = c(8.2, 7.5, 9.1, 8.0,', 'height_cm = c(12.2, 11.5, 13.1, 12.0,'),
       prompt: 'Make `best` the compost with the highest mean height.',
       starter: SEEDLINGS,
       hint: '`names(which.max(tapply(seedlings$height_cm, seedlings$compost, mean)))`',
@@ -68,12 +69,26 @@ export default makeTopic({
       solution: SEEDLINGS + 'seedlings$height_cm[2] <- NA\navg_height <- tapply(seedlings$height_cm, seedlings$compost, mean, na.rm = TRUE)',
       tests: [['avg_height has no NA, and peat is 8.43 (to 2 places)', '!anyNA(avg_height) && isTRUE(all.equal(round(unname(avg_height["peat"]), 2), 8.43))']],
     }),
+    task('hard', 'Range per compost', {
+      prompt: 'Make `ranges` the tallest minus the shortest seedling for each compost.',
+      starter: SEEDLINGS,
+      hint: 'Two `tapply()` results with the same groups can be subtracted: `tapply(h, g, max) - tapply(h, g, min)`.',
+      solution: SEEDLINGS + 'h <- seedlings$height_cm\ng <- seedlings$compost\nranges <- tapply(h, g, max) - tapply(h, g, min)',
+      tests: [['ranges is home 5.9, leaf 1.4, peat 1.6', 'isTRUE(all.equal(as.vector(ranges), c(5.9, 1.4, 1.6))) && identical(names(ranges), c("home", "leaf", "peat"))']],
+    }),
     task('expert', 'Best first, rounded', {
       prompt: 'Make `ranking` the mean height per compost, rounded to 1 decimal place, sorted from tallest to shortest.',
       starter: SEEDLINGS,
       hint: 'Round the `tapply()` result, then `sort(…, decreasing = TRUE)`.',
       solution: SEEDLINGS + 'ranking <- sort(round(tapply(seedlings$height_cm, seedlings$compost, mean), 1), decreasing = TRUE)',
       tests: [['ranking is leaf 10.6, home 8.6, peat 8.2', 'isTRUE(all.equal(as.vector(ranking), c(10.6, 8.6, 8.2))) && identical(names(ranking), c("leaf", "home", "peat"))']],
+    }),
+    task('expert', 'Taller than their group', {
+      prompt: 'Make `above` the tray numbers of the seedlings taller than the mean of their own compost.',
+      starter: SEEDLINGS,
+      hint: '`means <- tapply(h, g, mean)` is named by compost, so `means[g]` gives each seedling its group\'s mean. Compare, then pick the trays.',
+      solution: SEEDLINGS + 'h <- seedlings$height_cm\ng <- seedlings$compost\nmeans <- tapply(h, g, mean)\nabove <- seedlings$tray[h > means[g]]',
+      tests: [['above is trays 3, 6, 8 and 10', near('above', 'c(3, 6, 8, 10)')]],
     }),
   ],
   questions: [
@@ -85,8 +100,8 @@ export default makeTopic({
       { code: 'as.vector(tapply(c(2, 4, 10), c("a", "a", "b"), length))', output: '[1] 2 1' }),
     mc('In `tapply(x, g, f)`, what is `g`?', ['The function', 'The values to summarise', 'The groups', 'The number of groups'], 2,
       'Values first, then the groups, then the function.'),
-    mc('What order are the groups in, for a text column?', ['As they first appear', 'Alphabetical', 'Largest first', 'Random'], 1,
-      'Like `table()`, unless the column is a factor with its own levels.'),
+    mc('Why do the groups from `tapply()` come out in alphabetical order?', ['The text column is turned into a factor, whose levels are sorted', 'tapply() sorts by the results', 'R keeps them in the order they first appear', 'It is random'], 0,
+      'Make a factor with your own levels to choose the order.'),
     mc('What does `names(which.max(tapply(c(2, 9, 4), c("x", "y", "z"), mean)))` give?', ['`"y"`', '`9`', '`2`', '`"z"`'], 0,
       'Group y has the highest mean.',
       { code: 'names(which.max(tapply(c(2, 9, 4), c("x", "y", "z"), mean)))', output: '[1] "y"' }),

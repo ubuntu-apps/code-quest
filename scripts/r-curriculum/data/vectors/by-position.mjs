@@ -18,6 +18,7 @@ export default makeTopic({
     snippet('Past the end', 'days <- c("Mon", "Tue", "Wed")\ndays[5]'),
     snippet('Change a value', 'steps <- c(4200, 8100, 6500)\nsteps[2] <- 8300\nsteps'),
     snippet('Any order', 'days <- c("Mon", "Tue", "Wed", "Thu", "Fri")\ndays[c(5, 1, 3)]'),
+    snippet('From the end', 'x <- c(4, 8, 15, 16, 23)\nx[length(x)]\nx[(length(x) - 1):length(x)]'),
   ],
   readMore: R_INTRO('Index-vectors', 'An Introduction to R: index vectors'),
   challenges: [
@@ -88,6 +89,13 @@ export default makeTopic({
         ['Uses length()', uses('length(readings)')],
       ],
     }),
+    task('hard', 'Every other reading', {
+      prompt: 'Make `odd` the 1st, 3rd and 5th readings.',
+      starter: 'readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\n',
+      hint: 'Give several positions at once: `readings[c(1, 3, 5)]`.',
+      solution: 'readings <- c(4.1, 3.8, 4.6, 5.0, 4.4, 4.9)\nodd <- readings[c(1, 3, 5)]',
+      tests: [['odd is 4.1, 4.6, 4.4', near('odd', 'c(4.1, 4.6, 4.4)')]],
+    }),
     task('expert', 'Drop the ends', {
       prompt: 'Judges drop the first and last score. Make `kept` every score except the first and the last, in a way that works for any length.',
       starter: 'scores <- c(6.5, 8.0, 7.5, 9.0, 7.0, 5.5)\n',
@@ -98,6 +106,14 @@ export default makeTopic({
         ['Uses length()', uses('length(scores)')],
       ],
     }),
+    task('expert', 'The last three', {
+      prompt: 'Make `last3` the last three values of `steps`. It should still work when the vector is a different length.',
+      starter: 'steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\n',
+      alt: 'steps <- c(5000, 6000, 7000, 8000)\n',
+      hint: '`length(steps)` is the last position. Brackets matter: `steps[(length(steps) - 2):length(steps)]`.',
+      solution: 'steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\nlast3 <- steps[(length(steps) - 2):length(steps)]',
+      tests: [['last3 is 3000, 7600, 5400', near('last3', 'c(3000, 7600, 5400)')]],
+    }),
   ],
   questions: [
     mc('After `x <- c(10, 20, 30)`, what does `x[2]` give?', ['`[1] 10`', '`[1] 20`', '`[1] 30`', '`[1] 10 20`'], 1,
@@ -106,8 +122,8 @@ export default makeTopic({
     mc('After `x <- c(10, 20, 30)`, what does `x[-2]` give?', ['`[1] 20`', '`[1] 10 30`', '`[1] 10 20 30`', 'An error'], 1,
       'A minus leaves that position out.',
       { code: 'x <- c(10, 20, 30)\nx[-2]', output: '[1] 10 30' }),
-    mc('After `x <- c(10, 20, 30)`, what does `x[5]` give?', ['An error', '`[1] 30`', '`[1] NA`', '`[1] 0`'], 2,
-      'There is no fifth value, so R gives NA.',
+    mc('Why does `x[5]` give NA when `x` has only three values?', ['There is no 5th value, so R says it is unknown instead of stopping with an error', 'R counts from 0', 'The 5th value was deleted', 'It gives an error'], 0,
+      'Check `length(x)` when you aren\'t sure how long a vector is.',
       { code: 'x <- c(10, 20, 30)\nx[5]', output: '[1] NA' }),
     mc('After `x <- c(10, 20, 30)`, what does `x[c(3, 1)]` give?', ['`[1] 10 30`', '`[1] 30 10`', '`[1] 40`', '`[1] 30`'], 1,
       'Values come back in the order you ask for them.',

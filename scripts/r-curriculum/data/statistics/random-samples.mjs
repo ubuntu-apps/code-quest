@@ -14,7 +14,7 @@ export default makeTopic({
     'A **simulation** repeats an experiment many times. `replicate(1000, expr)` runs `expr` 1000 times and collects the results, so you can see how results spread out.',
   ],
   sandboxCode: 'set.seed(7)\nsample(1:6, 10, replace = TRUE)\nround(rnorm(5, mean = 500, sd = 6), 1)',
-  sandboxSnippets: [snippet('A thousand experiments', 'set.seed(1)\nmeans <- replicate(1000, mean(sample(1:6, 10, replace = TRUE)))\nround(c(mean = mean(means), sd = sd(means)), 2)')],
+  sandboxSnippets: [snippet('A thousand experiments', 'set.seed(1)\nmeans <- replicate(1000, mean(sample(1:6, 10, replace = TRUE)))\nround(c(mean = mean(means), sd = sd(means)), 2)'), snippet('Shuffle and split', 'set.seed(3)\nshuffled <- sample(c("Ana", "Ben", "Cy", "Dee", "Eli", "Fay"))\nshuffled[1:3]\nshuffled[4:6]'), snippet('A thousand rolls', 'set.seed(1)\nrolls <- sample(1:6, 1000, replace = TRUE)\ntable(rolls)\nmean(rolls)')],
   readMore: { label: 'R documentation: sample()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/sample.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Roll a die', {
@@ -24,6 +24,7 @@ export default makeTopic({
       tests: [['rolls is the ten rolls for seed 7', 'identical(as.integer(rolls), local({ set.seed(7); sample(1:6, 10, replace = TRUE) }))']],
     }),
     task('easy', 'Draw names', {
+      alt: 'students <- c("Hal", "Gus", "Fay", "Eli", "Dee", "Cy", "Ben", "Ana")\n',
       prompt: 'Four of these eight students will present today. Set the seed to 3, then make `chosen` four different names drawn from `students`.',
       starter: 'students <- c("Ana", "Ben", "Cy", "Dee", "Eli", "Fay", "Gus", "Hal")\n',
       hint: 'No `replace`: each student can be picked only once. `sample(students, 4)`.',
@@ -60,11 +61,25 @@ export default makeTopic({
       solution: 'set.seed(1)\nmeans <- replicate(1000, mean(sample(1:6, 10, replace = TRUE)))',
       tests: [['means is the 1000 means for seed 1', same('means', 'local({ set.seed(1); replicate(1000, mean(sample(1:6, 10, replace = TRUE))) })')], ['Uses replicate()', uses('replicate(')]],
     }),
+    task('hard', 'Rolling doubles', {
+      prompt: 'Roll two dice 1000 times each (`a` and `b`). Make `share` the share of throws where both dice show the same number.',
+      starter: 'set.seed(5)\n',
+      hint: 'Two vectors of rolls with `sample(1:6, 1000, replace = TRUE)`, then `mean(a == b)`.',
+      solution: 'set.seed(5)\na <- sample(1:6, 1000, replace = TRUE)\nb <- sample(1:6, 1000, replace = TRUE)\nshare <- mean(a == b)',
+      tests: [['share is right for seed 5 (about 1/6)', 'local({ set.seed(5); a <- sample(1:6, 1000, replace = TRUE); b <- sample(1:6, 1000, replace = TRUE); isTRUE(all.equal(share, mean(a == b))) })']],
+    }),
     task('expert', 'Bigger samples wobble less', {
       prompt: 'Set the seed to 1. Make `sd_10` the standard deviation of 1000 means of 10 rolls, then (without setting the seed again) `sd_100` the same for means of 100 rolls. Both rounded to 2 decimal places. Which is smaller?',
       hint: 'Two `replicate()` calls, one with 10 rolls and one with 100, each wrapped in `round(sd(...), 2)`.',
       solution: 'set.seed(1)\nsd_10 <- round(sd(replicate(1000, mean(sample(1:6, 10, replace = TRUE)))), 2)\nsd_100 <- round(sd(replicate(1000, mean(sample(1:6, 100, replace = TRUE)))), 2)',
       tests: [['sd_10 and sd_100 match seed 1', 'isTRUE(all.equal(c(sd_10, sd_100), local({ set.seed(1); a <- round(sd(replicate(1000, mean(sample(1:6, 10, replace = TRUE)))), 2); b <- round(sd(replicate(1000, mean(sample(1:6, 100, replace = TRUE)))), 2); c(a, b) })))'], ['sd_100 is smaller', 'sd_100 < sd_10']],
+    }),
+    task('expert', 'Two random teams', {
+      prompt: 'Shuffle the students once with `sample()`, then make `team_a` the first four and `team_b` the other four.',
+      starter: 'set.seed(3)\nstudents <- c("Ana", "Ben", "Cy", "Dee", "Eli", "Fay", "Gus", "Hal")\n',
+      hint: '`shuffled <- sample(students)` puts them in a random order; then take positions 1 to 4 and 5 to 8.',
+      solution: 'set.seed(3)\nstudents <- c("Ana", "Ben", "Cy", "Dee", "Eli", "Fay", "Gus", "Hal")\nshuffled <- sample(students)\nteam_a <- shuffled[1:4]\nteam_b <- shuffled[5:8]',
+      tests: [['Everyone is in exactly one team', 'identical(sort(c(team_a, team_b)), sort(students)) && length(team_a) == 4'], ['The teams are right for seed 3', 'local({ set.seed(3); s <- sample(c("Ana", "Ben", "Cy", "Dee", "Eli", "Fay", "Gus", "Hal")); identical(team_a, s[1:4]) })']],
     }),
   ],
   questions: [
@@ -73,8 +88,8 @@ export default makeTopic({
     mc('What does `length(sample(1:6, 10, replace = TRUE))` give?', ['`6`', '`10`', 'An error', '`60`'], 1,
       'Ten picks, whatever they are.',
       { code: 'length(sample(1:6, 10, replace = TRUE))', output: '[1] 10' }),
-    mc('What does `sample(1:6, 10)` (without replace) do?', ['Ten rolls', 'An error: it can\'t pick 10 different values from 6', 'Six values', 'Ten zeros'], 1,
-      'Without replacement there are only six values to take.',
+    mc('Why does `sample(1:6, 10)` give an error?', ['Without `replace = TRUE`, each value can be drawn only once, and there are only 6', 'sample() can\'t draw 10', 'It needs set.seed() first', 'It doesn\'t'], 0,
+      'Like drawing cards from a pack without putting them back.',
       { code: 'sample(1:6, 10)', error: 'cannot take a sample larger than the population' }),
     mc('Why use `set.seed()`?', ['To make numbers more random', 'So the same "random" numbers come out again, and results can be checked', 'To speed up R', 'It is required'], 1,
       'The same seed always gives the same draws.'),

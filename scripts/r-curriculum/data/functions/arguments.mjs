@@ -15,7 +15,7 @@ export default makeTopic({
     'R\'s own functions work exactly this way: `round(x, digits = 0)`, `mean(x, na.rm = FALSE)`, `paste(…, sep = " ")`. Now you can read their help pages: the usage line shows every argument and its default.',
   ],
   sandboxCode: 'ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\nride_cost(47)\nride_cost(47, unlock = 0)\nride_cost(47, rate = 0.1)',
-  sandboxSnippets: [snippet('Missing argument', '# Run it and read the error\nride_cost <- function(minutes, rate) {\n  1 + rate * minutes\n}\nride_cost(47)')],
+  sandboxSnippets: [snippet('Missing argument', '# Run it and read the error\nride_cost <- function(minutes, rate) {\n  1 + rate * minutes\n}\nride_cost(47)'), snippet('Defaults and names', 'tip <- function(bill, rate = 0.1) bill * rate\ntip(40)\ntip(40, 0.15)\ntip(rate = 0.2, bill = 40)'), snippet('Pass options on with ...', 'my_mean <- function(x, ...) round(mean(x, ...), 1)\nmy_mean(c(2.25, NA, 4.5), na.rm = TRUE)')],
   readMore: { label: 'An Introduction to R: named arguments and defaults', url: 'https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Named-arguments-and-defaults', source: 'R manuals' },
   challenges: [
     task('easy', 'Two arguments', {
@@ -61,12 +61,24 @@ export default makeTopic({
       solution: 'greet <- function(name, greeting = "Hello") {\n  paste0(greeting, ", ", name, "!")\n}',
       tests: [['greet("Ana") is "Hello, Ana!"', isFn('greet') + ' && identical(greet("Ana"), "Hello, Ana!")'], ['greet("Ben", greeting = "Welcome") is "Welcome, Ben!"', 'identical(greet("Ben", greeting = "Welcome"), "Welcome, Ben!")']],
     }),
+    task('hard', 'Split the bill', {
+      prompt: 'Write `split_bill(total, people = 2, tip = 0.1)`: the total plus the tip, shared between the people, rounded to 2 decimal places.',
+      hint: '`round(total * (1 + tip) / people, 2)`',
+      solution: 'split_bill <- function(total, people = 2, tip = 0.1) {\n  round(total * (1 + tip) / people, 2)\n}',
+      tests: [['split_bill(50) is 27.5', 'is.function(split_bill) && isTRUE(all.equal(split_bill(50), 27.5))'], ['split_bill(60, 3, tip = 0) is 20', 'isTRUE(all.equal(split_bill(60, 3, tip = 0), 20))'], ['split_bill(40, people = 4) is 11', 'isTRUE(all.equal(split_bill(40, people = 4), 11))']],
+    }),
     task('expert', 'Fix the missing argument', {
       prompt: 'Calling `fine(9)` gives the error "argument \\"per_day\\" is missing". Give `per_day` a default of 0.25 so `fine(9)` works and gives 2.25.',
       starter: 'fine <- function(days_late, per_day) {\n  days_late * per_day\n}\nfine(9)',
       hint: 'Write `per_day = 0.25` in the function\'s brackets.',
       solution: 'fine <- function(days_late, per_day = 0.25) {\n  days_late * per_day\n}\nfine(9)',
       tests: [['fine(9) is 2.25', isFn('fine') + ' && isTRUE(all.equal(fine(9), 2.25))'], ['fine(9, 0.5) is 4.5', 'isTRUE(all.equal(fine(9, 0.5), 4.5))']],
+    }),
+    task('expert', 'Either way round', {
+      prompt: 'Write `convert(x, to = "F")`. With `to = "F"` it turns Celsius into Fahrenheit (`x * 9 / 5 + 32`), with `to = "C"` Fahrenheit into Celsius (`(x - 32) * 5 / 9`), and anything else stops with an error.',
+      hint: 'Use `if (to == "F") ... else if (to == "C") ... else stop("to must be F or C")`.',
+      solution: 'convert <- function(x, to = "F") {\n  if (to == "F") {\n    x * 9 / 5 + 32\n  } else if (to == "C") {\n    (x - 32) * 5 / 9\n  } else {\n    stop("to must be F or C")\n  }\n}',
+      tests: [['convert(100) is 212', 'is.function(convert) && isTRUE(all.equal(convert(100), 212))'], ['convert(212, to = "C") is 100', 'isTRUE(all.equal(convert(212, to = "C"), 100))'], ['convert(5, to = "K") is an error', 'inherits(tryCatch(convert(5, to = "K"), error = function(e) e), "error")']],
     }),
   ],
   questions: [
@@ -84,9 +96,8 @@ export default makeTopic({
       { code: 'f <- function(a, b) { a - b }\nf(10)', error: 'argument "b" is missing' }),
     mc('Which arguments should usually have defaults?', ['The ones everyone needs', 'The optional ones, with a sensible usual value', 'All of them', 'None of them'], 1,
       'Required ones first without defaults; optional ones after, with defaults.'),
-    mc('What is the default of `na.rm` in `mean()`?', ['`TRUE`', '`FALSE`', '`NA`', 'There is none'], 1,
-      'That\'s why `mean(c(1, NA))` is NA unless you say `na.rm = TRUE`.',
-      { code: 'mean(c(1, NA))', output: '[1] NA' }),
+    mc('Why is `na.rm = FALSE` the default in `mean()`?', ['So missing values aren\'t dropped without you noticing; you have to ask', 'It is faster', 'NA can\'t be removed', 'It was a mistake'], 0,
+      'An NA result tells you there are gaps to think about.'),
     mc('After `g <- function(name, greeting = "Hi") paste(greeting, name)`, what does `g("Cy")` give?', ['`"Cy Hi"`', '`"Hi Cy"`', '`"HiCy"`', 'An error'], 1,
       '`greeting` takes its default.',
       { code: 'g <- function(name, greeting = "Hi") paste(greeting, name)\ng("Cy")', output: '[1] "Hi Cy"' }),
