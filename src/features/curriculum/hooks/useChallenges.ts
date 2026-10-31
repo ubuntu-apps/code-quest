@@ -126,6 +126,7 @@ export function useChallenges(
         const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [])
         if (controller.signal.aborted) return
         showRunFeedback(ch.id, run)
+        setOutput((prev) => ({ ...prev, [ch.id]: run.output ? run.output : null }))
         ok = run.passed
       } else {
         ok = validateAgainst(answer, ch.validation)

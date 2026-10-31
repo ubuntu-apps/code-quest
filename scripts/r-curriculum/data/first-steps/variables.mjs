@@ -1,0 +1,131 @@
+// First steps in R: Saving values with <-.
+import { R_INTRO, code, isText, makeTopic, matches, mc, near, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'variables',
+  title: 'Saving values with <-',
+  paragraphs: [
+    'A **variable** is a name for a value, so you can use it again later. You make one with the arrow `<-`, read as "gets": `cups <- 3` means "`cups` gets 3".',
+    code('cups <- 3', 'price <- 2.5', 'cups * price'),
+    'Saving a value shows nothing. To see a variable, type its name on its own line, or `print()` it. The last line above shows `[1] 7.5`, worked out from the two variables.',
+    'Variables can hold text too: `city <- "Lisbon"`. Text always needs quotes; a name without quotes is a variable.',
+    'You can give a variable a new value at any time, even one worked out from its old value. This adds 1 to `score`:',
+    code('score <- 10', 'score <- score + 1', 'score'),
+    'A variable keeps the value it was given. If you change `price` later, a total you worked out earlier stays the same until you work it out again.',
+    'Names can use letters, numbers, `.` and `_`, but can\'t start with a number and can\'t contain spaces or `-`. Good names say what the value is: `total_price`, `n_guests`. R is case-sensitive, so `total` and `Total` are two different names.',
+    'You may also see `=` used to save values (`cups = 3`). It works, but `<-` is the usual R style, and it\'s what this course uses. A handy trick: wrap an assignment in brackets to save the value and show it at once: `(cups <- 3)`.',
+  ],
+  sandboxCode: 'cups <- 3\nprice <- 2.5\ncups * price\ntotal <- cups * price\ntotal',
+  sandboxSnippets: [
+    snippet('Text in a variable', 'city <- "Lisbon"\ncity\nprint(city)'),
+    snippet('Change a value', 'score <- 10\nscore <- score + 5\nscore'),
+    snippet('Save and show', '(minutes <- 2.5 * 60)'),
+    snippet('Names are case-sensitive', '# Run it and read the error\ntotal <- 20\nTotal'),
+  ],
+  readMore: R_INTRO('Simple-manipulations-numbers-and-vectors', 'An Introduction to R: assignment'),
+  challenges: [
+    task('easy', 'Store a price', {
+      prompt: 'Make a variable `price` that holds `4.5`.',
+      hint: 'Name, arrow, value: `price <- 4.5`.',
+      solution: 'price <- 4.5',
+      tests: [['price is 4.5', near('price', 4.5)]],
+    }),
+    task('easy', 'Store some text', {
+      prompt: 'Make a variable `city` that holds the text `Lisbon`.',
+      hint: 'Text needs quotes: `city <- "Lisbon"`.',
+      solution: 'city <- "Lisbon"',
+      tests: [['city is "Lisbon"', isText('city', 'Lisbon')]],
+    }),
+    task('easy', 'Show a variable', {
+      prompt: '`cups` already holds a number. Add a line that shows it.',
+      starter: 'cups <- 3\n',
+      hint: 'Type the name on its own line: `cups`.',
+      solution: 'cups <- 3\ncups',
+      tests: [['Shows [1] 3', prints('[1] 3')]],
+    }),
+    task('medium', 'The cost of an order', {
+      prompt: 'Make `total` the price times the number of cups, using the two variables.',
+      starter: 'price <- 4.5\ncups <- 3\n',
+      hint: '`total <- price * cups`',
+      solution: 'price <- 4.5\ncups <- 3\ntotal <- price * cups',
+      tests: [
+        ['total is 13.5', near('total', 13.5)],
+        ['Uses the variables', matches('price\\s*\\*\\s*cups|cups\\s*\\*\\s*price')],
+      ],
+    }),
+    task('medium', 'Add to the score', {
+      prompt: 'Add 5 to `score`, so it becomes 15. Work it out from its old value.',
+      starter: 'score <- 10\n',
+      hint: '`score <- score + 5`',
+      solution: 'score <- 10\nscore <- score + 5',
+      tests: [
+        ['score is 15', near('score', 15)],
+        ['Adds to the old value', uses('score <- score +')],
+      ],
+    }),
+    task('medium', 'Fix the name', {
+      prompt: 'This code should show `[1] 40`, but it gives an error. Run it, read the error and fix it.',
+      starter: 'Total <- 20\ntotal * 2',
+      hint: '`Total` and `total` are different names. Use the same spelling on both lines.',
+      solution: 'total <- 20\ntotal * 2',
+      tests: [['Shows [1] 40', prints('[1] 40')]],
+    }),
+    task('hard', 'Hours to minutes', {
+      prompt: 'A film lasts `hours` hours. Make `minutes` the length in minutes, then show it.',
+      starter: 'hours <- 2.5\n',
+      hint: '`minutes <- hours * 60`, then a line with just `minutes`.',
+      solution: 'hours <- 2.5\nminutes <- hours * 60\nminutes',
+      tests: [
+        ['minutes is 150', near('minutes', 150)],
+        ['Shows [1] 150', prints('[1] 150')],
+      ],
+    }),
+    task('hard', 'A name that works', {
+      prompt: 'This name isn\'t allowed. Rename the variable `second_place`, keeping the value.',
+      starter: '2nd_place <- "Ana"',
+      hint: 'Names can\'t start with a number. Write `second_place <- "Ana"`.',
+      solution: 'second_place <- "Ana"',
+      tests: [['second_place is "Ana"', isText('second_place', 'Ana')]],
+    }),
+    task('expert', 'A café order', {
+      prompt: 'A coffee costs 3.2 and a cake 4.1. Make `total` the cost of two coffees and one cake, then show `Total: 10.5` with `cat()`.',
+      starter: 'coffee <- 3.2\ncake <- 4.1\n',
+      hint: '`total <- 2 * coffee + cake`, then `cat("Total:", total, "\\n")`.',
+      solution: r`coffee <- 3.2
+cake <- 4.1
+total <- 2 * coffee + cake
+cat("Total:", total, "\n")`,
+      tests: [
+        ['total is 10.5', near('total', 10.5)],
+        ['Shows Total: 10.5', prints('Total: 10.5')],
+      ],
+    }),
+  ],
+  questions: [
+    mc('After `x <- 4` and then `x <- x * 2`, what is `x`?', ['`4`', '`8`', '`6`', '`16`'], 1,
+      'The second line works out `x * 2` from the old value, 4, and saves 8 in `x`.',
+      { code: 'x <- 4\nx <- x * 2\nx', output: '[1] 8' }),
+    mc('What does running `y <- 3` show?', ['`[1] 3`', '`3`', 'Nothing', '`y`'], 2,
+      'Saving a value shows nothing. Type `y` on its own line to see it.',
+      { code: 'y <- 3', output: '' }),
+    mc('Which is a valid variable name?', ['`2cups`', '`cups_2`', '`cups-2`', '`cups 2`'], 1,
+      'Names can contain letters, numbers, `.` and `_`, but can\'t start with a number or contain `-` or spaces.'),
+    mc('After `a <- 5`, what does `A` give?', ['`[1] 5`', 'The error `object \'A\' not found`', '`[1] "A"`', '`[1] 0`'], 1,
+      'R is case-sensitive: `A` is a different name from `a`, and nothing called `A` exists.',
+      { code: 'a <- 5\nA', error: "object 'A' not found" }),
+    mc('After `x <- 2`, `y <- x + 1` and `x <- 10`, what does `y` show?', ['`[1] 11`', '`[1] 3`', '`[1] 10`', '`[1] 2`'], 1,
+      '`y` got 3 when it was worked out. Changing `x` afterwards doesn\'t change `y`.',
+      { code: 'x <- 2\ny <- x + 1\nx <- 10\ny', output: '[1] 3' }),
+    mc('What does `(n <- 7)` show?', ['Nothing', '`[1] 7`', 'An error', '`[1] TRUE`'], 1,
+      'Brackets around an assignment save the value and show it.',
+      { code: '(n <- 7)', output: '[1] 7' }),
+    mc('After `price <- "4"`, what does `price * 2` give?', ['`[1] 8`', '`[1] "44"`', 'An error: non-numeric argument', '`[1] "8"`'], 2,
+      'In quotes, `"4"` is text, and you can\'t multiply text.',
+      { code: 'price <- "4"\nprice * 2', error: 'non-numeric argument' }),
+    mc('Does `n = 5` save 5 in `n`?', ['No, it compares them', 'Yes, but `<-` is the usual R style', 'Only for text', 'No, it gives an error'], 1,
+      '`=` also saves values. R code usually uses `<-`, which makes saving stand out from other uses of `=`.',
+      { code: 'n = 5\nn', output: '[1] 5' }),
+    qShort('Which two characters save a value in a variable, as in `cups __ 3`?', '<-',
+      'The arrow `<-` means "gets": `cups <- 3`.'),
+  ],
+})

@@ -136,7 +136,18 @@ Progress is saved in each learner's browser under the course id and the lesson i
 - **Renaming a lesson.** Change its `id` in the data file and add the old id to the lesson's `formerIds`, e.g. `formerIds: ['hello']`. The app then moves learners' progress, drafts, review history and Continue button over to the new id (`src/features/curriculum/levelRenames.ts`). `scripts/lesson-ids.json` lists every lesson id ever published, and `npm run check` (so CI too) fails when one of them is no longer a lesson and isn't in any lesson's `formerIds`. After adding lessons, run `npm run lesson-ids:update` and commit the file. Never remove ids from it. Renaming a course isn't supported.
 - **Changing a challenge's checks.** A challenge's saved progress remembers a fingerprint of its title and checks, and a changed fingerprint clears learners' solved mark and draft, because the exercise may now be different. When the change only fixes a check (a typo in an expected value, a test that was too strict), add `keepProgress: true` to the challenge in the data file before regenerating. The generator compares the challenge with the JSON it is replacing and lists the old fingerprint in `acceptedFingerprints`, so learners keep their progress (`scripts/progress-safety.mjs`). Accepted fingerprints are carried forward on every run, so you can remove the flag again afterwards. To make a challenge count as new on purpose, change its title.
 
-The R generator still gives challenges random ids, so regenerating R gives every R challenge a new id. That's harmless while R is "Coming soon"; the R rewrite should use the permanent ids from `scripts/curriculum-ids.mjs`.
+#### The R course
+
+The R course is being rewritten quest by quest (base R, data-analysis beginners, invented data). It is marked `comingSoon` in `public/content/index.json`, so only admin mode opens it, and `check-lesson-ids.mjs` skips it until it is released; then run `npm run lesson-ids:update`. Its data files work like SQL's: one file per stage under `scripts/r-curriculum/data/`, built with `task()`, `mc()` and the test helpers in `data/_builders.mjs` (`near`, `prints`, `uses`, `isText`…), and permanent ids from `scripts/curriculum-ids.mjs`.
+
+There is no R on the build machines, so R content is checked in the browser with the same webR runner the app uses. Start `npm run dev`, open the app, and in the browser console run:
+
+```js
+const { checkR } = await import('/code-quest/scripts/r-curriculum/check-in-browser.mjs')
+await checkR()   // or checkR('first_steps')
+```
+
+It runs every solution (must pass) and starter code (must fail), every sandbox sample (must run, unless a comment says it shows an error), and every gate question with a `check` (must give the output or error it claims).
 
 #### Saving from the deployed site (optional)
 

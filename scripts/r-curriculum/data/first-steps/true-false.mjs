@@ -1,0 +1,137 @@
+// First steps in R: TRUE and FALSE.
+import { R_INTRO, code, isLogical, makeTopic, mc, prints, qShort, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'true_false',
+  title: 'TRUE and FALSE',
+  paragraphs: [
+    'A comparison asks R a yes-or-no question, and the answer is `TRUE` or `FALSE`. These are **logical** values, written in capitals and without quotes.',
+    '| Operator | Question | Example | Result |\n| --- | --- | --- | --- |\n| `==` | equal? | `3 == 3` | `TRUE` |\n| `!=` | not equal? | `3 != 3` | `FALSE` |\n| `<` | less than? | `2 < 5` | `TRUE` |\n| `>` | greater than? | `2 > 5` | `FALSE` |\n| `<=` | less than or equal? | `5 <= 5` | `TRUE` |\n| `>=` | greater than or equal? | `4 >= 5` | `FALSE` |',
+    'Equality is a **double** `==`. A single `=` saves a value (like `<-`), so `x = 5` changes `x`, while `x == 5` asks whether `x` is 5.',
+    'Text can be compared too. `"tea" == "tea"` is `TRUE`, but `"Tea" == "tea"` is `FALSE`: capitals count.',
+    'Combine questions with `&` (and: both must be true) and `|` (or: at least one must be true). `!` (not) turns `TRUE` into `FALSE` and back.',
+    code('temperature <- 24', 'sunny <- TRUE', 'temperature > 20 & sunny   # TRUE: both are true', 'temperature > 30 | sunny   # TRUE: one is enough', '!sunny                     # FALSE'),
+    'Logical values can be saved in variables like any other value, and later stages use them to choose rows of data and decide what code runs. One more trick: in arithmetic, `TRUE` counts as 1 and `FALSE` as 0, so `TRUE + TRUE` is 2. That makes counting easy, as you will see with vectors.',
+  ],
+  sandboxCode: '3 == 3\n2 > 5\n"tea" == "Tea"\nage <- 17\nage >= 18',
+  sandboxSnippets: [
+    snippet('And, or, not', 'sunny <- TRUE\nwarm <- FALSE\nsunny & warm\nsunny | warm\n!warm'),
+    snippet('= or ==', 'x <- 5\nx == 5   # a question\nx = 6    # saves 6 in x\nx'),
+    snippet('TRUE counts as 1', 'TRUE + TRUE + FALSE'),
+  ],
+  readMore: R_INTRO('Logical-vectors', 'An Introduction to R: logical values'),
+  challenges: [
+    task('easy', 'Is it bigger', {
+      prompt: 'Ask R whether 12 is greater than 9.',
+      hint: '`12 > 9`',
+      solution: '12 > 9',
+      tests: [
+        ['Shows [1] TRUE', prints('[1] TRUE')],
+        ['Uses >', uses('>')],
+      ],
+    }),
+    task('easy', 'Not the same drink', {
+      prompt: 'Make `different` the answer to: is `"tea"` not equal to `"coffee"`?',
+      hint: '`!=` means "not equal": `different <- "tea" != "coffee"`.',
+      solution: 'different <- "tea" != "coffee"',
+      tests: [
+        ['different is TRUE', isLogical('different', true)],
+        ['Uses !=', uses('!=')],
+      ],
+    }),
+    task('easy', 'Capitals count', {
+      prompt: 'Make `same` the answer to: is `"Tea"` equal to `"tea"`?',
+      hint: '`same <- "Tea" == "tea"` (two `=` signs).',
+      solution: 'same <- "Tea" == "tea"',
+      tests: [
+        ['same is FALSE', isLogical('same', false)],
+        ['Uses ==', uses('==')],
+      ],
+    }),
+    task('medium', 'Old enough to vote', {
+      prompt: 'Make `can_vote` the answer to: is `age` 18 or more?',
+      starter: 'age <- 17\n',
+      hint: '`can_vote <- age >= 18`',
+      solution: 'age <- 17\ncan_vote <- age >= 18',
+      tests: [
+        ['can_vote is FALSE', isLogical('can_vote', false)],
+        ['Uses >=', uses('>=')],
+      ],
+    }),
+    task('medium', 'Picnic weather', {
+      prompt: 'A picnic needs a temperature over 20 **and** sunshine. Make `picnic` the answer, using both variables.',
+      starter: 'temperature <- 22\nsunny <- TRUE\n',
+      hint: '`picnic <- temperature > 20 & sunny`',
+      solution: 'temperature <- 22\nsunny <- TRUE\npicnic <- temperature > 20 & sunny',
+      tests: [
+        ['picnic is TRUE', isLogical('picnic', true)],
+        ['Uses &', uses('&')],
+      ],
+    }),
+    task('medium', 'A day off', {
+      prompt: 'You have a day off on a weekend **or** a holiday. Make `day_off` the answer.',
+      starter: 'weekend <- FALSE\nholiday <- TRUE\n',
+      hint: '`day_off <- weekend | holiday`',
+      solution: 'weekend <- FALSE\nholiday <- TRUE\nday_off <- weekend | holiday',
+      tests: [
+        ['day_off is TRUE', isLogical('day_off', true)],
+        ['Uses |', uses('|')],
+      ],
+    }),
+    task('hard', 'Not raining', {
+      prompt: 'Make `dry` the opposite of `raining`, using `!`.',
+      starter: 'raining <- TRUE\n',
+      hint: '`dry <- !raining`',
+      solution: 'raining <- TRUE\ndry <- !raining',
+      tests: [
+        ['dry is FALSE', isLogical('dry', false)],
+        ['Uses !', uses('!raining')],
+      ],
+    }),
+    task('hard', 'A question, not a change', {
+      prompt: 'The last line should ask whether `x` is 5 and show `[1] TRUE`. Instead it changes `x` and shows nothing. Fix it.',
+      starter: 'x <- 5\nx = 5',
+      hint: 'A single `=` saves a value. Asking "is it equal?" needs two: `x == 5`.',
+      solution: 'x <- 5\nx == 5',
+      tests: [['Shows [1] TRUE', prints('[1] TRUE')]],
+    }),
+    task('expert', 'A B grade', {
+      prompt: 'A B grade is a score of at least 70 and below 80. Make `grade_b` the answer for `score`.',
+      starter: 'score <- 74\n',
+      hint: 'Two comparisons joined by `&`: `score >= 70 & score < 80`.',
+      solution: 'score <- 74\ngrade_b <- score >= 70 & score < 80',
+      tests: [
+        ['grade_b is TRUE', isLogical('grade_b', true)],
+        ['Tests both limits', uses('70') + ' && ' + uses('80')],
+      ],
+    }),
+  ],
+  questions: [
+    mc('What does `"Apple" == "apple"` give?', ['`TRUE`', '`FALSE`', 'An error', '`NA`'], 1,
+      'Capitals count when R compares text.',
+      { code: '"Apple" == "apple"', output: '[1] FALSE' }),
+    mc('What does `5 != 5` give?', ['`TRUE`', '`5`', '`FALSE`', '`0`'], 2,
+      '`!=` asks "not equal?". 5 is equal to 5, so the answer is FALSE.',
+      { code: '5 != 5', output: '[1] FALSE' }),
+    mc('What does `4 >= 4` give?', ['`TRUE`', '`FALSE`', '`4`', 'An error'], 0,
+      '`>=` is "greater than or equal". 4 is equal to 4.',
+      { code: '4 >= 4', output: '[1] TRUE' }),
+    mc('What does `TRUE & FALSE` give?', ['`TRUE`', '`1`', '`NA`', '`FALSE`'], 3,
+      '`&` needs both sides to be TRUE.',
+      { code: 'TRUE & FALSE', output: '[1] FALSE' }),
+    mc('What does `TRUE | FALSE` give?', ['`TRUE`', '`FALSE`', '`1`', '`NA`'], 0,
+      '`|` needs at least one side to be TRUE.',
+      { code: 'TRUE | FALSE', output: '[1] TRUE' }),
+    mc('What does `!(3 > 2)` give?', ['`TRUE`', '`FALSE`', '`1`', 'An error'], 1,
+      '`3 > 2` is TRUE, and `!` turns it into FALSE.',
+      { code: '!(3 > 2)', output: '[1] FALSE' }),
+    mc('What does `TRUE + TRUE + FALSE` give?', ['`TRUE`', '`3`', '`2`', 'An error'], 2,
+      'In arithmetic, TRUE counts as 1 and FALSE as 0.',
+      { code: 'TRUE + TRUE + FALSE', output: '[1] 2' }),
+    mc('After `x <- 3`, what does `x = 4` do?', ['Asks whether x is 4', 'Saves 4 in x', 'Gives an error', 'Shows FALSE'], 1,
+      'A single `=` saves a value. Asking needs `==`.',
+      { code: 'x <- 3\nx = 4\nx', output: '[1] 4' }),
+    qShort('Which operator asks "not equal?"', '!=',
+      '`!=` is TRUE when the two sides are different.'),
+  ],
+})

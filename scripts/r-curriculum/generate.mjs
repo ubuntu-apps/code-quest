@@ -1,48 +1,80 @@
 /**
- * Generates R curriculum section JSON files.
+ * Generates the R course's JSON files (public/content/r) from data/.
  * Run: node scripts/r-curriculum/generate.mjs
+ * Then check every answer in R, in the dev app's console (see check-in-browser.mjs).
  */
-import { mkdir, writeFile } from 'node:fs/promises'
-import { resolve, dirname } from 'node:path'
+import { writeFile, mkdir } from 'node:fs/promises'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { buildSection, finalizeTopic } from './helpers.mjs'
-import { sections } from './curriculum.mjs'
+import { COURSE } from './data/course.mjs'
+import { assertUnique, challengeId, questionId } from '../curriculum-ids.mjs'
 import { applyKeepProgress, previousChallenges, readPreviousSection } from '../progress-safety.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const outDir = resolve(here, '../../public/content/r')
 
+/** The items, after checking that no two share an id. */
+function unique(levelId, what, items) {
+  assertUnique(levelId, items.map((item) => item.id), what)
+  return items
+}
+
+function buildLevel(topic) {
+  return {
+    id: topic.id,
+    // Ids this stage had before it was renamed; the app moves saved progress over.
+    ...(topic.formerIds?.length ? { formerIds: topic.formerIds } : {}),
+    title: topic.title,
+    kind: topic.kind,
+    projectDifficulty: topic.projectDifficulty,
+    sandboxSnippets: topic.sandboxSnippets,
+    intro: {
+      title: topic.title,
+      bodyMarkdown: topic.paragraphs.join('\n\n'),
+      sandboxCode: topic.sandboxCode,
+      readMore: topic.readMore,
+    },
+    // Permanent ids from the title or prompt (see ../curriculum-ids.mjs).
+    challenges: unique(
+      topic.id,
+      'challenges',
+      topic.challenges.map((c) => ({ id: challengeId(topic.id, c.title), ...c })),
+    ),
+    test: {
+      passingScorePercent: 70,
+      questions: unique(
+        topic.id,
+        'questions',
+        topic.questions.map((q, i) => {
+          if (!q.explanation) throw new Error(`${topic.id} question ${i + 1} has no explanation`)
+          // `check` is for check-in-browser.mjs only.
+          const { check: _check, ...question } = q
+          return { id: questionId(topic.id, q.prompt), ...question }
+        }),
+      ),
+    },
+  }
+}
+
 await mkdir(outDir, { recursive: true })
-
-let totalTopics = 0
-let totalChallenges = 0
-
-for (const section of sections) {
-  const file = buildSection({
-    ...section,
-    topics: section.topics.map((topic) => finalizeTopic(topic, section.sectionId)),
-  })
-  totalTopics += file.levels.length
-  totalChallenges += file.levels.reduce((sum, level) => sum + level.challenges.length, 0)
+const written = COURSE.filter((section) => section.topics.length > 0)
+for (const section of written) {
+  const file = { sectionId: section.sectionId, title: section.title, levels: section.topics.map(buildLevel) }
   const path = resolve(outDir, section.filename)
   // Compare with the version learners have, before it is replaced (see ../progress-safety.mjs).
   for (const id of applyKeepProgress(file, previousChallenges(readPreviousSection(path)))) {
     console.log(`  ${id}: checks changed, learners keep their progress (keepProgress)`)
   }
   await writeFile(path, `${JSON.stringify(file, null, 2)}\n`, 'utf8')
-  console.log(`Wrote ${section.filename} (${file.levels.length} topics, ${file.levels[0]?.challenges.length ?? 0} challenges each)`)
+  console.log(`Wrote ${section.filename} (${file.levels.length} stages)`)
 }
 
-const languageIndex = {
+const index = {
   id: 'r',
   title: 'R',
-  sections: sections.map((section) => ({
-    id: section.sectionId,
-    title: section.title,
-    path: section.filename,
-  })),
+  sections: written.map((s) => ({ id: s.sectionId, title: s.title, path: s.filename })),
+  // Quests without stages yet are listed as "Coming soon".
+  upcoming: COURSE.filter((s) => s.topics.length === 0).map((s) => ({ id: s.sectionId, title: s.title })),
 }
-
-await writeFile(resolve(outDir, 'index.json'), `${JSON.stringify(languageIndex, null, 2)}\n`, 'utf8')
-console.log(`Wrote index.json (${sections.length} sections, ${totalTopics} topics, ${totalChallenges} challenges total)`)
-console.log('Done.')
+await writeFile(resolve(outDir, 'index.json'), `${JSON.stringify(index, null, 2)}\n`, 'utf8')
+console.log('Wrote index.json')
