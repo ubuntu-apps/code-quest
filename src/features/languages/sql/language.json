@@ -1,0 +1,345 @@
+{
+  "id": "sql",
+  "label": "SQL",
+  "testMode": "sql_tests",
+  "features": {
+    "runChallenges": true,
+    "readsInput": false,
+    "tableOutput": true,
+    "database": true,
+    "setupCode": false
+  },
+  "words": {
+    "literals": [
+      "null",
+      "true",
+      "false"
+    ],
+    "keywords": [
+      "SELECT",
+      "FROM",
+      "WHERE",
+      "AND",
+      "OR",
+      "NOT",
+      "IN",
+      "BETWEEN",
+      "LIKE",
+      "IS",
+      "NULL",
+      "AS",
+      "DISTINCT",
+      "ORDER",
+      "BY",
+      "ASC",
+      "DESC",
+      "LIMIT",
+      "OFFSET",
+      "GROUP",
+      "HAVING",
+      "JOIN",
+      "INNER",
+      "LEFT",
+      "RIGHT",
+      "FULL",
+      "OUTER",
+      "CROSS",
+      "ON",
+      "USING",
+      "UNION",
+      "ALL",
+      "INTERSECT",
+      "EXCEPT",
+      "CASE",
+      "WHEN",
+      "THEN",
+      "ELSE",
+      "END",
+      "INSERT",
+      "INTO",
+      "VALUES",
+      "UPDATE",
+      "SET",
+      "DELETE",
+      "CREATE",
+      "TABLE",
+      "DROP",
+      "ALTER",
+      "ADD",
+      "COLUMN",
+      "PRIMARY",
+      "KEY",
+      "FOREIGN",
+      "REFERENCES",
+      "UNIQUE",
+      "DEFAULT",
+      "CHECK",
+      "INDEX",
+      "VIEW",
+      "IF",
+      "EXISTS",
+      "WITH",
+      "RECURSIVE",
+      "OVER",
+      "PARTITION",
+      "WINDOW",
+      "BEGIN",
+      "COMMIT",
+      "ROLLBACK",
+      "TRANSACTION",
+      "INTEGER",
+      "TEXT",
+      "REAL",
+      "NUMERIC",
+      "BLOB",
+      "TRUE",
+      "FALSE",
+      "COLLATE",
+      "NOCASE",
+      "GLOB",
+      "ESCAPE",
+      "RETURNING",
+      "PRAGMA",
+      "STRICT",
+      "CASCADE",
+      "RESTRICT",
+      "ACTION",
+      "NO",
+      "AUTOINCREMENT",
+      "CONSTRAINT",
+      "RENAME",
+      "TO",
+      "TEMP",
+      "TEMPORARY",
+      "EXPLAIN",
+      "QUERY",
+      "PLAN",
+      "SAVEPOINT",
+      "RELEASE",
+      "CONFLICT",
+      "DO",
+      "NOTHING",
+      "IGNORE",
+      "WITHOUT",
+      "ROWID",
+      "FILTER",
+      "ROWS",
+      "RANGE",
+      "GROUPS",
+      "ROW",
+      "PRECEDING",
+      "FOLLOWING",
+      "UNBOUNDED",
+      "CURRENT",
+      "EXCLUDE",
+      "MATERIALIZED",
+      "REGEXP"
+    ],
+    "functions": [
+      "COUNT",
+      "SUM",
+      "AVG",
+      "MIN",
+      "MAX",
+      "ROUND",
+      "ABS",
+      "UPPER",
+      "LOWER",
+      "LENGTH",
+      "SUBSTR",
+      "TRIM",
+      "REPLACE",
+      "INSTR",
+      "COALESCE",
+      "IFNULL",
+      "NULLIF",
+      "CAST",
+      "DATE",
+      "TIME",
+      "DATETIME",
+      "STRFTIME",
+      "JULIANDAY",
+      "GROUP_CONCAT",
+      "PRINTF",
+      "ROW_NUMBER",
+      "RANK",
+      "DENSE_RANK",
+      "LAG",
+      "LEAD",
+      "IIF",
+      "TYPEOF",
+      "NTILE",
+      "FIRST_VALUE",
+      "LAST_VALUE",
+      "NTH_VALUE",
+      "PERCENT_RANK",
+      "CUME_DIST",
+      "CEIL",
+      "FLOOR",
+      "TOTAL",
+      "RANDOM",
+      "LTRIM",
+      "RTRIM",
+      "HEX",
+      "QUOTE",
+      "FORMAT",
+      "UNIXEPOCH",
+      "CHAR",
+      "UNICODE",
+      "JSON",
+      "JSON_EXTRACT",
+      "JSON_EACH",
+      "JSON_SET",
+      "JSON_INSERT",
+      "JSON_REMOVE",
+      "JSON_ARRAY",
+      "JSON_ARRAY_LENGTH",
+      "JSON_OBJECT",
+      "JSON_GROUP_ARRAY",
+      "JSON_GROUP_OBJECT",
+      "JSON_TYPE",
+      "JSON_VALID",
+      "JSON_TREE",
+      "PRAGMA_TABLE_INFO",
+      "CHANGES",
+      "LAST_INSERT_ROWID"
+    ]
+  },
+  "highlight": {
+    "caseInsensitive": true,
+    "tokens": [
+      {
+        "kind": "comment",
+        "pattern": "--[^\\n]*|\\/\\*[\\s\\S]*?(?:\\*\\/|$)"
+      },
+      {
+        "kind": "string",
+        "pattern": "'(?:[^']|'')*'?"
+      },
+      {
+        "kind": "number",
+        "pattern": "\\b\\d+(?:\\.\\d*)?(?:[eE][+-]?\\d+)?\\b|\\.\\d+\\b"
+      },
+      {
+        "kind": "name",
+        "pattern": "[A-Za-z_][\\w$]*"
+      }
+    ],
+    "names": [
+      {
+        "kind": "constant",
+        "words": "literals"
+      },
+      {
+        "kind": "keyword",
+        "words": "keywords"
+      },
+      {
+        "kind": "builtin",
+        "words": "functions",
+        "call": true
+      }
+    ]
+  },
+  "tryIt": {
+    "commentPrefix": "--",
+    "firstLine": {
+      "pattern": "^\\s*(SELECT|WITH|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|ALTER|BEGIN|PRAGMA|EXPLAIN)\\b",
+      "flags": "i"
+    }
+  },
+  "editor": {
+    "indentSize": 4,
+    "suggestKeywords": [
+      "keywords"
+    ],
+    "suggestFunctions": [
+      "functions"
+    ]
+  },
+  "keys": [
+    {
+      "pair": [
+        "(",
+        ")"
+      ],
+      "aria": "Parentheses"
+    },
+    {
+      "pair": [
+        "'",
+        "'"
+      ],
+      "aria": "Single quotes"
+    },
+    ",",
+    {
+      "text": ".",
+      "aria": "Dot"
+    },
+    {
+      "text": "_",
+      "aria": "Underscore"
+    },
+    {
+      "text": ";",
+      "aria": "Semicolon"
+    },
+    "=",
+    "*",
+    {
+      "text": "%",
+      "aria": "Percent"
+    },
+    {
+      "text": "||",
+      "aria": "Join text (two bars)"
+    },
+    "<",
+    ">",
+    "-",
+    "+",
+    "/",
+    "!",
+    {
+      "pair": [
+        "\"",
+        "\""
+      ],
+      "aria": "Double quotes"
+    },
+    {
+      "special": "indent"
+    },
+    {
+      "special": "unindent"
+    }
+  ],
+  "sandbox": {
+    "defaultCode": "SELECT 'Hello from CodeQuest!' AS greeting;",
+    "samples": [
+      {
+        "id": "hello",
+        "label": "Hello",
+        "code": "SELECT 'Hello, SQL!' AS greeting;"
+      },
+      {
+        "id": "maths",
+        "label": "Maths",
+        "code": "SELECT 2 + 3 AS total, 10 / 4.0 AS quarter;"
+      }
+    ]
+  },
+  "messages": {
+    "status": {
+      "waiting": "Waiting for the previous run to finish…",
+      "waiting-download": "Waiting for \"Download for offline\" to finish…",
+      "loading": "Getting the SQL engine ready (first run only, about 10 MB)…",
+      "packages": "Downloading SQLite (first run only)…",
+      "running": "Running…"
+    }
+  },
+  "offline": {
+    "stepLabel": "Downloading the SQL engine…"
+  }
+}

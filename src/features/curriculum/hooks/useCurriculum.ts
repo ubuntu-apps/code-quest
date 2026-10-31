@@ -3,7 +3,7 @@ import type { LanguageBundle, RootIndex } from '../types'
 import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from '../loadCurriculum'
 import { notifyProgressChanged } from '../progressStorage'
 import { reconcileLanguageProgress } from '../progressFingerprint'
-import { preloadWebR } from '../rSandbox'
+import { languagePack } from '../../languages'
 import { useEditorDraft, useEditorMode } from '../../editor'
 import { useLanguageBundles } from './useLanguageBundles'
 
@@ -202,7 +202,7 @@ export function useCurriculum({
   const openLanguage = useCallback(
     async (path: string, id: string): Promise<LanguageBundle | null> => {
       goToLanguage(id)
-      if (id === 'r') preloadWebR()
+      languagePack(id)?.preload()
       if (loadedLanguageId === id && bundle) return bundle
       try {
         const b = await loadLanguageBundle(baseUrl, path, {

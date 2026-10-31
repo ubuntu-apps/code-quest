@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { sqlTableFor, sqlTablesInQuery } from './sqlWords'
+import { sqlTableFor, sqlTablesInQuery } from './sqlTables'
 
 const tables = [
   { name: 'books', columns: ['id', 'title', 'author_id'] },

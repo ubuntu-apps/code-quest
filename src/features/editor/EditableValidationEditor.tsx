@@ -1,8 +1,11 @@
 import type { Validation, ValidationMode } from '../curriculum/types'
+import { validationModes } from '../curriculum/validationModes'
+import { packForTestMode } from '../languages'
 import { EditableBlock, EditableTextarea } from './EditableField'
 import { useEditorMode } from './editorHooks'
 
-const MODES: ValidationMode[] = ['equalsNormalized', 'includesAll', 'regex', 'python_tests']
+/** The text modes and every language's tests. */
+const MODES: ValidationMode[] = validationModes()
 
 interface EditableValidationEditorProps {
   validation: Validation
@@ -12,6 +15,8 @@ interface EditableValidationEditorProps {
 export function EditableValidationEditor({ validation, onChange }: EditableValidationEditorProps) {
   const { canEdit, isEditingLocal } = useEditorMode()
   if (!canEdit || !isEditingLocal) return null
+  // The language that runs this challenge's tests, if any.
+  const pack = packForTestMode(validation.mode)
 
   const setMode = (mode: ValidationMode) => {
     onChange({ ...validation, mode })
@@ -66,14 +71,16 @@ export function EditableValidationEditor({ validation, onChange }: EditableValid
         />
       )}
 
-      {validation.mode === 'python_tests' && (
+      {pack && (
         <>
-          <EditableTextarea
-            label="Setup code"
-            rows={3}
-            value={validation.setupCode ?? ''}
-            onChange={(setupCode) => onChange({ ...validation, setupCode })}
-          />
+          {pack.usesSetupCode ? (
+            <EditableTextarea
+              label="Setup code"
+              rows={3}
+              value={validation.setupCode ?? ''}
+              onChange={(setupCode) => onChange({ ...validation, setupCode })}
+            />
+          ) : null}
           {(validation.tests ?? []).map((t, i) => (
             <div key={t.id} className="cq-editable-nested">
               <EditableTextarea

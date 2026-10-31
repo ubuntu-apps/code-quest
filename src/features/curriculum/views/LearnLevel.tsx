@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react'
 import type { Challenge, Level, TestGradeResult } from '../types'
 import { saveProgress, type LevelProgress } from '../progressStorage'
-import type { FriendlySandboxError } from '../components/CodeSandboxSection'
-import type { PythonChallengeTestResult } from '../pythonSandbox'
-import type { RChallengeTestResult } from '../rSandbox'
+import type { ChallengeTestResult, FriendlyCodeError } from '../../languages'
 import { STEP_PANEL_ID, stepTabId, type LevelStep } from '../constants'
 import { EditableText } from '../../editor'
 import { AddItemButton } from '../../editor'
@@ -29,7 +27,7 @@ interface LearnLevelProps {
   sandboxCode: string
   sandboxOutput: string
   sandboxRunning: boolean
-  sandboxError: FriendlySandboxError | null
+  sandboxError: FriendlyCodeError | null
   sandboxErrorUiEpoch: number
   onSandboxCodeChange: (code: string) => void
   onSandboxRun: (stdin: string) => void
@@ -38,8 +36,8 @@ interface LearnLevelProps {
   onSandboxErrorClear: () => void
   challengeDrafts: Record<string, string>
   challengeStatus: Record<string, 'passed' | 'failed'>
-  challengeTestResults: Record<string, (PythonChallengeTestResult | RChallengeTestResult)[]>
-  challengeRuntimeError: Record<string, FriendlySandboxError | null>
+  challengeTestResults: Record<string, ChallengeTestResult[]>
+  challengeRuntimeError: Record<string, FriendlyCodeError | null>
   challengeErrorExpanded: Record<string, boolean>
   challengeErrorUiEpoch: Record<string, number>
   /** Challenges being checked now, with a progress message. */

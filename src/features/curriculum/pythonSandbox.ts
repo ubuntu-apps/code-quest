@@ -352,22 +352,6 @@ export async function preparePythonOffline(lessonCode: string, signal?: AbortSig
   throw new Error('Downloading Python took too long. Check your internet connection and try again.')
 }
 
-/** What to show while a run is in a given state. */
-export function pythonStatusMessage(status: PythonRunStatus): string {
-  switch (status) {
-    case 'waiting':
-      return 'Waiting for the previous run to finish…'
-    case 'waiting-download':
-      return 'Waiting for "Download for offline" to finish…'
-    case 'loading':
-      return 'Downloading Python (first run only, about 10 MB)…'
-    case 'packages':
-      return 'Downloading the packages this code uses, such as pandas (first time only)…'
-    case 'running':
-      return 'Running…'
-  }
-}
-
 function loadError(): FriendlyPythonError {
   return {
     title: 'Python could not start',
@@ -490,18 +474,6 @@ export async function runPythonChallengeTests(
     tests: results,
     error: null,
     output,
-  }
-}
-
-/** What to show while a SQL run is in a given state (SQL runs on the Python runtime). */
-export function sqlStatusMessage(status: PythonRunStatus): string {
-  switch (status) {
-    case 'loading':
-      return 'Getting the SQL engine ready (first run only, about 10 MB)…'
-    case 'packages':
-      return 'Downloading SQLite (first run only)…'
-    default:
-      return pythonStatusMessage(status)
   }
 }
 

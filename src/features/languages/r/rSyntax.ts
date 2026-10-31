@@ -1,8 +1,8 @@
 import { StreamLanguage, type StreamParser } from '@codemirror/language'
-import { R_CONSTANTS, R_KEYWORDS } from '../rWords'
+import language from './language.json'
 
-const KEYWORDS = new Set(R_KEYWORDS)
-const CONSTANTS = new Set(R_CONSTANTS)
+const KEYWORDS = new Set(language.words.keywords)
+const CONSTANTS = new Set(language.words.constants)
 
 interface RState {
   /** Inside a text that continues on the next line, and its quote. */

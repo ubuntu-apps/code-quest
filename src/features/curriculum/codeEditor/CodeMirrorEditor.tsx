@@ -12,33 +12,12 @@ import {
   type DecorationSet,
 } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
-import {
-  HighlightStyle,
-  bracketMatching,
-  indentOnInput,
-  indentUnit,
-  syntaxHighlighting,
-} from '@codemirror/language'
-import {
-  acceptCompletion,
-  autocompletion,
-  closeBrackets,
-  closeBracketsKeymap,
-  completeFromList,
-  completionKeymap,
-  completionStatus,
-  type Completion,
-  type CompletionContext,
-  type CompletionSource,
-} from '@codemirror/autocomplete'
-import { localCompletionSource, python } from '@codemirror/lang-python'
+import { HighlightStyle, bracketMatching, indentOnInput, syntaxHighlighting } from '@codemirror/language'
+import { acceptCompletion, closeBrackets, closeBracketsKeymap, completionKeymap, completionStatus } from '@codemirror/autocomplete'
 import { tags as t } from '@lezer/highlight'
 import type { KeyBarTarget } from './CodeKeyBar'
-import { rLanguage } from './rLanguage'
-import { sqlLanguage } from './sqlLanguage'
-import { R_CONSTANTS, R_FUNCTIONS, R_KEYWORDS } from '../rWords'
-import { isSqlKeyword, SQL_FUNCTIONS, SQL_KEYWORDS, sqlTableFor, sqlTablesInQuery } from '../sqlWords'
 import type { SqlTable } from '../types'
+import type { EditorLanguage } from '../../languages/EditorLanguage'
 
 /** The error from the last Run or Check, shown on its line. */
 export interface EditorError {
@@ -58,7 +37,8 @@ export interface EditorError {
 export interface CodeMirrorEditorProps {
   value: string
   onChange: (value: string) => void
-  language: 'python' | 'sql' | 'r' | 'plain'
+  /** The language's syntax, suggestions and indent (see languages/EditorLanguage.ts). */
+  editorLanguage: EditorLanguage
   /** Height to start at, in lines; the editor grows with the code. */
   minLines: number
   /** Element ids naming and describing the editor (its label, the keyboard hint). */
@@ -73,137 +53,6 @@ export interface CodeMirrorEditorProps {
   suggestNames?: string[]
   /** SQL lessons: the database's tables, for suggesting a table's columns after `table.` or an alias. */
   sqlTables?: SqlTable[]
-}
-
-/**
- * Suggested besides the names in the learner's own code: Python's keywords and the
- * built-ins the course uses. Not the full list of built-ins, which is mostly noise for
- * beginners (TabError, aiter, ...).
- */
-const PYTHON_WORDS: Completion[] = [
-  ...'and as break case class continue def del elif else except False finally for from global if import in is lambda match None nonlocal not or pass raise return True try while with yield'
-    .split(' ')
-    .map((label) => ({ label, type: 'keyword' })),
-  ...'abs all any bool dict divmod enumerate float input int isinstance len list map max min open print range repr reversed round set sorted str sum tuple type zip'
-    .split(' ')
-    .map((label) => ({ label, type: 'function' })),
-]
-
-/**
- * One list of suggestions for the word being typed: names used in this code first, then
- * names from the challenge's instructions (so `day_off` is offered before it is written),
- * then Python's words. Each name appears once. Suggestions start from the second letter
- * of a word (one letter matches too much), and the list closes when the word is deleted.
- */
-function suggestions(extraNames: () => string[]): CompletionSource {
-  const pythonWords = completeFromList(PYTHON_WORDS)
-  return async (context: CompletionContext) => {
-    const word = context.matchBefore(/\w+/)
-    if (!context.explicit && (!word || word.to - word.from < 2)) return null
-    const from = word ? word.from : context.pos
-    const byLabel = new Map<string, Completion>()
-    const add = (options: readonly Completion[] | undefined, boost: number) => {
-      for (const option of options ?? []) {
-        if (!byLabel.has(option.label)) byLabel.set(option.label, { ...option, boost })
-      }
-    }
-    add((await localCompletionSource(context))?.options, 2)
-    add(extraNames().map((label) => ({ label, type: 'variable' })), 1)
-    add((await pythonWords(context))?.options, 0)
-    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w{2,}$/ } : null
-  }
-}
-
-const R_WORDS: Completion[] = [
-  ...[...R_KEYWORDS, ...R_CONSTANTS].map((label) => ({ label, type: 'keyword' })),
-  ...R_FUNCTIONS.map((label) => ({ label, type: 'function' })),
-]
-
-/**
- * R suggestions: names already used in this code (R names can contain dots, like `is.na`),
- * names from the challenge's instructions, then R's words. Like Python's, from the second letter.
- */
-function rSuggestions(extraNames: () => string[]): CompletionSource {
-  const rWords = completeFromList(R_WORDS)
-  return async (context: CompletionContext) => {
-    const word = context.matchBefore(/[\w.]+/)
-    if (!context.explicit && (!word || word.to - word.from < 2)) return null
-    const from = word ? word.from : context.pos
-    const typed = word ? context.state.sliceDoc(word.from, word.to) : ''
-    const byLabel = new Map<string, Completion>()
-    const add = (options: readonly Completion[] | undefined, boost: number) => {
-      for (const option of options ?? []) {
-        if (!byLabel.has(option.label) && option.label !== typed) byLabel.set(option.label, { ...option, boost })
-      }
-    }
-    const used = new Set(context.state.doc.toString().match(/[A-Za-z.][\w.]*/g) ?? [])
-    add([...used].filter((name) => name.startsWith(typed)).map((label) => ({ label, type: 'variable' })), 2)
-    add(extraNames().filter((name) => name.startsWith(typed)).map((label) => ({ label, type: 'variable' })), 1)
-    add((await rWords(context))?.options, 0)
-    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^[\w.]{2,}$/ } : null
-  }
-}
-
-const SQL_WORDS: Completion[] = [
-  ...SQL_KEYWORDS.map((label) => ({ label, type: 'keyword' })),
-  ...SQL_FUNCTIONS.map((label) => ({ label, type: 'function' })),
-]
-
-/**
- * SQL suggestions, depending on where the cursor is:
- * - after `books.` or an alias such as `b.`: that table's columns;
- * - right after FROM, JOIN, INTO, UPDATE or TABLE: the lesson's tables first;
- * - anywhere else: the columns of the tables the query already uses first, then the
- *   other table and column names, names already typed, and SQL's keywords and functions.
- * Like Python's, they start from the second letter of a word (or straight after a dot).
- */
-function sqlSuggestions(extraNames: () => string[], lessonTables: () => SqlTable[]): CompletionSource {
-  const sqlWords = completeFromList(SQL_WORDS)
-  return async (context: CompletionContext) => {
-    const doc = context.state.doc.toString()
-    const tables = lessonTables()
-
-    const dotted = context.matchBefore(/[A-Za-z_]\w*\.\w*/)
-    if (dotted) {
-      const text = context.state.sliceDoc(dotted.from, dotted.to)
-      const qualifier = text.slice(0, text.indexOf('.'))
-      const table = sqlTableFor(qualifier, doc, tables)
-      if (!table) return null
-      return {
-        from: dotted.from + qualifier.length + 1,
-        options: table.columns.map((label) => ({ label, type: 'property', detail: table.name })),
-        validFor: /^\w*$/,
-      }
-    }
-
-    const word = context.matchBefore(/\w+/)
-    const from = word ? word.from : context.pos
-    const wantsTable = /\b(from|join|into|update|table)\s+$/i.test(context.state.sliceDoc(0, from))
-    if (!context.explicit && !wantsTable && (!word || word.to - word.from < 2)) return null
-    if (!context.explicit && wantsTable && !word) return null
-
-    const byLabel = new Map<string, Completion>()
-    const add = (options: readonly Completion[] | undefined, boost: number) => {
-      for (const option of options ?? []) {
-        if (!byLabel.has(option.label.toLowerCase())) byLabel.set(option.label.toLowerCase(), { ...option, boost })
-      }
-    }
-    if (wantsTable) add(tables.map((t) => ({ label: t.name, type: 'class', detail: 'table' })), 4)
-    for (const table of sqlTablesInQuery(doc, tables)) {
-      add(table.columns.map((label) => ({ label, type: 'property', detail: table.name })), 3)
-    }
-    add(extraNames().map((label) => ({ label, type: 'variable' })), 2)
-    const typed = doc.match(/[A-Za-z_]\w+/g) ?? []
-    const current = word ? context.state.sliceDoc(word.from, word.to) : ''
-    add(
-      [...new Set(typed)]
-        .filter((name) => name !== current && !isSqlKeyword(name))
-        .map((label) => ({ label, type: 'variable' })),
-      1,
-    )
-    add((await sqlWords(context))?.options, 0)
-    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w*$/ } : null
-  }
 }
 
 /** Marks changes that came from the `value` prop, so they aren't echoed back as onChange. */
@@ -315,14 +164,14 @@ function escapeThenTab(): Extension {
 }
 
 /**
- * The code editor used for challenges and the sandbox: CodeMirror 6 with Python
+ * The code editor used for challenges and the sandbox: CodeMirror 6 with the language's
  * colours, auto-indent, bracket matching and closing, name suggestions, undo, and the
  * last error's line marked. Loaded lazily (see CodeEditor), so pages without code don't download it.
  */
 export default function CodeMirrorEditor({
   value,
   onChange,
-  language,
+  editorLanguage,
   minLines,
   labelledBy,
   describedBy,
@@ -368,30 +217,11 @@ export default function CodeMirrorEditor({
           indentOnInput(),
           bracketMatching(),
           closeBrackets(),
-          // Suggestions while typing: names already used in this code (variables,
-          // functions), Python's keywords and common built-ins such as print and range.
-          // Only words that start with what was typed. Enter or Tab picks one; Escape closes.
-          language !== 'plain'
-            ? autocompletion({
-                override: [
-                  language === 'sql'
-                    ? sqlSuggestions(
-                        () => latest.current.suggestNames ?? [],
-                        () => latest.current.sqlTables ?? [],
-                      )
-                    : language === 'r'
-                      ? rSuggestions(() => latest.current.suggestNames ?? [])
-                      : suggestions(() => latest.current.suggestNames ?? []),
-                ],
-                filterStrict: true,
-                icons: false,
-                maxRenderedOptions: 8,
-              })
-            : [],
-          // R code is usually indented by two spaces, Python by four.
-          EditorState.tabSize.of(language === 'r' ? 2 : 4),
-          indentUnit.of(language === 'r' ? '  ' : '    '),
-          language === 'python' ? python() : language === 'sql' ? sqlLanguage : language === 'r' ? rLanguage : [],
+          // The language's suggestions while typing, indent and syntax.
+          ...editorLanguage.extensions({
+            extraNames: () => latest.current.suggestNames ?? [],
+            sqlTables: () => latest.current.sqlTables ?? [],
+          }),
           syntaxHighlighting(codeQuestHighlight),
           keymap.of([
             ...closeBracketsKeymap,
@@ -441,7 +271,7 @@ export default function CodeMirrorEditor({
       view.destroy()
       viewRef.current = null
     }
-  }, [language, labelledBy, describedBy])
+  }, [editorLanguage, labelledBy, describedBy])
 
   // The value changed from outside (a snippet, Reset, starter code): replace the text.
   useEffect(() => {

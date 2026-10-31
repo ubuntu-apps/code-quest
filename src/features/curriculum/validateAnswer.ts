@@ -53,12 +53,8 @@ export function validateAgainst(answer: string, v: Validation): boolean {
         return false
       }
     }
-    case 'python_tests':
-    case 'r_tests':
-    case 'sql_tests':
-      // Runtime-backed checks are handled asynchronously in CodeQuestScreen.
-      return false
     default:
+      // A language's tests run in its runtime (useChallenges), not here.
       return false
   }
 }
