@@ -15,8 +15,10 @@ const RUN_TIMEOUT_MS = 45_000
 
 type CaptureOutput = { type: string; data: unknown }
 
+type CaptureOptions = { withAutoprint?: boolean; captureStreams?: boolean; captureConditions?: boolean }
+
 type ShelterInstance = {
-  captureR: (code: string) => Promise<{ output: CaptureOutput[] }>
+  captureR: (code: string, options?: CaptureOptions) => Promise<{ output: CaptureOutput[] }>
   purge: () => void
 }
 
@@ -46,7 +48,12 @@ export interface RChallengeRunResult {
   passed: boolean
   tests: RChallengeTestResult[]
   error: FriendlyRError | null
+  /** What the learner's code printed, as the console would show it. */
+  output: string
 }
+
+/** Separates the learner's output from the test results in a check's output. */
+const TESTS_MARKER = '<<codequest-tests>>'
 
 let loaderPromise: Promise<WebRInstance> | null = null
 
@@ -104,11 +111,29 @@ export function preloadWebR(): void {
   })
 }
 
-function stdoutFromCapture(output: CaptureOutput[]): string {
-  return output
-    .filter((item) => item.type === 'stdout')
-    .map((item) => (typeof item.data === 'string' ? item.data : String(item.data ?? '')))
-    .join('')
+/** The text of a captured warning or message (an R condition object). */
+async function conditionText(data: unknown): Promise<string> {
+  if (typeof data === 'string') return data
+  try {
+    const condition = data as { get: (name: string) => Promise<{ toString: () => Promise<string> }> }
+    return await (await condition.get('message')).toString()
+  } catch {
+    return ''
+  }
+}
+
+/**
+ * What the code printed, in order, as the R console shows it: output lines, plus
+ * warnings and messages (R still runs the code after a warning).
+ */
+async function textFromCapture(output: CaptureOutput[]): Promise<string> {
+  const lines: string[] = []
+  for (const item of output) {
+    if (item.type === 'stdout') lines.push(typeof item.data === 'string' ? item.data : String(item.data ?? ''))
+    else if (item.type === 'warning') lines.push(`Warning: ${(await conditionText(item.data)).trim()}`)
+    else if (item.type === 'message') lines.push((await conditionText(item.data)).replace(/\n$/, ''))
+  }
+  return lines.join('\n')
 }
 
 function errorTextFromCapture(output: CaptureOutput[]): string | null {
@@ -139,12 +164,15 @@ function testsToRList(tests: RuntimeAssertionTest[]): string {
   return `list(${items.join(', ')})`
 }
 
-async function captureRCode(code: string): Promise<{ output: string; error: FriendlyRError | null }> {
+async function captureRCode(
+  code: string,
+  options: CaptureOptions = {},
+): Promise<{ output: string; error: FriendlyRError | null }> {
   const webR = await getWebR()
   const shelter = await new webR.Shelter()
   try {
     const captured = await withTimeout(
-      shelter.captureR(code),
+      shelter.captureR(code, { captureStreams: true, captureConditions: true, ...options }),
       RUN_TIMEOUT_MS,
       'R code took too long to run.',
     )
@@ -152,7 +180,7 @@ async function captureRCode(code: string): Promise<{ output: string; error: Frie
     if (errorText) {
       return { output: '', error: explainRError(errorText) }
     }
-    return { output: stdoutFromCapture(captured.output), error: null }
+    return { output: await textFromCapture(captured.output), error: null }
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : 'Execution error'
     return { output: '', error: explainRError(detail) }
@@ -161,8 +189,13 @@ async function captureRCode(code: string): Promise<{ output: string; error: Frie
   }
 }
 
+/** Clears variables left by earlier runs, so each run starts fresh, like a new R session. */
+const CLEAR_GLOBALS = 'rm(list = ls(envir = globalenv(), all.names = TRUE), envir = globalenv())'
+
+/** Runs code like the R console: each line's value is shown unless it is assigned. */
 export async function runRCode(source: string): Promise<SandboxRunResult> {
-  return captureRCode(source)
+  await captureRCode(CLEAR_GLOBALS)
+  return captureRCode(source, { withAutoprint: true })
 }
 
 export async function runRChallengeTests(
@@ -176,26 +209,34 @@ export async function runRChallengeTests(
 
   const wrapped = `
 local({
-  env <- new.env(parent = emptyenv())
+  # The learner's code runs in its own environment, which sees R's functions but not
+  # variables left in the global environment by the sandbox.
+  env <- new.env(parent = parent.env(globalenv()))
   setup <- "${safeSetup}"
   user <- "${safeUser}"
   tests <- ${testsLiteral}
   if (nzchar(trimws(setup))) {
     eval(parse(text = setup), envir = env)
   }
+  # Tests can look at the code itself (to check a function was used) and at its output.
+  env$._cq_code <- user
+  # Like the console: every top-level value is printed unless it is assigned.
   env$._cq_stdout <- paste(capture.output({
-    eval(parse(text = user), envir = env)
+    for (expr in parse(text = user)) {
+      res <- withVisible(eval(expr, envir = env))
+      if (res$visible) print(res$value)
+    }
   }), collapse = "\\n")
+  cat(env$._cq_stdout, "\\n${TESTS_MARKER}\\n", sep = "")
   lines <- character(length(tests))
   for (i in seq_along(tests)) {
     t <- tests[[i]]
     passed <- FALSE
     detail <- ""
     tryCatch({
+      # A failed check shows just its label; an error inside it (such as a variable the
+      # learner hasn't made yet, "object 'total' not found") is shown as the reason.
       passed <- isTRUE(eval(parse(text = t$assertion), envir = env))
-      if (!passed) {
-        detail <- paste0("Assertion returned FALSE: ", t$assertion)
-      }
     }, error = function(e) {
       passed <<- FALSE
       detail <<- conditionMessage(e)
@@ -210,10 +251,13 @@ local({
 
   const result = await captureRCode(wrapped)
   if (result.error) {
-    return { passed: false, tests: [], error: result.error }
+    return { passed: false, tests: [], error: result.error, output: '' }
   }
 
+  const markerAt = result.output.lastIndexOf(TESTS_MARKER)
+  const learnerOutput = markerAt >= 0 ? result.output.slice(0, markerAt).replace(/\n+$/, '') : ''
   const parsed = result.output
+    .slice(markerAt >= 0 ? markerAt + TESTS_MARKER.length : 0)
     .trim()
     .split('\n')
     .filter(Boolean)
@@ -234,5 +278,6 @@ local({
     passed: parsed.length > 0 && parsed.every((t) => t.passed),
     tests: parsed,
     error: null,
+    output: learnerOutput,
   }
 }

@@ -1,11 +1,12 @@
 import { useContext, type FC, type ReactNode } from 'react'
-import { looksLikePython, looksLikeSql } from './codeHighlight'
+import { looksLikePython, looksLikeR, looksLikeSql } from './codeHighlight'
 import { CodeLanguageContext } from './codeLanguageContext'
 import { HighlightedCode } from './components/HighlightedCode'
 
 /**
- * Minimal markdown: paragraphs, fenced ``` code blocks, inline `code`, **bold**.
- * With `onTryCode`, Python and SQL code blocks get a "Try it" button that hands their code over
+ * Minimal markdown: paragraphs, fenced ``` code blocks, inline `code`, **bold**, and simple
+ * pipe tables (a header row, a `| --- |` row, then the rows).
+ * With `onTryCode`, Python, SQL and R code blocks get a "Try it" button that hands their code over
  * (sample output, folder layouts and shell commands don't get one).
  */
 export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: (code: string) => void }> = ({
@@ -25,7 +26,8 @@ export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: 
             </pre>
             {onTryCode &&
             ((language === 'python' && looksLikePython(block.content)) ||
-              (language === 'sql' && looksLikeSql(block.content))) ? (
+              (language === 'sql' && looksLikeSql(block.content)) ||
+              (language === 'r' && looksLikeR(block.content))) ? (
               <button
                 type="button"
                 className="cq-btn cq-btn--sm cq-md-try"
@@ -72,11 +74,65 @@ function splitFences(text: string): { type: 'text' | 'code'; content: string }[]
 
 function renderParagraphs(text: string): ReactNode[] {
   const paras = text.split(/\n\n+/).filter((p) => p.trim())
-  return paras.map((p, i) => (
-    <p key={i} className="cq-md-p">
-      {renderInline(p.trim())}
-    </p>
-  ))
+  return paras.map((p, i) => {
+    const table = parseTable(p.trim())
+    if (table) {
+      return (
+        <div key={i} className="cq-md-table-wrap">
+          <table className="cq-md-table">
+            <thead>
+              <tr>
+                {table.header.map((cell, c) => (
+                  <th key={c}>{renderInline(cell)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {table.rows.map((row, r) => (
+                <tr key={r}>
+                  {row.map((cell, c) => (
+                    <td key={c}>{renderInline(cell)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+    return (
+      <p key={i} className="cq-md-p">
+        {renderInline(p.trim())}
+      </p>
+    )
+  })
+}
+
+/** Cells of one `| a | b |` line. A `|` inside `code` doesn't split a cell. */
+function tableCells(line: string): string[] {
+  const inner = line.trim().replace(/^\|/, '').replace(/\|$/, '')
+  const cells: string[] = []
+  let cell = ''
+  let inCode = false
+  for (const ch of inner) {
+    if (ch === '`') inCode = !inCode
+    if (ch === '|' && !inCode) {
+      cells.push(cell.trim())
+      cell = ''
+    } else {
+      cell += ch
+    }
+  }
+  cells.push(cell.trim())
+  return cells
+}
+
+/** A paragraph that is a pipe table: every line starts with `|`, and the second is `| --- |`. */
+function parseTable(text: string): { header: string[]; rows: string[][] } | null {
+  const lines = text.split('\n')
+  if (lines.length < 2 || !lines.every((l) => l.trim().startsWith('|'))) return null
+  if (!/^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?$/.test(lines[1].trim())) return null
+  return { header: tableCells(lines[0]), rows: lines.slice(2).map(tableCells) }
 }
 
 function renderInline(line: string): ReactNode[] {

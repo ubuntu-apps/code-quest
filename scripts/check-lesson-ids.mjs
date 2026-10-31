@@ -27,10 +27,15 @@ const update = process.argv.includes('--update')
 
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'))
 
-/** Each course's lessons: current ids, and former id → current id. */
+/**
+ * Each published course's lessons: current ids, and former id → current id. Courses marked
+ * comingSoon (only open in admin mode) are skipped: nobody has progress in them yet, so
+ * their lessons can still be renamed freely.
+ */
 function readCourses() {
   const courses = new Map()
   for (const lang of readJson(resolve(contentDir, 'index.json')).languages) {
+    if (lang.comingSoon) continue
     const langDir = dirname(resolve(contentDir, lang.path))
     const index = readJson(resolve(contentDir, lang.path))
     const current = new Set()

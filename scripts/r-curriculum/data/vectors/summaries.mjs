@@ -1,0 +1,129 @@
+// Vectors: Summaries: sum, mean, max.
+import { R_INTRO, code, makeTopic, mc, near, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'summaries',
+  title: 'Summaries: sum, mean, max',
+  paragraphs: [
+    'A summary turns a whole vector into a single number that tells you something about it. These are the ones you will use every day:',
+    '| Function | Gives | For `c(4, 8, 6, 2)` |\n| --- | --- | --- |\n| `sum()` | the total | `20` |\n| `mean()` | the average | `5` |\n| `median()` | the middle value | `5` |\n| `min()`, `max()` | smallest, largest | `2`, `8` |\n| `range()` | smallest and largest together | `2 8` |\n| `length()` | how many values | `4` |',
+    'The **median** is the middle value once the values are sorted; with an even number of values it is halfway between the two in the middle. It is less pulled about by one extreme value than the mean: for incomes or house prices, the median is often the better "typical" value.',
+    code('orders <- c(12, 7, 15, 9, 11, 8, 120)', 'mean(orders)     # 26: dragged up by one huge order', 'median(orders)   # 11'),
+    '`cumsum()` gives a **running total**, one value per position: `cumsum(c(4, 8, 6))` is `4 12 18`. That\'s handy for "how far so far" questions.',
+    'Summaries combine with everything else in this quest. The total of the busy days is `sum(steps[steps > 8000])`, and the average change since last week is `mean(this_week - last_week)`.',
+    code('steps <- c(4200, 8100, 6500, 9900, 3000)', r`cat("Total:", sum(steps), "steps\n")`, r`cat("Average:", mean(steps), "a day\n")`),
+  ],
+  sandboxCode: 'x <- c(4, 8, 6, 2)\nsum(x)\nmean(x)\nmedian(x)\nrange(x)\ncumsum(x)',
+  sandboxSnippets: [
+    snippet('Mean or median', 'orders <- c(12, 7, 15, 9, 11, 8, 120)\nmean(orders)\nmedian(orders)'),
+    snippet('Running total', 'savings <- c(20, 35, 10, 40)\ncumsum(savings)'),
+    snippet('Summary of a selection', 'steps <- c(4200, 8100, 6500, 9900, 3000)\nsum(steps[steps > 8000])\nmean(steps[steps > 8000])'),
+  ],
+  readMore: R_INTRO('Vector-arithmetic', 'An Introduction to R: vector arithmetic'),
+  challenges: [
+    task('easy', 'The week\'s total', {
+      prompt: 'Make `total` the total number of steps in the week.',
+      starter: 'steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\n',
+      hint: '`total <- sum(steps)`',
+      solution: 'steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\ntotal <- sum(steps)',
+      tests: [
+        ['total is 44700', near('total', 44700)],
+        ['Uses sum()', uses('sum(')],
+      ],
+    }),
+    task('easy', 'The average score', {
+      prompt: 'Make `avg` the average of the scores.',
+      starter: 'scores <- c(71, 64, 88, 92, 57, 70)\n',
+      hint: '`avg <- mean(scores)`',
+      solution: 'scores <- c(71, 64, 88, 92, 57, 70)\navg <- mean(scores)',
+      tests: [
+        ['avg is 73.67 (to 2 places)', 'isTRUE(all.equal(round(avg, 2), 73.67))'],
+        ['Uses mean()', uses('mean(')],
+      ],
+    }),
+    task('easy', 'Hottest and coldest', {
+      prompt: 'Make `hottest` the highest temperature and `coldest` the lowest.',
+      starter: 'temps <- c(16.2, 18.4, 21.0, 19.7, 14.9, 17.5)\n',
+      hint: '`hottest <- max(temps)` and `coldest <- min(temps)`.',
+      solution: 'temps <- c(16.2, 18.4, 21.0, 19.7, 14.9, 17.5)\nhottest <- max(temps)\ncoldest <- min(temps)',
+      tests: [
+        ['hottest is 21', near('hottest', 21)],
+        ['coldest is 14.9', near('coldest', 14.9)],
+      ],
+    }),
+    task('medium', 'A typical order', {
+      prompt: 'One customer ordered 120 coffees for an office party. Make `typical` the median order, which that one order doesn\'t drag up.',
+      starter: 'orders <- c(12, 7, 15, 9, 11, 8, 120)\n',
+      hint: '`typical <- median(orders)`',
+      solution: 'orders <- c(12, 7, 15, 9, 11, 8, 120)\ntypical <- median(orders)',
+      tests: [
+        ['typical is 11', near('typical', 11)],
+        ['Uses median()', uses('median(')],
+      ],
+    }),
+    task('medium', 'How far so far', {
+      prompt: 'Make `so_far` the running total of the distances ridden each day.',
+      starter: 'km <- c(5.2, 3.8, 7.0, 4.5)\n',
+      hint: '`so_far <- cumsum(km)`',
+      solution: 'km <- c(5.2, 3.8, 7.0, 4.5)\nso_far <- cumsum(km)',
+      tests: [
+        ['so_far is 5.2, 9, 16, 20.5', near('so_far', 'c(5.2, 9, 16, 20.5)')],
+        ['Uses cumsum()', uses('cumsum(')],
+      ],
+    }),
+    task('medium', 'Total of the big sales', {
+      prompt: 'Make `big_total` the total of the sales of 50 or more.',
+      starter: 'sales <- c(23, 75, 41, 120, 18, 56)\n',
+      hint: 'Pick, then add: `big_total <- sum(sales[sales >= 50])`.',
+      solution: 'sales <- c(23, 75, 41, 120, 18, 56)\nbig_total <- sum(sales[sales >= 50])',
+      tests: [['big_total is 251', near('big_total', 251)]],
+    }),
+    task('hard', 'The spread', {
+      prompt: 'Make `spread` the difference between the fastest and the slowest lap time.',
+      starter: 'laps <- c(82, 80, 84, 79, 88)\n',
+      hint: '`spread <- max(laps) - min(laps)`. (`diff(range(laps))` works too.)',
+      solution: 'laps <- c(82, 80, 84, 79, 88)\nspread <- max(laps) - min(laps)',
+      tests: [['spread is 9', near('spread', 9)]],
+    }),
+    task('expert', 'A weekly summary', {
+      prompt: 'Show these two lines, letting R work out the numbers:\n\n```\nTotal: 44700 steps\nAverage: 6386 a day\n```\n\nRound the average to a whole number.',
+      starter: 'steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)\n',
+      hint: '`cat("Total:", sum(steps), "steps\\n")` and `cat("Average:", round(mean(steps)), "a day\\n")`.',
+      solution: r`steps <- c(4200, 8100, 6500, 9900, 3000, 7600, 5400)
+cat("Total:", sum(steps), "steps\n")
+cat("Average:", round(mean(steps)), "a day\n")`,
+      tests: [
+        ['Shows both lines', prints('Total: 44700 steps', 'Average: 6386 a day')],
+        ['Uses sum() and mean()', uses('sum(') + ' && ' + uses('mean(')],
+      ],
+    }),
+  ],
+  questions: [
+    mc('What does `mean(c(2, 4, 9))` give?', ['`4`', '`5`', '`15`', '`4.5`'], 1,
+      'The total is 15, divided by 3 values.',
+      { code: 'mean(c(2, 4, 9))', output: '[1] 5' }),
+    mc('What does `median(c(2, 4, 9))` give?', ['`5`', '`4`', '`9`', '`2`'], 1,
+      'The middle value, once sorted, is 4.',
+      { code: 'median(c(2, 4, 9))', output: '[1] 4' }),
+    mc('What does `median(c(1, 3, 5, 7))` give?', ['`3`', '`5`', '`4`', '`16`'], 2,
+      'With an even number of values, the median is halfway between the middle two: 3 and 5.',
+      { code: 'median(c(1, 3, 5, 7))', output: '[1] 4' }),
+    mc('What does `range(c(4, 8, 6, 2))` give?', ['`[1] 6`', '`[1] 2 8`', '`[1] 4 2`', '`[1] 2 4 6 8`'], 1,
+      '`range()` gives the smallest and the largest value.',
+      { code: 'range(c(4, 8, 6, 2))', output: '[1] 2 8' }),
+    mc('What does `cumsum(c(1, 2, 3))` give?', ['`[1] 6`', '`[1] 1 3 6`', '`[1] 1 2 3`', '`[1] 3 2 1`'], 1,
+      'A running total: 1, then 1 + 2, then 1 + 2 + 3.',
+      { code: 'cumsum(c(1, 2, 3))', output: '[1] 1 3 6' }),
+    mc('After `x <- c(10, 20, 30, 40)`, what does `sum(x[x > 15])` give?', ['`100`', '`3`', '`90`', '`70`'], 2,
+      'The values over 15 are 20, 30 and 40, which add up to 90.',
+      { code: 'x <- c(10, 20, 30, 40)\nsum(x[x > 15])', output: '[1] 90' }),
+    mc('Orders were 9, 10, 11 and 200. Which is the better "typical" order?', ['The mean, 57.5', 'The median, 10.5', 'The total, 230', 'The maximum, 200'], 1,
+      'One huge order drags the mean up; the median stays with the usual orders.',
+      { code: 'median(c(9, 10, 11, 200))', output: '[1] 10.5' }),
+    mc('What does `max(c(3, 9, 2)) - min(c(3, 9, 2))` give?', ['`7`', '`14`', '`6`', '`1`'], 0,
+      '9 − 2 = 7.',
+      { code: 'max(c(3, 9, 2)) - min(c(3, 9, 2))', output: '[1] 7' }),
+    qShort('Which function gives a running total, one value per position?', 'cumsum',
+      '`cumsum()` is short for "cumulative sum".'),
+  ],
+})

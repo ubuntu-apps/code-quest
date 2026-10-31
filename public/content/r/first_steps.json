@@ -1,0 +1,4648 @@
+{
+  "sectionId": "first_steps",
+  "title": "First steps in R",
+  "levels": [
+    {
+      "id": "first_code",
+      "title": "Your first R code",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "r_as_a_calculator",
+          "label": "R as a calculator",
+          "code": "7 + 8\n100 - 1\n6 * 7"
+        },
+        {
+          "id": "print_or_cat",
+          "label": "print or cat",
+          "code": "print(\"Good morning\")\ncat(\"Good morning\\n\")"
+        },
+        {
+          "id": "text_and_maths",
+          "label": "Text and maths",
+          "code": "cat(\"6 * 7 =\", 6 * 7, \"\\n\")\ncat(\"6 * 7 =\", \"6 * 7\", \"\\n\")"
+        },
+        {
+          "id": "comments",
+          "label": "Comments",
+          "code": "# R skips this line\n1 + 1  # and this note"
+        },
+        {
+          "id": "read_an_error",
+          "label": "Read an error",
+          "code": "# Run this, read the error, then fix the capital P.\nPrint(\"Hi\")"
+        }
+      ],
+      "intro": {
+        "title": "Your first R code",
+        "bodyMarkdown": "R is a programming language made for working with data. Scientists, analysts, journalists and students use it to tidy data, summarise it, run statistics and make charts. In CodeQuest, R runs right here in your browser: type code, press **Run**, and the result appears underneath.\n\nThe simplest R code is a calculation. R works it out and shows the answer:\n\n```\n2 + 3\n10 * 4\n```\n\nR shows `[1] 5` and `[1] 40`. The `[1]` is not part of the answer: it means \"this line starts with the first value\". Later you will meet results with many values, where it helps you count them. For now, read `[1] 5` as \"the answer is 5\".\n\nTo show text, put it in quotes and give it to `print()`. R shows text with its quotes, so you can tell it is text:\n\n```\nprint(\"Hello, R!\")\n```\n\nThat shows `[1] \"Hello, R!\"`. When you want just the words, without the `[1]` and the quotes, use `cat()`. `cat()` doesn't start a new line by itself, so end the text with `\\n`, which means \"new line\":\n\n```\ncat(\"Hello, R!\\n\")\n```\n\n`cat()` can show several things at once, separated by commas. It puts a space between them, and it works out any maths first: `cat(\"2 + 3 =\", 2 + 3, \"\\n\")` shows `2 + 3 = 5`.\n\nA line that starts with `#` is a **comment**. R skips it: comments are notes for people reading your code. A comment can also go at the end of a line.\n\n```\n# the number of days in a year\n365  # not a leap year\n```\n\nR is **case-sensitive**: `print` works, but `Print` gives the error `could not find function \"Print\"`. Every challenge checks the result of your code, so read errors carefully, fix the line, and run it again.",
+        "sandboxCode": "2 + 3\n10 * 4\nprint(\"Hello, R!\")\ncat(\"Hello, R!\\n\")\ncat(\"2 + 3 =\", 2 + 3, \"\\n\")",
+        "readMore": {
+          "label": "An Introduction to R: getting started",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Introduction-and-preliminaries",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "first_code-add-two-numbers",
+          "title": "Easy: Add two numbers",
+          "promptMarkdown": "Show the result of `17 + 25`. Let R do the sum.",
+          "starterCode": "",
+          "hint": "Type the sum on its own line and run it. R shows `[1] 42`.",
+          "solution": "17 + 25",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 42",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 42\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Lets R do the sum",
+                "assertion": "grepl(\"+\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-print-some-text",
+          "title": "Easy: Print some text",
+          "promptMarkdown": "Use `print()` to show the text `Hello, R!`.",
+          "starterCode": "print()",
+          "hint": "Text goes in quotes inside the brackets: `print(\"Hello, R!\")`.",
+          "solution": "print(\"Hello, R!\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] \"Hello, R!\"",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] \\\"Hello, R!\\\"\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-just-the-words",
+          "title": "Easy: Just the words",
+          "promptMarkdown": "Show `Welcome to CodeQuest` without the `[1]` and without quotes.",
+          "starterCode": "",
+          "hint": "Use `cat()`, and end the text with `\\n`: `cat(\"Welcome to CodeQuest\\n\")`.",
+          "solution": "cat(\"Welcome to CodeQuest\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Welcome to CodeQuest",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Welcome to CodeQuest\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses cat()",
+                "assertion": "grepl(\"cat(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-minutes-in-a-day",
+          "title": "Medium: Minutes in a day",
+          "promptMarkdown": "How many minutes are in a day? Show 24 hours times 60 minutes, using `*` for multiplication.",
+          "starterCode": "",
+          "hint": "`24 * 60`",
+          "solution": "24 * 60",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 1440",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 1440\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Lets R multiply",
+                "assertion": "grepl(\"*\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-two-lines",
+          "title": "Medium: Two lines",
+          "promptMarkdown": "Show `Ready` on one line and `Set` on the next, without `[1]` or quotes.",
+          "starterCode": "cat(\"Ready\\n\")",
+          "hint": "Each `cat()` needs its own `\\n` at the end. Add a second `cat()` for `Set`.",
+          "solution": "cat(\"Ready\\n\")\ncat(\"Set\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Ready, then Set",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Ready\", \"Set\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-fix-the-capital-letter",
+          "title": "Medium: Fix the capital letter",
+          "promptMarkdown": "This line fails. Run it, read the error, then fix it so it shows `[1] \"Welcome\"`.",
+          "starterCode": "Print(\"Welcome\")",
+          "hint": "R is case-sensitive. The function is `print`, all lowercase.",
+          "solution": "print(\"Welcome\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] \"Welcome\"",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] \\\"Welcome\\\"\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-fix-the-quotes",
+          "title": "Hard: Fix the quotes",
+          "promptMarkdown": "This line has a missing quote. Fix it so it shows `[1] \"R is fun\"`.",
+          "starterCode": "print(\"R is fun)",
+          "hint": "Text needs a quote at both ends. One is missing before the closing bracket.",
+          "solution": "print(\"R is fun\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] \"R is fun\"",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] \\\"R is fun\\\"\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-comment-it-out",
+          "title": "Hard: Comment it out",
+          "promptMarkdown": "Turn the middle line into a comment, so only the other two lines are shown. Don't delete it.",
+          "starterCode": "cat(\"Keep me\\n\")\ncat(\"Skip me\\n\")\ncat(\"Keep me too\\n\")",
+          "hint": "Put `#` at the start of the middle line. R skips everything after a `#`.",
+          "solution": "cat(\"Keep me\\n\")\n# cat(\"Skip me\\n\")\ncat(\"Keep me too\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows only the first and last lines",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Keep me\", \"Keep me too\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Keeps the middle line as a comment",
+                "assertion": "grepl(\"Skip me\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_code-text-and-a-sum",
+          "title": "Expert: Text and a sum",
+          "promptMarkdown": "Show `7 + 8 = 15` with one `cat()`. Write `7 + 8 =` as text and let R work out the `15`.",
+          "starterCode": "",
+          "hint": "Give `cat()` the text, the sum and `\"\\n\"`, separated by commas: `cat(\"7 + 8 =\", 7 + 8, \"\\n\")`.",
+          "solution": "cat(\"7 + 8 =\", 7 + 8, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 7 + 8 = 15",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"7 + 8 = 15\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Lets R work out the 15",
+                "assertion": "!grepl(\"15\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "first_code-q-f14xg6",
+            "type": "mcq",
+            "prompt": "What does `3 + 4` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3 + 4`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 7`"
+              },
+              {
+                "id": "c",
+                "label": "`7`"
+              },
+              {
+                "id": "d",
+                "label": "`[7]`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "R works out the sum and shows it after `[1]`, which marks the first value of the result."
+          },
+          {
+            "id": "first_code-q-ryvl2r",
+            "type": "mcq",
+            "prompt": "What does `print(\"hi\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"hi\"`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"hi\"`"
+              },
+              {
+                "id": "c",
+                "label": "`hi`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] hi`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`print()` shows text with its quotes, after `[1]`."
+          },
+          {
+            "id": "first_code-q-hlev08",
+            "type": "mcq",
+            "prompt": "What does `cat(\"hi\\n\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"hi\"`"
+              },
+              {
+                "id": "b",
+                "label": "`hi`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] hi`"
+              },
+              {
+                "id": "d",
+                "label": "`\"hi\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`cat()` shows just the text: no `[1]` and no quotes. `\\n` ends the line."
+          },
+          {
+            "id": "first_code-q-1s8znl4",
+            "type": "mcq",
+            "prompt": "What does `\"2 + 3\"` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`5`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 5`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"2 + 3\"`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "In quotes, `2 + 3` is just text, so R shows the text instead of working out the sum."
+          },
+          {
+            "id": "first_code-q-zc6yq3",
+            "type": "mcq",
+            "prompt": "What does `cat(\"Total:\", 4 + 5, \"\\n\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`Total: 9`"
+              },
+              {
+                "id": "b",
+                "label": "`Total:9`"
+              },
+              {
+                "id": "c",
+                "label": "`Total: 4 + 5`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"Total: 9\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`cat()` works out `4 + 5` first and puts a space between the things it shows."
+          },
+          {
+            "id": "first_code-q-sgrt0g",
+            "type": "mcq",
+            "prompt": "What does R do with the line `# add the tips`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Gives an error"
+              },
+              {
+                "id": "b",
+                "label": "Shows it"
+              },
+              {
+                "id": "c",
+                "label": "Ignores it: it is a comment"
+              },
+              {
+                "id": "d",
+                "label": "Adds the tips"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Everything after `#` is a comment, a note for people. R skips it."
+          },
+          {
+            "id": "first_code-q-1uu4d6n",
+            "type": "mcq",
+            "prompt": "What does `Print(5)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 5`"
+              },
+              {
+                "id": "b",
+                "label": "`5`"
+              },
+              {
+                "id": "c",
+                "label": "The error `object 'Print' not found`"
+              },
+              {
+                "id": "d",
+                "label": "The error `could not find function \"Print\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "R is case-sensitive: the function is `print`. There is no function called `Print`."
+          },
+          {
+            "id": "first_code-q-sgtzvo",
+            "type": "mcq",
+            "prompt": "In `[1] 40`, what is the `[1]`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error number"
+              },
+              {
+                "id": "b",
+                "label": "Part of the answer"
+              },
+              {
+                "id": "c",
+                "label": "It marks the first value of the result"
+              },
+              {
+                "id": "d",
+                "label": "The number of lines"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Results can hold many values. `[1]` says that the line starts with the first one."
+          },
+          {
+            "id": "first_code-q-1y3nw45",
+            "type": "shortText",
+            "prompt": "Which function shows text without `[1]` and quotes?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "cat"
+            },
+            "explanation": "`cat()` shows just the words. `print()` shows `[1]` and the quotes."
+          }
+        ]
+      }
+    },
+    {
+      "id": "arithmetic",
+      "title": "Doing the maths",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "powers",
+          "label": "Powers",
+          "code": "2 ^ 10\n10 ^ 3\n1e3"
+        },
+        {
+          "id": "boxes_and_leftovers",
+          "label": "Boxes and leftovers",
+          "code": "# 50 eggs in boxes of 6\n50 %/% 6\n50 %% 6"
+        },
+        {
+          "id": "order_of_operations",
+          "label": "Order of operations",
+          "code": "10 + 20 / 2\n(10 + 20) / 2"
+        },
+        {
+          "id": "even_or_odd",
+          "label": "Even or odd",
+          "code": "14 %% 2\n15 %% 2"
+        }
+      ],
+      "intro": {
+        "title": "Doing the maths",
+        "bodyMarkdown": "R is a very good calculator. These are the arithmetic operators:\n\n| Operator | Meaning | Example | Result |\n| --- | --- | --- | --- |\n| `+` | add | `7 + 2` | `9` |\n| `-` | subtract | `7 - 2` | `5` |\n| `*` | multiply | `7 * 2` | `14` |\n| `/` | divide | `7 / 2` | `3.5` |\n| `^` | to the power of | `7 ^ 2` | `49` |\n| `%/%` | whole-number division | `7 %/% 2` | `3` |\n| `%%` | remainder | `7 %% 2` | `1` |\n\nDivision gives decimals when it needs to: `7 / 2` is `3.5`. Decimals use a point, never a comma.\n\nWhole-number division and remainder go together. 50 eggs fill `50 %/% 6`, that is 8, boxes of six, with `50 %% 6`, that is 2, eggs left over. The remainder is also how you test for even numbers: an even number has remainder 0 when divided by 2.\n\nR follows the usual order of operations: powers first, then `*` and `/`, then `+` and `-`. Use brackets to change the order, just like on paper:\n\n```\n2 + 3 * 4    # 14: multiply first\n(2 + 3) * 4  # 20: brackets first\n```\n\nSpaces around operators are optional, but they make code easier to read. R shows very big and very small numbers in **scientific notation**: `1e6` means 1 followed by 6 zeros, a million, and `2.5e-3` is 0.0025. You can type numbers that way too.\n\nWhen you run several lines, R shows the result of each one in turn:\n\n```\n12 * 3\n200 %/% 60\n200 %% 60\n```",
+        "sandboxCode": "7 / 2\n7 %/% 2\n7 %% 2\n2 + 3 * 4\n(2 + 3) * 4",
+        "readMore": {
+          "label": "An Introduction to R: arithmetic",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Vector-arithmetic",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "arithmetic-how-many-years",
+          "title": "Easy: How many years",
+          "promptMarkdown": "Show how many years there are from 1990 to 2026: subtract 1990 from 2026.",
+          "starterCode": "",
+          "hint": "`2026 - 1990`",
+          "solution": "2026 - 1990",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 36",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 36\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Lets R subtract",
+                "assertion": "grepl(\"-\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-a-power-of-two",
+          "title": "Easy: A power of two",
+          "promptMarkdown": "Show 2 to the power of 10, using `^`.",
+          "starterCode": "",
+          "hint": "`2 ^ 10`",
+          "solution": "2 ^ 10",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 1024",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 1024\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses ^",
+                "assertion": "grepl(\"^\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-share-a-pizza",
+          "title": "Easy: Share a pizza",
+          "promptMarkdown": "Nine slices are shared by two people. Show how many slices each gets: 9 divided by 2.",
+          "starterCode": "",
+          "hint": "`9 / 2`",
+          "solution": "9 / 2",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 4.5",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 4.5\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses /",
+                "assertion": "grepl(\"/\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-brackets-first",
+          "title": "Medium: Brackets first",
+          "promptMarkdown": "Two people each buy a ticket for 3 plus a booking fee of 5. Show the total: `3 + 5`, times 2. The answer should be 16.",
+          "starterCode": "3 + 5 * 2",
+          "hint": "Without brackets R multiplies first and gives 13. Put brackets around `3 + 5`.",
+          "solution": "(3 + 5) * 2",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 16",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 16\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-full-boxes",
+          "title": "Medium: Full boxes",
+          "promptMarkdown": "A farm packs 50 eggs into boxes of 6. Show how many boxes are full, using whole-number division.",
+          "starterCode": "",
+          "hint": "`50 %/% 6`",
+          "solution": "50 %/% 6",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 8",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 8\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses %/%",
+                "assertion": "grepl(\"%/%\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-eggs-left-over",
+          "title": "Medium: Eggs left over",
+          "promptMarkdown": "Now show how many of the 50 eggs are left over after filling the boxes of 6.",
+          "starterCode": "",
+          "hint": "The remainder operator: `50 %% 6`.",
+          "solution": "50 %% 6",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 2",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 2\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses %%",
+                "assertion": "grepl(\"%%\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-average-of-three",
+          "title": "Hard: Average of three",
+          "promptMarkdown": "A runner did three laps in 12, 15 and 9 minutes. Show the average lap time: the sum divided by 3.",
+          "starterCode": "",
+          "hint": "Add first, inside brackets, then divide: `(12 + 15 + 9) / 3`.",
+          "solution": "(12 + 15 + 9) / 3",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 12",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 12\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Divides the sum by 3",
+                "assertion": "grepl(\"/\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-minutes-and-seconds",
+          "title": "Hard: Minutes and seconds",
+          "promptMarkdown": "A song is 200 seconds long. Show `3 min 20 s` with one `cat()`, letting R work out the 3 and the 20.",
+          "starterCode": "",
+          "hint": "Minutes are `200 %/% 60` and the seconds left are `200 %% 60`: `cat(200 %/% 60, \"min\", 200 %% 60, \"s\\n\")`.",
+          "solution": "cat(200 %/% 60, \"min\", 200 %% 60, \"s\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 3 min 20 s",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"3 min 20 s\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Works out the minutes",
+                "assertion": "grepl(\"%/%\", ._cq_code, fixed = TRUE)"
+              },
+              {
+                "id": "t3",
+                "label": "Works out the seconds",
+                "assertion": "grepl(\"%%\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arithmetic-fix-the-average",
+          "title": "Expert: Fix the average",
+          "promptMarkdown": "This should show the average of 10 and 20, which is 15, but it shows 20. Fix it.",
+          "starterCode": "10 + 20 / 2",
+          "hint": "R divides before it adds. Add brackets so the sum comes first.",
+          "solution": "(10 + 20) / 2",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 15",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 15\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "arithmetic-q-1hbh8u",
+            "type": "mcq",
+            "prompt": "What does `2 + 3 * 4` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 24`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 20`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 9`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 14`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Multiplication comes before addition: 3 × 4 is 12, plus 2 is 14."
+          },
+          {
+            "id": "arithmetic-q-5e5hs3",
+            "type": "mcq",
+            "prompt": "What does `(2 + 3) * 4` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 14`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 24`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 9`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 20`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Brackets go first: 2 + 3 is 5, times 4 is 20."
+          },
+          {
+            "id": "arithmetic-q-1qaqv75",
+            "type": "mcq",
+            "prompt": "What does `2 ^ 3` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 6`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 5`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 8`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 9`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`^` is \"to the power of\": 2 × 2 × 2 is 8."
+          },
+          {
+            "id": "arithmetic-q-7p4a9p",
+            "type": "mcq",
+            "prompt": "What does `17 %% 5` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 12`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 2`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 3.4`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 3`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`%%` gives the remainder: 17 is 3 fives (15) with 2 left over."
+          },
+          {
+            "id": "arithmetic-q-obgmxq",
+            "type": "mcq",
+            "prompt": "What does `17 %/% 5` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 3.4`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 3`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 2`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 4`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`%/%` is whole-number division: 5 goes into 17 three whole times."
+          },
+          {
+            "id": "arithmetic-q-1jpnf5g",
+            "type": "mcq",
+            "prompt": "What does `7 / 2` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 4`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 3`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 3.5`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 1`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`/` is ordinary division and keeps the decimals."
+          },
+          {
+            "id": "arithmetic-q-1vdtg43",
+            "type": "mcq",
+            "prompt": "What does `-2 ^ 2` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 0`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 4`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`[1] -4`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The power is worked out before the minus sign, so it is −(2²) = −4. Write `(-2) ^ 2` to get 4."
+          },
+          {
+            "id": "arithmetic-q-19ed1yn",
+            "type": "mcq",
+            "prompt": "What number is `2e3`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`6`"
+              },
+              {
+                "id": "b",
+                "label": "`2.3`"
+              },
+              {
+                "id": "c",
+                "label": "`23`"
+              },
+              {
+                "id": "d",
+                "label": "`2000`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`e3` means \"times 10 to the power 3\", so 2e3 is 2 × 1000 = 2000."
+          },
+          {
+            "id": "arithmetic-q-k14u48",
+            "type": "mcq",
+            "prompt": "Which tests whether 14 is even?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`14 %% 2` is 0"
+              },
+              {
+                "id": "b",
+                "label": "`14 / 2`"
+              },
+              {
+                "id": "c",
+                "label": "`14 ^ 2`"
+              },
+              {
+                "id": "d",
+                "label": "`14 %/% 2`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "An even number has no remainder when divided by 2."
+          },
+          {
+            "id": "arithmetic-q-1v6sj4y",
+            "type": "shortText",
+            "prompt": "Which operator gives the remainder of a division?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "%%"
+            },
+            "explanation": "`%%` is the remainder; `%/%` is whole-number division."
+          }
+        ]
+      }
+    },
+    {
+      "id": "variables",
+      "title": "Saving values with <-",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "text_in_a_variable",
+          "label": "Text in a variable",
+          "code": "city <- \"Lisbon\"\ncity\nprint(city)"
+        },
+        {
+          "id": "change_a_value",
+          "label": "Change a value",
+          "code": "score <- 10\nscore <- score + 5\nscore"
+        },
+        {
+          "id": "save_and_show",
+          "label": "Save and show",
+          "code": "(minutes <- 2.5 * 60)"
+        },
+        {
+          "id": "names_are_case_sensitive",
+          "label": "Names are case-sensitive",
+          "code": "# Run it and read the error\ntotal <- 20\nTotal"
+        }
+      ],
+      "intro": {
+        "title": "Saving values with <-",
+        "bodyMarkdown": "A **variable** is a name for a value, so you can use it again later. You make one with the arrow `<-`, read as \"gets\": `cups <- 3` means \"`cups` gets 3\".\n\n```\ncups <- 3\nprice <- 2.5\ncups * price\n```\n\nSaving a value shows nothing. To see a variable, type its name on its own line, or `print()` it. The last line above shows `[1] 7.5`, worked out from the two variables.\n\nVariables can hold text too: `city <- \"Lisbon\"`. Text always needs quotes; a name without quotes is a variable.\n\nYou can give a variable a new value at any time, even one worked out from its old value. This adds 1 to `score`:\n\n```\nscore <- 10\nscore <- score + 1\nscore\n```\n\nA variable keeps the value it was given. If you change `price` later, a total you worked out earlier stays the same until you work it out again.\n\nNames can use letters, numbers, `.` and `_`, but can't start with a number and can't contain spaces or `-`. Good names say what the value is: `total_price`, `n_guests`. R is case-sensitive, so `total` and `Total` are two different names.\n\nYou may also see `=` used to save values (`cups = 3`). It works, but `<-` is the usual R style, and it's what this course uses. A handy trick: wrap an assignment in brackets to save the value and show it at once: `(cups <- 3)`.",
+        "sandboxCode": "cups <- 3\nprice <- 2.5\ncups * price\ntotal <- cups * price\ntotal",
+        "readMore": {
+          "label": "An Introduction to R: assignment",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Simple-manipulations-numbers-and-vectors",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "variables-store-a-price",
+          "title": "Easy: Store a price",
+          "promptMarkdown": "Make a variable `price` that holds `4.5`.",
+          "starterCode": "",
+          "hint": "Name, arrow, value: `price <- 4.5`.",
+          "solution": "price <- 4.5",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is 4.5",
+                "assertion": "is.numeric(price) && isTRUE(all.equal(price, 4.5))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-store-some-text",
+          "title": "Easy: Store some text",
+          "promptMarkdown": "Make a variable `city` that holds the text `Lisbon`.",
+          "starterCode": "",
+          "hint": "Text needs quotes: `city <- \"Lisbon\"`.",
+          "solution": "city <- \"Lisbon\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "city is \"Lisbon\"",
+                "assertion": "identical(city, \"Lisbon\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-show-a-variable",
+          "title": "Easy: Show a variable",
+          "promptMarkdown": "`cups` already holds a number. Add a line that shows it.",
+          "starterCode": "cups <- 3\n",
+          "hint": "Type the name on its own line: `cups`.",
+          "solution": "cups <- 3\ncups",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 3",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 3\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-the-cost-of-an-order",
+          "title": "Medium: The cost of an order",
+          "promptMarkdown": "Make `total` the price times the number of cups, using the two variables.",
+          "starterCode": "price <- 4.5\ncups <- 3\n",
+          "hint": "`total <- price * cups`",
+          "solution": "price <- 4.5\ncups <- 3\ntotal <- price * cups",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 13.5",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 13.5))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses the variables",
+                "assertion": "grepl(\"price\\\\s*\\\\*\\\\s*cups|cups\\\\s*\\\\*\\\\s*price\", ._cq_code)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-add-to-the-score",
+          "title": "Medium: Add to the score",
+          "promptMarkdown": "Add 5 to `score`, so it becomes 15. Work it out from its old value.",
+          "starterCode": "score <- 10\n",
+          "hint": "`score <- score + 5`",
+          "solution": "score <- 10\nscore <- score + 5",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "score is 15",
+                "assertion": "is.numeric(score) && isTRUE(all.equal(score, 15))"
+              },
+              {
+                "id": "t2",
+                "label": "Adds to the old value",
+                "assertion": "grepl(\"score <- score +\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-fix-the-name",
+          "title": "Medium: Fix the name",
+          "promptMarkdown": "This code should show `[1] 40`, but it gives an error. Run it, read the error and fix it.",
+          "starterCode": "Total <- 20\ntotal * 2",
+          "hint": "`Total` and `total` are different names. Use the same spelling on both lines.",
+          "solution": "total <- 20\ntotal * 2",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 40",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 40\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-hours-to-minutes",
+          "title": "Hard: Hours to minutes",
+          "promptMarkdown": "A film lasts `hours` hours. Make `minutes` the length in minutes, then show it.",
+          "starterCode": "hours <- 2.5\n",
+          "hint": "`minutes <- hours * 60`, then a line with just `minutes`.",
+          "solution": "hours <- 2.5\nminutes <- hours * 60\nminutes",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "minutes is 150",
+                "assertion": "is.numeric(minutes) && isTRUE(all.equal(minutes, 150))"
+              },
+              {
+                "id": "t2",
+                "label": "Shows [1] 150",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 150\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-a-name-that-works",
+          "title": "Hard: A name that works",
+          "promptMarkdown": "This name isn't allowed. Rename the variable `second_place`, keeping the value.",
+          "starterCode": "2nd_place <- \"Ana\"",
+          "hint": "Names can't start with a number. Write `second_place <- \"Ana\"`.",
+          "solution": "second_place <- \"Ana\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "second_place is \"Ana\"",
+                "assertion": "identical(second_place, \"Ana\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-a-caf-order",
+          "title": "Expert: A café order",
+          "promptMarkdown": "A coffee costs 3.2 and a cake 4.1. Make `total` the cost of two coffees and one cake, then show `Total: 10.5` with `cat()`.",
+          "starterCode": "coffee <- 3.2\ncake <- 4.1\n",
+          "hint": "`total <- 2 * coffee + cake`, then `cat(\"Total:\", total, \"\\n\")`.",
+          "solution": "coffee <- 3.2\ncake <- 4.1\ntotal <- 2 * coffee + cake\ncat(\"Total:\", total, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 10.5",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 10.5))"
+              },
+              {
+                "id": "t2",
+                "label": "Shows Total: 10.5",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Total: 10.5\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "variables-q-kys8zs",
+            "type": "mcq",
+            "prompt": "After `x <- 4` and then `x <- x * 2`, what is `x`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4`"
+              },
+              {
+                "id": "b",
+                "label": "`8`"
+              },
+              {
+                "id": "c",
+                "label": "`6`"
+              },
+              {
+                "id": "d",
+                "label": "`16`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The second line works out `x * 2` from the old value, 4, and saves 8 in `x`."
+          },
+          {
+            "id": "variables-q-5jjea2",
+            "type": "mcq",
+            "prompt": "What does running `y <- 3` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Nothing"
+              },
+              {
+                "id": "b",
+                "label": "`y`"
+              },
+              {
+                "id": "c",
+                "label": "`3`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 3`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Saving a value shows nothing. Type `y` on its own line to see it."
+          },
+          {
+            "id": "variables-q-1gcy40l",
+            "type": "mcq",
+            "prompt": "Which is a valid variable name?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2cups`"
+              },
+              {
+                "id": "b",
+                "label": "`cups 2`"
+              },
+              {
+                "id": "c",
+                "label": "`cups-2`"
+              },
+              {
+                "id": "d",
+                "label": "`cups_2`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Names can contain letters, numbers, `.` and `_`, but can't start with a number or contain `-` or spaces."
+          },
+          {
+            "id": "variables-q-hgqly8",
+            "type": "mcq",
+            "prompt": "After `a <- 5`, what does `A` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The error `object 'A' not found`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 5`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 0`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"A\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "R is case-sensitive: `A` is a different name from `a`, and nothing called `A` exists."
+          },
+          {
+            "id": "variables-q-1qrgdj3",
+            "type": "mcq",
+            "prompt": "After `x <- 2`, `y <- x + 1` and `x <- 10`, what does `y` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 2`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 3`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 11`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 10`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`y` got 3 when it was worked out. Changing `x` afterwards doesn't change `y`."
+          },
+          {
+            "id": "variables-q-n96p73",
+            "type": "mcq",
+            "prompt": "What does `(n <- 7)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 7`"
+              },
+              {
+                "id": "d",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Brackets around an assignment save the value and show it."
+          },
+          {
+            "id": "variables-q-1282wdr",
+            "type": "mcq",
+            "prompt": "After `price <- \"4\"`, what does `price * 2` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 8`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"8\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"44\"`"
+              },
+              {
+                "id": "d",
+                "label": "An error: non-numeric argument"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "In quotes, `\"4\"` is text, and you can't multiply text."
+          },
+          {
+            "id": "variables-q-1s457y2",
+            "type": "mcq",
+            "prompt": "Does `n = 5` save 5 in `n`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Only for text"
+              },
+              {
+                "id": "b",
+                "label": "No, it gives an error"
+              },
+              {
+                "id": "c",
+                "label": "No, it compares them"
+              },
+              {
+                "id": "d",
+                "label": "Yes, but `<-` is the usual R style"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`=` also saves values. R code usually uses `<-`, which makes saving stand out from other uses of `=`."
+          },
+          {
+            "id": "variables-q-1fm973v",
+            "type": "shortText",
+            "prompt": "Which two characters save a value in a variable, as in `cups __ 3`?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "<-"
+            },
+            "explanation": "The arrow `<-` means \"gets\": `cups <- 3`."
+          }
+        ]
+      }
+    },
+    {
+      "id": "text",
+      "title": "Working with text",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "paste_and_paste0",
+          "label": "paste and paste0",
+          "code": "paste(\"bike\", 42)\npaste0(\"bike\", 42)"
+        },
+        {
+          "id": "a_separator",
+          "label": "A separator",
+          "code": "paste(\"2026\", \"10\", \"30\", sep = \"-\")\npaste(\"tea\", \"milk\", \"sugar\", sep = \", \")"
+        },
+        {
+          "id": "quotes_inside_text",
+          "label": "Quotes inside text",
+          "code": "cat('She said \"hi\"', \"\\n\")"
+        },
+        {
+          "id": "text_is_not_a_number",
+          "label": "Text is not a number",
+          "code": "# Run it and read the error\n\"5\" + 1"
+        }
+      ],
+      "intro": {
+        "title": "Working with text",
+        "bodyMarkdown": "Text in R is called a **string** (R also calls it \"character\"). It goes in double quotes `\"...\"` or single quotes `'...'`; both work the same. Use single quotes around text that contains double quotes: `'She said \"hi\"'`.\n\n`paste()` joins pieces of text, with a space between them. `paste0()` joins them with nothing in between. Numbers are turned into text along the way:\n\n```\npaste(\"Good\", \"morning\")   # \"Good morning\"\npaste0(\"bike\", 42)          # \"bike42\"\npaste(\"Table\", 4, \"of\", 12) # \"Table 4 of 12\"\n```\n\nTo join with something else, give `paste()` a `sep` (separator): `paste(\"2026\", \"10\", \"30\", sep = \"-\")` gives `\"2026-10-30\"`.\n\nA few functions for working with text:\n\n| Function | What it does | Example | Result |\n| --- | --- | --- | --- |\n| `nchar()` | counts the characters | `nchar(\"garden\")` | `6` |\n| `toupper()` | capital letters | `toupper(\"open\")` | `\"OPEN\"` |\n| `tolower()` | small letters | `tolower(\"SALE\")` | `\"sale\"` |\n\n`nchar()` counts every character, spaces included: `nchar(\"R is fun\")` is 8.\n\nText that looks like a number is still text. `\"5\" + 1` gives an error, because R can't add text. Leave the quotes off numbers you want to calculate with.\n\nTo show a finished message, `cat()` is usually best: it shows the words without quotes, and puts a space between the pieces, like `paste()`.\n\n```\nname <- \"Ana\"\ngreeting <- paste(\"Hello,\", name)\ncat(greeting, \"\\n\")\n```",
+        "sandboxCode": "name <- \"Ana\"\ngreeting <- paste(\"Hello,\", name)\ngreeting\ncat(greeting, \"\\n\")\nnchar(greeting)\ntoupper(greeting)",
+        "readMore": {
+          "label": "An Introduction to R: character vectors",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Character-vectors",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "text-join-two-words",
+          "title": "Easy: Join two words",
+          "promptMarkdown": "Make `greeting` the text `Good morning`, by joining `\"Good\"` and `\"morning\"` with `paste()`.",
+          "starterCode": "",
+          "hint": "`greeting <- paste(\"Good\", \"morning\")`",
+          "solution": "greeting <- paste(\"Good\", \"morning\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "greeting is \"Good morning\"",
+                "assertion": "identical(greeting, \"Good morning\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses paste()",
+                "assertion": "grepl(\"paste(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-no-space",
+          "title": "Easy: No space",
+          "promptMarkdown": "Make `bike_id` the text `bike42`, joining `\"bike\"` and the number `42` with no space.",
+          "starterCode": "",
+          "hint": "`paste0()` joins with nothing in between: `bike_id <- paste0(\"bike\", 42)`.",
+          "solution": "bike_id <- paste0(\"bike\", 42)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "bike_id is \"bike42\"",
+                "assertion": "identical(bike_id, \"bike42\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses paste0()",
+                "assertion": "grepl(\"paste0(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-count-the-letters",
+          "title": "Easy: Count the letters",
+          "promptMarkdown": "Make `n` the number of characters in `\"Community garden\"`, spaces included.",
+          "starterCode": "",
+          "hint": "`n <- nchar(\"Community garden\")`",
+          "solution": "n <- nchar(\"Community garden\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n is 16",
+                "assertion": "is.numeric(n) && isTRUE(all.equal(n, 16))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses nchar()",
+                "assertion": "grepl(\"nchar(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-a-sign-in-capitals",
+          "title": "Medium: A sign in capitals",
+          "promptMarkdown": "Make `sign` the text in `notice`, in capital letters.",
+          "starterCode": "notice <- \"open today\"\n",
+          "hint": "`sign <- toupper(notice)`",
+          "solution": "notice <- \"open today\"\nsign <- toupper(notice)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "sign is \"OPEN TODAY\"",
+                "assertion": "identical(sign, \"OPEN TODAY\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses toupper()",
+                "assertion": "grepl(\"toupper(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-a-date-with-dashes",
+          "title": "Medium: A date with dashes",
+          "promptMarkdown": "Make `date_text` the text `2026-10-30` by pasting `\"2026\"`, `\"10\"` and `\"30\"` with `-` between them.",
+          "starterCode": "",
+          "hint": "Give `paste()` a separator: `paste(\"2026\", \"10\", \"30\", sep = \"-\")`.",
+          "solution": "date_text <- paste(\"2026\", \"10\", \"30\", sep = \"-\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "date_text is \"2026-10-30\"",
+                "assertion": "identical(date_text, \"2026-10-30\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses sep",
+                "assertion": "grepl(\"sep\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-a-name-tag",
+          "title": "Medium: A name tag",
+          "promptMarkdown": "Make `full_name` the first and last names, with a space between them.",
+          "starterCode": "first <- \"Ana\"\nlast <- \"Silva\"\n",
+          "hint": "`full_name <- paste(first, last)`",
+          "solution": "first <- \"Ana\"\nlast <- \"Silva\"\nfull_name <- paste(first, last)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "full_name is \"Ana Silva\"",
+                "assertion": "identical(full_name, \"Ana Silva\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses paste()",
+                "assertion": "grepl(\"paste(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-text-and-a-number",
+          "title": "Hard: Text and a number",
+          "promptMarkdown": "Make `message` the text `You ordered 3 cups`, using the variable `cups` for the number.",
+          "starterCode": "cups <- 3\n",
+          "hint": "`paste()` turns the number into text: `paste(\"You ordered\", cups, \"cups\")`.",
+          "solution": "cups <- 3\nmessage <- paste(\"You ordered\", cups, \"cups\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "message is \"You ordered 3 cups\"",
+                "assertion": "identical(message, \"You ordered 3 cups\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses the cups variable",
+                "assertion": "grepl(\",\\\\s*cups\\\\s*,\", ._cq_code)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-quotes-inside-text",
+          "title": "Hard: Quotes inside text",
+          "promptMarkdown": "This line gives an error. Fix it so it shows `She said \"hi\"`, quotes included.",
+          "starterCode": "cat(\"She said \"hi\"\", \"\\n\")",
+          "hint": "The inner quotes end the text early. Wrap the text in single quotes instead: `'She said \"hi\"'`.",
+          "solution": "cat('She said \"hi\"', \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows She said \"hi\"",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"She said \\\"hi\\\"\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "text-an-order-code",
+          "title": "Expert: An order code",
+          "promptMarkdown": "Make `order_code` the item, a dash and the quantity, all in capitals: `LATTE-2`.",
+          "starterCode": "item <- \"latte\"\nquantity <- 2\n",
+          "hint": "Join with `paste0(item, \"-\", quantity)`, then wrap that in `toupper()`.",
+          "solution": "item <- \"latte\"\nquantity <- 2\norder_code <- toupper(paste0(item, \"-\", quantity))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "order_code is \"LATTE-2\"",
+                "assertion": "identical(order_code, \"LATTE-2\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses toupper()",
+                "assertion": "grepl(\"toupper(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "text-q-8gbm23",
+            "type": "mcq",
+            "prompt": "What does `paste(\"a\", \"b\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"a b\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"a-b\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"a\" \"b\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"ab\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`paste()` puts a space between the pieces."
+          },
+          {
+            "id": "text-q-99byp9",
+            "type": "mcq",
+            "prompt": "What does `paste0(\"a\", \"b\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`\"ab\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"a b\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"a0b\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`paste0()` joins the pieces with nothing in between."
+          },
+          {
+            "id": "text-q-om6w9o",
+            "type": "mcq",
+            "prompt": "What does `nchar(\"R is fun\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`6`"
+              },
+              {
+                "id": "b",
+                "label": "`8`"
+              },
+              {
+                "id": "c",
+                "label": "`3`"
+              },
+              {
+                "id": "d",
+                "label": "`7`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`nchar()` counts every character, including the two spaces."
+          },
+          {
+            "id": "text-q-1qhwc1n",
+            "type": "mcq",
+            "prompt": "What does `paste(\"Room\", 4)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"Room4\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Room 4\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"Room\" 4`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`paste()` turns the number into text and adds a space."
+          },
+          {
+            "id": "text-q-1otj2pn",
+            "type": "mcq",
+            "prompt": "What does `paste(\"tea\", \"milk\", sep = \"+\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"teamilk\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"tea milk\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"tea +milk\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"tea+milk\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`sep` replaces the space between the pieces."
+          },
+          {
+            "id": "text-q-sdgn2f",
+            "type": "mcq",
+            "prompt": "What does `\"5\" + 1` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"51\"`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"6\"`"
+              },
+              {
+                "id": "c",
+                "label": "An error: non-numeric argument"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 6`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`\"5\"` is text, and R can't do arithmetic with text."
+          },
+          {
+            "id": "text-q-1gqnk6s",
+            "type": "mcq",
+            "prompt": "What does `toupper(\"Hello\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"Hello\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"HELLO\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"hello\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"H\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`toupper()` turns every letter into a capital."
+          },
+          {
+            "id": "text-q-aj4yym",
+            "type": "mcq",
+            "prompt": "Which shows `It's 5 o'clock` without an error?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`cat(\"It\"s 5 o\"clock\")`"
+              },
+              {
+                "id": "b",
+                "label": "`cat('It's 5 o'clock')`"
+              },
+              {
+                "id": "c",
+                "label": "`cat(\"It's 5 o'clock\")`"
+              },
+              {
+                "id": "d",
+                "label": "`cat(It's 5 o'clock)`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Text that contains single quotes can go in double quotes."
+          },
+          {
+            "id": "text-q-1si8e0c",
+            "type": "shortText",
+            "prompt": "Which function counts the characters in a piece of text?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "nchar"
+            },
+            "explanation": "`nchar(\"garden\")` is 6."
+          }
+        ]
+      }
+    },
+    {
+      "id": "true_false",
+      "title": "TRUE and FALSE",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "and_or_not",
+          "label": "And, or, not",
+          "code": "sunny <- TRUE\nwarm <- FALSE\nsunny & warm\nsunny | warm\n!warm"
+        },
+        {
+          "id": "or",
+          "label": "= or ==",
+          "code": "x <- 5\nx == 5   # a question\nx = 6    # saves 6 in x\nx"
+        },
+        {
+          "id": "true_counts_as_1",
+          "label": "TRUE counts as 1",
+          "code": "TRUE + TRUE + FALSE"
+        }
+      ],
+      "intro": {
+        "title": "TRUE and FALSE",
+        "bodyMarkdown": "A comparison asks R a yes-or-no question, and the answer is `TRUE` or `FALSE`. These are **logical** values, written in capitals and without quotes.\n\n| Operator | Question | Example | Result |\n| --- | --- | --- | --- |\n| `==` | equal? | `3 == 3` | `TRUE` |\n| `!=` | not equal? | `3 != 3` | `FALSE` |\n| `<` | less than? | `2 < 5` | `TRUE` |\n| `>` | greater than? | `2 > 5` | `FALSE` |\n| `<=` | less than or equal? | `5 <= 5` | `TRUE` |\n| `>=` | greater than or equal? | `4 >= 5` | `FALSE` |\n\nEquality is a **double** `==`. A single `=` saves a value (like `<-`), so `x = 5` changes `x`, while `x == 5` asks whether `x` is 5.\n\nText can be compared too. `\"tea\" == \"tea\"` is `TRUE`, but `\"Tea\" == \"tea\"` is `FALSE`: capitals count.\n\nCombine questions with `&` (and: both must be true) and `|` (or: at least one must be true). `!` (not) turns `TRUE` into `FALSE` and back.\n\n```\ntemperature <- 24\nsunny <- TRUE\ntemperature > 20 & sunny   # TRUE: both are true\ntemperature > 30 | sunny   # TRUE: one is enough\n!sunny                     # FALSE\n```\n\nLogical values can be saved in variables like any other value, and later stages use them to choose rows of data and decide what code runs. One more trick: in arithmetic, `TRUE` counts as 1 and `FALSE` as 0, so `TRUE + TRUE` is 2. That makes counting easy, as you will see with vectors.",
+        "sandboxCode": "3 == 3\n2 > 5\n\"tea\" == \"Tea\"\nage <- 17\nage >= 18",
+        "readMore": {
+          "label": "An Introduction to R: logical values",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Logical-vectors",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "true_false-is-it-bigger",
+          "title": "Easy: Is it bigger",
+          "promptMarkdown": "Ask R whether 12 is greater than 9.",
+          "starterCode": "",
+          "hint": "`12 > 9`",
+          "solution": "12 > 9",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] TRUE",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] TRUE\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses >",
+                "assertion": "grepl(\">\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-not-the-same-drink",
+          "title": "Easy: Not the same drink",
+          "promptMarkdown": "Make `different` the answer to: is `\"tea\"` not equal to `\"coffee\"`?",
+          "starterCode": "",
+          "hint": "`!=` means \"not equal\": `different <- \"tea\" != \"coffee\"`.",
+          "solution": "different <- \"tea\" != \"coffee\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "different is TRUE",
+                "assertion": "identical(different, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses !=",
+                "assertion": "grepl(\"!=\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-capitals-count",
+          "title": "Easy: Capitals count",
+          "promptMarkdown": "Make `same` the answer to: is `\"Tea\"` equal to `\"tea\"`?",
+          "starterCode": "",
+          "hint": "`same <- \"Tea\" == \"tea\"` (two `=` signs).",
+          "solution": "same <- \"Tea\" == \"tea\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "same is FALSE",
+                "assertion": "identical(same, FALSE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses ==",
+                "assertion": "grepl(\"==\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-old-enough-to-vote",
+          "title": "Medium: Old enough to vote",
+          "promptMarkdown": "Make `can_vote` the answer to: is `age` 18 or more?",
+          "starterCode": "age <- 17\n",
+          "hint": "`can_vote <- age >= 18`",
+          "solution": "age <- 17\ncan_vote <- age >= 18",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "can_vote is FALSE",
+                "assertion": "identical(can_vote, FALSE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses >=",
+                "assertion": "grepl(\">=\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-picnic-weather",
+          "title": "Medium: Picnic weather",
+          "promptMarkdown": "A picnic needs a temperature over 20 **and** sunshine. Make `picnic` the answer, using both variables.",
+          "starterCode": "temperature <- 22\nsunny <- TRUE\n",
+          "hint": "`picnic <- temperature > 20 & sunny`",
+          "solution": "temperature <- 22\nsunny <- TRUE\npicnic <- temperature > 20 & sunny",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "picnic is TRUE",
+                "assertion": "identical(picnic, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses &",
+                "assertion": "grepl(\"&\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-a-day-off",
+          "title": "Medium: A day off",
+          "promptMarkdown": "You have a day off on a weekend **or** a holiday. Make `day_off` the answer.",
+          "starterCode": "weekend <- FALSE\nholiday <- TRUE\n",
+          "hint": "`day_off <- weekend | holiday`",
+          "solution": "weekend <- FALSE\nholiday <- TRUE\nday_off <- weekend | holiday",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "day_off is TRUE",
+                "assertion": "identical(day_off, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses |",
+                "assertion": "grepl(\"|\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-not-raining",
+          "title": "Hard: Not raining",
+          "promptMarkdown": "Make `dry` the opposite of `raining`, using `!`.",
+          "starterCode": "raining <- TRUE\n",
+          "hint": "`dry <- !raining`",
+          "solution": "raining <- TRUE\ndry <- !raining",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "dry is FALSE",
+                "assertion": "identical(dry, FALSE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses !",
+                "assertion": "grepl(\"!raining\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-a-question-not-a-change",
+          "title": "Hard: A question, not a change",
+          "promptMarkdown": "The last line should ask whether `x` is 5 and show `[1] TRUE`. Instead it changes `x` and shows nothing. Fix it.",
+          "starterCode": "x <- 5\nx = 5",
+          "hint": "A single `=` saves a value. Asking \"is it equal?\" needs two: `x == 5`.",
+          "solution": "x <- 5\nx == 5",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] TRUE",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] TRUE\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "true_false-a-b-grade",
+          "title": "Expert: A B grade",
+          "promptMarkdown": "A B grade is a score of at least 70 and below 80. Make `grade_b` the answer for `score`.",
+          "starterCode": "score <- 74\n",
+          "hint": "Two comparisons joined by `&`: `score >= 70 & score < 80`.",
+          "solution": "score <- 74\ngrade_b <- score >= 70 & score < 80",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "grade_b is TRUE",
+                "assertion": "identical(grade_b, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Tests both limits",
+                "assertion": "grepl(\"70\", ._cq_code, fixed = TRUE) && grepl(\"80\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "true_false-q-1mws5l4",
+            "type": "mcq",
+            "prompt": "What does `\"Apple\" == \"apple\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "`NA`"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Capitals count when R compares text."
+          },
+          {
+            "id": "true_false-q-6g20a6",
+            "type": "mcq",
+            "prompt": "What does `5 != 5` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`5`"
+              },
+              {
+                "id": "b",
+                "label": "`0`"
+              },
+              {
+                "id": "c",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`FALSE`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`!=` asks \"not equal?\". 5 is equal to 5, so the answer is FALSE."
+          },
+          {
+            "id": "true_false-q-15la9s1",
+            "type": "mcq",
+            "prompt": "What does `4 >= 4` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`4`"
+              },
+              {
+                "id": "d",
+                "label": "`FALSE`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`>=` is \"greater than or equal\". 4 is equal to 4."
+          },
+          {
+            "id": "true_false-q-qzgy3t",
+            "type": "mcq",
+            "prompt": "What does `TRUE & FALSE` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`1`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`&` needs both sides to be TRUE."
+          },
+          {
+            "id": "true_false-q-14iiajv",
+            "type": "mcq",
+            "prompt": "What does `TRUE | FALSE` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "c",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`1`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`|` needs at least one side to be TRUE."
+          },
+          {
+            "id": "true_false-q-t9fzyt",
+            "type": "mcq",
+            "prompt": "What does `!(3 > 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`1`"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "`TRUE`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`3 > 2` is TRUE, and `!` turns it into FALSE."
+          },
+          {
+            "id": "true_false-q-1lwo54p",
+            "type": "mcq",
+            "prompt": "What does `TRUE + TRUE + FALSE` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`3`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "In arithmetic, TRUE counts as 1 and FALSE as 0."
+          },
+          {
+            "id": "true_false-q-9xwrvv",
+            "type": "mcq",
+            "prompt": "After `x <- 3`, what does `x = 4` do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Asks whether x is 4"
+              },
+              {
+                "id": "b",
+                "label": "Saves 4 in x"
+              },
+              {
+                "id": "c",
+                "label": "Gives an error"
+              },
+              {
+                "id": "d",
+                "label": "Shows FALSE"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A single `=` saves a value. Asking needs `==`."
+          },
+          {
+            "id": "true_false-q-n52f5i",
+            "type": "shortText",
+            "prompt": "Which operator asks \"not equal?\"",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "!="
+            },
+            "explanation": "`!=` is TRUE when the two sides are different."
+          }
+        ]
+      }
+    },
+    {
+      "id": "functions",
+      "title": "Calling functions",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "round_up_and_down",
+          "label": "Round up and down",
+          "code": "ceiling(4.2)\nfloor(4.8)\nround(4.5)\nround(5.5)"
+        },
+        {
+          "id": "inside_out",
+          "label": "Inside out",
+          "code": "sqrt(50)\nround(sqrt(50), 1)"
+        },
+        {
+          "id": "named_arguments",
+          "label": "Named arguments",
+          "code": "round(2.71828, digits = 2)\nround(digits = 2, x = 2.71828)"
+        },
+        {
+          "id": "round_to_tens",
+          "label": "Round to tens",
+          "code": "round(1234.5678, -1)\nround(1234.5678, -2)"
+        }
+      ],
+      "intro": {
+        "title": "Calling functions",
+        "bodyMarkdown": "A **function** does a job for you. You call it by name, with its inputs, called **arguments**, in brackets. You have already used `print()`, `cat()`, `paste()` and `nchar()`. R has thousands more; here are some for numbers:\n\n| Function | What it does | Example | Result |\n| --- | --- | --- | --- |\n| `sqrt()` | square root | `sqrt(144)` | `12` |\n| `abs()` | drops the minus sign | `abs(-7)` | `7` |\n| `round()` | rounds | `round(3.14159, 2)` | `3.14` |\n| `ceiling()` | rounds up | `ceiling(4.2)` | `5` |\n| `floor()` | rounds down | `floor(4.8)` | `4` |\n| `max()`, `min()` | largest, smallest | `max(18, 42, 27)` | `42` |\n\nSome functions take several arguments, separated by commas. `round(3.14159, 2)` rounds to 2 decimal places. Arguments have names, and you can write them out, which makes code easier to read: `round(3.14159, digits = 2)` does the same thing. Named arguments can go in any order.\n\nLeave out an argument that has a default, and R uses the default: `round(3.7)` rounds to a whole number, 4.\n\nOne surprise: R rounds a 5 to the nearest **even** number, so `round(2.5)` is 2 and `round(3.5)` is 4. Statisticians do this so rounding doesn't push totals up on average.\n\nYou can put one function call inside another. R works from the inside out:\n\n```\nround(sqrt(50), 1)   # sqrt first: 7.071..., then round: 7.1\n```\n\nTo read about any function, type `?` and its name, such as `?round`, in RStudio or the R console. The help pages list every argument and its default. (Help pages don't open inside CodeQuest; the **Read more** link at the end of each stage points to R's manuals.)",
+        "sandboxCode": "sqrt(144)\nabs(-7)\nround(3.14159, 2)\nround(3.14159, digits = 3)\nmax(18, 42, 27)",
+        "readMore": {
+          "label": "An Introduction to R: functions and arguments",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "functions-a-square-root",
+          "title": "Easy: A square root",
+          "promptMarkdown": "Show the square root of 144.",
+          "starterCode": "",
+          "hint": "`sqrt(144)`",
+          "solution": "sqrt(144)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 12",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 12\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses sqrt()",
+                "assertion": "grepl(\"sqrt(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-two-decimal-places",
+          "title": "Easy: Two decimal places",
+          "promptMarkdown": "Make `short_pi` the number `3.14159` rounded to 2 decimal places.",
+          "starterCode": "",
+          "hint": "`short_pi <- round(3.14159, 2)`",
+          "solution": "short_pi <- round(3.14159, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "short_pi is 3.14",
+                "assertion": "is.numeric(short_pi) && isTRUE(all.equal(short_pi, 3.14))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses round()",
+                "assertion": "grepl(\"round(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-how-far-apart",
+          "title": "Easy: How far apart",
+          "promptMarkdown": "Make `gap` the distance between 3 and 10, without a minus sign, by taking `abs()` of `3 - 10`.",
+          "starterCode": "",
+          "hint": "`gap <- abs(3 - 10)`",
+          "solution": "gap <- abs(3 - 10)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "gap is 7",
+                "assertion": "is.numeric(gap) && isTRUE(all.equal(gap, 7))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses abs()",
+                "assertion": "grepl(\"abs(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-the-highest-score",
+          "title": "Medium: The highest score",
+          "promptMarkdown": "Make `best` the highest of the scores 18, 42 and 27, using a function.",
+          "starterCode": "",
+          "hint": "`best <- max(18, 42, 27)`",
+          "solution": "best <- max(18, 42, 27)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "best is 42",
+                "assertion": "is.numeric(best) && isTRUE(all.equal(best, 42))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses max()",
+                "assertion": "grepl(\"max(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-name-the-argument",
+          "title": "Medium: Name the argument",
+          "promptMarkdown": "Make `e3` the number `2.71828` rounded to 3 decimal places. Name the argument: `digits = 3`.",
+          "starterCode": "",
+          "hint": "`e3 <- round(2.71828, digits = 3)`",
+          "solution": "e3 <- round(2.71828, digits = 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "e3 is 2.718",
+                "assertion": "is.numeric(e3) && isTRUE(all.equal(e3, 2.718))"
+              },
+              {
+                "id": "t2",
+                "label": "Names the digits argument",
+                "assertion": "grepl(\"digits\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-inside-out",
+          "title": "Medium: Inside out",
+          "promptMarkdown": "Make `side` the square root of 50, rounded to 1 decimal place, in one line.",
+          "starterCode": "",
+          "hint": "Put `sqrt(50)` inside `round(…, 1)`.",
+          "solution": "side <- round(sqrt(50), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "side is 7.1",
+                "assertion": "is.numeric(side) && isTRUE(all.equal(side, 7.1))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses sqrt() and round()",
+                "assertion": "grepl(\"sqrt(\", ._cq_code, fixed = TRUE) && grepl(\"round(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-split-the-bill",
+          "title": "Hard: Split the bill",
+          "promptMarkdown": "Three friends share a bill of 47.8. Make `share` what each pays, rounded to 2 decimal places.",
+          "starterCode": "bill <- 47.8\npeople <- 3\n",
+          "hint": "`share <- round(bill / people, 2)`",
+          "solution": "bill <- 47.8\npeople <- 3\nshare <- round(bill / people, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "share is 15.93",
+                "assertion": "is.numeric(share) && isTRUE(all.equal(share, 15.93))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-fix-the-call",
+          "title": "Hard: Fix the call",
+          "promptMarkdown": "This line gives an error. Fix it so it shows `[1] 9.88`.",
+          "starterCode": "round(9.876 2)",
+          "hint": "Arguments are separated by commas.",
+          "solution": "round(9.876, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 9.88",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 9.88\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions-enough-boxes",
+          "title": "Expert: Enough boxes",
+          "promptMarkdown": "50 eggs go into boxes of 6, and the last box may be part full. Make `boxes` the number of boxes needed.",
+          "starterCode": "",
+          "hint": "`50 / 6` is about 8.3, and you need a whole box for the rest: round **up** with `ceiling()`.",
+          "solution": "boxes <- ceiling(50 / 6)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "boxes is 9",
+                "assertion": "is.numeric(boxes) && isTRUE(all.equal(boxes, 9))"
+              },
+              {
+                "id": "t2",
+                "label": "Rounds up with ceiling()",
+                "assertion": "grepl(\"ceiling(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "functions-q-q61ey0",
+            "type": "mcq",
+            "prompt": "What does `round(2.567, 1)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2.5`"
+              },
+              {
+                "id": "b",
+                "label": "`2.57`"
+              },
+              {
+                "id": "c",
+                "label": "`2.6`"
+              },
+              {
+                "id": "d",
+                "label": "`3`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "One decimal place: 2.567 is nearer 2.6 than 2.5."
+          },
+          {
+            "id": "functions-q-h66h98",
+            "type": "mcq",
+            "prompt": "What does `round(2.5)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`2.5`"
+              },
+              {
+                "id": "c",
+                "label": "`3`"
+              },
+              {
+                "id": "d",
+                "label": "`2`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "R rounds a 5 to the nearest even number: 2.5 becomes 2 (and 3.5 becomes 4)."
+          },
+          {
+            "id": "functions-q-g286es",
+            "type": "mcq",
+            "prompt": "What does `ceiling(4.2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4.5`"
+              },
+              {
+                "id": "b",
+                "label": "`5`"
+              },
+              {
+                "id": "c",
+                "label": "`4`"
+              },
+              {
+                "id": "d",
+                "label": "`4.2`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`ceiling()` always rounds up."
+          },
+          {
+            "id": "functions-q-v3q8ab",
+            "type": "mcq",
+            "prompt": "What does `floor(4.8)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4`"
+              },
+              {
+                "id": "b",
+                "label": "`4.8`"
+              },
+              {
+                "id": "c",
+                "label": "`4.5`"
+              },
+              {
+                "id": "d",
+                "label": "`5`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`floor()` always rounds down."
+          },
+          {
+            "id": "functions-q-hqwx4q",
+            "type": "mcq",
+            "prompt": "What does `max(4, 9, 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4`"
+              },
+              {
+                "id": "b",
+                "label": "`15`"
+              },
+              {
+                "id": "c",
+                "label": "`9`"
+              },
+              {
+                "id": "d",
+                "label": "`2`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`max()` gives the largest of its arguments."
+          },
+          {
+            "id": "functions-q-mk2nw2",
+            "type": "mcq",
+            "prompt": "What does `abs(-3.5)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3`"
+              },
+              {
+                "id": "b",
+                "label": "`4`"
+              },
+              {
+                "id": "c",
+                "label": "`3.5`"
+              },
+              {
+                "id": "d",
+                "label": "`-3.5`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`abs()` drops the minus sign."
+          },
+          {
+            "id": "functions-q-1pu5gea",
+            "type": "mcq",
+            "prompt": "What does `round(1234.5678, -2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1234.57`"
+              },
+              {
+                "id": "b",
+                "label": "`1300`"
+              },
+              {
+                "id": "c",
+                "label": "`1234.6`"
+              },
+              {
+                "id": "d",
+                "label": "`1200`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A negative number of digits rounds to tens (−1), hundreds (−2) and so on."
+          },
+          {
+            "id": "functions-q-1s1l20f",
+            "type": "mcq",
+            "prompt": "Do `round(3.14159, 2)` and `round(digits = 2, x = 3.14159)` give the same result?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The second gives an error"
+              },
+              {
+                "id": "b",
+                "label": "Yes: named arguments can go in any order"
+              },
+              {
+                "id": "c",
+                "label": "Only in RStudio"
+              },
+              {
+                "id": "d",
+                "label": "No"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "With names, R knows which value is which, whatever the order."
+          },
+          {
+            "id": "functions-q-1uqryfp",
+            "type": "mcq",
+            "prompt": "What does `round(sqrt(16) + 0.46, 1)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4`"
+              },
+              {
+                "id": "b",
+                "label": "`4.5`"
+              },
+              {
+                "id": "c",
+                "label": "`4.4`"
+              },
+              {
+                "id": "d",
+                "label": "`4.46`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Inside first: sqrt(16) is 4, plus 0.46 is 4.46, rounded to 1 place is 4.5."
+          },
+          {
+            "id": "functions-q-15prkyw",
+            "type": "shortText",
+            "prompt": "Which function rounds a number up to the next whole number?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "ceiling"
+            },
+            "explanation": "`ceiling()` rounds up; `floor()` rounds down."
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing_values",
+      "title": "Missing values: NA",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "na_spreads",
+          "label": "NA spreads",
+          "code": "NA + 1\nNA * 0\nNA > 5\nNA == NA"
+        },
+        {
+          "id": "answers_with_a_gap",
+          "label": "Answers with a gap",
+          "code": "TRUE | NA\nFALSE & NA\nTRUE & NA"
+        },
+        {
+          "id": "text_na",
+          "label": "Text \"NA\"",
+          "code": "is.na(NA)\nis.na(\"NA\")"
+        }
+      ],
+      "intro": {
+        "title": "Missing values: NA",
+        "bodyMarkdown": "Real data has gaps: a survey question someone skipped, a day the sensor was off, a price nobody wrote down. R marks a missing value with `NA`, short for \"not available\". It is written without quotes.\n\n```\nrating <- NA\nrating\n```\n\nR is careful with `NA`. If a value is unknown, anything worked out from it is unknown too, so maths with `NA` gives `NA`:\n\n```\nNA + 1      # NA\nNA * 0      # NA\nNA > 5      # NA\n```\n\nEven `NA == NA` is `NA`: two unknown values might or might not be the same. So you can't test for a missing value with `==`. Use `is.na()`, which gives `TRUE` or `FALSE`:\n\n```\nis.na(rating)   # TRUE\nis.na(42)       # FALSE\n!is.na(42)      # TRUE: it has a value\n```\n\nSometimes R can answer even with a gap. `TRUE | NA` is `TRUE`, because \"true or anything\" is true. `FALSE & NA` is `FALSE`, because \"false and anything\" is false.\n\nWatch out for the text `\"NA\"` in quotes. That is two letters, not a missing value: `is.na(\"NA\")` is `FALSE`. Data files sometimes contain it by mistake, and a later quest shows how to clean it up.\n\nOnce you have many values, R lets you skip the `NA`s when you add them up or take an average. That's in the next quest, Vectors.",
+        "sandboxCode": "steps <- NA\nsteps + 100\nis.na(steps)\nis.na(250)",
+        "readMore": {
+          "label": "An Introduction to R: missing values",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Missing-values",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "missing_values-a-missing-rating",
+          "title": "Easy: A missing rating",
+          "promptMarkdown": "A customer left no rating. Make `rating` a missing value.",
+          "starterCode": "",
+          "hint": "`rating <- NA` (no quotes).",
+          "solution": "rating <- NA",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rating is NA, not text",
+                "assertion": "length(rating) == 1 && is.na(rating) && !is.character(rating)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-is-it-missing",
+          "title": "Easy: Is it missing",
+          "promptMarkdown": "Make `missing` the answer to: is `steps` missing?",
+          "starterCode": "steps <- NA\n",
+          "hint": "`missing <- is.na(steps)`",
+          "solution": "steps <- NA\nmissing <- is.na(steps)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "missing is TRUE",
+                "assertion": "identical(missing, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses is.na()",
+                "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-maths-with-a-gap",
+          "title": "Easy: Maths with a gap",
+          "promptMarkdown": "Nobody recorded `steps` today. Show `steps + 100` and see what R does.",
+          "starterCode": "steps <- NA\n",
+          "hint": "Add a line: `steps + 100`. The answer is unknown too.",
+          "solution": "steps <- NA\nsteps + 100",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] NA",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] NA\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-text-not-missing",
+          "title": "Medium: Text, not missing",
+          "promptMarkdown": "A data file had the text `\"NA\"` in it. Make `is_missing` the answer to: is `value` missing?",
+          "starterCode": "value <- \"NA\"\n",
+          "hint": "`is_missing <- is.na(value)`. Text in quotes is a real value, so the answer is FALSE.",
+          "solution": "value <- \"NA\"\nis_missing <- is.na(value)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "is_missing is FALSE",
+                "assertion": "identical(is_missing, FALSE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses is.na()",
+                "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-has-a-value",
+          "title": "Medium: Has a value",
+          "promptMarkdown": "Make `has_value` the answer to: does `reading` have a value? Use `is.na()` and `!`.",
+          "starterCode": "reading <- 12\n",
+          "hint": "`has_value <- !is.na(reading)`",
+          "solution": "reading <- 12\nhas_value <- !is.na(reading)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "has_value is TRUE",
+                "assertion": "identical(has_value, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses !is.na()",
+                "assertion": "grepl(\"!is.na(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-fix-the-test",
+          "title": "Medium: Fix the test",
+          "promptMarkdown": "The last line should show `[1] TRUE`, because `x` is missing. It shows `[1] NA`. Fix it.",
+          "starterCode": "x <- NA\nx == NA",
+          "hint": "`==` can't test for NA. Use `is.na(x)`.",
+          "solution": "x <- NA\nis.na(x)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] TRUE",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] TRUE\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-true-whatever-the-gap",
+          "title": "Hard: True whatever the gap",
+          "promptMarkdown": "Make `answer` the result of `TRUE | NA`, then show it. R can answer even though one side is missing.",
+          "starterCode": "",
+          "hint": "`answer <- TRUE | NA`, then `answer` on its own line.",
+          "solution": "answer <- TRUE | NA\nanswer",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "answer is TRUE",
+                "assertion": "identical(answer, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Shows [1] TRUE",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] TRUE\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-count-the-gaps",
+          "title": "Hard: Count the gaps",
+          "promptMarkdown": "A rain gauge sent readings on Monday, Tuesday and Wednesday, but some are missing. Make `n_missing` the number of missing readings, by adding up three `is.na()` results.",
+          "starterCode": "mon <- NA\ntue <- 7.5\nwed <- NA\n",
+          "hint": "TRUE counts as 1: `n_missing <- is.na(mon) + is.na(tue) + is.na(wed)`.",
+          "solution": "mon <- NA\ntue <- 7.5\nwed <- NA\nn_missing <- is.na(mon) + is.na(tue) + is.na(wed)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_missing is 2",
+                "assertion": "is.numeric(n_missing) && isTRUE(all.equal(n_missing, 2))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses is.na()",
+                "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_values-report-a-gap",
+          "title": "Expert: Report a gap",
+          "promptMarkdown": "Show `Missing: TRUE` with `cat()`, letting `is.na()` work out the `TRUE` for `reading`.",
+          "starterCode": "reading <- NA\n",
+          "hint": "`cat(\"Missing:\", is.na(reading), \"\\n\")`",
+          "solution": "reading <- NA\ncat(\"Missing:\", is.na(reading), \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Missing: TRUE",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Missing: TRUE\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses is.na()",
+                "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "missing_values-q-up6pwn",
+            "type": "mcq",
+            "prompt": "What does `NA + 1` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1`"
+              },
+              {
+                "id": "b",
+                "label": "`NA`"
+              },
+              {
+                "id": "c",
+                "label": "`0`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Anything worked out from an unknown value is unknown."
+          },
+          {
+            "id": "missing_values-q-wg74ds",
+            "type": "mcq",
+            "prompt": "What does `NA == NA` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`NA`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Two unknown values might or might not be equal, so the answer is unknown. Use `is.na()` instead."
+          },
+          {
+            "id": "missing_values-q-laxqo1",
+            "type": "mcq",
+            "prompt": "What does `is.na(\"NA\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`TRUE`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`\"NA\"` in quotes is two letters of text, not a missing value."
+          },
+          {
+            "id": "missing_values-q-1m111g1",
+            "type": "mcq",
+            "prompt": "What does `TRUE | NA` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "c",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "\"TRUE or anything\" is TRUE, so R doesn't need the missing value."
+          },
+          {
+            "id": "missing_values-q-13f66oo",
+            "type": "mcq",
+            "prompt": "What does `FALSE & NA` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`0`"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`FALSE`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "\"FALSE and anything\" is FALSE."
+          },
+          {
+            "id": "missing_values-q-gkl1a7",
+            "type": "mcq",
+            "prompt": "What does `TRUE & NA` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "`NA`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Here the answer depends on the missing value, so it is unknown."
+          },
+          {
+            "id": "missing_values-q-r129fs",
+            "type": "mcq",
+            "prompt": "What does `!is.na(7)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "`NA`"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "`7`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "7 is not missing, so `is.na(7)` is FALSE and `!` turns it into TRUE."
+          },
+          {
+            "id": "missing_values-q-1lqylne",
+            "type": "mcq",
+            "prompt": "What does `NA > 5` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "`5`"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "`NA`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "R can't tell whether an unknown value is bigger than 5."
+          },
+          {
+            "id": "missing_values-q-gxk3ox",
+            "type": "shortText",
+            "prompt": "Which function tests whether a value is missing?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "is.na"
+            },
+            "explanation": "`is.na(x)` is TRUE when `x` is NA."
+          }
+        ]
+      }
+    },
+    {
+      "id": "errors",
+      "title": "Reading error messages",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "misspelt_function",
+          "label": "Misspelt function",
+          "code": "# Run it and read the error\nsqroot(16)"
+        },
+        {
+          "id": "bracket_never_closed",
+          "label": "Bracket never closed",
+          "code": "# Run it and read the error\nround(3.456, 1"
+        },
+        {
+          "id": "missing_comma",
+          "label": "Missing comma",
+          "code": "# Run it and read the error\nmax(3 8)"
+        },
+        {
+          "id": "maths_on_text",
+          "label": "Maths on text",
+          "code": "# Run it and read the error\n\"12\" * 2"
+        },
+        {
+          "id": "a_warning_not_an_error",
+          "label": "A warning, not an error",
+          "code": "sqrt(-4)\ncat(\"This line still runs\\n\")"
+        }
+      ],
+      "intro": {
+        "title": "Reading error messages",
+        "bodyMarkdown": "Everyone who writes code makes mistakes, all the time. The skill is reading what R tells you and fixing it quickly. When R can't run a line, it stops and shows an **error**. Nothing after that line runs.\n\nThese are the errors you will meet most often:\n\n| Error | Usual cause | Example |\n| --- | --- | --- |\n| `object 'totl' not found` | a misspelt variable, or one not made yet | `totl * 2` |\n| `could not find function \"sqroot\"` | a misspelt function name | `sqroot(16)` |\n| `unexpected end of input` | a bracket or quote never closed | `round(3.456, 1` |\n| `unexpected numeric constant` | a missing comma or operator | `max(3 8)` |\n| `unexpected string constant` | a missing comma before some text | `paste(\"a\" \"b\")` |\n| `non-numeric argument to binary operator` | maths on text | `\"12\" * 2` |\n\nThe message usually names the problem word. `object 'totl' not found` points straight at `totl`. For \"unexpected\" errors, R shows the line with a `^` under the spot where it got confused: look just before it.\n\nA **warning** is different from an error. R still runs the line and gives an answer, but tells you something looks wrong. `sqrt(-4)` gives `NaN` (\"not a number\") with a warning, because negative numbers have no ordinary square root.\n\nA good routine: read the error, find the line, fix one thing, and run again. When there are several mistakes, R stops at the first, so fix them one at a time.\n\n```\n# Run this, read the error, and fix the typo\ntotal <- 12\ntotl * 2\n```",
+        "sandboxCode": "# Run this, read the error, then fix it\ntotal <- 12\ntotl * 2",
+        "readMore": {
+          "label": "An Introduction to R: getting help",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Getting-help-with-functions-and-features",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "errors-typo-in-a-name",
+          "title": "Easy: Typo in a name",
+          "promptMarkdown": "Fix the typo so the code shows `[1] 24`.",
+          "starterCode": "total <- 12\ntotl * 2",
+          "hint": "The error says `object 'totl' not found`. The variable is called `total`.",
+          "solution": "total <- 12\ntotal * 2",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 24",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 24\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-typo-in-a-function",
+          "title": "Easy: Typo in a function",
+          "promptMarkdown": "Fix the function name so the code shows `[1] 4`.",
+          "starterCode": "sqroot(16)",
+          "hint": "The square root function is `sqrt`.",
+          "solution": "sqrt(16)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 4",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 4\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-close-the-bracket",
+          "title": "Easy: Close the bracket",
+          "promptMarkdown": "Fix the line so it shows `[1] 3.5`.",
+          "starterCode": "round(3.456, 1",
+          "hint": "`unexpected end of input` means something was never closed. Add the `)`.",
+          "solution": "round(3.456, 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 3.5",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 3.5\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-the-missing-comma",
+          "title": "Medium: The missing comma",
+          "promptMarkdown": "Fix the line so it shows `[1] 8`.",
+          "starterCode": "max(3 8)",
+          "hint": "`unexpected numeric constant`: two numbers with nothing between them. Arguments need a comma.",
+          "solution": "max(3, 8)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 8",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 8\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-numbers-not-text",
+          "title": "Medium: Numbers, not text",
+          "promptMarkdown": "This price was typed as text. Fix the first line so the code shows `[1] 24`.",
+          "starterCode": "price <- \"12\"\nprice * 2",
+          "hint": "Remove the quotes, so `price` is the number 12.",
+          "solution": "price <- 12\nprice * 2",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is a number",
+                "assertion": "is.numeric(price) && isTRUE(all.equal(price, 12))"
+              },
+              {
+                "id": "t2",
+                "label": "Shows [1] 24",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 24\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-close-the-quote",
+          "title": "Medium: Close the quote",
+          "promptMarkdown": "Fix the line so it shows `See you soon`.",
+          "starterCode": "cat(\"See you soon\\n)",
+          "hint": "The text has an opening quote but no closing one. Close it after `\\n`.",
+          "solution": "cat(\"See you soon\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows See you soon",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"See you soon\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-a-warning-to-fix",
+          "title": "Hard: A warning to fix",
+          "promptMarkdown": "This gives `NaN` and a warning. The distance should not be negative: wrap `-16` in `abs()` so the line shows `[1] 4`.",
+          "starterCode": "sqrt(-16)",
+          "hint": "`sqrt(abs(-16))`: `abs()` first gives 16, and its square root is 4.",
+          "solution": "sqrt(abs(-16))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows [1] 4",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"[1] 4\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-two-mistakes",
+          "title": "Hard: Two mistakes",
+          "promptMarkdown": "Two lines are wrong. Fix them both so the code shows `Total: 9`.",
+          "starterCode": "apples <- 4\npears <- 5\ntotal <- apples + Pears\ncat(\"Total:\" total, \"\\n\")",
+          "hint": "R stops at the first error. Fix `Pears` (capital P), run again, then add the missing comma after `\"Total:\"`.",
+          "solution": "apples <- 4\npears <- 5\ntotal <- apples + pears\ncat(\"Total:\", total, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 9",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 9))"
+              },
+              {
+                "id": "t2",
+                "label": "Shows Total: 9",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Total: 9\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "errors-three-mistakes",
+          "title": "Expert: Three mistakes",
+          "promptMarkdown": "This program has three mistakes. Fix them all so it shows:\n\n```\nGuests: 12\nTables: 3\n```",
+          "starterCode": "guests <- 12\nper_table <- 4\ntables <- ceiling(guest / per_table\ncat(\"Guests:\", guests, \"\\n\")\nCat(\"Tables:\", tables, \"\\n\")",
+          "hint": "Fix one error at a time and run again: a misspelt variable, a bracket that isn't closed, and a function with a capital letter.",
+          "solution": "guests <- 12\nper_table <- 4\ntables <- ceiling(guests / per_table)\ncat(\"Guests:\", guests, \"\\n\")\ncat(\"Tables:\", tables, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tables is 3",
+                "assertion": "is.numeric(tables) && isTRUE(all.equal(tables, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Shows both lines",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Guests: 12\", \"Tables: 3\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "errors-q-cppnsk",
+            "type": "mcq",
+            "prompt": "Which error does `totl * 2` give when only `total` exists?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No error"
+              },
+              {
+                "id": "b",
+                "label": "`could not find function \"totl\"`"
+              },
+              {
+                "id": "c",
+                "label": "`object 'totl' not found`"
+              },
+              {
+                "id": "d",
+                "label": "`unexpected symbol`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "A name R doesn't know is an \"object not found\". Check the spelling."
+          },
+          {
+            "id": "errors-q-1kyxc91",
+            "type": "mcq",
+            "prompt": "Which error does `prnt(1)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`could not find function \"prnt\"`"
+              },
+              {
+                "id": "b",
+                "label": "`object 'prnt' not found`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 1`"
+              },
+              {
+                "id": "d",
+                "label": "`unexpected end of input`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A name followed by brackets is a function call, so R looks for a function."
+          },
+          {
+            "id": "errors-q-241j7m",
+            "type": "mcq",
+            "prompt": "Which error does `round(2.5` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`unexpected end of input`"
+              },
+              {
+                "id": "b",
+                "label": "`unexpected numeric constant`"
+              },
+              {
+                "id": "c",
+                "label": "`object not found`"
+              },
+              {
+                "id": "d",
+                "label": "No error"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The bracket is never closed, so R reaches the end of the code still waiting for it."
+          },
+          {
+            "id": "errors-q-j22wr3",
+            "type": "mcq",
+            "prompt": "Which error does `max(3 8)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`non-numeric argument`"
+              },
+              {
+                "id": "b",
+                "label": "`unexpected end of input`"
+              },
+              {
+                "id": "c",
+                "label": "`unexpected numeric constant`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 8`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "R finds the number 8 where it expected a comma or an operator."
+          },
+          {
+            "id": "errors-q-7l9egq",
+            "type": "mcq",
+            "prompt": "Which error does `\"12\" * 2` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`non-numeric argument to binary operator`"
+              },
+              {
+                "id": "b",
+                "label": "None: it gives 24"
+              },
+              {
+                "id": "c",
+                "label": "`object not found`"
+              },
+              {
+                "id": "d",
+                "label": "`unexpected string constant`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`\"12\"` is text, and `*` needs numbers."
+          },
+          {
+            "id": "errors-q-qxq10w",
+            "type": "mcq",
+            "prompt": "What does `sqrt(-4)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error, and nothing runs after it"
+              },
+              {
+                "id": "b",
+                "label": "`[1] -2`"
+              },
+              {
+                "id": "c",
+                "label": "`NaN`, with a warning"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 2`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "R still gives an answer, `NaN` (\"not a number\"), and warns you. Code after it keeps running."
+          },
+          {
+            "id": "errors-q-g1c54w",
+            "type": "mcq",
+            "prompt": "A program has two mistakes. What does R report when you run it?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Only the last one"
+              },
+              {
+                "id": "b",
+                "label": "Both mistakes"
+              },
+              {
+                "id": "c",
+                "label": "Only the first one; it stops there"
+              },
+              {
+                "id": "d",
+                "label": "Nothing until both are fixed"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "R stops at the first error, so fix it and run again to find the next."
+          },
+          {
+            "id": "errors-q-vbvpoc",
+            "type": "mcq",
+            "prompt": "Which error does `paste(\"a\" \"b\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"a b\"`"
+              },
+              {
+                "id": "b",
+                "label": "`unexpected string constant`"
+              },
+              {
+                "id": "c",
+                "label": "`unexpected numeric constant`"
+              },
+              {
+                "id": "d",
+                "label": "`object not found`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "R finds the text `\"b\"` where it expected a comma."
+          },
+          {
+            "id": "errors-q-1f59kvx",
+            "type": "shortText",
+            "prompt": "What does R call the result of `sqrt(-1)`, which means \"not a number\"?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "NaN"
+            },
+            "explanation": "`NaN` stands for \"not a number\"."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_cafe_bill",
+      "title": "Easy side quest: The café bill",
+      "kind": "project",
+      "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "ten_percent",
+          "label": "Ten percent",
+          "code": "subtotal <- 9.6\nsubtotal * 0.10\nround(subtotal * 0.10, 2)"
+        },
+        {
+          "id": "split_three_ways",
+          "label": "Split three ways",
+          "code": "10.56 / 3\nround(10.56 / 3, 2)"
+        }
+      ],
+      "intro": {
+        "title": "Easy side quest: The café bill",
+        "bodyMarkdown": "Corner Café sells lattes for 3.40 and croissants for 2.80. A table orders **two lattes and one croissant**, adds a 10% tip, and splits the bill three ways.\n\nBuild the bill step by step, saving each result in a variable. The last challenge puts it all together and shows the bill:\n\n```\nSubtotal: 9.6\nTip: 0.96\nTotal: 10.56\nEach pays: 3.52\n```\n\nRound money to 2 decimal places with `round(x, 2)`. Note that `cat()` shows `9.6`, not `9.60`: R drops zeros at the end of a number. A later quest shows how to format money with two decimals.",
+        "sandboxCode": "latte <- 3.4\ncroissant <- 2.8\n2 * latte + croissant"
+      },
+      "challenges": [
+        {
+          "id": "proj_cafe_bill-the-menu",
+          "title": "Easy: The menu",
+          "promptMarkdown": "Make `latte` hold `3.4` and `croissant` hold `2.8`.",
+          "starterCode": "",
+          "hint": "Two lines: `latte <- 3.4` and `croissant <- 2.8`.",
+          "solution": "latte <- 3.4\ncroissant <- 2.8",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "latte is 3.4",
+                "assertion": "is.numeric(latte) && isTRUE(all.equal(latte, 3.4))"
+              },
+              {
+                "id": "t2",
+                "label": "croissant is 2.8",
+                "assertion": "is.numeric(croissant) && isTRUE(all.equal(croissant, 2.8))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_cafe_bill-the-subtotal",
+          "title": "Easy: The subtotal",
+          "promptMarkdown": "Make `subtotal` the cost of two lattes and one croissant, using the variables.",
+          "starterCode": "latte <- 3.4\ncroissant <- 2.8\n",
+          "hint": "`subtotal <- 2 * latte + croissant`",
+          "solution": "latte <- 3.4\ncroissant <- 2.8\nsubtotal <- 2 * latte + croissant",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "subtotal is 9.6",
+                "assertion": "is.numeric(subtotal) && isTRUE(all.equal(subtotal, 9.6))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses the variables",
+                "assertion": "grepl(\"latte\", ._cq_code, fixed = TRUE) && grepl(\"croissant\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_cafe_bill-the-tip",
+          "title": "Medium: The tip",
+          "promptMarkdown": "Make `tip` 10% of the subtotal, rounded to 2 decimal places.",
+          "starterCode": "subtotal <- 9.6\n",
+          "hint": "10% is `0.10`: `tip <- round(subtotal * 0.10, 2)`.",
+          "solution": "subtotal <- 9.6\ntip <- round(subtotal * 0.10, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tip is 0.96",
+                "assertion": "is.numeric(tip) && isTRUE(all.equal(tip, 0.96))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_cafe_bill-the-total",
+          "title": "Medium: The total",
+          "promptMarkdown": "Make `total` the subtotal plus the tip.",
+          "starterCode": "subtotal <- 9.6\ntip <- 0.96\n",
+          "hint": "`total <- subtotal + tip`",
+          "solution": "subtotal <- 9.6\ntip <- 0.96\ntotal <- subtotal + tip",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 10.56",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 10.56))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_cafe_bill-split-three-ways",
+          "title": "Hard: Split three ways",
+          "promptMarkdown": "Make `each` what each of the three friends pays, rounded to 2 decimal places.",
+          "starterCode": "total <- 10.56\n",
+          "hint": "`each <- round(total / 3, 2)`",
+          "solution": "total <- 10.56\neach <- round(total / 3, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "each is 3.52",
+                "assertion": "is.numeric(each) && isTRUE(all.equal(each, 3.52))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_cafe_bill-the-whole-bill",
+          "title": "Expert: The whole bill",
+          "promptMarkdown": "Starting from the two prices, work out the whole bill and show these four lines:\n\n```\nSubtotal: 9.6\nTip: 0.96\nTotal: 10.56\nEach pays: 3.52\n```",
+          "starterCode": "latte <- 3.4\ncroissant <- 2.8\n",
+          "hint": "Work out `subtotal`, `tip`, `total` and `each` as before, then four `cat()` lines, such as `cat(\"Tip:\", tip, \"\\n\")`.",
+          "solution": "latte <- 3.4\ncroissant <- 2.8\nsubtotal <- 2 * latte + croissant\ntip <- round(subtotal * 0.10, 2)\ntotal <- subtotal + tip\neach <- round(total / 3, 2)\ncat(\"Subtotal:\", subtotal, \"\\n\")\ncat(\"Tip:\", tip, \"\\n\")\ncat(\"Total:\", total, \"\\n\")\ncat(\"Each pays:\", each, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 10.56",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 10.56))"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the four lines",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Subtotal: 9.6\", \"Tip: 0.96\", \"Total: 10.56\", \"Each pays: 3.52\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_cafe_bill-q-c90piw",
+            "type": "mcq",
+            "prompt": "What does `2 * 3.4 + 2.8` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`9.6`"
+              },
+              {
+                "id": "b",
+                "label": "`13.6`"
+              },
+              {
+                "id": "c",
+                "label": "`12.4`"
+              },
+              {
+                "id": "d",
+                "label": "`8.6`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Multiplication comes first: 6.8, plus 2.8 is 9.6."
+          },
+          {
+            "id": "proj_cafe_bill-q-13w6e4",
+            "type": "mcq",
+            "prompt": "What does `round(0.964, 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1`"
+              },
+              {
+                "id": "b",
+                "label": "`0.9`"
+              },
+              {
+                "id": "c",
+                "label": "`0.96`"
+              },
+              {
+                "id": "d",
+                "label": "`0.97`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Two decimal places: 0.964 is nearer 0.96."
+          },
+          {
+            "id": "proj_cafe_bill-q-gmcbzt",
+            "type": "mcq",
+            "prompt": "What does `cat(\"Total:\", 10.50, \"\\n\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`Total:10.5`"
+              },
+              {
+                "id": "b",
+                "label": "`Total: 10.50`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"Total: 10.5\"`"
+              },
+              {
+                "id": "d",
+                "label": "`Total: 10.5`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "R drops zeros at the end of a number, so 10.50 is shown as 10.5."
+          },
+          {
+            "id": "proj_cafe_bill-q-1wefmwk",
+            "type": "mcq",
+            "prompt": "Which gives 10% of `subtotal`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`subtotal * 0.10`"
+              },
+              {
+                "id": "b",
+                "label": "`subtotal + 10`"
+              },
+              {
+                "id": "c",
+                "label": "`subtotal %% 10`"
+              },
+              {
+                "id": "d",
+                "label": "`subtotal * 10`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "10% is 10/100, which is 0.10."
+          },
+          {
+            "id": "proj_cafe_bill-q-16objsv",
+            "type": "mcq",
+            "prompt": "What does `round(10.56 / 3, 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3.33`"
+              },
+              {
+                "id": "b",
+                "label": "`3.5`"
+              },
+              {
+                "id": "c",
+                "label": "`3.52`"
+              },
+              {
+                "id": "d",
+                "label": "`3.53`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "10.56 / 3 is exactly 3.52."
+          },
+          {
+            "id": "proj_cafe_bill-q-1vm969w",
+            "type": "shortText",
+            "prompt": "Which function rounds a number to a given number of decimal places?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "round"
+            },
+            "explanation": "`round(x, 2)` rounds to 2 decimal places."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_bike_ride",
+      "title": "Medium side quest: A bike-share ride",
+      "kind": "project",
+      "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "hours_and_minutes",
+          "label": "Hours and minutes",
+          "code": "minutes <- 135\nminutes %/% 60\nminutes %% 60"
+        },
+        {
+          "id": "speed",
+          "label": "Speed",
+          "code": "km <- 9.4\nminutes <- 47\nkm / (minutes / 60)"
+        }
+      ],
+      "intro": {
+        "title": "Medium side quest: A bike-share ride",
+        "bodyMarkdown": "Riverside Bikes charges **1.00 to unlock** a bike, plus **0.15 per minute**. A rider unlocks a bike at 8:12 and returns it at 8:59, after riding 9.4 km.\n\nTimes are easiest to work with as minutes since midnight: 8:12 is `8 * 60 + 12`, which is 492, and 8:59 is 539.\n\nWork out the ride step by step. The last challenge shows a summary:\n\n```\nRide: 47 min, 9.4 km\nSpeed: 12 km/h\nCost: 8.05\nLong ride: TRUE\n```",
+        "sandboxCode": "start <- 8 * 60 + 12\nend <- 8 * 60 + 59\nend - start"
+      },
+      "challenges": [
+        {
+          "id": "proj_bike_ride-minutes-since-midnight",
+          "title": "Easy: Minutes since midnight",
+          "promptMarkdown": "Make `start` the minutes since midnight at 8:12, and `end` at 8:59. Let R work them out from the hours and minutes.",
+          "starterCode": "",
+          "hint": "`start <- 8 * 60 + 12` and `end <- 8 * 60 + 59`.",
+          "solution": "start <- 8 * 60 + 12\nend <- 8 * 60 + 59",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "start is 492",
+                "assertion": "is.numeric(start) && isTRUE(all.equal(start, 492))"
+              },
+              {
+                "id": "t2",
+                "label": "end is 539",
+                "assertion": "is.numeric(end) && isTRUE(all.equal(end, 539))"
+              },
+              {
+                "id": "t3",
+                "label": "Works them out",
+                "assertion": "grepl(\"60\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_bike_ride-ride-length",
+          "title": "Easy: Ride length",
+          "promptMarkdown": "Make `minutes` the length of the ride.",
+          "starterCode": "start <- 492\nend <- 539\n",
+          "hint": "`minutes <- end - start`",
+          "solution": "start <- 492\nend <- 539\nminutes <- end - start",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "minutes is 47",
+                "assertion": "is.numeric(minutes) && isTRUE(all.equal(minutes, 47))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_bike_ride-the-cost",
+          "title": "Medium: The cost",
+          "promptMarkdown": "Make `cost` the price of the ride: 1.00 to unlock plus 0.15 per minute.",
+          "starterCode": "minutes <- 47\n",
+          "hint": "`cost <- 1 + 0.15 * minutes`",
+          "solution": "minutes <- 47\ncost <- 1 + 0.15 * minutes",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "cost is 8.05",
+                "assertion": "is.numeric(cost) && isTRUE(all.equal(cost, 8.05))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_bike_ride-the-speed",
+          "title": "Medium: The speed",
+          "promptMarkdown": "Make `speed` the average speed in km per hour, rounded to 1 decimal place. Speed is distance divided by time in **hours**.",
+          "starterCode": "km <- 9.4\nminutes <- 47\n",
+          "hint": "The time in hours is `minutes / 60`: `speed <- round(km / (minutes / 60), 1)`.",
+          "solution": "km <- 9.4\nminutes <- 47\nspeed <- round(km / (minutes / 60), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "speed is 12",
+                "assertion": "is.numeric(speed) && isTRUE(all.equal(speed, 12))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_bike_ride-a-long-ride",
+          "title": "Hard: A long ride?",
+          "promptMarkdown": "Rides over 45 minutes count as long. Make `long_ride` TRUE or FALSE for this ride.",
+          "starterCode": "minutes <- 47\n",
+          "hint": "`long_ride <- minutes > 45`",
+          "solution": "minutes <- 47\nlong_ride <- minutes > 45",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "long_ride is TRUE",
+                "assertion": "identical(long_ride, TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_bike_ride-the-ride-summary",
+          "title": "Expert: The ride summary",
+          "promptMarkdown": "From the start and end times and the distance, work everything out and show:\n\n```\nRide: 47 min, 9.4 km\nSpeed: 12 km/h\nCost: 8.05\nLong ride: TRUE\n```",
+          "starterCode": "start <- 8 * 60 + 12\nend <- 8 * 60 + 59\nkm <- 9.4\n",
+          "hint": "Work out `minutes`, `speed`, `cost` and `long_ride`, then use `cat()` for each line. For the first line, `cat()` puts a space before the comma unless the comma is part of the text: `cat(\"Ride:\", minutes, \"min,\", km, \"km\\n\")`.",
+          "solution": "start <- 8 * 60 + 12\nend <- 8 * 60 + 59\nkm <- 9.4\nminutes <- end - start\nspeed <- round(km / (minutes / 60), 1)\ncost <- 1 + 0.15 * minutes\nlong_ride <- minutes > 45\ncat(\"Ride:\", minutes, \"min,\", km, \"km\\n\")\ncat(\"Speed:\", speed, \"km/h\\n\")\ncat(\"Cost:\", cost, \"\\n\")\ncat(\"Long ride:\", long_ride, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "cost is 8.05",
+                "assertion": "is.numeric(cost) && isTRUE(all.equal(cost, 8.05))"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the summary",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Ride: 47 min, 9.4 km\", \"Speed: 12 km/h\", \"Cost: 8.05\", \"Long ride: TRUE\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_bike_ride-q-1ksad42",
+            "type": "mcq",
+            "prompt": "What does `8 * 60 + 12` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`8.12`"
+              },
+              {
+                "id": "b",
+                "label": "`600`"
+              },
+              {
+                "id": "c",
+                "label": "`576`"
+              },
+              {
+                "id": "d",
+                "label": "`492`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "8 hours is 480 minutes, plus 12 is 492."
+          },
+          {
+            "id": "proj_bike_ride-q-448leo",
+            "type": "mcq",
+            "prompt": "What does `135 %/% 60` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3`"
+              },
+              {
+                "id": "b",
+                "label": "`2`"
+              },
+              {
+                "id": "c",
+                "label": "`15`"
+              },
+              {
+                "id": "d",
+                "label": "`2.25`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Whole-number division: 60 goes into 135 twice."
+          },
+          {
+            "id": "proj_bike_ride-q-16hz7pz",
+            "type": "mcq",
+            "prompt": "What does `135 %% 60` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`75`"
+              },
+              {
+                "id": "b",
+                "label": "`15`"
+              },
+              {
+                "id": "c",
+                "label": "`0.25`"
+              },
+              {
+                "id": "d",
+                "label": "`2`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "After two hours (120 minutes), 15 minutes are left."
+          },
+          {
+            "id": "proj_bike_ride-q-1qqhhex",
+            "type": "mcq",
+            "prompt": "What does `1 + 0.15 * 47` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`55.05`"
+              },
+              {
+                "id": "b",
+                "label": "`47.15`"
+              },
+              {
+                "id": "c",
+                "label": "`8.05`"
+              },
+              {
+                "id": "d",
+                "label": "`7.05`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Multiply first: 7.05, plus 1 is 8.05."
+          },
+          {
+            "id": "proj_bike_ride-q-12vzorq",
+            "type": "mcq",
+            "prompt": "Why the brackets in `9.4 / (47 / 60)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "So the minutes are turned into hours before dividing"
+              },
+              {
+                "id": "b",
+                "label": "R needs brackets around every division"
+              },
+              {
+                "id": "c",
+                "label": "To round the result"
+              },
+              {
+                "id": "d",
+                "label": "They make no difference"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Without them R works left to right: `9.4 / 47 / 60`, which is a much smaller number."
+          },
+          {
+            "id": "proj_bike_ride-q-11y7o90",
+            "type": "mcq",
+            "prompt": "What does `47 > 45` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`47`"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "`2`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A comparison gives TRUE or FALSE."
+          },
+          {
+            "id": "proj_bike_ride-q-1ppdu66",
+            "type": "shortText",
+            "prompt": "Which operator gives the minutes left over after whole hours, as in `135 __ 60`?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "%%"
+            },
+            "explanation": "`%%` is the remainder: `135 %% 60` is 15."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_garden_harvest",
+      "title": "Hard side quest: The garden harvest",
+      "kind": "project",
+      "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "known_weights_only",
+          "label": "Known weights only",
+          "code": "tomatoes <- 12.4\ncourgettes <- 8.75\ntomatoes + courgettes"
+        },
+        {
+          "id": "capitals",
+          "label": "Capitals",
+          "code": "toupper(\"tomatoes\")"
+        }
+      ],
+      "intro": {
+        "title": "Hard side quest: The garden harvest",
+        "bodyMarkdown": "Five families share the Elm Street community garden. At the end of the season they weigh the harvest: **12.4 kg of tomatoes** and **8.75 kg of courgettes**. Nobody weighed the beans on the day, so for now the beans are missing.\n\nLater someone finds the note: the beans weighed **3.6 kg**. Then the families share the harvest equally and write a short report:\n\n```\nHarvest: 24.75 kg\nPer family: 4.95 kg\nMore tomatoes than courgettes: TRUE\nTop crop: TOMATOES\n```\n\nThis side quest uses everything in the quest: variables, arithmetic, `NA`, comparisons, functions and text.",
+        "sandboxCode": "tomatoes <- 12.4\nbeans <- NA\ncourgettes <- 8.75\ntomatoes + beans + courgettes"
+      },
+      "challenges": [
+        {
+          "id": "proj_garden_harvest-weigh-the-crops",
+          "title": "Easy: Weigh the crops",
+          "promptMarkdown": "Make `tomatoes` hold `12.4`, `courgettes` hold `8.75`, and `beans` a missing value.",
+          "starterCode": "",
+          "hint": "A missing value is `NA`, without quotes.",
+          "solution": "tomatoes <- 12.4\ncourgettes <- 8.75\nbeans <- NA",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tomatoes is 12.4",
+                "assertion": "is.numeric(tomatoes) && isTRUE(all.equal(tomatoes, 12.4))"
+              },
+              {
+                "id": "t2",
+                "label": "courgettes is 8.75",
+                "assertion": "is.numeric(courgettes) && isTRUE(all.equal(courgettes, 8.75))"
+              },
+              {
+                "id": "t3",
+                "label": "beans is missing",
+                "assertion": "length(beans) == 1 && is.na(beans) && !is.character(beans)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_garden_harvest-spot-the-gap",
+          "title": "Easy: Spot the gap",
+          "promptMarkdown": "Make `beans_missing` the answer to: are the beans missing?",
+          "starterCode": "beans <- NA\n",
+          "hint": "`beans_missing <- is.na(beans)`",
+          "solution": "beans <- NA\nbeans_missing <- is.na(beans)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "beans_missing is TRUE",
+                "assertion": "identical(beans_missing, TRUE)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses is.na()",
+                "assertion": "grepl(\"is.na(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_garden_harvest-what-we-know-so-far",
+          "title": "Medium: What we know so far",
+          "promptMarkdown": "Adding all three crops gives `NA`. Make `known_total` the weight of the two crops that were weighed.",
+          "starterCode": "tomatoes <- 12.4\ncourgettes <- 8.75\nbeans <- NA\n",
+          "hint": "Leave the beans out: `known_total <- tomatoes + courgettes`.",
+          "solution": "tomatoes <- 12.4\ncourgettes <- 8.75\nbeans <- NA\nknown_total <- tomatoes + courgettes",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "known_total is 21.15",
+                "assertion": "is.numeric(known_total) && isTRUE(all.equal(known_total, 21.15))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_garden_harvest-the-beans-turn-up",
+          "title": "Medium: The beans turn up",
+          "promptMarkdown": "The beans weighed 3.6 kg. Give `beans` its value, then make `total` the weight of all three crops.",
+          "starterCode": "tomatoes <- 12.4\ncourgettes <- 8.75\nbeans <- NA\n",
+          "hint": "`beans <- 3.6`, then `total <- tomatoes + beans + courgettes`.",
+          "solution": "tomatoes <- 12.4\ncourgettes <- 8.75\nbeans <- NA\nbeans <- 3.6\ntotal <- tomatoes + beans + courgettes",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "beans is 3.6",
+                "assertion": "is.numeric(beans) && isTRUE(all.equal(beans, 3.6))"
+              },
+              {
+                "id": "t2",
+                "label": "total is 24.75",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 24.75))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_garden_harvest-a-fair-share",
+          "title": "Hard: A fair share",
+          "promptMarkdown": "Make `share` each family's share of the total, rounded to 2 decimal places. Also make `more_tomatoes` the answer to: were there more tomatoes than courgettes?",
+          "starterCode": "tomatoes <- 12.4\ncourgettes <- 8.75\ntotal <- 24.75\nfamilies <- 5\n",
+          "hint": "`share <- round(total / families, 2)` and `more_tomatoes <- tomatoes > courgettes`.",
+          "solution": "tomatoes <- 12.4\ncourgettes <- 8.75\ntotal <- 24.75\nfamilies <- 5\nshare <- round(total / families, 2)\nmore_tomatoes <- tomatoes > courgettes",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "share is 4.95",
+                "assertion": "is.numeric(share) && isTRUE(all.equal(share, 4.95))"
+              },
+              {
+                "id": "t2",
+                "label": "more_tomatoes is TRUE",
+                "assertion": "identical(more_tomatoes, TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_garden_harvest-the-harvest-report",
+          "title": "Expert: The harvest report",
+          "promptMarkdown": "Starting from the weights, show the report:\n\n```\nHarvest: 24.75 kg\nPer family: 4.95 kg\nMore tomatoes than courgettes: TRUE\nTop crop: TOMATOES\n```\n\nMake `top_crop` the text `\"tomatoes\"` in capitals with `toupper()`.",
+          "starterCode": "tomatoes <- 12.4\ncourgettes <- 8.75\nbeans <- 3.6\nfamilies <- 5\n",
+          "hint": "Work out `total`, `share` and `more_tomatoes` as before, set `top_crop <- toupper(\"tomatoes\")`, then four `cat()` lines. The first is `cat(\"Harvest:\", total, \"kg\\n\")`.",
+          "solution": "tomatoes <- 12.4\ncourgettes <- 8.75\nbeans <- 3.6\nfamilies <- 5\ntotal <- tomatoes + beans + courgettes\nshare <- round(total / families, 2)\nmore_tomatoes <- tomatoes > courgettes\ntop_crop <- toupper(\"tomatoes\")\ncat(\"Harvest:\", total, \"kg\\n\")\ncat(\"Per family:\", share, \"kg\\n\")\ncat(\"More tomatoes than courgettes:\", more_tomatoes, \"\\n\")\ncat(\"Top crop:\", top_crop, \"\\n\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "top_crop is \"TOMATOES\"",
+                "assertion": "identical(top_crop, \"TOMATOES\")"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the report",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Harvest: 24.75 kg\", \"Per family: 4.95 kg\", \"More tomatoes than courgettes: TRUE\", \"Top crop: TOMATOES\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_garden_harvest-q-xaaz4w",
+            "type": "mcq",
+            "prompt": "What does `12.4 + NA + 8.75` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "`21.15`"
+              },
+              {
+                "id": "c",
+                "label": "`0`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "One unknown weight makes the total unknown."
+          },
+          {
+            "id": "proj_garden_harvest-q-1rzfyr5",
+            "type": "mcq",
+            "prompt": "What does `is.na(3.6)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "`3.6`"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`FALSE`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "3.6 is a real value, so it is not missing."
+          },
+          {
+            "id": "proj_garden_harvest-q-37e4k8",
+            "type": "mcq",
+            "prompt": "What does `12.4 + 8.75` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`20.15`"
+              },
+              {
+                "id": "b",
+                "label": "`21.5`"
+              },
+              {
+                "id": "c",
+                "label": "`20.79`"
+              },
+              {
+                "id": "d",
+                "label": "`21.15`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "12.4 + 8.75 = 21.15."
+          },
+          {
+            "id": "proj_garden_harvest-q-1bvyafr",
+            "type": "mcq",
+            "prompt": "What does `round(24.75 / 5, 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4.9`"
+              },
+              {
+                "id": "b",
+                "label": "`5`"
+              },
+              {
+                "id": "c",
+                "label": "`123.75`"
+              },
+              {
+                "id": "d",
+                "label": "`4.95`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "24.75 / 5 is exactly 4.95."
+          },
+          {
+            "id": "proj_garden_harvest-q-u38vk4",
+            "type": "mcq",
+            "prompt": "What does `toupper(\"tomatoes\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"Tomatoes\"`"
+              },
+              {
+                "id": "b",
+                "label": "`TOMATOES`, without quotes"
+              },
+              {
+                "id": "c",
+                "label": "`\"tomatoes\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"TOMATOES\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`toupper()` gives text, so R shows it in quotes, all in capitals."
+          },
+          {
+            "id": "proj_garden_harvest-q-1fo3h87",
+            "type": "mcq",
+            "prompt": "What does `12.4 > 8.75` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "b",
+                "label": "`3.65`"
+              },
+              {
+                "id": "c",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`NA`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "12.4 is greater than 8.75."
+          },
+          {
+            "id": "proj_garden_harvest-q-18lh79u",
+            "type": "shortText",
+            "prompt": "How does R write a missing value?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "NA"
+            },
+            "explanation": "`NA` (no quotes) means \"not available\"."
+          }
+        ]
+      }
+    }
+  ]
+}

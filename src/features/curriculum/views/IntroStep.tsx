@@ -66,7 +66,7 @@ export function IntroStep({
       <EditableMarkdown
         value={level.intro.bodyMarkdown}
         onChange={(bodyMarkdown) => onUpdateIntro({ bodyMarkdown })}
-        onTryCode={languageId === 'python' || languageId === 'sql' ? tryCode : undefined}
+        onTryCode={languageId === 'python' || languageId === 'sql' || languageId === 'r' ? tryCode : undefined}
       />
       {(level.intro.readMore || isEditingLocal) && (
         <div className="cq-row">
