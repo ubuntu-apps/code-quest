@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { CodeEditorLineGutter } from './CodeEditorLineGutter'
-import { CodeKeyBar, type KeyBarLanguage } from './CodeKeyBar'
+import { CodeKeyBar } from './CodeKeyBar'
 import { hasCoarsePointer } from './pointer'
 import { CodeTextarea } from './CodeTextarea'
 import { DraggableErrorPopover } from './DraggableErrorPopover'
@@ -24,7 +24,7 @@ export type CodeTextareaWithErrorLineProps = {
   errorUiEpoch?: number
   spellCheck?: boolean
   /** Which symbol keys to show on phones and tablets. */
-  keyLanguage?: KeyBarLanguage
+  keyLanguage?: string | null
 }
 
 export function CodeTextareaWithErrorLine({

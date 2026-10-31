@@ -1,13 +1,19 @@
-import { Component, Suspense, lazy, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Component, Suspense, lazy, use, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { EditorView } from '@codemirror/view'
 import { CodeKeyBar, type KeyBarTarget } from './CodeKeyBar'
 import { CodeTextareaWithErrorLine } from './CodeTextareaWithErrorLine'
-import type { EditorError } from './CodeMirrorEditor'
 import { hasCoarsePointer } from './pointer'
+import { editorLanguageFor } from './preloadCodeEditor'
+import type { CodeMirrorEditorProps, EditorError } from './CodeMirrorEditor'
 import type { SqlTable } from '../types'
 
 /** Downloaded on first use (see preloadCodeEditor), so pages without code stay light. */
 const CodeMirrorEditor = lazy(() => import('./CodeMirrorEditor'))
+
+/** The editor with the language's support (syntax, suggestions, indent), which loads alongside it. */
+function LanguageEditor({ language, ...props }: Omit<CodeMirrorEditorProps, 'editorLanguage'> & { language: string }) {
+  return <CodeMirrorEditor {...props} editorLanguage={use(editorLanguageFor(language))} />
+}
 
 /** If the editor can't be loaded (offline before it was cached), keep the plain text box. */
 class EditorLoadBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
@@ -29,7 +35,8 @@ export interface CodeEditorProps {
   id: string
   value: string
   onChange: (value: string) => void
-  language?: 'python' | 'sql' | 'r' | 'plain'
+  /** The language id (`python`, `sql`, `r`), or `plain` for text without colours or suggestions. */
+  language?: string
   /** Starting height in lines. */
   rows?: number
   /** Extra classes for the plain text box (e.g. pass/fail borders). */
@@ -143,7 +150,7 @@ export function CodeEditor({
         errorTitle={errorTitle}
         errorColumn={errorColumn}
         errorUiEpoch={errorUiEpoch}
-        keyLanguage={language === 'sql' ? 'sql' : language === 'r' ? 'r' : 'python'}
+        keyLanguage={language}
       />
     </div>
   )
@@ -152,10 +159,10 @@ export function CodeEditor({
     <>
       <EditorLoadBoundary fallback={fallback}>
         <Suspense fallback={fallback}>
-          <CodeMirrorEditor
+          <LanguageEditor
+            language={language}
             value={value}
             onChange={onChange}
-            language={language}
             minLines={rows}
             labelledBy={labelId}
             describedBy={hintId}
@@ -172,7 +179,7 @@ export function CodeEditor({
         Tab indents. Press Escape, then Tab, to move to the next control.
       </span>
       {touch && focused ? (
-        <CodeKeyBar target={() => targetRef.current} language={language === 'sql' ? 'sql' : language === 'r' ? 'r' : 'python'} />
+        <CodeKeyBar target={() => targetRef.current} language={language} />
       ) : null}
     </>
   )

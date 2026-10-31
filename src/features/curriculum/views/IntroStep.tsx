@@ -7,7 +7,7 @@ import {
   useEditorMode,
 } from '../../editor'
 import { CodeSandboxSection } from '../components/CodeSandboxSection'
-import type { FriendlySandboxError } from '../components/CodeSandboxSection'
+import { languagePack, type FriendlyCodeError } from '../../languages'
 
 interface IntroStepProps {
   level: Level
@@ -15,7 +15,7 @@ interface IntroStepProps {
   sandboxCode: string
   sandboxOutput: string
   sandboxRunning: boolean
-  sandboxError: FriendlySandboxError | null
+  sandboxError: FriendlyCodeError | null
   sandboxErrorUiEpoch: number
   onUpdateIntro: (patch: Partial<Level['intro']>) => void
   onReadMoreOpen: () => void
@@ -42,6 +42,8 @@ export function IntroStep({
   onSandboxReset,
   onSandboxErrorClear,
 }: IntroStepProps) {
+  // Courses whose code runs here get "Try it" buttons and the sandbox.
+  const hasCode = languagePack(languageId) !== null
   const { isEditingLocal } = useEditorMode()
 
   /** "Try it" on a lesson's code block: load it into the sandbox below and scroll there. */
@@ -66,7 +68,7 @@ export function IntroStep({
       <EditableMarkdown
         value={level.intro.bodyMarkdown}
         onChange={(bodyMarkdown) => onUpdateIntro({ bodyMarkdown })}
-        onTryCode={languageId === 'python' || languageId === 'sql' || languageId === 'r' ? tryCode : undefined}
+        onTryCode={hasCode ? tryCode : undefined}
       />
       {(level.intro.readMore || isEditingLocal) && (
         <div className="cq-row">
@@ -133,7 +135,7 @@ export function IntroStep({
           />
         </EditableBlock>
       )}
-      {(languageId === 'python' || languageId === 'r' || languageId === 'sql') && (
+      {hasCode && (
         <CodeSandboxSection
           languageId={languageId}
           tables={level.database?.tables}

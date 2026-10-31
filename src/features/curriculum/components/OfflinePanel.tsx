@@ -7,15 +7,11 @@ import {
   subscribeOfflineDownloadStatus,
   type OfflineStep,
 } from '../offlineDownload'
+import { languagePack } from '../../languages'
 
-/** Courses whose code runs in the browser and can be downloaded. */
-const RUNTIME_COURSES = new Set(['python', 'sql', 'r'])
-
-const STEP_LABEL: Record<OfflineStep, string> = {
-  lessons: 'Downloading quests…',
-  python: 'Downloading Python and the packages the stages use…',
-  sql: 'Downloading the SQL engine…',
-  r: 'Downloading R…',
+/** What the panel says while a step runs: the lessons, or a course's runtime. */
+function stepLabel(step: OfflineStep): string {
+  return step === 'lessons' ? 'Downloading quests…' : (languagePack(step)?.offlineStepLabel ?? 'Downloading…')
 }
 
 interface OfflinePanelProps {
@@ -45,10 +41,11 @@ function useOnline(): boolean {
 
 /** About tab: download all lessons and code runners so CodeQuest works without internet. */
 export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelProps) {
-  const runtimeCourses = courses.filter((c) => RUNTIME_COURSES.has(c.id))
+  // Courses whose code runs in the browser, so their runtime can be downloaded.
+  const runtimeCourses = courses.filter((c) => languagePack(c.id) !== null)
   const online = useOnline()
   const [selected, setSelected] = useState<string[]>(() => {
-    const preferred = activeCourseId && RUNTIME_COURSES.has(activeCourseId) ? activeCourseId : 'python'
+    const preferred = languagePack(activeCourseId)?.id ?? runtimeCourses[0]?.id ?? 'python'
     return [preferred]
   })
   const status = useSyncExternalStore(
@@ -106,7 +103,7 @@ export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelP
         {!online && !working
           ? 'You are offline. Connect to the internet to download.'
           : status.kind === 'working'
-            ? STEP_LABEL[status.step]
+            ? stepLabel(status.step)
             : status.kind === 'done'
               ? `Ready to use offline.${status.usedBytes ? ` CodeQuest now uses about ${formatMegabytes(status.usedBytes)} on this device.` : ''}`
               : status.kind === 'error'

@@ -1,74 +1,55 @@
 import { useCallback, useRef, useState } from 'react'
-import type { FriendlySandboxError } from '../components/CodeSandboxSection'
-import { pythonStatusMessage, runPythonCode, runSqlCode, sqlStatusMessage } from '../pythonSandbox'
-import { runRCode } from '../rSandbox'
-import { defaultSandboxForLanguage } from '../sandboxDefaults'
+import { languagePack, type FriendlyCodeError } from '../../languages'
 import type { Level } from '../types'
 
 function startingCode(level: Level, languageId: string | null): string {
-  return level.intro.sandboxCode ?? defaultSandboxForLanguage(languageId ?? 'python')
+  return level.intro.sandboxCode ?? languagePack(languageId)?.defaultSandboxCode ?? ''
 }
 
 /** State and actions for the intro "Sandbox" (free-form code runner) of a level. */
 export function useSandbox(languageId: string | null) {
-  const [code, setCode] = useState(() => defaultSandboxForLanguage('python'))
+  const [code, setCode] = useState('')
   const [output, setOutput] = useState('')
   const [running, setRunning] = useState(false)
-  const [error, setError] = useState<FriendlySandboxError | null>(null)
+  const [error, setError] = useState<FriendlyCodeError | null>(null)
   const [errorUiEpoch, setErrorUiEpoch] = useState(0)
   // Bumped when a new level opens, so a run that finishes later can't write into it.
   const levelEpochRef = useRef(0)
-  /** Stops the current Python run (and only that run). */
+  /** Stops the current run (and only that run). */
   const runControllerRef = useRef<AbortController | null>(null)
-  /** SQL lessons: the SQL that makes the lesson's database, fresh for every run. */
-  const setupSqlRef = useRef('')
+  /** The open lesson: SQL runs on its database. */
+  const levelRef = useRef<Level | null>(null)
 
   const run = async (stdin = '') => {
+    const pack = languagePack(languageId)
+    if (!pack) return
     const epoch = levelEpochRef.current
     const stillCurrent = () => levelEpochRef.current === epoch
     setRunning(true)
     setError(null)
-    const isSql = languageId === 'sql'
-    setOutput(
-      languageId === 'r'
-        ? 'Loading R runtime (first run downloads ~30MB, may take a minute)...'
-        : pythonStatusMessage('running'),
-    )
+    setOutput(pack.startMessage())
     const controller = new AbortController()
     runControllerRef.current = controller
     try {
-      const result =
-        languageId === 'r'
-          ? await runRCode(code, { signal: controller.signal })
-          : isSql
-            ? await runSqlCode(code, setupSqlRef.current, {
-                signal: controller.signal,
-                onStatus: (status) => {
-                  if (stillCurrent()) setOutput(sqlStatusMessage(status))
-                },
-              })
-            : await runPythonCode(code, stdin, {
-                signal: controller.signal,
-                onStatus: (status) => {
-                  if (stillCurrent()) setOutput(pythonStatusMessage(status))
-                },
-                // Show printed lines as they arrive, not only when the run ends.
-                onOutput: (text) => {
-                  if (stillCurrent()) setOutput(text)
-                },
-              })
+      const result = await pack.run(code, {
+        level: levelRef.current,
+        stdin,
+        signal: controller.signal,
+        onStatus: (message) => {
+          if (stillCurrent()) setOutput(message)
+        },
+        // Show printed lines as they arrive, not only when the run ends.
+        onOutput: (text) => {
+          if (stillCurrent()) setOutput(text)
+        },
+      })
       if (!stillCurrent()) return
       setOutput(result.output.trim() ? result.output : '[no output]')
       setError(result.error)
     } catch (err: unknown) {
       if (!stillCurrent()) return
       setOutput('')
-      const runtimeName = languageId === 'r' ? 'R' : isSql ? 'SQL' : 'Python'
-      setError({
-        title: `${runtimeName} runtime failed`,
-        detail: err instanceof Error ? err.message : `Could not start the ${runtimeName} runtime`,
-        tip: 'Check your network connection and try again.',
-      })
+      setError(pack.runtimeFailedError(err))
     }
     if (runControllerRef.current === controller) runControllerRef.current = null
     setErrorUiEpoch((n) => n + 1)
@@ -89,7 +70,7 @@ export function useSandbox(languageId: string | null) {
   /** Fresh sandbox when a level is opened. */
   const resetForLevel = useCallback((level: Level, langId: string | null) => {
     levelEpochRef.current += 1
-    setupSqlRef.current = level.database?.setupSql ?? ''
+    levelRef.current = level
     // A run from the previous level is no longer shown, so don't let it hold up the next one.
     runControllerRef.current?.abort()
     runControllerRef.current = null

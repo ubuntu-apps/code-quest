@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { highlightR } from './highlightR'
+import { highlightR } from './codeHighlight'
 
 function kinds(code: string): string {
   return highlightR(code)

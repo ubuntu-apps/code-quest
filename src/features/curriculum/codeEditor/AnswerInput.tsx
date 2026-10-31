@@ -36,7 +36,7 @@ export function AnswerInput(props: InputHTMLAttributes<HTMLInputElement>) {
           props.onBlur?.(e)
         }}
       />
-      {touch && focused ? <CodeKeyBar textareaRef={ref} variant="answer" language={language === 'sql' ? 'sql' : language === 'r' ? 'r' : 'python'} /> : null}
+      {touch && focused ? <CodeKeyBar textareaRef={ref} variant="answer" language={language} /> : null}
     </>
   )
 }

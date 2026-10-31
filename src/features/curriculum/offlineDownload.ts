@@ -1,6 +1,5 @@
 import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
-import { preparePythonOffline, prepareSqlOffline } from './pythonSandbox'
-import { prepareROffline } from './rSandbox'
+import { LANGUAGE_PACKS } from '../languages'
 import { requestPersistentStorageOnce } from './storagePersistence'
 import type { LanguageBundle } from './types'
 
@@ -20,7 +19,8 @@ export interface OfflineState {
   runtimes: string[]
 }
 
-export type OfflineStep = 'lessons' | 'python' | 'sql' | 'r'
+/** What a download is doing: the lessons, or a course's runtime (its language id). */
+export type OfflineStep = 'lessons' | (string & {})
 
 export function loadOfflineState(): OfflineState | null {
   try {
@@ -45,21 +45,6 @@ function saveOfflineState(state: OfflineState): void {
 /** True when a service worker controls this page, so fetched files land in its caches. */
 export function offlineCachingAvailable(): boolean {
   return typeof navigator !== 'undefined' && Boolean(navigator.serviceWorker?.controller)
-}
-
-/** All Python code in a course, so the worker can find every package it imports. */
-export function collectLessonCode(bundle: LanguageBundle): string {
-  const parts: string[] = []
-  for (const { file } of bundle.sections) {
-    for (const level of file.levels) {
-      parts.push(level.intro.sandboxCode ?? '')
-      for (const snippet of level.sandboxSnippets ?? []) parts.push(snippet.code)
-      for (const ch of level.challenges) {
-        parts.push(ch.starterCode ?? '', ch.solution ?? '', ch.validation.setupCode ?? '')
-      }
-    }
-  }
-  return parts.filter(Boolean).join('\n')
 }
 
 /**
@@ -95,37 +80,18 @@ export async function downloadForOffline(options: {
   }
 
   const runtimes: string[] = []
-  if (runtimeCourses.includes('python') && bundles.python) {
+  for (const pack of LANGUAGE_PACKS) {
+    const bundle = bundles[pack.id]
+    if (!runtimeCourses.includes(pack.id) || !bundle) continue
     throwIfCancelled()
-    onStep?.('python')
+    onStep?.(pack.id)
     try {
-      await preparePythonOffline(collectLessonCode(bundles.python), signal)
+      await pack.prepareOffline({ bundle, signal })
     } catch (error) {
       throwIfCancelled()
       throw error
     }
-    runtimes.push('python')
-  }
-  if (runtimeCourses.includes('sql') && bundles.sql) {
-    throwIfCancelled()
-    onStep?.('sql')
-    try {
-      await prepareSqlOffline(signal)
-    } catch (error) {
-      throwIfCancelled()
-      throw error
-    }
-    runtimes.push('sql')
-  }
-  if (runtimeCourses.includes('r') && bundles.r) {
-    throwIfCancelled()
-    onStep?.('r')
-    try {
-      await prepareROffline()
-    } catch {
-      throw new Error('Could not download the R runtime. Check your internet connection and try again.')
-    }
-    runtimes.push('r')
+    runtimes.push(pack.id)
   }
   throwIfCancelled()
 

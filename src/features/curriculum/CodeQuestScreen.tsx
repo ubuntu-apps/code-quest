@@ -21,7 +21,7 @@ import { useAdminMode } from './adminMode'
 import { loadRootIndex } from './loadCurriculum'
 import { loadProgress, notifyProgressChanged } from './progressStorage'
 import { hasTestedOut } from './testOut'
-import { warmUpPython } from './pythonSandbox'
+import { languagePack } from '../languages'
 import { preloadCodeEditor } from './codeEditor'
 import { playSound } from '../sound/sound'
 import { SectionCertificateNotice } from '../certificate/SectionCertificateNotice'
@@ -558,15 +558,15 @@ export function CodeQuestScreen() {
     return null
   }
 
-  // Once a lesson is open, load the code editor, and for Python lessons Python itself in
-  // the background (after the page has settled), so the first Run or Check starts straight away.
+  // Once a lesson is open, load the code editor, and the language's runtime in the
+  // background (after the page has settled), so the first Run or Check starts straight away.
   useEffect(() => {
     if (learnView !== 'level') return
-    // The code editor is small next to Python; fetch it straight away.
-    preloadCodeEditor()
-    // SQL runs on the Python runtime too (SQLite through Python's sqlite3).
-    if (languageId !== 'python' && languageId !== 'sql') return
-    const timer = window.setTimeout(warmUpPython, 1500)
+    // The code editor is small next to a runtime; fetch it straight away.
+    preloadCodeEditor(languageId ?? undefined)
+    const pack = languagePack(languageId)
+    if (!pack) return
+    const timer = window.setTimeout(() => pack.warmUp(), 1500)
     return () => window.clearTimeout(timer)
   }, [learnView, languageId])
 

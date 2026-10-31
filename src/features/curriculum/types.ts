@@ -1,4 +1,8 @@
-export type ValidationMode = 'regex' | 'includesAll' | 'equalsNormalized' | 'python_tests' | 'r_tests' | 'sql_tests'
+/** How an answer is checked: as text, or by a language's tests (`python_tests`, `sql_tests`, `r_tests`, …). */
+export type ValidationMode = 'regex' | 'includesAll' | 'equalsNormalized' | RuntimeTestMode
+
+/** A language's own tests: its LanguagePack's `testMode` (see src/features/languages). */
+export type RuntimeTestMode = `${string}_tests`
 
 export interface RuntimeAssertionTest {
   id: string

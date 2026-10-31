@@ -1,8 +1,8 @@
 import { StreamLanguage, type StreamParser } from '@codemirror/language'
-import { SQL_FUNCTIONS, SQL_KEYWORDS } from '../sqlWords'
+import language from './language.json'
 
-const KEYWORDS = new Set(SQL_KEYWORDS.map((w) => w.toLowerCase()))
-const FUNCTIONS = new Set(SQL_FUNCTIONS.map((w) => w.toLowerCase()))
+const KEYWORDS = new Set(language.words.keywords.map((w) => w.toLowerCase()))
+const FUNCTIONS = new Set(language.words.functions.map((w) => w.toLowerCase()))
 
 interface SqlState {
   /** Inside a /* comment *\/ that continues on the next line. */

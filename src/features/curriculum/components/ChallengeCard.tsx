@@ -1,20 +1,17 @@
-import { useId, useMemo, useRef, useState } from 'react'
+import { useContext, useId, useRef, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported } from '../sandboxSupport'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import { useAdminMode } from '../adminMode'
 import type { Challenge, SqlTable } from '../types'
-import type { FriendlyPythonError, PythonChallengeTestResult } from '../pythonSandbox'
-import type { FriendlyRError, RChallengeTestResult } from '../rSandbox'
+import { packForTestMode, type ChallengeTestResult, type FriendlyCodeError } from '../../languages'
+import { CodeLanguageContext } from '../codeLanguageContext'
 import { CodeEditor } from '../codeEditor'
 import { namesInMarkdown } from '../codeEditor/namesInMarkdown'
-import { pythonErrorSummaryLine } from '../pythonErrorHelper'
-import { rErrorSummaryLine } from '../rErrorHelper'
-import { sqlErrorSummaryLine } from '../sqlErrorHelper'
 import { SqlTablesNote } from './SqlTablesNote'
-import { sqlTableNames } from '../sqlWords'
-import { PythonErrorPanel } from './PythonErrorPanel'
+import { sqlTableNames } from '../../languages/sql/sqlTables'
+import { CodeErrorPanel } from './CodeErrorPanel'
 import { ValueDiff } from './ValueDiff'
 import { HighlightedCode } from './HighlightedCode'
 import { reportProblemUrl } from '../reportProblem'
@@ -37,8 +34,8 @@ interface ChallengeCardProps {
   status: 'passed' | 'failed' | undefined
   /** The answer was revealed before this challenge was solved. */
   answerViewed: boolean
-  testResults: (PythonChallengeTestResult | RChallengeTestResult)[]
-  runtimeError: FriendlyPythonError | FriendlyRError | null
+  testResults: ChallengeTestResult[]
+  runtimeError: FriendlyCodeError | null
   errorExpanded: boolean
   errorUiEpoch: number
   /** Set while the answer is being checked ("Checking…", "Downloading Python…"). */
@@ -64,11 +61,6 @@ interface ChallengeCardProps {
   setupSql?: string
 }
 
-/** The course a challenge belongs to, from how it is checked (for usage counts). */
-function languageOf(mode: Challenge['validation']['mode']): string {
-  return mode === 'sql_tests' ? 'sql' : mode === 'r_tests' ? 'r' : 'python'
-}
-
 export function ChallengeCard({
   challenge: ch,
   chIndex,
@@ -78,8 +70,8 @@ export function ChallengeCard({
   status,
   answerViewed,
   testResults,
-  runtimeError: pyRuntimeErr,
-  errorExpanded: pyErrExpanded,
+  runtimeError: runtimeErr,
+  errorExpanded,
   errorUiEpoch,
   checkingMessage,
   runningMessage,
@@ -107,21 +99,22 @@ export function ChallengeCard({
   const hintCounted = useRef(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const hintText = ch.hint ?? ch.hints?.[0]
-  const mode = ch.validation.mode
-  const isSql = mode === 'sql_tests'
-  const isRuntimeTests = mode === 'python_tests' || mode === 'r_tests' || isSql
-  // Python and SQL run in the same worker, so both can be run, stopped and checked the same way.
-  const runsInWorker = mode === 'python_tests' || isSql
+  // The language that runs and checks this challenge (null for a typed answer checked as text).
+  const pack = packForTestMode(ch.validation.mode)
+  const courseLanguage = useContext(CodeLanguageContext)
+  const languageId = pack?.id ?? courseLanguage ?? 'plain'
+  const isRuntimeTests = pack !== null
+  const hasDatabase = pack?.hasDatabase ?? false
   // Very old browsers can't run the code runtimes, so these challenges can't be checked there.
   const cannotRun = isRuntimeTests && !isCodeRuntimeSupported()
   const answerNoteId = useId()
   const checking = checkingMessage !== null
   const running = runningMessage !== null
   const busy = checking || running
-  // Run shows what the code prints before it is graded (Python challenges only).
-  const canRun = runsInWorker && !cannotRun
+  // Run shows what the code prints before it is graded (for languages that have it).
+  const canRun = (pack?.canRunChallenges ?? false) && !cannotRun
   // An empty box next to an error says nothing, so it shows only when there is output or no error.
-  const showOutput = output !== null && (output !== '' || running || !pyRuntimeErr)
+  const showOutput = output !== null && (output !== '' || running || !runtimeErr)
   // The answer unlocks after one Check attempt, so learners try first.
   // (Where code can't run, Check is unavailable, so the answer is open from the start.)
   const answerUnlocked = isEditingLocal || isAdmin || done || answerViewed || status !== undefined || cannotRun
@@ -137,8 +130,8 @@ export function ChallengeCard({
     ? ''
     : status === 'passed'
       ? 'Passed. Every check passed.'
-      : isRuntimeTests && pyRuntimeErr
-        ? `Not yet. Your code stopped with an error: ${pyRuntimeErr.title}.`
+      : isRuntimeTests && runtimeErr
+        ? `Not yet. Your code stopped with an error: ${runtimeErr.title}.`
         : testResults.length === 1
           ? 'Not yet. The check failed.'
           : testResults.length > 1
@@ -147,10 +140,7 @@ export function ChallengeCard({
 
   const challengeNumber = `Challenge ${chIndex + 1} of ${totalChallenges}`
   // Names written as code in the instructions, like `day_off`, are suggested while typing.
-  const promptNames = useMemo(
-    () => [...namesInMarkdown(ch.promptMarkdown), ...sqlTableNames(isSql ? tables : undefined)],
-    [ch.promptMarkdown, isSql, tables],
-  )
+  const promptNames = [...namesInMarkdown(ch.promptMarkdown), ...sqlTableNames(hasDatabase ? tables : undefined)]
 
   const toggleAnswer = () => {
     if (!showAnswer && !done && !answerViewed && !isEditingLocal && !isAdmin) onRevealAnswer()
@@ -237,7 +227,7 @@ export function ChallengeCard({
             onClick={() => {
               if (!showHint && !hintCounted.current) {
                 hintCounted.current = true
-                countEvent(`challenge-hint/${languageOf(mode)}/${ch.id}`, `Hint opened: ${ch.title}`)
+                countEvent(`challenge-hint/${languageId}/${ch.id}`, `Hint opened: ${ch.title}`)
               }
               setShowHint((v) => !v)
             }}
@@ -269,31 +259,25 @@ export function ChallengeCard({
             {ch.solution ? <HighlightedCode code={ch.solution} /> : 'No answer available for this challenge yet.'}
           </pre>
         ) : null}
-        {isSql && tables ? <SqlTablesNote tables={tables} setupSql={setupSql} /> : null}
+        {hasDatabase && tables ? <SqlTablesNote tables={tables} setupSql={setupSql} /> : null}
         <label className="cq-label" id={`code-label-${ch.id}`} htmlFor={`code-${ch.id}`}>
           Your answer
         </label>
         <CodeEditor
           suggestNames={promptNames}
-          sqlTables={isSql ? tables : undefined}
+          sqlTables={hasDatabase ? tables : undefined}
           id={`code-${ch.id}`}
           labelId={`code-label-${ch.id}`}
-          language={mode === 'r_tests' ? 'r' : isSql ? 'sql' : 'python'}
+          language={languageId}
           rows={4}
           value={draft}
           onChange={onDraftChange}
-          errorLine={isRuntimeTests && pyRuntimeErr?.line != null ? pyRuntimeErr.line : null}
+          errorLine={isRuntimeTests && runtimeErr?.line != null ? runtimeErr.line : null}
           errorSummary={
-            isRuntimeTests && pyRuntimeErr?.detail
-              ? mode === 'r_tests'
-                ? rErrorSummaryLine(pyRuntimeErr.detail)
-                : isSql
-                  ? sqlErrorSummaryLine(pyRuntimeErr.detail)
-                  : pythonErrorSummaryLine(pyRuntimeErr.detail)
-              : null
+            pack && runtimeErr?.detail ? pack.errorSummaryLine(runtimeErr.detail) : null
           }
-          errorTitle={isRuntimeTests ? (pyRuntimeErr?.title ?? null) : null}
-          errorColumn={isRuntimeTests ? (pyRuntimeErr?.column ?? null) : null}
+          errorTitle={isRuntimeTests ? (runtimeErr?.title ?? null) : null}
+          errorColumn={isRuntimeTests ? (runtimeErr?.column ?? null) : null}
           errorUiEpoch={errorUiEpoch}
         />
         {cannotRun ? (
@@ -315,7 +299,7 @@ export function ChallengeCard({
           >
             {checking ? 'Checking…' : status === 'failed' ? 'Try again' : done ? 'Check again' : 'Check'}
           </button>
-          {busy && runsInWorker ? (
+          {busy && isRuntimeTests ? (
             <button type="button" className="cq-btn" onClick={onStopCheck}>
               Stop
             </button>
@@ -345,16 +329,16 @@ export function ChallengeCard({
         {showOutput ? (
           <>
             <div className="cq-label">Output</div>
-            <pre className={`cq-sandbox-output${isSql ? ' cq-sandbox-output--table' : ''}`}>
+            <pre className={`cq-sandbox-output${pack?.tableOutput ? ' cq-sandbox-output--table' : ''}`}>
               {output || (running ? '' : 'Your code ran but printed nothing.')}
             </pre>
           </>
         ) : null}
-        {isRuntimeTests && pyRuntimeErr && (
-          <PythonErrorPanel
-            error={pyRuntimeErr as FriendlyPythonError}
+        {isRuntimeTests && runtimeErr && (
+          <CodeErrorPanel
+            error={runtimeErr}
             code={draft}
-            expanded={pyErrExpanded}
+            expanded={errorExpanded}
             onToggleExpanded={onToggleErrorExpanded}
           />
         )}

@@ -1,15 +1,16 @@
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import type { FriendlyPythonError } from '../pythonSandbox'
+import type { FriendlyCodeError } from '../../languages'
 import { pythonErrorLinePointer } from '../helpers'
 
-interface PythonErrorPanelProps {
-  error: FriendlyPythonError
+interface CodeErrorPanelProps {
+  error: FriendlyCodeError
   code: string
   expanded: boolean
   onToggleExpanded: () => void
 }
 
-export function PythonErrorPanel({ error, code, expanded, onToggleExpanded }: PythonErrorPanelProps) {
+/** An error from running code: its title and tip, the full message on request, and where it happened. */
+export function CodeErrorPanel({ error, code, expanded, onToggleExpanded }: CodeErrorPanelProps) {
   const pointer = pythonErrorLinePointer(code, error)
 
   return (

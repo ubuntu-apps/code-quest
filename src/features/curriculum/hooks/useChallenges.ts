@@ -1,23 +1,11 @@
 import { useCallback, useRef, useState } from 'react'
-import type { FriendlySandboxError } from '../components/CodeSandboxSection'
 import { loadProgress, saveChallengeDraft, saveProgress } from '../progressStorage'
-import {
-  pythonStatusMessage,
-  runPythonChallengeCode,
-  runPythonChallengeTests,
-  runSqlChallengeTests,
-  runSqlCode,
-  sqlStatusMessage,
-  type PythonChallengeTestResult,
-} from '../pythonSandbox'
-import { runRChallengeTests, type RChallengeTestResult } from '../rSandbox'
+import { packForTestMode, type ChallengeTestResult, type FriendlyCodeError } from '../../languages'
 import type { Challenge, Level } from '../types'
 import { validateAgainst } from '../validateAnswer'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import { playSound } from '../../sound/sound'
 import { countEvent } from '../../../lib/analytics'
-
-type ChallengeTestResult = PythonChallengeTestResult | RChallengeTestResult
 
 function saveAnswer(languageId: string, levelId: string, challengeId: string, answer: string) {
   const prev = loadProgress(languageId, levelId)
@@ -41,7 +29,7 @@ export function useChallenges(
   const [drafts, setDrafts] = useState<Record<string, string>>({})
   const [status, setStatus] = useState<Record<string, 'passed' | 'failed'>>({})
   const [testResults, setTestResults] = useState<Record<string, ChallengeTestResult[]>>({})
-  const [runtimeError, setRuntimeError] = useState<Record<string, FriendlySandboxError | null>>({})
+  const [runtimeError, setRuntimeError] = useState<Record<string, FriendlyCodeError | null>>({})
   const [errorExpanded, setErrorExpanded] = useState<Record<string, boolean>>({})
   const [errorUiEpoch, setErrorUiEpoch] = useState<Record<string, number>>({})
   /** Challenges being checked now, with what the check is doing ("Downloading Python…"). */
@@ -57,7 +45,7 @@ export function useChallenges(
 
   const showRunFeedback = (
     challengeId: string,
-    run: { tests: ChallengeTestResult[]; error: FriendlySandboxError | null },
+    run: { tests: ChallengeTestResult[]; error: FriendlyCodeError | null },
   ) => {
     setTestResults((prev) => ({ ...prev, [challengeId]: run.tests }))
     setRuntimeError((prev) => ({ ...prev, [challengeId]: run.error }))
@@ -90,44 +78,18 @@ export function useChallenges(
     setCheckingMessage(ch.id, 'Checking…')
     let ok: boolean
     try {
-      if (ch.validation.mode === 'python_tests') {
-        const run = await runPythonChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [], {
+      const pack = packForTestMode(ch.validation.mode)
+      if (pack) {
+        const run = await pack.checkChallenge(answer, {
+          challenge: ch,
+          level,
           signal: controller.signal,
-          onStatus: (status) =>
-            setCheckingMessage(ch.id, status === 'running' ? 'Checking…' : pythonStatusMessage(status)),
+          onStatus: (message) => setCheckingMessage(ch.id, message),
         })
         // Stopped by the learner (or by leaving the level): not an attempt, so no feedback.
         if (controller.signal.aborted) return
         showRunFeedback(ch.id, run)
         // A check that printed nothing (e.g. only defines a function) shows no output box.
-        setOutput((prev) => ({ ...prev, [ch.id]: run.output ? run.output : null }))
-        ok = run.passed
-      } else if (ch.validation.mode === 'sql_tests') {
-        const run = await runSqlChallengeTests(
-          answer,
-          {
-            setupSql: level.database?.setupSql ?? '',
-            altSetupSql: level.database?.altSetupSql,
-            solutionSql: ch.solution ?? '',
-            ordered: ch.validation.ordered,
-            checks: ch.validation.tests,
-          },
-          {
-            signal: controller.signal,
-            onStatus: (status) =>
-              setCheckingMessage(ch.id, status === 'running' ? 'Checking…' : sqlStatusMessage(status)),
-          },
-        )
-        if (controller.signal.aborted) return
-        showRunFeedback(ch.id, run)
-        setOutput((prev) => ({ ...prev, [ch.id]: run.output ? run.output : null }))
-        ok = run.passed
-      } else if (ch.validation.mode === 'r_tests') {
-        const run = await runRChallengeTests(answer, ch.validation.setupCode, ch.validation.tests ?? [], {
-          signal: controller.signal,
-        })
-        if (controller.signal.aborted) return
-        showRunFeedback(ch.id, run)
         setOutput((prev) => ({ ...prev, [ch.id]: run.output ? run.output : null }))
         ok = run.passed
       } else {
@@ -175,10 +137,9 @@ export function useChallenges(
    * what it prints. Not an attempt, so it doesn't change progress or unlock the answer.
    */
   const run = async (ch: Challenge) => {
-    const isSql = ch.validation.mode === 'sql_tests'
-    if (!languageId || !level || (ch.validation.mode !== 'python_tests' && !isSql)) return
+    const pack = packForTestMode(ch.validation.mode)
+    if (!languageId || !level || !pack?.canRunChallenges) return
     if (runControllers.current[ch.id] || checkControllers.current[ch.id]) return
-    const statusMessage = isSql ? sqlStatusMessage : pythonStatusMessage
     const answer = drafts[ch.id] ?? ''
     const controller = new AbortController()
     runControllers.current[ch.id] = controller
@@ -189,20 +150,19 @@ export function useChallenges(
         else next[ch.id] = message
         return next
       })
-    setRunningMessage(statusMessage('running'))
+    setRunningMessage(pack.runChallengeStartMessage())
     setOutput((prev) => ({ ...prev, [ch.id]: '' }))
     setErrorUiEpoch((prev) => ({ ...prev, [ch.id]: (prev[ch.id] ?? 0) + 1 }))
     try {
-      const options = {
+      const result = await pack.runChallenge(answer, {
+        challenge: ch,
+        level,
         signal: controller.signal,
-        onStatus: (status: Parameters<typeof statusMessage>[0]) => setRunningMessage(statusMessage(status)),
+        onStatus: setRunningMessage,
         onOutput: (text: string) => {
           if (runControllers.current[ch.id] === controller) setOutput((prev) => ({ ...prev, [ch.id]: text }))
         },
-      }
-      const result = isSql
-        ? await runSqlCode(answer, level.database?.setupSql ?? '', options)
-        : await runPythonChallengeCode(answer, ch.validation.setupCode, options)
+      })
       // Leaving the level stops the run; the new level's state is already fresh.
       if (runControllers.current[ch.id] !== controller) return
       setOutput((prev) => ({ ...prev, [ch.id]: result.output }))
@@ -235,7 +195,7 @@ export function useChallenges(
     countEvent(`challenge-answer-shown/${languageId}/${challengeId}`, `Answer shown before solving: ${title}`)
   }
 
-  /** Stops a running check or Run (only Python code can be stopped). */
+  /** Stops a running check or Run. */
   const stopCheck = (challengeId: string) => {
     checkControllers.current[challengeId]?.abort()
     runControllers.current[challengeId]?.abort()
