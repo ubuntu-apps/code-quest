@@ -1,0 +1,102 @@
+// Statistics: Counts and categories (chi-squared tests).
+import { code, makeTopic, mc, near, qShort, snippet, task } from '../_builders.mjs'
+
+const LUNCH = 'lunch <- data.frame(\n  year = rep(c("Y7", "Y8"), c(45, 55)),\n  choice = c(rep(c("hot", "packed"), c(30, 15)), rep(c("hot", "packed"), c(20, 35)))\n)\n'
+const TAB = 'tab <- table(lunch$year, lunch$choice)\n'
+
+export default makeTopic({
+  id: 'chi_squared',
+  title: 'Counts and categories',
+  paragraphs: [
+    't-tests compare means. When the data are **categories**, such as hot lunch or packed lunch, you compare **counts** instead. The school canteen asked 100 students in two years what they usually have:',
+    code(...LUNCH.trim().split('\n'), TAB.trim(), 'tab'),
+    'Year 7 chose hot lunch 30 times out of 45, Year 8 only 20 out of 55. Is lunch choice linked to year, or could a split like this happen by chance? The **chi-squared test of independence** compares the counts with what you would **expect** if year made no difference:',
+    code('chisq.test(tab)             # p = 0.005', 'chisq.test(tab)$expected    # the counts if there were no link'),
+    'The test adds up how far each observed count is from its expected count. Here p = 0.005, so the data are strong evidence that lunch choice differs between the years. (For a 2 × 2 table R applies a small correction by default, which makes the test a little more careful.)',
+    'A **goodness-of-fit** test checks counts in one set of categories against expected shares. Are these 120 dice rolls fair? `chisq.test(c(15, 22, 18, 25, 17, 23))` tests against equal shares; add `p = c(...)` for other expected shares.',
+    'The test needs reasonably large counts. If expected counts are below about 5, R warns that the approximation may be incorrect.',
+  ],
+  sandboxCode: LUNCH + TAB + 'tab\nchisq.test(tab)',
+  sandboxSnippets: [snippet('Fair dice?', 'rolls <- c(15, 22, 18, 25, 17, 23)\nchisq.test(rolls)')],
+  readMore: { label: 'R documentation: chisq.test()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/chisq.test.html', source: 'R documentation' },
+  challenges: [
+    task('easy', 'The table', {
+      prompt: 'Make `tab` a table of year against lunch choice.',
+      starter: LUNCH,
+      hint: '`tab <- table(lunch$year, lunch$choice)`',
+      solution: LUNCH + TAB,
+      tests: [['tab has Y7 30 15 and Y8 20 35', 'inherits(tab, "table") && identical(as.vector(tab), c(30L, 20L, 15L, 35L))']],
+    }),
+    task('easy', 'The test', {
+      prompt: 'Make `p` the p-value of a chi-squared test on `tab`, rounded to 3 decimal places.',
+      starter: LUNCH + TAB,
+      hint: '`round(chisq.test(tab)$p.value, 3)`',
+      solution: LUNCH + TAB + 'p <- round(chisq.test(tab)$p.value, 3)',
+      tests: [['p is 0.005', near('p', 0.005)]],
+    }),
+    task('easy', 'Expected counts', {
+      prompt: 'Make `expected` the expected counts if year made no difference.',
+      starter: LUNCH + TAB,
+      hint: '`chisq.test(tab)$expected`',
+      solution: LUNCH + TAB + 'expected <- chisq.test(tab)$expected',
+      tests: [['expected is 22.5, 27.5, 22.5, 27.5', 'isTRUE(all.equal(as.vector(expected), c(22.5, 27.5, 22.5, 27.5)))']],
+    }),
+    task('medium', 'Shares by year', {
+      prompt: 'Make `shares` the share of each choice within each year, rounded to 2 decimal places.',
+      starter: LUNCH + TAB,
+      hint: '`prop.table(tab, 1)` divides each row by its total.',
+      solution: LUNCH + TAB + 'shares <- round(prop.table(tab, 1), 2)',
+      tests: [['shares is Y7 0.67 0.33, Y8 0.36 0.64', 'isTRUE(all.equal(as.vector(shares), c(0.67, 0.36, 0.33, 0.64)))']],
+    }),
+    task('medium', 'The statistic', {
+      prompt: 'Make `x2` the chi-squared statistic, unnamed, rounded to 2 decimal places.',
+      starter: LUNCH + TAB,
+      hint: '`round(unname(chisq.test(tab)$statistic), 2)`',
+      solution: LUNCH + TAB + 'x2 <- round(unname(chisq.test(tab)$statistic), 2)',
+      tests: [['x2 is 7.92', near('x2', 7.92)]],
+    }),
+    task('medium', 'Fair dice', {
+      prompt: 'Make `p_dice` the p-value testing whether these 120 rolls fit a fair die, rounded to 2 decimal places.',
+      starter: 'rolls <- c(15, 22, 18, 25, 17, 23)\n',
+      hint: '`chisq.test(rolls)` tests against equal shares.',
+      solution: 'rolls <- c(15, 22, 18, 25, 17, 23)\np_dice <- round(chisq.test(rolls)$p.value, 2)',
+      tests: [['p_dice is 0.58', near('p_dice', 0.58)]],
+    }),
+    task('hard', 'Expected shares', {
+      prompt: 'A seed company says its mix is 40% red, 40% yellow, 20% white flowers. A packet grew 30 red, 50 yellow and 20 white. Make `p_mix` the p-value, rounded to 3 decimal places.',
+      starter: 'flowers <- c(red = 30, yellow = 50, white = 20)\n',
+      hint: '`chisq.test(flowers, p = c(0.4, 0.4, 0.2))`',
+      solution: 'flowers <- c(red = 30, yellow = 50, white = 20)\np_mix <- round(chisq.test(flowers, p = c(0.4, 0.4, 0.2))$p.value, 3)',
+      tests: [['p_mix is 0.082', near('p_mix', 0.082)]],
+    }),
+    task('expert', 'Straight from the counts', {
+      prompt: 'Sometimes you only have the counts. Make `m` a 2 × 2 matrix with rows Y7 (30 hot, 15 packed) and Y8 (20 hot, 35 packed), then `p_m` the chi-squared p-value, rounded to 3 decimal places.',
+      hint: '`matrix(c(30, 20, 15, 35), nrow = 2)` fills column by column. Then `chisq.test(m)`.',
+      solution: 'm <- matrix(c(30, 20, 15, 35), nrow = 2, dimnames = list(c("Y7", "Y8"), c("hot", "packed")))\np_m <- round(chisq.test(m)$p.value, 3)',
+      tests: [['m holds the counts', 'is.matrix(m) && isTRUE(all.equal(as.vector(m), c(30, 20, 15, 35)))'], ['p_m is 0.005', near('p_m', 0.005)]],
+    }),
+  ],
+  questions: [
+    mc('When do you use a chi-squared test instead of a t-test?', ['When the data are measurements', 'When the data are counts of categories', 'When there are NAs', 'Always'], 1,
+      't-tests compare means; chi-squared compares counts.'),
+    mc('What does the test of independence compare the counts with?', ['Zero', 'The counts you would expect if there were no link', 'The biggest count', 'The previous year'], 1,
+      'The bigger the gaps, the smaller the p-value.'),
+    mc('With 45 Y7 students, 55 Y8 and 50 hot lunches in all, how many Y7 hot lunches would you expect with no link?', ['`30`', '`22.5`', '`25`', '`45`'], 1,
+      '45 × 50 / 100 = 22.5.',
+      { code: '45 * 50 / 100', output: '[1] 22.5' }),
+    mc('p = 0.005 for year and lunch. What can you say?', ['Year causes lunch choice', 'Strong evidence that lunch choice differs between the years', 'No link', 'Half choose hot'], 1,
+      'A link, not a cause.'),
+    mc('What does `prop.table(tab, 1)` give?', ['Shares of the whole table', 'Shares within each row', 'Shares within each column', 'The counts'], 1,
+      '`1` is rows, `2` is columns.',
+      { code: 'prop.table(matrix(c(1, 3, 1, 1), nrow = 2), 1)[2, ]', output: '[1] 0.75 0.25' }),
+    mc('`chisq.test(c(15, 22, 18, 25, 17, 23))` tests against…', ['A normal distribution', 'Equal shares in each category', 'The mean', 'Zero'], 1,
+      'A fair die: one sixth each.'),
+    mc('What does R warn when expected counts are small?', ['Nothing', 'That the chi-squared approximation may be incorrect', 'That the data are text', 'That p is 0'], 1,
+      'Counts below about 5 make the test unreliable.'),
+    mc('What does `matrix(c(30, 20, 15, 35), nrow = 2)[1, ]` give?', ['`[1] 30 20`', '`[1] 30 15`', '`[1] 15 35`', '`[1] 20 35`'], 1,
+      'A matrix fills column by column, so row 1 is 30 and 15.',
+      { code: 'matrix(c(30, 20, 15, 35), nrow = 2)[1, ]', output: '[1] 30 15' }),
+    qShort('Which function runs a chi-squared test?', 'chisq.test',
+      '`chisq.test(table)`'),
+  ],
+})

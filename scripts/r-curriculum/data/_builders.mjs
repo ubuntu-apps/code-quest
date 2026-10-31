@@ -34,6 +34,14 @@ export const isText = (name, value) => `identical(${name}, ${rstr(value)})`
  */
 export const same = (name, rValue) => `isTRUE(all.equal(${name}, ${rValue}))`
 
+/**
+ * A test that `name` is a data frame with the same columns, in the same order and with
+ * the same values, as an R expression: `sameFrame('long', 'trips[trips$minutes > 30, ]')`.
+ * Row names are ignored, so a filtered or sorted table matches however it was made.
+ */
+export const sameFrame = (name, rExpr) =>
+  `is.data.frame(${name}) && identical(names(${name}), names(${rExpr})) && isTRUE(all.equal(as.list(${name}), as.list(${rExpr}), check.attributes = FALSE))`
+
 /** A test that `name` is exactly these texts, in order: `isTexts('days', 'Mon', 'Tue')`. */
 export const isTexts = (name, ...values) => `identical(${name}, c(${values.map(rstr).join(', ')}))`
 

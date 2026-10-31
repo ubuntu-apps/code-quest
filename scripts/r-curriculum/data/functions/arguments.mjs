@@ -1,0 +1,98 @@
+// Functions and control flow: Arguments and defaults.
+import { code, makeTopic, mc, near, qShort, snippet, task, uses } from '../_builders.mjs'
+
+const isFn = (name) => `is.function(${name})`
+
+export default makeTopic({
+  id: 'arguments',
+  title: 'Arguments and defaults',
+  paragraphs: [
+    'A function can take several arguments, separated by commas. When you call it, the values are matched by position, or by name:',
+    code('ride_cost <- function(minutes, rate) {', '  1 + rate * minutes', '}', 'ride_cost(47, 0.15)', 'ride_cost(rate = 0.15, minutes = 47)   # the same'),
+    'Give an argument a **default** with `=` in the definition. Callers can then leave it out, and only give it when they want something different:',
+    code('ride_cost <- function(minutes, rate = 0.15, unlock = 1) {', '  unlock + rate * minutes', '}', 'ride_cost(47)                  # 8.05', 'ride_cost(47, unlock = 0)      # 7.05: members unlock free'),
+    'Put the arguments everyone needs first, without defaults, and the optional ones after, with sensible defaults. Name the optional ones when you call the function, as above: `unlock = 0` is much clearer than a bare 0 in third place.',
+    'R\'s own functions work exactly this way: `round(x, digits = 0)`, `mean(x, na.rm = FALSE)`, `paste(…, sep = " ")`. Now you can read their help pages: the usage line shows every argument and its default.',
+  ],
+  sandboxCode: 'ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\nride_cost(47)\nride_cost(47, unlock = 0)\nride_cost(47, rate = 0.1)',
+  sandboxSnippets: [snippet('Missing argument', '# Run it and read the error\nride_cost <- function(minutes, rate) {\n  1 + rate * minutes\n}\nride_cost(47)')],
+  readMore: { label: 'An Introduction to R: named arguments and defaults', url: 'https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Named-arguments-and-defaults', source: 'R manuals' },
+  challenges: [
+    task('easy', 'Two arguments', {
+      prompt: 'Write `area(width, length)` that gives the area of a garden bed.',
+      hint: '`area <- function(width, length) { width * length }`',
+      solution: 'area <- function(width, length) {\n  width * length\n}',
+      tests: [['area(2, 3) is 6', isFn('area') + ' && isTRUE(all.equal(area(2, 3), 6))']],
+    }),
+    task('easy', 'A default tip', {
+      prompt: 'Write `with_tip(bill, tip = 0.1)` that gives the bill plus the tip share of it.',
+      hint: '`bill * (1 + tip)` or `bill + bill * tip`.',
+      solution: 'with_tip <- function(bill, tip = 0.1) {\n  bill * (1 + tip)\n}',
+      tests: [['with_tip(20) is 22', isFn('with_tip') + ' && isTRUE(all.equal(with_tip(20), 22))'], ['with_tip(20, tip = 0.15) is 23', 'isTRUE(all.equal(with_tip(20, tip = 0.15), 23))']],
+    }),
+    task('easy', 'Call by name', {
+      prompt: 'Make `member_cost` the cost of a 47-minute ride for a member, who unlocks free: call `ride_cost` with `unlock = 0`.',
+      starter: 'ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\n',
+      hint: '`member_cost <- ride_cost(47, unlock = 0)`',
+      solution: 'ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\nmember_cost <- ride_cost(47, unlock = 0)',
+      tests: [['member_cost is 7.05', near('member_cost', 7.05)], ['Names the argument', uses('unlock = 0') + ' || ' + uses('unlock=0')]],
+    }),
+    task('medium', 'Ride cost with options', {
+      prompt: 'Write `ride_cost(minutes, rate = 0.15, unlock = 1)`.',
+      hint: 'The body is `unlock + rate * minutes`.',
+      solution: 'ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}',
+      tests: [['ride_cost(47) is 8.05', isFn('ride_cost') + ' && isTRUE(all.equal(ride_cost(47), 8.05))'], ['ride_cost(47, rate = 0.1, unlock = 0) is 4.7', 'isTRUE(all.equal(ride_cost(47, rate = 0.1, unlock = 0), 4.7))']],
+    }),
+    task('medium', 'Rounding as an option', {
+      prompt: 'Write `share(total, people, digits = 2)` that gives each person\'s share, rounded to `digits` places.',
+      hint: '`round(total / people, digits)`',
+      solution: 'share <- function(total, people, digits = 2) {\n  round(total / people, digits)\n}',
+      tests: [['share(10, 3) is 3.33', isFn('share') + ' && isTRUE(all.equal(share(10, 3), 3.33))'], ['share(10, 3, digits = 0) is 3', 'isTRUE(all.equal(share(10, 3, digits = 0), 3))']],
+    }),
+    task('medium', 'Pass it on', {
+      prompt: 'Write `avg(x, na_rm = TRUE)` that gives the mean of `x`, passing `na_rm` on to `mean()`\'s `na.rm`.',
+      hint: '`mean(x, na.rm = na_rm)`',
+      solution: 'avg <- function(x, na_rm = TRUE) {\n  mean(x, na.rm = na_rm)\n}',
+      tests: [['avg(c(2, NA, 4)) is 3', isFn('avg') + ' && isTRUE(all.equal(avg(c(2, NA, 4)), 3))'], ['avg(c(2, NA, 4), na_rm = FALSE) is NA', 'is.na(avg(c(2, NA, 4), na_rm = FALSE))']],
+    }),
+    task('hard', 'A greeting', {
+      prompt: 'Write `greet(name, greeting = "Hello")` that gives text like `"Hello, Ana!"`.',
+      hint: '`paste0(greeting, ", ", name, "!")`',
+      solution: 'greet <- function(name, greeting = "Hello") {\n  paste0(greeting, ", ", name, "!")\n}',
+      tests: [['greet("Ana") is "Hello, Ana!"', isFn('greet') + ' && identical(greet("Ana"), "Hello, Ana!")'], ['greet("Ben", greeting = "Welcome") is "Welcome, Ben!"', 'identical(greet("Ben", greeting = "Welcome"), "Welcome, Ben!")']],
+    }),
+    task('expert', 'Fix the missing argument', {
+      prompt: 'Calling `fine(9)` gives the error "argument \\"per_day\\" is missing". Give `per_day` a default of 0.25 so `fine(9)` works and gives 2.25.',
+      starter: 'fine <- function(days_late, per_day) {\n  days_late * per_day\n}\nfine(9)',
+      hint: 'Write `per_day = 0.25` in the function\'s brackets.',
+      solution: 'fine <- function(days_late, per_day = 0.25) {\n  days_late * per_day\n}\nfine(9)',
+      tests: [['fine(9) is 2.25', isFn('fine') + ' && isTRUE(all.equal(fine(9), 2.25))'], ['fine(9, 0.5) is 4.5', 'isTRUE(all.equal(fine(9, 0.5), 4.5))']],
+    }),
+  ],
+  questions: [
+    mc('After `f <- function(a, b = 2) { a * b }`, what does `f(5)` give?', ['`5`', '`10`', '`7`', 'An error'], 1,
+      '`b` takes its default, 2.',
+      { code: 'f <- function(a, b = 2) { a * b }\nf(5)', output: '[1] 10' }),
+    mc('After `f <- function(a, b = 2) { a * b }`, what does `f(5, 3)` give?', ['`10`', '`15`', '`8`', 'An error'], 1,
+      'The 3 replaces the default.',
+      { code: 'f <- function(a, b = 2) { a * b }\nf(5, 3)', output: '[1] 15' }),
+    mc('After `f <- function(a, b) { a - b }`, what does `f(b = 1, a = 10)` give?', ['`-9`', '`9`', 'An error', '`11`'], 1,
+      'Named arguments are matched by name, whatever the order.',
+      { code: 'f <- function(a, b) { a - b }\nf(b = 1, a = 10)', output: '[1] 9' }),
+    mc('After `f <- function(a, b) { a - b }`, what does `f(10)` give?', ['`10`', 'An error: argument "b" is missing', '`NA`', '`0`'], 1,
+      '`b` has no default, so it must be given.',
+      { code: 'f <- function(a, b) { a - b }\nf(10)', error: 'argument "b" is missing' }),
+    mc('Which arguments should usually have defaults?', ['The ones everyone needs', 'The optional ones, with a sensible usual value', 'All of them', 'None of them'], 1,
+      'Required ones first without defaults; optional ones after, with defaults.'),
+    mc('What is the default of `na.rm` in `mean()`?', ['`TRUE`', '`FALSE`', '`NA`', 'There is none'], 1,
+      'That\'s why `mean(c(1, NA))` is NA unless you say `na.rm = TRUE`.',
+      { code: 'mean(c(1, NA))', output: '[1] NA' }),
+    mc('After `g <- function(name, greeting = "Hi") paste(greeting, name)`, what does `g("Cy")` give?', ['`"Cy Hi"`', '`"Hi Cy"`', '`"HiCy"`', 'An error'], 1,
+      '`greeting` takes its default.',
+      { code: 'g <- function(name, greeting = "Hi") paste(greeting, name)\ng("Cy")', output: '[1] "Hi Cy"' }),
+    mc('Why name optional arguments when calling, as in `ride_cost(47, unlock = 0)`?', ['R needs it', 'It is clearer and doesn\'t depend on their order', 'It is faster', 'Defaults only work by name'], 1,
+      'A bare 0 in third place says nothing about what it means.'),
+    qShort('In a function definition, which symbol gives an argument its default, as in `tip __ 0.1`?', '=',
+      '`function(bill, tip = 0.1)`'),
+  ],
+})

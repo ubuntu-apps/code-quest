@@ -33,6 +33,8 @@ export async function checkR(sectionId) {
       }
       for (const c of topic.challenges) {
         challenges += 1
+        // Shows where a long or stuck check has got to: globalThis.cqCheckProgress
+        globalThis.cqCheckProgress = `${where} "${c.title}"`
         const tests = c.validation.tests
         const good = await runRChallengeTests(c.solution, c.validation.setupCode, tests)
         if (!good.passed) {

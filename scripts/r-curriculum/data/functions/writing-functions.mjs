@@ -1,0 +1,100 @@
+// Functions and control flow: Writing functions.
+import { code, makeTopic, mc, near, qShort, r, snippet, task, uses } from '../_builders.mjs'
+
+const isFn = (name) => `is.function(${name})`
+
+export default makeTopic({
+  id: 'writing_functions',
+  title: 'Writing functions',
+  paragraphs: [
+    'When you find yourself writing the same calculation again and again, make it a **function** of your own. You save it in a name, like any value, with `function()`:',
+    code('ride_cost <- function(minutes) {', '  1 + 0.15 * minutes', '}', 'ride_cost(47)    # 8.05', 'ride_cost(12)    # 2.8'),
+    '`minutes` is the function\'s **argument**: a name for whatever value it is called with. The code in the braces is the **body**. The value of the last line is what the function gives back, its **return value**, so `ride_cost(47)` is 8.05.',
+    'A function works like R\'s own ones: on vectors (`ride_cost(c(12, 47))` gives both costs), inside other calls (`round(ride_cost(47))`), and in new columns (`trips$cost <- ride_cost(trips$minutes)`).',
+    'Variables made inside a function stay inside it. If the body says `total <- …`, that `total` disappears when the function finishes and doesn\'t touch a `total` outside. Only the return value comes out.',
+    'Good functions do one clear job and have a name that says what it is, usually a verb or a noun for the result: `ride_cost`, `to_fahrenheit`, `tidy_name`.',
+  ],
+  sandboxCode: 'ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\nride_cost(47)\nride_cost(c(12, 47, 30))',
+  sandboxSnippets: [
+    snippet('Inside stays inside', 'total <- 100\nadd_tip <- function(bill) {\n  total <- bill * 1.1\n  total\n}\nadd_tip(20)\ntotal'),
+    snippet('Several lines', 'tidy_name <- function(x) {\n  x <- trimws(x)\n  x <- tolower(x)\n  x\n}\ntidy_name("  ANA Silva ")'),
+  ],
+  readMore: { label: 'An Introduction to R: writing your own functions', url: 'https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions', source: 'R manuals' },
+  challenges: [
+    task('easy', 'Double it', {
+      prompt: 'Write a function `double` that gives back its argument times 2.',
+      starter: 'double <- function(x) {\n  \n}\n',
+      hint: 'The last line of the body is the result: `x * 2`.',
+      solution: 'double <- function(x) {\n  x * 2\n}',
+      tests: [['double is a function', isFn('double')], ['double(4) is 8', 'isTRUE(all.equal(double(4), 8))'], ['double(c(1, 5)) is 2, 10', 'isTRUE(all.equal(double(c(1, 5)), c(2, 10)))']],
+    }),
+    task('easy', 'Ride cost', {
+      prompt: 'Write `ride_cost(minutes)`: 1 to unlock plus 0.15 per minute.',
+      hint: '`ride_cost <- function(minutes) { 1 + 0.15 * minutes }`',
+      solution: 'ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}',
+      tests: [['ride_cost(47) is 8.05', isFn('ride_cost') + ' && isTRUE(all.equal(ride_cost(47), 8.05))'], ['ride_cost(0) is 1', 'isTRUE(all.equal(ride_cost(0), 1))']],
+    }),
+    task('easy', 'Use your function', {
+      prompt: 'Make `costs` the cost of each ride, using the function you are given.',
+      starter: 'ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\nminutes <- c(12, 47, 30)\n',
+      hint: 'Functions work on vectors: `costs <- ride_cost(minutes)`.',
+      solution: 'ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\nminutes <- c(12, 47, 30)\ncosts <- ride_cost(minutes)',
+      tests: [['costs is 2.8, 8.05, 5.5', near('costs', 'c(2.8, 8.05, 5.5)')], ['Uses ride_cost()', uses('ride_cost(minutes)')]],
+    }),
+    task('medium', 'Kilometres to miles', {
+      prompt: 'Write `km_to_miles(km)` that gives the distance in miles, rounded to 1 decimal place. 1 km is 0.621371 miles.',
+      hint: '`round(km * 0.621371, 1)`',
+      solution: 'km_to_miles <- function(km) {\n  round(km * 0.621371, 1)\n}',
+      tests: [['km_to_miles(10) is 6.2', isFn('km_to_miles') + ' && isTRUE(all.equal(km_to_miles(10), 6.2))'], ['km_to_miles(42.2) is 26.2', 'isTRUE(all.equal(km_to_miles(42.2), 26.2))']],
+    }),
+    task('medium', 'Tidy a name', {
+      prompt: 'Write `tidy_name(x)` that trims the spaces from the ends and makes the text all small letters.',
+      hint: 'Two steps in the body: `x <- trimws(x)`, then `tolower(x)` as the last line.',
+      solution: 'tidy_name <- function(x) {\n  x <- trimws(x)\n  tolower(x)\n}',
+      tests: [['tidy_name("  ANA Silva ") is "ana silva"', isFn('tidy_name') + ' && identical(tidy_name("  ANA Silva "), "ana silva")'], ['Works on a vector', 'identical(tidy_name(c(" Ben", "CY ")), c("ben", "cy"))']],
+    }),
+    task('medium', 'Percent of a total', {
+      prompt: 'Write `percent_of(x)` that gives each value as a percentage of the total of `x`, rounded to a whole number.',
+      hint: '`round(x / sum(x) * 100)`',
+      solution: 'percent_of <- function(x) {\n  round(x / sum(x) * 100)\n}',
+      tests: [['percent_of(c(1, 1, 2)) is 25, 25, 50', isFn('percent_of') + ' && isTRUE(all.equal(percent_of(c(1, 1, 2)), c(25, 25, 50)))']],
+    }),
+    task('hard', 'The range as one number', {
+      prompt: 'Write `spread(x)` that gives the largest value minus the smallest, ignoring NAs.',
+      hint: '`max(x, na.rm = TRUE) - min(x, na.rm = TRUE)`',
+      solution: 'spread <- function(x) {\n  max(x, na.rm = TRUE) - min(x, na.rm = TRUE)\n}',
+      tests: [['spread(c(4, 9, 2)) is 7', isFn('spread') + ' && isTRUE(all.equal(spread(c(4, 9, 2)), 7))'], ['spread(c(4, NA, 10)) is 6', 'isTRUE(all.equal(spread(c(4, NA, 10)), 6))']],
+    }),
+    task('expert', 'Grade letter', {
+      prompt: 'Write `grade(score)` for **one** score: `"A"` for 80 or more, `"B"` for 65 or more, `"C"` for 50 or more, and `"F"` otherwise.',
+      hint: 'Use `if`, `else if` and `else` in the body. Each branch\'s value is the result, so the whole `if` can be the last line.',
+      solution: 'grade <- function(score) {\n  if (score >= 80) {\n    "A"\n  } else if (score >= 65) {\n    "B"\n  } else if (score >= 50) {\n    "C"\n  } else {\n    "F"\n  }\n}',
+      tests: [['grade(91) is "A"', isFn('grade') + ' && identical(grade(91), "A")'], ['grade(65) is "B"', 'identical(grade(65), "B")'], ['grade(50) is "C" and grade(49) is "F"', 'identical(grade(50), "C") && identical(grade(49), "F")']],
+    }),
+  ],
+  questions: [
+    mc('After `sq <- function(x) { x * x }`, what does `sq(4)` give?', ['`8`', '`16`', '`4`', 'An error'], 1,
+      'The body works out 4 × 4.',
+      { code: 'sq <- function(x) { x * x }\nsq(4)', output: '[1] 16' }),
+    mc('After `f <- function(x) { y <- x + 1; y * 2 }`, what does `f(3)` give?', ['`4`', '`8`', '`7`', '`6`'], 1,
+      'The last line is the result: (3 + 1) × 2.',
+      { code: 'f <- function(x) { y <- x + 1; y * 2 }\nf(3)', output: '[1] 8' }),
+    mc('After `y <- 10`, `f <- function(x) { y <- x; y }` and `f(3)`, what is `y` outside the function?', ['`3`', '`10`', 'An error', '`NULL`'], 1,
+      'The `y` inside the function is separate and disappears when it finishes.',
+      { code: 'y <- 10\nf <- function(x) { y <- x; y }\ninvisible(f(3))\ny', output: '[1] 10' }),
+    mc('After `sq <- function(x) { x * x }`, what does `sq(c(1, 2, 3))` give?', ['`[1] 1 4 9`', '`[1] 14`', 'An error', '`[1] 36`'], 0,
+      'Vector maths in the body works on every value.',
+      { code: 'sq <- function(x) { x * x }\nsq(c(1, 2, 3))', output: '[1] 1 4 9' }),
+    mc('In `function(minutes) { … }`, what is `minutes`?', ['The result', 'The argument: a name for the value passed in', 'A global variable', 'The function\'s name'], 1,
+      'It takes the value the function is called with.'),
+    mc('What does `class(function(x) x)` give?', ['`"function"`', '`"numeric"`', '`"code"`', '`"list"`'], 0,
+      'A function is a value like any other.',
+      { code: 'class(function(x) x)', output: '[1] "function"' }),
+    mc('After `f <- function(x) { x * 2 }`, what does `f` (without brackets) show?', ['`2`', 'The function\'s code', 'An error', '`NULL`'], 1,
+      'Without brackets you see the function itself; with them, you call it.'),
+    mc('Why write a function?', ['R needs them', 'To reuse a calculation without copying it, and give it a clear name', 'It is faster', 'To hide errors'], 1,
+      'Fix a function once and every use of it is fixed.'),
+    qShort('Which keyword makes a function, as in `ride_cost <- __(minutes) { … }`?', 'function',
+      '`function(arguments) { body }`'),
+  ],
+})
