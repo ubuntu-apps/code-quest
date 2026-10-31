@@ -28,6 +28,15 @@ export const near = (name, value) => `is.numeric(${name}) && isTRUE(all.equal(${
 /** A test that `name` is exactly this text. */
 export const isText = (name, value) => `identical(${name}, ${rstr(value)})`
 
+/**
+ * A test that `name` equals an R value (a vector, a named vector…), allowing for rounding
+ * in the last digits: `same('x', 'c(2, 4, 6)')`. Whole numbers and decimals compare equal.
+ */
+export const same = (name, rValue) => `isTRUE(all.equal(${name}, ${rValue}))`
+
+/** A test that `name` is exactly these texts, in order: `isTexts('days', 'Mon', 'Tue')`. */
+export const isTexts = (name, ...values) => `identical(${name}, c(${values.map(rstr).join(', ')}))`
+
 /** A test that `name` is exactly TRUE or FALSE. */
 export const isLogical = (name, value) => `identical(${name}, ${value ? 'TRUE' : 'FALSE'})`
 
@@ -100,8 +109,9 @@ export function task(difficulty, title, { prompt, starter = '', hint, solution, 
 }
 
 /**
- * Multiple-choice question: `correct` is the index of the right option (vary it: the app
- * shows options in this order), `explanation` says why it is right. `check` (optional,
+ * Multiple-choice question: `correct` is the index of the right option, `explanation`
+ * says why it is right. The generator shuffles the options in a fixed order per prompt, so
+ * the right answer lands in different places; write the options in whatever order reads best. `check` (optional,
  * not published): `{ code, output }` or `{ code, error }`, run in R by the checker.
  */
 export function mc(prompt, options, correct, explanation, check) {

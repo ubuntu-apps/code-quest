@@ -13,7 +13,7 @@ export default makeTopic({
     code('is.na(rating)   # TRUE', 'is.na(42)       # FALSE', '!is.na(42)      # TRUE: it has a value'),
     'Sometimes R can answer even with a gap. `TRUE | NA` is `TRUE`, because "true or anything" is true. `FALSE & NA` is `FALSE`, because "false and anything" is false.',
     'Watch out for the text `"NA"` in quotes. That is two letters, not a missing value: `is.na("NA")` is `FALSE`. Data files sometimes contain it by mistake, and a later quest shows how to clean it up.',
-    'Once you have many values, R lets you skip the `NA`s when you add them up or take an average. That\'s in the next quest, *Vectors*.',
+    'Once you have many values, R lets you skip the `NA`s when you add them up or take an average. That\'s in the next quest, Vectors.',
   ],
   sandboxCode: 'steps <- NA\nsteps + 100\nis.na(steps)\nis.na(250)',
   sandboxSnippets: [

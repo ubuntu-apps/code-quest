@@ -163,6 +163,15 @@ export function highlightSql(code: string): Token[] {
 const SQL_STATEMENT = /^\s*(SELECT|WITH|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|ALTER|BEGIN|PRAGMA|EXPLAIN)\b/i
 
 /** Whether a lesson's code block is SQL that can be run (not a result table or a sketch). */
+/**
+ * R code worth trying in the sandbox: an assignment, a function call or a calculation.
+ * Sample output (`Total: 10.56`) doesn't count.
+ */
+export function looksLikeR(code: string): boolean {
+  const lines = code.split('\n').filter((l) => l.trim() !== '' && !l.trim().startsWith('#'))
+  return lines.length > 0 && lines.some((l) => /<-|[A-Za-z_.][\w.]*\(|^\s*-?[\d.]+\s*([-+*/^]|%%|%\/%)\s*[\d.(]/.test(l))
+}
+
 export function looksLikeSql(code: string): boolean {
   const lines = code.split('\n').filter((l) => l.trim() !== '' && !l.trim().startsWith('--'))
   return lines.length > 0 && SQL_STATEMENT.test(lines[0])

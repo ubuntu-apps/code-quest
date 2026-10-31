@@ -1,0 +1,120 @@
+// Vectors: Sequences: :, seq and rep.
+import { R_INTRO, code, isTexts, makeTopic, mc, near, prints, qShort, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'sequences',
+  title: 'Sequences: :, seq and rep',
+  paragraphs: [
+    'Typing every value with `c()` gets tiring. R has quick ways to make vectors that follow a pattern.',
+    'A colon makes whole numbers counting by one: `1:10` is 1 to 10, and `10:1` counts down. `seq()` gives you more control: where to start, where to stop, and either the step (`by`) or how many values you want (`length.out`):',
+    code('1:5                              # 1 2 3 4 5', 'seq(0, 100, by = 25)             # 0 25 50 75 100', 'seq(1, 2, length.out = 5)        # 1.00 1.25 1.50 1.75 2.00', 'seq(10, 0, by = -5)              # 10 5 0'),
+    '`seq()` stops at the last value that fits: `seq(0, 10, by = 3)` is 0 3 6 9, without going past 10.',
+    '`rep()` repeats. `times` repeats the whole vector; `each` repeats every value before moving on:',
+    code('rep(0, times = 4)                # 0 0 0 0', 'rep(c("a", "b"), times = 3)      # "a" "b" "a" "b" "a" "b"', 'rep(c("a", "b"), each = 2)       # "a" "a" "b" "b"'),
+    'These are handy for setting up data: table numbers `1:12`, a price list that goes up in steps, or a label for each group of readings. Watch the brackets with `:` and maths. The colon is worked out before `+` and `-`, so `1:3 + 1` is `2 3 4`, while `1:(3 + 1)` is `1 2 3 4`.',
+  ],
+  sandboxCode: '1:10\n10:1\nseq(0, 100, by = 25)\nseq(1, 2, length.out = 5)\nrep(c("a", "b"), each = 2)',
+  sandboxSnippets: [
+    snippet('seq stops early', 'seq(0, 10, by = 3)'),
+    snippet('Times or each', 'rep(1:3, times = 2)\nrep(1:3, each = 2)'),
+    snippet('Colon and maths', '1:3 + 1\n1:(3 + 1)'),
+  ],
+  readMore: R_INTRO('Generating-regular-sequences', 'An Introduction to R: regular sequences'),
+  challenges: [
+    task('easy', 'Table numbers', {
+      prompt: 'A café has 12 tables. Make `tables` the numbers 1 to 12, using `:`.',
+      hint: '`tables <- 1:12`',
+      solution: 'tables <- 1:12',
+      tests: [
+        ['tables is 1 to 12', near('tables', '1:12')],
+        ['Uses :', uses(':')],
+      ],
+    }),
+    task('easy', 'Countdown', {
+      prompt: 'Show the numbers from 5 down to 1.',
+      hint: 'A colon counts down when the first number is bigger: `5:1`.',
+      solution: '5:1',
+      tests: [['Shows [1] 5 4 3 2 1', prints('[1] 5 4 3 2 1')]],
+    }),
+    task('easy', 'Steps of five', {
+      prompt: 'Make `marks` the numbers 0, 5, 10, … up to 50, using `seq()`.',
+      hint: '`marks <- seq(0, 50, by = 5)`',
+      solution: 'marks <- seq(0, 50, by = 5)',
+      tests: [
+        ['marks is 0, 5, …, 50', near('marks', 'c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50)')],
+        ['Uses seq()', uses('seq(')],
+      ],
+    }),
+    task('medium', 'Evenly spaced', {
+      prompt: 'A garden bed is 3 metres long. Make `posts` 7 evenly spaced positions from 0 to 3, using `length.out`.',
+      hint: '`posts <- seq(0, 3, length.out = 7)`',
+      solution: 'posts <- seq(0, 3, length.out = 7)',
+      tests: [
+        ['posts is 0, 0.5, …, 3', near('posts', 'c(0, 0.5, 1, 1.5, 2, 2.5, 3)')],
+        ['Uses length.out', uses('length.out')],
+      ],
+    }),
+    task('medium', 'All zeros', {
+      prompt: 'Make `goals` a vector of 6 zeros, one for each team before the first match, using `rep()`.',
+      hint: '`goals <- rep(0, times = 6)`',
+      solution: 'goals <- rep(0, times = 6)',
+      tests: [
+        ['goals is six zeros', near('goals', 'c(0, 0, 0, 0, 0, 0)')],
+        ['Uses rep()', uses('rep(')],
+      ],
+    }),
+    task('medium', 'Morning and afternoon', {
+      prompt: 'A garden club meets in the morning and the afternoon on 3 days. Make `shifts` the session labels for the 3 days: `"am"`, `"pm"` repeated 3 times, giving `am pm am pm am pm`.',
+      hint: '`shifts <- rep(c("am", "pm"), times = 3)`',
+      solution: 'shifts <- rep(c("am", "pm"), times = 3)',
+      tests: [['shifts is am pm am pm am pm', isTexts('shifts', 'am', 'pm', 'am', 'pm', 'am', 'pm')]],
+    }),
+    task('hard', 'A label for each reading', {
+      prompt: 'Two sensors, `"A"` and `"B"`, each sent 3 readings: first all of A\'s, then all of B\'s. Make `sensor` the matching labels: `A A A B B B`.',
+      hint: 'Use `each` so every value repeats before the next: `rep(c("A", "B"), each = 3)`.',
+      solution: 'sensor <- rep(c("A", "B"), each = 3)',
+      tests: [
+        ['sensor is A A A B B B', isTexts('sensor', 'A', 'A', 'A', 'B', 'B', 'B')],
+        ['Uses each', uses('each')],
+      ],
+    }),
+    task('expert', 'Fix the range', {
+      prompt: 'This should give the numbers 1 to 6, but it gives 2 to 6 instead. Fix it with brackets, keeping `n + 1` in the code.',
+      starter: 'n <- 5\nseats <- 1:n + 1\nseats',
+      hint: 'The colon is worked out before `+`, so this is `(1:5) + 1`. Put brackets around `n + 1`.',
+      solution: 'n <- 5\nseats <- 1:(n + 1)\nseats',
+      tests: [
+        ['seats is 1 to 6', near('seats', '1:6')],
+        ['Keeps n + 1', uses('n + 1')],
+      ],
+    }),
+  ],
+  questions: [
+    mc('What does `3:7` give?', ['`[1] 3 7`', '`[1] 3 4 5 6 7`', '`[1] 4 5 6`', '`[1] 3 4 5 6`'], 1,
+      'The colon counts by one from the first number to the last, both included.',
+      { code: '3:7', output: '[1] 3 4 5 6 7' }),
+    mc('What does `seq(0, 10, by = 3)` give?', ['`[1] 0 3 6 9 12`', '`[1] 3 6 9`', '`[1] 0 3 6 9`', '`[1] 0 10 3`'], 2,
+      '`seq()` stops at the last value that doesn\'t go past 10.',
+      { code: 'seq(0, 10, by = 3)', output: '[1] 0 3 6 9' }),
+    mc('What does `seq(1, 2, length.out = 3)` give?', ['`[1] 1.0 1.5 2.0`', '`[1] 1 2 3`', '`[1] 1 2`', '`[1] 1.0 1.3 1.6`'], 0,
+      'Three evenly spaced values from 1 to 2.',
+      { code: 'seq(1, 2, length.out = 3)', output: '[1] 1.0 1.5 2.0' }),
+    mc('What does `rep(1:2, times = 2)` give?', ['`[1] 1 1 2 2`', '`[1] 1 2 1 2`', '`[1] 2 4`', '`[1] 1 2 2`'], 1,
+      '`times` repeats the whole vector.',
+      { code: 'rep(1:2, times = 2)', output: '[1] 1 2 1 2' }),
+    mc('What does `rep(1:2, each = 2)` give?', ['`[1] 1 2 1 2`', '`[1] 2 2`', '`[1] 1 1 2 2`', '`[1] 1 2`'], 2,
+      '`each` repeats every value before moving on.',
+      { code: 'rep(1:2, each = 2)', output: '[1] 1 1 2 2' }),
+    mc('What does `1:3 + 1` give?', ['`[1] 1 2 3 4`', '`[1] 2 3 4`', '`[1] 1 2 4`', 'An error'], 1,
+      'The colon goes first, making 1 2 3, then 1 is added to each.',
+      { code: '1:3 + 1', output: '[1] 2 3 4' }),
+    mc('What does `seq(10, 0, by = -5)` give?', ['`[1] 10 5 0`', '`[1] 0 5 10`', 'An error', '`[1] 10 5`'], 0,
+      'A negative step counts down.',
+      { code: 'seq(10, 0, by = -5)', output: '[1] 10  5  0' }),
+    mc('What does `length(seq(0, 100, by = 10))` give?', ['`10`', '`11`', '`100`', '`9`'], 1,
+      '0, 10, 20, … 100 is 11 values: both ends are included.',
+      { code: 'length(seq(0, 100, by = 10))', output: '[1] 11' }),
+    qShort('Which function repeats values, as in `__(0, times = 4)`?', 'rep',
+      '`rep()` repeats a value or a vector.'),
+  ],
+})

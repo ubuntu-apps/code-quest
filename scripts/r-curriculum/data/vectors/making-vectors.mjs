@@ -1,0 +1,123 @@
+// Vectors: Making vectors with c().
+import { R_INTRO, code, isTexts, makeTopic, mc, near, prints, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'making_vectors',
+  title: 'Making vectors with c()',
+  paragraphs: [
+    'Data is rarely one number. It is a week of step counts, a class of test scores, a list of café orders. In R, a row of values like that is a **vector**, and almost everything in R works on vectors.',
+    'You make a vector with `c()`, short for "combine". Separate the values with commas:',
+    code('steps <- c(4200, 8100, 6500, 9900, 3000)', 'steps', 'days <- c("Mon", "Tue", "Wed", "Thu", "Fri")', 'days'),
+    'R shows a vector on one line: `[1] 4200 8100 6500 9900 3000`. When a vector is too long for one line, R wraps it, and the number in square brackets at the start of each line tells you the position of the first value on that line, such as `[13]`. That\'s what the `[1]` has meant all along: a single value is just a vector of length 1.',
+    '`length()` tells you how many values a vector holds: `length(steps)` is 5.',
+    'A vector holds one kind of value: all numbers, all text, or all `TRUE`/`FALSE`. If you mix them, R turns everything into the most flexible kind, usually text: `c(1, "two", 3)` gives `"1" "two" "3"`. A later quest looks at this more closely.',
+    '`c()` also joins vectors together, so you can add values to the end (or the start) of one you already have:',
+    code('steps <- c(steps, 7600)   # add Saturday', 'length(steps)             # 6'),
+  ],
+  sandboxCode: 'steps <- c(4200, 8100, 6500, 9900, 3000)\nsteps\nlength(steps)\ndays <- c("Mon", "Tue", "Wed", "Thu", "Fri")\ndays',
+  sandboxSnippets: [
+    snippet('A long vector wraps', 'c(101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125)'),
+    snippet('Mixing kinds', 'c(1, "two", 3)\nc(1, TRUE, FALSE)'),
+    snippet('Add to a vector', 'cups <- c(3, 5, 2)\ncups <- c(cups, 4)\ncups\nlength(cups)'),
+  ],
+  readMore: R_INTRO('Vectors-and-assignment', 'An Introduction to R: vectors'),
+  challenges: [
+    task('easy', 'A week of steps', {
+      prompt: 'Make `steps` a vector of these five step counts: 4200, 8100, 6500, 9900 and 3000.',
+      hint: '`steps <- c(4200, 8100, 6500, 9900, 3000)`',
+      solution: 'steps <- c(4200, 8100, 6500, 9900, 3000)',
+      tests: [
+        ['steps has the five counts', near('steps', 'c(4200, 8100, 6500, 9900, 3000)')],
+        ['Uses c()', uses('c(')],
+      ],
+    }),
+    task('easy', 'Days of the week', {
+      prompt: 'Make `days` a vector of the texts `Mon`, `Tue` and `Wed`.',
+      hint: 'Each text in quotes: `days <- c("Mon", "Tue", "Wed")`.',
+      solution: 'days <- c("Mon", "Tue", "Wed")',
+      tests: [['days is "Mon" "Tue" "Wed"', isTexts('days', 'Mon', 'Tue', 'Wed')]],
+    }),
+    task('easy', 'How many', {
+      prompt: 'Make `n` the number of values in `orders`, using a function.',
+      starter: 'orders <- c(12, 7, 15, 9, 11, 8, 14)\n',
+      hint: '`n <- length(orders)`',
+      solution: 'orders <- c(12, 7, 15, 9, 11, 8, 14)\nn <- length(orders)',
+      tests: [
+        ['n is 7', near('n', 7)],
+        ['Uses length()', uses('length(')],
+      ],
+    }),
+    task('medium', 'Show a vector', {
+      prompt: 'Make `prices` a vector of 2.5, 3 and 4.25, then show it.',
+      hint: '`prices <- c(2.5, 3, 4.25)`, then a line with `prices`. Notice how R lines up the decimals.',
+      solution: 'prices <- c(2.5, 3, 4.25)\nprices',
+      tests: [
+        ['prices is 2.5, 3, 4.25', near('prices', 'c(2.5, 3, 4.25)')],
+        ['Shows [1] 2.50 3.00 4.25', prints('[1] 2.50 3.00 4.25')],
+      ],
+    }),
+    task('medium', 'Add a day', {
+      prompt: 'Saturday\'s count, 7600, came in late. Add it to the end of `steps`.',
+      starter: 'steps <- c(4200, 8100, 6500, 9900, 3000)\n',
+      hint: 'Combine the old vector and the new value: `steps <- c(steps, 7600)`.',
+      solution: 'steps <- c(4200, 8100, 6500, 9900, 3000)\nsteps <- c(steps, 7600)',
+      tests: [
+        ['steps has six counts, ending with 7600', near('steps', 'c(4200, 8100, 6500, 9900, 3000, 7600)')],
+        ['Adds to the old vector', uses('c(steps')],
+      ],
+    }),
+    task('medium', 'Two vectors in one', {
+      prompt: 'Make `all_scores` the morning scores followed by the afternoon scores, in one vector.',
+      starter: 'morning <- c(14, 18, 11)\nafternoon <- c(16, 20)\n',
+      hint: '`c()` joins vectors too: `all_scores <- c(morning, afternoon)`.',
+      solution: 'morning <- c(14, 18, 11)\nafternoon <- c(16, 20)\nall_scores <- c(morning, afternoon)',
+      tests: [
+        ['all_scores is 14, 18, 11, 16, 20', near('all_scores', 'c(14, 18, 11, 16, 20)')],
+        ['Joins the two vectors', uses('morning') + ' && ' + uses('afternoon')],
+      ],
+    }),
+    task('hard', 'Fix the vector', {
+      prompt: 'This line gives an error. Fix it so `cups` holds 3, 5 and 2.',
+      starter: 'cups <- c(3, 5 2)',
+      hint: 'Every value needs a comma before the next one.',
+      solution: 'cups <- c(3, 5, 2)',
+      tests: [['cups is 3, 5, 2', near('cups', 'c(3, 5, 2)')]],
+    }),
+    task('expert', 'Numbers, not text', {
+      prompt: 'One value was typed in quotes, so the whole vector became text. Fix it so `weights` is a vector of numbers: 1.2, 0.8 and 2.5.',
+      starter: 'weights <- c(1.2, "0.8", 2.5)\nweights',
+      hint: 'Remove the quotes around `0.8`. One text value is enough to turn every value into text.',
+      solution: 'weights <- c(1.2, 0.8, 2.5)\nweights',
+      tests: [
+        ['weights is numbers: 1.2, 0.8, 2.5', near('weights', 'c(1.2, 0.8, 2.5)')],
+      ],
+    }),
+  ],
+  questions: [
+    mc('What does `c(3, 1, 2)` show?', ['`[1] 1 2 3`', '`[1] 3 1 2`', '`[1] 312`', '`[3] 3 1 2`'], 1,
+      'A vector keeps its values in the order you gave them.',
+      { code: 'c(3, 1, 2)', output: '[1] 3 1 2' }),
+    mc('What does `length(c(4, 8, 15, 16))` give?', ['`4`', '`43`', '`16`', '`1`'], 0,
+      '`length()` counts the values, not their total.',
+      { code: 'length(c(4, 8, 15, 16))', output: '[1] 4' }),
+    mc('What does `length(42)` give?', ['`0`', '`2`', '`1`', '`42`'], 2,
+      'A single value is a vector of length 1.',
+      { code: 'length(42)', output: '[1] 1' }),
+    mc('What does `c(1, "two", 3)` give?', ['An error', '`[1] 1 2 3`', '`[1] "1" "two" "3"`', '`[1] 1 "two" 3`'], 2,
+      'A vector holds one kind of value. One text value turns them all into text.',
+      { code: 'c(1, "two", 3)', output: '[1] "1"   "two" "3"' }),
+    mc('What does `c(c(1, 2), c(3, 4))` give?', ['`[1] 1 2 3 4`', 'Two vectors', 'An error', '`[1] 3 7`'], 0,
+      '`c()` joins vectors into one longer vector.',
+      { code: 'c(c(1, 2), c(3, 4))', output: '[1] 1 2 3 4' }),
+    mc('What does `c(1.5, 2, 10)` show?', ['`[1] 1.5 2 10`', '`[1]  1.5  2.0 10.0`', '`[1] 1 2 10`', '`[1] 13.5`'], 1,
+      'R shows every value with the same number of decimals, lined up.',
+      { code: 'c(1.5, 2, 10)', output: '[1]  1.5  2.0 10.0' }),
+    mc('A long vector wraps onto a second line that starts with `[19]`. What does `[19]` mean?', ['It is the 19th line', 'The line starts with the 19th value', 'There are 19 values', 'An error number'], 1,
+      'The number in square brackets is the position of the first value on that line.'),
+    mc('After `x <- c(5, 6)` and `x <- c(x, 7)`, what is `length(x)`?', ['`2`', '`7`', '`3`', '`1`'], 2,
+      '`c(x, 7)` adds 7 to the end, making three values.',
+      { code: 'x <- c(5, 6)\nx <- c(x, 7)\nlength(x)', output: '[1] 3' }),
+    qShort('Which function makes a vector, as in `__(4, 8, 15)`?', 'c',
+      '`c()` combines values into a vector.'),
+  ],
+})
