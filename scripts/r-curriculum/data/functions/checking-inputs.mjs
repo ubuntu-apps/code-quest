@@ -15,6 +15,7 @@ export default makeTopic({
     '`return()` gives back a value **straight away**, without running the rest of the body. It is handy for special cases at the start:',
     code('average <- function(x) {', '  if (length(x) == 0) return(NA)', '  sum(x) / length(x)', '}'),
     '`warning()` is the gentle version of `stop()`: it shows a message but carries on. Use it when the input is unusual but the function can still give a sensible answer.',
+    'The other side of `stop()` is catching an error so the rest of your code can carry on. `tryCatch()` runs some code, and if it fails, runs your plan B instead: `tryCatch(ride_cost(-5), error = function(e) NA)` gives `NA` instead of stopping. `conditionMessage(e)` inside the handler gives the error\'s message. Use it sparingly: a hidden error is still an error.',
   ],
   sandboxCode: 'ride_cost <- function(minutes) {\n  if (minutes < 0) {\n    stop("minutes can\'t be negative")\n  }\n  1 + 0.15 * minutes\n}\nride_cost(20)',
   sandboxSnippets: [

@@ -10,7 +10,7 @@ export default makeTopic({
     code(...DELIVERIES.trim().split('\n')),
     code('tab <- table(deliveries$rider, deliveries$area)', 'tab'),
     'Each cell is a count: Sam made 3 deliveries in the north and 1 in the south. Pick a cell with `tab["Sam", "north"]`, a row with `tab["Sam", ]`.',
-    '`addmargins(tab)` adds row and column totals, labelled `Sum`. For percentages, `prop.table()` needs to know what to divide by. `margin = 1` divides each **row** by its row total ("of Sam\'s deliveries, how many were north?"); `margin = 2` divides each **column** by its column total ("of the north deliveries, how many were Sam\'s?"):',
+    '`addmargins(tab)` adds row and column totals, labelled `Sum`. For percentages, `prop.table()` needs to know what to divide by. `margin = 1` divides each **row** by its row total ("of Sam\'s deliveries, what share were north?"); `margin = 2` divides each **column** by its column total ("of the north deliveries, what share were Sam\'s?"):',
     code('round(prop.table(tab, margin = 1) * 100)   # each row adds up to 100'),
     'Two-way tables are the basis of the chi-squared test in the Statistics quest, which asks whether two categories are related.',
   ],

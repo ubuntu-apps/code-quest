@@ -9,7 +9,7 @@ export default makeTopic({
     '| Function | Gives | For `c(4, 8, 6, 2)` |\n| --- | --- | --- |\n| `sum()` | the total | `20` |\n| `mean()` | the average | `5` |\n| `median()` | the middle value | `5` |\n| `min()`, `max()` | smallest, largest | `2`, `8` |\n| `range()` | smallest and largest together | `2 8` |\n| `length()` | how many values | `4` |',
     'The **median** is the middle value once the values are sorted; with an even number of values it is halfway between the two in the middle. It is less pulled about by one extreme value than the mean: for incomes or house prices, the median is often the better "typical" value.',
     code('orders <- c(12, 7, 15, 9, 11, 8, 120)', 'mean(orders)     # 26: dragged up by one huge order', 'median(orders)   # 11'),
-    '`cumsum()` gives a **running total**, one value per position: `cumsum(c(4, 8, 6))` is `4 12 18`. That\'s handy for "how far so far" questions.',
+    '`cumsum()` gives a **running total**, one value per position: `cumsum(c(4, 8, 6))` is `4 12 18`. That\'s handy for "how far so far" questions. Its partner `diff()` gives the **change** from each value to the next: `diff(c(4, 8, 6))` is `4 -2`, one value fewer than you started with.',
     'Summaries combine with everything else in this quest. The total of the busy days is `sum(steps[steps > 8000])`, and the average change since last week is `mean(this_week - last_week)`.',
     code('steps <- c(4200, 8100, 6500, 9900, 3000)', r`cat("Total:", sum(steps), "steps\n")`, r`cat("Average:", mean(steps), "a day\n")`),
   ],

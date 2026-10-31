@@ -6,7 +6,9 @@ export default makeTopic({
   id: 'filtering',
   title: 'Filtering rows',
   paragraphs: [
-    'Keeping only the rows you care about is called **filtering**. You already know how: put a condition in the rows part of the brackets. Every tool for conditions works, because each column is a vector:',
+    'Keeping only the rows you care about is called **filtering**. This stage uses the Riverside Bikes trips:',
+    code(...TRIPS.trim().split('\n')),
+    'You already know how: put a condition in the rows part of the brackets. Every tool for conditions works, because each column is a vector:',
     code('trips[trips$minutes > 30, ]                              # long trips', 'trips[trips$station == "Park" & trips$member, ]          # members from Park', 'trips[trips$station %in% c("Park", "River"), ]           # two stations', 'trips[!trips$member, ]                                   # non-members'),
     'Writing `trips$` again and again gets long. `subset()` does the same with the column names alone, and can pick columns too:',
     code('subset(trips, minutes > 30)', 'subset(trips, station == "Park" & member, select = c(id, minutes))'),

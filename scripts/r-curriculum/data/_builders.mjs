@@ -19,6 +19,9 @@ export const r = String.raw
 /** A code block for lesson text, one line per argument: code(r`cat("Hi\n")`, 'x <- 5'). */
 export const code = (...lines) => `\`\`\`\n${lines.join('\n')}\n\`\`\``
 
+/** A block of sample output for lesson text, one line per argument. It gets no "Try it" button. */
+export const output = (...lines) => `\`\`\`text\n${lines.join('\n')}\n\`\`\``
+
 /** An R string literal. */
 export const rstr = (text) => JSON.stringify(text)
 

@@ -1,5 +1,5 @@
 import { useContext, type FC, type ReactNode } from 'react'
-import { looksLikePython, looksLikeR, looksLikeSql } from './codeHighlight'
+import { canTryCode, codeToTry, type FenceBlock } from './tryCode'
 import { CodeLanguageContext } from './codeLanguageContext'
 import { HighlightedCode } from './components/HighlightedCode'
 
@@ -7,7 +7,8 @@ import { HighlightedCode } from './components/HighlightedCode'
  * Minimal markdown: paragraphs, fenced ``` code blocks, inline `code`, **bold**, and simple
  * pipe tables (a header row, a `| --- |` row, then the rows).
  * With `onTryCode`, Python, SQL and R code blocks get a "Try it" button that hands their code over
- * (sample output, folder layouts and shell commands don't get one).
+ * (sample output, folder layouts and shell commands don't get one, nor do fences marked
+ * ```text). In R lessons the button hands over the lesson's code up to that block (see tryCode.ts).
  */
 export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: (code: string) => void }> = ({
   text,
@@ -16,6 +17,7 @@ export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: 
 }) => {
   const language = useContext(CodeLanguageContext)
   const blocks = splitFences(text.trim())
+  const fences: FenceBlock[] = blocks.filter((b) => b.type === 'code')
   return (
     <div className={className}>
       {blocks.map((block, i) =>
@@ -24,14 +26,11 @@ export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: 
             <pre className="cq-md-pre">
               <HighlightedCode code={block.content} />
             </pre>
-            {onTryCode &&
-            ((language === 'python' && looksLikePython(block.content)) ||
-              (language === 'sql' && looksLikeSql(block.content)) ||
-              (language === 'r' && looksLikeR(block.content))) ? (
+            {onTryCode && canTryCode(language, block) ? (
               <button
                 type="button"
                 className="cq-btn cq-btn--sm cq-md-try"
-                onClick={() => onTryCode(block.content)}
+                onClick={() => onTryCode(codeToTry(language, fences, fences.indexOf(block)))}
                 aria-label="Try this code in the sandbox"
               >
                 Try it
@@ -51,16 +50,16 @@ export const SimpleMarkdown: FC<{ text: string; className?: string; onTryCode?: 
 /** One line of inline markdown (`code`, **bold**) without paragraph wrappers, e.g. for labels. */
 export const InlineMarkdown: FC<{ text: string }> = ({ text }) => <>{renderInline(text)}</>
 
-function splitFences(text: string): { type: 'text' | 'code'; content: string }[] {
-  const parts: { type: 'text' | 'code'; content: string }[] = []
-  const re = /```(?:\w*\n)?([\s\S]*?)```/g
+function splitFences(text: string): { type: 'text' | 'code'; content: string; lang?: string }[] {
+  const parts: { type: 'text' | 'code'; content: string; lang?: string }[] = []
+  const re = /```(?:(\w*)\n)?([\s\S]*?)```/g
   let last = 0
   let m: RegExpExecArray | null
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) {
       parts.push({ type: 'text', content: text.slice(last, m.index) })
     }
-    parts.push({ type: 'code', content: m[1]?.trimEnd() ?? '' })
+    parts.push({ type: 'code', content: m[2]?.trimEnd() ?? '', ...(m[1] ? { lang: m[1] } : {}) })
     last = m.index + m[0].length
   }
   if (last < text.length) {

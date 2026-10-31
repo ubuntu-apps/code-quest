@@ -13,6 +13,7 @@ export default makeTopic({
     code(...CSV.trim().split('\n')),
     'Always look at what you got with `str()` straight away. `read.csv()` guesses each column\'s type from its values: a column of numbers becomes numeric, but if even one value isn\'t a number (`"N/A"`, `"12 days"`, `"$3.40"`), the whole column comes in as text. Spotting that early saves a lot of confusion.',
     'Useful arguments: `na.strings = c("", "N/A")` tells R which texts mean "missing", and `strip.white = TRUE` removes stray spaces around values. Writing is the mirror image: `write.csv(df, "clean.csv", row.names = FALSE)`.',
+    'In many countries spreadsheets save "CSV" with `;` between the values and `,` as the decimal point (`2,50`). `read.csv2()` reads that style; it is `read.csv()` with those two settings changed.',
     'The rest of this quest is about the cleaning that usually comes next.',
   ],
   sandboxCode: CSV + 'loans\nstr(loans)',

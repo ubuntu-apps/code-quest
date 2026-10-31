@@ -71,7 +71,7 @@ export default makeTopic({
     task('expert', 'Line up any columns', {
       prompt: 'Write `stack_all(pieces)` that stacks a list of data frames even when some have columns the others lack, filling the gaps with NA. Then make `abc` the three shops stacked with it.',
       starter: SHOPS,
-      hint: 'Find all the column names with `unique(unlist(lapply(pieces, names)))`. For each piece, add the missing ones: `d[setdiff(cols, names(d))] <- NA`. Then `do.call(rbind, …)`.',
+      hint: 'Find all the column names with `unique(unlist(lapply(pieces, names)))`: `unlist()` joins the list of name vectors into one vector. For each piece, add the missing ones: `d[setdiff(cols, names(d))] <- NA`. Then `do.call(rbind, …)`.',
       solution: SHOPS + 'stack_all <- function(pieces) {\n  cols <- unique(unlist(lapply(pieces, names)))\n  filled <- lapply(pieces, function(d) {\n    d[setdiff(cols, names(d))] <- NA\n    d[cols]\n  })\n  do.call(rbind, filled)\n}\nabc <- stack_all(list(shop_a, shop_b, shop_c))',
       tests: [['abc has 5 rows with price NA except the last', 'is.data.frame(abc) && nrow(abc) == 5 && identical(abc$price, c(NA, NA, NA, NA, 8.5))'], ['abc$item is mug, tote, mug, poster, mug', 'identical(abc$item, c("mug", "tote", "mug", "poster", "mug"))'], ['stack_all is a function', 'is.function(stack_all)']],
     }),

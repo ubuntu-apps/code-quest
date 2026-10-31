@@ -8,7 +8,7 @@ export default makeTopic({
   id: 'sets_and_match',
   title: 'Sets and match()',
   paragraphs: [
-    'Before and after combining tables, you often ask questions about **sets** of values: who is in both clubs, which codes are new, which orders aren\'t on the menu. R has a function for each:',
+    'Before combining tables, and after, you often ask questions about **sets** of values: who is in both clubs, which codes are new, which orders aren\'t on the menu. R has a function for each:',
     code(...CLUBS.trim().split('\n'), 'union(chess, choir)        # in either: Ana Ben Cy Dee Eli', 'intersect(chess, choir)    # in both: Ana Cy', 'setdiff(chess, choir)      # in chess but not choir: Ben'),
     'Each gives every value once, in the order it first appears. `setdiff()` is one-sided: `setdiff(choir, chess)` is Dee and Eli.',
     '`match(x, table)` gives, for each value of `x`, its **position** in `table`, or NA if it isn\'t there. That makes it a quick lookup: use the positions to pick from another column of the same table.',

@@ -6,6 +6,8 @@ export default makeTopic({
   id: 'sorting_rows',
   title: 'Sorting rows',
   paragraphs: [
+    'This stage sorts the Corner Café orders:',
+    code(...ORDERS.trim().split('\n')),
     'Remember `order()` from the Vectors quest? It gives the positions in sorted order, and that is exactly what goes in the rows part of the brackets to sort a whole table by one column:',
     code('orders[order(orders$price), ]                       # cheapest first', 'orders[order(orders$price, decreasing = TRUE), ]    # dearest first'),
     'Every row moves as a whole, so the drink, day and price of an order stay together. (Using `sort()` on a column would only sort that column.)',

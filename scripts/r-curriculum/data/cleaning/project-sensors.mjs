@@ -1,5 +1,5 @@
 // Cleaning data, hard side quest: Sensor readings.
-import { code, makeProject, mc, prints, qShort, snippet, task } from '../_builders.mjs'
+import { code, makeProject, mc, output, prints, qShort, snippet, task } from '../_builders.mjs'
 
 const RAW = 'raw <- "time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1"\n'
 const READ = 'readings <- read.csv(text = raw, na.strings = c("", "error", "-999"))\n'
@@ -13,7 +13,7 @@ export default makeProject('hard', {
     'Two temperature sensors in the school greenhouse log a reading three times a day. When one fails it writes `-999` or `error`, or nothing at all, and sensor A once logged 61 °C on a cool autumn afternoon.',
     code(...RAW.trim().split('\n')),
     'Turn every failure into a real NA, remove the impossible value, and build a daily summary. The last challenge shows:',
-    code('2026-10-28: 4 readings, mean 21.5, max 23.5', '2026-10-29: 4 readings, mean 19.6, max 22.1'),
+    output('2026-10-28: 4 readings, mean 21.5, max 23.5', '2026-10-29: 4 readings, mean 19.6, max 22.1'),
   ],
   sandboxCode: RAW + 'readings <- read.csv(text = raw)\nstr(readings)',
   sandboxSnippets: [snippet('Fix while reading', RAW + READ + 'summary(readings$temp)')],
@@ -54,7 +54,7 @@ export default makeProject('hard', {
       tests: [['daily is 21.5, 19.6', 'isTRUE(all.equal(as.vector(daily), c(21.5, 19.6)))']],
     }),
     task('expert', 'The daily report', {
-      prompt: 'Show one line per day with the number of known readings, the mean (1 decimal place) and the maximum:\n\n```\n2026-10-28: 4 readings, mean 21.5, max 23.5\n2026-10-29: 4 readings, mean 19.6, max 22.1\n```',
+      prompt: 'Show one line per day with the number of known readings, the mean (1 decimal place) and the maximum:\n\n```text\n2026-10-28: 4 readings, mean 21.5, max 23.5\n2026-10-29: 4 readings, mean 19.6, max 22.1\n```',
       starter: RAW + READ + DAY + FAULT,
       hint: 'Loop over `unique(readings$day)` (use `as.character()` so the loop keeps the text), take that day\'s known temperatures, and `cat()` a line.',
       solution: RAW + READ + DAY + FAULT + 'for (d in as.character(unique(readings$day))) {\n  t <- readings$temp[readings$day == as.Date(d) & !is.na(readings$temp)]\n  cat(d, ": ", length(t), " readings, mean ", round(mean(t), 1), ", max ", max(t), "\\n", sep = "")\n}',

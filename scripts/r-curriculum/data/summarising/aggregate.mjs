@@ -12,7 +12,7 @@ export default makeTopic({
     'Read `minutes ~ rider` as "minutes by rider". The result has one row per rider and two columns, `rider` and `minutes`.',
     'Group by two columns with `+`, and get one row for every combination that appears: `aggregate(minutes ~ rider + area, data = deliveries, FUN = mean)` gives each rider\'s mean in each area.',
     'Because the result is a data frame, you can sort it like any other: `res[order(res$minutes), ]`. Give the summary column a clearer name with `names(res)[2] <- "avg_minutes"`.',
-    'Formulas with `~` appear all over R\'s statistics, including the regression models in the last quest, so it is worth getting used to reading them.',
+    'Formulas with `~` appear all over R\'s statistics, including the regression models in the Statistics quest, so it is worth getting used to reading them.',
   ],
   sandboxCode: DELIVERIES + 'aggregate(minutes ~ rider, data = deliveries, FUN = mean)\naggregate(minutes ~ rider + area, data = deliveries, FUN = mean)',
   sandboxSnippets: [snippet('Sorted', DELIVERIES + 'res <- aggregate(minutes ~ rider, data = deliveries, FUN = median)\nres[order(res$minutes), ]')],
