@@ -13,6 +13,7 @@ export default makeTopic({
     'Year 7 chose hot lunch 30 times out of 45, Year 8 only 20 out of 55. Is lunch choice linked to year, or could a split like this happen by chance? The **chi-squared test of independence** compares the counts with what you would **expect** if year made no difference:',
     code('chisq.test(tab)             # p = 0.005', 'chisq.test(tab)$expected    # the counts if there were no link'),
     'The test adds up how far each observed count is from its expected count. Here p = 0.005, so the data are strong evidence that lunch choice differs between the years. (For a 2 × 2 table R applies a small correction by default, which makes the test a little more careful.)',
+    'When you only have the counts, not the rows, build the table yourself: `matrix(c(30, 20, 15, 35), nrow = 2)` makes a 2 × 2 grid, filled **column by column**, so its first column is 30 and 20. `chisq.test()` accepts it just like a table. (The Reshaping quest covers matrices properly.)',
     'A **goodness-of-fit** test checks counts in one set of categories against expected shares. Are these 120 dice rolls fair? `chisq.test(c(15, 22, 18, 25, 17, 23))` tests against equal shares; add `p = c(...)` for other expected shares.',
     'The test needs reasonably large counts. If expected counts are below about 5, R warns that the approximation may be incorrect.',
   ],

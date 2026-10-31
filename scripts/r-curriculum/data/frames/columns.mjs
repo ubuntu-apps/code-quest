@@ -6,7 +6,9 @@ export default makeTopic({
   id: 'columns',
   title: 'Columns with $',
   paragraphs: [
-    'A data frame is a set of named columns, and `$` gets one out by name. What you get is an ordinary vector, so everything from the Vectors quest works on it:',
+    'A data frame is a set of named columns, and `$` gets one out by name. This stage uses the Riverside Bikes trips again:',
+    code(...TRIPS.trim().split('\n')),
+    'What you get with `$` is an ordinary vector, so everything from the Vectors quest works on it:',
     code('trips$minutes                # 12 47 30 8 55 15 22 35', 'mean(trips$minutes)          # 28', 'sum(trips$member)            # 5 members', 'trips$station[trips$minutes > 40]'),
     '`trips[["minutes"]]` does the same as `trips$minutes`. It is handy when the column name is in a variable: `col <- "km"; trips[[col]]`.',
     '**Making a new column** works the same way: assign to a name that doesn\'t exist yet. Because columns are vectors, a calculation on one column gives a value for every row:',

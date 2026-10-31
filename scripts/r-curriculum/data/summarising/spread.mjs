@@ -13,6 +13,7 @@ export default makeTopic({
     '`quantile()` without a second argument gives the **quartiles**: the values a quarter, half and three quarters of the way through the sorted data. The 50% quartile is the median. The IQR is the 75% quartile minus the 25% one, so it covers the middle half of the data.',
     'Like the median, the IQR isn\'t pulled about by one extreme value, while the standard deviation is. Here the 74-minute delivery makes the sd 14.6, though the middle half of deliveries are within 10 minutes of each other.',
     'Quantiles answer practical questions: "90% of deliveries arrive within how many minutes?" is `quantile(minutes, 0.9)`. All of these take `na.rm = TRUE`.',
+    'One tip for checking results: two decimals worked out in different ways, such as `sqrt(var(x))` and `sd(x)`, can differ in the last of their many digits, so `==` may say FALSE. Compare them with `isTRUE(all.equal(a, b))`, which allows for that tiny rounding difference.',
   ],
   sandboxCode: DELIVERIES + 'range(deliveries$minutes)\nsd(deliveries$minutes)\nquantile(deliveries$minutes)\nIQR(deliveries$minutes)\nquantile(deliveries$minutes, 0.9)',
   sandboxSnippets: [snippet('Same mean, different spread', 'steady <- c(28, 30, 31, 29, 32)\nwild <- c(10, 60, 25, 15, 40)\nc(mean(steady), mean(wild))\nc(sd(steady), sd(wild))')],

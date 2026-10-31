@@ -1206,6 +1206,407 @@
       }
     },
     {
+      "id": "sets_and_match",
+      "title": "Sets and match()",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "look_up_prices",
+          "label": "Look up prices",
+          "code": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\npos <- match(orders, menu$drink)\npos\nmenu$price[pos]"
+        }
+      ],
+      "intro": {
+        "title": "Sets and match()",
+        "bodyMarkdown": "Before combining tables, and after, you often ask questions about **sets** of values: who is in both clubs, which codes are new, which orders aren't on the menu. R has a function for each:\n\n```\nchess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nunion(chess, choir)        # in either: Ana Ben Cy Dee Eli\nintersect(chess, choir)    # in both: Ana Cy\nsetdiff(chess, choir)      # in chess but not choir: Ben\n```\n\nEach gives every value once, in the order it first appears. `setdiff()` is one-sided: `setdiff(choir, chess)` is Dee and Eli.\n\n`match(x, table)` gives, for each value of `x`, its **position** in `table`, or NA if it isn't there. That makes it a quick lookup: use the positions to pick from another column of the same table.\n\n```\nmenu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nmatch(orders, menu$drink)                  # 2 1 1 NA 4\nmenu$price[match(orders, menu$drink)]      # the price of each order\n```\n\nThis is what `merge()` does under the hood, but `match()` keeps the orders in their own order, one result per order, with NA for anything unknown, which makes the gaps easy to find.",
+        "sandboxCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nunion(chess, choir)\nintersect(chess, choir)\nsetdiff(chess, choir)",
+        "readMore": {
+          "label": "R documentation: set operations",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/sets.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "sets_and_match-everyone",
+          "title": "Easy: Everyone",
+          "promptMarkdown": "Make `members` everyone in chess or choir, each once.",
+          "starterCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\n",
+          "hint": "`union(chess, choir)`",
+          "solution": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nmembers <- union(chess, choir)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "members is Ana, Ben, Cy, Dee, Eli",
+                "assertion": "identical(members, c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_and_match-in-both",
+          "title": "Easy: In both",
+          "promptMarkdown": "Make `both` the pupils in both clubs.",
+          "starterCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\n",
+          "hint": "`intersect(chess, choir)`",
+          "solution": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nboth <- intersect(chess, choir)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "both is Ana, Cy",
+                "assertion": "identical(both, c(\"Ana\", \"Cy\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_and_match-choir-only",
+          "title": "Easy: Choir only",
+          "promptMarkdown": "Make `choir_only` the pupils in choir but not chess.",
+          "starterCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\n",
+          "hint": "Order matters: `setdiff(choir, chess)`.",
+          "solution": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nchoir_only <- setdiff(choir, chess)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "choir_only is Dee, Eli",
+                "assertion": "identical(choir_only, c(\"Dee\", \"Eli\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_and_match-where-on-the-menu",
+          "title": "Medium: Where on the menu",
+          "promptMarkdown": "Make `pos` the position of each order on the menu.",
+          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
+          "hint": "`match(orders, menu$drink)`",
+          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\npos <- match(orders, menu$drink)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "pos is 2, 1, 1, NA, 4",
+                "assertion": "identical(pos, c(2L, 1L, 1L, NA, 4L))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_and_match-price-of-each-order",
+          "title": "Medium: Price of each order",
+          "promptMarkdown": "Make `prices` the price of each order, NA for anything not on the menu.",
+          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
+          "hint": "`menu$price[match(orders, menu$drink)]`",
+          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nprices <- menu$price[match(orders, menu$drink)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "prices is 2.5, 3.4, 3.4, NA, 3.8",
+                "assertion": "isTRUE(all.equal(prices, c(2.5, 3.4, 3.4, NA, 3.8)))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses match()",
+                "assertion": "grepl(\"match(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_and_match-not-on-the-menu",
+          "title": "Medium: Not on the menu",
+          "promptMarkdown": "Make `missing_drinks` the orders that aren't on the menu, each once.",
+          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
+          "hint": "`setdiff(orders, menu$drink)`",
+          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nmissing_drinks <- setdiff(orders, menu$drink)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "missing_drinks is \"flat white\"",
+                "assertion": "identical(missing_drinks, c(\"flat white\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_and_match-the-bill-so-far",
+          "title": "Hard: The bill so far",
+          "promptMarkdown": "Make `known_total` the total of the orders that have a price, and `n_unknown` the number of orders without one.",
+          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
+          "hint": "Look up the prices with `match()`, then `sum(prices, na.rm = TRUE)` and `sum(is.na(prices))`.",
+          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nprices <- menu$price[match(orders, menu$drink)]\nknown_total <- sum(prices, na.rm = TRUE)\nn_unknown <- sum(is.na(prices))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "known_total is 13.1",
+                "assertion": "is.numeric(known_total) && isTRUE(all.equal(known_total, 13.1))"
+              },
+              {
+                "id": "t2",
+                "label": "n_unknown is 1",
+                "assertion": "is.numeric(n_unknown) && isTRUE(all.equal(n_unknown, 1))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "sets_and_match-signed-up-twice",
+          "title": "Expert: Signed up twice?",
+          "promptMarkdown": "Two sign-up sheets were typed by different people. Make `on_both` the names that appear on both sheets, after trimming and making them small letters.",
+          "starterCode": "sheet1 <- c(\"Ana \", \"ben\", \"Cy\", \"DEE\")\nsheet2 <- c(\"dee\", \" Eli\", \"ANA\", \"Fay\")\n",
+          "hint": "Clean each sheet with `tolower(trimws())` first, then `intersect()`.",
+          "solution": "sheet1 <- c(\"Ana \", \"ben\", \"Cy\", \"DEE\")\nsheet2 <- c(\"dee\", \" Eli\", \"ANA\", \"Fay\")\non_both <- intersect(tolower(trimws(sheet1)), tolower(trimws(sheet2)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "on_both is ana, dee",
+                "assertion": "identical(on_both, c(\"ana\", \"dee\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "sets_and_match-q-g42qhw",
+            "type": "mcq",
+            "prompt": "What does `union(c(1, 2, 2), c(2, 3))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 1 2 3`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 1 2 2 2 3`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 2`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 1 3`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Everything in either, each once."
+          },
+          {
+            "id": "sets_and_match-q-1ira1xo",
+            "type": "mcq",
+            "prompt": "What does `intersect(c(\"a\", \"b\", \"c\"), c(\"c\", \"a\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"b\"`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"c\" \"a\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"a\" \"b\" \"c\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"a\" \"c\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Values in both, in the order of the first."
+          },
+          {
+            "id": "sets_and_match-q-3hkjnh",
+            "type": "mcq",
+            "prompt": "What does `setdiff(c(1, 2, 3), c(2, 5))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 1 3 5`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 2`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 1 3`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 5`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "In the first but not the second. The 5 isn't counted: setdiff is one-sided."
+          },
+          {
+            "id": "sets_and_match-q-1h0eo8s",
+            "type": "mcq",
+            "prompt": "What does `match(c(\"b\", \"z\"), c(\"a\", \"b\", \"c\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1]  2 NA`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"b\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] TRUE FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 2 0`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Positions in the table, NA when missing."
+          },
+          {
+            "id": "sets_and_match-q-17czcb6",
+            "type": "mcq",
+            "prompt": "How is `match()` different from `%in%`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They are the same"
+              },
+              {
+                "id": "b",
+                "label": "`match()` only works on numbers"
+              },
+              {
+                "id": "c",
+                "label": "`%in%` gives positions"
+              },
+              {
+                "id": "d",
+                "label": "`%in%` says whether each value is there; `match()` says where"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`x %in% t` is the same as `!is.na(match(x, t))`."
+          },
+          {
+            "id": "sets_and_match-q-2560y1",
+            "type": "mcq",
+            "prompt": "Why use `match()` for a lookup instead of `merge()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is the only way"
+              },
+              {
+                "id": "b",
+                "label": "It sorts the result"
+              },
+              {
+                "id": "c",
+                "label": "It keeps one result per value, in the original order, with NA for unknowns"
+              },
+              {
+                "id": "d",
+                "label": "It drops unknown values"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`merge()` sorts by the key and, by default, drops unmatched rows."
+          },
+          {
+            "id": "sets_and_match-q-61oofo",
+            "type": "mcq",
+            "prompt": "What does `c(10, 20, 30)[match(c(\"y\", \"x\"), c(\"x\", \"y\", \"z\"))]` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 2 1`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 10 20`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 20`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 20 10`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "\"y\" is at position 2 and \"x\" at 1."
+          },
+          {
+            "id": "sets_and_match-q-1kafeap",
+            "type": "mcq",
+            "prompt": "Why clean text before `intersect()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is faster"
+              },
+              {
+                "id": "b",
+                "label": "\"Ana \" and \"ANA\" are different texts until they are tidied"
+              },
+              {
+                "id": "c",
+                "label": "It isn't needed"
+              },
+              {
+                "id": "d",
+                "label": "intersect() needs small letters"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Set functions compare exact values."
+          },
+          {
+            "id": "sets_and_match-q-1yb5o5r",
+            "type": "shortText",
+            "prompt": "Which function gives the values in the first vector that aren't in the second?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "setdiff"
+            },
+            "explanation": "`setdiff(a, b)` is one-sided; swap them for the other way."
+          }
+        ]
+      }
+    },
+    {
       "id": "stacking",
       "title": "Stacking tables",
       "kind": "topic",
@@ -1380,7 +1781,7 @@
           "title": "Expert: Line up any columns",
           "promptMarkdown": "Write `stack_all(pieces)` that stacks a list of data frames even when some have columns the others lack, filling the gaps with NA. Then make `abc` the three shops stacked with it.",
           "starterCode": "shop_a <- data.frame(item = c(\"mug\", \"tote\"), sold = c(5, 3))\nshop_b <- data.frame(sold = c(4, 6), item = c(\"mug\", \"poster\"))\nshop_c <- data.frame(item = \"mug\", sold = 2, price = 8.5)\n",
-          "hint": "Find all the column names with `unique(unlist(lapply(pieces, names)))`. For each piece, add the missing ones: `d[setdiff(cols, names(d))] <- NA`. Then `do.call(rbind, …)`.",
+          "hint": "Find all the column names with `unique(unlist(lapply(pieces, names)))`: `unlist()` joins the list of name vectors into one vector. For each piece, add the missing ones: `d[setdiff(cols, names(d))] <- NA`. Then `do.call(rbind, …)`.",
           "solution": "shop_a <- data.frame(item = c(\"mug\", \"tote\"), sold = c(5, 3))\nshop_b <- data.frame(sold = c(4, 6), item = c(\"mug\", \"poster\"))\nshop_c <- data.frame(item = \"mug\", sold = 2, price = 8.5)\nstack_all <- function(pieces) {\n  cols <- unique(unlist(lapply(pieces, names)))\n  filled <- lapply(pieces, function(d) {\n    d[setdiff(cols, names(d))] <- NA\n    d[cols]\n  })\n  do.call(rbind, filled)\n}\nabc <- stack_all(list(shop_a, shop_b, shop_c))",
           "validation": {
             "mode": "r_tests",
@@ -2429,407 +2830,6 @@
               "expected": "reshape"
             },
             "explanation": "`reshape(…, direction = \"long\")` or `direction = \"wide\"`."
-          }
-        ]
-      }
-    },
-    {
-      "id": "sets_and_match",
-      "title": "Sets and match()",
-      "kind": "topic",
-      "sandboxSnippets": [
-        {
-          "id": "look_up_prices",
-          "label": "Look up prices",
-          "code": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\npos <- match(orders, menu$drink)\npos\nmenu$price[pos]"
-        }
-      ],
-      "intro": {
-        "title": "Sets and match()",
-        "bodyMarkdown": "Before and after combining tables, you often ask questions about **sets** of values: who is in both clubs, which codes are new, which orders aren't on the menu. R has a function for each:\n\n```\nchess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nunion(chess, choir)        # in either: Ana Ben Cy Dee Eli\nintersect(chess, choir)    # in both: Ana Cy\nsetdiff(chess, choir)      # in chess but not choir: Ben\n```\n\nEach gives every value once, in the order it first appears. `setdiff()` is one-sided: `setdiff(choir, chess)` is Dee and Eli.\n\n`match(x, table)` gives, for each value of `x`, its **position** in `table`, or NA if it isn't there. That makes it a quick lookup: use the positions to pick from another column of the same table.\n\n```\nmenu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nmatch(orders, menu$drink)                  # 2 1 1 NA 4\nmenu$price[match(orders, menu$drink)]      # the price of each order\n```\n\nThis is what `merge()` does under the hood, but `match()` keeps the orders in their own order, one result per order, with NA for anything unknown, which makes the gaps easy to find.",
-        "sandboxCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nunion(chess, choir)\nintersect(chess, choir)\nsetdiff(chess, choir)",
-        "readMore": {
-          "label": "R documentation: set operations",
-          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/sets.html",
-          "source": "R documentation"
-        }
-      },
-      "challenges": [
-        {
-          "id": "sets_and_match-everyone",
-          "title": "Easy: Everyone",
-          "promptMarkdown": "Make `members` everyone in chess or choir, each once.",
-          "starterCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\n",
-          "hint": "`union(chess, choir)`",
-          "solution": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nmembers <- union(chess, choir)",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "members is Ana, Ben, Cy, Dee, Eli",
-                "assertion": "identical(members, c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\"))"
-              }
-            ]
-          }
-        },
-        {
-          "id": "sets_and_match-in-both",
-          "title": "Easy: In both",
-          "promptMarkdown": "Make `both` the pupils in both clubs.",
-          "starterCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\n",
-          "hint": "`intersect(chess, choir)`",
-          "solution": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nboth <- intersect(chess, choir)",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "both is Ana, Cy",
-                "assertion": "identical(both, c(\"Ana\", \"Cy\"))"
-              }
-            ]
-          }
-        },
-        {
-          "id": "sets_and_match-choir-only",
-          "title": "Easy: Choir only",
-          "promptMarkdown": "Make `choir_only` the pupils in choir but not chess.",
-          "starterCode": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\n",
-          "hint": "Order matters: `setdiff(choir, chess)`.",
-          "solution": "chess <- c(\"Ana\", \"Ben\", \"Cy\")\nchoir <- c(\"Cy\", \"Dee\", \"Ana\", \"Eli\")\nchoir_only <- setdiff(choir, chess)",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "choir_only is Dee, Eli",
-                "assertion": "identical(choir_only, c(\"Dee\", \"Eli\"))"
-              }
-            ]
-          }
-        },
-        {
-          "id": "sets_and_match-where-on-the-menu",
-          "title": "Medium: Where on the menu",
-          "promptMarkdown": "Make `pos` the position of each order on the menu.",
-          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
-          "hint": "`match(orders, menu$drink)`",
-          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\npos <- match(orders, menu$drink)",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "pos is 2, 1, 1, NA, 4",
-                "assertion": "identical(pos, c(2L, 1L, 1L, NA, 4L))"
-              }
-            ]
-          }
-        },
-        {
-          "id": "sets_and_match-price-of-each-order",
-          "title": "Medium: Price of each order",
-          "promptMarkdown": "Make `prices` the price of each order, NA for anything not on the menu.",
-          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
-          "hint": "`menu$price[match(orders, menu$drink)]`",
-          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nprices <- menu$price[match(orders, menu$drink)]",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "prices is 2.5, 3.4, 3.4, NA, 3.8",
-                "assertion": "isTRUE(all.equal(prices, c(2.5, 3.4, 3.4, NA, 3.8)))"
-              },
-              {
-                "id": "t2",
-                "label": "Uses match()",
-                "assertion": "grepl(\"match(\", ._cq_code, fixed = TRUE)"
-              }
-            ]
-          }
-        },
-        {
-          "id": "sets_and_match-not-on-the-menu",
-          "title": "Medium: Not on the menu",
-          "promptMarkdown": "Make `missing_drinks` the orders that aren't on the menu, each once.",
-          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
-          "hint": "`setdiff(orders, menu$drink)`",
-          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nmissing_drinks <- setdiff(orders, menu$drink)",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "missing_drinks is \"flat white\"",
-                "assertion": "identical(missing_drinks, c(\"flat white\"))"
-              }
-            ]
-          }
-        },
-        {
-          "id": "sets_and_match-the-bill-so-far",
-          "title": "Hard: The bill so far",
-          "promptMarkdown": "Make `known_total` the total of the orders that have a price, and `n_unknown` the number of orders without one.",
-          "starterCode": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\n",
-          "hint": "Look up the prices with `match()`, then `sum(prices, na.rm = TRUE)` and `sum(is.na(prices))`.",
-          "solution": "menu <- data.frame(drink = c(\"latte\", \"tea\", \"mocha\", \"chai\"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c(\"tea\", \"latte\", \"latte\", \"flat white\", \"chai\")\nprices <- menu$price[match(orders, menu$drink)]\nknown_total <- sum(prices, na.rm = TRUE)\nn_unknown <- sum(is.na(prices))",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "known_total is 13.1",
-                "assertion": "is.numeric(known_total) && isTRUE(all.equal(known_total, 13.1))"
-              },
-              {
-                "id": "t2",
-                "label": "n_unknown is 1",
-                "assertion": "is.numeric(n_unknown) && isTRUE(all.equal(n_unknown, 1))"
-              }
-            ]
-          }
-        },
-        {
-          "id": "sets_and_match-signed-up-twice",
-          "title": "Expert: Signed up twice?",
-          "promptMarkdown": "Two sign-up sheets were typed by different people. Make `on_both` the names that appear on both sheets, after trimming and making them small letters.",
-          "starterCode": "sheet1 <- c(\"Ana \", \"ben\", \"Cy\", \"DEE\")\nsheet2 <- c(\"dee\", \" Eli\", \"ANA\", \"Fay\")\n",
-          "hint": "Clean each sheet with `tolower(trimws())` first, then `intersect()`.",
-          "solution": "sheet1 <- c(\"Ana \", \"ben\", \"Cy\", \"DEE\")\nsheet2 <- c(\"dee\", \" Eli\", \"ANA\", \"Fay\")\non_both <- intersect(tolower(trimws(sheet1)), tolower(trimws(sheet2)))",
-          "validation": {
-            "mode": "r_tests",
-            "setupCode": "",
-            "tests": [
-              {
-                "id": "t1",
-                "label": "on_both is ana, dee",
-                "assertion": "identical(on_both, c(\"ana\", \"dee\"))"
-              }
-            ]
-          }
-        }
-      ],
-      "test": {
-        "passingScorePercent": 70,
-        "questions": [
-          {
-            "id": "sets_and_match-q-g42qhw",
-            "type": "mcq",
-            "prompt": "What does `union(c(1, 2, 2), c(2, 3))` give?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`[1] 1 2 3`"
-              },
-              {
-                "id": "b",
-                "label": "`[1] 1 2 2 2 3`"
-              },
-              {
-                "id": "c",
-                "label": "`[1] 2`"
-              },
-              {
-                "id": "d",
-                "label": "`[1] 1 3`"
-              }
-            ],
-            "correctChoiceId": "a",
-            "explanation": "Everything in either, each once."
-          },
-          {
-            "id": "sets_and_match-q-1ira1xo",
-            "type": "mcq",
-            "prompt": "What does `intersect(c(\"a\", \"b\", \"c\"), c(\"c\", \"a\"))` give?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`[1] \"b\"`"
-              },
-              {
-                "id": "b",
-                "label": "`[1] \"c\" \"a\"`"
-              },
-              {
-                "id": "c",
-                "label": "`[1] \"a\" \"b\" \"c\"`"
-              },
-              {
-                "id": "d",
-                "label": "`[1] \"a\" \"c\"`"
-              }
-            ],
-            "correctChoiceId": "d",
-            "explanation": "Values in both, in the order of the first."
-          },
-          {
-            "id": "sets_and_match-q-3hkjnh",
-            "type": "mcq",
-            "prompt": "What does `setdiff(c(1, 2, 3), c(2, 5))` give?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`[1] 1 3 5`"
-              },
-              {
-                "id": "b",
-                "label": "`[1] 2`"
-              },
-              {
-                "id": "c",
-                "label": "`[1] 1 3`"
-              },
-              {
-                "id": "d",
-                "label": "`[1] 5`"
-              }
-            ],
-            "correctChoiceId": "c",
-            "explanation": "In the first but not the second. The 5 isn't counted: setdiff is one-sided."
-          },
-          {
-            "id": "sets_and_match-q-1h0eo8s",
-            "type": "mcq",
-            "prompt": "What does `match(c(\"b\", \"z\"), c(\"a\", \"b\", \"c\"))` give?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`[1]  2 NA`"
-              },
-              {
-                "id": "b",
-                "label": "`[1] \"b\"`"
-              },
-              {
-                "id": "c",
-                "label": "`[1] TRUE FALSE`"
-              },
-              {
-                "id": "d",
-                "label": "`[1] 2 0`"
-              }
-            ],
-            "correctChoiceId": "a",
-            "explanation": "Positions in the table, NA when missing."
-          },
-          {
-            "id": "sets_and_match-q-17czcb6",
-            "type": "mcq",
-            "prompt": "How is `match()` different from `%in%`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "They are the same"
-              },
-              {
-                "id": "b",
-                "label": "`match()` only works on numbers"
-              },
-              {
-                "id": "c",
-                "label": "`%in%` gives positions"
-              },
-              {
-                "id": "d",
-                "label": "`%in%` says whether each value is there; `match()` says where"
-              }
-            ],
-            "correctChoiceId": "d",
-            "explanation": "`x %in% t` is the same as `!is.na(match(x, t))`."
-          },
-          {
-            "id": "sets_and_match-q-2560y1",
-            "type": "mcq",
-            "prompt": "Why use `match()` for a lookup instead of `merge()`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "It is the only way"
-              },
-              {
-                "id": "b",
-                "label": "It sorts the result"
-              },
-              {
-                "id": "c",
-                "label": "It keeps one result per value, in the original order, with NA for unknowns"
-              },
-              {
-                "id": "d",
-                "label": "It drops unknown values"
-              }
-            ],
-            "correctChoiceId": "c",
-            "explanation": "`merge()` sorts by the key and, by default, drops unmatched rows."
-          },
-          {
-            "id": "sets_and_match-q-61oofo",
-            "type": "mcq",
-            "prompt": "What does `c(10, 20, 30)[match(c(\"y\", \"x\"), c(\"x\", \"y\", \"z\"))]` give?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "`[1] 2 1`"
-              },
-              {
-                "id": "b",
-                "label": "`[1] 10 20`"
-              },
-              {
-                "id": "c",
-                "label": "`[1] 20`"
-              },
-              {
-                "id": "d",
-                "label": "`[1] 20 10`"
-              }
-            ],
-            "correctChoiceId": "d",
-            "explanation": "\"y\" is at position 2 and \"x\" at 1."
-          },
-          {
-            "id": "sets_and_match-q-1kafeap",
-            "type": "mcq",
-            "prompt": "Why clean text before `intersect()`?",
-            "choices": [
-              {
-                "id": "a",
-                "label": "It is faster"
-              },
-              {
-                "id": "b",
-                "label": "\"Ana \" and \"ANA\" are different texts until they are tidied"
-              },
-              {
-                "id": "c",
-                "label": "It isn't needed"
-              },
-              {
-                "id": "d",
-                "label": "intersect() needs small letters"
-              }
-            ],
-            "correctChoiceId": "b",
-            "explanation": "Set functions compare exact values."
-          },
-          {
-            "id": "sets_and_match-q-1yb5o5r",
-            "type": "shortText",
-            "prompt": "Which function gives the values in the first vector that aren't in the second?",
-            "validation": {
-              "mode": "equalsNormalized",
-              "expected": "setdiff"
-            },
-            "explanation": "`setdiff(a, b)` is one-sided; swap them for the other way."
           }
         ]
       }

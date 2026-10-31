@@ -13,6 +13,7 @@ export default makeTopic({
     '| Code | Gives | For 2026-10-30 |\n| --- | --- | --- |\n| `%Y` | year | `2026` |\n| `%m` | month number | `10` |\n| `%d` | day of the month | `30` |\n| `%B` | month name | `October` |\n| `%A` | weekday name | `Friday` |',
     code('format(as.Date("2026-10-30"), "%d %B %Y")   # "30 October 2026"', 'weekdays(as.Date("2026-10-30"))              # "Friday"'),
     'Dates written another way can be read with a `format` too: `as.Date("30/10/2026", format = "%d/%m/%Y")`. And `seq()` makes date sequences: `seq(as.Date("2026-10-01"), by = "week", length.out = 4)` gives four Thursdays a week apart.',
+    '`Sys.Date()` gives today\'s date, so `Sys.Date() - borrowed` is how long ago a loan started. For other units, `difftime(returned, borrowed, units = "weeks")` gives the gap in weeks.',
   ],
   sandboxCode: 'borrowed <- as.Date("2026-10-02")\nreturned <- as.Date("2026-10-23")\nreturned - borrowed\nas.numeric(returned - borrowed)\nborrowed + 14\nformat(returned, "%d %B %Y")\nweekdays(returned)',
   sandboxSnippets: [

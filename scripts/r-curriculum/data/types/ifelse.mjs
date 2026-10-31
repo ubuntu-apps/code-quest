@@ -12,7 +12,7 @@ export default makeTopic({
     'For three or more groups, put one `ifelse()` inside another. R checks the first condition; where it is FALSE, it moves on to the inner `ifelse()`:',
     code('ifelse(scores >= 70, "high", ifelse(scores >= 50, "middle", "low"))'),
     'Where the condition is `NA`, the answer is `NA` too, so missing values stay missing. A common use is filling in gaps: `ifelse(is.na(x), 0, x)` replaces each NA with 0 and keeps the other values.',
-    'For many groups based on number ranges, `cut()`, two stages from now, is tidier than lots of nested `ifelse()`s.',
+    'For many groups based on number ranges, `cut()`, later in this quest, is tidier than lots of nested `ifelse()`s.',
   ],
   sandboxCode: 'scores <- c(71, 44, 88, 50, 39)\nifelse(scores >= 50, "pass", "fail")\nifelse(scores >= 70, "high", ifelse(scores >= 50, "middle", "low"))',
   sandboxSnippets: [
