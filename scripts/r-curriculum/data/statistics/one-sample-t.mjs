@@ -1,0 +1,100 @@
+// Statistics: Testing a claim (one-sample t-test).
+import { code, makeTopic, mc, near, prints, qShort, snippet, task } from '../_builders.mjs'
+import { LOAVES } from './stats-data.mjs'
+
+const MINUTES = 'minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\n'
+
+export default makeTopic({
+  id: 'one_sample_t',
+  title: 'Testing a claim',
+  paragraphs: [
+    'The bakery\'s label says 500 g, and the 10 loaves averaged 495.8 g. Is that just luck of the sample, or are the loaves really light? A **hypothesis test** answers in a careful way:',
+    'First, assume the claim is true: the true mean is 500 g. This is the **null hypothesis**. Then work out how surprising the data would be if it were. That surprise is the **p-value**: the chance of a sample mean at least this far from 500 just by luck.',
+    'The **one-sample t-test** does all of it. `mu` is the claimed mean:',
+    code(LOAVES.trim(), 't.test(loaf, mu = 500)$p.value    # 0.034'),
+    'A small p-value means the data would be surprising if the claim were true. By a common convention, **p < 0.05** counts as evidence against the claim, often called "statistically significant". Here p = 0.034, so the data are evidence that the loaves weigh less than 500 g on average.',
+    'A large p-value does **not** prove the claim; it only means the data don\'t give clear evidence against it. Small samples often can\'t tell.',
+    'By default the test is two-sided: too heavy and too light both count. If only one direction matters, say so: `alternative = "less"` tests whether the true mean is below `mu`.',
+  ],
+  sandboxCode: LOAVES + 't.test(loaf, mu = 500)',
+  sandboxSnippets: [snippet('Just the numbers', LOAVES + 'res <- t.test(loaf, mu = 500)\nround(c(t = unname(res$statistic), p = res$p.value), 3)')],
+  readMore: { label: 'R documentation: t.test()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html', source: 'R documentation' },
+  challenges: [
+    task('easy', 'The p-value', {
+      prompt: 'Test the 500 g claim. Make `p` the p-value, rounded to 3 decimal places.',
+      starter: LOAVES,
+      hint: '`round(t.test(loaf, mu = 500)$p.value, 3)`',
+      solution: LOAVES + 'p <- round(t.test(loaf, mu = 500)$p.value, 3)',
+      tests: [['p is 0.034', near('p', 0.034)]],
+    }),
+    task('easy', 'Significant?', {
+      prompt: 'Make `significant` TRUE if the p-value is below 0.05.',
+      starter: LOAVES,
+      hint: '`t.test(loaf, mu = 500)$p.value < 0.05`',
+      solution: LOAVES + 'significant <- t.test(loaf, mu = 500)$p.value < 0.05',
+      tests: [['significant is TRUE', 'identical(significant, TRUE)']],
+    }),
+    task('easy', 'The t statistic', {
+      prompt: 'Make `t_value` the t statistic, unnamed, rounded to 2 decimal places.',
+      starter: LOAVES,
+      hint: '`round(unname(t.test(loaf, mu = 500)$statistic), 2)`',
+      solution: LOAVES + 't_value <- round(unname(t.test(loaf, mu = 500)$statistic), 2)',
+      tests: [['t_value is -2.5', near('t_value', -2.5)]],
+    }),
+    task('medium', 'One direction', {
+      prompt: 'Only underweight loaves matter to customers. Make `p_less` the p-value for "the true mean is below 500", rounded to 3 decimal places.',
+      starter: LOAVES,
+      hint: '`t.test(loaf, mu = 500, alternative = "less")$p.value`',
+      solution: LOAVES + 'p_less <- round(t.test(loaf, mu = 500, alternative = "less")$p.value, 3)',
+      tests: [['p_less is 0.017', near('p_less', 0.017)]],
+    }),
+    task('medium', 'A claim that fits', {
+      prompt: 'Make `p_495` the p-value for the claim that the true mean is 495 g, rounded to 2 decimal places. Is it evidence against that claim?',
+      starter: LOAVES,
+      hint: '`t.test(loaf, mu = 495)`. A large p-value: no clear evidence against.',
+      solution: LOAVES + 'p_495 <- round(t.test(loaf, mu = 495)$p.value, 2)',
+      tests: [['p_495 is 0.65', near('p_495', 0.65)]],
+    }),
+    task('medium', 'Delivery promise', {
+      prompt: 'A bakery promises deliveries in 30 minutes on average. Make `p_del` the p-value for the claim, using `minutes`, rounded to 2 decimal places.',
+      starter: MINUTES,
+      hint: '`t.test(minutes, mu = 30)$p.value`',
+      solution: MINUTES + 'p_del <- round(t.test(minutes, mu = 30)$p.value, 2)',
+      tests: [['p_del is 0.71', near('p_del', 0.71)]],
+    }),
+    task('hard', 'A report line', {
+      prompt: 'Show one line about the loaves, with the mean rounded to 1 decimal place and p to 3:\n\n```\nmean 495.8 g, p = 0.034\n```',
+      starter: LOAVES,
+      hint: '`res <- t.test(loaf, mu = 500)`, then `cat("mean ", round(mean(loaf), 1), " g, p = ", round(res$p.value, 3), "\\n", sep = "")`.',
+      solution: LOAVES + 'res <- t.test(loaf, mu = 500)\ncat("mean ", round(mean(loaf), 1), " g, p = ", round(res$p.value, 3), "\\n", sep = "")',
+      tests: [['Shows the line', prints('mean 495.8 g, p = 0.034')]],
+    }),
+    task('expert', 'False alarms', {
+      prompt: 'If the claim is true, how often does p < 0.05 happen anyway? Set the seed to 8 and make `false_alarms` the share of 1000 samples of 10 loaves from `rnorm(10, 500, 6)` (where the claim is true) with p < 0.05. It should be near 0.05.',
+      hint: '`replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05)`, then `mean()`.',
+      solution: 'set.seed(8)\nfalse_alarms <- mean(replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05))',
+      tests: [['false_alarms matches seed 8', near('false_alarms', 'local({ set.seed(8); mean(replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05)) })')], ['It is near 0.05', 'abs(false_alarms - 0.05) < 0.025']],
+    }),
+  ],
+  questions: [
+    mc('What is the null hypothesis in testing the 500 g label?', ['The loaves weigh less than 500 g', 'The true mean weight is 500 g', 'The sample mean is 495.8 g', 'Every loaf weighs 500 g'], 1,
+      'The test assumes the claim and asks how surprising the data are.'),
+    mc('What does a p-value of 0.034 mean here?', ['The claim is true with chance 0.034', 'If the true mean were 500 g, a sample this far off would happen about 3.4% of the time', '3.4% of loaves are light', 'The loaves are 3.4% light'], 1,
+      'It is about the data, assuming the claim.'),
+    mc('p = 0.65 for the claim "the mean is 495 g". What can you say?', ['The mean is 495 g', 'The data give no clear evidence against the claim', 'The claim is false', 'The test failed'], 1,
+      'A large p-value is not proof.'),
+    mc('Which is the usual convention for "statistically significant"?', ['p > 0.05', 'p < 0.05', 'p = 1', 'p < 0.5'], 1,
+      'A convention, not a law of nature: 0.049 and 0.051 are about equally strong.'),
+    mc('What does `mu = 500` set in `t.test(loaf, mu = 500)`?', ['The sample size', 'The claimed true mean', 'The standard deviation', 'The seed'], 1,
+      'Without it, `mu` is 0.'),
+    mc('Why is the one-sided p (0.017) half the two-sided p (0.034)?', ['A rounding error', 'Two-sided counts surprises in both directions; one-sided counts only "too light"', 'One-sided uses fewer loaves', 'It is a different test'], 1,
+      'The t distribution is symmetric, so each side holds half.'),
+    mc('If the claim is true, how often does a test give p < 0.05 anyway?', ['Never', 'About 5% of the time', 'About 50% of the time', 'Always'], 1,
+      'That is what the 0.05 means: a false alarm rate.'),
+    mc('What does `t.test(c(5, 6, 7), mu = 6)$statistic` give, unnamed?', ['`0`', '`1`', '`6`', '`-1`'], 0,
+      'The sample mean equals mu exactly.',
+      { code: 'unname(t.test(c(5, 6, 7), mu = 6)$statistic)', output: '[1] 0' }),
+    qShort('Which part of a t.test() result holds the p-value? Give its name without the $.', 'p.value',
+      '`t.test(x, mu = …)$p.value`'),
+  ],
+})

@@ -1,0 +1,107 @@
+// Data frames: Combining tables.
+import { code, isTexts, makeTopic, mc, near, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
+
+const SALES = 'sales <- data.frame(item = c("latte", "tea", "cake", "latte", "scone"), qty = c(2, 1, 3, 1, 2))\n'
+const MENU = 'menu <- data.frame(item = c("latte", "tea", "cake", "chai"), price = c(3.4, 2.5, 4.2, 3.8))\n'
+
+export default makeTopic({
+  id: 'combining',
+  title: 'Combining tables',
+  paragraphs: [
+    'Data often comes in more than one table. Two ways to put tables together:',
+    '**Stacking** adds the rows of one table below another. Both need the same column names. `rbind()` does it ("row bind"):',
+    code('monday  <- data.frame(item = c("latte", "tea"), qty = c(2, 1))', 'tuesday <- data.frame(item = c("cake", "latte"), qty = c(3, 1))', 'rbind(monday, tuesday)   # 4 rows'),
+    '**Merging** matches rows on a shared column, the **key**. Say one table has what was sold and another the menu prices. `merge()` looks up each sale\'s item in the menu and adds the price:',
+    code('sales <- data.frame(item = c("latte", "tea", "cake", "latte", "scone"), qty = c(2, 1, 3, 1, 2))', 'menu  <- data.frame(item = c("latte", "tea", "cake", "chai"), price = c(3.4, 2.5, 4.2, 3.8))', 'merge(sales, menu, by = "item")'),
+    'By default `merge()` keeps only rows that match in **both** tables: the scone (not on the menu) and the chai (never sold) are dropped, and the result is sorted by the key. Add `all.x = TRUE` to keep every row of the first table, with `NA` where nothing matched. That\'s how you find sales of items missing from the menu.',
+    'To add a whole new column from a vector of the same length, `cbind()` ("column bind") or plain `df$new <- …` both work.',
+  ],
+  sandboxCode: SALES + MENU + 'merge(sales, menu, by = "item")\nmerge(sales, menu, by = "item", all.x = TRUE)',
+  sandboxSnippets: [
+    snippet('Stack two days', 'monday  <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), qty = c(3, 1))\nrbind(monday, tuesday)'),
+    snippet('Names must match', '# Run it and read the error\na <- data.frame(item = "tea", qty = 1)\nb <- data.frame(item = "cake", amount = 2)\nrbind(a, b)'),
+  ],
+  readMore: { label: 'R documentation: merge()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/merge.html', source: 'R documentation' },
+  challenges: [
+    task('easy', 'Two days in one', {
+      prompt: 'Make `both` Monday\'s sales followed by Tuesday\'s.',
+      starter: 'monday <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), qty = c(3, 1))\n',
+      hint: '`both <- rbind(monday, tuesday)`',
+      solution: 'monday <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), qty = c(3, 1))\nboth <- rbind(monday, tuesday)',
+      tests: [['both has the 4 sales', sameFrame('both', 'data.frame(item = c("latte", "tea", "cake", "latte"), qty = c(2, 1, 3, 1))')]],
+    }),
+    task('easy', 'Add the prices', {
+      prompt: 'Make `priced` the sales with the menu price of each item, using `merge()` on `item`.',
+      starter: SALES + MENU,
+      hint: '`priced <- merge(sales, menu, by = "item")`',
+      solution: SALES + MENU + 'priced <- merge(sales, menu, by = "item")',
+      tests: [['priced is the merged table', sameFrame('priced', 'merge(sales, menu, by = "item")')], ['Uses merge()', uses('merge(')]],
+    }),
+    task('easy', 'How many matched', {
+      prompt: 'Make `n_matched` the number of rows in the merged table.',
+      starter: SALES + MENU,
+      hint: '`n_matched <- nrow(merge(sales, menu, by = "item"))`',
+      solution: SALES + MENU + 'n_matched <- nrow(merge(sales, menu, by = "item"))',
+      tests: [['n_matched is 4', near('n_matched', 4)]],
+    }),
+    task('medium', 'Line totals', {
+      prompt: 'Merge the sales with the menu into `priced`, then add a column `total`: quantity times price.',
+      starter: SALES + MENU,
+      hint: 'After merging, `priced$total <- priced$qty * priced$price`.',
+      solution: SALES + MENU + 'priced <- merge(sales, menu, by = "item")\npriced$total <- priced$qty * priced$price',
+      tests: [['priced has the right totals', 'is.data.frame(priced) && isTRUE(all.equal(sort(priced$total), sort(c(12.6, 6.8, 3.4, 2.5))))']],
+    }),
+    task('medium', 'Keep every sale', {
+      prompt: 'Make `all_sales` the merge that keeps every sale, even ones not on the menu.',
+      starter: SALES + MENU,
+      hint: '`merge(sales, menu, by = "item", all.x = TRUE)`',
+      solution: SALES + MENU + 'all_sales <- merge(sales, menu, by = "item", all.x = TRUE)',
+      tests: [['all_sales has all 5 sales', sameFrame('all_sales', 'merge(sales, menu, by = "item", all.x = TRUE)')]],
+    }),
+    task('medium', 'Missing from the menu', {
+      prompt: 'Make `unknown` the items that were sold but have no price on the menu.',
+      starter: SALES + MENU,
+      hint: 'Merge with `all.x = TRUE`, then pick the items where `price` is NA.',
+      solution: SALES + MENU + 'all_sales <- merge(sales, menu, by = "item", all.x = TRUE)\nunknown <- all_sales$item[is.na(all_sales$price)]',
+      tests: [['unknown is "scone"', isTexts('unknown', 'scone')]],
+    }),
+    task('hard', 'Fix the names', {
+      prompt: 'Stacking fails because one column has a different name. Rename Tuesday\'s `amount` column to `qty` with `names()`, then make `both` the two tables stacked.',
+      starter: 'monday <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), amount = c(3, 1))\nboth <- rbind(monday, tuesday)',
+      hint: '`names(tuesday) <- c("item", "qty")` before the `rbind()`.',
+      solution: 'monday <- data.frame(item = c("latte", "tea"), qty = c(2, 1))\ntuesday <- data.frame(item = c("cake", "latte"), amount = c(3, 1))\nnames(tuesday) <- c("item", "qty")\nboth <- rbind(monday, tuesday)',
+      tests: [['both has the 4 sales', sameFrame('both', 'data.frame(item = c("latte", "tea", "cake", "latte"), qty = c(2, 1, 3, 1))')]],
+    }),
+    task('expert', 'The day\'s takings', {
+      prompt: 'Make `takings` the total money taken for the sales that are on the menu.',
+      starter: SALES + MENU,
+      hint: 'Merge, then `sum(priced$qty * priced$price)`.',
+      solution: SALES + MENU + 'priced <- merge(sales, menu, by = "item")\ntakings <- sum(priced$qty * priced$price)',
+      tests: [['takings is 25.3', near('takings', 25.3)]],
+    }),
+  ],
+  questions: [
+    mc('What does `nrow(rbind(data.frame(x = 1:2), data.frame(x = 3:5)))` give?', ['`2`', '`3`', '`5`', '`1`'], 2,
+      'Stacking 2 rows and 3 rows gives 5.',
+      { code: 'nrow(rbind(data.frame(x = 1:2), data.frame(x = 3:5)))', output: '[1] 5' }),
+    mc('What does `rbind()` need from the two tables?', ['The same number of rows', 'The same column names', 'A key column', 'Nothing'], 1,
+      'Rows are stacked under matching columns.'),
+    mc('In `merge(a, b, by = "id")`, what is `id`?', ['The column to sort by', 'The column whose values are matched between the tables', 'A new column', 'The first row'], 1,
+      'Rows with the same id in both tables are joined.'),
+    mc('What does `nrow(merge(data.frame(k = c("a", "b")), data.frame(k = c("b", "c"))))` give?', ['`1`', '`2`', '`3`', '`4`'], 0,
+      'By default only keys found in both tables are kept: just "b".',
+      { code: 'nrow(merge(data.frame(k = c("a", "b")), data.frame(k = c("b", "c"))))', output: '[1] 1' }),
+    mc('What does `all.x = TRUE` do in `merge()`?', ['Keeps every row of the first table, with NA where nothing matched', 'Keeps every column', 'Sorts by x', 'Removes duplicates'], 0,
+      'Rows from the first table are kept even without a match.',
+      { code: 'nrow(merge(data.frame(k = c("a", "b")), data.frame(k = c("b", "c")), all.x = TRUE))', output: '[1] 2' }),
+    mc('What does `rbind(data.frame(a = 1), data.frame(b = 2))` give?', ['A 2-row table', 'An error: the names don\'t match', 'A 1-row table with a and b', 'NA'], 1,
+      'Stacked tables need the same column names.',
+      { code: 'rbind(data.frame(a = 1), data.frame(b = 2))', error: 'names do not match' }),
+    mc('A sale\'s item isn\'t on the menu. With a plain `merge()`, what happens to that sale?', ['It gets price 0', 'It is dropped from the result', 'It gets price NA', 'An error'], 1,
+      'Only matching rows are kept unless you add `all.x = TRUE`.'),
+    mc('What does `merge()` sort the result by?', ['Nothing: original order', 'The key column', 'The last column', 'The number of rows'], 1,
+      'The merged table comes out sorted by the key.'),
+    qShort('Which function stacks the rows of two tables with the same columns?', 'rbind',
+      '`rbind()` means "row bind".'),
+  ],
+})

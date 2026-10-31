@@ -1,0 +1,103 @@
+// Statistics: Linear regression.
+import { code, makeTopic, mc, near, qShort, snippet, task, uses } from '../_builders.mjs'
+import { STUDY } from './stats-data.mjs'
+
+const MODEL = 'model <- lm(score ~ hours, data = study)\n'
+
+export default makeTopic({
+  id: 'linear_regression',
+  title: 'Linear regression',
+  paragraphs: [
+    'A correlation says revision and scores move together. **Linear regression** goes further: it finds the straight line that best fits the points, so you can say **how much** the score goes up per hour and **predict** scores.',
+    code(...STUDY.trim().split('\n'), MODEL.trim(), 'coef(model)'),
+    '`lm()` means "linear model", with the same formula as before: score explained by hours. `coef()` gives the line\'s two numbers: the **intercept** (50.1, the predicted score for 0 hours) and the **slope** (4.8, the extra points per hour of revision). So the line is: score = 50.1 + 4.8 × hours.',
+    '**R²** (R-squared), from `summary(model)$r.squared`, says what share of the variation in scores the line explains: 0.86 here, which is a lot. It is the correlation squared.',
+    '`predict()` uses the line for new values. It needs a data frame with the same column name:',
+    code('predict(model, newdata = data.frame(hours = 4.5))    # about 71.7'),
+    'Two warnings. Predicting far outside the data (`hours = 20`) trusts the straight line where you have never seen it; that is **extrapolation**, and it can give nonsense like a score over 100. And as with correlation, a good fit is not proof that one thing causes the other.',
+    '`residuals(model)` are the gaps between each real score and the line: positive if the student did better than the line predicts.',
+  ],
+  sandboxCode: STUDY + MODEL + 'coef(model)\nsummary(model)$r.squared\npredict(model, newdata = data.frame(hours = c(4.5, 8)))',
+  sandboxSnippets: [snippet('The whole summary', STUDY + MODEL + 'summary(model)')],
+  readMore: { label: 'R documentation: lm()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html', source: 'R documentation' },
+  challenges: [
+    task('easy', 'Fit the line', {
+      prompt: 'Make `model` a linear model of score explained by hours.',
+      starter: STUDY,
+      hint: '`model <- lm(score ~ hours, data = study)`',
+      solution: STUDY + MODEL,
+      tests: [['model is an lm of score on hours', 'inherits(model, "lm") && isTRUE(all.equal(unname(coef(model)), unname(coef(lm(score ~ hours, data = study)))))']],
+    }),
+    task('easy', 'The slope', {
+      prompt: 'Make `slope` the extra points per hour, unnamed, rounded to 2 decimal places.',
+      starter: STUDY + MODEL,
+      hint: 'The second coefficient: `round(unname(coef(model)[2]), 2)`.',
+      solution: STUDY + MODEL + 'slope <- round(unname(coef(model)[2]), 2)',
+      tests: [['slope is 4.8', near('slope', 4.8)]],
+    }),
+    task('easy', 'The intercept', {
+      prompt: 'Make `intercept` the predicted score for 0 hours, unnamed, rounded to 1 decimal place.',
+      starter: STUDY + MODEL,
+      hint: '`round(unname(coef(model)[1]), 1)`',
+      solution: STUDY + MODEL + 'intercept <- round(unname(coef(model)[1]), 1)',
+      tests: [['intercept is 50.1', near('intercept', 50.1)]],
+    }),
+    task('medium', 'How good a fit', {
+      prompt: 'Make `r2` the R-squared of the model, rounded to 2 decimal places.',
+      starter: STUDY + MODEL,
+      hint: '`round(summary(model)$r.squared, 2)`',
+      solution: STUDY + MODEL + 'r2 <- round(summary(model)$r.squared, 2)',
+      tests: [['r2 is 0.86', near('r2', 0.86)]],
+    }),
+    task('medium', 'Predict', {
+      prompt: 'Make `pred` the predicted scores for 4.5 and 8 hours, unnamed, rounded to 1 decimal place.',
+      starter: STUDY + MODEL,
+      hint: '`predict(model, newdata = data.frame(hours = c(4.5, 8)))`, then `unname()` and `round()`.',
+      solution: STUDY + MODEL + 'pred <- round(unname(predict(model, newdata = data.frame(hours = c(4.5, 8)))), 1)',
+      tests: [['pred is 71.7, 88.5', 'isTRUE(all.equal(pred, c(71.7, 88.5)))'], ['Uses predict()', uses('predict(')]],
+    }),
+    task('medium', 'By hand', {
+      prompt: 'Make `by_hand` the prediction for 4.5 hours worked out from the coefficients yourself, rounded to 1 decimal place.',
+      starter: STUDY + MODEL,
+      hint: '`b <- coef(model)`, then `b[1] + b[2] * 4.5`.',
+      solution: STUDY + MODEL + 'b <- coef(model)\nby_hand <- round(unname(b[1] + b[2] * 4.5), 1)',
+      tests: [['by_hand is 71.7', near('by_hand', 71.7)]],
+    }),
+    task('hard', 'Above and below the line', {
+      prompt: 'Make `beat_line` the names of the students who scored **more** than the line predicts.',
+      starter: STUDY + MODEL,
+      hint: 'Positive residuals: `study$student[residuals(model) > 0]`.',
+      solution: STUDY + MODEL + 'beat_line <- study$student[residuals(model) > 0]',
+      tests: [['beat_line is Ana, Dee, Eli, Gus, Hal', 'identical(beat_line, c("Ana", "Dee", "Eli", "Gus", "Hal"))']],
+    }),
+    task('expert', 'Phones instead', {
+      prompt: 'Fit `model2`, score explained by phone hours. Make `slope2` its slope and `r2_2` its R-squared, both rounded to 2 decimal places. Which model fits better?',
+      starter: STUDY,
+      hint: '`model2 <- lm(score ~ phone, data = study)`, then the same two numbers as before.',
+      solution: STUDY + 'model2 <- lm(score ~ phone, data = study)\nslope2 <- round(unname(coef(model2)[2]), 2)\nr2_2 <- round(summary(model2)$r.squared, 2)',
+      tests: [['slope2 matches the phone model', near('slope2', 'round(unname(coef(lm(score ~ phone, data = study))[2]), 2)')], ['r2_2 is 0.84', near('r2_2', 0.84)]],
+    }),
+  ],
+  questions: [
+    mc('In `lm(score ~ hours, data = study)`, what is being predicted?', ['hours', 'score', 'study', 'Both'], 1,
+      'The left of `~` is the outcome.'),
+    mc('The slope is 4.8. What does it mean?', ['Students revise 4.8 hours', 'Each extra hour of revision goes with about 4.8 more points', 'The average score is 4.8', 'The line passes 4.8'], 1,
+      'The slope is the change in the outcome per unit of the predictor.'),
+    mc('What does the intercept (50.1) mean here?', ['The lowest score', 'The predicted score for 0 hours of revision', 'The mean score', 'The slope at 50'], 1,
+      'Where the line crosses hours = 0.'),
+    mc('What does `coef(lm(y ~ x, data = data.frame(x = 1:3, y = c(2, 4, 6))))` give, unnamed?', ['`[1] 0 2`', '`[1] 2 0`', '`[1] 2 4 6`', '`[1] 1 2`'], 0,
+      'y = 0 + 2 × x exactly.',
+      { code: 'round(unname(coef(lm(y ~ x, data = data.frame(x = 1:3, y = c(2, 4, 6))))), 10)', output: '[1] 0 2' }),
+    mc('R² is 0.86. What does that say?', ['86% of students passed', 'The line explains 86% of the variation in scores', 'The slope is 0.86', 'The prediction is 86'], 1,
+      'Close to 1 is a close fit; close to 0 explains almost nothing.'),
+    mc('Why is predicting the score for 20 hours risky?', ['It isn\'t', 'No student revised anywhere near 20 hours, so the straight line is a guess there (extrapolation)', 'predict() can\'t do it', 'It gives NA'], 1,
+      'The line gives 146, an impossible score.',
+      { code: 'model <- lm(score ~ hours, data = data.frame(hours = c(2, 5, 1, 4, 6, 3, 7, 2), score = c(64, 71, 52, 75, 79, 58, 84, 62)))\nround(unname(predict(model, newdata = data.frame(hours = 20))))', output: '[1] 146' }),
+    mc('What does `predict()` need in `newdata`?', ['A vector', 'A data frame with a column of the same name as the predictor', 'The old data', 'Nothing'], 1,
+      '`data.frame(hours = 4.5)`.'),
+    mc('A student has a residual of −6.5. What does that mean?', ['They revised 6.5 hours less', 'They scored 6.5 points below what the line predicts', 'An error', 'They scored 6.5'], 1,
+      'Residual = real value − predicted value.'),
+    qShort('Which function fits a linear model?', 'lm',
+      '`lm(outcome ~ predictor, data = …)`'),
+  ],
+})

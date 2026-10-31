@@ -1,0 +1,101 @@
+// Statistics: Comparing two groups (two-sample t-test).
+import { CLASS, DELIVERIES, SEEDLINGS } from '../datasets.mjs'
+import { code, makeTopic, mc, near, prints, qShort, snippet, task, uses } from '../_builders.mjs'
+
+const TWO = 'two <- seedlings[seedlings$compost %in% c("peat", "leaf"), ]\n'
+
+export default makeTopic({
+  id: 'two_sample_t',
+  title: 'Comparing two groups',
+  paragraphs: [
+    'In the seedling trial, the leaf-compost trays averaged 10.6 cm and the peat trays 8.2 cm. With only four trays each, could that gap be luck? The **two-sample t-test** asks: if both composts really gave the same mean height, how surprising would a gap this big be?',
+    code(...SEEDLINGS.trim().split('\n'), TWO.trim(), 't.test(height_cm ~ compost, data = two)'),
+    'The `~` is a **formula**: "height explained by compost". The column on the left is the measurement, the one on the right says which group each row is in, and it must have exactly two groups, so here we first keep only peat and leaf.',
+    'The result gives a p-value (0.002: strong evidence of a real difference), the two group means in `$estimate`, and in `$conf.int` a confidence interval for the **difference** between them: leaf minus peat, because the groups are taken in alphabetical order.',
+    'R uses the **Welch** version by default, which doesn\'t assume the two groups are equally spread. That is a safe default.',
+    'When each value in one group has a partner in the other, such as the same student\'s first and second test, use a **paired** test on the two columns: `t.test(after, before, paired = TRUE)`. It tests whether the average change is zero.',
+  ],
+  sandboxCode: SEEDLINGS + TWO + 't.test(height_cm ~ compost, data = two)',
+  sandboxSnippets: [snippet('Paired', CLASS + 't.test(class_results$test2, class_results$test1, paired = TRUE)$p.value')],
+  readMore: { label: 'R documentation: t.test()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html', source: 'R documentation' },
+  challenges: [
+    task('easy', 'Two groups only', {
+      prompt: 'Make `two` the seedlings with peat or leaf compost.',
+      starter: SEEDLINGS,
+      hint: '`seedlings[seedlings$compost %in% c("peat", "leaf"), ]`',
+      solution: SEEDLINGS + TWO,
+      tests: [['two has the 8 peat and leaf trays', 'is.data.frame(two) && nrow(two) == 8 && all(two$compost %in% c("peat", "leaf"))']],
+    }),
+    task('easy', 'Leaf against peat', {
+      prompt: 'Make `p` the p-value of a t-test of height by compost on `two`, rounded to 3 decimal places.',
+      starter: SEEDLINGS + TWO,
+      hint: '`round(t.test(height_cm ~ compost, data = two)$p.value, 3)`',
+      solution: SEEDLINGS + TWO + 'p <- round(t.test(height_cm ~ compost, data = two)$p.value, 3)',
+      tests: [['p is 0.002', near('p', 0.002)], ['Uses a formula', uses('~')]],
+    }),
+    task('easy', 'The group means', {
+      prompt: 'Make `means` the two group means from the test, unnamed, rounded to 1 decimal place.',
+      starter: SEEDLINGS + TWO,
+      hint: '`round(unname(t.test(height_cm ~ compost, data = two)$estimate), 1)`',
+      solution: SEEDLINGS + TWO + 'means <- round(unname(t.test(height_cm ~ compost, data = two)$estimate), 1)',
+      tests: [['means is leaf 10.6, peat 8.2', 'isTRUE(all.equal(means, c(10.6, 8.2)))']],
+    }),
+    task('medium', 'How big is the gap', {
+      prompt: 'Make `gap_ci` the 95% interval for the difference (leaf minus peat), rounded to 1 decimal place.',
+      starter: SEEDLINGS + TWO,
+      hint: '`round(t.test(height_cm ~ compost, data = two)$conf.int, 1)`',
+      solution: SEEDLINGS + TWO + 'gap_ci <- round(t.test(height_cm ~ compost, data = two)$conf.int, 1)',
+      tests: [['gap_ci is 1.3 to 3.5', 'isTRUE(all.equal(as.vector(gap_ci), c(1.3, 3.5)))']],
+    }),
+    task('medium', 'Home against peat', {
+      prompt: 'Now compare home compost with peat. Make `p_home` the p-value, rounded to 2 decimal places.',
+      starter: SEEDLINGS,
+      hint: 'Make a new two-group table with `c("peat", "home")`, then the same test.',
+      solution: SEEDLINGS + 'hp <- seedlings[seedlings$compost %in% c("peat", "home"), ]\np_home <- round(t.test(height_cm ~ compost, data = hp)$p.value, 2)',
+      tests: [['p_home is 0.8', near('p_home', 0.8)]],
+    }),
+    task('medium', 'North and south', {
+      prompt: 'Make `p_area` the p-value comparing delivery minutes in the north and south, rounded to 3 decimal places.',
+      starter: DELIVERIES,
+      hint: '`t.test(minutes ~ area, data = deliveries)`: area already has just two groups.',
+      solution: DELIVERIES + 'p_area <- round(t.test(minutes ~ area, data = deliveries)$p.value, 3)',
+      tests: [['p_area is 0.059', near('p_area', 0.059)]],
+    }),
+    task('hard', 'Paired tests', {
+      prompt: 'Did the class do better on test 2? Make `p_paired` the p-value of a paired t-test of test2 against test1, rounded to 3 decimal places. (Fay, with no test 2, is left out automatically.)',
+      starter: CLASS,
+      hint: '`t.test(class_results$test2, class_results$test1, paired = TRUE)$p.value`',
+      solution: CLASS + 'p_paired <- round(t.test(class_results$test2, class_results$test1, paired = TRUE)$p.value, 3)',
+      tests: [['p_paired is 0.01', near('p_paired', 0.01)], ['Uses paired = TRUE', uses('paired')]],
+    }),
+    task('expert', 'Summary sentence', {
+      prompt: 'Show this line for the leaf and peat trays, using the test\'s numbers:\n\n```\nleaf 10.6 cm vs peat 8.2 cm, p = 0.002\n```',
+      starter: SEEDLINGS + TWO,
+      hint: '`res <- t.test(height_cm ~ compost, data = two)`; `round(res$estimate, 1)` gives the means, `round(res$p.value, 3)` the p-value.',
+      solution: SEEDLINGS + TWO + 'res <- t.test(height_cm ~ compost, data = two)\nm <- round(unname(res$estimate), 1)\ncat("leaf ", m[1], " cm vs peat ", m[2], " cm, p = ", round(res$p.value, 3), "\\n", sep = "")',
+      tests: [['Shows the line', prints('leaf 10.6 cm vs peat 8.2 cm, p = 0.002')]],
+    }),
+  ],
+  questions: [
+    mc('What does `height_cm ~ compost` mean in `t.test()`?', ['Height minus compost', 'Height explained by compost: compare height between the compost groups', 'A comment', 'Height and compost are equal'], 1,
+      'Measurement on the left, groups on the right.'),
+    mc('Why keep only peat and leaf before the test?', ['To save time', 'The formula version of `t.test()` needs exactly two groups', 'Home compost has NAs', 'It isn\'t needed'], 1,
+      'With three groups R stops with an error.',
+      { code: 'd <- data.frame(y = 1:6, g = c("a", "a", "b", "b", "c", "c"))\nt.test(y ~ g, data = d)', error: 'exactly 2 levels' }),
+    mc('The interval for leaf minus peat is 1.3 to 3.5 cm. What does it say?', ['Leaf trays grew 1.3 to 3.5 cm', 'We are 95% confident leaf compost gives 1.3 to 3.5 cm more height on average', 'Peat is better', 'Nothing, because it doesn\'t include 0'], 1,
+      'And since 0 is outside it, no difference is not a good fit.'),
+    mc('Home against peat gives p = 0.8. What can you say?', ['They are the same', 'No clear evidence of a difference, from these few trays', 'Home compost is better', 'The test is wrong'], 1,
+      'One very tall home tray (12.8 cm) makes the group very spread out.'),
+    mc('When should you use `paired = TRUE`?', ['Always', 'When each value in one group belongs with one in the other, like the same student twice', 'When the groups are the same size', 'With text'], 1,
+      'Pairing removes the differences between students, so the test is sharper.'),
+    mc('What does R use by default for two groups?', ['A paired test', 'The Welch test, which doesn\'t assume equal spreads', 'A test assuming equal spreads', 'A chi-squared test'], 1,
+      '`var.equal = TRUE` switches to the classic version.'),
+    mc('Delivery times north vs south give p = 0.059. Which is a fair summary?', ['South is definitely slower', 'Some evidence south is slower, not quite at the usual 0.05 level, and one 74-minute delivery affects it', 'No difference', 'North is slower'], 1,
+      'Report the p-value and the context, not just "significant or not".'),
+    mc('In what order does R take the groups in `$estimate`?', ['The order in the data', 'Alphabetical order of the group names', 'Largest mean first', 'At random'], 1,
+      'So leaf comes before peat.',
+      { code: 'names(t.test(len ~ grp, data = data.frame(len = c(1, 2, 3, 5, 6, 7), grp = c("peat", "peat", "peat", "leaf", "leaf", "leaf")))$estimate)', output: '[1] "mean in group leaf" "mean in group peat"' }),
+    qShort('Which argument of t.test(), set to TRUE, makes it a paired test?', 'paired',
+      '`t.test(after, before, paired = TRUE)`'),
+  ],
+})

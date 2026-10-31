@@ -1,0 +1,4046 @@
+{
+  "sectionId": "statistics",
+  "title": "Statistics",
+  "levels": [
+    {
+      "id": "random_samples",
+      "title": "Random samples",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "a_thousand_experiments",
+          "label": "A thousand experiments",
+          "code": "set.seed(1)\nmeans <- replicate(1000, mean(sample(1:6, 10, replace = TRUE)))\nround(c(mean = mean(means), sd = sd(means)), 2)"
+        }
+      ],
+      "intro": {
+        "title": "Random samples",
+        "bodyMarkdown": "Statistics is about learning from a **sample**: a few values drawn from something bigger. R can draw random samples itself, which is a great way to see how much results wobble from sample to sample.\n\n`sample(x, size)` picks `size` values from `x`. Without `replace = TRUE` each value can be picked only once, like drawing names from a hat; with it, values can repeat, like rolling a die:\n\n```\nsample(1:20, 5)                      # five different numbers\nsample(1:6, 10, replace = TRUE)      # ten dice rolls\n```\n\nRandom numbers are different every run. To get the **same** \"random\" numbers again, so a result can be checked or shared, set the starting point first with `set.seed()`. Any whole number works; the same seed always gives the same draws:\n\n```\nset.seed(7)\nsample(1:6, 3, replace = TRUE)\n```\n\nR can also draw from the classic shapes: `runif(n, min, max)` gives numbers spread evenly between two limits, and `rnorm(n, mean, sd)` gives numbers from a **normal** (bell-shaped) distribution, most of them near the mean.\n\nA **simulation** repeats an experiment many times. `replicate(1000, expr)` runs `expr` 1000 times and collects the results, so you can see how results spread out.",
+        "sandboxCode": "set.seed(7)\nsample(1:6, 10, replace = TRUE)\nround(rnorm(5, mean = 500, sd = 6), 1)",
+        "readMore": {
+          "label": "R documentation: sample()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/sample.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "random_samples-roll-a-die",
+          "title": "Easy: Roll a die",
+          "promptMarkdown": "Set the seed to 7, then make `rolls` ten rolls of a six-sided die.",
+          "starterCode": "",
+          "hint": "`set.seed(7)` then `rolls <- sample(1:6, 10, replace = TRUE)`.",
+          "solution": "set.seed(7)\nrolls <- sample(1:6, 10, replace = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rolls is the ten rolls for seed 7",
+                "assertion": "identical(as.integer(rolls), local({ set.seed(7); sample(1:6, 10, replace = TRUE) }))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-draw-names",
+          "title": "Easy: Draw names",
+          "promptMarkdown": "Four of these eight students will present today. Set the seed to 3, then make `chosen` four different names drawn from `students`.",
+          "starterCode": "students <- c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\")\n",
+          "hint": "No `replace`: each student can be picked only once. `sample(students, 4)`.",
+          "solution": "students <- c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\")\nset.seed(3)\nchosen <- sample(students, 4)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "chosen is the four names for seed 3",
+                "assertion": "identical(chosen, local({ set.seed(3); sample(students, 4) }))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-same-seed-same-draws",
+          "title": "Easy: Same seed, same draws",
+          "promptMarkdown": "Make `a` and `b` each five numbers from `sample(1:100, 5)`, setting the seed to 11 before each, so they come out the same.",
+          "starterCode": "",
+          "hint": "`set.seed(11)` before each `sample()`.",
+          "solution": "set.seed(11)\na <- sample(1:100, 5)\nset.seed(11)\nb <- sample(1:100, 5)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "a and b are the same",
+                "assertion": "exists(\"a\") && exists(\"b\") && identical(a, b)"
+              },
+              {
+                "id": "t2",
+                "label": "They are the draws for seed 11",
+                "assertion": "identical(a, local({ set.seed(11); sample(1:100, 5) }))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-normal-loaves",
+          "title": "Medium: Normal loaves",
+          "promptMarkdown": "A bakery's loaves weigh about 500 g, with a standard deviation of 6 g. Set the seed to 42 and make `loaves` 20 simulated weights with `rnorm()`.",
+          "starterCode": "",
+          "hint": "`rnorm(20, mean = 500, sd = 6)`",
+          "solution": "set.seed(42)\nloaves <- rnorm(20, mean = 500, sd = 6)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "loaves is the 20 weights for seed 42",
+                "assertion": "isTRUE(all.equal(loaves, local({ set.seed(42); rnorm(20, mean = 500, sd = 6) })))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-even-spread",
+          "title": "Medium: Even spread",
+          "promptMarkdown": "Set the seed to 5 and make `waits` 8 waiting times spread evenly between 2 and 10 minutes, rounded to 1 decimal place.",
+          "starterCode": "",
+          "hint": "`round(runif(8, min = 2, max = 10), 1)`",
+          "solution": "set.seed(5)\nwaits <- round(runif(8, min = 2, max = 10), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "waits is the 8 times for seed 5",
+                "assertion": "isTRUE(all.equal(waits, local({ set.seed(5); round(runif(8, min = 2, max = 10), 1) })))"
+              },
+              {
+                "id": "t2",
+                "label": "All between 2 and 10",
+                "assertion": "all(waits >= 2 & waits <= 10)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-how-many-sixes",
+          "title": "Medium: How many sixes",
+          "promptMarkdown": "Set the seed to 2, roll a die 600 times, and make `sixes` the number of sixes.",
+          "starterCode": "",
+          "hint": "`rolls <- sample(1:6, 600, replace = TRUE)`, then `sum(rolls == 6)`. You would expect about 100.",
+          "solution": "set.seed(2)\nrolls <- sample(1:6, 600, replace = TRUE)\nsixes <- sum(rolls == 6)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "sixes is the count for seed 2",
+                "assertion": "is.numeric(sixes) && isTRUE(all.equal(sixes, local({ set.seed(2); sum(sample(1:6, 600, replace = TRUE) == 6) })))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-many-experiments",
+          "title": "Hard: Many experiments",
+          "promptMarkdown": "Set the seed to 1. Use `replicate()` to make `means` 1000 means of 10 dice rolls each.",
+          "starterCode": "",
+          "hint": "`replicate(1000, mean(sample(1:6, 10, replace = TRUE)))`",
+          "solution": "set.seed(1)\nmeans <- replicate(1000, mean(sample(1:6, 10, replace = TRUE)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "means is the 1000 means for seed 1",
+                "assertion": "isTRUE(all.equal(means, local({ set.seed(1); replicate(1000, mean(sample(1:6, 10, replace = TRUE))) })))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses replicate()",
+                "assertion": "grepl(\"replicate(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "random_samples-bigger-samples-wobble-less",
+          "title": "Expert: Bigger samples wobble less",
+          "promptMarkdown": "Set the seed to 1. Make `sd_10` the standard deviation of 1000 means of 10 rolls, then (without setting the seed again) `sd_100` the same for means of 100 rolls. Both rounded to 2 decimal places. Which is smaller?",
+          "starterCode": "",
+          "hint": "Two `replicate()` calls, one with 10 rolls and one with 100, each wrapped in `round(sd(...), 2)`.",
+          "solution": "set.seed(1)\nsd_10 <- round(sd(replicate(1000, mean(sample(1:6, 10, replace = TRUE)))), 2)\nsd_100 <- round(sd(replicate(1000, mean(sample(1:6, 100, replace = TRUE)))), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "sd_10 and sd_100 match seed 1",
+                "assertion": "isTRUE(all.equal(c(sd_10, sd_100), local({ set.seed(1); a <- round(sd(replicate(1000, mean(sample(1:6, 10, replace = TRUE)))), 2); b <- round(sd(replicate(1000, mean(sample(1:6, 100, replace = TRUE)))), 2); c(a, b) })))"
+              },
+              {
+                "id": "t2",
+                "label": "sd_100 is smaller",
+                "assertion": "sd_100 < sd_10"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "random_samples-q-1b7nnj3",
+            "type": "mcq",
+            "prompt": "What does `replace = TRUE` do in `sample()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Lets the same value be picked more than once"
+              },
+              {
+                "id": "b",
+                "label": "Sorts the result"
+              },
+              {
+                "id": "c",
+                "label": "Uses a new seed"
+              },
+              {
+                "id": "d",
+                "label": "Replaces NAs"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Like rolling a die: a 4 can come up again."
+          },
+          {
+            "id": "random_samples-q-cceuzz",
+            "type": "mcq",
+            "prompt": "What does `length(sample(1:6, 10, replace = TRUE))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`6`"
+              },
+              {
+                "id": "b",
+                "label": "`10`"
+              },
+              {
+                "id": "c",
+                "label": "`60`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Ten picks, whatever they are."
+          },
+          {
+            "id": "random_samples-q-1cty5k4",
+            "type": "mcq",
+            "prompt": "What does `sample(1:6, 10)` (without replace) do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error: it can't pick 10 different values from 6"
+              },
+              {
+                "id": "b",
+                "label": "Six values"
+              },
+              {
+                "id": "c",
+                "label": "Ten rolls"
+              },
+              {
+                "id": "d",
+                "label": "Ten zeros"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Without replacement there are only six values to take."
+          },
+          {
+            "id": "random_samples-q-80n88v",
+            "type": "mcq",
+            "prompt": "Why use `set.seed()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To speed up R"
+              },
+              {
+                "id": "b",
+                "label": "To make numbers more random"
+              },
+              {
+                "id": "c",
+                "label": "It is required"
+              },
+              {
+                "id": "d",
+                "label": "So the same \"random\" numbers come out again, and results can be checked"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The same seed always gives the same draws."
+          },
+          {
+            "id": "random_samples-q-g4xmqe",
+            "type": "mcq",
+            "prompt": "What does `identical(local({ set.seed(4); runif(3) }), local({ set.seed(4); runif(3) }))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`TRUE`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Same seed, same numbers."
+          },
+          {
+            "id": "random_samples-q-17975m2",
+            "type": "mcq",
+            "prompt": "Most values from `rnorm(1000, mean = 50, sd = 5)` are…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Exactly 50"
+              },
+              {
+                "id": "b",
+                "label": "Between 0 and 1"
+              },
+              {
+                "id": "c",
+                "label": "Spread evenly from 0 to 100"
+              },
+              {
+                "id": "d",
+                "label": "Near 50, and few are more than 10 away"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A normal distribution is bell-shaped around its mean."
+          },
+          {
+            "id": "random_samples-q-16j15wr",
+            "type": "mcq",
+            "prompt": "What does `runif(5, 2, 10)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Five numbers spread evenly between 2 and 10"
+              },
+              {
+                "id": "b",
+                "label": "Five whole numbers"
+              },
+              {
+                "id": "c",
+                "label": "Five numbers near 6 only"
+              },
+              {
+                "id": "d",
+                "label": "Five copies of 2"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Uniform means every part of the range is equally likely."
+          },
+          {
+            "id": "random_samples-q-9q40ry",
+            "type": "mcq",
+            "prompt": "Means of 100 rolls vary less than means of 10 rolls. Why?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They use a different seed"
+              },
+              {
+                "id": "b",
+                "label": "R rounds them"
+              },
+              {
+                "id": "c",
+                "label": "They don't"
+              },
+              {
+                "id": "d",
+                "label": "Bigger samples average out more of the luck"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "This is why bigger samples give more precise estimates."
+          },
+          {
+            "id": "random_samples-q-lwn2z8",
+            "type": "shortText",
+            "prompt": "Which function repeats an expression many times and collects the results?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "replicate"
+            },
+            "explanation": "`replicate(1000, expr)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "normal_distribution",
+      "title": "The normal distribution",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "the_68_95_rule",
+          "label": "The 68–95 rule",
+          "code": "pnorm(1) - pnorm(-1)\npnorm(2) - pnorm(-2)\npnorm(3) - pnorm(-3)"
+        }
+      ],
+      "intro": {
+        "title": "The normal distribution",
+        "bodyMarkdown": "Many measurements, such as weights of loaves, heights of seedlings or errors in a reading, pile up in a **bell shape** around their mean. That shape is the **normal distribution**, and it is described by two numbers: the mean (the centre) and the standard deviation (the spread).\n\nFor any normal distribution, about **68%** of values are within 1 sd of the mean, about **95%** within 2 sd, and almost all within 3 sd.\n\nSay a bakery's loaves weigh on average 500 g with sd 6 g. R answers questions about it with two functions:\n\n| Function | Question | Example |\n| --- | --- | --- |\n| `pnorm(q, mean, sd)` | What share is **below** q? | `pnorm(490, 500, 6)` is about 0.048 |\n| `qnorm(p, mean, sd)` | Below which value is a share p? | `qnorm(0.95, 500, 6)` is about 509.9 |\n\nFor \"above\", take the rest: `1 - pnorm(510, 500, 6)`. For \"between\", subtract: `pnorm(510, 500, 6) - pnorm(490, 500, 6)`.\n\nA **z-score** says how many sds a value is from the mean: `(x - mean) / sd`. A 488 g loaf has z = (488 − 500) / 6 = −2. Without a mean and sd, `pnorm(z)` uses the standard normal (mean 0, sd 1).\n\n```\npnorm(490, mean = 500, sd = 6)     # share of loaves under 490 g\nqnorm(0.95, mean = 500, sd = 6)    # 95% of loaves weigh less than this\n```",
+        "sandboxCode": "pnorm(490, mean = 500, sd = 6)\n1 - pnorm(510, mean = 500, sd = 6)\nqnorm(0.95, mean = 500, sd = 6)",
+        "readMore": {
+          "label": "R documentation: Normal",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/Normal.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "normal_distribution-light-loaves",
+          "title": "Easy: Light loaves",
+          "promptMarkdown": "Loaves weigh on average 500 g with sd 6 g. Make `light` the share of loaves under 490 g.",
+          "starterCode": "",
+          "hint": "`pnorm(490, mean = 500, sd = 6)`",
+          "solution": "light <- pnorm(490, mean = 500, sd = 6)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "light is about 0.048",
+                "assertion": "is.numeric(light) && isTRUE(all.equal(light, pnorm(490, 500, 6)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-heavy-loaves",
+          "title": "Easy: Heavy loaves",
+          "promptMarkdown": "Make `heavy` the share of loaves **over** 510 g.",
+          "starterCode": "",
+          "hint": "Everything minus the share below: `1 - pnorm(510, mean = 500, sd = 6)`.",
+          "solution": "heavy <- 1 - pnorm(510, mean = 500, sd = 6)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "heavy is about 0.048",
+                "assertion": "is.numeric(heavy) && isTRUE(all.equal(heavy, 1 - pnorm(510, 500, 6)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-a-z-score",
+          "title": "Easy: A z-score",
+          "promptMarkdown": "Make `z` the z-score of a 488 g loaf.",
+          "starterCode": "",
+          "hint": "`(488 - 500) / 6`",
+          "solution": "z <- (488 - 500) / 6",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "z is -2",
+                "assertion": "is.numeric(z) && isTRUE(all.equal(z, -2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-in-between",
+          "title": "Medium: In between",
+          "promptMarkdown": "Make `ok_share` the share of loaves between 490 g and 510 g, rounded to 3 decimal places.",
+          "starterCode": "",
+          "hint": "`round(pnorm(510, 500, 6) - pnorm(490, 500, 6), 3)`",
+          "solution": "ok_share <- round(pnorm(510, 500, 6) - pnorm(490, 500, 6), 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ok_share is 0.904",
+                "assertion": "is.numeric(ok_share) && isTRUE(all.equal(ok_share, 0.904))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-the-heaviest-5",
+          "title": "Medium: The heaviest 5%",
+          "promptMarkdown": "Make `cutoff` the weight that only the heaviest 5% of loaves are over, rounded to 1 decimal place.",
+          "starterCode": "",
+          "hint": "95% are below it: `round(qnorm(0.95, 500, 6), 1)`.",
+          "solution": "cutoff <- round(qnorm(0.95, 500, 6), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "cutoff is 509.9",
+                "assertion": "is.numeric(cutoff) && isTRUE(all.equal(cutoff, 509.9))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-the-95-rule",
+          "title": "Medium: The 95% rule",
+          "promptMarkdown": "Make `within2` the share of a normal distribution within 2 sds of the mean, rounded to 3 decimal places.",
+          "starterCode": "",
+          "hint": "With z-scores: `pnorm(2) - pnorm(-2)`.",
+          "solution": "within2 <- round(pnorm(2) - pnorm(-2), 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "within2 is 0.954",
+                "assertion": "is.numeric(within2) && isTRUE(all.equal(within2, 0.954))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-how-many-in-a-batch",
+          "title": "Hard: How many in a batch",
+          "promptMarkdown": "The bakery makes 400 loaves a day. Loaves under 490 g can't be sold. Make `rejects` the expected number of rejects, rounded to a whole number.",
+          "starterCode": "",
+          "hint": "The share below 490 times 400, then `round()`.",
+          "solution": "rejects <- round(400 * pnorm(490, 500, 6))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rejects is 19",
+                "assertion": "is.numeric(rejects) && isTRUE(all.equal(rejects, 19))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "normal_distribution-check-by-simulation",
+          "title": "Expert: Check by simulation",
+          "promptMarkdown": "Set the seed to 9, simulate 10,000 loaves with `rnorm()`, and make `sim_share` the share under 490 g. It should be close to `pnorm(490, 500, 6)`.",
+          "starterCode": "",
+          "hint": "`loaves <- rnorm(10000, 500, 6)`, then `mean(loaves < 490)`: the mean of TRUE/FALSE is the share TRUE.",
+          "solution": "set.seed(9)\nloaves <- rnorm(10000, 500, 6)\nsim_share <- mean(loaves < 490)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "sim_share matches seed 9",
+                "assertion": "is.numeric(sim_share) && isTRUE(all.equal(sim_share, local({ set.seed(9); mean(rnorm(10000, 500, 6) < 490) })))"
+              },
+              {
+                "id": "t2",
+                "label": "It is close to pnorm()",
+                "assertion": "abs(sim_share - pnorm(490, 500, 6)) < 0.01"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "normal_distribution-q-3q3put",
+            "type": "mcq",
+            "prompt": "About what share of a normal distribution is within 1 sd of the mean?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "99.7%"
+              },
+              {
+                "id": "b",
+                "label": "68%"
+              },
+              {
+                "id": "c",
+                "label": "95%"
+              },
+              {
+                "id": "d",
+                "label": "50%"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The 68–95–99.7 rule."
+          },
+          {
+            "id": "normal_distribution-q-yq2g1",
+            "type": "mcq",
+            "prompt": "What does `pnorm(0)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "`0.5`"
+              },
+              {
+                "id": "c",
+                "label": "`1`"
+              },
+              {
+                "id": "d",
+                "label": "`0`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Half of a normal distribution is below its mean."
+          },
+          {
+            "id": "normal_distribution-q-pqx62i",
+            "type": "mcq",
+            "prompt": "What does `pnorm(490, 500, 6)` answer?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The weight of the lightest 490 loaves"
+              },
+              {
+                "id": "b",
+                "label": "The share of loaves below 490 g"
+              },
+              {
+                "id": "c",
+                "label": "The z-score of 490"
+              },
+              {
+                "id": "d",
+                "label": "The share of loaves above 490 g"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`pnorm()` always gives the share below."
+          },
+          {
+            "id": "normal_distribution-q-14de03n",
+            "type": "mcq",
+            "prompt": "Which gives the share **above** 510 g?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`qnorm(510, 500, 6)`"
+              },
+              {
+                "id": "b",
+                "label": "`1 - pnorm(510, 500, 6)`"
+              },
+              {
+                "id": "c",
+                "label": "`pnorm(-510, 500, 6)`"
+              },
+              {
+                "id": "d",
+                "label": "`pnorm(510, 500, 6)`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Everything (1) minus the share below."
+          },
+          {
+            "id": "normal_distribution-q-xopfqw",
+            "type": "mcq",
+            "prompt": "What does `qnorm(0.5, 500, 6)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`0.5`"
+              },
+              {
+                "id": "b",
+                "label": "`6`"
+              },
+              {
+                "id": "c",
+                "label": "`506`"
+              },
+              {
+                "id": "d",
+                "label": "`500`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Half of the loaves are below the mean."
+          },
+          {
+            "id": "normal_distribution-q-glk9bn",
+            "type": "mcq",
+            "prompt": "What is the z-score of a 512 g loaf (mean 500, sd 6)?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2`"
+              },
+              {
+                "id": "b",
+                "label": "`12`"
+              },
+              {
+                "id": "c",
+                "label": "`-2`"
+              },
+              {
+                "id": "d",
+                "label": "`0.5`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "(512 − 500) / 6 = 2: two sds above the mean."
+          },
+          {
+            "id": "normal_distribution-q-izgyw9",
+            "type": "mcq",
+            "prompt": "`pnorm()` and `qnorm()` are…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Opposites: one turns a value into a share, the other a share into a value"
+              },
+              {
+                "id": "b",
+                "label": "Both random"
+              },
+              {
+                "id": "c",
+                "label": "The same"
+              },
+              {
+                "id": "d",
+                "label": "For text"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`qnorm(pnorm(490, 500, 6), 500, 6)` gives 490 back."
+          },
+          {
+            "id": "normal_distribution-q-18foqqg",
+            "type": "mcq",
+            "prompt": "What does `round(qnorm(0.975), 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1.96`"
+              },
+              {
+                "id": "b",
+                "label": "`0.98`"
+              },
+              {
+                "id": "c",
+                "label": "`2.5`"
+              },
+              {
+                "id": "d",
+                "label": "`1.64`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The famous 1.96: 95% of the standard normal is between −1.96 and 1.96."
+          },
+          {
+            "id": "normal_distribution-q-1wq4hfj",
+            "type": "shortText",
+            "prompt": "Which function gives the share of a normal distribution below a value?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "pnorm"
+            },
+            "explanation": "`pnorm(q, mean, sd)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "correlation",
+      "title": "Correlation",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "one_outlier",
+          "label": "One outlier",
+          "code": "x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\ncor(x, y)\ny[6] <- 30\ncor(x, y)\ncor(x, y, method = \"spearman\")"
+        }
+      ],
+      "intro": {
+        "title": "Correlation",
+        "bodyMarkdown": "Do students who revise more score higher? A **correlation** measures how closely two numeric columns move together, as one number from −1 to 1:\n\n| r | Means |\n| --- | --- |\n| near 1 | When one is high, the other is high (a strong positive link) |\n| near 0 | No straight-line link |\n| near −1 | When one is high, the other is low (a strong negative link) |\n\n```\nstudy <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\ncor(study$hours, study$score)    # 0.93: strongly positive\ncor(study$phone, study$score)    # -0.91: strongly negative\n```\n\n`cor()` on a whole table of numbers gives every pair at once, as a matrix: `cor(study[, c(\"hours\", \"phone\", \"sleep\", \"score\")])`.\n\n`cor()` measures **straight-line** links, and one unusual value can pull it a long way. `method = \"spearman\"` uses ranks instead, so it is less affected by outliers.\n\nAnd the big warning: **correlation is not causation**. Revising and phone use are linked (r = −0.91), so either could be behind the scores, or something else behind both. A correlation tells you two things go together, not why.",
+        "sandboxCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\ncor(study$hours, study$score)\nround(cor(study[, c(\"hours\", \"phone\", \"sleep\", \"score\")]), 2)",
+        "readMore": {
+          "label": "R documentation: cor()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "correlation-revision-and-score",
+          "title": "Easy: Revision and score",
+          "promptMarkdown": "Make `r_hours` the correlation between hours of revision and score, rounded to 2 decimal places.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`round(cor(study$hours, study$score), 2)`",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nr_hours <- round(cor(study$hours, study$score), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r_hours is 0.93",
+                "assertion": "is.numeric(r_hours) && isTRUE(all.equal(r_hours, 0.93))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-phones-and-score",
+          "title": "Easy: Phones and score",
+          "promptMarkdown": "Make `r_phone` the correlation between phone hours and score, rounded to 2 decimal places.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`round(cor(study$phone, study$score), 2)`",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nr_phone <- round(cor(study$phone, study$score), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r_phone is -0.91",
+                "assertion": "is.numeric(r_phone) && isTRUE(all.equal(r_phone, -0.91))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-sleep-and-score",
+          "title": "Easy: Sleep and score",
+          "promptMarkdown": "Make `r_sleep` the correlation between sleep and score, rounded to 2 decimal places. Is the link strong?",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "Same as before, with `study$sleep`. A value near 0 means a weak link.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nr_sleep <- round(cor(study$sleep, study$score), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r_sleep is 0.2",
+                "assertion": "is.numeric(r_sleep) && isTRUE(all.equal(r_sleep, 0.2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-every-pair",
+          "title": "Medium: Every pair",
+          "promptMarkdown": "Make `m` the correlation matrix of the four number columns, rounded to 2 decimal places.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`round(cor(study[, c(\"hours\", \"phone\", \"sleep\", \"score\")]), 2)`, or `study[, -1]` for every column but the name.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nm <- round(cor(study[, c(\"hours\", \"phone\", \"sleep\", \"score\")]), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "m is the 4 by 4 correlation matrix",
+                "assertion": "is.matrix(m) && isTRUE(all.equal(m, round(cor(study[, c(\"hours\", \"phone\", \"sleep\", \"score\")]), 2)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-the-strongest-link",
+          "title": "Medium: The strongest link",
+          "promptMarkdown": "Make `strongest` the name of the column (hours, phone or sleep) most strongly linked to score, either way.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "Work out the three correlations with score in a named vector, then take the name of the largest `abs()`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nr <- c(hours = cor(study$hours, study$score), phone = cor(study$phone, study$score), sleep = cor(study$sleep, study$score))\nstrongest <- names(which.max(abs(r)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "strongest is \"hours\"",
+                "assertion": "identical(strongest, \"hours\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-ranks-instead",
+          "title": "Medium: Ranks instead",
+          "promptMarkdown": "Make `rho` the Spearman (rank) correlation between hours and score, rounded to 2 decimal places.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`cor(..., method = \"spearman\")`",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nrho <- round(cor(study$hours, study$score, method = \"spearman\"), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rho is 0.9",
+                "assertion": "is.numeric(rho) && isTRUE(all.equal(rho, 0.9))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-one-outlier",
+          "title": "Hard: One outlier",
+          "promptMarkdown": "Make `before` the correlation of `x` and `y`, then change the last `y` to 30 and make `after` the new correlation, both rounded to 2 decimal places.",
+          "starterCode": "x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\n",
+          "hint": "`before <- round(cor(x, y), 2)`, then `y[6] <- 30`, then `after <- round(cor(x, y), 2)`.",
+          "solution": "x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\nbefore <- round(cor(x, y), 2)\ny[6] <- 30\nafter <- round(cor(x, y), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "before is 0.86",
+                "assertion": "is.numeric(before) && isTRUE(all.equal(before, 0.86))"
+              },
+              {
+                "id": "t2",
+                "label": "after is 0.71",
+                "assertion": "is.numeric(after) && isTRUE(all.equal(after, 0.71))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "correlation-is-it-significant",
+          "title": "Expert: Is it significant?",
+          "promptMarkdown": "With only 8 students, a correlation could be luck. `cor.test()` gives a p-value. Make `p` the p-value for hours and score, rounded to 4 decimal places.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`cor.test(study$hours, study$score)$p.value`",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\np <- round(cor.test(study$hours, study$score)$p.value, 4)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p is 0.0009",
+                "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.0009))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "correlation-q-1tnlbuk",
+            "type": "mcq",
+            "prompt": "A correlation of −0.9 means…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A strong link: when one is high, the other is low"
+              },
+              {
+                "id": "b",
+                "label": "No link"
+              },
+              {
+                "id": "c",
+                "label": "A weak positive link"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The sign is the direction; the size is the strength."
+          },
+          {
+            "id": "correlation-q-1ioy333",
+            "type": "mcq",
+            "prompt": "What does `cor(c(1, 2, 3), c(2, 4, 6))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`0.5`"
+              },
+              {
+                "id": "b",
+                "label": "`2`"
+              },
+              {
+                "id": "c",
+                "label": "`1`"
+              },
+              {
+                "id": "d",
+                "label": "`0`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "A perfect straight line going up."
+          },
+          {
+            "id": "correlation-q-h2kbwv",
+            "type": "mcq",
+            "prompt": "What does `cor(c(1, 2, 3), c(6, 4, 2))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`-2`"
+              },
+              {
+                "id": "b",
+                "label": "`-1`"
+              },
+              {
+                "id": "c",
+                "label": "`1`"
+              },
+              {
+                "id": "d",
+                "label": "`0`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A perfect straight line going down."
+          },
+          {
+            "id": "correlation-q-1w7ysid",
+            "type": "mcq",
+            "prompt": "Revision hours and scores have r = 0.93. What can you say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They go together strongly; the reason needs more evidence"
+              },
+              {
+                "id": "b",
+                "label": "Every student who revises scores 93"
+              },
+              {
+                "id": "c",
+                "label": "They are unrelated"
+              },
+              {
+                "id": "d",
+                "label": "Revising causes higher scores"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Correlation is not causation."
+          },
+          {
+            "id": "correlation-q-5jqc1a",
+            "type": "mcq",
+            "prompt": "Which range can a correlation take?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "0 to 1"
+              },
+              {
+                "id": "b",
+                "label": "Any number"
+              },
+              {
+                "id": "c",
+                "label": "−1 to 1"
+              },
+              {
+                "id": "d",
+                "label": "0 to 100"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "±1 is a perfect straight line."
+          },
+          {
+            "id": "correlation-q-y7jfx4",
+            "type": "mcq",
+            "prompt": "Why use `method = \"spearman\"`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It gives p-values"
+              },
+              {
+                "id": "b",
+                "label": "It uses ranks, so one unusual value has less pull"
+              },
+              {
+                "id": "c",
+                "label": "It is always bigger"
+              },
+              {
+                "id": "d",
+                "label": "It works on text"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Ranks don't care how far out an outlier is."
+          },
+          {
+            "id": "correlation-q-1lyqcf3",
+            "type": "mcq",
+            "prompt": "What does `cor()` give for a data frame of numbers?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "One number"
+              },
+              {
+                "id": "c",
+                "label": "A list"
+              },
+              {
+                "id": "d",
+                "label": "A matrix of the correlation of every pair of columns"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The diagonal is always 1: each column with itself."
+          },
+          {
+            "id": "correlation-q-13pv7zu",
+            "type": "mcq",
+            "prompt": "A correlation near 0 means…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A perfect link"
+              },
+              {
+                "id": "b",
+                "label": "No **straight-line** link; there could still be a curved one"
+              },
+              {
+                "id": "c",
+                "label": "Missing values"
+              },
+              {
+                "id": "d",
+                "label": "No link of any kind"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A U-shape can have r near 0."
+          },
+          {
+            "id": "correlation-q-1q0bnt2",
+            "type": "shortText",
+            "prompt": "Which function measures how two numeric vectors move together?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "cor"
+            },
+            "explanation": "`cor(x, y)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "confidence_intervals",
+      "title": "Confidence intervals",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "by_hand",
+          "label": "By hand",
+          "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nse <- sd(loaf) / sqrt(length(loaf))\nmean(loaf) + c(-1, 1) * qt(0.975, df = 9) * se"
+        }
+      ],
+      "intro": {
+        "title": "Confidence intervals",
+        "bodyMarkdown": "A trading-standards officer weighs 10 loaves from the bakery. Their mean is 495.8 g, but a different 10 loaves would give a different mean. How far from the **true** mean of all the loaves could 495.8 be?\n\n```\nloaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nmean(loaf)    # 495.8\n```\n\nThe **standard error** measures how much a sample mean wobbles: `sd(x) / sqrt(length(x))`. Bigger samples have smaller standard errors.\n\nA **95% confidence interval** is a range built so that, for 95% of samples, it contains the true mean. For a mean it is roughly the mean ± 2 standard errors; exactly, the 2 is `qt(0.975, df = n - 1)`, which allows for small samples.\n\nR works it out with `t.test()`. The result holds many parts; `$conf.int` is the interval and `$estimate` the mean:\n\n```\nt.test(loaf)$conf.int    # 492.0 to 499.6\n```\n\n`conf.level = 0.90` gives a 90% interval, which is narrower: being less sure buys a tighter range. To read the interval: we are 95% confident the true mean weight is between 492.0 g and 499.6 g. Notice that 500 g, the label, is **outside** it.",
+        "sandboxCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nmean(loaf)\nsd(loaf) / sqrt(length(loaf))\nt.test(loaf)$conf.int",
+        "readMore": {
+          "label": "R documentation: t.test()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "confidence_intervals-the-standard-error",
+          "title": "Easy: The standard error",
+          "promptMarkdown": "Make `se` the standard error of the loaf weights, rounded to 2 decimal places.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`round(sd(loaf) / sqrt(length(loaf)), 2)`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nse <- round(sd(loaf) / sqrt(length(loaf)), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "se is 1.68",
+                "assertion": "is.numeric(se) && isTRUE(all.equal(se, 1.68))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-the-interval",
+          "title": "Easy: The interval",
+          "promptMarkdown": "Make `ci` the 95% confidence interval for the mean weight, rounded to 1 decimal place.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`round(t.test(loaf)$conf.int, 1)`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nci <- round(t.test(loaf)$conf.int, 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ci is 492 to 499.6",
+                "assertion": "isTRUE(all.equal(as.vector(ci), c(492, 499.6)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-the-estimate",
+          "title": "Easy: The estimate",
+          "promptMarkdown": "Make `est` the mean that `t.test()` reports, without its name.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`unname(t.test(loaf)$estimate)`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nest <- unname(t.test(loaf)$estimate)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "est is 495.8",
+                "assertion": "is.numeric(est) && isTRUE(all.equal(est, 495.8))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-by-hand",
+          "title": "Medium: By hand",
+          "promptMarkdown": "Build the interval yourself: make `ci_hand` the mean minus and plus `qt(0.975, df = 9)` standard errors, rounded to 1 decimal place.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`se <- sd(loaf) / sqrt(10)`, then `round(mean(loaf) + c(-1, 1) * qt(0.975, df = 9) * se, 1)`.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nse <- sd(loaf) / sqrt(10)\nci_hand <- round(mean(loaf) + c(-1, 1) * qt(0.975, df = 9) * se, 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ci_hand is 492 to 499.6",
+                "assertion": "isTRUE(all.equal(ci_hand, c(492, 499.6)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-a-90-interval",
+          "title": "Medium: A 90% interval",
+          "promptMarkdown": "Make `ci90` the 90% confidence interval, rounded to 1 decimal place. Is it wider or narrower?",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`t.test(loaf, conf.level = 0.90)$conf.int`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nci90 <- round(t.test(loaf, conf.level = 0.90)$conf.int, 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ci90 is 492.7 to 498.9",
+                "assertion": "isTRUE(all.equal(as.vector(ci90), c(492.7, 498.9)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-is-500-inside",
+          "title": "Medium: Is 500 inside?",
+          "promptMarkdown": "Make `inside` TRUE if 500 g is inside the 95% interval, FALSE if not.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`ci <- t.test(loaf)$conf.int`, then `500 >= ci[1] & 500 <= ci[2]`.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nci <- t.test(loaf)$conf.int\ninside <- 500 >= ci[1] & 500 <= ci[2]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "inside is FALSE",
+                "assertion": "identical(inside, FALSE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-the-width",
+          "title": "Hard: The width",
+          "promptMarkdown": "Make `width` the width of the 95% interval (top minus bottom), rounded to 1 decimal place.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`ci <- t.test(loaf)$conf.int`, then `round(ci[2] - ci[1], 1)` or `round(diff(ci), 1)`.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nci <- t.test(loaf)$conf.int\nwidth <- round(ci[2] - ci[1], 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "width is 7.6",
+                "assertion": "is.numeric(width) && isTRUE(all.equal(width, 7.6))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_intervals-do-95-of-intervals-catch-it",
+          "title": "Expert: Do 95% of intervals catch it?",
+          "promptMarkdown": "Simulate it: set the seed to 4 and make `caught` the share of 1000 samples of 10 loaves (`rnorm(10, 500, 6)`) whose 95% interval contains 500. It should be near 0.95.",
+          "starterCode": "",
+          "hint": "`replicate(1000, { ci <- t.test(rnorm(10, 500, 6))$conf.int; ci[1] <= 500 & 500 <= ci[2] })`, then `mean()` of the result.",
+          "solution": "set.seed(4)\nhits <- replicate(1000, {\n  ci <- t.test(rnorm(10, 500, 6))$conf.int\n  ci[1] <= 500 & 500 <= ci[2]\n})\ncaught <- mean(hits)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "caught matches seed 4",
+                "assertion": "is.numeric(caught) && isTRUE(all.equal(caught, local({ set.seed(4); mean(replicate(1000, { ci <- t.test(rnorm(10, 500, 6))$conf.int; ci[1] <= 500 & 500 <= ci[2] })) })))"
+              },
+              {
+                "id": "t2",
+                "label": "It is near 0.95",
+                "assertion": "abs(caught - 0.95) < 0.03"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "confidence_intervals-q-1jytm33",
+            "type": "mcq",
+            "prompt": "What does the standard error measure?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The mistake in a reading"
+              },
+              {
+                "id": "b",
+                "label": "The spread of the values"
+              },
+              {
+                "id": "c",
+                "label": "How much the sample mean would wobble from sample to sample"
+              },
+              {
+                "id": "d",
+                "label": "The range"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`sd(x) / sqrt(n)`: it shrinks as samples grow."
+          },
+          {
+            "id": "confidence_intervals-q-w9ubg2",
+            "type": "mcq",
+            "prompt": "What does `sd(c(2, 4, 6, 8)) / sqrt(4)` give, roughly?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2.58`"
+              },
+              {
+                "id": "b",
+                "label": "`1.29`"
+              },
+              {
+                "id": "c",
+                "label": "`0.65`"
+              },
+              {
+                "id": "d",
+                "label": "`5`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The sd is 2.58; divided by 2 it is 1.29."
+          },
+          {
+            "id": "confidence_intervals-q-b0kelj",
+            "type": "mcq",
+            "prompt": "A 95% interval for the mean weight is 492.0 to 499.6. Which reading is right?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The mean is exactly 495.8 for all loaves"
+              },
+              {
+                "id": "b",
+                "label": "Every loaf is under 500 g"
+              },
+              {
+                "id": "c",
+                "label": "We are 95% confident the true mean weight is in that range"
+              },
+              {
+                "id": "d",
+                "label": "95% of loaves weigh between 492.0 and 499.6 g"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "It is about the mean, not single loaves."
+          },
+          {
+            "id": "confidence_intervals-q-r4m3k3",
+            "type": "mcq",
+            "prompt": "What happens to the interval with a bigger sample?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It disappears"
+              },
+              {
+                "id": "b",
+                "label": "It gets narrower"
+              },
+              {
+                "id": "c",
+                "label": "It stays the same"
+              },
+              {
+                "id": "d",
+                "label": "It gets wider"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The standard error shrinks as n grows."
+          },
+          {
+            "id": "confidence_intervals-q-16nw46l",
+            "type": "mcq",
+            "prompt": "Compared with a 95% interval, a 90% interval is…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Always includes 0"
+              },
+              {
+                "id": "b",
+                "label": "Wider"
+              },
+              {
+                "id": "c",
+                "label": "The same"
+              },
+              {
+                "id": "d",
+                "label": "Narrower"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Less confidence, tighter range."
+          },
+          {
+            "id": "confidence_intervals-q-izfa0s",
+            "type": "mcq",
+            "prompt": "Which part of `t.test()` holds the interval?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`$estimate`"
+              },
+              {
+                "id": "b",
+                "label": "`$interval`"
+              },
+              {
+                "id": "c",
+                "label": "`$p.value`"
+              },
+              {
+                "id": "d",
+                "label": "`$conf.int`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`$estimate` is the mean; `$p.value` comes in the next stage."
+          },
+          {
+            "id": "confidence_intervals-q-scsnui",
+            "type": "mcq",
+            "prompt": "What does `round(qt(0.975, df = 9), 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1.96`"
+              },
+              {
+                "id": "b",
+                "label": "`2.26`"
+              },
+              {
+                "id": "c",
+                "label": "`9`"
+              },
+              {
+                "id": "d",
+                "label": "`0.98`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Bigger than 1.96: small samples need a wider interval."
+          },
+          {
+            "id": "confidence_intervals-q-rveif9",
+            "type": "mcq",
+            "prompt": "The label says 500 g and 500 is outside the 95% interval. What does that suggest?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The true mean is probably below 500 g"
+              },
+              {
+                "id": "b",
+                "label": "Nothing"
+              },
+              {
+                "id": "c",
+                "label": "Every loaf is underweight"
+              },
+              {
+                "id": "d",
+                "label": "The scale is broken"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The data don't fit a true mean of 500 well. The next stage tests this directly."
+          },
+          {
+            "id": "confidence_intervals-q-1d7f0il",
+            "type": "shortText",
+            "prompt": "Which function gives a confidence interval for a mean, in its $conf.int part?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "t.test"
+            },
+            "explanation": "`t.test(x)$conf.int`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "one_sample_t",
+      "title": "Testing a claim",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "just_the_numbers",
+          "label": "Just the numbers",
+          "code": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nres <- t.test(loaf, mu = 500)\nround(c(t = unname(res$statistic), p = res$p.value), 3)"
+        }
+      ],
+      "intro": {
+        "title": "Testing a claim",
+        "bodyMarkdown": "The bakery's label says 500 g, and the 10 loaves averaged 495.8 g. Is that just luck of the sample, or are the loaves really light? A **hypothesis test** answers in a careful way:\n\nFirst, assume the claim is true: the true mean is 500 g. This is the **null hypothesis**. Then work out how surprising the data would be if it were. That surprise is the **p-value**: the chance of a sample mean at least this far from 500 just by luck.\n\nThe **one-sample t-test** does all of it. `mu` is the claimed mean:\n\n```\nloaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nt.test(loaf, mu = 500)$p.value    # 0.034\n```\n\nA small p-value means the data would be surprising if the claim were true. By a common convention, **p < 0.05** counts as evidence against the claim, often called \"statistically significant\". Here p = 0.034, so the data are evidence that the loaves weigh less than 500 g on average.\n\nA large p-value does **not** prove the claim; it only means the data don't give clear evidence against it. Small samples often can't tell.\n\nBy default the test is two-sided: too heavy and too light both count. If only one direction matters, say so: `alternative = \"less\"` tests whether the true mean is below `mu`.",
+        "sandboxCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nt.test(loaf, mu = 500)",
+        "readMore": {
+          "label": "R documentation: t.test()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "one_sample_t-the-p-value",
+          "title": "Easy: The p-value",
+          "promptMarkdown": "Test the 500 g claim. Make `p` the p-value, rounded to 3 decimal places.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`round(t.test(loaf, mu = 500)$p.value, 3)`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\np <- round(t.test(loaf, mu = 500)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p is 0.034",
+                "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.034))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-significant",
+          "title": "Easy: Significant?",
+          "promptMarkdown": "Make `significant` TRUE if the p-value is below 0.05.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`t.test(loaf, mu = 500)$p.value < 0.05`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nsignificant <- t.test(loaf, mu = 500)$p.value < 0.05",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "significant is TRUE",
+                "assertion": "identical(significant, TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-the-t-statistic",
+          "title": "Easy: The t statistic",
+          "promptMarkdown": "Make `t_value` the t statistic, unnamed, rounded to 2 decimal places.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`round(unname(t.test(loaf, mu = 500)$statistic), 2)`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nt_value <- round(unname(t.test(loaf, mu = 500)$statistic), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "t_value is -2.5",
+                "assertion": "is.numeric(t_value) && isTRUE(all.equal(t_value, -2.5))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-one-direction",
+          "title": "Medium: One direction",
+          "promptMarkdown": "Only underweight loaves matter to customers. Make `p_less` the p-value for \"the true mean is below 500\", rounded to 3 decimal places.",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`t.test(loaf, mu = 500, alternative = \"less\")$p.value`",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\np_less <- round(t.test(loaf, mu = 500, alternative = \"less\")$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_less is 0.017",
+                "assertion": "is.numeric(p_less) && isTRUE(all.equal(p_less, 0.017))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-a-claim-that-fits",
+          "title": "Medium: A claim that fits",
+          "promptMarkdown": "Make `p_495` the p-value for the claim that the true mean is 495 g, rounded to 2 decimal places. Is it evidence against that claim?",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`t.test(loaf, mu = 495)`. A large p-value: no clear evidence against.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\np_495 <- round(t.test(loaf, mu = 495)$p.value, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_495 is 0.65",
+                "assertion": "is.numeric(p_495) && isTRUE(all.equal(p_495, 0.65))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-delivery-promise",
+          "title": "Medium: Delivery promise",
+          "promptMarkdown": "A bakery promises deliveries in 30 minutes on average. Make `p_del` the p-value for the claim, using `minutes`, rounded to 2 decimal places.",
+          "starterCode": "minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\n",
+          "hint": "`t.test(minutes, mu = 30)$p.value`",
+          "solution": "minutes <- c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\np_del <- round(t.test(minutes, mu = 30)$p.value, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_del is 0.71",
+                "assertion": "is.numeric(p_del) && isTRUE(all.equal(p_del, 0.71))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-a-report-line",
+          "title": "Hard: A report line",
+          "promptMarkdown": "Show one line about the loaves, with the mean rounded to 1 decimal place and p to 3:\n\n```\nmean 495.8 g, p = 0.034\n```",
+          "starterCode": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\n",
+          "hint": "`res <- t.test(loaf, mu = 500)`, then `cat(\"mean \", round(mean(loaf), 1), \" g, p = \", round(res$p.value, 3), \"\\n\", sep = \"\")`.",
+          "solution": "loaf <- c(497, 503, 491, 499, 488, 502, 495, 494, 500, 489)\nres <- t.test(loaf, mu = 500)\ncat(\"mean \", round(mean(loaf), 1), \" g, p = \", round(res$p.value, 3), \"\\n\", sep = \"\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the line",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"mean 495.8 g, p = 0.034\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "one_sample_t-false-alarms",
+          "title": "Expert: False alarms",
+          "promptMarkdown": "If the claim is true, how often does p < 0.05 happen anyway? Set the seed to 8 and make `false_alarms` the share of 1000 samples of 10 loaves from `rnorm(10, 500, 6)` (where the claim is true) with p < 0.05. It should be near 0.05.",
+          "starterCode": "",
+          "hint": "`replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05)`, then `mean()`.",
+          "solution": "set.seed(8)\nfalse_alarms <- mean(replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "false_alarms matches seed 8",
+                "assertion": "is.numeric(false_alarms) && isTRUE(all.equal(false_alarms, local({ set.seed(8); mean(replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05)) })))"
+              },
+              {
+                "id": "t2",
+                "label": "It is near 0.05",
+                "assertion": "abs(false_alarms - 0.05) < 0.025"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "one_sample_t-q-1a1s3km",
+            "type": "mcq",
+            "prompt": "What is the null hypothesis in testing the 500 g label?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Every loaf weighs 500 g"
+              },
+              {
+                "id": "b",
+                "label": "The true mean weight is 500 g"
+              },
+              {
+                "id": "c",
+                "label": "The loaves weigh less than 500 g"
+              },
+              {
+                "id": "d",
+                "label": "The sample mean is 495.8 g"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The test assumes the claim and asks how surprising the data are."
+          },
+          {
+            "id": "one_sample_t-q-8xqzjp",
+            "type": "mcq",
+            "prompt": "What does a p-value of 0.034 mean here?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3.4% of loaves are light"
+              },
+              {
+                "id": "b",
+                "label": "If the true mean were 500 g, a sample this far off would happen about 3.4% of the time"
+              },
+              {
+                "id": "c",
+                "label": "The claim is true with chance 0.034"
+              },
+              {
+                "id": "d",
+                "label": "The loaves are 3.4% light"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "It is about the data, assuming the claim."
+          },
+          {
+            "id": "one_sample_t-q-yqp32t",
+            "type": "mcq",
+            "prompt": "p = 0.65 for the claim \"the mean is 495 g\". What can you say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The claim is false"
+              },
+              {
+                "id": "b",
+                "label": "The test failed"
+              },
+              {
+                "id": "c",
+                "label": "The data give no clear evidence against the claim"
+              },
+              {
+                "id": "d",
+                "label": "The mean is 495 g"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "A large p-value is not proof."
+          },
+          {
+            "id": "one_sample_t-q-ciguu1",
+            "type": "mcq",
+            "prompt": "Which is the usual convention for \"statistically significant\"?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "p < 0.05"
+              },
+              {
+                "id": "b",
+                "label": "p = 1"
+              },
+              {
+                "id": "c",
+                "label": "p < 0.5"
+              },
+              {
+                "id": "d",
+                "label": "p > 0.05"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A convention, not a law of nature: 0.049 and 0.051 are about equally strong."
+          },
+          {
+            "id": "one_sample_t-q-1atcz15",
+            "type": "mcq",
+            "prompt": "What does `mu = 500` set in `t.test(loaf, mu = 500)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The seed"
+              },
+              {
+                "id": "b",
+                "label": "The sample size"
+              },
+              {
+                "id": "c",
+                "label": "The standard deviation"
+              },
+              {
+                "id": "d",
+                "label": "The claimed true mean"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Without it, `mu` is 0."
+          },
+          {
+            "id": "one_sample_t-q-11u885g",
+            "type": "mcq",
+            "prompt": "Why is the one-sided p (0.017) half the two-sided p (0.034)?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A rounding error"
+              },
+              {
+                "id": "b",
+                "label": "Two-sided counts surprises in both directions; one-sided counts only \"too light\""
+              },
+              {
+                "id": "c",
+                "label": "It is a different test"
+              },
+              {
+                "id": "d",
+                "label": "One-sided uses fewer loaves"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The t distribution is symmetric, so each side holds half."
+          },
+          {
+            "id": "one_sample_t-q-72a18v",
+            "type": "mcq",
+            "prompt": "If the claim is true, how often does a test give p < 0.05 anyway?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Always"
+              },
+              {
+                "id": "b",
+                "label": "Never"
+              },
+              {
+                "id": "c",
+                "label": "About 5% of the time"
+              },
+              {
+                "id": "d",
+                "label": "About 50% of the time"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "That is what the 0.05 means: a false alarm rate."
+          },
+          {
+            "id": "one_sample_t-q-19e4zde",
+            "type": "mcq",
+            "prompt": "What does `t.test(c(5, 6, 7), mu = 6)$statistic` give, unnamed?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1`"
+              },
+              {
+                "id": "b",
+                "label": "`0`"
+              },
+              {
+                "id": "c",
+                "label": "`-1`"
+              },
+              {
+                "id": "d",
+                "label": "`6`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The sample mean equals mu exactly."
+          },
+          {
+            "id": "one_sample_t-q-5tyaee",
+            "type": "shortText",
+            "prompt": "Which part of a t.test() result holds the p-value? Give its name without the $.",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "p.value"
+            },
+            "explanation": "`t.test(x, mu = …)$p.value`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "two_sample_t",
+      "title": "Comparing two groups",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "paired",
+          "label": "Paired",
+          "code": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nt.test(class_results$test2, class_results$test1, paired = TRUE)$p.value"
+        }
+      ],
+      "intro": {
+        "title": "Comparing two groups",
+        "bodyMarkdown": "In the seedling trial, the leaf-compost trays averaged 10.6 cm and the peat trays 8.2 cm. With only four trays each, could that gap be luck? The **two-sample t-test** asks: if both composts really gave the same mean height, how surprising would a gap this big be?\n\n```\nseedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\nt.test(height_cm ~ compost, data = two)\n```\n\nThe `~` is a **formula**: \"height explained by compost\". The column on the left is the measurement, the one on the right says which group each row is in, and it must have exactly two groups, so here we first keep only peat and leaf.\n\nThe result gives a p-value (0.002: strong evidence of a real difference), the two group means in `$estimate`, and in `$conf.int` a confidence interval for the **difference** between them: leaf minus peat, because the groups are taken in alphabetical order.\n\nR uses the **Welch** version by default, which doesn't assume the two groups are equally spread. That is a safe default.\n\nWhen each value in one group has a partner in the other, such as the same student's first and second test, use a **paired** test on the two columns: `t.test(after, before, paired = TRUE)`. It tests whether the average change is zero.",
+        "sandboxCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\nt.test(height_cm ~ compost, data = two)",
+        "readMore": {
+          "label": "R documentation: t.test()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "two_sample_t-two-groups-only",
+          "title": "Easy: Two groups only",
+          "promptMarkdown": "Make `two` the seedlings with peat or leaf compost.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\n",
+          "hint": "`seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]`",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "two has the 8 peat and leaf trays",
+                "assertion": "is.data.frame(two) && nrow(two) == 8 && all(two$compost %in% c(\"peat\", \"leaf\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-leaf-against-peat",
+          "title": "Easy: Leaf against peat",
+          "promptMarkdown": "Make `p` the p-value of a t-test of height by compost on `two`, rounded to 3 decimal places.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\n",
+          "hint": "`round(t.test(height_cm ~ compost, data = two)$p.value, 3)`",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\np <- round(t.test(height_cm ~ compost, data = two)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p is 0.002",
+                "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.002))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses a formula",
+                "assertion": "grepl(\"~\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-the-group-means",
+          "title": "Easy: The group means",
+          "promptMarkdown": "Make `means` the two group means from the test, unnamed, rounded to 1 decimal place.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\n",
+          "hint": "`round(unname(t.test(height_cm ~ compost, data = two)$estimate), 1)`",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\nmeans <- round(unname(t.test(height_cm ~ compost, data = two)$estimate), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "means is leaf 10.6, peat 8.2",
+                "assertion": "isTRUE(all.equal(means, c(10.6, 8.2)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-how-big-is-the-gap",
+          "title": "Medium: How big is the gap",
+          "promptMarkdown": "Make `gap_ci` the 95% interval for the difference (leaf minus peat), rounded to 1 decimal place.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\n",
+          "hint": "`round(t.test(height_cm ~ compost, data = two)$conf.int, 1)`",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\ngap_ci <- round(t.test(height_cm ~ compost, data = two)$conf.int, 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "gap_ci is 1.3 to 3.5",
+                "assertion": "isTRUE(all.equal(as.vector(gap_ci), c(1.3, 3.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-home-against-peat",
+          "title": "Medium: Home against peat",
+          "promptMarkdown": "Now compare home compost with peat. Make `p_home` the p-value, rounded to 2 decimal places.",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\n",
+          "hint": "Make a new two-group table with `c(\"peat\", \"home\")`, then the same test.",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\nhp <- seedlings[seedlings$compost %in% c(\"peat\", \"home\"), ]\np_home <- round(t.test(height_cm ~ compost, data = hp)$p.value, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_home is 0.8",
+                "assertion": "is.numeric(p_home) && isTRUE(all.equal(p_home, 0.8))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-north-and-south",
+          "title": "Medium: North and south",
+          "promptMarkdown": "Make `p_area` the p-value comparing delivery minutes in the north and south, rounded to 3 decimal places.",
+          "starterCode": "deliveries <- data.frame(\n  rider = c(\"Sam\", \"Ola\", \"Sam\", \"Ola\", \"Kit\", \"Sam\", \"Kit\", \"Ola\", \"Kit\", \"Sam\", \"Ola\", \"Kit\"),\n  area = c(\"north\", \"south\", \"north\", \"north\", \"south\", \"south\", \"north\", \"south\", \"south\", \"north\", \"north\", \"south\"),\n  minutes = c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\n)\n",
+          "hint": "`t.test(minutes ~ area, data = deliveries)`: area already has just two groups.",
+          "solution": "deliveries <- data.frame(\n  rider = c(\"Sam\", \"Ola\", \"Sam\", \"Ola\", \"Kit\", \"Sam\", \"Kit\", \"Ola\", \"Kit\", \"Sam\", \"Ola\", \"Kit\"),\n  area = c(\"north\", \"south\", \"north\", \"north\", \"south\", \"south\", \"north\", \"south\", \"south\", \"north\", \"north\", \"south\"),\n  minutes = c(24, 31, 19, 27, 35, 29, 22, 74, 33, 21, 26, 38)\n)\np_area <- round(t.test(minutes ~ area, data = deliveries)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_area is 0.059",
+                "assertion": "is.numeric(p_area) && isTRUE(all.equal(p_area, 0.059))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-paired-tests",
+          "title": "Hard: Paired tests",
+          "promptMarkdown": "Did the class do better on test 2? Make `p_paired` the p-value of a paired t-test of test2 against test1, rounded to 3 decimal places. (Fay, with no test 2, is left out automatically.)",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+          "hint": "`t.test(class_results$test2, class_results$test1, paired = TRUE)$p.value`",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\np_paired <- round(t.test(class_results$test2, class_results$test1, paired = TRUE)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_paired is 0.01",
+                "assertion": "is.numeric(p_paired) && isTRUE(all.equal(p_paired, 0.01))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses paired = TRUE",
+                "assertion": "grepl(\"paired\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "two_sample_t-summary-sentence",
+          "title": "Expert: Summary sentence",
+          "promptMarkdown": "Show this line for the leaf and peat trays, using the test's numbers:\n\n```\nleaf 10.6 cm vs peat 8.2 cm, p = 0.002\n```",
+          "starterCode": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\n",
+          "hint": "`res <- t.test(height_cm ~ compost, data = two)`; `round(res$estimate, 1)` gives the means, `round(res$p.value, 3)` the p-value.",
+          "solution": "seedlings <- data.frame(\n  tray = 1:12,\n  compost = c(\"peat\", \"peat\", \"peat\", \"peat\", \"leaf\", \"leaf\", \"leaf\", \"leaf\", \"home\", \"home\", \"home\", \"home\"),\n  height_cm = c(8.2, 7.5, 9.1, 8.0, 10.4, 11.2, 9.8, 10.9, 7.1, 12.8, 6.9, 7.6),\n  leaves = c(6, 5, 7, 6, 8, 9, 7, 8, 5, 9, 4, 5)\n)\ntwo <- seedlings[seedlings$compost %in% c(\"peat\", \"leaf\"), ]\nres <- t.test(height_cm ~ compost, data = two)\nm <- round(unname(res$estimate), 1)\ncat(\"leaf \", m[1], \" cm vs peat \", m[2], \" cm, p = \", round(res$p.value, 3), \"\\n\", sep = \"\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the line",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"leaf 10.6 cm vs peat 8.2 cm, p = 0.002\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "two_sample_t-q-143sfaj",
+            "type": "mcq",
+            "prompt": "What does `height_cm ~ compost` mean in `t.test()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Height explained by compost: compare height between the compost groups"
+              },
+              {
+                "id": "b",
+                "label": "Height minus compost"
+              },
+              {
+                "id": "c",
+                "label": "A comment"
+              },
+              {
+                "id": "d",
+                "label": "Height and compost are equal"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Measurement on the left, groups on the right."
+          },
+          {
+            "id": "two_sample_t-q-1l7hfoi",
+            "type": "mcq",
+            "prompt": "Why keep only peat and leaf before the test?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It isn't needed"
+              },
+              {
+                "id": "b",
+                "label": "Home compost has NAs"
+              },
+              {
+                "id": "c",
+                "label": "The formula version of `t.test()` needs exactly two groups"
+              },
+              {
+                "id": "d",
+                "label": "To save time"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "With three groups R stops with an error."
+          },
+          {
+            "id": "two_sample_t-q-1ct0eir",
+            "type": "mcq",
+            "prompt": "The interval for leaf minus peat is 1.3 to 3.5 cm. What does it say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Peat is better"
+              },
+              {
+                "id": "b",
+                "label": "Leaf trays grew 1.3 to 3.5 cm"
+              },
+              {
+                "id": "c",
+                "label": "Nothing, because it doesn't include 0"
+              },
+              {
+                "id": "d",
+                "label": "We are 95% confident leaf compost gives 1.3 to 3.5 cm more height on average"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "And since 0 is outside it, no difference is not a good fit."
+          },
+          {
+            "id": "two_sample_t-q-1xrnj91",
+            "type": "mcq",
+            "prompt": "Home against peat gives p = 0.8. What can you say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They are the same"
+              },
+              {
+                "id": "b",
+                "label": "No clear evidence of a difference, from these few trays"
+              },
+              {
+                "id": "c",
+                "label": "Home compost is better"
+              },
+              {
+                "id": "d",
+                "label": "The test is wrong"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "One very tall home tray (12.8 cm) makes the group very spread out."
+          },
+          {
+            "id": "two_sample_t-q-7a003j",
+            "type": "mcq",
+            "prompt": "When should you use `paired = TRUE`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "When each value in one group belongs with one in the other, like the same student twice"
+              },
+              {
+                "id": "b",
+                "label": "Always"
+              },
+              {
+                "id": "c",
+                "label": "When the groups are the same size"
+              },
+              {
+                "id": "d",
+                "label": "With text"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Pairing removes the differences between students, so the test is sharper."
+          },
+          {
+            "id": "two_sample_t-q-gorq8n",
+            "type": "mcq",
+            "prompt": "What does R use by default for two groups?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The Welch test, which doesn't assume equal spreads"
+              },
+              {
+                "id": "b",
+                "label": "A test assuming equal spreads"
+              },
+              {
+                "id": "c",
+                "label": "A chi-squared test"
+              },
+              {
+                "id": "d",
+                "label": "A paired test"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`var.equal = TRUE` switches to the classic version."
+          },
+          {
+            "id": "two_sample_t-q-m48ibp",
+            "type": "mcq",
+            "prompt": "Delivery times north vs south give p = 0.059. Which is a fair summary?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No difference"
+              },
+              {
+                "id": "b",
+                "label": "Some evidence south is slower, not quite at the usual 0.05 level, and one 74-minute delivery affects it"
+              },
+              {
+                "id": "c",
+                "label": "North is slower"
+              },
+              {
+                "id": "d",
+                "label": "South is definitely slower"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Report the p-value and the context, not just \"significant or not\"."
+          },
+          {
+            "id": "two_sample_t-q-1a3lwe1",
+            "type": "mcq",
+            "prompt": "In what order does R take the groups in `$estimate`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "At random"
+              },
+              {
+                "id": "b",
+                "label": "Alphabetical order of the group names"
+              },
+              {
+                "id": "c",
+                "label": "The order in the data"
+              },
+              {
+                "id": "d",
+                "label": "Largest mean first"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "So leaf comes before peat."
+          },
+          {
+            "id": "two_sample_t-q-8ea9p3",
+            "type": "shortText",
+            "prompt": "Which argument of t.test(), set to TRUE, makes it a paired test?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "paired"
+            },
+            "explanation": "`t.test(after, before, paired = TRUE)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "chi_squared",
+      "title": "Counts and categories",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "fair_dice",
+          "label": "Fair dice?",
+          "code": "rolls <- c(15, 22, 18, 25, 17, 23)\nchisq.test(rolls)"
+        }
+      ],
+      "intro": {
+        "title": "Counts and categories",
+        "bodyMarkdown": "t-tests compare means. When the data are **categories**, such as hot lunch or packed lunch, you compare **counts** instead. The school canteen asked 100 students in two years what they usually have:\n\n```\nlunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\ntab\n```\n\nYear 7 chose hot lunch 30 times out of 45, Year 8 only 20 out of 55. Is lunch choice linked to year, or could a split like this happen by chance? The **chi-squared test of independence** compares the counts with what you would **expect** if year made no difference:\n\n```\nchisq.test(tab)             # p = 0.005\nchisq.test(tab)$expected    # the counts if there were no link\n```\n\nThe test adds up how far each observed count is from its expected count. Here p = 0.005, so the data are strong evidence that lunch choice differs between the years. (For a 2 × 2 table R applies a small correction by default, which makes the test a little more careful.)\n\nA **goodness-of-fit** test checks counts in one set of categories against expected shares. Are these 120 dice rolls fair? `chisq.test(c(15, 22, 18, 25, 17, 23))` tests against equal shares; add `p = c(...)` for other expected shares.\n\nThe test needs reasonably large counts. If expected counts are below about 5, R warns that the approximation may be incorrect.",
+        "sandboxCode": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\ntab\nchisq.test(tab)",
+        "readMore": {
+          "label": "R documentation: chisq.test()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/chisq.test.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "chi_squared-the-table",
+          "title": "Easy: The table",
+          "promptMarkdown": "Make `tab` a table of year against lunch choice.",
+          "starterCode": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\n",
+          "hint": "`tab <- table(lunch$year, lunch$choice)`",
+          "solution": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tab has Y7 30 15 and Y8 20 35",
+                "assertion": "inherits(tab, \"table\") && identical(as.vector(tab), c(30L, 20L, 15L, 35L))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-the-test",
+          "title": "Easy: The test",
+          "promptMarkdown": "Make `p` the p-value of a chi-squared test on `tab`, rounded to 3 decimal places.",
+          "starterCode": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\n",
+          "hint": "`round(chisq.test(tab)$p.value, 3)`",
+          "solution": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\np <- round(chisq.test(tab)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p is 0.005",
+                "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.005))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-expected-counts",
+          "title": "Easy: Expected counts",
+          "promptMarkdown": "Make `expected` the expected counts if year made no difference.",
+          "starterCode": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\n",
+          "hint": "`chisq.test(tab)$expected`",
+          "solution": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\nexpected <- chisq.test(tab)$expected",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "expected is 22.5, 27.5, 22.5, 27.5",
+                "assertion": "isTRUE(all.equal(as.vector(expected), c(22.5, 27.5, 22.5, 27.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-shares-by-year",
+          "title": "Medium: Shares by year",
+          "promptMarkdown": "Make `shares` the share of each choice within each year, rounded to 2 decimal places.",
+          "starterCode": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\n",
+          "hint": "`prop.table(tab, 1)` divides each row by its total.",
+          "solution": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\nshares <- round(prop.table(tab, 1), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "shares is Y7 0.67 0.33, Y8 0.36 0.64",
+                "assertion": "isTRUE(all.equal(as.vector(shares), c(0.67, 0.36, 0.33, 0.64)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-the-statistic",
+          "title": "Medium: The statistic",
+          "promptMarkdown": "Make `x2` the chi-squared statistic, unnamed, rounded to 2 decimal places.",
+          "starterCode": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\n",
+          "hint": "`round(unname(chisq.test(tab)$statistic), 2)`",
+          "solution": "lunch <- data.frame(\n  year = rep(c(\"Y7\", \"Y8\"), c(45, 55)),\n  choice = c(rep(c(\"hot\", \"packed\"), c(30, 15)), rep(c(\"hot\", \"packed\"), c(20, 35)))\n)\ntab <- table(lunch$year, lunch$choice)\nx2 <- round(unname(chisq.test(tab)$statistic), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "x2 is 7.92",
+                "assertion": "is.numeric(x2) && isTRUE(all.equal(x2, 7.92))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-fair-dice",
+          "title": "Medium: Fair dice",
+          "promptMarkdown": "Make `p_dice` the p-value testing whether these 120 rolls fit a fair die, rounded to 2 decimal places.",
+          "starterCode": "rolls <- c(15, 22, 18, 25, 17, 23)\n",
+          "hint": "`chisq.test(rolls)` tests against equal shares.",
+          "solution": "rolls <- c(15, 22, 18, 25, 17, 23)\np_dice <- round(chisq.test(rolls)$p.value, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_dice is 0.58",
+                "assertion": "is.numeric(p_dice) && isTRUE(all.equal(p_dice, 0.58))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-expected-shares",
+          "title": "Hard: Expected shares",
+          "promptMarkdown": "A seed company says its mix is 40% red, 40% yellow, 20% white flowers. A packet grew 30 red, 50 yellow and 20 white. Make `p_mix` the p-value, rounded to 3 decimal places.",
+          "starterCode": "flowers <- c(red = 30, yellow = 50, white = 20)\n",
+          "hint": "`chisq.test(flowers, p = c(0.4, 0.4, 0.2))`",
+          "solution": "flowers <- c(red = 30, yellow = 50, white = 20)\np_mix <- round(chisq.test(flowers, p = c(0.4, 0.4, 0.2))$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p_mix is 0.082",
+                "assertion": "is.numeric(p_mix) && isTRUE(all.equal(p_mix, 0.082))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "chi_squared-straight-from-the-counts",
+          "title": "Expert: Straight from the counts",
+          "promptMarkdown": "Sometimes you only have the counts. Make `m` a 2 × 2 matrix with rows Y7 (30 hot, 15 packed) and Y8 (20 hot, 35 packed), then `p_m` the chi-squared p-value, rounded to 3 decimal places.",
+          "starterCode": "",
+          "hint": "`matrix(c(30, 20, 15, 35), nrow = 2)` fills column by column. Then `chisq.test(m)`.",
+          "solution": "m <- matrix(c(30, 20, 15, 35), nrow = 2, dimnames = list(c(\"Y7\", \"Y8\"), c(\"hot\", \"packed\")))\np_m <- round(chisq.test(m)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "m holds the counts",
+                "assertion": "is.matrix(m) && isTRUE(all.equal(as.vector(m), c(30, 20, 15, 35)))"
+              },
+              {
+                "id": "t2",
+                "label": "p_m is 0.005",
+                "assertion": "is.numeric(p_m) && isTRUE(all.equal(p_m, 0.005))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "chi_squared-q-vd7oeb",
+            "type": "mcq",
+            "prompt": "When do you use a chi-squared test instead of a t-test?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "When there are NAs"
+              },
+              {
+                "id": "b",
+                "label": "When the data are measurements"
+              },
+              {
+                "id": "c",
+                "label": "Always"
+              },
+              {
+                "id": "d",
+                "label": "When the data are counts of categories"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "t-tests compare means; chi-squared compares counts."
+          },
+          {
+            "id": "chi_squared-q-qtd3st",
+            "type": "mcq",
+            "prompt": "What does the test of independence compare the counts with?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Zero"
+              },
+              {
+                "id": "b",
+                "label": "The biggest count"
+              },
+              {
+                "id": "c",
+                "label": "The counts you would expect if there were no link"
+              },
+              {
+                "id": "d",
+                "label": "The previous year"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The bigger the gaps, the smaller the p-value."
+          },
+          {
+            "id": "chi_squared-q-4ht1w5",
+            "type": "mcq",
+            "prompt": "With 45 Y7 students, 55 Y8 and 50 hot lunches in all, how many Y7 hot lunches would you expect with no link?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`30`"
+              },
+              {
+                "id": "b",
+                "label": "`45`"
+              },
+              {
+                "id": "c",
+                "label": "`25`"
+              },
+              {
+                "id": "d",
+                "label": "`22.5`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "45 × 50 / 100 = 22.5."
+          },
+          {
+            "id": "chi_squared-q-ezwol9",
+            "type": "mcq",
+            "prompt": "p = 0.005 for year and lunch. What can you say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Half choose hot"
+              },
+              {
+                "id": "b",
+                "label": "Year causes lunch choice"
+              },
+              {
+                "id": "c",
+                "label": "No link"
+              },
+              {
+                "id": "d",
+                "label": "Strong evidence that lunch choice differs between the years"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A link, not a cause."
+          },
+          {
+            "id": "chi_squared-q-14wqs00",
+            "type": "mcq",
+            "prompt": "What does `prop.table(tab, 1)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The counts"
+              },
+              {
+                "id": "b",
+                "label": "Shares of the whole table"
+              },
+              {
+                "id": "c",
+                "label": "Shares within each row"
+              },
+              {
+                "id": "d",
+                "label": "Shares within each column"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`1` is rows, `2` is columns."
+          },
+          {
+            "id": "chi_squared-q-12zt3op",
+            "type": "mcq",
+            "prompt": "`chisq.test(c(15, 22, 18, 25, 17, 23))` tests against…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Equal shares in each category"
+              },
+              {
+                "id": "b",
+                "label": "The mean"
+              },
+              {
+                "id": "c",
+                "label": "Zero"
+              },
+              {
+                "id": "d",
+                "label": "A normal distribution"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A fair die: one sixth each."
+          },
+          {
+            "id": "chi_squared-q-1wv6s2k",
+            "type": "mcq",
+            "prompt": "What does R warn when expected counts are small?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Nothing"
+              },
+              {
+                "id": "b",
+                "label": "That the data are text"
+              },
+              {
+                "id": "c",
+                "label": "That p is 0"
+              },
+              {
+                "id": "d",
+                "label": "That the chi-squared approximation may be incorrect"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Counts below about 5 make the test unreliable."
+          },
+          {
+            "id": "chi_squared-q-16sjcfr",
+            "type": "mcq",
+            "prompt": "What does `matrix(c(30, 20, 15, 35), nrow = 2)[1, ]` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 15 35`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 30 15`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 20 35`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 30 20`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A matrix fills column by column, so row 1 is 30 and 15."
+          },
+          {
+            "id": "chi_squared-q-1h5fju0",
+            "type": "shortText",
+            "prompt": "Which function runs a chi-squared test?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "chisq.test"
+            },
+            "explanation": "`chisq.test(table)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "linear_regression",
+      "title": "Linear regression",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "the_whole_summary",
+          "label": "The whole summary",
+          "code": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nsummary(model)"
+        }
+      ],
+      "intro": {
+        "title": "Linear regression",
+        "bodyMarkdown": "A correlation says revision and scores move together. **Linear regression** goes further: it finds the straight line that best fits the points, so you can say **how much** the score goes up per hour and **predict** scores.\n\n```\nstudy <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\ncoef(model)\n```\n\n`lm()` means \"linear model\", with the same formula as before: score explained by hours. `coef()` gives the line's two numbers: the **intercept** (50.1, the predicted score for 0 hours) and the **slope** (4.8, the extra points per hour of revision). So the line is: score = 50.1 + 4.8 × hours.\n\n**R²** (R-squared), from `summary(model)$r.squared`, says what share of the variation in scores the line explains: 0.86 here, which is a lot. It is the correlation squared.\n\n`predict()` uses the line for new values. It needs a data frame with the same column name:\n\n```\npredict(model, newdata = data.frame(hours = 4.5))    # about 71.7\n```\n\nTwo warnings. Predicting far outside the data (`hours = 20`) trusts the straight line where you have never seen it; that is **extrapolation**, and it can give nonsense like a score over 100. And as with correlation, a good fit is not proof that one thing causes the other.\n\n`residuals(model)` are the gaps between each real score and the line: positive if the student did better than the line predicts.",
+        "sandboxCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\ncoef(model)\nsummary(model)$r.squared\npredict(model, newdata = data.frame(hours = c(4.5, 8)))",
+        "readMore": {
+          "label": "R documentation: lm()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "linear_regression-fit-the-line",
+          "title": "Easy: Fit the line",
+          "promptMarkdown": "Make `model` a linear model of score explained by hours.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`model <- lm(score ~ hours, data = study)`",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "model is an lm of score on hours",
+                "assertion": "inherits(model, \"lm\") && isTRUE(all.equal(unname(coef(model)), unname(coef(lm(score ~ hours, data = study)))))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-the-slope",
+          "title": "Easy: The slope",
+          "promptMarkdown": "Make `slope` the extra points per hour, unnamed, rounded to 2 decimal places.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "The second coefficient: `round(unname(coef(model)[2]), 2)`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nslope <- round(unname(coef(model)[2]), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "slope is 4.8",
+                "assertion": "is.numeric(slope) && isTRUE(all.equal(slope, 4.8))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-the-intercept",
+          "title": "Easy: The intercept",
+          "promptMarkdown": "Make `intercept` the predicted score for 0 hours, unnamed, rounded to 1 decimal place.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "`round(unname(coef(model)[1]), 1)`",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nintercept <- round(unname(coef(model)[1]), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "intercept is 50.1",
+                "assertion": "is.numeric(intercept) && isTRUE(all.equal(intercept, 50.1))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-how-good-a-fit",
+          "title": "Medium: How good a fit",
+          "promptMarkdown": "Make `r2` the R-squared of the model, rounded to 2 decimal places.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "`round(summary(model)$r.squared, 2)`",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nr2 <- round(summary(model)$r.squared, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r2 is 0.86",
+                "assertion": "is.numeric(r2) && isTRUE(all.equal(r2, 0.86))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-predict",
+          "title": "Medium: Predict",
+          "promptMarkdown": "Make `pred` the predicted scores for 4.5 and 8 hours, unnamed, rounded to 1 decimal place.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "`predict(model, newdata = data.frame(hours = c(4.5, 8)))`, then `unname()` and `round()`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\npred <- round(unname(predict(model, newdata = data.frame(hours = c(4.5, 8)))), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "pred is 71.7, 88.5",
+                "assertion": "isTRUE(all.equal(pred, c(71.7, 88.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses predict()",
+                "assertion": "grepl(\"predict(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-by-hand",
+          "title": "Medium: By hand",
+          "promptMarkdown": "Make `by_hand` the prediction for 4.5 hours worked out from the coefficients yourself, rounded to 1 decimal place.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "`b <- coef(model)`, then `b[1] + b[2] * 4.5`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nb <- coef(model)\nby_hand <- round(unname(b[1] + b[2] * 4.5), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "by_hand is 71.7",
+                "assertion": "is.numeric(by_hand) && isTRUE(all.equal(by_hand, 71.7))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-above-and-below-the-line",
+          "title": "Hard: Above and below the line",
+          "promptMarkdown": "Make `beat_line` the names of the students who scored **more** than the line predicts.",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\n",
+          "hint": "Positive residuals: `study$student[residuals(model) > 0]`.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel <- lm(score ~ hours, data = study)\nbeat_line <- study$student[residuals(model) > 0]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "beat_line is Ana, Dee, Eli, Gus, Hal",
+                "assertion": "identical(beat_line, c(\"Ana\", \"Dee\", \"Eli\", \"Gus\", \"Hal\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "linear_regression-phones-instead",
+          "title": "Expert: Phones instead",
+          "promptMarkdown": "Fit `model2`, score explained by phone hours. Make `slope2` its slope and `r2_2` its R-squared, both rounded to 2 decimal places. Which model fits better?",
+          "starterCode": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\n",
+          "hint": "`model2 <- lm(score ~ phone, data = study)`, then the same two numbers as before.",
+          "solution": "study <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\"),\n  hours = c(2, 5, 1, 4, 6, 3, 7, 2),\n  phone = c(5, 2, 6, 2, 1, 4, 1, 3),\n  sleep = c(7, 8, 6, 7, 8, 9, 7, 6),\n  score = c(64, 71, 52, 75, 79, 58, 84, 62)\n)\nmodel2 <- lm(score ~ phone, data = study)\nslope2 <- round(unname(coef(model2)[2]), 2)\nr2_2 <- round(summary(model2)$r.squared, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "slope2 matches the phone model",
+                "assertion": "is.numeric(slope2) && isTRUE(all.equal(slope2, round(unname(coef(lm(score ~ phone, data = study))[2]), 2)))"
+              },
+              {
+                "id": "t2",
+                "label": "r2_2 is 0.84",
+                "assertion": "is.numeric(r2_2) && isTRUE(all.equal(r2_2, 0.84))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "linear_regression-q-7vthwz",
+            "type": "mcq",
+            "prompt": "In `lm(score ~ hours, data = study)`, what is being predicted?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "score"
+              },
+              {
+                "id": "b",
+                "label": "hours"
+              },
+              {
+                "id": "c",
+                "label": "Both"
+              },
+              {
+                "id": "d",
+                "label": "study"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The left of `~` is the outcome."
+          },
+          {
+            "id": "linear_regression-q-1l1155j",
+            "type": "mcq",
+            "prompt": "The slope is 4.8. What does it mean?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Each extra hour of revision goes with about 4.8 more points"
+              },
+              {
+                "id": "b",
+                "label": "The average score is 4.8"
+              },
+              {
+                "id": "c",
+                "label": "Students revise 4.8 hours"
+              },
+              {
+                "id": "d",
+                "label": "The line passes 4.8"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The slope is the change in the outcome per unit of the predictor."
+          },
+          {
+            "id": "linear_regression-q-1j2vuiq",
+            "type": "mcq",
+            "prompt": "What does the intercept (50.1) mean here?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The predicted score for 0 hours of revision"
+              },
+              {
+                "id": "b",
+                "label": "The lowest score"
+              },
+              {
+                "id": "c",
+                "label": "The mean score"
+              },
+              {
+                "id": "d",
+                "label": "The slope at 50"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Where the line crosses hours = 0."
+          },
+          {
+            "id": "linear_regression-q-12wr7d7",
+            "type": "mcq",
+            "prompt": "What does `coef(lm(y ~ x, data = data.frame(x = 1:3, y = c(2, 4, 6))))` give, unnamed?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 2 0`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 1 2`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 0 2`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 2 4 6`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "y = 0 + 2 × x exactly."
+          },
+          {
+            "id": "linear_regression-q-wtk31",
+            "type": "mcq",
+            "prompt": "R² is 0.86. What does that say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The prediction is 86"
+              },
+              {
+                "id": "b",
+                "label": "The line explains 86% of the variation in scores"
+              },
+              {
+                "id": "c",
+                "label": "86% of students passed"
+              },
+              {
+                "id": "d",
+                "label": "The slope is 0.86"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Close to 1 is a close fit; close to 0 explains almost nothing."
+          },
+          {
+            "id": "linear_regression-q-1oiwibg",
+            "type": "mcq",
+            "prompt": "Why is predicting the score for 20 hours risky?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "predict() can't do it"
+              },
+              {
+                "id": "b",
+                "label": "No student revised anywhere near 20 hours, so the straight line is a guess there (extrapolation)"
+              },
+              {
+                "id": "c",
+                "label": "It gives NA"
+              },
+              {
+                "id": "d",
+                "label": "It isn't"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The line gives 146, an impossible score."
+          },
+          {
+            "id": "linear_regression-q-13m6pu8",
+            "type": "mcq",
+            "prompt": "What does `predict()` need in `newdata`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The old data"
+              },
+              {
+                "id": "b",
+                "label": "A vector"
+              },
+              {
+                "id": "c",
+                "label": "A data frame with a column of the same name as the predictor"
+              },
+              {
+                "id": "d",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`data.frame(hours = 4.5)`."
+          },
+          {
+            "id": "linear_regression-q-1um8rr9",
+            "type": "mcq",
+            "prompt": "A student has a residual of −6.5. What does that mean?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They scored 6.5 points below what the line predicts"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "They scored 6.5"
+              },
+              {
+                "id": "d",
+                "label": "They revised 6.5 hours less"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Residual = real value − predicted value."
+          },
+          {
+            "id": "linear_regression-q-1tm5604",
+            "type": "shortText",
+            "prompt": "Which function fits a linear model?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "lm"
+            },
+            "explanation": "`lm(outcome ~ predictor, data = …)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_coin_flips",
+      "title": "Easy side quest: Coin flips",
+      "kind": "project",
+      "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "many_experiments",
+          "label": "Many experiments",
+          "code": "set.seed(10)\ncounts <- replicate(1000, sum(sample(c(\"H\", \"T\"), 100, replace = TRUE) == \"H\"))\nrange(counts)"
+        }
+      ],
+      "intro": {
+        "title": "Easy side quest: Coin flips",
+        "bodyMarkdown": "At the school fair, a stall uses a coin to decide who wins. One student flipped it 100 times and got 61 heads. Is the coin unfair, or is that within normal luck?\n\nYou will find out two ways: by simulating a fair coin many times in R, and with a proper test. Both should tell the same story.\n\n```\nflips <- sample(c(\"H\", \"T\"), 100, replace = TRUE)    # 100 flips of a fair coin\nsum(flips == \"H\")\n```",
+        "sandboxCode": "set.seed(10)\nflips <- sample(c(\"H\", \"T\"), 100, replace = TRUE)\ntable(flips)"
+      },
+      "challenges": [
+        {
+          "id": "proj_coin_flips-a-hundred-flips",
+          "title": "Easy: A hundred flips",
+          "promptMarkdown": "Set the seed to 10 and make `flips` 100 flips of a fair coin, as `\"H\"` and `\"T\"`.",
+          "starterCode": "",
+          "hint": "`sample(c(\"H\", \"T\"), 100, replace = TRUE)`",
+          "solution": "set.seed(10)\nflips <- sample(c(\"H\", \"T\"), 100, replace = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "flips matches seed 10",
+                "assertion": "identical(flips, local({ set.seed(10); sample(c(\"H\", \"T\"), 100, replace = TRUE) }))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_coin_flips-count-the-heads",
+          "title": "Easy: Count the heads",
+          "promptMarkdown": "Make `heads` the number of heads, and `share` the share of heads.",
+          "starterCode": "set.seed(10)\nflips <- sample(c(\"H\", \"T\"), 100, replace = TRUE)\n",
+          "hint": "`sum(flips == \"H\")` and `mean(flips == \"H\")`.",
+          "solution": "set.seed(10)\nflips <- sample(c(\"H\", \"T\"), 100, replace = TRUE)\nheads <- sum(flips == \"H\")\nshare <- mean(flips == \"H\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "heads is the count",
+                "assertion": "is.numeric(heads) && isTRUE(all.equal(heads, sum(flips == \"H\")))"
+              },
+              {
+                "id": "t2",
+                "label": "share is heads / 100",
+                "assertion": "is.numeric(share) && isTRUE(all.equal(share, sum(flips == \"H\") / 100))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_coin_flips-a-thousand-experiments",
+          "title": "Medium: A thousand experiments",
+          "promptMarkdown": "Set the seed to 10 and make `counts` the number of heads in each of 1000 experiments of 100 flips.",
+          "starterCode": "",
+          "hint": "`replicate(1000, sum(sample(c(\"H\", \"T\"), 100, replace = TRUE) == \"H\"))`",
+          "solution": "set.seed(10)\ncounts <- replicate(1000, sum(sample(c(\"H\", \"T\"), 100, replace = TRUE) == \"H\"))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "counts matches seed 10",
+                "assertion": "is.numeric(counts) && isTRUE(all.equal(counts, local({ set.seed(10); replicate(1000, sum(sample(c(\"H\", \"T\"), 100, replace = TRUE) == \"H\")) })))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_coin_flips-how-unusual-is-61",
+          "title": "Medium: How unusual is 61",
+          "promptMarkdown": "Make `as_extreme` the share of experiments with 61 or more heads, **or** 39 or fewer (just as far from 50 the other way).",
+          "starterCode": "set.seed(10)\ncounts <- replicate(1000, sum(sample(c(\"H\", \"T\"), 100, replace = TRUE) == \"H\"))\n",
+          "hint": "`mean(counts >= 61 | counts <= 39)`",
+          "solution": "set.seed(10)\ncounts <- replicate(1000, sum(sample(c(\"H\", \"T\"), 100, replace = TRUE) == \"H\"))\nas_extreme <- mean(counts >= 61 | counts <= 39)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "as_extreme is the share",
+                "assertion": "is.numeric(as_extreme) && isTRUE(all.equal(as_extreme, mean(counts >= 61 | counts <= 39)))"
+              },
+              {
+                "id": "t2",
+                "label": "It is small, about 0.035",
+                "assertion": "as_extreme < 0.07"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_coin_flips-the-proper-test",
+          "title": "Hard: The proper test",
+          "promptMarkdown": "`binom.test(x, n)` tests whether x successes in n tries fit a 50% chance. Make `p` the p-value for 61 heads in 100, rounded to 3 decimal places.",
+          "starterCode": "",
+          "hint": "`round(binom.test(61, 100)$p.value, 3)`",
+          "solution": "p <- round(binom.test(61, 100)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p is 0.035",
+                "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.035))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_coin_flips-where-is-the-true-chance",
+          "title": "Expert: Where is the true chance",
+          "promptMarkdown": "Make `ci` the 95% confidence interval for the coin's true chance of heads, from `binom.test()`, rounded to 2 decimal places. Is 0.5 inside?",
+          "starterCode": "",
+          "hint": "`round(binom.test(61, 100)$conf.int, 2)`",
+          "solution": "ci <- round(binom.test(61, 100)$conf.int, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ci is 0.51 to 0.71",
+                "assertion": "isTRUE(all.equal(as.vector(ci), c(0.51, 0.71)))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_coin_flips-q-1pet0xk",
+            "type": "mcq",
+            "prompt": "In 100 flips of a fair coin, how many heads do you expect?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "61"
+              },
+              {
+                "id": "b",
+                "label": "Exactly 50"
+              },
+              {
+                "id": "c",
+                "label": "About 50, give or take a few"
+              },
+              {
+                "id": "d",
+                "label": "100"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Luck moves the count around 50 every time."
+          },
+          {
+            "id": "proj_coin_flips-q-mp9sg",
+            "type": "mcq",
+            "prompt": "What does `mean(c(\"H\", \"T\", \"H\", \"H\") == \"H\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3`"
+              },
+              {
+                "id": "b",
+                "label": "`0.25`"
+              },
+              {
+                "id": "c",
+                "label": "`\"H\"`"
+              },
+              {
+                "id": "d",
+                "label": "`0.75`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The mean of TRUE/FALSE is the share TRUE."
+          },
+          {
+            "id": "proj_coin_flips-q-1tf0cjt",
+            "type": "mcq",
+            "prompt": "The simulation found about 3.5% of fair-coin experiments as extreme as 61 heads. That is…",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The chance the coin is fair"
+              },
+              {
+                "id": "b",
+                "label": "The share of heads"
+              },
+              {
+                "id": "c",
+                "label": "A simulated p-value"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "It matches what `binom.test()` works out exactly."
+          },
+          {
+            "id": "proj_coin_flips-q-1izjw5w",
+            "type": "mcq",
+            "prompt": "p = 0.035 for 61 heads. What can you say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The coin is certainly unfair"
+              },
+              {
+                "id": "b",
+                "label": "Nothing"
+              },
+              {
+                "id": "c",
+                "label": "The coin is fair"
+              },
+              {
+                "id": "d",
+                "label": "Some evidence the coin favours heads; worth more flips before accusing anyone"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Evidence, not proof. More data would make it clearer."
+          },
+          {
+            "id": "proj_coin_flips-q-eymqno",
+            "type": "mcq",
+            "prompt": "The interval for the chance of heads is 0.51 to 0.71. What does it say about 0.5?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "0.5 is just outside, so a fair coin is not a good fit"
+              },
+              {
+                "id": "b",
+                "label": "Nothing"
+              },
+              {
+                "id": "c",
+                "label": "0.5 is the estimate"
+              },
+              {
+                "id": "d",
+                "label": "0.5 is inside"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "It agrees with the p-value being under 0.05."
+          },
+          {
+            "id": "proj_coin_flips-q-c4gx2",
+            "type": "shortText",
+            "prompt": "Which function tests a count of successes against a chance, like heads in coin flips?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "binom.test"
+            },
+            "explanation": "`binom.test(61, 100)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_study_trial",
+      "title": "Medium side quest: The study-method trial",
+      "kind": "project",
+      "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "the_test",
+          "label": "The test",
+          "code": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\nt.test(score ~ method, data = trial)"
+        }
+      ],
+      "intro": {
+        "title": "Medium side quest: The study-method trial",
+        "bodyMarkdown": "Sixteen volunteers learned the same list of 100 words in another language. Eight used flashcards that tested them, and eight read the list over and over. A week later, everyone took the same test.\n\n```\ntrial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\n```\n\nWas the method worth it? Describe both groups, test the difference, and say how big it probably is. The last challenge shows:\n\n```\nflashcards 81.6 vs rereading 72, p = 0.004\n```",
+        "sandboxCode": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\ntapply(trial$score, trial$method, summary)"
+      },
+      "challenges": [
+        {
+          "id": "proj_study_trial-group-means",
+          "title": "Easy: Group means",
+          "promptMarkdown": "Make `means` the mean score of each method, rounded to 1 decimal place.",
+          "starterCode": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\n",
+          "hint": "`round(tapply(trial$score, trial$method, mean), 1)`",
+          "solution": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\nmeans <- round(tapply(trial$score, trial$method, mean), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "means is flashcards 81.6, rereading 72",
+                "assertion": "isTRUE(all.equal(as.vector(means), c(81.6, 72))) && identical(names(means), c(\"flashcards\", \"rereading\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_study_trial-group-spreads",
+          "title": "Easy: Group spreads",
+          "promptMarkdown": "Make `sds` the standard deviation of each method, rounded to 1 decimal place.",
+          "starterCode": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\n",
+          "hint": "The same with `sd`.",
+          "solution": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\nsds <- round(tapply(trial$score, trial$method, sd), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "sds is flashcards 6.1, rereading 4.6",
+                "assertion": "isTRUE(all.equal(as.vector(sds), c(6.1, 4.6)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_study_trial-test-the-difference",
+          "title": "Medium: Test the difference",
+          "promptMarkdown": "Make `p` the p-value of a t-test of score by method, rounded to 3 decimal places.",
+          "starterCode": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\n",
+          "hint": "`round(t.test(score ~ method, data = trial)$p.value, 3)`",
+          "solution": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\np <- round(t.test(score ~ method, data = trial)$p.value, 3)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "p is 0.004",
+                "assertion": "is.numeric(p) && isTRUE(all.equal(p, 0.004))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_study_trial-how-big-a-gain",
+          "title": "Medium: How big a gain",
+          "promptMarkdown": "Make `gain_ci` the 95% interval for flashcards minus rereading, rounded to 1 decimal place.",
+          "starterCode": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\n",
+          "hint": "`round(t.test(score ~ method, data = trial)$conf.int, 1)`",
+          "solution": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\ngain_ci <- round(t.test(score ~ method, data = trial)$conf.int, 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "gain_ci is 3.8 to 15.5",
+                "assertion": "isTRUE(all.equal(as.vector(gain_ci), c(3.8, 15.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_study_trial-beating-the-average",
+          "title": "Hard: Beating the average",
+          "promptMarkdown": "Make `beat` the share of flashcard students who scored above the rereading mean.",
+          "starterCode": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\n",
+          "hint": "Pick out each group's scores, then `mean(flash > mean(reread))`.",
+          "solution": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\nflash <- trial$score[trial$method == \"flashcards\"]\nreread <- trial$score[trial$method == \"rereading\"]\nbeat <- mean(flash > mean(reread))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "beat is 0.875",
+                "assertion": "is.numeric(beat) && isTRUE(all.equal(beat, 0.875))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_study_trial-the-finding",
+          "title": "Expert: The finding",
+          "promptMarkdown": "Show the one-line finding, using the test result:\n\n```\nflashcards 81.6 vs rereading 72, p = 0.004\n```",
+          "starterCode": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\n",
+          "hint": "`res <- t.test(score ~ method, data = trial)`; `round(unname(res$estimate), 1)` and `round(res$p.value, 3)`, joined with `cat(..., sep = \"\")`.",
+          "solution": "trial <- data.frame(\n  method = rep(c(\"flashcards\", \"rereading\"), each = 8),\n  score = c(78, 85, 72, 90, 81, 76, 88, 83, 70, 74, 79, 65, 72, 68, 77, 71)\n)\nres <- t.test(score ~ method, data = trial)\nm <- round(unname(res$estimate), 1)\ncat(\"flashcards \", m[1], \" vs rereading \", m[2], \", p = \", round(res$p.value, 3), \"\\n\", sep = \"\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the finding",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"flashcards 81.6 vs rereading 72, p = 0.004\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_study_trial-q-1xaj58s",
+            "type": "mcq",
+            "prompt": "Why report the spreads as well as the means?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The test needs them typed in"
+              },
+              {
+                "id": "b",
+                "label": "A gap between means means more when each group is tightly packed"
+              },
+              {
+                "id": "c",
+                "label": "It isn't needed"
+              },
+              {
+                "id": "d",
+                "label": "They look nice"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A t-test weighs the gap against the spread."
+          },
+          {
+            "id": "proj_study_trial-q-1wk6gzt",
+            "type": "mcq",
+            "prompt": "p = 0.004. What can you say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Flashcards cause higher scores in everyone"
+              },
+              {
+                "id": "b",
+                "label": "No difference"
+              },
+              {
+                "id": "c",
+                "label": "Strong evidence the flashcard group scored higher on average"
+              },
+              {
+                "id": "d",
+                "label": "Rereading is better"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "With volunteers assigned to methods, it is a fair comparison, but still a small one."
+          },
+          {
+            "id": "proj_study_trial-q-133g9r8",
+            "type": "mcq",
+            "prompt": "The interval for the gain is 3.8 to 15.5 points. What does that say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Nothing"
+              },
+              {
+                "id": "b",
+                "label": "Some students lost points"
+              },
+              {
+                "id": "c",
+                "label": "The true average gain is probably between about 4 and 15 points"
+              },
+              {
+                "id": "d",
+                "label": "The gain is 15.5"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "A wide interval: small groups can't pin it down tightly."
+          },
+          {
+            "id": "proj_study_trial-q-1ekq995",
+            "type": "mcq",
+            "prompt": "What would make the interval narrower?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Rounding"
+              },
+              {
+                "id": "b",
+                "label": "A smaller p-value"
+              },
+              {
+                "id": "c",
+                "label": "Fewer volunteers"
+              },
+              {
+                "id": "d",
+                "label": "More volunteers"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Bigger samples, smaller standard errors."
+          },
+          {
+            "id": "proj_study_trial-q-159cck5",
+            "type": "mcq",
+            "prompt": "Why is it important that volunteers were **split between** methods, not choosing their own?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "For equal group sizes"
+              },
+              {
+                "id": "b",
+                "label": "It isn't"
+              },
+              {
+                "id": "c",
+                "label": "R requires it"
+              },
+              {
+                "id": "d",
+                "label": "If they chose, keener students might pick flashcards, and the gap could be about them, not the method"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Random assignment is what lets a trial talk about causes."
+          },
+          {
+            "id": "proj_study_trial-q-waygov",
+            "type": "shortText",
+            "prompt": "In t.test(score ~ method, data = trial), what is the ~ part called?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "formula"
+            },
+            "explanation": "A formula: the measurement on the left, the groups on the right."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_icecream_model",
+      "title": "Hard side quest: The ice-cream model",
+      "kind": "project",
+      "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "residuals",
+          "label": "Residuals",
+          "code": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\nround(residuals(model), 1)"
+        }
+      ],
+      "intro": {
+        "title": "Hard side quest: The ice-cream model",
+        "bodyMarkdown": "A kiosk by the lake sells ice creams. The owner noted the afternoon temperature (°C) and the number sold on 12 days, and wants to know how many to order for tomorrow.\n\n```\nkiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\n```\n\nMeasure the link, fit a model, check how well it fits, and build a small forecasting function that refuses to guess outside the temperatures it has seen.",
+        "sandboxCode": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\ncor(kiosk$temp, kiosk$sales)\nmodel <- lm(sales ~ temp, data = kiosk)\ncoef(model)"
+      },
+      "challenges": [
+        {
+          "id": "proj_icecream_model-warmer-more-sold",
+          "title": "Easy: Warmer, more sold?",
+          "promptMarkdown": "Make `r` the correlation between temperature and sales, rounded to 2 decimal places.",
+          "starterCode": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\n",
+          "hint": "`round(cor(kiosk$temp, kiosk$sales), 2)`",
+          "solution": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nr <- round(cor(kiosk$temp, kiosk$sales), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r is 0.96",
+                "assertion": "is.numeric(r) && isTRUE(all.equal(r, 0.96))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_icecream_model-per-degree",
+          "title": "Medium: Per degree",
+          "promptMarkdown": "Fit `model`, sales explained by temperature, and make `per_degree` the slope, unnamed, rounded to 2 decimal places.",
+          "starterCode": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\n",
+          "hint": "`model <- lm(sales ~ temp, data = kiosk)`, then `round(unname(coef(model)[2]), 2)`.",
+          "solution": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\nper_degree <- round(unname(coef(model)[2]), 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "model is an lm",
+                "assertion": "inherits(model, \"lm\")"
+              },
+              {
+                "id": "t2",
+                "label": "per_degree is 10.75",
+                "assertion": "is.numeric(per_degree) && isTRUE(all.equal(per_degree, 10.75))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_icecream_model-how-good",
+          "title": "Medium: How good",
+          "promptMarkdown": "Make `r2` the R-squared, rounded to 2 decimal places.",
+          "starterCode": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\n",
+          "hint": "`round(summary(model)$r.squared, 2)`",
+          "solution": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\nr2 <- round(summary(model)$r.squared, 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "r2 is 0.93",
+                "assertion": "is.numeric(r2) && isTRUE(all.equal(r2, 0.93))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_icecream_model-tomorrow-at-25-c",
+          "title": "Hard: Tomorrow at 25 °C",
+          "promptMarkdown": "Make `to_order` the predicted sales for 25 °C, rounded to a whole number.",
+          "starterCode": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\n",
+          "hint": "`round(unname(predict(model, newdata = data.frame(temp = 25))))`",
+          "solution": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\nto_order <- round(unname(predict(model, newdata = data.frame(temp = 25))))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "to_order is 236",
+                "assertion": "is.numeric(to_order) && isTRUE(all.equal(to_order, 236))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_icecream_model-the-surprising-day",
+          "title": "Hard: The surprising day",
+          "promptMarkdown": "Make `odd_day` the day whose sales were furthest from the line, either way.",
+          "starterCode": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\n",
+          "hint": "`kiosk$day[which.max(abs(residuals(model)))]`",
+          "solution": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\nodd_day <- kiosk$day[which.max(abs(residuals(model)))]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "odd_day is 8",
+                "assertion": "is.numeric(odd_day) && isTRUE(all.equal(odd_day, 8))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_icecream_model-a-careful-forecast",
+          "title": "Expert: A careful forecast",
+          "promptMarkdown": "Write `forecast(t)` that gives the predicted sales for temperature `t`, rounded to a whole number, but `NA` if `t` is outside the temperatures in the data. `forecast(25)` is 236 and `forecast(35)` is NA.",
+          "starterCode": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\n",
+          "hint": "Inside the function: `if (t < min(kiosk$temp) || t > max(kiosk$temp)) return(NA)`, then the prediction.",
+          "solution": "kiosk <- data.frame(\n  day = 1:12,\n  temp = c(14, 16, 18, 20, 22, 24, 26, 28, 30, 19, 23, 27),\n  sales = c(118, 152, 141, 196, 183, 240, 231, 292, 284, 170, 221, 248)\n)\nmodel <- lm(sales ~ temp, data = kiosk)\nforecast <- function(t) {\n  if (t < min(kiosk$temp) || t > max(kiosk$temp)) return(NA)\n  round(unname(predict(model, newdata = data.frame(temp = t))))\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "forecast(25) is 236",
+                "assertion": "is.function(forecast) && isTRUE(all.equal(forecast(25), 236))"
+              },
+              {
+                "id": "t2",
+                "label": "forecast(35) is NA",
+                "assertion": "is.na(forecast(35))"
+              },
+              {
+                "id": "t3",
+                "label": "forecast(10) is NA",
+                "assertion": "is.na(forecast(10))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_icecream_model-q-11cyw1g",
+            "type": "mcq",
+            "prompt": "The slope is 10.75. What does it mean?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "About 10.75 more ice creams sold per extra degree"
+              },
+              {
+                "id": "b",
+                "label": "R² is 10.75"
+              },
+              {
+                "id": "c",
+                "label": "10.75 ice creams a day"
+              },
+              {
+                "id": "d",
+                "label": "The temperature rises 10.75"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Change in sales per unit of temperature."
+          },
+          {
+            "id": "proj_icecream_model-q-16ptmzu",
+            "type": "mcq",
+            "prompt": "R² is 0.93. What share of the day-to-day variation in sales does temperature explain?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "7%"
+              },
+              {
+                "id": "b",
+                "label": "0.93%"
+              },
+              {
+                "id": "c",
+                "label": "96%"
+              },
+              {
+                "id": "d",
+                "label": "93%"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The rest is everything else: weekends, holidays, luck."
+          },
+          {
+            "id": "proj_icecream_model-q-svv9po",
+            "type": "mcq",
+            "prompt": "Why refuse to forecast at 35 °C?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The data only go up to 30 °C; the straight line might not hold beyond (extrapolation)"
+              },
+              {
+                "id": "b",
+                "label": "R can't"
+              },
+              {
+                "id": "c",
+                "label": "predict() gives an error"
+              },
+              {
+                "id": "d",
+                "label": "35 is too hot to sell"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "At very high temperatures people may stay indoors, or the kiosk may run out."
+          },
+          {
+            "id": "proj_icecream_model-q-ce9r27",
+            "type": "mcq",
+            "prompt": "What does `which.max(abs(c(3, -9, 5)))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2`"
+              },
+              {
+                "id": "b",
+                "label": "`9`"
+              },
+              {
+                "id": "c",
+                "label": "`1`"
+              },
+              {
+                "id": "d",
+                "label": "`3`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The biggest gap either way is −9, in position 2."
+          },
+          {
+            "id": "proj_icecream_model-q-fi89v",
+            "type": "mcq",
+            "prompt": "The intercept is about −33. What does that say?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The model is wrong"
+              },
+              {
+                "id": "b",
+                "label": "Sales start at 33"
+              },
+              {
+                "id": "c",
+                "label": "At 0 °C the line predicts −33 sales: another sign not to trust it outside the data"
+              },
+              {
+                "id": "d",
+                "label": "The kiosk loses 33 ice creams"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "An intercept far outside the data often has no real meaning."
+          },
+          {
+            "id": "proj_icecream_model-q-s9k9i6",
+            "type": "shortText",
+            "prompt": "Which function uses a fitted model to give values for new data?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "predict"
+            },
+            "explanation": "`predict(model, newdata = data.frame(temp = 25))`"
+          }
+        ]
+      }
+    }
+  ]
+}

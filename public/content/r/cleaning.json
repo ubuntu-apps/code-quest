@@ -1,0 +1,4001 @@
+{
+  "sectionId": "cleaning",
+  "title": "Cleaning data",
+  "levels": [
+    {
+      "id": "reading_csv",
+      "title": "Reading CSV data",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "one_bad_value",
+          "label": "One bad value",
+          "code": "x <- read.csv(text = \"\nitem,price\ntea,2.5\ncake,N/A\n\")\nstr(x)"
+        },
+        {
+          "id": "tell_r_what_missing_looks_like",
+          "label": "Tell R what missing looks like",
+          "code": "x <- read.csv(text = \"\nitem,price\ntea,2.5\ncake,N/A\n\", na.strings = \"N/A\")\nstr(x)"
+        }
+      ],
+      "intro": {
+        "title": "Reading CSV data",
+        "bodyMarkdown": "Most data arrives as a file, and the most common kind is **CSV**: comma-separated values. It is plain text, one row per line, with commas between the values and the column names on the first line:\n\n```\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n```\n\n`read.csv()` turns that into a data frame. Normally you give it a file name, `read.csv(\"loans.csv\")`. In CodeQuest there are no files to open, so the challenges give the text directly with `text =`, which works exactly the same way:\n\n```\nloans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\n```\n\nAlways look at what you got with `str()` straight away. `read.csv()` guesses each column's type from its values: a column of numbers becomes numeric, but if even one value isn't a number (`\"N/A\"`, `\"12 days\"`, `\"$3.40\"`), the whole column comes in as text. Spotting that early saves a lot of confusion.\n\nUseful arguments: `na.strings = c(\"\", \"N/A\")` tells R which texts mean \"missing\", and `strip.white = TRUE` removes stray spaces around values. Writing is the mirror image: `write.csv(df, \"clean.csv\", row.names = FALSE)`.\n\nThe rest of this quest is about the cleaning that usually comes next.",
+        "sandboxCode": "loans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\nloans\nstr(loans)",
+        "readMore": {
+          "label": "R documentation: read.csv()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/utils/html/read.table.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "reading_csv-read-the-loans",
+          "title": "Easy: Read the loans",
+          "promptMarkdown": "Make `loans` by reading the CSV text in `csv`.",
+          "starterCode": "csv <- \"member,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\"\n",
+          "hint": "`loans <- read.csv(text = csv)`",
+          "solution": "csv <- \"member,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\"\nloans <- read.csv(text = csv)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "loans has the three loans",
+                "assertion": "is.data.frame(loans) && identical(names(loans), names(data.frame(member = c(\"Ana\", \"Ben\", \"Cy\"), book = c(\"The Long Walk\", \"Seed Saving\", \"River Birds\"), days = c(12L, 20L, 9L)))) && isTRUE(all.equal(as.list(loans), as.list(data.frame(member = c(\"Ana\", \"Ben\", \"Cy\"), book = c(\"The Long Walk\", \"Seed Saving\", \"River Birds\"), days = c(12L, 20L, 9L))), check.attributes = FALSE))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses read.csv()",
+                "assertion": "grepl(\"read.csv(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-total-days",
+          "title": "Easy: Total days",
+          "promptMarkdown": "Make `total_days` the total of the `days` column.",
+          "starterCode": "loans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\n",
+          "hint": "`total_days <- sum(loans$days)`",
+          "solution": "loans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\ntotal_days <- sum(loans$days)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total_days is 41",
+                "assertion": "is.numeric(total_days) && isTRUE(all.equal(total_days, 41))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-look-before-you-leap",
+          "title": "Easy: Look before you leap",
+          "promptMarkdown": "Show the structure of `loans`.",
+          "starterCode": "loans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\n",
+          "hint": "`str(loans)`",
+          "solution": "loans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\nstr(loans)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the structure",
+                "assertion": "grepl(\"3 obs. of  3 variables\", ._cq_stdout, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-why-is-it-text",
+          "title": "Medium: Why is it text",
+          "promptMarkdown": "One value isn't a number, so `days` came in as text. Make `bad` the value of `days` that can't be turned into a number.",
+          "starterCode": "loans <- read.csv(text = \"\nmember,days\nAna,12\nBen,20 days\nCy,9\n\")\n",
+          "hint": "Convert with `suppressWarnings(as.numeric(loans$days))`, then pick the original values where that is NA.",
+          "solution": "loans <- read.csv(text = \"\nmember,days\nAna,12\nBen,20 days\nCy,9\n\")\nnums <- suppressWarnings(as.numeric(loans$days))\nbad <- loans$days[is.na(nums)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "bad is \"20 days\"",
+                "assertion": "identical(bad, c(\"20 days\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-missing-means-missing",
+          "title": "Medium: Missing means missing",
+          "promptMarkdown": "Read the CSV so that both `N/A` and an empty value become `NA`, making `days` numeric. Make `n_missing` the number of missing days.",
+          "starterCode": "csv <- \"member,days\nAna,12\nBen,N/A\nCy,\nDee,9\"\n",
+          "hint": "`read.csv(text = csv, na.strings = c(\"\", \"N/A\"))`, then `sum(is.na(loans$days))`.",
+          "solution": "csv <- \"member,days\nAna,12\nBen,N/A\nCy,\nDee,9\"\nloans <- read.csv(text = csv, na.strings = c(\"\", \"N/A\"))\nn_missing <- sum(is.na(loans$days))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "days is numeric",
+                "assertion": "is.numeric(loans$days)"
+              },
+              {
+                "id": "t2",
+                "label": "n_missing is 2",
+                "assertion": "is.numeric(n_missing) && isTRUE(all.equal(n_missing, 2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-stray-spaces",
+          "title": "Medium: Stray spaces",
+          "promptMarkdown": "The names have spaces around them. Read the CSV with `strip.white = TRUE` so `loans$member` is clean.",
+          "starterCode": "csv <- \"member,days\n Ana ,12\nBen  ,20\n  Cy,9\"\n",
+          "hint": "`loans <- read.csv(text = csv, strip.white = TRUE)`",
+          "solution": "csv <- \"member,days\n Ana ,12\nBen  ,20\n  Cy,9\"\nloans <- read.csv(text = csv, strip.white = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "member is Ana, Ben, Cy",
+                "assertion": "identical(loans$member, c(\"Ana\", \"Ben\", \"Cy\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-write-it-back",
+          "title": "Hard: Write it back",
+          "promptMarkdown": "Write `loans` to a file `loans_clean.csv` without row numbers, then read it back into `again`.",
+          "starterCode": "loans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\n",
+          "hint": "`write.csv(loans, \"loans_clean.csv\", row.names = FALSE)` then `again <- read.csv(\"loans_clean.csv\")`.",
+          "solution": "loans <- read.csv(text = \"\nmember,book,days\nAna,The Long Walk,12\nBen,Seed Saving,20\nCy,River Birds,9\n\")\nwrite.csv(loans, \"loans_clean.csv\", row.names = FALSE)\nagain <- read.csv(\"loans_clean.csv\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "again is the same as loans",
+                "assertion": "is.data.frame(again) && identical(names(again), names(loans)) && isTRUE(all.equal(as.list(again), as.list(loans), check.attributes = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "reading_csv-a-semicolon-file",
+          "title": "Expert: A semicolon file",
+          "promptMarkdown": "Some countries' spreadsheets save CSV with `;` between values and `,` as the decimal point. Make `prices` by reading this text with `read.csv2()`, so `price` is numeric.",
+          "starterCode": "csv <- \"item;price\ntea;2,50\ncake;4,20\"\n",
+          "hint": "`read.csv2()` expects exactly that: `prices <- read.csv2(text = csv)`.",
+          "solution": "csv <- \"item;price\ntea;2,50\ncake;4,20\"\nprices <- read.csv2(text = csv)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "prices has tea 2.5 and cake 4.2",
+                "assertion": "is.data.frame(prices) && identical(names(prices), names(data.frame(item = c(\"tea\", \"cake\"), price = c(2.5, 4.2)))) && isTRUE(all.equal(as.list(prices), as.list(data.frame(item = c(\"tea\", \"cake\"), price = c(2.5, 4.2))), check.attributes = FALSE))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "reading_csv-q-1l7i6hc",
+            "type": "mcq",
+            "prompt": "What does CSV stand for?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Column style view"
+              },
+              {
+                "id": "b",
+                "label": "Coded system values"
+              },
+              {
+                "id": "c",
+                "label": "Clean sorted values"
+              },
+              {
+                "id": "d",
+                "label": "Comma-separated values"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Values separated by commas, one row per line."
+          },
+          {
+            "id": "reading_csv-q-lj2513",
+            "type": "mcq",
+            "prompt": "What does `nrow(read.csv(text = \"a,b\\n1,2\\n3,4\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1`"
+              },
+              {
+                "id": "b",
+                "label": "`4`"
+              },
+              {
+                "id": "c",
+                "label": "`2`"
+              },
+              {
+                "id": "d",
+                "label": "`3`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The first line is the column names, so there are 2 rows of data."
+          },
+          {
+            "id": "reading_csv-q-1e90ww7",
+            "type": "mcq",
+            "prompt": "What type is column `x` in `read.csv(text = \"x\\n1\\n2\\nN/A\")`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "numeric"
+              },
+              {
+                "id": "b",
+                "label": "logical"
+              },
+              {
+                "id": "c",
+                "label": "factor"
+              },
+              {
+                "id": "d",
+                "label": "character"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "One value isn't a number, so the whole column is text."
+          },
+          {
+            "id": "reading_csv-q-nvvmnq",
+            "type": "mcq",
+            "prompt": "What does `na.strings = c(\"\", \"N/A\")` do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Sorts the data"
+              },
+              {
+                "id": "b",
+                "label": "Removes those rows"
+              },
+              {
+                "id": "c",
+                "label": "Treats empty values and \"N/A\" as missing"
+              },
+              {
+                "id": "d",
+                "label": "Replaces NA with \"N/A\""
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Then a column of numbers with gaps still comes in as numeric."
+          },
+          {
+            "id": "reading_csv-q-1nnbljs",
+            "type": "mcq",
+            "prompt": "Why look at `str()` straight after reading?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To sort the data"
+              },
+              {
+                "id": "b",
+                "label": "To save the file"
+              },
+              {
+                "id": "c",
+                "label": "To check each column has the type you expect"
+              },
+              {
+                "id": "d",
+                "label": "It is required"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "A numbers column that came in as text needs fixing first."
+          },
+          {
+            "id": "reading_csv-q-uucm9l",
+            "type": "mcq",
+            "prompt": "What does `row.names = FALSE` do in `write.csv()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Deletes the row names column from the data"
+              },
+              {
+                "id": "b",
+                "label": "Writes no header"
+              },
+              {
+                "id": "c",
+                "label": "Sorts the rows"
+              },
+              {
+                "id": "d",
+                "label": "Doesn't write an extra column of row numbers"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Otherwise the file gets an unnamed first column of 1, 2, 3, …"
+          },
+          {
+            "id": "reading_csv-q-12uoevz",
+            "type": "mcq",
+            "prompt": "What does `read.csv(text = \"a\\n x \", strip.white = TRUE)$a` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"x\"`"
+              },
+              {
+                "id": "b",
+                "label": "`NA`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`\" x \"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The spaces around the value are removed."
+          },
+          {
+            "id": "reading_csv-q-1pbhgd7",
+            "type": "mcq",
+            "prompt": "Which reads a file that uses `;` between values and `,` for decimals?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`read.table()` only"
+              },
+              {
+                "id": "b",
+                "label": "`read.csv2()`"
+              },
+              {
+                "id": "c",
+                "label": "`read.csv()`"
+              },
+              {
+                "id": "d",
+                "label": "`strsplit()`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`read.csv2()` is made for that style."
+          },
+          {
+            "id": "reading_csv-q-2rb0dw",
+            "type": "shortText",
+            "prompt": "Which function reads CSV data into a data frame?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "read.csv"
+            },
+            "explanation": "`read.csv(\"file.csv\")` or `read.csv(text = …)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "column_names",
+      "title": "Fixing column names",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "rename_one",
+          "label": "Rename one",
+          "code": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members)[names(members) == \"E.mail\"] <- \"email\"\nnames(members)"
+        }
+      ],
+      "intro": {
+        "title": "Fixing column names",
+        "bodyMarkdown": "Column names in real files are written for people: `Member Name`, `E-mail`, `Age (years)`. R needs names it can use after `$`, so `read.csv()` quietly changes them, turning every space and symbol into a dot:\n\n```\nmembers <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members)   # \"Member.Name\" \"E.mail\" \"Age..years.\" \"Joined.On\"\n```\n\nThose work, but they are awkward to type and easy to get wrong. A good habit is to tidy all the names at the start: small letters, words joined with `_`, no symbols. Assign new names with `names()`:\n\n```\nnames(members) <- c(\"name\", \"email\", \"age\", \"joined\")\n```\n\nFor many columns, clean them with text tools instead of typing every name: `tolower()`, then `gsub()` to turn runs of dots into `_` and trim `_` from the ends.\n\n```\nn <- tolower(names(members))\nn <- gsub(\"\\\\.+\", \"_\", n)      # one or more dots become _\nn <- gsub(\"^_|_$\", \"\", n)       # no _ at the start or end\n```\n\nTo rename just one column, assign to that position: `names(members)[3] <- \"age\"`, or find it by name: `names(members)[names(members) == \"E.mail\"] <- \"email\"`.",
+        "sandboxCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members)\nn <- tolower(names(members))\nn <- gsub(\"\\\\.+\", \"_\", n)\ngsub(\"^_|_$\", \"\", n)",
+        "readMore": {
+          "label": "R documentation: make.names()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/make.names.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "column_names-what-r-made-of-them",
+          "title": "Easy: What R made of them",
+          "promptMarkdown": "Make `original` the column names R gave the data.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "`original <- names(members)`",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\noriginal <- names(members)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "original is Member.Name, E.mail, Age..years., Joined.On",
+                "assertion": "identical(original, c(\"Member.Name\", \"E.mail\", \"Age..years.\", \"Joined.On\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-new-names",
+          "title": "Easy: New names",
+          "promptMarkdown": "Give the columns the names `name`, `email`, `age` and `joined`.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "`names(members) <- c(\"name\", \"email\", \"age\", \"joined\")`",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members) <- c(\"name\", \"email\", \"age\", \"joined\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The names are name, email, age, joined",
+                "assertion": "identical(names(members), c(\"name\", \"email\", \"age\", \"joined\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-rename-one",
+          "title": "Easy: Rename one",
+          "promptMarkdown": "Rename only the third column to `age`.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "`names(members)[3] <- \"age\"`",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members)[3] <- \"age\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The third name is age, the others unchanged",
+                "assertion": "identical(names(members), c(\"Member.Name\", \"E.mail\", \"age\", \"Joined.On\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-rename-by-name",
+          "title": "Medium: Rename by name",
+          "promptMarkdown": "Rename the column `E.mail` to `email`, finding it by its name rather than its position.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "`names(members)[names(members) == \"E.mail\"] <- \"email\"`",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members)[names(members) == \"E.mail\"] <- \"email\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "E.mail is now email",
+                "assertion": "identical(names(members), c(\"Member.Name\", \"email\", \"Age..years.\", \"Joined.On\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Finds it by name",
+                "assertion": "grepl(\"== \\\"E.mail\\\"\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-small-letters",
+          "title": "Medium: Small letters",
+          "promptMarkdown": "Make every column name small letters, keeping the dots for now.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "`names(members) <- tolower(names(members))`",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nnames(members) <- tolower(names(members))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The names are lower case",
+                "assertion": "identical(names(members), c(\"member.name\", \"e.mail\", \"age..years.\", \"joined.on\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-dots-to-underscores",
+          "title": "Hard: Dots to underscores",
+          "promptMarkdown": "Make every name small letters, with each run of dots turned into one `_`, and no `_` at the end.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "`gsub(\"\\\\.+\", \"_\", n)` turns runs of dots into `_`; `gsub(\"_$\", \"\", n)` removes one at the end.",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nn <- tolower(names(members))\nn <- gsub(\"\\\\.+\", \"_\", n)\nn <- gsub(\"^_|_$\", \"\", n)\nnames(members) <- n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "The names are member_name, e_mail, age_years, joined_on",
+                "assertion": "identical(names(members), c(\"member_name\", \"e_mail\", \"age_years\", \"joined_on\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-a-name-cleaning-function",
+          "title": "Hard: A name-cleaning function",
+          "promptMarkdown": "Write `clean_names(df)` that does those three steps and gives back the data frame with tidy names.",
+          "starterCode": "",
+          "hint": "Inside: `n <- tolower(names(df))`, the two `gsub()` calls, then `names(df) <- n` and `df` as the last line.",
+          "solution": "clean_names <- function(df) {\n  n <- tolower(names(df))\n  n <- gsub(\"\\\\.+\", \"_\", n)\n  n <- gsub(\"^_|_$\", \"\", n)\n  names(df) <- n\n  df\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "clean_names() tidies the names",
+                "assertion": "is.function(clean_names) && identical(names(clean_names(data.frame(Member.Name = 1, Age..years. = 2))), c(\"member_name\", \"age_years\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "column_names-use-the-tidy-names",
+          "title": "Expert: Use the tidy names",
+          "promptMarkdown": "Tidy the names as in the last challenges, then make `avg_age` the mean of the `age_years` column.",
+          "starterCode": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\n",
+          "hint": "After tidying, the column is `members$age_years`.",
+          "solution": "members <- read.csv(text = \"\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n\")\nn <- tolower(names(members))\nn <- gsub(\"\\\\.+\", \"_\", n)\nnames(members) <- gsub(\"^_|_$\", \"\", n)\navg_age <- mean(members$age_years)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "avg_age is 37.5",
+                "assertion": "isTRUE(all.equal(avg_age, 37.5))"
+              },
+              {
+                "id": "t2",
+                "label": "The names are tidy",
+                "assertion": "\"age_years\" %in% names(members)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "column_names-q-vpx3n5",
+            "type": "mcq",
+            "prompt": "What does `names(read.csv(text = \"Member Name\\nAna\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"member_name\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Member.Name\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"Member Name\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"MemberName\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`read.csv()` turns the space into a dot."
+          },
+          {
+            "id": "column_names-q-12etok5",
+            "type": "mcq",
+            "prompt": "What does `gsub(\"\\\\.+\", \"_\", \"Age..years.\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"Age__years_\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Age.years\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"Age years\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"Age_years_\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Each run of one or more dots becomes a single `_`."
+          },
+          {
+            "id": "column_names-q-w0o44b",
+            "type": "mcq",
+            "prompt": "Why does `.` need `\\\\.` in a `gsub()` pattern?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "For speed"
+              },
+              {
+                "id": "b",
+                "label": "A plain `.` means \"any character\"; `\\\\.` means a real dot"
+              },
+              {
+                "id": "c",
+                "label": "To make it lower case"
+              },
+              {
+                "id": "d",
+                "label": "It doesn't"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Or use `fixed = TRUE` when you mean plain text."
+          },
+          {
+            "id": "column_names-q-zku11l",
+            "type": "mcq",
+            "prompt": "What does `gsub(\"^_|_$\", \"\", \"_age_\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"_age\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"age\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"age_\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`^_` is a `_` at the start and `_$` one at the end; `|` means either."
+          },
+          {
+            "id": "column_names-q-1cy98ql",
+            "type": "mcq",
+            "prompt": "After `df <- data.frame(a = 1, b = 2)` and `names(df)[2] <- \"z\"`, what does `names(df)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"a\" \"b\"`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"a\" \"z\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"z\" \"b\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"z\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Only the second name changes."
+          },
+          {
+            "id": "column_names-q-1i2nvko",
+            "type": "mcq",
+            "prompt": "Why tidy column names at the start?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It sorts the columns"
+              },
+              {
+                "id": "b",
+                "label": "Short, consistent names are easy to type and hard to get wrong"
+              },
+              {
+                "id": "c",
+                "label": "It removes NAs"
+              },
+              {
+                "id": "d",
+                "label": "R requires it"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`members$age` beats `members$Age..years.`."
+          },
+          {
+            "id": "column_names-q-12qjdcx",
+            "type": "mcq",
+            "prompt": "What does `tolower(\"Joined.On\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"joinedon\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"joined.on\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"joined_on\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"JOINED.ON\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Only the letters change."
+          },
+          {
+            "id": "column_names-q-1v0wjjz",
+            "type": "mcq",
+            "prompt": "Which renames the column called `E.mail` wherever it is?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`names(df)[names(df) == \"E.mail\"] <- \"email\"`"
+              },
+              {
+                "id": "b",
+                "label": "`df$E.mail <- \"email\"`"
+              },
+              {
+                "id": "c",
+                "label": "`rename(df, \"email\")`"
+              },
+              {
+                "id": "d",
+                "label": "`names(df)[2] <- \"email\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The condition finds the position from the name."
+          },
+          {
+            "id": "column_names-q-20v30n",
+            "type": "shortText",
+            "prompt": "Which function gives or sets the column names of a data frame?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "names"
+            },
+            "explanation": "`names(df) <- c(…)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "numbers_as_text",
+      "title": "Numbers stored as text",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "find_what_is_still_wrong",
+          "label": "Find what is still wrong",
+          "code": "x <- c(\"12\", \"8 kg\", \"15\", \"n/a\")\nnums <- suppressWarnings(as.numeric(x))\nx[is.na(nums)]"
+        }
+      ],
+      "intro": {
+        "title": "Numbers stored as text",
+        "bodyMarkdown": "A very common problem: a column that should be numbers came in as text because of extra characters. A currency sign, a thousands comma, a unit, a space:\n\n```\nprice <- c(\"$3.40\", \"$12.00\", \"$1,250.50\", \" $8 \")\nas.numeric(price)    # all NA, with a warning\n```\n\nThe fix is to remove the extra characters with `gsub()`, then convert. Use `fixed = TRUE` when the character to remove has a special meaning in patterns, like `$` (which means \"end of text\") or `.`:\n\n```\nprice <- gsub(\"$\", \"\", price, fixed = TRUE)   # remove $\nprice <- gsub(\",\", \"\", price, fixed = TRUE)   # remove the thousands comma\nprice <- as.numeric(trimws(price))\n```\n\nAfter converting, **always check for new NAs**. `as.numeric()` turns anything it can't read into NA, so compare the number of NAs before and after: `sum(is.na(price))`. Any surprise NA is a value you haven't cleaned yet.\n\nUnits work the same way: `gsub(\" kg\", \"\", weights, fixed = TRUE)`. When a column mixes units, such as `\"500 g\"` and `\"1.2 kg\"`, split the cleaning: find the rows with each unit with `grepl()` and convert them separately.\n\nTo check a whole column at once: `suppressWarnings(as.numeric(x))` gives NA for the values that still aren't numbers, and `x[is.na(that)]` shows you which they are.",
+        "sandboxCode": "price <- c(\"$3.40\", \"$12.00\", \"$1,250.50\", \" $8 \")\nprice <- gsub(\"$\", \"\", price, fixed = TRUE)\nprice <- gsub(\",\", \"\", price, fixed = TRUE)\nas.numeric(trimws(price))",
+        "readMore": {
+          "label": "R documentation: grep, sub and gsub",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/grep.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "numbers_as_text-remove-the-dollar",
+          "title": "Easy: Remove the dollar",
+          "promptMarkdown": "Make `price` the prices as numbers, removing the `$` first.",
+          "starterCode": "raw <- c(\"$3.40\", \"$12.00\", \"$2.50\")\n",
+          "hint": "`price <- as.numeric(gsub(\"$\", \"\", raw, fixed = TRUE))`",
+          "solution": "raw <- c(\"$3.40\", \"$12.00\", \"$2.50\")\nprice <- as.numeric(gsub(\"$\", \"\", raw, fixed = TRUE))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is 3.4, 12, 2.5",
+                "assertion": "is.numeric(price) && isTRUE(all.equal(price, c(3.4, 12, 2.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-thousands-commas",
+          "title": "Easy: Thousands commas",
+          "promptMarkdown": "Make `visitors` the yearly visitor counts as numbers.",
+          "starterCode": "raw <- c(\"1,250\", \"980\", \"12,400\")\n",
+          "hint": "Remove the commas, then convert: `as.numeric(gsub(\",\", \"\", raw))`.",
+          "solution": "raw <- c(\"1,250\", \"980\", \"12,400\")\nvisitors <- as.numeric(gsub(\",\", \"\", raw))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "visitors is 1250, 980, 12400",
+                "assertion": "is.numeric(visitors) && isTRUE(all.equal(visitors, c(1250, 980, 12400)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-a-unit",
+          "title": "Easy: A unit",
+          "promptMarkdown": "Make `kg` the weights as numbers, removing the ` kg`.",
+          "starterCode": "raw <- c(\"12.4 kg\", \"3.6 kg\", \"9.8 kg\")\n",
+          "hint": "`as.numeric(gsub(\" kg\", \"\", raw, fixed = TRUE))`",
+          "solution": "raw <- c(\"12.4 kg\", \"3.6 kg\", \"9.8 kg\")\nkg <- as.numeric(gsub(\" kg\", \"\", raw, fixed = TRUE))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "kg is 12.4, 3.6, 9.8",
+                "assertion": "is.numeric(kg) && isTRUE(all.equal(kg, c(12.4, 3.6, 9.8)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-everything-at-once",
+          "title": "Medium: Everything at once",
+          "promptMarkdown": "Make `price` the prices as numbers: remove `$` and commas, and trim spaces.",
+          "starterCode": "raw <- c(\"$3.40\", \"$12.00\", \"$1,250.50\", \" $8 \")\n",
+          "hint": "Two `gsub()` calls with `fixed = TRUE`, then `as.numeric(trimws(…))`.",
+          "solution": "raw <- c(\"$3.40\", \"$12.00\", \"$1,250.50\", \" $8 \")\nx <- gsub(\"$\", \"\", raw, fixed = TRUE)\nx <- gsub(\",\", \"\", x, fixed = TRUE)\nprice <- as.numeric(trimws(x))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is 3.4, 12, 1250.5, 8",
+                "assertion": "is.numeric(price) && isTRUE(all.equal(price, c(3.4, 12, 1250.5, 8)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-what-is-still-wrong",
+          "title": "Medium: What is still wrong",
+          "promptMarkdown": "Make `left_over` the values that still aren't numbers after removing ` kg`.",
+          "starterCode": "raw <- c(\"12.4 kg\", \"about 4\", \"9.8 kg\", \"-\", \"3.6kg\")\n",
+          "hint": "Clean and convert with `suppressWarnings(as.numeric(…))`, then pick from `raw` where the result is NA.",
+          "solution": "raw <- c(\"12.4 kg\", \"about 4\", \"9.8 kg\", \"-\", \"3.6kg\")\nnums <- suppressWarnings(as.numeric(gsub(\" kg\", \"\", raw, fixed = TRUE)))\nleft_over <- raw[is.na(nums)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "left_over is \"about 4\", \"-\", \"3.6kg\"",
+                "assertion": "identical(left_over, c(\"about 4\", \"-\", \"3.6kg\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-percent-signs",
+          "title": "Medium: Percent signs",
+          "promptMarkdown": "Make `share` the shares as numbers between 0 and 1: `\"45%\"` becomes 0.45.",
+          "starterCode": "raw <- c(\"45%\", \"8%\", \"100%\")\n",
+          "hint": "Remove `%`, convert, then divide by 100.",
+          "solution": "raw <- c(\"45%\", \"8%\", \"100%\")\nshare <- as.numeric(gsub(\"%\", \"\", raw)) / 100",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "share is 0.45, 0.08, 1",
+                "assertion": "is.numeric(share) && isTRUE(all.equal(share, c(0.45, 0.08, 1)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-a-whole-column",
+          "title": "Hard: A whole column",
+          "promptMarkdown": "Clean the `price` column of `orders` in place so it is numeric.",
+          "starterCode": "orders <- read.csv(text = \"\nitem,price\ntea,$2.50\ncake,$4.20\nlunch,\\\"$1,250.00\\\"\n\")\n",
+          "hint": "`orders$price <- as.numeric(gsub(\"[$,]\", \"\", orders$price))`. `[$,]` means \"a $ or a comma\"; inside square brackets `$` is plain.",
+          "solution": "orders <- read.csv(text = \"\nitem,price\ntea,$2.50\ncake,$4.20\nlunch,\\\"$1,250.00\\\"\n\")\norders$price <- as.numeric(gsub(\"[$,]\", \"\", orders$price))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is numeric 2.5, 4.2, 1250",
+                "assertion": "is.numeric(orders$price) && isTRUE(all.equal(orders$price, c(2.5, 4.2, 1250)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers_as_text-grams-and-kilograms",
+          "title": "Expert: Grams and kilograms",
+          "promptMarkdown": "Some weights are in grams and some in kilograms. Make `kg` all of them in kilograms.",
+          "starterCode": "raw <- c(\"500 g\", \"1.2 kg\", \"250 g\", \"2 kg\")\n",
+          "hint": "Take the number part with `as.numeric(sub(\" .*\", \"\", raw))`, then divide the gram ones by 1000: `ifelse(grepl(\"kg\", raw), n, n / 1000)`.",
+          "solution": "raw <- c(\"500 g\", \"1.2 kg\", \"250 g\", \"2 kg\")\nn <- as.numeric(sub(\" .*\", \"\", raw))\nkg <- ifelse(grepl(\"kg\", raw), n, n / 1000)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "kg is 0.5, 1.2, 0.25, 2",
+                "assertion": "is.numeric(kg) && isTRUE(all.equal(kg, c(0.5, 1.2, 0.25, 2)))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "numbers_as_text-q-1pm8xb9",
+            "type": "mcq",
+            "prompt": "What does `as.numeric(\"$3.40\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`NA`, with a warning"
+              },
+              {
+                "id": "c",
+                "label": "`3.4`"
+              },
+              {
+                "id": "d",
+                "label": "`340`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The `$` stops R reading it as a number."
+          },
+          {
+            "id": "numbers_as_text-q-vlisj3",
+            "type": "mcq",
+            "prompt": "What does `gsub(\"$\", \"\", \"$3.40\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"3.40\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"$3.40\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"\"`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "In a pattern, `$` means \"end of text\", so nothing visible is removed. Add `fixed = TRUE`."
+          },
+          {
+            "id": "numbers_as_text-q-1mu0z3c",
+            "type": "mcq",
+            "prompt": "What does `gsub(\"$\", \"\", \"$3.40\", fixed = TRUE)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"3.40\"`"
+              },
+              {
+                "id": "b",
+                "label": "`3.4`"
+              },
+              {
+                "id": "c",
+                "label": "`\"$3.40\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"340\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`fixed = TRUE` treats the pattern as plain text."
+          },
+          {
+            "id": "numbers_as_text-q-c4y2lq",
+            "type": "mcq",
+            "prompt": "What does `as.numeric(gsub(\",\", \"\", \"1,250\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1250`"
+              },
+              {
+                "id": "b",
+                "label": "`125`"
+              },
+              {
+                "id": "c",
+                "label": "`1.25`"
+              },
+              {
+                "id": "d",
+                "label": "`NA`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Remove the thousands comma, then convert."
+          },
+          {
+            "id": "numbers_as_text-q-1jy4y85",
+            "type": "mcq",
+            "prompt": "Why count NAs after `as.numeric()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To sort the data"
+              },
+              {
+                "id": "b",
+                "label": "To round the numbers"
+              },
+              {
+                "id": "c",
+                "label": "R requires it"
+              },
+              {
+                "id": "d",
+                "label": "New NAs show values that weren't cleaned properly"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`as.numeric()` turns anything it can't read into NA, quietly apart from a warning."
+          },
+          {
+            "id": "numbers_as_text-q-13ghupc",
+            "type": "mcq",
+            "prompt": "What does `gsub(\"[$,]\", \"\", \"$1,250\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"[$,]1,250\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"1250\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"1,250\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"$1250\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`[$,]` matches either a `$` or a comma."
+          },
+          {
+            "id": "numbers_as_text-q-1juvcrv",
+            "type": "mcq",
+            "prompt": "What does `as.numeric(gsub(\"%\", \"\", \"45%\")) / 100` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4.5`"
+              },
+              {
+                "id": "b",
+                "label": "`45`"
+              },
+              {
+                "id": "c",
+                "label": "`0.45`"
+              },
+              {
+                "id": "d",
+                "label": "`NA`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Remove the percent sign, convert, divide by 100."
+          },
+          {
+            "id": "numbers_as_text-q-15p29ed",
+            "type": "mcq",
+            "prompt": "What does `as.numeric(sub(\" .*\", \"\", \"500 g\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"500\"`"
+              },
+              {
+                "id": "b",
+                "label": "`500`"
+              },
+              {
+                "id": "c",
+                "label": "`0.5`"
+              },
+              {
+                "id": "d",
+                "label": "`NA`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Everything from the space on is removed, leaving \"500\"."
+          },
+          {
+            "id": "numbers_as_text-q-kzvz00",
+            "type": "shortText",
+            "prompt": "Which argument makes `gsub()` treat the pattern as plain text? (write it as `name = TRUE`)",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "fixed = TRUE"
+            },
+            "explanation": "Then `$` and `.` mean themselves."
+          }
+        ]
+      }
+    },
+    {
+      "id": "cleaning_text",
+      "title": "Cleaning text values",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "title_case",
+          "label": "Title case",
+          "code": "tools::toTitleCase(c(\"ana silva\", \"ben okafor\"))"
+        }
+      ],
+      "intro": {
+        "title": "Cleaning text values",
+        "bodyMarkdown": "When people type categories, the same answer arrives in many forms: `\"Kale\"`, `\"kale \"`, `\"KALE\"`, `\" kale\"`. To R these are four different values, so `table()` counts them separately and filters miss some of them.\n\n```\ncrop <- c(\"Kale\", \"kale \", \"KALE\", \"beans\", \" Beans\")\ntable(crop)    # five different values\n```\n\nThe standard fix is to trim the spaces and choose one case. Small letters are the usual choice:\n\n```\ncrop <- tolower(trimws(crop))\ntable(crop)    # beans 2, kale 3\n```\n\nRuns of spaces inside the text need `gsub(\" +\", \" \", x)`. Typos and spelling variants (`\"courgette\"`, `\"courgettes\"`, `\"zucchini\"`) don't follow a rule; look at `table()` or `sort(unique(x))` to find them, then fix them one by one, as in the next stage.\n\nFor proper names, small letters look wrong in a report. A neat way to capitalise each word is `tools::toTitleCase()`: `tools::toTitleCase(\"ana silva\")` gives `\"Ana Silva\"`. The `tools::` part says which package the function comes from; it is part of every R installation.\n\nAlways check the result with `table()` or `unique()`: it is the quickest way to see that every variant has been caught.",
+        "sandboxCode": "crop <- c(\"Kale\", \"kale \", \"KALE\", \"beans\", \" Beans\")\ntable(crop)\ncrop <- tolower(trimws(crop))\ntable(crop)",
+        "readMore": {
+          "label": "R documentation: trimws()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/trimws.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "cleaning_text-one-crop-one-spelling",
+          "title": "Easy: One crop, one spelling",
+          "promptMarkdown": "Make `crop` clean: no spaces at the ends and all small letters.",
+          "starterCode": "crop <- c(\"Kale\", \"kale \", \"KALE\", \"beans\", \" Beans\")\n",
+          "hint": "`crop <- tolower(trimws(crop))`",
+          "solution": "crop <- c(\"Kale\", \"kale \", \"KALE\", \"beans\", \" Beans\")\ncrop <- tolower(trimws(crop))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "crop is kale kale kale beans beans",
+                "assertion": "identical(crop, c(\"kale\", \"kale\", \"kale\", \"beans\", \"beans\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-count-after-cleaning",
+          "title": "Easy: Count after cleaning",
+          "promptMarkdown": "Make `counts` a table of the cleaned answers.",
+          "starterCode": "answers <- c(\"Yes\", \"yes \", \"NO\", \"no\", \"Yes\")\n",
+          "hint": "`counts <- table(tolower(trimws(answers)))`",
+          "solution": "answers <- c(\"Yes\", \"yes \", \"NO\", \"no\", \"Yes\")\ncounts <- table(tolower(trimws(answers)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "counts is no 2, yes 3",
+                "assertion": "identical(as.vector(counts), c(2L, 3L)) && identical(names(counts), c(\"no\", \"yes\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-how-many-variants",
+          "title": "Easy: How many variants",
+          "promptMarkdown": "Make `n_variants` the number of different raw values, before cleaning, and `n_clean` the number after.",
+          "starterCode": "crop <- c(\"Kale\", \"kale \", \"KALE\", \"beans\", \" Beans\")\n",
+          "hint": "`length(unique(crop))` before and after `tolower(trimws())`.",
+          "solution": "crop <- c(\"Kale\", \"kale \", \"KALE\", \"beans\", \" Beans\")\nn_variants <- length(unique(crop))\nn_clean <- length(unique(tolower(trimws(crop))))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_variants is 5",
+                "assertion": "is.numeric(n_variants) && isTRUE(all.equal(n_variants, 5))"
+              },
+              {
+                "id": "t2",
+                "label": "n_clean is 2",
+                "assertion": "is.numeric(n_clean) && isTRUE(all.equal(n_clean, 2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-squeeze-the-spaces",
+          "title": "Medium: Squeeze the spaces",
+          "promptMarkdown": "Make `names_clean` the names with no spaces at the ends and single spaces between words.",
+          "starterCode": "names_in <- c(\"  Ana   Silva\", \"Ben  Okafor \", \"Cy Li\")\n",
+          "hint": "`gsub(\" +\", \" \", trimws(names_in))`",
+          "solution": "names_in <- c(\"  Ana   Silva\", \"Ben  Okafor \", \"Cy Li\")\nnames_clean <- gsub(\" +\", \" \", trimws(names_in))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "names_clean is Ana Silva, Ben Okafor, Cy Li",
+                "assertion": "identical(names_clean, c(\"Ana Silva\", \"Ben Okafor\", \"Cy Li\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-title-case",
+          "title": "Medium: Title case",
+          "promptMarkdown": "Make `display` the names with a capital at the start of each word, using `tools::toTitleCase()`.",
+          "starterCode": "names_in <- c(\"ana silva\", \"BEN OKAFOR\", \"cy li\")\n",
+          "hint": "Make them small letters first: `tools::toTitleCase(tolower(names_in))`.",
+          "solution": "names_in <- c(\"ana silva\", \"BEN OKAFOR\", \"cy li\")\ndisplay <- tools::toTitleCase(tolower(names_in))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "display is Ana Silva, Ben Okafor, Cy Li",
+                "assertion": "identical(display, c(\"Ana Silva\", \"Ben Okafor\", \"Cy Li\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-clean-a-column",
+          "title": "Medium: Clean a column",
+          "promptMarkdown": "Clean the `crop` column of `harvest` in place: trimmed, small letters.",
+          "starterCode": "harvest <- data.frame(crop = c(\"Kale\", \"kale \", \"Beans\"), kg = c(2.7, 2.3, 4.1))\n",
+          "hint": "`harvest$crop <- tolower(trimws(harvest$crop))`",
+          "solution": "harvest <- data.frame(crop = c(\"Kale\", \"kale \", \"Beans\"), kg = c(2.7, 2.3, 4.1))\nharvest$crop <- tolower(trimws(harvest$crop))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "crop is kale, kale, beans",
+                "assertion": "identical(harvest$crop, c(\"kale\", \"kale\", \"beans\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-totals-after-cleaning",
+          "title": "Hard: Totals after cleaning",
+          "promptMarkdown": "Make `per_crop` the total kg per crop, after cleaning the crop names.",
+          "starterCode": "harvest <- data.frame(crop = c(\"Kale\", \"kale \", \"Beans\", \"TOMATOES\", \"beans\"), kg = c(2.7, 2.3, 4.1, 12.4, 2.9))\n",
+          "hint": "Clean the column, then `tapply(harvest$kg, harvest$crop, sum)`.",
+          "solution": "harvest <- data.frame(crop = c(\"Kale\", \"kale \", \"Beans\", \"TOMATOES\", \"beans\"), kg = c(2.7, 2.3, 4.1, 12.4, 2.9))\nharvest$crop <- tolower(trimws(harvest$crop))\nper_crop <- tapply(harvest$kg, harvest$crop, sum)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "per_crop is beans 7, kale 5, tomatoes 12.4",
+                "assertion": "isTRUE(all.equal(as.vector(per_crop), c(7, 5, 12.4))) && identical(names(per_crop), c(\"beans\", \"kale\", \"tomatoes\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cleaning_text-emails",
+          "title": "Expert: Emails",
+          "promptMarkdown": "Emails are not case-sensitive, so make `emails` trimmed and small letters, then `n_people` the number of different people.",
+          "starterCode": "emails <- c(\"Ana@Example.org\", \" ana@example.org\", \"BEN@example.org\", \"cy@example.org \")\n",
+          "hint": "Clean with `tolower(trimws())`, then `length(unique(emails))`.",
+          "solution": "emails <- c(\"Ana@Example.org\", \" ana@example.org\", \"BEN@example.org\", \"cy@example.org \")\nemails <- tolower(trimws(emails))\nn_people <- length(unique(emails))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "emails is cleaned",
+                "assertion": "identical(emails, c(\"ana@example.org\", \"ana@example.org\", \"ben@example.org\", \"cy@example.org\"))"
+              },
+              {
+                "id": "t2",
+                "label": "n_people is 3",
+                "assertion": "is.numeric(n_people) && isTRUE(all.equal(n_people, 3))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "cleaning_text-q-12tb7ey",
+            "type": "mcq",
+            "prompt": "How many different values does `c(\"Kale\", \"kale\", \"kale \")` have?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "1"
+              },
+              {
+                "id": "b",
+                "label": "0"
+              },
+              {
+                "id": "c",
+                "label": "3"
+              },
+              {
+                "id": "d",
+                "label": "2"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Capitals and spaces make them different texts."
+          },
+          {
+            "id": "cleaning_text-q-13m0fth",
+            "type": "mcq",
+            "prompt": "What does `tolower(trimws(\" KALE \"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"kale\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"KALE\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"Kale\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\" kale \"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Trim, then small letters."
+          },
+          {
+            "id": "cleaning_text-q-1kyn0b6",
+            "type": "mcq",
+            "prompt": "What does `tools::toTitleCase(\"ana silva\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"ANA SILVA\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Ana Silva\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"ana silva\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"Ana silva\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Each word gets a capital."
+          },
+          {
+            "id": "cleaning_text-q-17prr33",
+            "type": "mcq",
+            "prompt": "What does `tools::` mean in `tools::toTitleCase()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It makes the function faster"
+              },
+              {
+                "id": "b",
+                "label": "A comment"
+              },
+              {
+                "id": "c",
+                "label": "The function comes from the tools package"
+              },
+              {
+                "id": "d",
+                "label": "A typo"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`package::function` calls a function from a package without loading the whole package."
+          },
+          {
+            "id": "cleaning_text-q-1jjdnfh",
+            "type": "mcq",
+            "prompt": "What does `gsub(\" +\", \" \", \"a   b  c\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"a b c\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"abc\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"a+b+c\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"a   b  c\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Each run of spaces becomes one."
+          },
+          {
+            "id": "cleaning_text-q-1ohmt4k",
+            "type": "mcq",
+            "prompt": "Which finds spelling variants like \"courgette\" and \"courgettes\"?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Looking at `table()` or `sort(unique(x))`"
+              },
+              {
+                "id": "b",
+                "label": "`as.numeric()`"
+              },
+              {
+                "id": "c",
+                "label": "`tolower()`"
+              },
+              {
+                "id": "d",
+                "label": "`trimws()`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Variants don't follow a rule, so you have to look."
+          },
+          {
+            "id": "cleaning_text-q-1018fha",
+            "type": "mcq",
+            "prompt": "Why use small letters for categories?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "R needs them"
+              },
+              {
+                "id": "b",
+                "label": "So \"Kale\", \"KALE\" and \"kale\" become one value"
+              },
+              {
+                "id": "c",
+                "label": "They take less space"
+              },
+              {
+                "id": "d",
+                "label": "They sort faster"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Then counts and filters treat them as the same."
+          },
+          {
+            "id": "cleaning_text-q-uz9kbz",
+            "type": "mcq",
+            "prompt": "What does `table(tolower(c(\"Yes\", \"yes\", \"NO\")))` count?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "yes 3"
+              },
+              {
+                "id": "b",
+                "label": "no 1, yes 2"
+              },
+              {
+                "id": "c",
+                "label": "Yes 1, yes 1, NO 1"
+              },
+              {
+                "id": "d",
+                "label": "no 2, yes 1"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "After lowering, there are two yeses and one no."
+          },
+          {
+            "id": "cleaning_text-q-1xniylm",
+            "type": "shortText",
+            "prompt": "Which function makes text all small letters?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "tolower"
+            },
+            "explanation": "`tolower()`; `toupper()` does the opposite."
+          }
+        ]
+      }
+    },
+    {
+      "id": "recoding",
+      "title": "Recoding values",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "fix_variants",
+          "label": "Fix variants",
+          "code": "crop <- c(\"courgettes\", \"zucchini\", \"kale\", \"courgette\")\ncrop[crop %in% c(\"courgette\", \"zucchini\")] <- \"courgettes\"\ncrop"
+        }
+      ],
+      "intro": {
+        "title": "Recoding values",
+        "bodyMarkdown": "**Recoding** means changing values to the ones you want: fixing variants, shortening codes into words, or merging categories. Three ways, from the simplest:\n\n**One value:** assign to the matching positions: `crop[crop == \"zucchini\"] <- \"courgettes\"`.\n\n**A few values at once:** `%in%` finds them all: `crop[crop %in% c(\"courgette\", \"zucchini\")] <- \"courgettes\"`.\n\n**A whole code list:** a **lookup** vector with names maps each code to its meaning. Indexing it by the codes gives the meanings, in order:\n\n```\nsize_names <- c(S = \"small\", M = \"medium\", L = \"large\")\nsizes <- c(\"M\", \"S\", \"M\", \"L\")\nunname(size_names[sizes])    # \"medium\" \"small\" \"medium\" \"large\"\n```\n\nA code missing from the lookup becomes `NA`, which is useful: it shows you every code you didn't expect.\n\nFor yes/no style answers, `ifelse()` or `%in%` turns many forms into TRUE/FALSE: `answer %in% c(\"yes\", \"y\", \"1\")`. And to merge categories, recode several into one, such as every leafy crop into `\"greens\"`.",
+        "sandboxCode": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\nsizes <- c(\"M\", \"S\", \"M\", \"L\", \"XL\")\nunname(size_names[sizes])",
+        "readMore": {
+          "label": "R documentation: Extract",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extract.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "recoding-fix-one-variant",
+          "title": "Easy: Fix one variant",
+          "promptMarkdown": "Change every `\"zucchini\"` in `crop` to `\"courgettes\"`.",
+          "starterCode": "crop <- c(\"courgettes\", \"zucchini\", \"kale\", \"zucchini\")\n",
+          "hint": "`crop[crop == \"zucchini\"] <- \"courgettes\"`",
+          "solution": "crop <- c(\"courgettes\", \"zucchini\", \"kale\", \"zucchini\")\ncrop[crop == \"zucchini\"] <- \"courgettes\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "crop is courgettes courgettes kale courgettes",
+                "assertion": "identical(crop, c(\"courgettes\", \"courgettes\", \"kale\", \"courgettes\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-several-variants",
+          "title": "Easy: Several variants",
+          "promptMarkdown": "Change both `\"courgette\"` and `\"zucchini\"` to `\"courgettes\"`, in one line with `%in%`.",
+          "starterCode": "crop <- c(\"courgettes\", \"zucchini\", \"kale\", \"courgette\")\n",
+          "hint": "`crop[crop %in% c(\"courgette\", \"zucchini\")] <- \"courgettes\"`",
+          "solution": "crop <- c(\"courgettes\", \"zucchini\", \"kale\", \"courgette\")\ncrop[crop %in% c(\"courgette\", \"zucchini\")] <- \"courgettes\"",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "crop is courgettes courgettes kale courgettes",
+                "assertion": "identical(crop, c(\"courgettes\", \"courgettes\", \"kale\", \"courgettes\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses %in%",
+                "assertion": "grepl(\"%in%\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-codes-to-words",
+          "title": "Easy: Codes to words",
+          "promptMarkdown": "Make `size_words` the sizes as words, using the lookup vector.",
+          "starterCode": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\nsizes <- c(\"M\", \"S\", \"M\", \"L\")\n",
+          "hint": "`size_words <- unname(size_names[sizes])`",
+          "solution": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\nsizes <- c(\"M\", \"S\", \"M\", \"L\")\nsize_words <- unname(size_names[sizes])",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "size_words is medium small medium large",
+                "assertion": "identical(size_words, c(\"medium\", \"small\", \"medium\", \"large\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-unexpected-codes",
+          "title": "Medium: Unexpected codes",
+          "promptMarkdown": "Make `unknown` the codes in `sizes` that aren't in the lookup.",
+          "starterCode": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\nsizes <- c(\"M\", \"XL\", \"S\", \"m\", \"L\")\n",
+          "hint": "Codes that aren't names of the lookup: `sizes[!sizes %in% names(size_names)]`.",
+          "solution": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\nsizes <- c(\"M\", \"XL\", \"S\", \"m\", \"L\")\nunknown <- sizes[!sizes %in% names(size_names)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "unknown is XL, m",
+                "assertion": "identical(unknown, c(\"XL\", \"m\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-yes-in-many-forms",
+          "title": "Medium: Yes in many forms",
+          "promptMarkdown": "Make `agreed` TRUE for any answer that is `\"yes\"`, `\"y\"` or `\"1\"`, and FALSE otherwise.",
+          "starterCode": "answers <- c(\"yes\", \"no\", \"y\", \"1\", \"0\", \"maybe\")\n",
+          "hint": "`agreed <- answers %in% c(\"yes\", \"y\", \"1\")`",
+          "solution": "answers <- c(\"yes\", \"no\", \"y\", \"1\", \"0\", \"maybe\")\nagreed <- answers %in% c(\"yes\", \"y\", \"1\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "agreed is TRUE FALSE TRUE TRUE FALSE FALSE",
+                "assertion": "identical(agreed, c(TRUE, FALSE, TRUE, TRUE, FALSE, FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-merge-categories",
+          "title": "Medium: Merge categories",
+          "promptMarkdown": "Make `group` `\"greens\"` for kale, chard and spinach, and the crop name for everything else.",
+          "starterCode": "crop <- c(\"kale\", \"beans\", \"chard\", \"tomatoes\", \"spinach\")\n",
+          "hint": "`ifelse(crop %in% c(\"kale\", \"chard\", \"spinach\"), \"greens\", crop)`",
+          "solution": "crop <- c(\"kale\", \"beans\", \"chard\", \"tomatoes\", \"spinach\")\ngroup <- ifelse(crop %in% c(\"kale\", \"chard\", \"spinach\"), \"greens\", crop)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "group is greens beans greens tomatoes greens",
+                "assertion": "identical(group, c(\"greens\", \"beans\", \"greens\", \"tomatoes\", \"greens\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-recode-a-column",
+          "title": "Hard: Recode a column",
+          "promptMarkdown": "Add a column `size_word` to `orders`, using the lookup on the `size` column.",
+          "starterCode": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\norders <- data.frame(order = 1:4, size = c(\"M\", \"S\", \"L\", \"M\"))\n",
+          "hint": "`orders$size_word <- unname(size_names[orders$size])`",
+          "solution": "size_names <- c(S = \"small\", M = \"medium\", L = \"large\")\norders <- data.frame(order = 1:4, size = c(\"M\", \"S\", \"L\", \"M\"))\norders$size_word <- unname(size_names[orders$size])",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "size_word is medium small large medium",
+                "assertion": "identical(orders$size_word, c(\"medium\", \"small\", \"large\", \"medium\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "recoding-clean-then-recode",
+          "title": "Expert: Clean, then recode",
+          "promptMarkdown": "The answers are messy. Clean them (trim, small letters), then make `agreed` TRUE for `\"yes\"` and `\"y\"`, FALSE for `\"no\"` and `\"n\"`, and NA for anything else.",
+          "starterCode": "answers <- c(\" Yes\", \"N\", \"y\", \"NO \", \"maybe\", \"yes\")\n",
+          "hint": "A lookup works here too: `c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[clean]`, and `unname()` the result.",
+          "solution": "answers <- c(\" Yes\", \"N\", \"y\", \"NO \", \"maybe\", \"yes\")\nclean <- tolower(trimws(answers))\nagreed <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[clean])",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "agreed is TRUE FALSE TRUE FALSE NA TRUE",
+                "assertion": "identical(agreed, c(TRUE, FALSE, TRUE, FALSE, NA, TRUE))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "recoding-q-1lm53xe",
+            "type": "mcq",
+            "prompt": "After `x <- c(\"a\", \"b\", \"a\")` and `x[x == \"a\"] <- \"z\"`, what is `x`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"z\" \"b\" \"z\"`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"z\" \"b\" \"a\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"z\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"a\" \"b\" \"a\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Every matching value is changed."
+          },
+          {
+            "id": "recoding-q-gbmme9",
+            "type": "mcq",
+            "prompt": "What does `unname(c(S = \"small\", L = \"large\")[c(\"L\", \"S\")])` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"L\" \"S\"`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"large\" \"small\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"small\" \"large\"`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The names pick the meanings, in the order of the codes."
+          },
+          {
+            "id": "recoding-q-18oxb87",
+            "type": "mcq",
+            "prompt": "What does a lookup give for a code it doesn't have?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "The code itself"
+              },
+              {
+                "id": "d",
+                "label": "`\"\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Which helps you find unexpected codes."
+          },
+          {
+            "id": "recoding-q-1vcwvot",
+            "type": "mcq",
+            "prompt": "What does `c(\"y\", \"no\", \"1\") %in% c(\"yes\", \"y\", \"1\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1]  TRUE FALSE  TRUE`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] FALSE TRUE FALSE`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 2`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "One answer per value on the left."
+          },
+          {
+            "id": "recoding-q-6nr8jl",
+            "type": "mcq",
+            "prompt": "What does `ifelse(c(\"kale\", \"beans\") %in% \"kale\", \"greens\", c(\"kale\", \"beans\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"greens\" \"beans\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"kale\" \"beans\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"greens\" \"greens\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Kale becomes \"greens\"; beans keeps its name."
+          },
+          {
+            "id": "recoding-q-1yfdrm2",
+            "type": "mcq",
+            "prompt": "Why clean text before recoding?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Otherwise \" Yes\" and \"YES\" won't match the lookup"
+              },
+              {
+                "id": "b",
+                "label": "For speed"
+              },
+              {
+                "id": "c",
+                "label": "It doesn't matter"
+              },
+              {
+                "id": "d",
+                "label": "Recoding needs numbers"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A lookup matches exact text."
+          },
+          {
+            "id": "recoding-q-1r40ae0",
+            "type": "mcq",
+            "prompt": "What is a lookup vector?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A sorted vector"
+              },
+              {
+                "id": "b",
+                "label": "A named vector that maps codes (names) to meanings (values)"
+              },
+              {
+                "id": "c",
+                "label": "A table"
+              },
+              {
+                "id": "d",
+                "label": "A list of NAs"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Indexing it by codes gives the meanings."
+          },
+          {
+            "id": "recoding-q-1l9vq1y",
+            "type": "mcq",
+            "prompt": "What does `x[!x %in% c(\"S\", \"M\", \"L\")]` give for `x <- c(\"M\", \"XL\", \"s\")`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`character(0)`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] \"XL\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"M\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"XL\" \"s\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The values that aren't in the list."
+          },
+          {
+            "id": "recoding-q-1rb9x3v",
+            "type": "shortText",
+            "prompt": "Which operator checks each value against a list of allowed values?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "%in%"
+            },
+            "explanation": "`x %in% c(…)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "duplicates",
+      "title": "Duplicates",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "every_copy",
+          "label": "Every copy",
+          "code": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\ne <- signups$email\nsignups[duplicated(e) | duplicated(e, fromLast = TRUE), ]"
+        }
+      ],
+      "intro": {
+        "title": "Duplicates",
+        "bodyMarkdown": "Duplicates creep in when someone submits a form twice, when two files overlap, or when the same thing is entered by two people. They make counts and totals too big, so finding them is a standard cleaning step.\n\n`duplicated()` is TRUE for every value (or row) that has **already appeared** earlier. The first copy is FALSE, later copies TRUE:\n\n```\nduplicated(c(\"a\", \"b\", \"a\", \"c\", \"a\"))    # FALSE FALSE TRUE FALSE TRUE\n```\n\nSo `sum(duplicated(x))` counts the extra copies, and `x[!duplicated(x)]` keeps the first of each, which is what `unique(x)` does too.\n\nOn a data frame, `duplicated(df)` compares **whole rows**. Two rows are duplicates only if every column matches:\n\n```\nsignups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\nduplicated(signups)          # FALSE FALSE TRUE FALSE FALSE\nsignups[!duplicated(signups), ]\n```\n\nOften, though, what defines a duplicate is a **key**: one person should appear once, whatever else differs. Then test that column alone: `signups[!duplicated(signups$email), ]` keeps each email's first row. Be sure that is what you want: here it would drop Ben's second, different workshop.\n\nBefore deleting anything, look at the duplicates: `signups[duplicated(signups$email) | duplicated(signups$email, fromLast = TRUE), ]` shows every row whose email appears more than once.",
+        "sandboxCode": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\nduplicated(signups)\nsignups[!duplicated(signups), ]\nduplicated(signups$email)",
+        "readMore": {
+          "label": "R documentation: duplicated()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/duplicated.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "duplicates-which-are-repeats",
+          "title": "Easy: Which are repeats",
+          "promptMarkdown": "Make `again` TRUE for each email that already appeared earlier.",
+          "starterCode": "emails <- c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\")\n",
+          "hint": "`again <- duplicated(emails)`",
+          "solution": "emails <- c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\")\nagain <- duplicated(emails)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "again is FALSE FALSE TRUE FALSE",
+                "assertion": "identical(again, c(FALSE, FALSE, TRUE, FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-count-the-extras",
+          "title": "Easy: Count the extras",
+          "promptMarkdown": "Make `n_extra` the number of extra copies in `codes`.",
+          "starterCode": "codes <- c(\"FI-104\", \"SC-221\", \"FI-104\", \"HI-007\", \"FI-104\", \"SC-221\")\n",
+          "hint": "`n_extra <- sum(duplicated(codes))`",
+          "solution": "codes <- c(\"FI-104\", \"SC-221\", \"FI-104\", \"HI-007\", \"FI-104\", \"SC-221\")\nn_extra <- sum(duplicated(codes))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_extra is 3",
+                "assertion": "is.numeric(n_extra) && isTRUE(all.equal(n_extra, 3))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-whole-rows",
+          "title": "Easy: Whole rows",
+          "promptMarkdown": "Make `clean` the sign-ups without duplicated whole rows.",
+          "starterCode": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\n",
+          "hint": "`clean <- signups[!duplicated(signups), ]`",
+          "solution": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\nclean <- signups[!duplicated(signups), ]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "clean has 4 rows",
+                "assertion": "is.data.frame(clean) && identical(names(clean), names(signups[c(1, 2, 4, 5), ])) && isTRUE(all.equal(as.list(clean), as.list(signups[c(1, 2, 4, 5), ]), check.attributes = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-one-row-per-person",
+          "title": "Medium: One row per person",
+          "promptMarkdown": "Make `people` the first sign-up of each email.",
+          "starterCode": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\n",
+          "hint": "Test the key column: `signups[!duplicated(signups$email), ]`.",
+          "solution": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\npeople <- signups[!duplicated(signups$email), ]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "people is rows 1, 2 and 4",
+                "assertion": "is.data.frame(people) && identical(names(people), names(signups[c(1, 2, 4), ])) && isTRUE(all.equal(as.list(people), as.list(signups[c(1, 2, 4), ]), check.attributes = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-look-before-deleting",
+          "title": "Medium: Look before deleting",
+          "promptMarkdown": "Make `repeats` every row whose email appears more than once, including the first copy.",
+          "starterCode": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\n",
+          "hint": "`e <- signups$email`, then `signups[duplicated(e) | duplicated(e, fromLast = TRUE), ]`.",
+          "solution": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\ne <- signups$email\nrepeats <- signups[duplicated(e) | duplicated(e, fromLast = TRUE), ]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "repeats is rows 1, 2, 3 and 5",
+                "assertion": "is.data.frame(repeats) && identical(names(repeats), names(signups[c(1, 2, 3, 5), ])) && isTRUE(all.equal(as.list(repeats), as.list(signups[c(1, 2, 3, 5), ]), check.attributes = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-who-signed-up-twice",
+          "title": "Medium: Who signed up twice",
+          "promptMarkdown": "Make `twice` the emails that appear more than once, each listed once.",
+          "starterCode": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\n",
+          "hint": "`unique(signups$email[duplicated(signups$email)])`",
+          "solution": "signups <- data.frame(\n  email = c(\"ana@example.org\", \"ben@example.org\", \"ana@example.org\", \"cy@example.org\", \"ben@example.org\"),\n  workshop = c(\"compost\", \"compost\", \"compost\", \"seeds\", \"seeds\")\n)\ntwice <- unique(signups$email[duplicated(signups$email)])",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "twice is ana@example.org, ben@example.org",
+                "assertion": "identical(twice, c(\"ana@example.org\", \"ben@example.org\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-duplicates-after-cleaning",
+          "title": "Hard: Duplicates after cleaning",
+          "promptMarkdown": "These emails only look different. Clean them (trim, small letters), then make `n_people` the number of different people.",
+          "starterCode": "emails <- c(\"Ana@Example.org\", \"ben@example.org\", \" ana@example.org\", \"BEN@EXAMPLE.ORG\", \"cy@example.org\")\n",
+          "hint": "Clean first, then `sum(!duplicated(clean))` or `length(unique(clean))`.",
+          "solution": "emails <- c(\"Ana@Example.org\", \"ben@example.org\", \" ana@example.org\", \"BEN@EXAMPLE.ORG\", \"cy@example.org\")\nclean <- tolower(trimws(emails))\nn_people <- length(unique(clean))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_people is 3",
+                "assertion": "is.numeric(n_people) && isTRUE(all.equal(n_people, 3))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "duplicates-keep-the-latest",
+          "title": "Expert: Keep the latest",
+          "promptMarkdown": "Each member may have updated their phone number. Make `latest` the **last** row for each member, using `fromLast = TRUE`.",
+          "starterCode": "phones <- data.frame(member = c(\"Ana\", \"Ben\", \"Ana\", \"Cy\", \"Ana\"), phone = c(\"0111\", \"0222\", \"0333\", \"0444\", \"0555\"))\n",
+          "hint": "`phones[!duplicated(phones$member, fromLast = TRUE), ]` marks the earlier copies as duplicates instead.",
+          "solution": "phones <- data.frame(member = c(\"Ana\", \"Ben\", \"Ana\", \"Cy\", \"Ana\"), phone = c(\"0111\", \"0222\", \"0333\", \"0444\", \"0555\"))\nlatest <- phones[!duplicated(phones$member, fromLast = TRUE), ]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "latest is Ben 0222, Cy 0444, Ana 0555",
+                "assertion": "is.data.frame(latest) && identical(names(latest), names(phones[c(2, 4, 5), ])) && isTRUE(all.equal(as.list(latest), as.list(phones[c(2, 4, 5), ]), check.attributes = FALSE))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "duplicates-q-1xywhnd",
+            "type": "mcq",
+            "prompt": "What does `duplicated(c(1, 2, 1, 1))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 1 2`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] FALSE FALSE  TRUE  TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "`[1]  TRUE FALSE  TRUE  TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 2`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The first 1 is not a duplicate; the later ones are."
+          },
+          {
+            "id": "duplicates-q-izgtnb",
+            "type": "mcq",
+            "prompt": "What does `sum(duplicated(c(\"a\", \"b\", \"a\", \"a\")))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4`"
+              },
+              {
+                "id": "b",
+                "label": "`2`"
+              },
+              {
+                "id": "c",
+                "label": "`1`"
+              },
+              {
+                "id": "d",
+                "label": "`3`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Two extra copies of \"a\"."
+          },
+          {
+            "id": "duplicates-q-19g2iqz",
+            "type": "mcq",
+            "prompt": "When does `duplicated(df)` mark a row?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "When any column repeats"
+              },
+              {
+                "id": "b",
+                "label": "Never"
+              },
+              {
+                "id": "c",
+                "label": "When the first column repeats"
+              },
+              {
+                "id": "d",
+                "label": "When every column matches an earlier row"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Whole rows are compared."
+          },
+          {
+            "id": "duplicates-q-1iip2dp",
+            "type": "mcq",
+            "prompt": "What does `nrow(unique(data.frame(a = c(1, 1, 2), b = c(\"x\", \"x\", \"y\"))))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`2`"
+              },
+              {
+                "id": "c",
+                "label": "`3`"
+              },
+              {
+                "id": "d",
+                "label": "`1`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The first two rows are the same."
+          },
+          {
+            "id": "duplicates-q-1eptb6r",
+            "type": "mcq",
+            "prompt": "What does `duplicated(c(\"a\", \"b\", \"a\"), fromLast = TRUE)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1]  TRUE FALSE FALSE`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] FALSE  TRUE FALSE`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] FALSE FALSE  TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] TRUE TRUE TRUE`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Counting from the end, the last \"a\" is kept and the first is the duplicate."
+          },
+          {
+            "id": "duplicates-q-1q1y749",
+            "type": "mcq",
+            "prompt": "Why look at the duplicates before removing them?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To sort them"
+              },
+              {
+                "id": "b",
+                "label": "R can't remove them otherwise"
+              },
+              {
+                "id": "c",
+                "label": "Rows that share a key may differ in other columns that matter"
+              },
+              {
+                "id": "d",
+                "label": "It is required"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Ben signed up for two different workshops; removing by email alone would lose one."
+          },
+          {
+            "id": "duplicates-q-zfgu9q",
+            "type": "mcq",
+            "prompt": "Why clean text before checking for duplicates?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is faster"
+              },
+              {
+                "id": "b",
+                "label": "duplicated() needs small letters"
+              },
+              {
+                "id": "c",
+                "label": "It isn't needed"
+              },
+              {
+                "id": "d",
+                "label": "\"Ana@Example.org\" and \"ana@example.org\" are the same person but different texts"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Duplicates are found by exact match."
+          },
+          {
+            "id": "duplicates-q-2burd8",
+            "type": "mcq",
+            "prompt": "Which keeps the first row for each `email`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`df[duplicated(df$email), ]`"
+              },
+              {
+                "id": "b",
+                "label": "`df[!duplicated(df$email), ]`"
+              },
+              {
+                "id": "c",
+                "label": "`unique(df$email)`"
+              },
+              {
+                "id": "d",
+                "label": "`df[!duplicated(df), ]`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`unique(df$email)` gives just the emails, not the rows."
+          },
+          {
+            "id": "duplicates-q-1rbv9iv",
+            "type": "shortText",
+            "prompt": "Which function is TRUE for values that already appeared earlier?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "duplicated"
+            },
+            "explanation": "`duplicated(x)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "missing_strategies",
+      "title": "Handling missing values",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "fill_with_the_median",
+          "label": "Fill with the median",
+          "code": "x <- c(34, NA, 58, 27, 41)\nx[is.na(x)] <- median(x, na.rm = TRUE)\nx"
+        }
+      ],
+      "intro": {
+        "title": "Handling missing values",
+        "bodyMarkdown": "Missing values hide in many disguises: an empty cell, `\"N/A\"`, `\"-\"`, `999`, `-1`. The first job is to make every one of them a real `NA`, so R knows. Then you choose what to do with them.\n\n```\nsurvey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\n```\n\nHere `age` has an empty value and a `-1` (a typing error, not an age), and `rating` has `\"N/A\"` and an empty value, which made it a text column. Fix the disguises:\n\n```\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\n```\n\nThen decide, column by column, and write down what you did:\n\n| Choice | How | When |\n| --- | --- | --- |\n| Leave them | `na.rm = TRUE` in summaries | Usually the honest default |\n| Drop rows | `df[!is.na(df$col), ]` | When that column is essential for the question |\n| Fill in | `x[is.na(x)] <- median(x, na.rm = TRUE)` | Only with a good reason, and say so |\n\nFilling in (\"imputing\") makes the data look complete, but the filled values are guesses. Filling with the median keeps the centre unchanged but makes the spread look smaller than it is. Always report how many values were missing.",
+        "sandboxCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nstr(survey)\ncolSums(is.na(survey))",
+        "readMore": {
+          "label": "R documentation: NA",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "missing_strategies-disguised-ratings",
+          "title": "Easy: Disguised ratings",
+          "promptMarkdown": "Turn the empty and `\"N/A\"` ratings into `NA`, then make `rating` numeric.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\n",
+          "hint": "`survey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA`, then `as.numeric()`.",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rating is 5, 4, NA, 3, NA, 5",
+                "assertion": "is.numeric(survey$rating) && identical(survey$rating, c(5, 4, NA, 3, NA, 5))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-impossible-ages",
+          "title": "Easy: Impossible ages",
+          "promptMarkdown": "An age below 0 is a typing error. Make those ages `NA`.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\n",
+          "hint": "`survey$age[survey$age < 0] <- NA`",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$age[survey$age < 0] <- NA",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "age is 34, NA, 58, NA, 27, 41",
+                "assertion": "identical(as.numeric(survey$age), c(34, NA, 58, NA, 27, 41))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-how-many-missing",
+          "title": "Easy: How many missing",
+          "promptMarkdown": "Make `n_missing_age` the number of missing ages, after the last fix.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$age[survey$age < 0] <- NA\n",
+          "hint": "`sum(is.na(survey$age))`",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$age[survey$age < 0] <- NA\nn_missing_age <- sum(is.na(survey$age))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_missing_age is 2",
+                "assertion": "is.numeric(n_missing_age) && isTRUE(all.equal(n_missing_age, 2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-leave-them-out",
+          "title": "Medium: Leave them out",
+          "promptMarkdown": "Make `avg_age` the mean of the known ages (after fixing the -1), rounded to 1 decimal place.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$age[survey$age < 0] <- NA\n",
+          "hint": "`round(mean(survey$age, na.rm = TRUE), 1)`",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$age[survey$age < 0] <- NA\navg_age <- round(mean(survey$age, na.rm = TRUE), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "avg_age is 40",
+                "assertion": "is.numeric(avg_age) && isTRUE(all.equal(avg_age, 40))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-drop-rows-without-a-rating",
+          "title": "Medium: Drop rows without a rating",
+          "promptMarkdown": "Make `rated` the visitors who gave a rating.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\n",
+          "hint": "`rated <- survey[!is.na(survey$rating), ]`",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nrated <- survey[!is.na(survey$rating), ]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rated is visitors 1, 2, 4 and 6",
+                "assertion": "is.data.frame(rated) && identical(rated$visitor, c(1L, 2L, 4L, 6L))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-fill-with-the-median",
+          "title": "Medium: Fill with the median",
+          "promptMarkdown": "Make `filled` the ages with each NA replaced by the median of the known ages.",
+          "starterCode": "ages <- c(34, NA, 58, NA, 27, 41)\n",
+          "hint": "`filled <- ages` then `filled[is.na(filled)] <- median(ages, na.rm = TRUE)`.",
+          "solution": "ages <- c(34, NA, 58, NA, 27, 41)\nfilled <- ages\nfilled[is.na(filled)] <- median(ages, na.rm = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "filled is 34, 37.5, 58, 37.5, 27, 41",
+                "assertion": "is.numeric(filled) && isTRUE(all.equal(filled, c(34, 37.5, 58, 37.5, 27, 41)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-read-it-right-first",
+          "title": "Hard: Read it right first",
+          "promptMarkdown": "Read the CSV so that empty values, `N/A` and `-` all become NA straight away, making both columns numeric.",
+          "starterCode": "csv <- \"visitor,rating\n1,5\n2,N/A\n3,-\n4,4\n5,\"\n",
+          "hint": "`read.csv(text = csv, na.strings = c(\"\", \"N/A\", \"-\"))`",
+          "solution": "csv <- \"visitor,rating\n1,5\n2,N/A\n3,-\n4,4\n5,\"\nsurvey <- read.csv(text = csv, na.strings = c(\"\", \"N/A\", \"-\"))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rating is numeric with 3 NAs",
+                "assertion": "is.numeric(survey$rating) && sum(is.na(survey$rating)) == 3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "missing_strategies-report-the-gaps",
+          "title": "Expert: Report the gaps",
+          "promptMarkdown": "Make `missing_pct` the percentage of missing values in each column of the cleaned survey, rounded to whole numbers.",
+          "starterCode": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\nsurvey$comment[survey$comment == \"\"] <- NA\n",
+          "hint": "`colMeans(is.na(survey))` is the share missing per column; times 100, rounded.",
+          "solution": "survey <- read.csv(text = \"\nvisitor,age,rating,comment\n1,34,5,Lovely\n2,,4,\n3,58,N/A,Too busy\n4,-1,3,ok\n5,27,,\n6,41,5,Great\n\")\nsurvey$rating[survey$rating %in% c(\"\", \"N/A\")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\nsurvey$comment[survey$comment == \"\"] <- NA\nmissing_pct <- round(colMeans(is.na(survey)) * 100)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "missing_pct is visitor 0, age 33, rating 33, comment 33",
+                "assertion": "isTRUE(all.equal(missing_pct, c(visitor = 0, age = 33, rating = 33, comment = 33)))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "missing_strategies-q-1jvfffx",
+            "type": "mcq",
+            "prompt": "Which of these is a missing value in disguise?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`-1` in an age column"
+              },
+              {
+                "id": "b",
+                "label": "`34`"
+              },
+              {
+                "id": "c",
+                "label": "`5`"
+              },
+              {
+                "id": "d",
+                "label": "`\"Lovely\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "An impossible value usually means \"not known\" or a typo."
+          },
+          {
+            "id": "missing_strategies-q-5iipi9",
+            "type": "mcq",
+            "prompt": "What does `as.numeric(c(\"5\", \"\", \"4\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 5 4`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 5 0 4`"
+              },
+              {
+                "id": "c",
+                "label": "`[1]  5 NA  4`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "An empty text becomes NA."
+          },
+          {
+            "id": "missing_strategies-q-1237qe",
+            "type": "mcq",
+            "prompt": "What does `colMeans(is.na(data.frame(a = c(1, NA), b = c(NA, NA))))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`a 0.5, b 1`"
+              },
+              {
+                "id": "b",
+                "label": "`a 0, b 0`"
+              },
+              {
+                "id": "c",
+                "label": "`a 1, b 2`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 0.75`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The share of NAs in each column."
+          },
+          {
+            "id": "missing_strategies-q-1nm1g1x",
+            "type": "mcq",
+            "prompt": "After `x <- c(2, NA, 10)` and `x[is.na(x)] <- median(x, na.rm = TRUE)`, what is `x`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1]  2 NA 10`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 6 6 6`"
+              },
+              {
+                "id": "c",
+                "label": "`[1]  2  6 10`"
+              },
+              {
+                "id": "d",
+                "label": "`[1]  2  0 10`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The median of 2 and 10 is 6."
+          },
+          {
+            "id": "missing_strategies-q-r2cge9",
+            "type": "mcq",
+            "prompt": "What is the risk of filling NAs with the median?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "None"
+              },
+              {
+                "id": "b",
+                "label": "The data looks complete and less spread out than it really is"
+              },
+              {
+                "id": "c",
+                "label": "It changes the median"
+              },
+              {
+                "id": "d",
+                "label": "It deletes rows"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The filled values are guesses; say how many there were."
+          },
+          {
+            "id": "missing_strategies-q-1i2ejrh",
+            "type": "mcq",
+            "prompt": "When is dropping rows with NA reasonable?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "When that column is essential for the question you're answering"
+              },
+              {
+                "id": "b",
+                "label": "Only for text columns"
+              },
+              {
+                "id": "c",
+                "label": "Always"
+              },
+              {
+                "id": "d",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A row with no rating can't help with \"what is the average rating?\"."
+          },
+          {
+            "id": "missing_strategies-q-wgh6jb",
+            "type": "mcq",
+            "prompt": "What does `na.strings = c(\"\", \"-\")` do in `read.csv()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Skips the header"
+              },
+              {
+                "id": "b",
+                "label": "Replaces NA with \"-\""
+              },
+              {
+                "id": "c",
+                "label": "Reads empty values and \"-\" as NA"
+              },
+              {
+                "id": "d",
+                "label": "Removes those rows"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Fixing disguises while reading saves a step."
+          },
+          {
+            "id": "missing_strategies-q-1mmcgu7",
+            "type": "mcq",
+            "prompt": "What is usually the honest default for missing values?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Guess them"
+              },
+              {
+                "id": "b",
+                "label": "Fill them with 0"
+              },
+              {
+                "id": "c",
+                "label": "Leave them and use `na.rm = TRUE`, reporting how many there were"
+              },
+              {
+                "id": "d",
+                "label": "Delete the column"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "It doesn't invent data, and readers know what is behind the numbers."
+          },
+          {
+            "id": "missing_strategies-q-ow50su",
+            "type": "shortText",
+            "prompt": "Which function is TRUE where a value is missing?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "is.na"
+            },
+            "explanation": "`is.na(x)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dates_from_text",
+      "title": "Dates from text",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "wrong_format_gives_na",
+          "label": "Wrong format gives NA",
+          "code": "as.Date(\"30/10/2026\")\nas.Date(\"30/10/2026\", format = \"%d/%m/%Y\")"
+        }
+      ],
+      "intro": {
+        "title": "Dates from text",
+        "bodyMarkdown": "Dates in files come in many shapes: `2026-10-30`, `30/10/2026`, `10/30/2026`, `30 Oct 2026`. `read.csv()` reads them all as text, so the first step is always `as.Date()` with the right `format`:\n\n| Written as | format |\n| --- | --- |\n| `2026-10-30` | `\"%Y-%m-%d\"` (the default) |\n| `30/10/2026` | `\"%d/%m/%Y\"` |\n| `10/30/2026` | `\"%m/%d/%Y\"` |\n| `30 Oct 2026` | `\"%d %b %Y\"` |\n| `30.10.26` | `\"%d.%m.%y\"` (small y: two-digit year) |\n\nA date that doesn't fit the format becomes `NA`. As with numbers, count the NAs after converting to find the ones that need attention.\n\nWatch out for **day/month confusion**: `03/04/2026` is 3 April in most of the world and March 4 in the US. Look for a value with a day over 12 (like `30/10`) to tell which way round a file is.\n\nOnce they are real dates, you can pull out parts for grouping: `format(d, \"%Y-%m\")` gives the year and month, perfect for monthly totals with `tapply()`. `weekdays(d)` gives the day of the week.\n\n```\nd <- as.Date(c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\"), format = \"%d/%m/%Y\")\nformat(d, \"%Y-%m\")    # \"2026-09\" \"2026-09\" \"2026-10\"\n```\n\nWhen a column mixes two formats, convert with each format and combine: where the first gives NA, use the second. `ifelse()` drops the Date type, so assign into the NAs instead: `d[is.na(d)] <- as.Date(x[is.na(d)], format = \"%d/%m/%Y\")`.",
+        "sandboxCode": "d <- as.Date(c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\"), format = \"%d/%m/%Y\")\nd\nformat(d, \"%Y-%m\")\nweekdays(d)",
+        "readMore": {
+          "label": "R documentation: strptime formats",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/strptime.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "dates_from_text-day-first",
+          "title": "Easy: Day first",
+          "promptMarkdown": "Make `d` real dates from the day-first texts.",
+          "starterCode": "raw <- c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\")\n",
+          "hint": "`as.Date(raw, format = \"%d/%m/%Y\")`",
+          "solution": "raw <- c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\")\nd <- as.Date(raw, format = \"%d/%m/%Y\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "d is 2026-09-02, 2026-09-15, 2026-10-03",
+                "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-09-02\", \"2026-09-15\", \"2026-10-03\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-us-style",
+          "title": "Easy: US style",
+          "promptMarkdown": "These dates are month first, the US way. Make `d` real dates.",
+          "starterCode": "raw <- c(\"09/02/2026\", \"10/31/2026\")\n",
+          "hint": "`format = \"%m/%d/%Y\"`",
+          "solution": "raw <- c(\"09/02/2026\", \"10/31/2026\")\nd <- as.Date(raw, format = \"%m/%d/%Y\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "d is 2026-09-02, 2026-10-31",
+                "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-09-02\", \"2026-10-31\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-month-names",
+          "title": "Easy: Month names",
+          "promptMarkdown": "Make `d` real dates from texts like `\"30 Oct 2026\"`.",
+          "starterCode": "raw <- c(\"30 Oct 2026\", \"4 Nov 2026\")\n",
+          "hint": "`format = \"%d %b %Y\"`: `%b` is a short month name.",
+          "solution": "raw <- c(\"30 Oct 2026\", \"4 Nov 2026\")\nd <- as.Date(raw, format = \"%d %b %Y\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "d is 2026-10-30, 2026-11-04",
+                "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-10-30\", \"2026-11-04\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-spot-the-bad-ones",
+          "title": "Medium: Spot the bad ones",
+          "promptMarkdown": "Convert with the day-first format, then make `bad` the texts that didn't convert.",
+          "starterCode": "raw <- c(\"02/09/2026\", \"15/9/26\", \"03/10/2026\", \"TBC\")\n",
+          "hint": "`d <- as.Date(raw, format = \"%d/%m/%Y\")`, then `raw[is.na(d)]`.",
+          "solution": "raw <- c(\"02/09/2026\", \"15/9/26\", \"03/10/2026\", \"TBC\")\nd <- as.Date(raw, format = \"%d/%m/%Y\")\nbad <- raw[is.na(d)]",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "bad is \"15/9/26\" and \"TBC\"",
+                "assertion": "identical(bad, c(\"15/9/26\", \"TBC\")) || identical(bad, \"TBC\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-year-and-month",
+          "title": "Medium: Year and month",
+          "promptMarkdown": "Make `month` the year and month of each date, like `\"2026-09\"`.",
+          "starterCode": "d <- as.Date(c(\"2026-09-02\", \"2026-09-15\", \"2026-10-03\"))\n",
+          "hint": "`month <- format(d, \"%Y-%m\")`",
+          "solution": "d <- as.Date(c(\"2026-09-02\", \"2026-09-15\", \"2026-10-03\"))\nmonth <- format(d, \"%Y-%m\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "month is 2026-09, 2026-09, 2026-10",
+                "assertion": "identical(month, c(\"2026-09\", \"2026-09\", \"2026-10\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-monthly-totals",
+          "title": "Medium: Monthly totals",
+          "promptMarkdown": "Make `per_month` the total sales per month (year and month).",
+          "starterCode": "sales <- data.frame(date = c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\", \"21/10/2026\"), amount = c(12.5, 8, 20, 6.5))\n",
+          "hint": "Convert the dates, then `tapply(sales$amount, format(d, \"%Y-%m\"), sum)`.",
+          "solution": "sales <- data.frame(date = c(\"02/09/2026\", \"15/09/2026\", \"03/10/2026\", \"21/10/2026\"), amount = c(12.5, 8, 20, 6.5))\nd <- as.Date(sales$date, format = \"%d/%m/%Y\")\nper_month <- tapply(sales$amount, format(d, \"%Y-%m\"), sum)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "per_month is 2026-09 20.5, 2026-10 26.5",
+                "assertion": "isTRUE(all.equal(as.vector(per_month), c(20.5, 26.5))) && identical(names(per_month), c(\"2026-09\", \"2026-10\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-two-digit-years",
+          "title": "Hard: Two-digit years",
+          "promptMarkdown": "Make `d` real dates from texts like `\"30.10.26\"`.",
+          "starterCode": "raw <- c(\"30.10.26\", \"01.11.26\")\n",
+          "hint": "`format = \"%d.%m.%y\"`: a small `y` is a two-digit year.",
+          "solution": "raw <- c(\"30.10.26\", \"01.11.26\")\nd <- as.Date(raw, format = \"%d.%m.%y\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "d is 2026-10-30, 2026-11-01",
+                "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-10-30\", \"2026-11-01\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "dates_from_text-two-formats-in-one-column",
+          "title": "Expert: Two formats in one column",
+          "promptMarkdown": "This column mixes `2026-10-30` and `30/10/2026` styles. Make `d` real dates for all of them.",
+          "starterCode": "raw <- c(\"2026-09-02\", \"15/09/2026\", \"2026-10-03\", \"21/10/2026\")\n",
+          "hint": "First `d <- as.Date(raw, format = \"%Y-%m-%d\")`; the day-first ones become NA. Then fill those: `d[is.na(d)] <- as.Date(raw[is.na(d)], format = \"%d/%m/%Y\")`.",
+          "solution": "raw <- c(\"2026-09-02\", \"15/09/2026\", \"2026-10-03\", \"21/10/2026\")\nd <- as.Date(raw, format = \"%Y-%m-%d\")\nd[is.na(d)] <- as.Date(raw[is.na(d)], format = \"%d/%m/%Y\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "d is all four dates",
+                "assertion": "inherits(d, \"Date\") && identical(format(d), c(\"2026-09-02\", \"2026-09-15\", \"2026-10-03\", \"2026-10-21\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "dates_from_text-q-ycyrfb",
+            "type": "mcq",
+            "prompt": "Which `format` reads `\"30/10/2026\"`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"%d/%m/%Y\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"%m/%d/%Y\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"%Y-%m-%d\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"%d %b %Y\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Day, month, year, with slashes."
+          },
+          {
+            "id": "dates_from_text-q-1k1o966",
+            "type": "mcq",
+            "prompt": "What does `as.Date(\"30/10/2026\", format = \"%m/%d/%Y\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`: there is no month 30"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`2026-10-30`"
+              },
+              {
+                "id": "d",
+                "label": "`2026-30-10`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A text that doesn't fit the format becomes NA."
+          },
+          {
+            "id": "dates_from_text-q-jxjq8h",
+            "type": "mcq",
+            "prompt": "A file has `03/04/2026` and `25/04/2026`. Which way round are its dates?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Year first"
+              },
+              {
+                "id": "b",
+                "label": "You can't tell"
+              },
+              {
+                "id": "c",
+                "label": "Day first: 25 can only be a day"
+              },
+              {
+                "id": "d",
+                "label": "Month first"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "A value over 12 settles it."
+          },
+          {
+            "id": "dates_from_text-q-v047e9",
+            "type": "mcq",
+            "prompt": "What does `format(as.Date(\"2026-09-15\"), \"%Y-%m\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"2026-09-15\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Sep\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"2026-09\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"09-2026\"`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The year and month, handy for grouping."
+          },
+          {
+            "id": "dates_from_text-q-begupf",
+            "type": "mcq",
+            "prompt": "What does `%y` (small y) mean?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The weekday"
+              },
+              {
+                "id": "b",
+                "label": "The day of the year"
+              },
+              {
+                "id": "c",
+                "label": "A two-digit year, like 26"
+              },
+              {
+                "id": "d",
+                "label": "The full year"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`%Y` is 2026; `%y` is 26."
+          },
+          {
+            "id": "dates_from_text-q-1ycthgm",
+            "type": "mcq",
+            "prompt": "Why count NAs after `as.Date()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To sort the dates"
+              },
+              {
+                "id": "b",
+                "label": "Dates can't be NA"
+              },
+              {
+                "id": "c",
+                "label": "It is required"
+              },
+              {
+                "id": "d",
+                "label": "They show texts that didn't fit the format"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Just as with `as.numeric()`."
+          },
+          {
+            "id": "dates_from_text-q-1qysggv",
+            "type": "mcq",
+            "prompt": "Why fill a Date vector's NAs by assignment rather than with `ifelse()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is shorter"
+              },
+              {
+                "id": "b",
+                "label": "ifelse() can't handle NA"
+              },
+              {
+                "id": "c",
+                "label": "`ifelse()` drops the Date type and gives plain numbers"
+              },
+              {
+                "id": "d",
+                "label": "There is no reason"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Assigning into `d[is.na(d)]` keeps the result a Date."
+          },
+          {
+            "id": "dates_from_text-q-9powq8",
+            "type": "mcq",
+            "prompt": "What does `weekdays(as.Date(\"2026-11-01\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"Monday\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Sunday\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"Saturday\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"November\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "November 1, 2026 is a Sunday."
+          },
+          {
+            "id": "dates_from_text-q-3tpvsk",
+            "type": "shortText",
+            "prompt": "In a date format, which code is a short month name like \"Oct\"?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "%b"
+            },
+            "explanation": "`%b` is the short name; `%B` the full one."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_club_signups",
+      "title": "Easy side quest: Club sign-ups",
+      "kind": "project",
+      "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "look_at_the_emails",
+          "label": "Look at the emails",
+          "code": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nsort(unique(club$email))"
+        }
+      ],
+      "intro": {
+        "title": "Easy side quest: Club sign-ups",
+        "bodyMarkdown": "The new gardening club collected sign-ups on a shared form, and it shows: odd spaces, shouting capitals, a member who signed up twice, and three different ways to say \"yes\".\n\n```\nraw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\n```\n\nClean it step by step into a members list you could hand to the treasurer. The last challenge shows:\n\n```\n4 members, 2 paid, 1 not paid, 1 unknown\n```",
+        "sandboxCode": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nstr(club)\ntable(club$paid)"
+      },
+      "challenges": [
+        {
+          "id": "proj_club_signups-read-it-in",
+          "title": "Easy: Read it in",
+          "promptMarkdown": "Read `raw` into `club`, with empty values and `N/A` becoming NA.",
+          "starterCode": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\n",
+          "hint": "`club <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))`",
+          "solution": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "club has 5 rows",
+                "assertion": "is.data.frame(club) && nrow(club) == 5"
+              },
+              {
+                "id": "t2",
+                "label": "N/A became NA",
+                "assertion": "sum(is.na(club$joined)) == 1 && sum(is.na(club$paid)) == 1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_club_signups-clean-the-emails",
+          "title": "Easy: Clean the emails",
+          "promptMarkdown": "Make the `email` column trimmed and small letters.",
+          "starterCode": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\n",
+          "hint": "`club$email <- tolower(trimws(club$email))`",
+          "solution": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "email is cleaned",
+                "assertion": "identical(club$email, c(\"ana@example.org\", \"ben@example.org\", \"cy@example.org\", \"ana@example.org\", \"dee@example.org\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_club_signups-tidy-the-names",
+          "title": "Medium: Tidy the names",
+          "promptMarkdown": "Make each name trimmed, with single spaces, and a capital at the start of each word.",
+          "starterCode": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\n",
+          "hint": "`tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))`",
+          "solution": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\nclub$name <- tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "name is Ana Silva, Ben Okafor, Cy Li, Ana Silva, Dee Moss",
+                "assertion": "identical(club$name, c(\"Ana Silva\", \"Ben Okafor\", \"Cy Li\", \"Ana Silva\", \"Dee Moss\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_club_signups-one-row-per-member",
+          "title": "Medium: One row per member",
+          "promptMarkdown": "Keep only the first sign-up for each email.",
+          "starterCode": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\nclub$name <- tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))\n",
+          "hint": "`club <- club[!duplicated(club$email), ]`",
+          "solution": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\nclub$name <- tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))\nclub <- club[!duplicated(club$email), ]\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "club has 4 rows, one per email",
+                "assertion": "nrow(club) == 4 && !any(duplicated(club$email))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_club_signups-paid-or-not",
+          "title": "Hard: Paid or not",
+          "promptMarkdown": "Make `paid` TRUE for yes/y, FALSE for no/n, whatever the case, and NA where it is unknown.",
+          "starterCode": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\nclub$name <- tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))\nclub <- club[!duplicated(club$email), ]\n",
+          "hint": "A lookup: `unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])`.",
+          "solution": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\nclub$name <- tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))\nclub <- club[!duplicated(club$email), ]\nclub$paid <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "paid is TRUE TRUE FALSE NA",
+                "assertion": "identical(unname(club$paid), c(TRUE, TRUE, FALSE, NA))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_club_signups-for-the-treasurer",
+          "title": "Expert: For the treasurer",
+          "promptMarkdown": "Show the summary line for the cleaned list:\n\n```\n4 members, 2 paid, 1 not paid, 1 unknown\n```",
+          "starterCode": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\nclub$name <- tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))\nclub <- club[!duplicated(club$email), ]\nclub$paid <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])\n",
+          "hint": "`nrow(club)`, `sum(club$paid, na.rm = TRUE)`, `sum(!club$paid, na.rm = TRUE)` and `sum(is.na(club$paid))`, joined with `cat(..., sep = \"\")`.",
+          "solution": "raw <- \"name,email,joined,paid\n ana silva,Ana@Example.org,02/09/2026,yes\nBEN OKAFOR,ben@example.org ,03/09/2026,Y\nCy Li,cy@example.org,N/A,no\nana silva,ana@example.org,02/09/2026,yes\nDee  Moss,dee@example.org,15/09/2026,N/A\"\nclub <- read.csv(text = raw, na.strings = c(\"\", \"N/A\"))\nclub$email <- tolower(trimws(club$email))\nclub$name <- tools::toTitleCase(tolower(gsub(\" +\", \" \", trimws(club$name))))\nclub <- club[!duplicated(club$email), ]\nclub$paid <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[tolower(club$paid)])\ncat(nrow(club), \" members, \", sum(club$paid, na.rm = TRUE), \" paid, \", sum(!club$paid, na.rm = TRUE), \" not paid, \", sum(is.na(club$paid)), \" unknown\\n\", sep = \"\")",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the summary",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"4 members, 2 paid, 1 not paid, 1 unknown\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_club_signups-q-r6dl",
+            "type": "mcq",
+            "prompt": "Why clean the emails before removing duplicates?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"Ana@Example.org\" and \"ana@example.org\" are one person but different texts"
+              },
+              {
+                "id": "b",
+                "label": "duplicated() ignores case"
+              },
+              {
+                "id": "c",
+                "label": "It is faster"
+              },
+              {
+                "id": "d",
+                "label": "It isn't needed"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Duplicates are found by exact match, so clean first."
+          },
+          {
+            "id": "proj_club_signups-q-7uyk59",
+            "type": "mcq",
+            "prompt": "What does `tolower(trimws(\"ben@example.org \"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"BEN@EXAMPLE.ORG\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"ben@example.org \"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"ben@example.org\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"ben\"`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Trimmed and small letters."
+          },
+          {
+            "id": "proj_club_signups-q-1vr8gvd",
+            "type": "mcq",
+            "prompt": "What does `tools::toTitleCase(tolower(\"BEN OKAFOR\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"ben okafor\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Ben Okafor\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"BEN OKAFOR\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"Ben okafor\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Small letters first, then a capital for each word."
+          },
+          {
+            "id": "proj_club_signups-q-ze1cr6",
+            "type": "mcq",
+            "prompt": "What does `unname(c(yes = TRUE, no = FALSE)[c(\"no\", NA)])` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] FALSE`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] FALSE    NA`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] FALSE TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A missing code gives NA, so unknown stays unknown."
+          },
+          {
+            "id": "proj_club_signups-q-ssd399",
+            "type": "mcq",
+            "prompt": "What does `sum(c(TRUE, FALSE, NA), na.rm = TRUE)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`0`"
+              },
+              {
+                "id": "b",
+                "label": "`1`"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`2`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "TRUE counts as 1; the NA is left out."
+          },
+          {
+            "id": "proj_club_signups-q-1jmotdh",
+            "type": "shortText",
+            "prompt": "Which `read.csv()` argument lists the texts that should be read as NA?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "na.strings"
+            },
+            "explanation": "`na.strings = c(\"\", \"N/A\")`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_sales_log",
+      "title": "Medium side quest: The sales log",
+      "kind": "project",
+      "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "prices_as_numbers",
+          "label": "Prices as numbers",
+          "code": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nas.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))"
+        }
+      ],
+      "intro": {
+        "title": "Medium side quest: The sales log",
+        "bodyMarkdown": "A small school shop sells mugs, tote bags and posters at events. The volunteer who keeps the log types prices with a `$`, dates day first, and item names however they come out.\n\n```\nsales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\n```\n\nClean the log, then answer the two questions the shop committee always asks: how much did we take each month, and which item earned the most?",
+        "sandboxCode": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nstr(sales)\ntable(sales$item)"
+      },
+      "challenges": [
+        {
+          "id": "proj_sales_log-prices-as-numbers",
+          "title": "Easy: Prices as numbers",
+          "promptMarkdown": "Make the `price` column numbers, removing the `$`.",
+          "starterCode": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\n",
+          "hint": "`as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))`",
+          "solution": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is 8.5, 8.5, 12, 12, 5.25, 8.5",
+                "assertion": "is.numeric(sales$price) && isTRUE(all.equal(sales$price, c(8.5, 8.5, 12, 12, 5.25, 8.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sales_log-one-name-per-item",
+          "title": "Easy: One name per item",
+          "promptMarkdown": "Make the `item` column trimmed and small letters.",
+          "starterCode": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\n",
+          "hint": "`sales$item <- tolower(trimws(sales$item))`",
+          "solution": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "item is cleaned",
+                "assertion": "identical(sales$item, c(\"mug\", \"mug\", \"tote bag\", \"tote bag\", \"poster\", \"mug\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sales_log-real-dates",
+          "title": "Medium: Real dates",
+          "promptMarkdown": "Make the `date` column real dates. They are written day first.",
+          "starterCode": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\n",
+          "hint": "`as.Date(sales$date, format = \"%d/%m/%Y\")`",
+          "solution": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\nsales$date <- as.Date(sales$date, format = \"%d/%m/%Y\")\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "date is real dates",
+                "assertion": "inherits(sales$date, \"Date\") && identical(format(sales$date), c(\"2026-09-02\", \"2026-09-15\", \"2026-09-20\", \"2026-10-03\", \"2026-10-21\", \"2026-10-28\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sales_log-line-totals",
+          "title": "Medium: Line totals",
+          "promptMarkdown": "Add a column `total`: price times quantity.",
+          "starterCode": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\nsales$date <- as.Date(sales$date, format = \"%d/%m/%Y\")\n",
+          "hint": "`sales$total <- sales$price * sales$qty`",
+          "solution": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\nsales$date <- as.Date(sales$date, format = \"%d/%m/%Y\")\nsales$total <- sales$price * sales$qty\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 17, 8.5, 12, 36, 21, 17",
+                "assertion": "isTRUE(all.equal(sales$total, c(17, 8.5, 12, 36, 21, 17)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sales_log-takings-per-month",
+          "title": "Hard: Takings per month",
+          "promptMarkdown": "Make `per_month` the total takings per month, named like `\"2026-09\"`.",
+          "starterCode": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\nsales$date <- as.Date(sales$date, format = \"%d/%m/%Y\")\nsales$total <- sales$price * sales$qty\n",
+          "hint": "`tapply(sales$total, format(sales$date, \"%Y-%m\"), sum)`",
+          "solution": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\nsales$date <- as.Date(sales$date, format = \"%d/%m/%Y\")\nsales$total <- sales$price * sales$qty\nper_month <- tapply(sales$total, format(sales$date, \"%Y-%m\"), sum)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "per_month is 2026-09 37.5, 2026-10 74",
+                "assertion": "isTRUE(all.equal(as.vector(per_month), c(37.5, 74))) && identical(names(per_month), c(\"2026-09\", \"2026-10\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sales_log-the-best-seller",
+          "title": "Expert: The best seller",
+          "promptMarkdown": "Make `per_item` the takings per item, from most to least.",
+          "starterCode": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\nsales$date <- as.Date(sales$date, format = \"%d/%m/%Y\")\nsales$total <- sales$price * sales$qty\n",
+          "hint": "`sort(tapply(sales$total, sales$item, sum), decreasing = TRUE)`",
+          "solution": "sales <- read.csv(text = \"date,item,price,qty\n02/09/2026,Mug,$8.50,2\n15/09/2026,mug,$8.50,1\n20/09/2026,Tote bag,$12.00,1\n03/10/2026,TOTE BAG,$12.00,3\n21/10/2026,Poster,$5.25,4\n28/10/2026,mug ,$8.50,2\")\nsales$price <- as.numeric(gsub(\"$\", \"\", sales$price, fixed = TRUE))\nsales$item <- tolower(trimws(sales$item))\nsales$date <- as.Date(sales$date, format = \"%d/%m/%Y\")\nsales$total <- sales$price * sales$qty\nper_item <- sort(tapply(sales$total, sales$item, sum), decreasing = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "per_item is tote bag 48, mug 42.5, poster 21",
+                "assertion": "isTRUE(all.equal(as.vector(per_item), c(48, 42.5, 21))) && identical(names(per_item), c(\"tote bag\", \"mug\", \"poster\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_sales_log-q-xaq932",
+            "type": "mcq",
+            "prompt": "Why does `price` read in as text?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It has NAs"
+              },
+              {
+                "id": "b",
+                "label": "It has decimals"
+              },
+              {
+                "id": "c",
+                "label": "R reads all columns as text"
+              },
+              {
+                "id": "d",
+                "label": "The `$` signs make it non-numeric"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "One non-number character makes the whole column text."
+          },
+          {
+            "id": "proj_sales_log-q-1ras8wf",
+            "type": "mcq",
+            "prompt": "Why `fixed = TRUE` in `gsub(\"$\", \"\", x, fixed = TRUE)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "In a pattern, `$` means \"end of text\"; fixed makes it a plain dollar sign"
+              },
+              {
+                "id": "b",
+                "label": "It is required by gsub()"
+              },
+              {
+                "id": "c",
+                "label": "It keeps the result as text"
+              },
+              {
+                "id": "d",
+                "label": "It is faster"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Without it, nothing is removed."
+          },
+          {
+            "id": "proj_sales_log-q-19qiy0r",
+            "type": "mcq",
+            "prompt": "Without cleaning, how many different items does `table()` show for \"Mug\", \"mug\" and \"mug \"?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3"
+              },
+              {
+                "id": "b",
+                "label": "2"
+              },
+              {
+                "id": "c",
+                "label": "1"
+              },
+              {
+                "id": "d",
+                "label": "0"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Capitals and a trailing space make three different texts."
+          },
+          {
+            "id": "proj_sales_log-q-jziv6u",
+            "type": "mcq",
+            "prompt": "What does `format(as.Date(\"2026-10-21\"), \"%Y-%m\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"2026-10\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"2026-10-21\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"Oct\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"10-2026\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Year and month: one group per month."
+          },
+          {
+            "id": "proj_sales_log-q-6de4qm",
+            "type": "mcq",
+            "prompt": "What does `sort(c(mug = 42.5, poster = 21, tote = 48), decreasing = TRUE)` put first?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "tote"
+              },
+              {
+                "id": "b",
+                "label": "mug"
+              },
+              {
+                "id": "c",
+                "label": "It keeps the order"
+              },
+              {
+                "id": "d",
+                "label": "poster"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The largest value first, with its name."
+          },
+          {
+            "id": "proj_sales_log-q-1cgc9yu",
+            "type": "shortText",
+            "prompt": "Which function adds up a column within each group?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "tapply"
+            },
+            "explanation": "`tapply(values, groups, sum)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_sensor_readings",
+      "title": "Hard side quest: Sensor readings",
+      "kind": "project",
+      "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "fix_while_reading",
+          "label": "Fix while reading",
+          "code": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nsummary(readings$temp)"
+        }
+      ],
+      "intro": {
+        "title": "Hard side quest: Sensor readings",
+        "bodyMarkdown": "Two temperature sensors in the school greenhouse log a reading three times a day. When one fails it writes `-999` or `error`, or nothing at all, and sensor A once logged 61 °C on a cool autumn afternoon.\n\n```\nraw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\n```\n\nTurn every failure into a real NA, remove the impossible value, and build a daily summary. The last challenge shows:\n\n```\n2026-10-28: 4 readings, mean 21.5, max 23.5\n2026-10-29: 4 readings, mean 19.6, max 22.1\n```",
+        "sandboxCode": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw)\nstr(readings)"
+      },
+      "challenges": [
+        {
+          "id": "proj_sensor_readings-failures-as-na",
+          "title": "Easy: Failures as NA",
+          "promptMarkdown": "Read `raw` into `readings` so that empty values, `error` and `-999` all become NA, making `temp` numeric.",
+          "starterCode": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\n",
+          "hint": "`read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))`",
+          "solution": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "temp is numeric with 3 NAs",
+                "assertion": "is.data.frame(readings) && is.numeric(readings$temp) && sum(is.na(readings$temp)) == 3"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sensor_readings-the-day",
+          "title": "Medium: The day",
+          "promptMarkdown": "Add a column `day`: the date part of `time`, as a real date.",
+          "starterCode": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\n",
+          "hint": "The first 10 characters are the date: `as.Date(substr(readings$time, 1, 10))`.",
+          "solution": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "day is 6 of 2026-10-28 then 6 of 2026-10-29",
+                "assertion": "inherits(readings$day, \"Date\") && identical(format(readings$day), rep(c(\"2026-10-28\", \"2026-10-29\"), each = 6))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sensor_readings-impossible-values",
+          "title": "Medium: Impossible values",
+          "promptMarkdown": "A greenhouse in October isn't over 50 °C. Make those temperatures NA.",
+          "starterCode": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\n",
+          "hint": "`readings$temp[readings$temp > 50] <- NA`. The NAs already there stay NA.",
+          "solution": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\nreadings$temp[readings$temp > 50] <- NA\n",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "temp now has 4 NAs and nothing over 50",
+                "assertion": "sum(is.na(readings$temp)) == 4 && max(readings$temp, na.rm = TRUE) <= 50"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sensor_readings-gaps-per-sensor",
+          "title": "Hard: Gaps per sensor",
+          "promptMarkdown": "Make `gaps` the number of missing readings per sensor.",
+          "starterCode": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\nreadings$temp[readings$temp > 50] <- NA\n",
+          "hint": "`tapply(is.na(readings$temp), readings$sensor, sum)`",
+          "solution": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\nreadings$temp[readings$temp > 50] <- NA\ngaps <- tapply(is.na(readings$temp), readings$sensor, sum)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "gaps is A 2, B 2",
+                "assertion": "isTRUE(all.equal(as.vector(gaps), c(2, 2))) && identical(names(gaps), c(\"A\", \"B\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sensor_readings-daily-means",
+          "title": "Hard: Daily means",
+          "promptMarkdown": "Make `daily` the mean temperature per day, leaving out the NAs, rounded to 1 decimal place.",
+          "starterCode": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\nreadings$temp[readings$temp > 50] <- NA\n",
+          "hint": "`round(tapply(readings$temp, readings$day, mean, na.rm = TRUE), 1)`",
+          "solution": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\nreadings$temp[readings$temp > 50] <- NA\ndaily <- round(tapply(readings$temp, readings$day, mean, na.rm = TRUE), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "daily is 21.5, 19.6",
+                "assertion": "isTRUE(all.equal(as.vector(daily), c(21.5, 19.6)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_sensor_readings-the-daily-report",
+          "title": "Expert: The daily report",
+          "promptMarkdown": "Show one line per day with the number of known readings, the mean (1 decimal place) and the maximum:\n\n```\n2026-10-28: 4 readings, mean 21.5, max 23.5\n2026-10-29: 4 readings, mean 19.6, max 22.1\n```",
+          "starterCode": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\nreadings$temp[readings$temp > 50] <- NA\n",
+          "hint": "Loop over `unique(readings$day)` (use `as.character()` so the loop keeps the text), take that day's known temperatures, and `cat()` a line.",
+          "solution": "raw <- \"time,sensor,temp\n2026-10-28 08:00,A,18.2\n2026-10-28 12:00,A,-999\n2026-10-28 16:00,A,21.4\n2026-10-28 08:00,B,error\n2026-10-28 12:00,B,22.9\n2026-10-28 16:00,B,23.5\n2026-10-29 08:00,A,17.6\n2026-10-29 12:00,A,20.8\n2026-10-29 16:00,A,61.0\n2026-10-29 08:00,B,17.9\n2026-10-29 12:00,B,\n2026-10-29 16:00,B,22.1\"\nreadings <- read.csv(text = raw, na.strings = c(\"\", \"error\", \"-999\"))\nreadings$day <- as.Date(substr(readings$time, 1, 10))\nreadings$temp[readings$temp > 50] <- NA\nfor (d in as.character(unique(readings$day))) {\n  t <- readings$temp[readings$day == as.Date(d) & !is.na(readings$temp)]\n  cat(d, \": \", length(t), \" readings, mean \", round(mean(t), 1), \", max \", max(t), \"\\n\", sep = \"\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the report",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"2026-10-28: 4 readings, mean 21.5, max 23.5\", \"2026-10-29: 4 readings, mean 19.6, max 22.1\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_sensor_readings-q-1i19sl4",
+            "type": "mcq",
+            "prompt": "Why must `-999` become NA before taking a mean?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Otherwise it is counted as a real, very cold temperature"
+              },
+              {
+                "id": "b",
+                "label": "It doesn't matter"
+              },
+              {
+                "id": "c",
+                "label": "R can't add negative numbers"
+              },
+              {
+                "id": "d",
+                "label": "It is too long"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A code for \"failed\" dragged into a mean ruins it."
+          },
+          {
+            "id": "proj_sensor_readings-q-dayaaf",
+            "type": "mcq",
+            "prompt": "What does `substr(\"2026-10-28 08:00\", 1, 10)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"08:00\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"2026-10-28\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"2026-10-28 08:00\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"2026\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Characters 1 to 10."
+          },
+          {
+            "id": "proj_sensor_readings-q-tsjaqg",
+            "type": "mcq",
+            "prompt": "After `x <- c(18, NA, 61)` and `x[x > 50] <- NA`, what is `x`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error, because of the NA"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 18 NA 61`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 18`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 18 NA NA`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "An NA in a logical index assigns nothing for that position, so the NA stays NA and 61 becomes NA."
+          },
+          {
+            "id": "proj_sensor_readings-q-1sygr79",
+            "type": "mcq",
+            "prompt": "What does `tapply(is.na(c(1, NA, NA)), c(\"A\", \"A\", \"B\"), sum)` count?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Known readings"
+              },
+              {
+                "id": "b",
+                "label": "The total"
+              },
+              {
+                "id": "c",
+                "label": "Readings per sensor"
+              },
+              {
+                "id": "d",
+                "label": "Missing readings per sensor: A 1, B 1"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "TRUE counts as 1, so the sum counts the NAs in each group."
+          },
+          {
+            "id": "proj_sensor_readings-q-1ggtgbb",
+            "type": "mcq",
+            "prompt": "Why is a value of 61 °C treated as a fault and not just dropped silently?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "You set it to NA and report it, so readers know a value was removed"
+              },
+              {
+                "id": "b",
+                "label": "It is kept"
+              },
+              {
+                "id": "c",
+                "label": "R deletes it automatically"
+              },
+              {
+                "id": "d",
+                "label": "It isn't"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Cleaning decisions should be visible."
+          },
+          {
+            "id": "proj_sensor_readings-q-7nlr0f",
+            "type": "shortText",
+            "prompt": "Which function gives part of a text, by character positions?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "substr"
+            },
+            "explanation": "`substr(x, start, stop)`"
+          }
+        ]
+      }
+    }
+  ]
+}

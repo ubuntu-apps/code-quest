@@ -1,0 +1,4226 @@
+{
+  "sectionId": "functions",
+  "title": "Functions and control flow",
+  "levels": [
+    {
+      "id": "if_else",
+      "title": "if and else",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "only_one_value",
+          "label": "Only one value",
+          "code": "# Run it and read the error\nif (c(25, 35) > 30) cat(\"hot\")"
+        },
+        {
+          "id": "any_and_all",
+          "label": "any() and all()",
+          "code": "temps <- c(25, 35, 28)\nif (any(temps > 30)) cat(\"At least one hot day\\n\")\nif (all(temps > 20)) cat(\"Every day was warm\\n\")"
+        }
+      ],
+      "intro": {
+        "title": "if and else",
+        "bodyMarkdown": "So far, every line of your code has run, top to bottom. `if` runs some code **only when** a condition is TRUE. The code to run goes in curly braces:\n\n```\ntemperature <- 31\nif (temperature > 30) {\n  cat(\"Water the greenhouse twice today\\n\")\n}\n```\n\nAdd `else` for what to do otherwise, and `else if` for more cases. R checks the conditions in order and runs only the first block whose condition is TRUE:\n\n```\nif (temperature > 30) {\n  advice <- \"water twice\"\n} else if (temperature > 20) {\n  advice <- \"water once\"\n} else {\n  advice <- \"no watering\"\n}\n```\n\nWrite `} else` on the same line as the closing brace, as above. At the top level of a script R would otherwise think the `if` had already ended.\n\n`if` needs **one** TRUE or FALSE. That's the difference from `ifelse()`, which works on a whole vector at once. `if (c(TRUE, FALSE))` is an error (\"the condition has length > 1\"), and `if (NA)` is an error too, so make sure the condition can't be missing. Use `any()`, `all()` or `is.na()` to turn a vector into one answer.\n\nIndent the code inside the braces by two spaces. R doesn't need it, but it makes the structure easy to see.",
+        "sandboxCode": "temperature <- 24\nif (temperature > 30) {\n  advice <- \"water twice\"\n} else if (temperature > 20) {\n  advice <- \"water once\"\n} else {\n  advice <- \"no watering\"\n}\nadvice",
+        "readMore": {
+          "label": "R documentation: Control flow",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/Control.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "if_else-hot-day",
+          "title": "Easy: Hot day",
+          "promptMarkdown": "Add an `if` so the code shows `Hot day!` when `temperature` is over 30.",
+          "starterCode": "temperature <- 34\n",
+          "hint": "if (temperature > 30) { cat(\"Hot day!\\n\") }",
+          "solution": "temperature <- 34\nif (temperature > 30) {\n  cat(\"Hot day!\\n\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Hot day!",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Hot day!\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses if",
+                "assertion": "grepl(\"if (\", ._cq_code, fixed = TRUE) || grepl(\"if(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-pass-or-fail",
+          "title": "Easy: Pass or fail",
+          "promptMarkdown": "Make `result` `\"pass\"` if `score` is 50 or more, and `\"fail\"` otherwise, with `if` and `else`.",
+          "starterCode": "score <- 47\n",
+          "hint": "Two branches: `if (score >= 50) { result <- \"pass\" } else { result <- \"fail\" }`.",
+          "solution": "score <- 47\nif (score >= 50) {\n  result <- \"pass\"\n} else {\n  result <- \"fail\"\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "result is \"fail\"",
+                "assertion": "identical(result, \"fail\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses else",
+                "assertion": "grepl(\"else\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-free-delivery",
+          "title": "Easy: Free delivery",
+          "promptMarkdown": "Make `delivery` 0 if `order_total` is 30 or more, and 3.5 otherwise.",
+          "starterCode": "order_total <- 42\n",
+          "hint": "`if (order_total >= 30) { delivery <- 0 } else { delivery <- 3.5 }`",
+          "solution": "order_total <- 42\nif (order_total >= 30) {\n  delivery <- 0\n} else {\n  delivery <- 3.5\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "delivery is 0",
+                "assertion": "is.numeric(delivery) && isTRUE(all.equal(delivery, 0))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-three-levels",
+          "title": "Medium: Three levels",
+          "promptMarkdown": "Make `advice` `\"water twice\"` above 30 °C, `\"water once\"` above 20 °C, and `\"no watering\"` otherwise.",
+          "starterCode": "temperature <- 24\n",
+          "hint": "Use `if`, `else if` and `else`, testing the highest temperature first.",
+          "solution": "temperature <- 24\nif (temperature > 30) {\n  advice <- \"water twice\"\n} else if (temperature > 20) {\n  advice <- \"water once\"\n} else {\n  advice <- \"no watering\"\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "advice is \"water once\"",
+                "assertion": "identical(advice, \"water once\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses else if",
+                "assertion": "grepl(\"else if\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-any-late",
+          "title": "Medium: Any late?",
+          "promptMarkdown": "Show `Some deliveries were late` if **any** delivery took more than 30 minutes, and `All on time` otherwise.",
+          "starterCode": "minutes <- c(24, 19, 35, 27)\n",
+          "hint": "`if` needs one TRUE or FALSE, so wrap the comparison in `any()`.",
+          "solution": "minutes <- c(24, 19, 35, 27)\nif (any(minutes > 30)) {\n  cat(\"Some deliveries were late\\n\")\n} else {\n  cat(\"All on time\\n\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Some deliveries were late",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Some deliveries were late\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses any()",
+                "assertion": "grepl(\"any(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-fix-the-condition",
+          "title": "Medium: Fix the condition",
+          "promptMarkdown": "This gives the error \"the condition has length > 1\". It should show `Everyone passed` only when every score is 50 or more. Fix it.",
+          "starterCode": "scores <- c(71, 64, 88, 52)\nif (scores >= 50) {\n  cat(\"Everyone passed\\n\")\n}",
+          "hint": "Turn the vector of answers into one with `all()`.",
+          "solution": "scores <- c(71, 64, 88, 52)\nif (all(scores >= 50)) {\n  cat(\"Everyone passed\\n\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Everyone passed",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Everyone passed\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-watch-out-for-na",
+          "title": "Hard: Watch out for NA",
+          "promptMarkdown": "The reading may be missing. Make `status` `\"missing\"` if `reading` is NA, `\"high\"` if it is over 25, and `\"ok\"` otherwise. Test for NA first.",
+          "starterCode": "reading <- NA\n",
+          "hint": "Start with `if (is.na(reading))`. Comparing NA with 25 first would give an error.",
+          "solution": "reading <- NA\nif (is.na(reading)) {\n  status <- \"missing\"\n} else if (reading > 25) {\n  status <- \"high\"\n} else {\n  status <- \"ok\"\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "status is \"missing\"",
+                "assertion": "identical(status, \"missing\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "if_else-ticket-price",
+          "title": "Expert: Ticket price",
+          "promptMarkdown": "A museum charges 0 for under-5s, 6 for under-18s, 4 for 65 and over, and 12 for everyone else. Make `price` the price for `age`.",
+          "starterCode": "age <- 70\n",
+          "hint": "Four branches. Check the age groups in an order where each condition is clear: under 5, under 18, 65 and over, else.",
+          "solution": "age <- 70\nif (age < 5) {\n  price <- 0\n} else if (age < 18) {\n  price <- 6\n} else if (age >= 65) {\n  price <- 4\n} else {\n  price <- 12\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is 4",
+                "assertion": "is.numeric(price) && isTRUE(all.equal(price, 4))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses else if",
+                "assertion": "grepl(\"else if\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "if_else-q-3gic4e",
+            "type": "mcq",
+            "prompt": "What does `x <- 7; if (x > 5) \"big\" else \"small\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "`\"small\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"big\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "7 is over 5, so the first branch is used."
+          },
+          {
+            "id": "if_else-q-111a88s",
+            "type": "mcq",
+            "prompt": "What does `if (c(TRUE, FALSE)) 1` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NULL`"
+              },
+              {
+                "id": "b",
+                "label": "An error: the condition has length > 1"
+              },
+              {
+                "id": "c",
+                "label": "`1`"
+              },
+              {
+                "id": "d",
+                "label": "A warning only"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`if` needs exactly one TRUE or FALSE."
+          },
+          {
+            "id": "if_else-q-163i9wc",
+            "type": "mcq",
+            "prompt": "What does `if (NA) 1` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "Nothing"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`1`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "R can't decide whether to run the code, so it stops."
+          },
+          {
+            "id": "if_else-q-1e4mzq",
+            "type": "mcq",
+            "prompt": "With `x <- 15`, which branch runs in `if (x > 20) \"a\" else if (x > 10) \"b\" else \"c\"`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"a\"`"
+              },
+              {
+                "id": "b",
+                "label": "Both b and c"
+              },
+              {
+                "id": "c",
+                "label": "`\"b\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"c\"`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The first condition is FALSE, the second TRUE. Only one branch runs."
+          },
+          {
+            "id": "if_else-q-7tugmv",
+            "type": "mcq",
+            "prompt": "What is the difference between `if` and `ifelse()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "None"
+              },
+              {
+                "id": "b",
+                "label": "`if` works on vectors"
+              },
+              {
+                "id": "c",
+                "label": "`ifelse()` is faster"
+              },
+              {
+                "id": "d",
+                "label": "`if` decides once for one value; `ifelse()` decides for every value of a vector"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Use `ifelse()` for a new column, `if` to decide what code runs."
+          },
+          {
+            "id": "if_else-q-11460nq",
+            "type": "mcq",
+            "prompt": "What does `if (any(c(3, 8) > 5)) \"yes\" else \"no\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`\"no\"`"
+              },
+              {
+                "id": "c",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`\"yes\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`any()` turns the two answers into one TRUE."
+          },
+          {
+            "id": "if_else-q-1le4bmq",
+            "type": "mcq",
+            "prompt": "What does `if (FALSE) \"a\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "Nothing (NULL)"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "`\"a\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "With no `else`, nothing is run and nothing is shown."
+          },
+          {
+            "id": "if_else-q-1yw40h0",
+            "type": "mcq",
+            "prompt": "Why test `is.na(x)` first in an if/else chain?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It is faster"
+              },
+              {
+                "id": "b",
+                "label": "Comparing NA (like `x > 25`) would give an error in `if`"
+              },
+              {
+                "id": "c",
+                "label": "R needs it"
+              },
+              {
+                "id": "d",
+                "label": "To round x"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`if (NA > 25)` is `if (NA)`, which stops with an error."
+          },
+          {
+            "id": "if_else-q-1dm2yvy",
+            "type": "shortText",
+            "prompt": "Which word gives the branch to run when the `if` condition is FALSE?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "else"
+            },
+            "explanation": "`if (…) { … } else { … }`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "for_loops",
+      "title": "for loops",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "running_total",
+          "label": "Running total",
+          "code": "rain <- c(2.4, 0, 5.1, 1.2)\ntotal <- 0\nfor (mm in rain) {\n  total <- total + mm\n}\ntotal"
+        },
+        {
+          "id": "position_and_value",
+          "label": "Position and value",
+          "code": "days <- c(\"Mon\", \"Tue\", \"Wed\")\nfor (i in seq_along(days)) {\n  cat(i, days[i], \"\\n\")\n}"
+        }
+      ],
+      "intro": {
+        "title": "for loops",
+        "bodyMarkdown": "A `for` loop runs the same code once for each value of a vector. The loop variable takes each value in turn:\n\n```\ncrops <- c(\"kale\", \"beans\", \"mint\")\nfor (crop in crops) {\n  cat(\"Water the\", crop, \"\\n\")\n}\n```\n\nA very common pattern is a **running total**: start with 0 before the loop, and add to it each time round:\n\n```\nrain <- c(2.4, 0, 5.1, 1.2)\ntotal <- 0\nfor (mm in rain) {\n  total <- total + mm\n}\ntotal    # 8.7\n```\n\nWhen you need the position as well as the value, loop over `seq_along(x)`, which gives 1, 2, 3, … up to the length. Then `x[i]` is the value and `i` its position:\n\n```\ndays <- c(\"Mon\", \"Tue\", \"Wed\")\nfor (i in seq_along(days)) {\n  cat(i, days[i], \"\\n\")\n}\n```\n\nTo collect a result per value, make an empty vector first and fill it in: `out <- numeric(length(x))`, then `out[i] <- …` inside the loop.\n\nMany loops in R can be replaced by vector maths: `sum(rain)` is the same as the running total above, and shorter. Loops shine when each step depends on the one before, or when you are doing something (printing, reading files) rather than calculating.",
+        "sandboxCode": "crops <- c(\"kale\", \"beans\", \"mint\")\nfor (crop in crops) {\n  cat(\"Water the\", crop, \"\\n\")\n}",
+        "readMore": {
+          "label": "R documentation: Control flow",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/Control.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "for_loops-say-each-name",
+          "title": "Easy: Say each name",
+          "promptMarkdown": "Use a `for` loop to show `Hello, Ana`, `Hello, Ben` and `Hello, Cy`, one per line.",
+          "starterCode": "members <- c(\"Ana\", \"Ben\", \"Cy\")\n",
+          "hint": "for (m in members) { cat(\"Hello,\", m, \"\\n\") }",
+          "solution": "members <- c(\"Ana\", \"Ben\", \"Cy\")\nfor (m in members) {\n  cat(\"Hello,\", m, \"\\n\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the three greetings",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Hello, Ana\", \"Hello, Ben\", \"Hello, Cy\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses for",
+                "assertion": "grepl(\"for (\", ._cq_code, fixed = TRUE) || grepl(\"for(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-count-to-five",
+          "title": "Easy: Count to five",
+          "promptMarkdown": "Use a `for` loop over `1:5` to show the numbers 1 to 5, one per line.",
+          "starterCode": "",
+          "hint": "for (i in 1:5) { cat(i, \"\\n\") }",
+          "solution": "for (i in 1:5) {\n  cat(i, \"\\n\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 1 to 5",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"1\", \"2\", \"3\", \"4\", \"5\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses for",
+                "assertion": "grepl(\"for\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-a-running-total",
+          "title": "Easy: A running total",
+          "promptMarkdown": "Make `total` the total rainfall, adding each value in a `for` loop.",
+          "starterCode": "rain <- c(2.4, 0, 5.1, 1.2)\ntotal <- 0\n",
+          "hint": "Inside the loop: `total <- total + mm`.",
+          "solution": "rain <- c(2.4, 0, 5.1, 1.2)\ntotal <- 0\nfor (mm in rain) {\n  total <- total + mm\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 8.7",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 8.7))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses a loop",
+                "assertion": "grepl(\"for\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-numbered-list",
+          "title": "Medium: Numbered list",
+          "promptMarkdown": "Show the days numbered, like `1. Mon`, using `seq_along()`.",
+          "starterCode": "days <- c(\"Mon\", \"Tue\", \"Wed\")\n",
+          "hint": "for (i in seq_along(days)) { cat(i, \". \", days[i], \"\\n\", sep = \"\") }",
+          "solution": "days <- c(\"Mon\", \"Tue\", \"Wed\")\nfor (i in seq_along(days)) {\n  cat(i, \". \", days[i], \"\\n\", sep = \"\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 1. Mon, 2. Tue, 3. Wed",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"1. Mon\", \"2. Tue\", \"3. Wed\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses seq_along()",
+                "assertion": "grepl(\"seq_along(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-fill-a-vector",
+          "title": "Medium: Fill a vector",
+          "promptMarkdown": "Make `lengths_of` the number of characters in each crop name, filling an empty vector in a loop.",
+          "starterCode": "crops <- c(\"kale\", \"beans\", \"courgettes\")\nlengths_of <- numeric(length(crops))\n",
+          "hint": "Loop over `seq_along(crops)` and set `lengths_of[i] <- nchar(crops[i])`.",
+          "solution": "crops <- c(\"kale\", \"beans\", \"courgettes\")\nlengths_of <- numeric(length(crops))\nfor (i in seq_along(crops)) {\n  lengths_of[i] <- nchar(crops[i])\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "lengths_of is 4, 5, 10",
+                "assertion": "is.numeric(lengths_of) && isTRUE(all.equal(lengths_of, c(4, 5, 10)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-count-the-hot-days",
+          "title": "Medium: Count the hot days",
+          "promptMarkdown": "Make `hot_days` the number of temperatures over 25, counting with `if` inside a `for` loop.",
+          "starterCode": "temps <- c(22, 27, 31, 24, 26)\nhot_days <- 0\n",
+          "hint": "Inside the loop: `if (t > 25) hot_days <- hot_days + 1`.",
+          "solution": "temps <- c(22, 27, 31, 24, 26)\nhot_days <- 0\nfor (t in temps) {\n  if (t > 25) {\n    hot_days <- hot_days + 1\n  }\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "hot_days is 3",
+                "assertion": "is.numeric(hot_days) && isTRUE(all.equal(hot_days, 3))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses if in the loop",
+                "assertion": "grepl(\"if\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-savings-plan",
+          "title": "Hard: Savings plan",
+          "promptMarkdown": "Ana saves 20 in week 1, and each week she saves 5 more than the week before. Make `saved` her total after 8 weeks, with a loop.",
+          "starterCode": "saved <- 0\nthis_week <- 20\n",
+          "hint": "Loop 8 times: add `this_week` to `saved`, then add 5 to `this_week`.",
+          "solution": "saved <- 0\nthis_week <- 20\nfor (week in 1:8) {\n  saved <- saved + this_week\n  this_week <- this_week + 5\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "saved is 300",
+                "assertion": "is.numeric(saved) && isTRUE(all.equal(saved, 300))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "for_loops-best-so-far",
+          "title": "Expert: Best so far",
+          "promptMarkdown": "Make `best_so_far` the highest score up to and including each game, in a loop: for scores 12, 18, 15, 22, 20 it is 12, 18, 18, 22, 22.",
+          "starterCode": "scores <- c(12, 18, 15, 22, 20)\nbest_so_far <- numeric(length(scores))\n",
+          "hint": "Start with `best_so_far[1] <- scores[1]`, then for `i` in `2:length(scores)`, take the `max()` of the previous best and `scores[i]`.",
+          "solution": "scores <- c(12, 18, 15, 22, 20)\nbest_so_far <- numeric(length(scores))\nbest_so_far[1] <- scores[1]\nfor (i in 2:length(scores)) {\n  best_so_far[i] <- max(best_so_far[i - 1], scores[i])\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "best_so_far is 12, 18, 18, 22, 22",
+                "assertion": "is.numeric(best_so_far) && isTRUE(all.equal(best_so_far, c(12, 18, 18, 22, 22)))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "for_loops-q-el6pq4",
+            "type": "mcq",
+            "prompt": "How many times does `for (x in c(5, 9, 2)) {…}` run?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "1"
+              },
+              {
+                "id": "b",
+                "label": "3"
+              },
+              {
+                "id": "c",
+                "label": "16"
+              },
+              {
+                "id": "d",
+                "label": "2"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Once for each value."
+          },
+          {
+            "id": "for_loops-q-owhj60",
+            "type": "mcq",
+            "prompt": "After `t <- 0; for (v in 1:4) t <- t + v`, what is `t`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`24`"
+              },
+              {
+                "id": "b",
+                "label": "`10`"
+              },
+              {
+                "id": "c",
+                "label": "`4`"
+              },
+              {
+                "id": "d",
+                "label": "`0`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "1 + 2 + 3 + 4."
+          },
+          {
+            "id": "for_loops-q-1fw3l8s",
+            "type": "mcq",
+            "prompt": "What does `seq_along(c(\"a\", \"b\", \"c\"))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] \"a\" \"b\" \"c\"`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 1 2 3`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 3`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 0 1 2`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The positions 1 to the length."
+          },
+          {
+            "id": "for_loops-q-wmskq9",
+            "type": "mcq",
+            "prompt": "Inside `for (i in seq_along(x))`, what is `x[i]`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Always the first value"
+              },
+              {
+                "id": "b",
+                "label": "The length"
+              },
+              {
+                "id": "c",
+                "label": "The value at that position"
+              },
+              {
+                "id": "d",
+                "label": "The position"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`i` is the position; `x[i]` the value there."
+          },
+          {
+            "id": "for_loops-q-ty8rgr",
+            "type": "mcq",
+            "prompt": "Why set `total <- 0` before a running-total loop?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "So there is something to add the first value to"
+              },
+              {
+                "id": "b",
+                "label": "It isn't needed"
+              },
+              {
+                "id": "c",
+                "label": "R needs every loop to start at 0"
+              },
+              {
+                "id": "d",
+                "label": "To stop the loop"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Without it, `total + mm` fails the first time: total doesn't exist yet."
+          },
+          {
+            "id": "for_loops-q-7ywvwp",
+            "type": "mcq",
+            "prompt": "What does `numeric(3)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 1 2 3`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 0 0 0`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 3`"
+              },
+              {
+                "id": "d",
+                "label": "`NULL`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "An empty vector of three zeros, ready to fill in."
+          },
+          {
+            "id": "for_loops-q-ttufng",
+            "type": "mcq",
+            "prompt": "Which is a simpler way to total `rain` than a loop?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`max(rain)`"
+              },
+              {
+                "id": "b",
+                "label": "`length(rain)`"
+              },
+              {
+                "id": "c",
+                "label": "`sum(rain)`"
+              },
+              {
+                "id": "d",
+                "label": "`rain + rain`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Vector functions do many loops for you."
+          },
+          {
+            "id": "for_loops-q-3n6emy",
+            "type": "mcq",
+            "prompt": "After `out <- c(); for (w in c(\"a\", \"bb\")) out <- c(out, nchar(w))`, what is `out`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 1 2`"
+              },
+              {
+                "id": "b",
+                "label": "`NULL`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"a\" \"bb\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 3`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Each time round adds the length of one word."
+          },
+          {
+            "id": "for_loops-q-19lb4jc",
+            "type": "shortText",
+            "prompt": "Which function gives the positions 1, 2, 3, … of a vector, for looping?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "seq_along"
+            },
+            "explanation": "`for (i in seq_along(x))`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "while_loops",
+      "title": "while loops",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "next_and_break",
+          "label": "next and break",
+          "code": "for (t in c(22, NA, 27, 31, 24)) {\n  if (is.na(t)) next\n  if (t > 30) break\n  cat(t, \"\\n\")\n}"
+        }
+      ],
+      "intro": {
+        "title": "while loops",
+        "bodyMarkdown": "A `for` loop runs a known number of times. A `while` loop keeps going **as long as** a condition is TRUE, which suits questions like \"how many weeks until I have saved 500?\":\n\n```\nsaved <- 0\nweeks <- 0\nwhile (saved < 500) {\n  saved <- saved + 45\n  weeks <- weeks + 1\n}\nweeks    # 12\n```\n\nEach time round, R checks the condition first. When it becomes FALSE, the loop stops and the code after it runs.\n\nSomething inside the loop **must** change the condition, or it runs forever. If your code seems stuck, that's usually why: reload the page to stop it.\n\nTwo keywords control any loop. `break` stops the loop straight away. `next` skips the rest of this time round and goes on to the next:\n\n```\nfor (t in c(22, NA, 27, 31)) {\n  if (is.na(t)) next          # skip missing readings\n  if (t > 30) break           # stop at the first very hot one\n  cat(t, \"\\n\")\n}\n```",
+        "sandboxCode": "saved <- 0\nweeks <- 0\nwhile (saved < 500) {\n  saved <- saved + 45\n  weeks <- weeks + 1\n}\nweeks\nsaved",
+        "readMore": {
+          "label": "R documentation: Control flow",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/Control.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "while_loops-weeks-to-save",
+          "title": "Easy: Weeks to save",
+          "promptMarkdown": "Saving 45 a week from 0, how many weeks until the savings reach at least 500? Make `weeks` the answer, with a `while` loop.",
+          "starterCode": "saved <- 0\nweeks <- 0\n",
+          "hint": "While `saved < 500`: add 45 to `saved` and 1 to `weeks`.",
+          "solution": "saved <- 0\nweeks <- 0\nwhile (saved < 500) {\n  saved <- saved + 45\n  weeks <- weeks + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "weeks is 12",
+                "assertion": "is.numeric(weeks) && isTRUE(all.equal(weeks, 12))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses while",
+                "assertion": "grepl(\"while\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-halving",
+          "title": "Easy: Halving",
+          "promptMarkdown": "Start with `n <- 100` and keep halving it while it is more than 1. Make `steps` the number of halvings.",
+          "starterCode": "n <- 100\nsteps <- 0\n",
+          "hint": "While `n > 1`: `n <- n / 2` and `steps <- steps + 1`.",
+          "solution": "n <- 100\nsteps <- 0\nwhile (n > 1) {\n  n <- n / 2\n  steps <- steps + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "steps is 7",
+                "assertion": "is.numeric(steps) && isTRUE(all.equal(steps, 7))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-doubling-plants",
+          "title": "Medium: Doubling plants",
+          "promptMarkdown": "A mint plant spreads, doubling its area every month, starting at 0.1 m². Make `months` the number of months until it covers at least 5 m².",
+          "starterCode": "area <- 0.1\nmonths <- 0\n",
+          "hint": "While `area < 5`: double `area` and add 1 to `months`.",
+          "solution": "area <- 0.1\nmonths <- 0\nwhile (area < 5) {\n  area <- area * 2\n  months <- months + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "months is 6",
+                "assertion": "is.numeric(months) && isTRUE(all.equal(months, 6))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-skip-the-gaps",
+          "title": "Medium: Skip the gaps",
+          "promptMarkdown": "Make `total` the total of the readings, skipping NAs with `next` in a `for` loop.",
+          "starterCode": "readings <- c(2.4, NA, 5.1, NA, 1.2)\ntotal <- 0\n",
+          "hint": "In the loop: `if (is.na(r)) next`, then `total <- total + r`.",
+          "solution": "readings <- c(2.4, NA, 5.1, NA, 1.2)\ntotal <- 0\nfor (r in readings) {\n  if (is.na(r)) next\n  total <- total + r\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 8.7",
+                "assertion": "is.numeric(total) && isTRUE(all.equal(total, 8.7))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses next",
+                "assertion": "grepl(\"next\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-stop-at-the-first",
+          "title": "Medium: Stop at the first",
+          "promptMarkdown": "Make `first_late` the first delivery time over 30 minutes, stopping the loop with `break` when you find it.",
+          "starterCode": "minutes <- c(24, 19, 35, 27, 41)\nfirst_late <- NA\n",
+          "hint": "In the loop: `if (m > 30) { first_late <- m; break }`.",
+          "solution": "minutes <- c(24, 19, 35, 27, 41)\nfirst_late <- NA\nfor (m in minutes) {\n  if (m > 30) {\n    first_late <- m\n    break\n  }\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "first_late is 35",
+                "assertion": "is.numeric(first_late) && isTRUE(all.equal(first_late, 35))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses break",
+                "assertion": "grepl(\"break\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-fix-the-counting",
+          "title": "Medium: Fix the counting",
+          "promptMarkdown": "This loop should show 1, 2 and 3, one per line, but it shows 2, 3 and 4. Fix the order of the two lines inside the loop.",
+          "starterCode": "count <- 1\nwhile (count <= 3) {\n  count <- count + 1\n  cat(count, \"\\n\")\n}",
+          "hint": "Show `count` first, then add 1 to it.",
+          "solution": "count <- 1\nwhile (count <= 3) {\n  cat(count, \"\\n\")\n  count <- count + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 1, 2, 3",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"1\", \"2\", \"3\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-roll-until-six",
+          "title": "Hard: Roll until six",
+          "promptMarkdown": "With `set.seed(7)` already set, roll a die with `sample(1:6, 1)` until it shows a 6. Make `rolls` the number of rolls it took.",
+          "starterCode": "set.seed(7)\nrolls <- 0\nroll <- 0\n",
+          "hint": "While `roll != 6`: roll again and add 1 to `rolls`.",
+          "solution": "set.seed(7)\nrolls <- 0\nroll <- 0\nwhile (roll != 6) {\n  roll <- sample(1:6, 1)\n  rolls <- rolls + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rolls is right for seed 7",
+                "assertion": "local({ set.seed(7); n <- 0; x <- 0; while (x != 6) { x <- sample(1:6, 1); n <- n + 1 }; isTRUE(all.equal(rolls, n)) })"
+              }
+            ]
+          }
+        },
+        {
+          "id": "while_loops-paying-off-a-loan",
+          "title": "Expert: Paying off a loan",
+          "promptMarkdown": "A loan of 1000 grows by 1% each month, then a payment of 120 is made. Make `months` the number of payments until the balance is 0 or less.",
+          "starterCode": "balance <- 1000\nmonths <- 0\n",
+          "hint": "While `balance > 0`: `balance <- balance * 1.01 - 120` and add 1 to `months`.",
+          "solution": "balance <- 1000\nmonths <- 0\nwhile (balance > 0) {\n  balance <- balance * 1.01 - 120\n  months <- months + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "months is 9",
+                "assertion": "is.numeric(months) && isTRUE(all.equal(months, 9))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "while_loops-q-1evsw45",
+            "type": "mcq",
+            "prompt": "When does a `while` loop stop?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "After 10 rounds"
+              },
+              {
+                "id": "b",
+                "label": "When its condition becomes FALSE"
+              },
+              {
+                "id": "c",
+                "label": "When it reaches the end of a vector"
+              },
+              {
+                "id": "d",
+                "label": "Never"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The condition is checked before each time round."
+          },
+          {
+            "id": "while_loops-q-wxs4qh",
+            "type": "mcq",
+            "prompt": "After `n <- 1; while (n < 20) n <- n * 3`, what is `n`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3`"
+              },
+              {
+                "id": "b",
+                "label": "`20`"
+              },
+              {
+                "id": "c",
+                "label": "`27`"
+              },
+              {
+                "id": "d",
+                "label": "`9`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "1, 3, 9, 27: 27 is the first value that isn't under 20."
+          },
+          {
+            "id": "while_loops-q-s85xh3",
+            "type": "mcq",
+            "prompt": "What happens with `x <- 1; while (x > 0) { cat(x) }`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Nothing"
+              },
+              {
+                "id": "b",
+                "label": "It runs forever: x never changes"
+              },
+              {
+                "id": "c",
+                "label": "It prints 1 once"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Something in the loop must make the condition FALSE."
+          },
+          {
+            "id": "while_loops-q-13k8v1p",
+            "type": "mcq",
+            "prompt": "What does `next` do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Stops the loop"
+              },
+              {
+                "id": "b",
+                "label": "Skips to the next time round"
+              },
+              {
+                "id": "c",
+                "label": "Restarts the loop"
+              },
+              {
+                "id": "d",
+                "label": "Goes to the next line"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The rest of the current round is skipped."
+          },
+          {
+            "id": "while_loops-q-1fu6sjj",
+            "type": "mcq",
+            "prompt": "What does `break` do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Pauses R"
+              },
+              {
+                "id": "b",
+                "label": "Gives an error"
+              },
+              {
+                "id": "c",
+                "label": "Skips one round"
+              },
+              {
+                "id": "d",
+                "label": "Stops the loop straight away"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The code after the loop runs next."
+          },
+          {
+            "id": "while_loops-q-12ftjv6",
+            "type": "mcq",
+            "prompt": "After `s <- 0; for (v in c(1, NA, 3)) { if (is.na(v)) next; s <- s + v }`, what is `s`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3`"
+              },
+              {
+                "id": "b",
+                "label": "`1`"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`4`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The NA is skipped."
+          },
+          {
+            "id": "while_loops-q-1wun6u1",
+            "type": "mcq",
+            "prompt": "After `out <- 0; for (v in 1:10) { if (v > 3) break; out <- v }`, what is `out`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3`"
+              },
+              {
+                "id": "b",
+                "label": "`10`"
+              },
+              {
+                "id": "c",
+                "label": "`0`"
+              },
+              {
+                "id": "d",
+                "label": "`4`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The loop stops when v is 4, before `out` is changed."
+          },
+          {
+            "id": "while_loops-q-1ksch4k",
+            "type": "mcq",
+            "prompt": "Which loop suits \"how many weeks until I have saved 500\"?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "while"
+              },
+              {
+                "id": "b",
+                "label": "for"
+              },
+              {
+                "id": "c",
+                "label": "Neither"
+              },
+              {
+                "id": "d",
+                "label": "if"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "You don't know the number of rounds in advance."
+          },
+          {
+            "id": "while_loops-q-yv1rc8",
+            "type": "shortText",
+            "prompt": "Which keyword stops a loop straight away?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "break"
+            },
+            "explanation": "`break` ends the loop; `next` skips one round."
+          }
+        ]
+      }
+    },
+    {
+      "id": "writing_functions",
+      "title": "Writing functions",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "inside_stays_inside",
+          "label": "Inside stays inside",
+          "code": "total <- 100\nadd_tip <- function(bill) {\n  total <- bill * 1.1\n  total\n}\nadd_tip(20)\ntotal"
+        },
+        {
+          "id": "several_lines",
+          "label": "Several lines",
+          "code": "tidy_name <- function(x) {\n  x <- trimws(x)\n  x <- tolower(x)\n  x\n}\ntidy_name(\"  ANA Silva \")"
+        }
+      ],
+      "intro": {
+        "title": "Writing functions",
+        "bodyMarkdown": "When you find yourself writing the same calculation again and again, make it a **function** of your own. You save it in a name, like any value, with `function()`:\n\n```\nride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\nride_cost(47)    # 8.05\nride_cost(12)    # 2.8\n```\n\n`minutes` is the function's **argument**: a name for whatever value it is called with. The code in the braces is the **body**. The value of the last line is what the function gives back, its **return value**, so `ride_cost(47)` is 8.05.\n\nA function works like R's own ones: on vectors (`ride_cost(c(12, 47))` gives both costs), inside other calls (`round(ride_cost(47))`), and in new columns (`trips$cost <- ride_cost(trips$minutes)`).\n\nVariables made inside a function stay inside it. If the body says `total <- …`, that `total` disappears when the function finishes and doesn't touch a `total` outside. Only the return value comes out.\n\nGood functions do one clear job and have a name that says what it is, usually a verb or a noun for the result: `ride_cost`, `to_fahrenheit`, `tidy_name`.",
+        "sandboxCode": "ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\nride_cost(47)\nride_cost(c(12, 47, 30))",
+        "readMore": {
+          "label": "An Introduction to R: writing your own functions",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Writing-your-own-functions",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "writing_functions-double-it",
+          "title": "Easy: Double it",
+          "promptMarkdown": "Write a function `double` that gives back its argument times 2.",
+          "starterCode": "double <- function(x) {\n  \n}\n",
+          "hint": "The last line of the body is the result: `x * 2`.",
+          "solution": "double <- function(x) {\n  x * 2\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "double is a function",
+                "assertion": "is.function(double)"
+              },
+              {
+                "id": "t2",
+                "label": "double(4) is 8",
+                "assertion": "isTRUE(all.equal(double(4), 8))"
+              },
+              {
+                "id": "t3",
+                "label": "double(c(1, 5)) is 2, 10",
+                "assertion": "isTRUE(all.equal(double(c(1, 5)), c(2, 10)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-ride-cost",
+          "title": "Easy: Ride cost",
+          "promptMarkdown": "Write `ride_cost(minutes)`: 1 to unlock plus 0.15 per minute.",
+          "starterCode": "",
+          "hint": "`ride_cost <- function(minutes) { 1 + 0.15 * minutes }`",
+          "solution": "ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ride_cost(47) is 8.05",
+                "assertion": "is.function(ride_cost) && isTRUE(all.equal(ride_cost(47), 8.05))"
+              },
+              {
+                "id": "t2",
+                "label": "ride_cost(0) is 1",
+                "assertion": "isTRUE(all.equal(ride_cost(0), 1))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-use-your-function",
+          "title": "Easy: Use your function",
+          "promptMarkdown": "Make `costs` the cost of each ride, using the function you are given.",
+          "starterCode": "ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\nminutes <- c(12, 47, 30)\n",
+          "hint": "Functions work on vectors: `costs <- ride_cost(minutes)`.",
+          "solution": "ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\nminutes <- c(12, 47, 30)\ncosts <- ride_cost(minutes)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "costs is 2.8, 8.05, 5.5",
+                "assertion": "is.numeric(costs) && isTRUE(all.equal(costs, c(2.8, 8.05, 5.5)))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses ride_cost()",
+                "assertion": "grepl(\"ride_cost(minutes)\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-kilometres-to-miles",
+          "title": "Medium: Kilometres to miles",
+          "promptMarkdown": "Write `km_to_miles(km)` that gives the distance in miles, rounded to 1 decimal place. 1 km is 0.621371 miles.",
+          "starterCode": "",
+          "hint": "`round(km * 0.621371, 1)`",
+          "solution": "km_to_miles <- function(km) {\n  round(km * 0.621371, 1)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "km_to_miles(10) is 6.2",
+                "assertion": "is.function(km_to_miles) && isTRUE(all.equal(km_to_miles(10), 6.2))"
+              },
+              {
+                "id": "t2",
+                "label": "km_to_miles(42.2) is 26.2",
+                "assertion": "isTRUE(all.equal(km_to_miles(42.2), 26.2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-tidy-a-name",
+          "title": "Medium: Tidy a name",
+          "promptMarkdown": "Write `tidy_name(x)` that trims the spaces from the ends and makes the text all small letters.",
+          "starterCode": "",
+          "hint": "Two steps in the body: `x <- trimws(x)`, then `tolower(x)` as the last line.",
+          "solution": "tidy_name <- function(x) {\n  x <- trimws(x)\n  tolower(x)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tidy_name(\"  ANA Silva \") is \"ana silva\"",
+                "assertion": "is.function(tidy_name) && identical(tidy_name(\"  ANA Silva \"), \"ana silva\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works on a vector",
+                "assertion": "identical(tidy_name(c(\" Ben\", \"CY \")), c(\"ben\", \"cy\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-percent-of-a-total",
+          "title": "Medium: Percent of a total",
+          "promptMarkdown": "Write `percent_of(x)` that gives each value as a percentage of the total of `x`, rounded to a whole number.",
+          "starterCode": "",
+          "hint": "`round(x / sum(x) * 100)`",
+          "solution": "percent_of <- function(x) {\n  round(x / sum(x) * 100)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "percent_of(c(1, 1, 2)) is 25, 25, 50",
+                "assertion": "is.function(percent_of) && isTRUE(all.equal(percent_of(c(1, 1, 2)), c(25, 25, 50)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-the-range-as-one-number",
+          "title": "Hard: The range as one number",
+          "promptMarkdown": "Write `spread(x)` that gives the largest value minus the smallest, ignoring NAs.",
+          "starterCode": "",
+          "hint": "`max(x, na.rm = TRUE) - min(x, na.rm = TRUE)`",
+          "solution": "spread <- function(x) {\n  max(x, na.rm = TRUE) - min(x, na.rm = TRUE)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "spread(c(4, 9, 2)) is 7",
+                "assertion": "is.function(spread) && isTRUE(all.equal(spread(c(4, 9, 2)), 7))"
+              },
+              {
+                "id": "t2",
+                "label": "spread(c(4, NA, 10)) is 6",
+                "assertion": "isTRUE(all.equal(spread(c(4, NA, 10)), 6))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "writing_functions-grade-letter",
+          "title": "Expert: Grade letter",
+          "promptMarkdown": "Write `grade(score)` for **one** score: `\"A\"` for 80 or more, `\"B\"` for 65 or more, `\"C\"` for 50 or more, and `\"F\"` otherwise.",
+          "starterCode": "",
+          "hint": "Use `if`, `else if` and `else` in the body. Each branch's value is the result, so the whole `if` can be the last line.",
+          "solution": "grade <- function(score) {\n  if (score >= 80) {\n    \"A\"\n  } else if (score >= 65) {\n    \"B\"\n  } else if (score >= 50) {\n    \"C\"\n  } else {\n    \"F\"\n  }\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "grade(91) is \"A\"",
+                "assertion": "is.function(grade) && identical(grade(91), \"A\")"
+              },
+              {
+                "id": "t2",
+                "label": "grade(65) is \"B\"",
+                "assertion": "identical(grade(65), \"B\")"
+              },
+              {
+                "id": "t3",
+                "label": "grade(50) is \"C\" and grade(49) is \"F\"",
+                "assertion": "identical(grade(50), \"C\") && identical(grade(49), \"F\")"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "writing_functions-q-119e1vf",
+            "type": "mcq",
+            "prompt": "After `sq <- function(x) { x * x }`, what does `sq(4)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`8`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`16`"
+              },
+              {
+                "id": "d",
+                "label": "`4`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The body works out 4 × 4."
+          },
+          {
+            "id": "writing_functions-q-1ocos9k",
+            "type": "mcq",
+            "prompt": "After `f <- function(x) { y <- x + 1; y * 2 }`, what does `f(3)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`4`"
+              },
+              {
+                "id": "b",
+                "label": "`7`"
+              },
+              {
+                "id": "c",
+                "label": "`6`"
+              },
+              {
+                "id": "d",
+                "label": "`8`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The last line is the result: (3 + 1) × 2."
+          },
+          {
+            "id": "writing_functions-q-9r1eux",
+            "type": "mcq",
+            "prompt": "After `y <- 10`, `f <- function(x) { y <- x; y }` and `f(3)`, what is `y` outside the function?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`NULL`"
+              },
+              {
+                "id": "c",
+                "label": "`10`"
+              },
+              {
+                "id": "d",
+                "label": "`3`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The `y` inside the function is separate and disappears when it finishes."
+          },
+          {
+            "id": "writing_functions-q-1poqfhf",
+            "type": "mcq",
+            "prompt": "After `sq <- function(x) { x * x }`, what does `sq(c(1, 2, 3))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 36`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 14`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 1 4 9`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Vector maths in the body works on every value."
+          },
+          {
+            "id": "writing_functions-q-15crots",
+            "type": "mcq",
+            "prompt": "In `function(minutes) { … }`, what is `minutes`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A global variable"
+              },
+              {
+                "id": "b",
+                "label": "The function's name"
+              },
+              {
+                "id": "c",
+                "label": "The argument: a name for the value passed in"
+              },
+              {
+                "id": "d",
+                "label": "The result"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "It takes the value the function is called with."
+          },
+          {
+            "id": "writing_functions-q-ke8taw",
+            "type": "mcq",
+            "prompt": "What does `class(function(x) x)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"code\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"list\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"numeric\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"function\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A function is a value like any other."
+          },
+          {
+            "id": "writing_functions-q-1n959fy",
+            "type": "mcq",
+            "prompt": "After `f <- function(x) { x * 2 }`, what does `f` (without brackets) show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The function's code"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`2`"
+              },
+              {
+                "id": "d",
+                "label": "`NULL`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Without brackets you see the function itself; with them, you call it."
+          },
+          {
+            "id": "writing_functions-q-1sbalys",
+            "type": "mcq",
+            "prompt": "Why write a function?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "R needs them"
+              },
+              {
+                "id": "b",
+                "label": "It is faster"
+              },
+              {
+                "id": "c",
+                "label": "To hide errors"
+              },
+              {
+                "id": "d",
+                "label": "To reuse a calculation without copying it, and give it a clear name"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Fix a function once and every use of it is fixed."
+          },
+          {
+            "id": "writing_functions-q-v04l5o",
+            "type": "shortText",
+            "prompt": "Which keyword makes a function, as in `ride_cost <- __(minutes) { … }`?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "function"
+            },
+            "explanation": "`function(arguments) { body }`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "arguments",
+      "title": "Arguments and defaults",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "missing_argument",
+          "label": "Missing argument",
+          "code": "# Run it and read the error\nride_cost <- function(minutes, rate) {\n  1 + rate * minutes\n}\nride_cost(47)"
+        }
+      ],
+      "intro": {
+        "title": "Arguments and defaults",
+        "bodyMarkdown": "A function can take several arguments, separated by commas. When you call it, the values are matched by position, or by name:\n\n```\nride_cost <- function(minutes, rate) {\n  1 + rate * minutes\n}\nride_cost(47, 0.15)\nride_cost(rate = 0.15, minutes = 47)   # the same\n```\n\nGive an argument a **default** with `=` in the definition. Callers can then leave it out, and only give it when they want something different:\n\n```\nride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\nride_cost(47)                  # 8.05\nride_cost(47, unlock = 0)      # 7.05: members unlock free\n```\n\nPut the arguments everyone needs first, without defaults, and the optional ones after, with sensible defaults. Name the optional ones when you call the function, as above: `unlock = 0` is much clearer than a bare 0 in third place.\n\nR's own functions work exactly this way: `round(x, digits = 0)`, `mean(x, na.rm = FALSE)`, `paste(…, sep = \" \")`. Now you can read their help pages: the usage line shows every argument and its default.",
+        "sandboxCode": "ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\nride_cost(47)\nride_cost(47, unlock = 0)\nride_cost(47, rate = 0.1)",
+        "readMore": {
+          "label": "An Introduction to R: named arguments and defaults",
+          "url": "https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Named-arguments-and-defaults",
+          "source": "R manuals"
+        }
+      },
+      "challenges": [
+        {
+          "id": "arguments-two-arguments",
+          "title": "Easy: Two arguments",
+          "promptMarkdown": "Write `area(width, length)` that gives the area of a garden bed.",
+          "starterCode": "",
+          "hint": "`area <- function(width, length) { width * length }`",
+          "solution": "area <- function(width, length) {\n  width * length\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "area(2, 3) is 6",
+                "assertion": "is.function(area) && isTRUE(all.equal(area(2, 3), 6))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-a-default-tip",
+          "title": "Easy: A default tip",
+          "promptMarkdown": "Write `with_tip(bill, tip = 0.1)` that gives the bill plus the tip share of it.",
+          "starterCode": "",
+          "hint": "`bill * (1 + tip)` or `bill + bill * tip`.",
+          "solution": "with_tip <- function(bill, tip = 0.1) {\n  bill * (1 + tip)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "with_tip(20) is 22",
+                "assertion": "is.function(with_tip) && isTRUE(all.equal(with_tip(20), 22))"
+              },
+              {
+                "id": "t2",
+                "label": "with_tip(20, tip = 0.15) is 23",
+                "assertion": "isTRUE(all.equal(with_tip(20, tip = 0.15), 23))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-call-by-name",
+          "title": "Easy: Call by name",
+          "promptMarkdown": "Make `member_cost` the cost of a 47-minute ride for a member, who unlocks free: call `ride_cost` with `unlock = 0`.",
+          "starterCode": "ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\n",
+          "hint": "`member_cost <- ride_cost(47, unlock = 0)`",
+          "solution": "ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}\nmember_cost <- ride_cost(47, unlock = 0)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "member_cost is 7.05",
+                "assertion": "is.numeric(member_cost) && isTRUE(all.equal(member_cost, 7.05))"
+              },
+              {
+                "id": "t2",
+                "label": "Names the argument",
+                "assertion": "grepl(\"unlock = 0\", ._cq_code, fixed = TRUE) || grepl(\"unlock=0\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-ride-cost-with-options",
+          "title": "Medium: Ride cost with options",
+          "promptMarkdown": "Write `ride_cost(minutes, rate = 0.15, unlock = 1)`.",
+          "starterCode": "",
+          "hint": "The body is `unlock + rate * minutes`.",
+          "solution": "ride_cost <- function(minutes, rate = 0.15, unlock = 1) {\n  unlock + rate * minutes\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ride_cost(47) is 8.05",
+                "assertion": "is.function(ride_cost) && isTRUE(all.equal(ride_cost(47), 8.05))"
+              },
+              {
+                "id": "t2",
+                "label": "ride_cost(47, rate = 0.1, unlock = 0) is 4.7",
+                "assertion": "isTRUE(all.equal(ride_cost(47, rate = 0.1, unlock = 0), 4.7))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-rounding-as-an-option",
+          "title": "Medium: Rounding as an option",
+          "promptMarkdown": "Write `share(total, people, digits = 2)` that gives each person's share, rounded to `digits` places.",
+          "starterCode": "",
+          "hint": "`round(total / people, digits)`",
+          "solution": "share <- function(total, people, digits = 2) {\n  round(total / people, digits)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "share(10, 3) is 3.33",
+                "assertion": "is.function(share) && isTRUE(all.equal(share(10, 3), 3.33))"
+              },
+              {
+                "id": "t2",
+                "label": "share(10, 3, digits = 0) is 3",
+                "assertion": "isTRUE(all.equal(share(10, 3, digits = 0), 3))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-pass-it-on",
+          "title": "Medium: Pass it on",
+          "promptMarkdown": "Write `avg(x, na_rm = TRUE)` that gives the mean of `x`, passing `na_rm` on to `mean()`'s `na.rm`.",
+          "starterCode": "",
+          "hint": "`mean(x, na.rm = na_rm)`",
+          "solution": "avg <- function(x, na_rm = TRUE) {\n  mean(x, na.rm = na_rm)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "avg(c(2, NA, 4)) is 3",
+                "assertion": "is.function(avg) && isTRUE(all.equal(avg(c(2, NA, 4)), 3))"
+              },
+              {
+                "id": "t2",
+                "label": "avg(c(2, NA, 4), na_rm = FALSE) is NA",
+                "assertion": "is.na(avg(c(2, NA, 4), na_rm = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-a-greeting",
+          "title": "Hard: A greeting",
+          "promptMarkdown": "Write `greet(name, greeting = \"Hello\")` that gives text like `\"Hello, Ana!\"`.",
+          "starterCode": "",
+          "hint": "`paste0(greeting, \", \", name, \"!\")`",
+          "solution": "greet <- function(name, greeting = \"Hello\") {\n  paste0(greeting, \", \", name, \"!\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "greet(\"Ana\") is \"Hello, Ana!\"",
+                "assertion": "is.function(greet) && identical(greet(\"Ana\"), \"Hello, Ana!\")"
+              },
+              {
+                "id": "t2",
+                "label": "greet(\"Ben\", greeting = \"Welcome\") is \"Welcome, Ben!\"",
+                "assertion": "identical(greet(\"Ben\", greeting = \"Welcome\"), \"Welcome, Ben!\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "arguments-fix-the-missing-argument",
+          "title": "Expert: Fix the missing argument",
+          "promptMarkdown": "Calling `fine(9)` gives the error \"argument \\\"per_day\\\" is missing\". Give `per_day` a default of 0.25 so `fine(9)` works and gives 2.25.",
+          "starterCode": "fine <- function(days_late, per_day) {\n  days_late * per_day\n}\nfine(9)",
+          "hint": "Write `per_day = 0.25` in the function's brackets.",
+          "solution": "fine <- function(days_late, per_day = 0.25) {\n  days_late * per_day\n}\nfine(9)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "fine(9) is 2.25",
+                "assertion": "is.function(fine) && isTRUE(all.equal(fine(9), 2.25))"
+              },
+              {
+                "id": "t2",
+                "label": "fine(9, 0.5) is 4.5",
+                "assertion": "isTRUE(all.equal(fine(9, 0.5), 4.5))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "arguments-q-14395fr",
+            "type": "mcq",
+            "prompt": "After `f <- function(a, b = 2) { a * b }`, what does `f(5)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`7`"
+              },
+              {
+                "id": "b",
+                "label": "`10`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`5`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`b` takes its default, 2."
+          },
+          {
+            "id": "arguments-q-uawacu",
+            "type": "mcq",
+            "prompt": "After `f <- function(a, b = 2) { a * b }`, what does `f(5, 3)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`8`"
+              },
+              {
+                "id": "c",
+                "label": "`10`"
+              },
+              {
+                "id": "d",
+                "label": "`15`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The 3 replaces the default."
+          },
+          {
+            "id": "arguments-q-55sh1p",
+            "type": "mcq",
+            "prompt": "After `f <- function(a, b) { a - b }`, what does `f(b = 1, a = 10)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`-9`"
+              },
+              {
+                "id": "b",
+                "label": "`9`"
+              },
+              {
+                "id": "c",
+                "label": "`11`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Named arguments are matched by name, whatever the order."
+          },
+          {
+            "id": "arguments-q-xp79t",
+            "type": "mcq",
+            "prompt": "After `f <- function(a, b) { a - b }`, what does `f(10)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "An error: argument \"b\" is missing"
+              },
+              {
+                "id": "c",
+                "label": "`10`"
+              },
+              {
+                "id": "d",
+                "label": "`0`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`b` has no default, so it must be given."
+          },
+          {
+            "id": "arguments-q-1d51pph",
+            "type": "mcq",
+            "prompt": "Which arguments should usually have defaults?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The ones everyone needs"
+              },
+              {
+                "id": "b",
+                "label": "None of them"
+              },
+              {
+                "id": "c",
+                "label": "All of them"
+              },
+              {
+                "id": "d",
+                "label": "The optional ones, with a sensible usual value"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Required ones first without defaults; optional ones after, with defaults."
+          },
+          {
+            "id": "arguments-q-1ivjzw4",
+            "type": "mcq",
+            "prompt": "What is the default of `na.rm` in `mean()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`NA`"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "`FALSE`"
+              },
+              {
+                "id": "d",
+                "label": "There is none"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "That's why `mean(c(1, NA))` is NA unless you say `na.rm = TRUE`."
+          },
+          {
+            "id": "arguments-q-19uwn61",
+            "type": "mcq",
+            "prompt": "After `g <- function(name, greeting = \"Hi\") paste(greeting, name)`, what does `g(\"Cy\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"HiCy\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"Cy Hi\"`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`\"Hi Cy\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`greeting` takes its default."
+          },
+          {
+            "id": "arguments-q-102im9v",
+            "type": "mcq",
+            "prompt": "Why name optional arguments when calling, as in `ride_cost(47, unlock = 0)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Defaults only work by name"
+              },
+              {
+                "id": "b",
+                "label": "It is clearer and doesn't depend on their order"
+              },
+              {
+                "id": "c",
+                "label": "R needs it"
+              },
+              {
+                "id": "d",
+                "label": "It is faster"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A bare 0 in third place says nothing about what it means."
+          },
+          {
+            "id": "arguments-q-1ml51eq",
+            "type": "shortText",
+            "prompt": "In a function definition, which symbol gives an argument its default, as in `tip __ 0.1`?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "="
+            },
+            "explanation": "`function(bill, tip = 0.1)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "checking_inputs",
+      "title": "Checking inputs",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "a_clear_error",
+          "label": "A clear error",
+          "code": "# Run it and read the error\nride_cost <- function(minutes) {\n  if (minutes < 0) stop(\"minutes can't be negative\")\n  1 + 0.15 * minutes\n}\nride_cost(-5)"
+        },
+        {
+          "id": "stopifnot",
+          "label": "stopifnot",
+          "code": "# Run it and read the error\nsafe_mean <- function(x) {\n  stopifnot(is.numeric(x))\n  mean(x)\n}\nsafe_mean(\"12\")"
+        }
+      ],
+      "intro": {
+        "title": "Checking inputs",
+        "bodyMarkdown": "A function used by other people (or by you, next month) will one day get a wrong input: text instead of a number, a negative age, an empty vector. It is much better to stop with a clear message than to quietly give a wrong answer.\n\n`stop()` ends the function with an error message of your choice:\n\n```\nride_cost <- function(minutes) {\n  if (minutes < 0) {\n    stop(\"minutes can't be negative\")\n  }\n  1 + 0.15 * minutes\n}\nride_cost(-5)    # Error: minutes can't be negative\n```\n\n`stopifnot()` is a short way to check several things at once: it stops if any of them isn't TRUE. `stopifnot(is.numeric(minutes), all(minutes >= 0))`.\n\n`return()` gives back a value **straight away**, without running the rest of the body. It is handy for special cases at the start:\n\n```\naverage <- function(x) {\n  if (length(x) == 0) return(NA)\n  sum(x) / length(x)\n}\n```\n\n`warning()` is the gentle version of `stop()`: it shows a message but carries on. Use it when the input is unusual but the function can still give a sensible answer.",
+        "sandboxCode": "ride_cost <- function(minutes) {\n  if (minutes < 0) {\n    stop(\"minutes can't be negative\")\n  }\n  1 + 0.15 * minutes\n}\nride_cost(20)",
+        "readMore": {
+          "label": "R documentation: stop()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/stop.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "checking_inputs-no-negative-minutes",
+          "title": "Easy: No negative minutes",
+          "promptMarkdown": "Add a check so `ride_cost()` stops with an error when `minutes` is negative.",
+          "starterCode": "ride_cost <- function(minutes) {\n  1 + 0.15 * minutes\n}\n",
+          "hint": "At the start of the body: `if (minutes < 0) stop(\"minutes can't be negative\")`.",
+          "solution": "ride_cost <- function(minutes) {\n  if (minutes < 0) stop(\"minutes can't be negative\")\n  1 + 0.15 * minutes\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "ride_cost(20) still works",
+                "assertion": "is.function(ride_cost) && isTRUE(all.equal(ride_cost(20), 4))"
+              },
+              {
+                "id": "t2",
+                "label": "ride_cost(-5) is an error",
+                "assertion": "inherits(tryCatch(ride_cost(-5), error = function(e) e), \"error\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-numbers-only",
+          "title": "Easy: Numbers only",
+          "promptMarkdown": "Add `stopifnot()` so `safe_mean()` stops when `x` isn't numeric.",
+          "starterCode": "safe_mean <- function(x) {\n  mean(x)\n}\n",
+          "hint": "First line of the body: `stopifnot(is.numeric(x))`.",
+          "solution": "safe_mean <- function(x) {\n  stopifnot(is.numeric(x))\n  mean(x)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "safe_mean(c(2, 4)) is 3",
+                "assertion": "is.function(safe_mean) && isTRUE(all.equal(safe_mean(c(2, 4)), 3))"
+              },
+              {
+                "id": "t2",
+                "label": "safe_mean(\"12\") is an error",
+                "assertion": "inherits(tryCatch(safe_mean(\"12\"), error = function(e) e), \"error\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-empty-input",
+          "title": "Medium: Empty input",
+          "promptMarkdown": "Make `average(x)` give `NA` straight away when `x` is empty, using `return()`.",
+          "starterCode": "average <- function(x) {\n  sum(x) / length(x)\n}\n",
+          "hint": "First line: `if (length(x) == 0) return(NA)`.",
+          "solution": "average <- function(x) {\n  if (length(x) == 0) return(NA)\n  sum(x) / length(x)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "average(c(2, 4)) is 3",
+                "assertion": "is.function(average) && isTRUE(all.equal(average(c(2, 4)), 3))"
+              },
+              {
+                "id": "t2",
+                "label": "average(numeric(0)) is NA",
+                "assertion": "identical(average(numeric(0)), NA)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-your-own-message",
+          "title": "Medium: Your own message",
+          "promptMarkdown": "Write `age_band(age)` that stops with the message `\"age must be between 0 and 120\"` for ages outside 0 to 120, and otherwise gives `\"adult\"` for 18 or more and `\"young\"` for under 18.",
+          "starterCode": "",
+          "hint": "Check first: `if (age < 0 || age > 120) stop(\"age must be between 0 and 120\")`. Then an `if`/`else` for the band.",
+          "solution": "age_band <- function(age) {\n  if (age < 0 || age > 120) stop(\"age must be between 0 and 120\")\n  if (age >= 18) \"adult\" else \"young\"\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "age_band(34) is \"adult\", age_band(12) is \"young\"",
+                "assertion": "is.function(age_band) && identical(age_band(34), \"adult\") && identical(age_band(12), \"young\")"
+              },
+              {
+                "id": "t2",
+                "label": "age_band(150) stops with the message",
+                "assertion": "identical(tryCatch(age_band(150), error = function(e) conditionMessage(e)), \"age must be between 0 and 120\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-missing-value-in",
+          "title": "Medium: Missing value in",
+          "promptMarkdown": "Make `fine(days_late)` give `0` when `days_late` is NA, using `return()`, and otherwise `days_late * 0.25`.",
+          "starterCode": "fine <- function(days_late) {\n  days_late * 0.25\n}\n",
+          "hint": "First line: `if (is.na(days_late)) return(0)`.",
+          "solution": "fine <- function(days_late) {\n  if (is.na(days_late)) return(0)\n  days_late * 0.25\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "fine(8) is 2",
+                "assertion": "is.function(fine) && isTRUE(all.equal(fine(8), 2))"
+              },
+              {
+                "id": "t2",
+                "label": "fine(NA) is 0",
+                "assertion": "isTRUE(all.equal(fine(NA), 0))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-several-checks-at-once",
+          "title": "Hard: Several checks at once",
+          "promptMarkdown": "Make `percent(part, whole)` stop unless both are numeric and `whole` is more than 0, using one `stopifnot()`. It gives `part / whole * 100`.",
+          "starterCode": "",
+          "hint": "`stopifnot(is.numeric(part), is.numeric(whole), whole > 0)`",
+          "solution": "percent <- function(part, whole) {\n  stopifnot(is.numeric(part), is.numeric(whole), whole > 0)\n  part / whole * 100\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "percent(3, 4) is 75",
+                "assertion": "is.function(percent) && isTRUE(all.equal(percent(3, 4), 75))"
+              },
+              {
+                "id": "t2",
+                "label": "percent(3, 0) is an error",
+                "assertion": "inherits(tryCatch(percent(3, 0), error = function(e) e), \"error\")"
+              },
+              {
+                "id": "t3",
+                "label": "percent(\"3\", 4) is an error",
+                "assertion": "inherits(tryCatch(percent(\"3\", 4), error = function(e) e), \"error\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-a-warning-not-an-error",
+          "title": "Hard: A warning, not an error",
+          "promptMarkdown": "Make `speed(km, minutes)` give km per hour. If `minutes` is under 1, it should call `warning(\"very short trip\")` but still give the answer.",
+          "starterCode": "",
+          "hint": "`if (minutes < 1) warning(\"very short trip\")`, then `km / (minutes / 60)`.",
+          "solution": "speed <- function(km, minutes) {\n  if (minutes < 1) warning(\"very short trip\")\n  km / (minutes / 60)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "speed(10, 30) is 20",
+                "assertion": "is.function(speed) && isTRUE(all.equal(speed(10, 30), 20))"
+              },
+              {
+                "id": "t2",
+                "label": "speed(0.1, 0.5) warns but gives 12",
+                "assertion": "inherits(tryCatch(speed(0.1, 0.5), warning = function(w) w), \"warning\") && isTRUE(all.equal(suppressWarnings(speed(0.1, 0.5)), 12))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "checking_inputs-a-careful-grade",
+          "title": "Expert: A careful grade",
+          "promptMarkdown": "Write `grade(score)`: `NA` for a missing score (return early), an error for scores below 0 or above 100, then `\"pass\"` for 50 or more and `\"fail\"` otherwise.",
+          "starterCode": "",
+          "hint": "Three steps in order: `if (is.na(score)) return(NA)`, then the range check with `stop()`, then the pass/fail `if`.",
+          "solution": "grade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score < 0 || score > 100) stop(\"score must be between 0 and 100\")\n  if (score >= 50) \"pass\" else \"fail\"\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "grade(72) is \"pass\", grade(31) is \"fail\"",
+                "assertion": "is.function(grade) && identical(grade(72), \"pass\") && identical(grade(31), \"fail\")"
+              },
+              {
+                "id": "t2",
+                "label": "grade(NA) is NA",
+                "assertion": "identical(grade(NA), NA)"
+              },
+              {
+                "id": "t3",
+                "label": "grade(140) is an error",
+                "assertion": "inherits(tryCatch(grade(140), error = function(e) e), \"error\")"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "checking_inputs-q-2uk717",
+            "type": "mcq",
+            "prompt": "What does `stop(\"too big\")` do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Pauses R"
+              },
+              {
+                "id": "b",
+                "label": "Ends with an error showing \"too big\""
+              },
+              {
+                "id": "c",
+                "label": "Prints a message and carries on"
+              },
+              {
+                "id": "d",
+                "label": "Returns \"too big\""
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Nothing after it runs."
+          },
+          {
+            "id": "checking_inputs-q-1hzi59g",
+            "type": "mcq",
+            "prompt": "What does `stopifnot(2 > 1, 5 > 9)` do?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Returns FALSE"
+              },
+              {
+                "id": "b",
+                "label": "Stops: 5 > 9 is not TRUE"
+              },
+              {
+                "id": "c",
+                "label": "Warns only"
+              },
+              {
+                "id": "d",
+                "label": "Nothing"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Every condition must be TRUE."
+          },
+          {
+            "id": "checking_inputs-q-1fkl8o8",
+            "type": "mcq",
+            "prompt": "After `f <- function(x) { if (x > 5) return(\"big\"); \"small\" }`, what does `f(9)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"big\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"small\"`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "Both"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`return()` gives back \"big\" straight away; the last line never runs."
+          },
+          {
+            "id": "checking_inputs-q-10yoo53",
+            "type": "mcq",
+            "prompt": "What is the difference between `warning()` and `stop()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "None"
+              },
+              {
+                "id": "b",
+                "label": "`stop()` is quieter"
+              },
+              {
+                "id": "c",
+                "label": "`warning()` ends the function"
+              },
+              {
+                "id": "d",
+                "label": "`warning()` shows a message and carries on; `stop()` ends with an error"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Use `warning()` when the answer is still usable."
+          },
+          {
+            "id": "checking_inputs-q-v2icsf",
+            "type": "mcq",
+            "prompt": "Why check inputs at the start of a function?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "R needs it"
+              },
+              {
+                "id": "b",
+                "label": "A clear error now is better than a quietly wrong answer later"
+              },
+              {
+                "id": "c",
+                "label": "To make the function shorter"
+              },
+              {
+                "id": "d",
+                "label": "It is faster"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Wrong answers can spread through a whole analysis unnoticed."
+          },
+          {
+            "id": "checking_inputs-q-1diaih1",
+            "type": "mcq",
+            "prompt": "What does `if (5 < 0 || 5 > 120) \"bad\" else \"ok\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"ok\"`"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`\"bad\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Neither condition is TRUE. `||` is the single-value \"or\" used in `if`."
+          },
+          {
+            "id": "checking_inputs-q-18mvwd",
+            "type": "mcq",
+            "prompt": "Which gives a function's answer early, skipping the rest of the body?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`stop()`"
+              },
+              {
+                "id": "b",
+                "label": "`next`"
+              },
+              {
+                "id": "c",
+                "label": "`return()`"
+              },
+              {
+                "id": "d",
+                "label": "`break`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`break` and `next` are for loops; `return()` is for functions."
+          },
+          {
+            "id": "checking_inputs-q-l85vxp",
+            "type": "mcq",
+            "prompt": "What does `length(numeric(0))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1`"
+              },
+              {
+                "id": "b",
+                "label": "`NA`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`0`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "An empty vector has length 0, a case worth checking for."
+          },
+          {
+            "id": "checking_inputs-q-lrwy3",
+            "type": "shortText",
+            "prompt": "Which function ends a function with an error message of your choice?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "stop"
+            },
+            "explanation": "`stop(\"message\")`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "apply_family",
+      "title": "sapply and lapply",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "lapply_gives_a_list",
+          "label": "lapply gives a list",
+          "code": "lapply(c(2, 5), \\(n) seq_len(n))"
+        },
+        {
+          "id": "over_a_list",
+          "label": "Over a list",
+          "code": "scores <- list(ana = c(72, 78), ben = c(65, NA), cy = c(88, 85))\nsapply(scores, mean, na.rm = TRUE)"
+        }
+      ],
+      "intro": {
+        "title": "sapply and lapply",
+        "bodyMarkdown": "Many functions already work on whole vectors. When one doesn't (because it uses `if`, say, which needs a single value), `sapply()` runs it once for each value and collects the answers in a vector, with no loop to write:\n\n```\ngrade <- function(score) if (score >= 50) \"pass\" else \"fail\"\nsapply(c(71, 44, 88), grade)    # \"pass\" \"fail\" \"pass\"\n```\n\n`sapply(x, f)` is the same as a `for` loop that fills a vector with `f(x[i])`, just shorter. Extra arguments go after the function: `sapply(lists, mean, na.rm = TRUE)`.\n\nFor a quick one-off, write the function right inside the call. R has a short way to write a small function: `\\(x) x * 2` means `function(x) x * 2`.\n\n```\nsapply(c(\"kale\", \"beans\"), \\(w) paste0(toupper(substr(w, 1, 1)), substr(w, 2, nchar(w))))\n```\n\n`lapply()` does the same but always gives a **list**, one item per value. Use it when each answer is more than one value, or when you want to keep them separate. `sapply()` simplifies to a vector or table when it can.\n\nThey also work over lists and over the columns of a data frame, because a data frame is a list of columns: `sapply(df, class)` gives every column's type in one line. The next stage uses that a lot.",
+        "sandboxCode": "grade <- function(score) if (score >= 50) \"pass\" else \"fail\"\nsapply(c(71, 44, 88), grade)\nsapply(1:5, \\(n) n ^ 2)",
+        "readMore": {
+          "label": "R documentation: lapply() and sapply()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/lapply.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "apply_family-pass-or-fail-for-each",
+          "title": "Easy: Pass or fail for each",
+          "promptMarkdown": "Make `results` the result of `grade()` for each score, using `sapply()`.",
+          "starterCode": "grade <- function(score) if (score >= 50) \"pass\" else \"fail\"\nscores <- c(71, 44, 88, 50)\n",
+          "hint": "`results <- sapply(scores, grade)`",
+          "solution": "grade <- function(score) if (score >= 50) \"pass\" else \"fail\"\nscores <- c(71, 44, 88, 50)\nresults <- sapply(scores, grade)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "results is pass fail pass pass",
+                "assertion": "identical(results, c(\"pass\", \"fail\", \"pass\", \"pass\"))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses sapply()",
+                "assertion": "grepl(\"sapply(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-squares",
+          "title": "Easy: Squares",
+          "promptMarkdown": "Make `squares` the squares of 1 to 6, using `sapply()` with a short function `\\(n) n ^ 2`.",
+          "starterCode": "",
+          "hint": "`squares <- sapply(1:6, \\(n) n ^ 2)`",
+          "solution": "squares <- sapply(1:6, \\(n) n ^ 2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "squares is 1, 4, 9, 16, 25, 36",
+                "assertion": "is.numeric(squares) && isTRUE(all.equal(squares, c(1, 4, 9, 16, 25, 36)))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses sapply()",
+                "assertion": "grepl(\"sapply(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-mean-of-each",
+          "title": "Easy: Mean of each",
+          "promptMarkdown": "Make `avgs` each member's mean score from the list, ignoring NAs.",
+          "starterCode": "scores <- list(ana = c(72, 78), ben = c(65, NA), cy = c(88, 85))\n",
+          "hint": "`avgs <- sapply(scores, mean, na.rm = TRUE)`",
+          "solution": "scores <- list(ana = c(72, 78), ben = c(65, NA), cy = c(88, 85))\navgs <- sapply(scores, mean, na.rm = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "avgs is ana 75, ben 65, cy 86.5",
+                "assertion": "isTRUE(all.equal(avgs, c(ana = 75, ben = 65, cy = 86.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-count-per-item",
+          "title": "Medium: Count per item",
+          "promptMarkdown": "Make `n_scores` the number of scores each member has, with `sapply()` and `length`.",
+          "starterCode": "scores <- list(ana = c(72, 78, 80), ben = c(65), cy = c(88, 85))\n",
+          "hint": "`sapply(scores, length)`",
+          "solution": "scores <- list(ana = c(72, 78, 80), ben = c(65), cy = c(88, 85))\nn_scores <- sapply(scores, length)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_scores is ana 3, ben 1, cy 2",
+                "assertion": "isTRUE(all.equal(n_scores, c(ana = 3L, ben = 1L, cy = 2L)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-capital-first-letter",
+          "title": "Medium: Capital first letter",
+          "promptMarkdown": "Make `nice` the crop names with a capital first letter, using `sapply()` and `unname()` to drop the names it adds.",
+          "starterCode": "crops <- c(\"kale\", \"beans\", \"mint\")\ncap <- function(w) paste0(toupper(substr(w, 1, 1)), substr(w, 2, nchar(w)))\n",
+          "hint": "`nice <- unname(sapply(crops, cap))`",
+          "solution": "crops <- c(\"kale\", \"beans\", \"mint\")\ncap <- function(w) paste0(toupper(substr(w, 1, 1)), substr(w, 2, nchar(w)))\nnice <- unname(sapply(crops, cap))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "nice is Kale, Beans, Mint",
+                "assertion": "identical(nice, c(\"Kale\", \"Beans\", \"Mint\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-a-list-of-results",
+          "title": "Medium: A list of results",
+          "promptMarkdown": "Make `seqs` a list where each item is `1:n` for n in 2, 3 and 4, using `lapply()`.",
+          "starterCode": "",
+          "hint": "`seqs <- lapply(c(2, 3, 4), \\(n) 1:n)`",
+          "solution": "seqs <- lapply(c(2, 3, 4), \\(n) 1:n)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "seqs is a list of 1:2, 1:3, 1:4",
+                "assertion": "is.list(seqs) && identical(seqs, list(1:2, 1:3, 1:4))"
+              },
+              {
+                "id": "t2",
+                "label": "Uses lapply()",
+                "assertion": "grepl(\"lapply(\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-without-a-loop",
+          "title": "Hard: Without a loop",
+          "promptMarkdown": "This loop works, but rewrite it as one `sapply()` call that makes the same `lengths_of`.",
+          "starterCode": "crops <- c(\"kale\", \"beans\", \"courgettes\")\nlengths_of <- numeric(length(crops))\nfor (i in seq_along(crops)) {\n  lengths_of[i] <- nchar(crops[i])\n}",
+          "hint": "`lengths_of <- unname(sapply(crops, nchar))`. (`nchar(crops)` works too, since `nchar()` is already vectorised.)",
+          "solution": "crops <- c(\"kale\", \"beans\", \"courgettes\")\nlengths_of <- unname(sapply(crops, nchar))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "lengths_of is 4, 5, 10",
+                "assertion": "is.numeric(lengths_of) && isTRUE(all.equal(lengths_of, c(4, 5, 10)))"
+              },
+              {
+                "id": "t2",
+                "label": "No loop",
+                "assertion": "!grepl(\"for\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "apply_family-grades-for-everyone",
+          "title": "Expert: Grades for everyone",
+          "promptMarkdown": "Make `letters_out` the grade letter for each score, using `sapply()` with a function you write: `\"A\"` for 80 or more, `\"B\"` for 65 or more, `\"C\"` for 50 or more, `\"F\"` otherwise.",
+          "starterCode": "scores <- c(91, 65, 50, 49, 72)\n",
+          "hint": "Write `grade <- function(s) { if (s >= 80) \"A\" else if (s >= 65) \"B\" else if (s >= 50) \"C\" else \"F\" }`, then `sapply(scores, grade)`.",
+          "solution": "scores <- c(91, 65, 50, 49, 72)\ngrade <- function(s) {\n  if (s >= 80) \"A\" else if (s >= 65) \"B\" else if (s >= 50) \"C\" else \"F\"\n}\nletters_out <- sapply(scores, grade)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "letters_out is A B C F B",
+                "assertion": "identical(letters_out, c(\"A\", \"B\", \"C\", \"F\", \"B\"))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "apply_family-q-l5ml28",
+            "type": "mcq",
+            "prompt": "What does `sapply(1:3, \\(x) x * 10)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 10 20 30`"
+              },
+              {
+                "id": "b",
+                "label": "A list"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 60`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 1 2 3`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The function runs once per value and the results are collected."
+          },
+          {
+            "id": "apply_family-q-11xoxei",
+            "type": "mcq",
+            "prompt": "What does `class(lapply(1:3, \\(x) x * 10))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"list\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"numeric\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"function\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"vector\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`lapply()` always gives a list."
+          },
+          {
+            "id": "apply_family-q-q2sn5l",
+            "type": "mcq",
+            "prompt": "What does `\\(x) x + 1` mean?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "A comment"
+              },
+              {
+                "id": "c",
+                "label": "x plus 1, worked out now"
+              },
+              {
+                "id": "d",
+                "label": "A short way to write `function(x) x + 1`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The backslash is short for `function` (R 4.1 and later)."
+          },
+          {
+            "id": "apply_family-q-1guso3z",
+            "type": "mcq",
+            "prompt": "What does `sapply(list(a = 1:3, b = 4:6), sum)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`a 6, b 15`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 1 2 3 4 5 6`"
+              },
+              {
+                "id": "c",
+                "label": "A list"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 21`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "One sum per item, named after the items."
+          },
+          {
+            "id": "apply_family-q-u1b4uw",
+            "type": "mcq",
+            "prompt": "Why can't `grade(c(71, 44))` work when `grade` uses `if`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It works fine"
+              },
+              {
+                "id": "b",
+                "label": "Functions can't take vectors"
+              },
+              {
+                "id": "c",
+                "label": "grade only takes text"
+              },
+              {
+                "id": "d",
+                "label": "`if` needs a single TRUE or FALSE, but gets two"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "That is exactly when `sapply()` helps: it calls the function once per value."
+          },
+          {
+            "id": "apply_family-q-1ce7c8u",
+            "type": "mcq",
+            "prompt": "Where do extra arguments go, as in `na.rm = TRUE`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They can't be used"
+              },
+              {
+                "id": "b",
+                "label": "Inside the function name"
+              },
+              {
+                "id": "c",
+                "label": "After the function: `sapply(x, mean, na.rm = TRUE)`"
+              },
+              {
+                "id": "d",
+                "label": "Before the vector"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "They are passed on to the function each time."
+          },
+          {
+            "id": "apply_family-q-1zfza5",
+            "type": "mcq",
+            "prompt": "What does `sapply(data.frame(a = 1:2, b = c(\"x\", \"y\")), class)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"data.frame\"`"
+              },
+              {
+                "id": "b",
+                "label": "`a \"integer\", b \"character\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 2`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A data frame is a list of columns, so `sapply()` goes through them."
+          },
+          {
+            "id": "apply_family-q-1fvkrp4",
+            "type": "mcq",
+            "prompt": "Which is the same as `sapply(x, f)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`f(sum(x))`"
+              },
+              {
+                "id": "b",
+                "label": "`lapply(f, x)`"
+              },
+              {
+                "id": "c",
+                "label": "`f(x[1])`"
+              },
+              {
+                "id": "d",
+                "label": "A loop that fills a vector with `f(x[i])` for each i"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`sapply()` writes that loop for you."
+          },
+          {
+            "id": "apply_family-q-bbazxm",
+            "type": "shortText",
+            "prompt": "Which function applies a function to each value and always gives a list?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "lapply"
+            },
+            "explanation": "`lapply()` gives a list; `sapply()` simplifies when it can."
+          }
+        ]
+      }
+    },
+    {
+      "id": "functions_on_data",
+      "title": "Functions for data frames",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "a_function_as_fun",
+          "label": "A function as FUN",
+          "code": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\npct_pass <- function(x) round(mean(x >= 60) * 100)\naggregate(test1 ~ group, data = class_results, FUN = pct_pass)"
+        }
+      ],
+      "intro": {
+        "title": "Functions for data frames",
+        "bodyMarkdown": "Your own functions really pay off with data frames, where the same steps are needed for many columns or many tables.\n\nA data frame is a list of columns, so `sapply()` runs a function on every column. That gives a one-line overview of a whole table:\n\n```\nclass_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n```\n\n```\nsapply(class_results, class)                     # every column's type\nsapply(class_results, \\(col) sum(is.na(col)))    # NAs per column\nsapply(class_results[, c(\"test1\", \"test2\")], mean, na.rm = TRUE)\n```\n\nA function can take a whole data frame as its argument and give back a number, a vector or a new data frame. That's how you package up a cleaning step or a report so it can be used on next week's data too:\n\n```\npass_rate <- function(df, column, pass = 50) {\n  round(mean(df[[column]] >= pass, na.rm = TRUE) * 100)\n}\npass_rate(class_results, \"test1\")\npass_rate(class_results, \"test2\", pass = 60)\n```\n\nNote `df[[column]]`: the column name arrives as text in a variable, so `$` won't work (`df$column` would look for a column literally called \"column\").\n\nYour functions also work as the `FUN` of `tapply()` and `aggregate()`, so any summary you can write, you can get per group.",
+        "sandboxCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nsapply(class_results, class)\nsapply(class_results, \\(col) sum(is.na(col)))",
+        "readMore": {
+          "label": "R documentation: lapply() and sapply()",
+          "url": "https://stat.ethz.ch/R-manual/R-devel/library/base/html/lapply.html",
+          "source": "R documentation"
+        }
+      },
+      "challenges": [
+        {
+          "id": "functions_on_data-every-column-s-type",
+          "title": "Easy: Every column's type",
+          "promptMarkdown": "Make `types` the class of every column, using `sapply()`.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+          "hint": "`types <- sapply(class_results, class)`",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ntypes <- sapply(class_results, class)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "types is character, character, numeric, numeric",
+                "assertion": "identical(unname(types), c(\"character\", \"character\", \"numeric\", \"numeric\")) && identical(names(types), names(class_results))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-gaps-per-column",
+          "title": "Easy: Gaps per column",
+          "promptMarkdown": "Make `gaps` the number of NAs in every column, with `sapply()` and a short function.",
+          "starterCode": "harvest <- data.frame(\n  plot = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\", \"D\", \"D\"),\n  crop = c(\"tomatoes\", \"beans\", \"tomatoes\", \"kale\", \"beans\", \"kale\", \"tomatoes\", \"beans\"),\n  kg = c(12.4, 3.6, 9.8, NA, 4.1, 2.7, 14.2, 2.9),\n  family = c(\"Silva\", \"Silva\", \"Okafor\", \"Okafor\", \"Li\", \"Li\", \"Mensah\", \"Mensah\")\n)\n",
+          "hint": "`gaps <- sapply(harvest, \\(col) sum(is.na(col)))`",
+          "solution": "harvest <- data.frame(\n  plot = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\", \"D\", \"D\"),\n  crop = c(\"tomatoes\", \"beans\", \"tomatoes\", \"kale\", \"beans\", \"kale\", \"tomatoes\", \"beans\"),\n  kg = c(12.4, 3.6, 9.8, NA, 4.1, 2.7, 14.2, 2.9),\n  family = c(\"Silva\", \"Silva\", \"Okafor\", \"Okafor\", \"Li\", \"Li\", \"Mensah\", \"Mensah\")\n)\ngaps <- sapply(harvest, \\(col) sum(is.na(col)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "gaps is plot 0, crop 0, kg 1, family 0",
+                "assertion": "isTRUE(all.equal(gaps, c(plot = 0L, crop = 0L, kg = 1L, family = 0L)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-means-of-the-test-columns",
+          "title": "Medium: Means of the test columns",
+          "promptMarkdown": "Make `test_means` the mean of `test1` and `test2`, ignoring NAs, rounded to 1 decimal place.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+          "hint": "`round(sapply(class_results[, c(\"test1\", \"test2\")], mean, na.rm = TRUE), 1)`",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ntest_means <- round(sapply(class_results[, c(\"test1\", \"test2\")], mean, na.rm = TRUE), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "test_means is test1 71.8, test2 77.5",
+                "assertion": "isTRUE(all.equal(test_means, c(test1 = 71.8, test2 = 77.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-a-pass-rate-function",
+          "title": "Medium: A pass-rate function",
+          "promptMarkdown": "Write `pass_rate(df, column, pass = 50)` that gives the percentage of values in that column that are at least `pass`, ignoring NAs, rounded to a whole number.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+          "hint": "Use `df[[column]]` to get the column from its name: `round(mean(df[[column]] >= pass, na.rm = TRUE) * 100)`.",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\npass_rate <- function(df, column, pass = 50) {\n  round(mean(df[[column]] >= pass, na.rm = TRUE) * 100)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "pass_rate(class_results, \"test1\") is 92",
+                "assertion": "is.function(pass_rate) && isTRUE(all.equal(pass_rate(class_results, \"test1\"), 92))"
+              },
+              {
+                "id": "t2",
+                "label": "pass_rate(class_results, \"test2\", pass = 70) is 73",
+                "assertion": "isTRUE(all.equal(pass_rate(class_results, \"test2\", pass = 70), 73))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-your-function-per-group",
+          "title": "Medium: Your function per group",
+          "promptMarkdown": "Make `per_group` a data frame of each group's test 1 range (max minus min), using `aggregate()` with a function you write.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+          "hint": "`spread <- function(x) max(x) - min(x)`, then `aggregate(test1 ~ group, data = class_results, FUN = spread)`.",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nspread <- function(x) max(x) - min(x)\nper_group <- aggregate(test1 ~ group, data = class_results, FUN = spread)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "per_group is A 27, B 48",
+                "assertion": "is.data.frame(per_group) && identical(names(per_group), names(data.frame(group = c(\"A\", \"B\"), test1 = c(27, 48)))) && isTRUE(all.equal(as.list(per_group), as.list(data.frame(group = c(\"A\", \"B\"), test1 = c(27, 48))), check.attributes = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-a-cleaning-function",
+          "title": "Hard: A cleaning function",
+          "promptMarkdown": "Write `clean_text(df)` that trims spaces and lowers the case of **every text column** of a data frame, and gives back the cleaned data frame. Leave other columns alone.",
+          "starterCode": "",
+          "hint": "Loop over `names(df)`; for each column where `is.character(df[[col]])`, set `df[[col]] <- tolower(trimws(df[[col]]))`. Return `df` at the end.",
+          "solution": "clean_text <- function(df) {\n  for (col in names(df)) {\n    if (is.character(df[[col]])) {\n      df[[col]] <- tolower(trimws(df[[col]]))\n    }\n  }\n  df\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "clean_text tidies the text columns and leaves numbers",
+                "assertion": "is.function(clean_text) && identical(clean_text(data.frame(a = c(\" Ana\", \"BEN \"), n = c(1, 2))), data.frame(a = c(\"ana\", \"ben\"), n = c(1, 2)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-summary-of-every-number-column",
+          "title": "Hard: Summary of every number column",
+          "promptMarkdown": "Make `overview` the mean of every **numeric** column of `class_results`, ignoring NAs, rounded to 1 decimal place.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n",
+          "hint": "Pick the numeric columns with `sapply(class_results, is.numeric)`, then `sapply()` the mean over those.",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nnums <- class_results[, sapply(class_results, is.numeric)]\noverview <- round(sapply(nums, mean, na.rm = TRUE), 1)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "overview is test1 71.8, test2 77.5",
+                "assertion": "isTRUE(all.equal(overview, c(test1 = 71.8, test2 = 77.5)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "functions_on_data-a-table-summary-function",
+          "title": "Expert: A table summary function",
+          "promptMarkdown": "Write `describe(df)` that gives a data frame with one row per column of `df` and the columns `column`, `type` and `missing` (the number of NAs).",
+          "starterCode": "",
+          "hint": "`data.frame(column = names(df), type = unname(sapply(df, class)), missing = unname(sapply(df, \\(x) sum(is.na(x)))))`",
+          "solution": "describe <- function(df) {\n  data.frame(\n    column = names(df),\n    type = unname(sapply(df, class)),\n    missing = unname(sapply(df, \\(x) sum(is.na(x))))\n  )\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "describe() works on a small table",
+                "assertion": "is.function(describe) && isTRUE(all.equal(describe(data.frame(a = c(1, NA), b = c(\"x\", \"y\"))), data.frame(column = c(\"a\", \"b\"), type = c(\"numeric\", \"character\"), missing = c(1L, 0L)), check.attributes = FALSE))"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "functions_on_data-q-h3y8i",
+            "type": "mcq",
+            "prompt": "What does `sapply(data.frame(a = 1:3, b = 4:6), sum)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`a 6, b 15`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 3 3`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] 21`"
+              },
+              {
+                "id": "d",
+                "label": "A data frame"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "One sum per column."
+          },
+          {
+            "id": "functions_on_data-q-1f0gjta",
+            "type": "mcq",
+            "prompt": "Inside a function, why use `df[[column]]` and not `df$column`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`$` doesn't work on data frames"
+              },
+              {
+                "id": "b",
+                "label": "`column` holds the name as text; `df$column` would look for a column called \"column\""
+              },
+              {
+                "id": "c",
+                "label": "There is no difference"
+              },
+              {
+                "id": "d",
+                "label": "It is faster"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`[[ ]]` uses the value of the variable as the column name."
+          },
+          {
+            "id": "functions_on_data-q-ihriiw",
+            "type": "mcq",
+            "prompt": "After `f <- function(df) nrow(df)`, what does `f(data.frame(x = 1:4))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A data frame"
+              },
+              {
+                "id": "b",
+                "label": "`4`"
+              },
+              {
+                "id": "c",
+                "label": "`1`"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A function can take a whole data frame."
+          },
+          {
+            "id": "functions_on_data-q-1byw98n",
+            "type": "mcq",
+            "prompt": "What does `sapply(data.frame(a = 1, b = \"x\"), is.numeric)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`a TRUE, b FALSE`"
+              },
+              {
+                "id": "b",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`FALSE`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "One TRUE or FALSE per column, handy for picking the numeric ones."
+          },
+          {
+            "id": "functions_on_data-q-1if4by7",
+            "type": "mcq",
+            "prompt": "Can your own function be the `FUN` of `aggregate()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No, only R's"
+              },
+              {
+                "id": "b",
+                "label": "Yes, any function that turns a vector into a value"
+              },
+              {
+                "id": "c",
+                "label": "Only with sapply"
+              },
+              {
+                "id": "d",
+                "label": "Only for means"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`aggregate(x ~ g, data = df, FUN = my_function)`"
+          },
+          {
+            "id": "functions_on_data-q-1fc1aon",
+            "type": "mcq",
+            "prompt": "If a function changes `df` inside its body, what happens to the data frame you passed in?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It changes too"
+              },
+              {
+                "id": "b",
+                "label": "It is deleted"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "It stays as it was; only the returned copy is changed"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "R works on a copy. Save the result: `cleaned <- clean_text(raw)`."
+          },
+          {
+            "id": "functions_on_data-q-1n6mi1d",
+            "type": "mcq",
+            "prompt": "Why put a cleaning step in a function?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "R requires it"
+              },
+              {
+                "id": "b",
+                "label": "To hide the code"
+              },
+              {
+                "id": "c",
+                "label": "It runs faster"
+              },
+              {
+                "id": "d",
+                "label": "So the same steps can be used on next week's data with one call"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Write it once, use it on every table that needs it."
+          },
+          {
+            "id": "functions_on_data-q-t05tx3",
+            "type": "mcq",
+            "prompt": "What does `sum(is.na(c(1, NA, NA)))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`3`"
+              },
+              {
+                "id": "b",
+                "label": "`NA`"
+              },
+              {
+                "id": "c",
+                "label": "`2`"
+              },
+              {
+                "id": "d",
+                "label": "`1`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Two NAs."
+          },
+          {
+            "id": "functions_on_data-q-eh9lym",
+            "type": "shortText",
+            "prompt": "A data frame is a list of what?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "columns"
+            },
+            "explanation": "That's why `sapply()` and `lapply()` go through its columns."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_dice_game",
+      "title": "Easy side quest: The dice game",
+      "kind": "project",
+      "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "same_seed_same_rolls",
+          "label": "Same seed, same rolls",
+          "code": "set.seed(1)\nsample(1:6, 5, replace = TRUE)\nset.seed(1)\nsample(1:6, 5, replace = TRUE)"
+        }
+      ],
+      "intro": {
+        "title": "Easy side quest: The dice game",
+        "bodyMarkdown": "The board-game club wants a quick dice simulator. `sample(1:6, 1)` rolls one die: it picks one of the numbers 1 to 6 at random. `sample(1:6, 10, replace = TRUE)` rolls ten.\n\nRandom numbers are different every run, which makes them hard to check. `set.seed()` fixes the starting point, so the same \"random\" rolls come out every time: `set.seed(42)` before the rolls means everyone gets the same ones.\n\n```\nset.seed(42)\nsample(1:6, 10, replace = TRUE)\n```\n\nBuild some functions and a little game. The last challenge summarises a fixed set of rolls:\n\n```\nRolls: 8\nSixes: 3\nAverage: 4.1\n```",
+        "sandboxCode": "set.seed(42)\nsample(1:6, 10, replace = TRUE)\nsample(1:6, 10, replace = TRUE)"
+      },
+      "challenges": [
+        {
+          "id": "proj_dice_game-roll-one-die",
+          "title": "Easy: Roll one die",
+          "promptMarkdown": "Write `roll_die()`, a function with no arguments that gives one random roll of a die.",
+          "starterCode": "",
+          "hint": "`roll_die <- function() { sample(1:6, 1) }`",
+          "solution": "roll_die <- function() {\n  sample(1:6, 1)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "roll_die() always gives a whole number from 1 to 6",
+                "assertion": "is.function(roll_die) && all(replicate(50, { x <- roll_die(); length(x) == 1 && x %in% 1:6 }))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_dice_game-twenty-rolls",
+          "title": "Easy: Twenty rolls",
+          "promptMarkdown": "With `set.seed(42)` first, make `rolls` twenty rolls of a die.",
+          "starterCode": "",
+          "hint": "`set.seed(42)` then `rolls <- sample(1:6, 20, replace = TRUE)`.",
+          "solution": "set.seed(42)\nrolls <- sample(1:6, 20, replace = TRUE)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rolls are the twenty rolls for seed 42",
+                "assertion": "local({ set.seed(42); identical(rolls, sample(1:6, 20, replace = TRUE)) })"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_dice_game-count-the-sixes",
+          "title": "Medium: Count the sixes",
+          "promptMarkdown": "Make `n_six` the number of sixes in `rolls`.",
+          "starterCode": "set.seed(42)\nrolls <- sample(1:6, 20, replace = TRUE)\n",
+          "hint": "`n_six <- sum(rolls == 6)`",
+          "solution": "set.seed(42)\nrolls <- sample(1:6, 20, replace = TRUE)\nn_six <- sum(rolls == 6)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_six counts the sixes",
+                "assertion": "isTRUE(all.equal(n_six, sum(rolls == 6))) && !identical(n_six, NULL)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_dice_game-two-dice",
+          "title": "Medium: Two dice",
+          "promptMarkdown": "Write `roll_two()` that gives the total of two dice.",
+          "starterCode": "",
+          "hint": "`sum(sample(1:6, 2, replace = TRUE))`",
+          "solution": "roll_two <- function() {\n  sum(sample(1:6, 2, replace = TRUE))\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "roll_two() gives totals from 2 to 12, and both ends happen",
+                "assertion": "is.function(roll_two) && local({ set.seed(9); x <- replicate(500, roll_two()); all(x %in% 2:12) && any(x == 2) && any(x == 12) })"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_dice_game-race-to-20",
+          "title": "Hard: Race to 20",
+          "promptMarkdown": "With `set.seed(3)`, keep rolling one die and adding to `total` until it reaches at least 20. Make `turns` the number of rolls it took.",
+          "starterCode": "set.seed(3)\ntotal <- 0\nturns <- 0\n",
+          "hint": "A `while (total < 20)` loop: add `sample(1:6, 1)` to `total` and 1 to `turns`.",
+          "solution": "set.seed(3)\ntotal <- 0\nturns <- 0\nwhile (total < 20) {\n  total <- total + sample(1:6, 1)\n  turns <- turns + 1\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "turns is right for seed 3",
+                "assertion": "local({ set.seed(3); t <- 0; n <- 0; while (t < 20) { t <- t + sample(1:6, 1); n <- n + 1 }; isTRUE(all.equal(turns, n)) })"
+              },
+              {
+                "id": "t2",
+                "label": "Uses while",
+                "assertion": "grepl(\"while\", ._cq_code, fixed = TRUE)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_dice_game-a-game-summary",
+          "title": "Expert: A game summary",
+          "promptMarkdown": "Write `summarise_rolls(rolls)` that shows three lines, then call it on the rolls given:\n\n```\nRolls: 8\nSixes: 3\nAverage: 4.1\n```\n\nRound the average to 1 decimal place.",
+          "starterCode": "rolls <- c(3, 6, 2, 6, 5, 1, 6, 4)\n",
+          "hint": "The body has three `cat()` lines, using `length(rolls)`, `sum(rolls == 6)` and `round(mean(rolls), 1)`.",
+          "solution": "rolls <- c(3, 6, 2, 6, 5, 1, 6, 4)\nsummarise_rolls <- function(rolls) {\n  cat(\"Rolls:\", length(rolls), \"\\n\")\n  cat(\"Sixes:\", sum(rolls == 6), \"\\n\")\n  cat(\"Average:\", round(mean(rolls), 1), \"\\n\")\n}\nsummarise_rolls(rolls)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the summary",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"Rolls: 8\", \"Sixes: 3\", \"Average: 4.1\"))"
+              },
+              {
+                "id": "t2",
+                "label": "summarise_rolls is a function",
+                "assertion": "is.function(summarise_rolls)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_dice_game-q-fisnso",
+            "type": "mcq",
+            "prompt": "What can `sample(1:6, 1)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Always 1"
+              },
+              {
+                "id": "b",
+                "label": "Any whole number from 1 to 6"
+              },
+              {
+                "id": "c",
+                "label": "A decimal"
+              },
+              {
+                "id": "d",
+                "label": "Six numbers"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "It picks one of the numbers at random."
+          },
+          {
+            "id": "proj_dice_game-q-80n88v",
+            "type": "mcq",
+            "prompt": "Why use `set.seed()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To roll faster"
+              },
+              {
+                "id": "b",
+                "label": "To make rolls more random"
+              },
+              {
+                "id": "c",
+                "label": "To roll a six"
+              },
+              {
+                "id": "d",
+                "label": "So the same random numbers come out every time, which makes results checkable"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The same seed gives the same sequence."
+          },
+          {
+            "id": "proj_dice_game-q-hexwfe",
+            "type": "mcq",
+            "prompt": "Why `replace = TRUE` for many dice rolls?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To allow the same number more than once"
+              },
+              {
+                "id": "b",
+                "label": "It isn't needed"
+              },
+              {
+                "id": "c",
+                "label": "To sort the rolls"
+              },
+              {
+                "id": "d",
+                "label": "To roll faster"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Without it, `sample(1:6, 10)` fails: you can't pick 10 different numbers from 6."
+          },
+          {
+            "id": "proj_dice_game-q-3tlkf4",
+            "type": "mcq",
+            "prompt": "What does `sum(c(3, 6, 6, 1) == 6)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2`"
+              },
+              {
+                "id": "b",
+                "label": "`12`"
+              },
+              {
+                "id": "c",
+                "label": "`TRUE`"
+              },
+              {
+                "id": "d",
+                "label": "`16`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Two sixes."
+          },
+          {
+            "id": "proj_dice_game-q-5e2lm0",
+            "type": "mcq",
+            "prompt": "What is the smallest total `roll_two()` can give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`6`"
+              },
+              {
+                "id": "b",
+                "label": "`2`"
+              },
+              {
+                "id": "c",
+                "label": "`0`"
+              },
+              {
+                "id": "d",
+                "label": "`1`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Two ones."
+          },
+          {
+            "id": "proj_dice_game-q-11ygzmr",
+            "type": "shortText",
+            "prompt": "Which function fixes the starting point of R's random numbers?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "set.seed"
+            },
+            "explanation": "`set.seed(42)`"
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_grade_report",
+      "title": "Medium side quest: The grade report",
+      "kind": "project",
+      "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "grades_with_sapply",
+          "label": "Grades with sapply",
+          "code": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\nsapply(class_results$test2, grade)"
+        }
+      ],
+      "intro": {
+        "title": "Medium side quest: The grade report",
+        "bodyMarkdown": "The teacher from the Summarising quest wants letter grades for test 2: **A** for 80 or more, **B** for 65 or more, **C** for 50 or more, **F** below. One student was absent and gets no grade.\n\n```\nclass_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\n```\n\nBuild it from small functions, then a function that makes the whole report. The last challenge shows the grade counts:\n\n```\nA: 5\nB: 4\nC: 2\nF: 0\nAbsent: 1\n```",
+        "sandboxCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\nclass_results$test2"
+      },
+      "challenges": [
+        {
+          "id": "proj_grade_report-one-grade",
+          "title": "Easy: One grade",
+          "promptMarkdown": "Write `grade(score)` for one score: `NA` if the score is NA, otherwise `\"A\"`, `\"B\"`, `\"C\"` or `\"F\"`.",
+          "starterCode": "",
+          "hint": "Start with `if (is.na(score)) return(NA)`, then an `if`/`else if` chain from A down.",
+          "solution": "grade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "grade() gives the right letters",
+                "assertion": "is.function(grade) && identical(c(grade(80), grade(79), grade(65), grade(50), grade(49)), c(\"A\", \"B\", \"B\", \"C\", \"F\"))"
+              },
+              {
+                "id": "t2",
+                "label": "grade(NA) is NA",
+                "assertion": "is.na(grade(NA))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_grade_report-everyone-s-grade",
+          "title": "Medium: Everyone's grade",
+          "promptMarkdown": "Make `grades` the grade for every test 2 score, with `sapply()`.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\n",
+          "hint": "`grades <- sapply(class_results$test2, grade)`",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\ngrades <- sapply(class_results$test2, grade)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "grades is right for every student",
+                "assertion": "identical(unname(grades), c(\"B\", \"B\", \"A\", \"C\", \"A\", NA, \"A\", \"B\", \"A\", \"C\", \"B\", \"A\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_grade_report-a-line-per-student",
+          "title": "Medium: A line per student",
+          "promptMarkdown": "Write `report_line(name, score)` that gives text like `\"Ana: 78 (B)\"`, using `grade()`.",
+          "starterCode": "grade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\n",
+          "hint": "`paste0(name, \": \", score, \" (\", grade(score), \")\")`",
+          "solution": "grade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\nreport_line <- function(name, score) {\n  paste0(name, \": \", score, \" (\", grade(score), \")\")\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "report_line(\"Ana\", 78) is \"Ana: 78 (B)\"",
+                "assertion": "is.function(report_line) && identical(report_line(\"Ana\", 78), \"Ana: 78 (B)\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_grade_report-add-a-grade-column",
+          "title": "Medium: Add a grade column",
+          "promptMarkdown": "Write `add_grades(df)` that gives back the data frame with a new column `grade2`: the grade for `test2`.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\n",
+          "hint": "Inside: `df$grade2 <- sapply(df$test2, grade)`, then `df` as the last line.",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\nadd_grades <- function(df) {\n  df$grade2 <- sapply(df$test2, grade)\n  df\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "add_grades() adds the grade2 column",
+                "assertion": "is.function(add_grades) && local({ g <- add_grades(class_results); identical(names(g), c(names(class_results), \"grade2\")) && identical(unname(g$grade2), c(\"B\", \"B\", \"A\", \"C\", \"A\", NA, \"A\", \"B\", \"A\", \"C\", \"B\", \"A\")) })"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_grade_report-count-the-grades",
+          "title": "Hard: Count the grades",
+          "promptMarkdown": "Make `counts` a table of how many of each grade, in the order A, B, C, F, including grades nobody got.",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\ngrades <- sapply(class_results$test2, grade)\n",
+          "hint": "Make a factor with the levels A, B, C, F first: `table(factor(grades, levels = c(\"A\", \"B\", \"C\", \"F\")))`.",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\ngrades <- sapply(class_results$test2, grade)\ncounts <- table(factor(grades, levels = c(\"A\", \"B\", \"C\", \"F\")))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "counts is A 5, B 4, C 2, F 0",
+                "assertion": "identical(as.vector(counts), c(5L, 4L, 2L, 0L)) && identical(names(counts), c(\"A\", \"B\", \"C\", \"F\"))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_grade_report-the-grade-summary",
+          "title": "Expert: The grade summary",
+          "promptMarkdown": "Write `grade_summary(scores)` that shows the count of each grade and the number absent, then call it on test 2:\n\n```\nA: 5\nB: 4\nC: 2\nF: 0\nAbsent: 1\n```",
+          "starterCode": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\n",
+          "hint": "Inside: grades with `sapply()`, counts with `table(factor(…))`, then `cat(sprintf(\"%s: %d\\n\", names(counts), counts), sep = \"\")` and a line for `sum(is.na(scores))`.",
+          "solution": "class_results <- data.frame(\n  student = c(\"Ana\", \"Ben\", \"Cy\", \"Dee\", \"Eli\", \"Fay\", \"Gus\", \"Hal\", \"Ivy\", \"Jo\", \"Kai\", \"Lea\"),\n  group = c(\"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\", \"A\", \"B\"),\n  test1 = c(72, 65, 88, 54, 91, 47, 76, 69, 83, 58, 64, 95),\n  test2 = c(78, 70, 85, 61, 94, NA, 80, 66, 88, 62, 71, 97)\n)\ngrade <- function(score) {\n  if (is.na(score)) return(NA)\n  if (score >= 80) \"A\" else if (score >= 65) \"B\" else if (score >= 50) \"C\" else \"F\"\n}\ngrade_summary <- function(scores) {\n  grades <- sapply(scores, grade)\n  counts <- table(factor(grades, levels = c(\"A\", \"B\", \"C\", \"F\")))\n  cat(sprintf(\"%s: %d\\n\", names(counts), as.integer(counts)), sep = \"\")\n  cat(\"Absent:\", sum(is.na(scores)), \"\\n\")\n}\ngrade_summary(class_results$test2)",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the summary",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"A: 5\", \"B: 4\", \"C: 2\", \"F: 0\", \"Absent: 1\"))"
+              },
+              {
+                "id": "t2",
+                "label": "grade_summary is a function",
+                "assertion": "is.function(grade_summary)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_grade_report-q-1gtfrwx",
+            "type": "mcq",
+            "prompt": "Why does `grade()` check `is.na(score)` first?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "R needs it"
+              },
+              {
+                "id": "b",
+                "label": "To give NA a grade of F"
+              },
+              {
+                "id": "c",
+                "label": "`if (NA >= 80)` would stop with an error"
+              },
+              {
+                "id": "d",
+                "label": "To be faster"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "`if` can't decide with NA, so missing scores are handled first."
+          },
+          {
+            "id": "proj_grade_report-q-1oj3pn5",
+            "type": "mcq",
+            "prompt": "What does `sapply(c(85, 52), \\(s) if (s >= 80) \"A\" else \"C\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`\"A\"`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] \"C\" \"A\"`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] \"A\" \"C\"`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "One answer per score."
+          },
+          {
+            "id": "proj_grade_report-q-4tp43q",
+            "type": "mcq",
+            "prompt": "What does `paste0(\"Ana\", \": \", 78, \" (\", \"B\", \")\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"Ana: 78 (B)\"`"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "`\"Ana:78(B)\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"Ana : 78 ( B )\"`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`paste0()` joins with nothing in between."
+          },
+          {
+            "id": "proj_grade_report-q-v1oryd",
+            "type": "mcq",
+            "prompt": "Why use `factor(grades, levels = c(\"A\", \"B\", \"C\", \"F\"))` before `table()`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To remove NAs"
+              },
+              {
+                "id": "b",
+                "label": "It isn't needed"
+              },
+              {
+                "id": "c",
+                "label": "To sort by score"
+              },
+              {
+                "id": "d",
+                "label": "So the grades come out in order and F shows even with 0"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Every level is counted, even empty ones."
+          },
+          {
+            "id": "proj_grade_report-q-16y7l0c",
+            "type": "mcq",
+            "prompt": "After `f <- function(df) { df$new <- 1; df }`, what does `ncol(f(data.frame(a = 1:2)))` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`2`"
+              },
+              {
+                "id": "b",
+                "label": "`1`"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "`3`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The returned copy has the new column."
+          },
+          {
+            "id": "proj_grade_report-q-1uuajrc",
+            "type": "shortText",
+            "prompt": "Which function gives back a value early, as in `if (is.na(score)) __(NA)`?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "return"
+            },
+            "explanation": "`return()` ends the function with that value."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_data_checker",
+      "title": "Hard side quest: The data checker",
+      "kind": "project",
+      "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "out_of_range",
+          "label": "Out of range",
+          "code": "readings <- data.frame(\n  sensor = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\"),\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\n  humidity = c(55, 61, NA, 58, 140, 52)\n)\nx <- readings$temp\nsum(x < 0 | x > 50, na.rm = TRUE)"
+        }
+      ],
+      "intro": {
+        "title": "Hard side quest: The data checker",
+        "bodyMarkdown": "A school greenhouse sends readings from three sensors. Some are missing, and some are clearly impossible: a greenhouse isn't 85 °C or −40 °C, and humidity can't be over 100%.\n\n```\nreadings <- data.frame(\n  sensor = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\"),\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\n  humidity = c(55, 61, NA, 58, 140, 52)\n)\n```\n\nWrite a small set of functions that check any column against a sensible range, then a function that checks a whole table and reports the problems. Next week's data can be checked with one call. The last challenge shows:\n\n```\ntemp: 1 missing, 2 out of range\nhumidity: 1 missing, 1 out of range\n```",
+        "sandboxCode": "readings <- data.frame(\n  sensor = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\"),\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\n  humidity = c(55, 61, NA, 58, 140, 52)\n)\nsummary(readings)"
+      },
+      "challenges": [
+        {
+          "id": "proj_data_checker-count-missing",
+          "title": "Easy: Count missing",
+          "promptMarkdown": "Write `n_missing(x)` that gives the number of NAs in a vector.",
+          "starterCode": "",
+          "hint": "`sum(is.na(x))`",
+          "solution": "n_missing <- function(x) {\n  sum(is.na(x))\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_missing(c(1, NA, NA)) is 2",
+                "assertion": "is.function(n_missing) && isTRUE(all.equal(n_missing(c(1, NA, NA)), 2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_data_checker-count-out-of-range",
+          "title": "Medium: Count out of range",
+          "promptMarkdown": "Write `n_outside(x, low, high)` that gives the number of values below `low` or above `high`, ignoring NAs.",
+          "starterCode": "",
+          "hint": "`sum(x < low | x > high, na.rm = TRUE)`",
+          "solution": "n_outside <- function(x, low, high) {\n  sum(x < low | x > high, na.rm = TRUE)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "n_outside(c(5, NA, 50, -1), 0, 40) is 2",
+                "assertion": "is.function(n_outside) && isTRUE(all.equal(n_outside(c(5, NA, 50, -1), 0, 40), 2))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_data_checker-which-rows",
+          "title": "Medium: Which rows",
+          "promptMarkdown": "Write `bad_rows(x, low, high)` that gives the positions of values outside the range (not the NAs).",
+          "starterCode": "",
+          "hint": "`which(x < low | x > high)`. `which()` leaves out NAs.",
+          "solution": "bad_rows <- function(x, low, high) {\n  which(x < low | x > high)\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "bad_rows(c(5, NA, 50, -1), 0, 40) is 3, 4",
+                "assertion": "is.function(bad_rows) && identical(bad_rows(c(5, NA, 50, -1), 0, 40), c(3L, 4L))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_data_checker-check-one-column",
+          "title": "Hard: Check one column",
+          "promptMarkdown": "Write `check_column(x, low, high)` that gives a named vector with `missing` and `outside`, using your two counting functions.",
+          "starterCode": "n_missing <- function(x) sum(is.na(x))\nn_outside <- function(x, low, high) sum(x < low | x > high, na.rm = TRUE)\n",
+          "hint": "`c(missing = n_missing(x), outside = n_outside(x, low, high))`",
+          "solution": "n_missing <- function(x) sum(is.na(x))\nn_outside <- function(x, low, high) sum(x < low | x > high, na.rm = TRUE)\ncheck_column <- function(x, low, high) {\n  c(missing = n_missing(x), outside = n_outside(x, low, high))\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "check_column(c(5, NA, 50, -1), 0, 40) is missing 1, outside 2",
+                "assertion": "is.function(check_column) && isTRUE(all.equal(check_column(c(5, NA, 50, -1), 0, 40), c(missing = 1, outside = 2)))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_data_checker-check-the-table",
+          "title": "Hard: Check the table",
+          "promptMarkdown": "Write `check_table(df, limits)` where `limits` is a list like `list(temp = c(0, 50), humidity = c(0, 100))`. It gives a data frame with one row per checked column: `column`, `missing`, `outside`.",
+          "starterCode": "readings <- data.frame(\n  sensor = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\"),\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\n  humidity = c(55, 61, NA, 58, 140, 52)\n)\ncheck_column <- function(x, low, high) c(missing = sum(is.na(x)), outside = sum(x < low | x > high, na.rm = TRUE))\n",
+          "hint": "Loop over `names(limits)` (or use `sapply()`), calling `check_column(df[[col]], limits[[col]][1], limits[[col]][2])`, and build the data frame from the results.",
+          "solution": "readings <- data.frame(\n  sensor = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\"),\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\n  humidity = c(55, 61, NA, 58, 140, 52)\n)\ncheck_column <- function(x, low, high) c(missing = sum(is.na(x)), outside = sum(x < low | x > high, na.rm = TRUE))\ncheck_table <- function(df, limits) {\n  cols <- names(limits)\n  res <- sapply(cols, function(col) check_column(df[[col]], limits[[col]][1], limits[[col]][2]))\n  data.frame(column = cols, missing = unname(res[\"missing\", ]), outside = unname(res[\"outside\", ]))\n}",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "check_table(readings, …) finds the problems",
+                "assertion": "is.function(check_table) && is.data.frame(check_table(readings, list(temp = c(0, 50), humidity = c(0, 100)))) && identical(names(check_table(readings, list(temp = c(0, 50), humidity = c(0, 100)))), names(data.frame(column = c(\"temp\", \"humidity\"), missing = c(1, 1), outside = c(2, 1)))) && isTRUE(all.equal(as.list(check_table(readings, list(temp = c(0, 50), humidity = c(0, 100)))), as.list(data.frame(column = c(\"temp\", \"humidity\"), missing = c(1, 1), outside = c(2, 1))), check.attributes = FALSE))"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_data_checker-the-checker-report",
+          "title": "Expert: The checker report",
+          "promptMarkdown": "Write `report(df, limits)` that shows one line per checked column, then call it on the readings with limits 0 to 50 for temp and 0 to 100 for humidity:\n\n```\ntemp: 1 missing, 2 out of range\nhumidity: 1 missing, 1 out of range\n```",
+          "starterCode": "readings <- data.frame(\n  sensor = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\"),\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\n  humidity = c(55, 61, NA, 58, 140, 52)\n)\n",
+          "hint": "Loop over `names(limits)`; for each column work out the two counts and `cat()` a line.",
+          "solution": "readings <- data.frame(\n  sensor = c(\"A\", \"A\", \"B\", \"B\", \"C\", \"C\"),\n  temp = c(21.4, NA, 22.0, 85.0, 21.8, -40),\n  humidity = c(55, 61, NA, 58, 140, 52)\n)\nreport <- function(df, limits) {\n  for (col in names(limits)) {\n    x <- df[[col]]\n    low <- limits[[col]][1]\n    high <- limits[[col]][2]\n    n_na <- sum(is.na(x))\n    n_out <- sum(x < low | x > high, na.rm = TRUE)\n    cat(col, \": \", n_na, \" missing, \", n_out, \" out of range\\n\", sep = \"\")\n  }\n}\nreport(readings, list(temp = c(0, 50), humidity = c(0, 100)))",
+          "validation": {
+            "mode": "r_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the report",
+                "assertion": "identical(trimws(strsplit(._cq_stdout, \"\\n\", fixed = TRUE)[[1]], \"right\"), c(\"temp: 1 missing, 2 out of range\", \"humidity: 1 missing, 1 out of range\"))"
+              },
+              {
+                "id": "t2",
+                "label": "report is a function",
+                "assertion": "is.function(report)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_data_checker-q-1bkrkj8",
+            "type": "mcq",
+            "prompt": "What does `sum(c(5, NA, 50) > 40, na.rm = TRUE)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`1`"
+              },
+              {
+                "id": "b",
+                "label": "`2`"
+              },
+              {
+                "id": "c",
+                "label": "`NA`"
+              },
+              {
+                "id": "d",
+                "label": "`50`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Only 50 is over 40; the NA is left out."
+          },
+          {
+            "id": "proj_data_checker-q-1b15br0",
+            "type": "mcq",
+            "prompt": "What does `which(c(5, NA, 50, -1) < 0 | c(5, NA, 50, -1) > 40)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`[1] 3 4`"
+              },
+              {
+                "id": "b",
+                "label": "`[1] 50 -1`"
+              },
+              {
+                "id": "c",
+                "label": "`[1] NA 3 4`"
+              },
+              {
+                "id": "d",
+                "label": "`[1] 2 3 4`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`which()` gives positions and skips NAs."
+          },
+          {
+            "id": "proj_data_checker-q-1eiu0kk",
+            "type": "mcq",
+            "prompt": "After `limits <- list(temp = c(0, 50))`, what does `limits[[\"temp\"]][2]` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"temp\"`"
+              },
+              {
+                "id": "b",
+                "label": "`0`"
+              },
+              {
+                "id": "c",
+                "label": "A list"
+              },
+              {
+                "id": "d",
+                "label": "`50`"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Take the item, then its second value."
+          },
+          {
+            "id": "proj_data_checker-q-8ys58h",
+            "type": "mcq",
+            "prompt": "What does `c(missing = 1, outside = 2)[\"outside\"]` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "`1`"
+              },
+              {
+                "id": "c",
+                "label": "`\"outside\"`"
+              },
+              {
+                "id": "d",
+                "label": "`2`, named outside"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A named vector, picked by name."
+          },
+          {
+            "id": "proj_data_checker-q-1b7o98g",
+            "type": "mcq",
+            "prompt": "Why split the checker into small functions?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "To use more memory"
+              },
+              {
+                "id": "b",
+                "label": "Each piece is easy to test and reuse, and the big function reads like a description"
+              },
+              {
+                "id": "c",
+                "label": "It runs faster"
+              },
+              {
+                "id": "d",
+                "label": "R needs it"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Small, named steps are easier to check and to change."
+          },
+          {
+            "id": "proj_data_checker-q-4gttt4",
+            "type": "shortText",
+            "prompt": "Which function gives the positions of the TRUE values in a condition, skipping NAs?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "which"
+            },
+            "explanation": "`which(x < low | x > high)` gives the positions of the bad values."
+          }
+        ]
+      }
+    }
+  ]
+}
