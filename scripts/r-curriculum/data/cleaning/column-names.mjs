@@ -1,5 +1,5 @@
 // Cleaning data: Fixing column names.
-import { code, isTexts, makeTopic, mc, qShort, snippet, task, uses } from '../_builders.mjs'
+import { code, isLogical, isTexts, makeTopic, mc, qShort, snippet, task, uses } from '../_builders.mjs'
 
 const RAW = 'members <- read.csv(text = "\nMember Name,E-mail,Age (years),Joined On\nAna Silva,ana@example.org,34,2026-09-01\nBen Okafor,ben@example.org,41,2026-09-03\n")\n'
 
@@ -16,10 +16,11 @@ export default makeTopic({
     'To rename just one column, assign to that position: `names(members)[3] <- "age"`, or find it by name: `names(members)[names(members) == "E.mail"] <- "email"`.',
   ],
   sandboxCode: RAW + 'names(members)\nn <- tolower(names(members))\nn <- gsub("\\\\.+", "_", n)\ngsub("^_|_$", "", n)',
-  sandboxSnippets: [snippet('Rename one', RAW + 'names(members)[names(members) == "E.mail"] <- "email"\nnames(members)')],
+  sandboxSnippets: [snippet('Rename one', RAW + 'names(members)[names(members) == "E.mail"] <- "email"\nnames(members)'), snippet('Names as written', 'read.csv(text = "Member Name,Age (years)\\nAna,34")\nread.csv(text = "Member Name,Age (years)\\nAna,34", check.names = FALSE)'), snippet('Rename with a lookup', 'df <- data.frame(Member.Name = "Ana", E.mail = "a@example.org")\nnew_names <- c(Member.Name = "name", E.mail = "email")\nnames(df) <- new_names[names(df)]\nnames(df)')],
   readMore: { label: 'R documentation: make.names()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/make.names.html', source: 'R documentation' },
   challenges: [
     task('easy', 'What R made of them', {
+      typedOk: true,
       prompt: 'Make `original` the column names R gave the data.',
       starter: RAW,
       hint: '`original <- names(members)`',
@@ -39,6 +40,14 @@ export default makeTopic({
       hint: '`names(members)[3] <- "age"`',
       solution: RAW + 'names(members)[3] <- "age"',
       tests: [['The third name is age, the others unchanged', 'identical(names(members), c("Member.Name", "E.mail", "age", "Joined.On"))']],
+    }),
+    task('easy', 'Is there an email column', {
+      prompt: 'Make `has_email` TRUE if the table has a column called `E.mail`, and FALSE if not.',
+      starter: RAW,
+      alt: 'members <- read.csv(text = "Name,Age\\nAna,34\\n")\n',
+      hint: '`"E.mail" %in% names(members)`',
+      solution: RAW + 'has_email <- "E.mail" %in% names(members)',
+      tests: [['has_email is TRUE', isLogical('has_email', true)]],
     }),
     task('medium', 'Rename by name', {
       prompt: 'Rename the column `E.mail` to `email`, finding it by its name rather than its position.',
@@ -74,6 +83,13 @@ export default makeTopic({
       solution: RAW + 'n <- tolower(names(members))\nn <- gsub("\\\\.+", "_", n)\nnames(members) <- gsub("^_|_$", "", n)\navg_age <- mean(members$age_years)',
       tests: [['avg_age is 37.5', 'isTRUE(all.equal(avg_age, 37.5))'], ['The names are tidy', '"age_years" %in% names(members)']],
     }),
+    task('expert', 'Rename from a lookup', {
+      prompt: 'Rename the columns listed in `new_names` (old name = new name), and leave the other columns as they are.',
+      starter: RAW + 'new_names <- c(Member.Name = "name", E.mail = "email")\n',
+      hint: '`hit <- names(members) %in% names(new_names)` marks the columns to rename. Then `names(members)[hit] <- new_names[names(members)[hit]]`.',
+      solution: RAW + 'new_names <- c(Member.Name = "name", E.mail = "email")\nhit <- names(members) %in% names(new_names)\nnames(members)[hit] <- new_names[names(members)[hit]]',
+      tests: [['The names are name, email, Age..years., Joined.On', 'identical(unname(names(members)), c("name", "email", "Age..years.", "Joined.On"))'], ['The data is unchanged', 'identical(members[[1]], c("Ana Silva", "Ben Okafor"))']],
+    }),
   ],
   questions: [
     mc('What does `names(read.csv(text = "Member Name\\nAna"))` give?', ['`"Member Name"`', '`"Member.Name"`', '`"member_name"`', '`"MemberName"`'], 1,
@@ -92,9 +108,8 @@ export default makeTopic({
       { code: 'df <- data.frame(a = 1, b = 2)\nnames(df)[2] <- "z"\nnames(df)', output: '[1] "a" "z"' }),
     mc('Why tidy column names at the start?', ['R requires it', 'Short, consistent names are easy to type and hard to get wrong', 'It sorts the columns', 'It removes NAs'], 1,
       '`members$age` beats `members$Age..years.`.'),
-    mc('What does `tolower("Joined.On")` give?', ['`"joined.on"`', '`"joined_on"`', '`"JOINED.ON"`', '`"joinedon"`'], 0,
-      'Only the letters change.',
-      { code: 'tolower("Joined.On")', output: '[1] "joined.on"' }),
+    mc('Why does `read.csv()` turn `Member Name` into `Member.Name`?', ['Column names must be valid R names, so spaces and symbols become dots', 'It is a bug', 'Dots are quicker to type', 'It keeps the space'], 0,
+      'Add `check.names = FALSE` to keep the names exactly as written.'),
     mc('Which renames the column called `E.mail` wherever it is?', ['`names(df)[2] <- "email"`', '`names(df)[names(df) == "E.mail"] <- "email"`', '`df$E.mail <- "email"`', '`rename(df, "email")`'], 1,
       'The condition finds the position from the name.'),
     qShort('Which function gives or sets the column names of a data frame?', 'names',

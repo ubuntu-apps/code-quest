@@ -1,5 +1,5 @@
 // Types, text and factors: More text tools.
-import { code, isText, isTexts, makeTopic, mc, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
+import { code, isText, isTexts, makeTopic, mc, near, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'text_tools',
@@ -25,6 +25,8 @@ cat(sprintf("Total: %.2f\n", 9.6))`,
     snippet('Money', r`prices <- c(2.5, 3, 4.25)
 sprintf("%.2f", prices)
 cat(sprintf("%-8s %5.2f\n", c("tea", "latte", "cake"), prices), sep = "")`),
+    snippet('Split, then count', 'parts <- strsplit("oats,milk,apples", ",")[[1]]\nparts\nlength(parts)'),
+    snippet('Pad with zeros', 'sprintf("%03d", c(7L, 42L, 105L))'),
   ],
   readMore: { label: 'R documentation: sprintf()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/sprintf.html', source: 'R documentation' },
   challenges: [
@@ -56,6 +58,7 @@ cat(sprintf("%-8s %5.2f\n", c("tea", "latte", "cake"), prices), sep = "")`),
       ],
     }),
     task('medium', 'Split the list', {
+      alt: 'list_text <- "tea,bread,eggs"\n',
       prompt: 'Make `items` the shopping items as a vector, by splitting `list_text` at the commas.',
       starter: 'list_text <- "oats,milk,apples,coffee"\n',
       hint: '`items <- strsplit(list_text, ",")[[1]]`',
@@ -87,12 +90,28 @@ cat(sprintf("Total: %.2f\n", total))`,
         ['Uses sprintf()', uses('sprintf(')],
       ],
     }),
+    task('hard', 'Initials', {
+      prompt: 'Make `initials` texts like `"A.S."` from the first and last names.',
+      starter: 'first <- c("Ana", "Ben", "Cy")\nlast <- c("Silva", "Okafor", "Li")\n',
+      alt: 'first <- c("Dee", "Eli")\nlast <- c("Novak", "Park")\n',
+      hint: '`substr(first, 1, 1)` is the first letter. Join the parts with `paste0()`, dots included.',
+      solution: 'first <- c("Ana", "Ben", "Cy")\nlast <- c("Silva", "Okafor", "Li")\ninitials <- paste0(substr(first, 1, 1), ".", substr(last, 1, 1), ".")',
+      tests: [['initials is A.S., B.O., C.L.', isTexts('initials', 'A.S.', 'B.O.', 'C.L.')]],
+    }),
     task('expert', 'The middle part', {
       prompt: 'Make `numbers` the 3-digit number in each code, as numbers: the part after the dash.',
       starter: 'codes <- c("FI-104", "SC-221", "HI-007")\n',
       hint: 'The number is characters 4 to 6: `as.numeric(substr(codes, 4, 6))`.',
       solution: 'codes <- c("FI-104", "SC-221", "HI-007")\nnumbers <- as.numeric(substr(codes, 4, 6))',
       tests: [['numbers is 104, 221, 7', 'is.numeric(numbers) && isTRUE(all.equal(numbers, c(104, 221, 7)))']],
+    }),
+    task('expert', 'Count the words', {
+      prompt: 'Make `n_words` the number of words in `sentence`. The words are separated by single spaces.',
+      starter: 'sentence <- "the seeds need water"\n',
+      alt: 'sentence <- "seeds need water and light and time"\n',
+      hint: 'Split at the spaces, take the vector out of the list with `[[1]]`, then `length()`.',
+      solution: 'sentence <- "the seeds need water"\nn_words <- length(strsplit(sentence, " ")[[1]])',
+      tests: [['n_words is 4', near('n_words', 4)]],
     }),
   ],
   questions: [
@@ -114,8 +133,8 @@ cat(sprintf("Total: %.2f\n", total))`,
     mc('What does `substr(c("apple", "kiwi"), 1, 1)` give?', ['`"a"`', '`[1] "a" "k"`', '`[1] "apple"`', 'An error'], 1,
       '`substr()` works on every text in the vector.',
       { code: 'substr(c("apple", "kiwi"), 1, 1)', output: '[1] "a" "k"' }),
-    mc('What does `sprintf("%d", 3.5)` give?', ['`"3"`', '`"4"`', '`"3.5"`', 'An error'], 3,
-      '`%d` needs a whole number. Use `%.0f` or `%.1f` for others.',
+    mc('Why does `sprintf("%d", 3.5)` give an error?', ['`%d` is for whole numbers; use `%.1f` for decimals', 'sprintf() can\'t show numbers', '3.5 must be text', 'It needs `paste()`'], 0,
+      '`%d` takes whole numbers like `4L` or 4.',
       { code: 'sprintf("%d", 3.5)', error: 'invalid format' }),
     mc('What does `sprintf("%5.1f", 2.345)` give?', ['`"2.3"`', '`"  2.3"`', '`"2.345"`', '`"00002.3"`'], 1,
       '5 characters wide with 1 decimal, padded with spaces on the left.',

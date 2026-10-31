@@ -18,6 +18,7 @@ export default makeTopic({
     snippet('seq stops early', 'seq(0, 10, by = 3)'),
     snippet('Times or each', 'rep(1:3, times = 2)\nrep(1:3, each = 2)'),
     snippet('Colon and maths', '1:3 + 1\n1:(3 + 1)'),
+    snippet('Counting down', 'seq(10, 0, by = -2)\n10:1'),
   ],
   readMore: R_INTRO('Generating-regular-sequences', 'An Introduction to R: regular sequences'),
   challenges: [
@@ -78,6 +79,12 @@ export default makeTopic({
         ['Uses each', uses('each')],
       ],
     }),
+    task('hard', 'Every other month', {
+      prompt: 'Make `months` the numbers 1, 3, 5, 7, 9 and 11 with `seq()`.',
+      hint: 'Start, end and step: `seq(1, 11, by = 2)`.',
+      solution: 'months <- seq(1, 11, by = 2)',
+      tests: [['months is 1, 3, 5, 7, 9, 11', near('months', 'c(1, 3, 5, 7, 9, 11)')], ['Uses seq()', uses('seq(')]],
+    }),
     task('expert', 'Fix the range', {
       prompt: 'This should give the numbers 1 to 6, but it gives 2 to 6 instead. Fix it with brackets, keeping `n + 1` in the code.',
       starter: 'n <- 5\nseats <- 1:n + 1\nseats',
@@ -87,6 +94,12 @@ export default makeTopic({
         ['seats is 1 to 6', near('seats', '1:6')],
         ['Keeps n + 1', uses('n + 1')],
       ],
+    }),
+    task('expert', 'A shift rota', {
+      prompt: 'Ana, Ben and Cy work two days each in turn. Make `rota` for two rounds: `"Ana" "Ana" "Ben" "Ben" "Cy" "Cy"` and then the same again (12 values).',
+      hint: 'Repeat each name twice, then repeat that whole vector: `rep(rep(c("Ana", "Ben", "Cy"), each = 2), times = 2)`.',
+      solution: 'rota <- rep(rep(c("Ana", "Ben", "Cy"), each = 2), times = 2)',
+      tests: [['rota has the two rounds', isTexts('rota', 'Ana', 'Ana', 'Ben', 'Ben', 'Cy', 'Cy', 'Ana', 'Ana', 'Ben', 'Ben', 'Cy', 'Cy')], ['Uses rep()', uses('rep(')]],
     }),
   ],
   questions: [
@@ -105,9 +118,9 @@ export default makeTopic({
     mc('What does `rep(1:2, each = 2)` give?', ['`[1] 1 2 1 2`', '`[1] 2 2`', '`[1] 1 1 2 2`', '`[1] 1 2`'], 2,
       '`each` repeats every value before moving on.',
       { code: 'rep(1:2, each = 2)', output: '[1] 1 1 2 2' }),
-    mc('What does `1:3 + 1` give?', ['`[1] 1 2 3 4`', '`[1] 2 3 4`', '`[1] 1 2 4`', 'An error'], 1,
-      'The colon goes first, making 1 2 3, then 1 is added to each.',
-      { code: '1:3 + 1', output: '[1] 2 3 4' }),
+    mc('Why does `1:n + 1` not give the numbers 1 to n + 1?', ['`:` is worked out before `+`, so R makes 1 to n and then adds 1 to each', '`+` only works on single numbers', '`n` must be in quotes', 'It does'], 0,
+      'Brackets fix it: `1:(n + 1)`.',
+      { code: 'n <- 3\n1:n + 1\n1:(n + 1)', output: '[1] 2 3 4\n[1] 1 2 3 4' }),
     mc('What does `seq(10, 0, by = -5)` give?', ['`[1] 10 5 0`', '`[1] 0 5 10`', 'An error', '`[1] 10 5`'], 0,
       'A negative step counts down.',
       { code: 'seq(10, 0, by = -5)', output: '[1] 10  5  0' }),

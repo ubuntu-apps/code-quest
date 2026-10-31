@@ -14,7 +14,7 @@ export default makeTopic({
     'When a column mixes two formats, convert with each format and combine: where the first gives NA, use the second. `ifelse()` drops the Date type, so assign into the NAs instead: `d[is.na(d)] <- as.Date(x[is.na(d)], format = "%d/%m/%Y")`.',
   ],
   sandboxCode: 'd <- as.Date(c("02/09/2026", "15/09/2026", "03/10/2026"), format = "%d/%m/%Y")\nd\nformat(d, "%Y-%m")\nweekdays(d)',
-  sandboxSnippets: [snippet('Wrong format gives NA', 'as.Date("30/10/2026")\nas.Date("30/10/2026", format = "%d/%m/%Y")')],
+  sandboxSnippets: [snippet('Wrong format gives NA', 'as.Date("30/10/2026")\nas.Date("30/10/2026", format = "%d/%m/%Y")'), snippet('Text sorts the wrong way', 'x <- c("15/09/2026", "02/10/2026")\nsort(x)\nsort(as.Date(x, format = "%d/%m/%Y"))'), snippet('Days between', 'start <- as.Date("02/09/2026", format = "%d/%m/%Y")\nend <- as.Date("20/09/2026", format = "%d/%m/%Y")\nas.numeric(end - start)')],
   readMore: { label: 'R documentation: strptime formats', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/strptime.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Day first', {
@@ -39,6 +39,7 @@ export default makeTopic({
       tests: [['d is 2026-10-30, 2026-11-04', 'inherits(d, "Date") && identical(format(d), c("2026-10-30", "2026-11-04"))']],
     }),
     task('medium', 'Spot the bad ones', {
+      alt: 'raw <- c("TBC", "15/09/2026", "n/a", "03/10/2026")\n',
       prompt: 'Convert with the day-first format, then make `bad` the texts that didn\'t convert.',
       starter: 'raw <- c("02/09/2026", "15/9/26", "03/10/2026", "TBC")\n',
       hint: '`d <- as.Date(raw, format = "%d/%m/%Y")`, then `raw[is.na(d)]`.',
@@ -66,12 +67,27 @@ export default makeTopic({
       solution: 'raw <- c("30.10.26", "01.11.26")\nd <- as.Date(raw, format = "%d.%m.%y")',
       tests: [['d is 2026-10-30, 2026-11-01', 'inherits(d, "Date") && identical(format(d), c("2026-10-30", "2026-11-01"))']],
     }),
+    task('hard', 'Days between', {
+      prompt: 'Make `days` the number of days from each `start` to its `end`, as plain numbers. Both are written day first.',
+      starter: 'start <- c("02/09/2026", "15/09/2026")\nend <- c("20/09/2026", "05/10/2026")\n',
+      alt: 'start <- c("01/09/2026", "15/09/2026")\nend <- c("30/09/2026", "15/10/2026")\n',
+      hint: 'Convert both with `format = "%d/%m/%Y"`, subtract, then `as.numeric()`.',
+      solution: 'start <- c("02/09/2026", "15/09/2026")\nend <- c("20/09/2026", "05/10/2026")\ndays <- as.numeric(as.Date(end, format = "%d/%m/%Y") - as.Date(start, format = "%d/%m/%Y"))',
+      tests: [['days is 18, 20', near('days', 'c(18, 20)')]],
+    }),
     task('expert', 'Two formats in one column', {
       prompt: 'This column mixes `2026-10-30` and `30/10/2026` styles. Make `d` real dates for all of them.',
       starter: 'raw <- c("2026-09-02", "15/09/2026", "2026-10-03", "21/10/2026")\n',
       hint: 'First `d <- as.Date(raw, format = "%Y-%m-%d")`; the day-first ones become NA. Then fill those: `d[is.na(d)] <- as.Date(raw[is.na(d)], format = "%d/%m/%Y")`.',
       solution: 'raw <- c("2026-09-02", "15/09/2026", "2026-10-03", "21/10/2026")\nd <- as.Date(raw, format = "%Y-%m-%d")\nd[is.na(d)] <- as.Date(raw[is.na(d)], format = "%d/%m/%Y")',
       tests: [['d is all four dates', 'inherits(d, "Date") && identical(format(d), c("2026-09-02", "2026-09-15", "2026-10-03", "2026-10-21"))']],
+    }),
+    task('expert', 'Sales per weekday', {
+      prompt: 'Make `per_day` the total sales for each day of the week.',
+      starter: 'sales <- data.frame(date = c("02/09/2026", "15/09/2026", "03/10/2026", "21/10/2026"), amount = c(12.5, 8, 20, 6.5))\n',
+      hint: 'Convert the dates, then group with `weekdays()`: `tapply(sales$amount, weekdays(d), sum)`.',
+      solution: 'sales <- data.frame(date = c("02/09/2026", "15/09/2026", "03/10/2026", "21/10/2026"), amount = c(12.5, 8, 20, 6.5))\nd <- as.Date(sales$date, format = "%d/%m/%Y")\nper_day <- tapply(sales$amount, weekdays(d), sum)',
+      tests: [['per_day is Saturday 20, Tuesday 8, Wednesday 19', 'isTRUE(all.equal(as.vector(per_day), c(20, 8, 19))) && identical(names(per_day), c("Saturday", "Tuesday", "Wednesday"))']],
     }),
   ],
   questions: [
@@ -94,9 +110,9 @@ export default makeTopic({
     mc('Why fill a Date vector\'s NAs by assignment rather than with `ifelse()`?', ['It is shorter', '`ifelse()` drops the Date type and gives plain numbers', 'ifelse() can\'t handle NA', 'There is no reason'], 1,
       'Assigning into `d[is.na(d)]` keeps the result a Date.',
       { code: 'class(ifelse(TRUE, as.Date("2026-10-30"), NA))', output: '[1] "numeric"' }),
-    mc('What does `weekdays(as.Date("2026-11-01"))` give?', ['`"Saturday"`', '`"Sunday"`', '`"Monday"`', '`"November"`'], 1,
-      'November 1, 2026 is a Sunday.',
-      { code: 'weekdays(as.Date("2026-11-01"))', output: '[1] "Sunday"' }),
+    mc('Why can\'t you sort day-first texts like `"15/09/2026"` to put them in date order?', ['Texts sort character by character, so the day decides the order, not the year and month', 'Texts can\'t be sorted', 'sort() needs numbers', 'You can'], 0,
+      'Turn them into dates first; dates sort in time order.',
+      { code: 'sort(c("15/09/2026", "02/10/2026"))', output: '[1] "02/10/2026" "15/09/2026"' }),
     qShort('In a date format, which code is a short month name like "Oct"?', '%b',
       '`%b` is the short name; `%B` the full one.'),
   ],

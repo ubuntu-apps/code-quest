@@ -16,7 +16,7 @@ export default makeTopic({
     'When each value in one group has a partner in the other, such as the same student\'s first and second test, use a **paired** test on the two columns: `t.test(after, before, paired = TRUE)`. It tests whether the average change is zero.',
   ],
   sandboxCode: SEEDLINGS + TWO + 't.test(height_cm ~ compost, data = two)',
-  sandboxSnippets: [snippet('Paired', CLASS + 't.test(class_results$test2, class_results$test1, paired = TRUE)$p.value')],
+  sandboxSnippets: [snippet('Paired', CLASS + 't.test(class_results$test2, class_results$test1, paired = TRUE)$p.value'), snippet('Means and the test', SEEDLINGS + TWO + 'tapply(two$height_cm, two$compost, mean)\nt.test(height_cm ~ compost, data = two)'), snippet('The same students twice', CLASS + 'ok <- !is.na(class_results$test2)\nt.test(class_results$test2[ok], class_results$test1[ok], paired = TRUE)$p.value')],
   readMore: { label: 'R documentation: t.test()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Two groups only', {
@@ -68,12 +68,26 @@ export default makeTopic({
       solution: CLASS + 'p_paired <- round(t.test(class_results$test2, class_results$test1, paired = TRUE)$p.value, 3)',
       tests: [['p_paired is 0.01', near('p_paired', 0.01)], ['Uses paired = TRUE', uses('paired')]],
     }),
+    task('hard', 'Leaf against home', {
+      prompt: 'Make `p_home` the p-value of a two-sample t-test of height, leaf compost against home compost.',
+      starter: SEEDLINGS,
+      hint: 'Keep the two groups first: `seedlings[seedlings$compost %in% c("leaf", "home"), ]`, then `t.test(height_cm ~ compost, data = ...)$p.value`.',
+      solution: SEEDLINGS + 'lh <- seedlings[seedlings$compost %in% c("leaf", "home"), ]\np_home <- t.test(height_cm ~ compost, data = lh)$p.value',
+      tests: [['p_home is right', near('p_home', 't.test(height_cm ~ compost, data = seedlings[seedlings$compost %in% c("leaf", "home"), ])$p.value')]],
+    }),
     task('expert', 'Summary sentence', {
       prompt: 'Show this line for the leaf and peat trays, using the test\'s numbers:\n\n```\nleaf 10.6 cm vs peat 8.2 cm, p = 0.002\n```',
       starter: SEEDLINGS + TWO,
       hint: '`res <- t.test(height_cm ~ compost, data = two)`; `round(res$estimate, 1)` gives the means, `round(res$p.value, 3)` the p-value.',
       solution: SEEDLINGS + TWO + 'res <- t.test(height_cm ~ compost, data = two)\nm <- round(unname(res$estimate), 1)\ncat("leaf ", m[1], " cm vs peat ", m[2], " cm, p = ", round(res$p.value, 3), "\\n", sep = "")',
       tests: [['Shows the line', prints('leaf 10.6 cm vs peat 8.2 cm, p = 0.002')]],
+    }),
+    task('expert', 'How big is the effect', {
+      prompt: 'A p-value doesn\'t say how big a difference is. Make `d` the effect size for leaf against peat: the difference in means divided by `sqrt((var(leaf) + var(peat)) / 2)`.',
+      starter: SEEDLINGS,
+      hint: 'Pull out the two height vectors first, for example `leaf <- seedlings$height_cm[seedlings$compost == "leaf"]`.',
+      solution: SEEDLINGS + 'leaf <- seedlings$height_cm[seedlings$compost == "leaf"]\npeat <- seedlings$height_cm[seedlings$compost == "peat"]\nd <- (mean(leaf) - mean(peat)) / sqrt((var(leaf) + var(peat)) / 2)',
+      tests: [['d is right', near('d', 'local({ h <- seedlings$height_cm; g <- seedlings$compost; (mean(h[g == "leaf"]) - mean(h[g == "peat"])) / sqrt((var(h[g == "leaf"]) + var(h[g == "peat"])) / 2) })')]],
     }),
   ],
   questions: [
@@ -88,8 +102,8 @@ export default makeTopic({
       'One very tall home tray (12.8 cm) makes the group very spread out.'),
     mc('When should you use `paired = TRUE`?', ['Always', 'When each value in one group belongs with one in the other, like the same student twice', 'When the groups are the same size', 'With text'], 1,
       'Pairing removes the differences between students, so the test is sharper.'),
-    mc('What does R use by default for two groups?', ['A paired test', 'The Welch test, which doesn\'t assume equal spreads', 'A test assuming equal spreads', 'A chi-squared test'], 1,
-      '`var.equal = TRUE` switches to the classic version.'),
+    mc('Why does R use the Welch test by default for two groups?', ['It doesn\'t assume the two groups have the same spread, which is safer', 'It is faster', 'It always gives smaller p-values', 'It needs fewer values'], 0,
+      'Add `var.equal = TRUE` only when you have good reason to think the spreads match.'),
     mc('Delivery times north vs south give p = 0.059. Which is a fair summary?', ['South is definitely slower', 'Some evidence south is slower, not quite at the usual 0.05 level, and one 74-minute delivery affects it', 'No difference', 'North is slower'], 1,
       'Report the p-value and the context, not just "significant or not".'),
     mc('In what order does R take the groups in `$estimate`?', ['The order in the data', 'Alphabetical order of the group names', 'Largest mean first', 'At random'], 1,

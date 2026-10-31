@@ -17,7 +17,7 @@ export default makeTopic({
     'Before deleting anything, look at the duplicates: `signups[duplicated(signups$email) | duplicated(signups$email, fromLast = TRUE), ]` shows every row whose email appears more than once.',
   ],
   sandboxCode: SIGN + 'duplicated(signups)\nsignups[!duplicated(signups), ]\nduplicated(signups$email)',
-  sandboxSnippets: [snippet('Every copy', SIGN + 'e <- signups$email\nsignups[duplicated(e) | duplicated(e, fromLast = TRUE), ]')],
+  sandboxSnippets: [snippet('Every copy', SIGN + 'e <- signups$email\nsignups[duplicated(e) | duplicated(e, fromLast = TRUE), ]'), snippet('How many each', SIGN + 'table(signups$email)'), snippet('Latest by date', 'p <- data.frame(member = c("Ana", "Ben", "Ana"), updated = as.Date(c("2026-10-05", "2026-09-01", "2026-08-20")))\np <- p[order(p$updated), ]\np[!duplicated(p$member, fromLast = TRUE), ]')],
   readMore: { label: 'R documentation: duplicated()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/duplicated.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Which are repeats', {
@@ -69,12 +69,26 @@ export default makeTopic({
       solution: 'emails <- c("Ana@Example.org", "ben@example.org", " ana@example.org", "BEN@EXAMPLE.ORG", "cy@example.org")\nclean <- tolower(trimws(emails))\nn_people <- length(unique(clean))',
       tests: [['n_people is 3', near('n_people', 3)]],
     }),
+    task('hard', 'Sign-ups per email', {
+      prompt: 'Make `per_email` how many sign-ups each email has.',
+      starter: SIGN,
+      hint: '`table(signups$email)` counts each email.',
+      solution: SIGN + 'per_email <- table(signups$email)',
+      tests: [['per_email is ana 2, ben 2, cy 1', 'identical(as.vector(per_email), c(2L, 2L, 1L)) && identical(names(per_email), c("ana@example.org", "ben@example.org", "cy@example.org"))']],
+    }),
     task('expert', 'Keep the latest', {
       prompt: 'Each member may have updated their phone number. Make `latest` the **last** row for each member, using `fromLast = TRUE`.',
       starter: 'phones <- data.frame(member = c("Ana", "Ben", "Ana", "Cy", "Ana"), phone = c("0111", "0222", "0333", "0444", "0555"))\n',
       hint: '`phones[!duplicated(phones$member, fromLast = TRUE), ]` marks the earlier copies as duplicates instead.',
       solution: 'phones <- data.frame(member = c("Ana", "Ben", "Ana", "Cy", "Ana"), phone = c("0111", "0222", "0333", "0444", "0555"))\nlatest <- phones[!duplicated(phones$member, fromLast = TRUE), ]',
       tests: [['latest is Ben 0222, Cy 0444, Ana 0555', sameFrame('latest', 'phones[c(2, 4, 5), ]')]],
+    }),
+    task('expert', 'Latest by date', {
+      prompt: 'Make `latest` the most recently updated row for each member. The rows aren\'t in date order.',
+      starter: 'phones <- data.frame(member = c("Ana", "Ben", "Ana", "Cy"), phone = c("0111", "0222", "0333", "0444"), updated = as.Date(c("2026-10-05", "2026-09-01", "2026-08-20", "2026-10-01")))\n',
+      hint: 'Sort by date first: `sorted <- phones[order(phones$updated), ]`. Then keep the last row of each member with `!duplicated(sorted$member, fromLast = TRUE)`.',
+      solution: 'phones <- data.frame(member = c("Ana", "Ben", "Ana", "Cy"), phone = c("0111", "0222", "0333", "0444"), updated = as.Date(c("2026-10-05", "2026-09-01", "2026-08-20", "2026-10-01")))\nsorted <- phones[order(phones$updated), ]\nlatest <- sorted[!duplicated(sorted$member, fromLast = TRUE), ]',
+      tests: [['latest is Ben 0222, Cy 0444, Ana 0111', sameFrame('latest', 'phones[c(2, 4, 1), ]')]],
     }),
   ],
   questions: [
@@ -86,9 +100,8 @@ export default makeTopic({
       { code: 'sum(duplicated(c("a", "b", "a", "a")))', output: '[1] 2' }),
     mc('When does `duplicated(df)` mark a row?', ['When any column repeats', 'When every column matches an earlier row', 'When the first column repeats', 'Never'], 1,
       'Whole rows are compared.'),
-    mc('What does `nrow(unique(data.frame(a = c(1, 1, 2), b = c("x", "x", "y"))))` give?', ['`3`', '`2`', '`1`', 'An error'], 1,
-      'The first two rows are the same.',
-      { code: 'nrow(unique(data.frame(a = c(1, 1, 2), b = c("x", "x", "y"))))', output: '[1] 2' }),
+    mc('Why do duplicates make totals too big?', ['The same sale or sign-up is counted more than once', 'duplicated() adds values', 'R doubles repeated numbers', 'They don\'t'], 0,
+      'Count the extra copies with `sum(duplicated(x))` before you total.'),
     mc('What does `duplicated(c("a", "b", "a"), fromLast = TRUE)` give?', ['`[1]  TRUE FALSE FALSE`', '`[1] FALSE FALSE  TRUE`', '`[1] TRUE TRUE TRUE`', '`[1] FALSE  TRUE FALSE`'], 0,
       'Counting from the end, the last "a" is kept and the first is the duplicate.',
       { code: 'duplicated(c("a", "b", "a"), fromLast = TRUE)', output: '[1]  TRUE FALSE FALSE' }),

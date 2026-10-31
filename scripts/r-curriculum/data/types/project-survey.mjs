@@ -20,6 +20,7 @@ export default makeProject('easy', {
   ],
   challenges: [
     task('easy', 'Tidy the answers', {
+      alt: 'answers <- c("No", "no", " YES", "yes", "Yes ", NA, "yes ", " no")\n',
       prompt: 'Make `clean` the answers with the spaces trimmed and all in small letters.',
       starter: DATA,
       hint: '`clean <- tolower(trimws(answers))`',
@@ -27,6 +28,7 @@ export default makeProject('easy', {
       tests: [['clean is yes no yes yes no NA yes no', 'identical(clean, c("yes", "no", "yes", "yes", "no", NA, "yes", "no"))']],
     }),
     task('easy', 'Count them', {
+      alt: 'answers <- c("no", "no", "yes", NA, "no", NA, "yes", "no")\n',
       prompt: 'Make `counts` a table of the cleaned answers.',
       starter: CLEAN,
       hint: '`counts <- table(answers)`',
@@ -34,6 +36,7 @@ export default makeProject('easy', {
       tests: [['counts is no 3, yes 4', 'identical(as.vector(counts), c(3L, 4L)) && identical(names(counts), c("no", "yes"))']],
     }),
     task('medium', 'Yes first', {
+      alt: 'answers <- c("no", "no", "yes", NA, "no", NA, "yes", "no")\n',
       prompt: 'Make `answer_f` a factor of the answers with the levels in the order `yes`, `no`.',
       starter: CLEAN,
       hint: '`answer_f <- factor(answers, levels = c("yes", "no"))`',
@@ -41,6 +44,7 @@ export default makeProject('easy', {
       tests: [['answer_f has levels yes, no', 'is.factor(answer_f) && identical(levels(answer_f), c("yes", "no"))']],
     }),
     task('medium', 'How many answered', {
+      alt: 'answers <- c("no", "no", "yes", NA, "no", NA, "yes", "no")\n',
       prompt: 'Make `n_answered` the number of forms with an answer.',
       starter: CLEAN,
       hint: '`n_answered <- sum(!is.na(answers))`',
@@ -48,6 +52,7 @@ export default makeProject('easy', {
       tests: [['n_answered is 7', near('n_answered', 7)]],
     }),
     task('hard', 'The yes share', {
+      alt: 'answers <- c("no", "no", "yes", NA, "no", NA, "yes", "no")\n',
       prompt: 'Make `yes_share` the percentage of answers that were yes, rounded to a whole number, leaving out the blank form.',
       starter: CLEAN,
       hint: 'The yeses divided by the answers: `round(sum(answers == "yes", na.rm = TRUE) / sum(!is.na(answers)) * 100)`.',

@@ -16,7 +16,7 @@ export default makeTopic({
     'One tip for checking results: two decimals worked out in different ways, such as `sqrt(var(x))` and `sd(x)`, can differ in the last of their many digits, so `==` may say FALSE. Compare them with `isTRUE(all.equal(a, b))`, which allows for that tiny rounding difference.',
   ],
   sandboxCode: DELIVERIES + 'range(deliveries$minutes)\nsd(deliveries$minutes)\nquantile(deliveries$minutes)\nIQR(deliveries$minutes)\nquantile(deliveries$minutes, 0.9)',
-  sandboxSnippets: [snippet('Same mean, different spread', 'steady <- c(28, 30, 31, 29, 32)\nwild <- c(10, 60, 25, 15, 40)\nc(mean(steady), mean(wild))\nc(sd(steady), sd(wild))')],
+  sandboxSnippets: [snippet('Same mean, different spread', 'steady <- c(28, 30, 31, 29, 32)\nwild <- c(10, 60, 25, 15, 40)\nc(mean(steady), mean(wild))\nc(sd(steady), sd(wild))'), snippet('With and without the outlier', DELIVERIES + 'm <- deliveries$minutes\nsd(m)\nsd(m[m < 60])\nIQR(m)\nIQR(m[m < 60])'), snippet('Several quantiles at once', DELIVERIES + 'quantile(deliveries$minutes, c(0.1, 0.5, 0.9))')],
   readMore: { label: 'R documentation: quantile()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/quantile.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Fastest and slowest', {
@@ -71,12 +71,26 @@ export default makeTopic({
         ['sd_south is right', near('sd_south', 'round(sd(deliveries$minutes[deliveries$area == "south"]), 1)')],
       ],
     }),
+    task('hard', 'Spread without the outlier', {
+      prompt: 'Make `sd_clean` the standard deviation of the delivery times under 60 minutes, rounded to 1 decimal place.',
+      starter: DELIVERIES,
+      hint: '`m[m < 60]` keeps the usual times; then `round(sd(...), 1)`.',
+      solution: DELIVERIES + 'm <- deliveries$minutes\nsd_clean <- round(sd(m[m < 60]), 1)',
+      tests: [['sd_clean is 6.1', near('sd_clean', 6.1)]],
+    }),
     task('expert', 'One line of spread', {
       prompt: 'Show `Median 28, IQR 10, range 19 to 74` with one `cat()`, letting R work out the numbers.',
       starter: DELIVERIES,
       hint: '`cat()` puts a space before each comma; use `paste0()` for "28," or give the commas as part of the text: `cat("Median ", m, ", IQR ", …, sep = "")`.',
       solution: DELIVERIES + 'm <- deliveries$minutes\ncat("Median ", median(m), ", IQR ", IQR(m), ", range ", min(m), " to ", max(m), "\\n", sep = "")',
       tests: [['Shows the line', 'identical(trimws(._cq_stdout), "Median 28, IQR 10, range 19 to 74")'], ['Works out the IQR', uses('IQR(')]],
+    }),
+    task('expert', 'Five numbers', {
+      prompt: 'Make `five` the smallest time, the lower quartile, the median, the upper quartile and the largest time, as one vector without names.',
+      starter: DELIVERIES,
+      hint: '`quantile()` takes several probabilities: `c(0, 0.25, 0.5, 0.75, 1)`. `unname()` removes the names.',
+      solution: DELIVERIES + 'five <- unname(quantile(deliveries$minutes, c(0, 0.25, 0.5, 0.75, 1)))',
+      tests: [['five is 19, 23.5, 28, 33.5, 74', near('five', 'c(19, 23.5, 28, 33.5, 74)')]],
     }),
   ],
   questions: [
@@ -94,9 +108,9 @@ export default makeTopic({
       { code: 'IQR(c(1, 2, 3, 4, 5, 6, 7, 8, 100))', output: '[1] 4' }),
     mc('Which measure of spread is pulled up most by one extreme value?', ['The IQR', 'The standard deviation', 'The median', 'The 25% quantile'], 1,
       'The sd uses every value\'s distance from the mean, so one far value counts a lot.'),
-    mc('What does `var(c(1, 3))` give?', ['`1`', '`2`', '`4`', '`1.41`'], 1,
-      'The sd of 1 and 3 is 1.414, and the variance is its square, 2.',
-      { code: 'var(c(1, 3))', output: '[1] 2' }),
+    mc('Why is the standard deviation easier to report than the variance?', ['It is in the same units as the data, like minutes; the variance is in minutes squared', 'It is always smaller', 'R can\'t work out variances', 'They are the same'], 0,
+      '`sd(x)` is the square root of `var(x)`.',
+      { code: 'var(c(1, 3))\nsd(c(1, 3))', output: '[1] 2\n[1] 1.414214' }),
     mc('What does `quantile(x, 0.9)` answer?', ['The 9th value', 'The value 90% of the data is below', '90% of the mean', 'The top 10 values'], 1,
       'For delivery times: 90% arrive within that many minutes.'),
     mc('Two bakeries both average 30 minutes. One has sd 2, the other sd 15. Which is more reliable?', ['The one with sd 15', 'The one with sd 2', 'They are the same', 'You can\'t tell'], 1,

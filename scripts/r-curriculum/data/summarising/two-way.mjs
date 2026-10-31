@@ -1,5 +1,5 @@
 // Summarising data: Two-way tables.
-import { code, makeTopic, mc, near, qShort, snippet, task, uses } from '../_builders.mjs'
+import { code, makeTopic, mc, near, qShort, same, snippet, task, uses } from '../_builders.mjs'
 import { DELIVERIES } from '../datasets.mjs'
 
 export default makeTopic({
@@ -15,7 +15,7 @@ export default makeTopic({
     'Two-way tables are the basis of the chi-squared test in the Statistics quest, which asks whether two categories are related.',
   ],
   sandboxCode: DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\ntab\naddmargins(tab)\nround(prop.table(tab, margin = 1) * 100)',
-  sandboxSnippets: [snippet('One cell, one row', DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\ntab["Sam", "north"]\ntab["Sam", ]')],
+  sandboxSnippets: [snippet('One cell, one row', DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\ntab["Sam", "north"]\ntab["Sam", ]'), snippet('Counts with totals', DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\naddmargins(tab)'), snippet('Mean in each cell', DELIVERIES + 'tapply(deliveries$minutes, list(deliveries$rider, deliveries$area), mean)')],
   readMore: { label: 'R documentation: addmargins()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/addmargins.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Rider by area', {
@@ -26,6 +26,7 @@ export default makeTopic({
       tests: [['tab counts every rider and area', 'identical(dim(tab), c(3L, 2L)) && tab["Sam", "north"] == 3 && tab["Kit", "south"] == 3 && tab["Ola", "north"] == 2']],
     }),
     task('easy', 'One cell', {
+      alt: (s) => s.replace('area = c("north", "south", "north", "north", "south", "south", "north", "south", "south", "north", "north", "south")', 'area = c("north", "south", "north", "north", "north", "south", "north", "south", "north", "north", "north", "north")'),
       prompt: 'Make `kit_north` the number of Kit\'s deliveries to the north.',
       starter: DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\n',
       hint: '`kit_north <- tab["Kit", "north"]`',
@@ -61,11 +62,19 @@ export default makeTopic({
       tests: [['ola is north 2, south 2', 'identical(as.vector(ola), c(2L, 2L)) && identical(names(ola), c("north", "south"))']],
     }),
     task('hard', 'Busy in the south', {
+      alt: (s) => s.replace('area = c("north", "south", "north", "north", "south", "south", "north", "south", "south", "north", "north", "south")', 'area = c("north", "south", "north", "north", "north", "south", "north", "south", "north", "north", "north", "north")'),
       prompt: 'Make `south_riders` the names of the riders with at least 2 deliveries in the south.',
       starter: DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\n',
       hint: 'Take the south column, keep counts of 2 or more, and take the names: `names(which(tab[, "south"] >= 2))`.',
       solution: DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\nsouth_riders <- names(which(tab[, "south"] >= 2))',
       tests: [['south_riders is Kit, Ola', 'identical(south_riders, c("Kit", "Ola"))']],
+    }),
+    task('hard', 'Share in the north', {
+      prompt: 'Make `north_pct` the percentage of each rider\'s deliveries that went to the north, as whole numbers.',
+      starter: DELIVERIES,
+      hint: 'Row percentages: `prop.table(tab, margin = 1)`. Then take the `"north"` column, times 100, rounded.',
+      solution: DELIVERIES + 'tab <- table(deliveries$rider, deliveries$area)\nnorth_pct <- round(prop.table(tab, margin = 1)[, "north"] * 100)',
+      tests: [['north_pct is Kit 25, Ola 50, Sam 75', same('north_pct', 'c(Kit = 25, Ola = 50, Sam = 75)')]],
     }),
     task('expert', 'Late deliveries by area', {
       prompt: 'A delivery is late if it takes more than 30 minutes. Make `late_tab` a two-way table of area (rows) by late (columns: FALSE, TRUE).',
@@ -73,6 +82,13 @@ export default makeTopic({
       hint: 'Make the TRUE/FALSE vector `deliveries$minutes > 30` and give it to `table()` as the second argument.',
       solution: DELIVERIES + 'late_tab <- table(deliveries$area, deliveries$minutes > 30)',
       tests: [['late_tab is north 6/0 and south 1/5', 'identical(as.vector(late_tab), c(6L, 1L, 0L, 5L))']],
+    }),
+    task('expert', 'Mean time in each cell', {
+      prompt: 'Make `cell_means` a table of the mean minutes for each rider (rows) and area (columns).',
+      starter: DELIVERIES,
+      hint: '`tapply()` takes several groups in a `list()`: `tapply(deliveries$minutes, list(deliveries$rider, deliveries$area), mean)`.',
+      solution: DELIVERIES + 'cell_means <- tapply(deliveries$minutes, list(deliveries$rider, deliveries$area), mean)',
+      tests: [['cell_means has riders as rows and areas as columns', 'is.matrix(cell_means) && identical(rownames(cell_means), c("Kit", "Ola", "Sam")) && identical(colnames(cell_means), c("north", "south"))'], ['Ola in the south is 52.5 and Sam in the north 21.3', 'isTRUE(all.equal(cell_means["Ola", "south"], 52.5)) && isTRUE(all.equal(cell_means["Sam", "north"], 64 / 3))']],
     }),
   ],
   questions: [
@@ -88,9 +104,8 @@ export default makeTopic({
       'Margin 2 means columns.'),
     mc('What does `addmargins()` add?', ['Percentages', 'Row and column totals, labelled Sum', 'Empty rows', 'Means'], 1,
       'Totals make a table much easier to read.'),
-    mc('What does `dim(table(c("a", "b", "c"), c("x", "y", "x")))` give?', ['`[1] 3 2`', '`[1] 2 3`', '`[1] 3 3`', '`[1] 6`'], 0,
-      'Three values in the first column make 3 rows; two in the second make 2 columns.',
-      { code: 'dim(table(c("a", "b", "c"), c("x", "y", "x")))', output: '[1] 3 2' }),
+    mc('Why use row percentages, not counts, when riders made different numbers of deliveries?', ['Each rider\'s row adds up to 100%, so riders can be compared fairly', 'Counts can\'t be compared at all', 'prop.table() removes zeros', 'Percentages are always smaller'], 0,
+      '3 out of 4 and 30 out of 40 are both 75%.'),
     mc('Which question does `margin = 1` answer for a rider-by-area table?', ['Of the north deliveries, what share were Sam\'s?', 'Of Sam\'s deliveries, what share were north?', 'How many deliveries in total?', 'Which area is busiest?'], 1,
       'Each rider\'s row is divided by that rider\'s total.'),
     mc('What is the grand total in `addmargins(table(x, y))`?', ['The number of rows of data', 'The number of columns', 'The largest count', 'Always 100'], 0,

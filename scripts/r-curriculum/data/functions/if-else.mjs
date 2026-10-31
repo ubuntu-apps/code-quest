@@ -1,5 +1,5 @@
 // Functions and control flow: if and else.
-import { code, isText, makeTopic, mc, near, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
+import { code, isLogical, isText, makeTopic, mc, near, prints, qShort, r, snippet, task, uses } from '../_builders.mjs'
 
 export default makeTopic({
   id: 'if_else',
@@ -27,6 +27,8 @@ advice`,
     snippet('any() and all()', r`temps <- c(25, 35, 28)
 if (any(temps > 30)) cat("At least one hot day\n")
 if (all(temps > 20)) cat("Every day was warm\n")`),
+    snippet('An else if chain', 'temp <- 24\nif (temp >= 30) "hot" else if (temp >= 18) "mild" else "cold"'),
+    snippet('One answer for a vector', 'scores <- c(71, 44, 88)\nif (all(scores >= 50)) "everyone passed" else "some failed"'),
   ],
   readMore: { label: 'R documentation: Control flow', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/Control.html', source: 'R documentation' },
   challenges: [
@@ -48,6 +50,7 @@ if (temperature > 30) {
       tests: [['result is "fail"', isText('result', 'fail')], ['Uses else', uses('else')]],
     }),
     task('easy', 'Free delivery', {
+      alt: 'order_total <- 12\n',
       prompt: 'Make `delivery` 0 if `order_total` is 30 or more, and 3.5 otherwise.',
       starter: 'order_total <- 42\n',
       hint: '`if (order_total >= 30) { delivery <- 0 } else { delivery <- 3.5 }`',
@@ -87,11 +90,20 @@ if (all(scores >= 50)) {
       tests: [['Shows Everyone passed', prints('Everyone passed')]],
     }),
     task('hard', 'Watch out for NA', {
+      alt: 'reading <- 30\n',
       prompt: 'The reading may be missing. Make `status` `"missing"` if `reading` is NA, `"high"` if it is over 25, and `"ok"` otherwise. Test for NA first.',
       starter: 'reading <- NA\n',
       hint: 'Start with `if (is.na(reading))`. Comparing NA with 25 first would give an error.',
       solution: 'reading <- NA\nif (is.na(reading)) {\n  status <- "missing"\n} else if (reading > 25) {\n  status <- "high"\n} else {\n  status <- "ok"\n}',
       tests: [['status is "missing"', isText('status', 'missing')]],
+    }),
+    task('hard', 'Parking charge', {
+      prompt: 'Parking is free for up to 1 hour, 2.50 for up to 3 hours, and 5 for longer. Make `charge` the price for `hours`.',
+      starter: 'hours <- 3.5\n',
+      alt: 'hours <- 2\n',
+      hint: 'Check from the smallest band up: `if (hours <= 1) 0 else if (hours <= 3) 2.5 else 5`.',
+      solution: 'hours <- 3.5\ncharge <- if (hours <= 1) 0 else if (hours <= 3) 2.5 else 5',
+      tests: [['charge is 5', near('charge', 5)]],
     }),
     task('expert', 'Ticket price', {
       prompt: 'A museum charges 0 for under-5s, 6 for under-18s, 4 for 65 and over, and 12 for everyone else. Make `price` the price for `age`.',
@@ -99,6 +111,14 @@ if (all(scores >= 50)) {
       hint: 'Four branches. Check the age groups in an order where each condition is clear: under 5, under 18, 65 and over, else.',
       solution: 'age <- 70\nif (age < 5) {\n  price <- 0\n} else if (age < 18) {\n  price <- 6\n} else if (age >= 65) {\n  price <- 4\n} else {\n  price <- 12\n}',
       tests: [['price is 4', near('price', 4)], ['Uses else if', uses('else if')]],
+    }),
+    task('expert', 'Leap year', {
+      prompt: 'A year is a leap year if it divides by 4, except century years (dividing by 100), which must also divide by 400. Make `leap` TRUE or FALSE for `year`.',
+      starter: 'year <- 2028\n',
+      alt: 'year <- 1900\n',
+      hint: '`%%` gives the remainder. Put it together: `(year %% 4 == 0 && year %% 100 != 0) || year %% 400 == 0`.',
+      solution: 'year <- 2028\nleap <- (year %% 4 == 0 && year %% 100 != 0) || year %% 400 == 0',
+      tests: [['leap is TRUE', isLogical('leap', true)]],
     }),
   ],
   questions: [
@@ -119,9 +139,9 @@ if (all(scores >= 50)) {
     mc('What does `if (any(c(3, 8) > 5)) "yes" else "no"` give?', ['`"no"`', '`"yes"`', 'An error', '`TRUE`'], 1,
       '`any()` turns the two answers into one TRUE.',
       { code: 'if (any(c(3, 8) > 5)) "yes" else "no"', output: '[1] "yes"' }),
-    mc('What does `if (FALSE) "a"` give?', ['`"a"`', 'Nothing (NULL)', 'An error', '`FALSE`'], 1,
-      'With no `else`, nothing is run and nothing is shown.',
-      { code: 'x <- if (FALSE) "a"\nis.null(x)', output: '[1] TRUE' }),
+    mc('Why does `if (scores >= 50)` give an error when `scores` has several values?', ['`if` needs one TRUE or FALSE; use `all()`, `any()` or `ifelse()` for a vector', '`>=` doesn\'t work on vectors', '`scores` must be text', 'It doesn\'t'], 0,
+      'Since R 4.2, a condition longer than one is an error.',
+      { code: 'scores <- c(71, 44)\nif (scores >= 50) "pass"', error: 'the condition has length > 1' }),
     mc('Why test `is.na(x)` first in an if/else chain?', ['It is faster', 'Comparing NA (like `x > 25`) would give an error in `if`', 'R needs it', 'To round x'], 1,
       '`if (NA > 25)` is `if (NA)`, which stops with an error.'),
     qShort('Which word gives the branch to run when the `if` condition is FALSE?', 'else',

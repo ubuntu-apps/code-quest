@@ -14,7 +14,7 @@ export default makeTopic({
     '`apply()` also works on a data frame of numbers (it turns it into a matrix first), but a data frame with text columns becomes a text matrix, so pick the number columns first.',
   ],
   sandboxCode: SCORES + 'apply(scores, 2, max)\napply(scores, 1, mean)\napply(scores, 1, range)',
-  sandboxSnippets: [snippet('Your own function', SCORES + 'apply(scores, 1, function(x) max(x) - min(x))')],
+  sandboxSnippets: [snippet('Your own function', SCORES + 'apply(scores, 1, function(x) max(x) - min(x))'), snippet('Your own function per row', SCORES + 'apply(scores, 1, function(x) max(x) - min(x))'), snippet('Results become columns', SCORES + 'apply(scores, 1, range)\nt(apply(scores, 1, range))')],
   readMore: { label: 'R documentation: apply()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/apply.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Top score per test', {
@@ -66,12 +66,26 @@ export default makeTopic({
       solution: SCORES + 'lo_hi <- t(apply(scores, 1, range))',
       tests: [['lo_hi is 4 by 2 with Ana 72 81', 'is.matrix(lo_hi) && identical(dim(lo_hi), c(4L, 2L)) && isTRUE(all.equal(unname(lo_hi["Ana", ]), c(72, 81)))']],
     }),
+    task('hard', 'Spread per student', {
+      prompt: 'Make `spread` each student\'s best score minus their worst, using `apply()` with a function of your own.',
+      starter: SCORES,
+      hint: '`apply(scores, 1, function(x) max(x) - min(x))`',
+      solution: SCORES + 'spread <- apply(scores, 1, function(x) max(x) - min(x))',
+      tests: [['spread is Ana 9, Ben 5, Cy 5, Dee 7', same('spread', 'c(Ana = 9, Ben = 5, Cy = 5, Dee = 7)')], ['Uses apply()', uses('apply(')]],
+    }),
     task('expert', 'Above the average', {
       prompt: 'Make `vs_mean` the scores minus each test\'s mean, rounded to 1 decimal place, keeping the same shape as `scores`.',
       starter: SCORES,
       hint: '`apply(scores, 2, function(x) x - mean(x))` keeps one column per test, because each column gives 4 values back.',
       solution: SCORES + 'vs_mean <- round(apply(scores, 2, function(x) x - mean(x)), 1)',
       tests: [['vs_mean is the scores minus the test means', 'is.matrix(vs_mean) && isTRUE(all.equal(vs_mean, round(sweep(scores, 2, colMeans(scores)), 1)))']],
+    }),
+    task('expert', 'z-scores per test', {
+      prompt: 'Make `z` a matrix the same shape as `scores`, with each score turned into a z-score within its own test (column).',
+      starter: SCORES,
+      hint: '`apply(scores, 2, function(x) (x - mean(x)) / sd(x))` works test by test, and each result becomes a column.',
+      solution: SCORES + 'z <- apply(scores, 2, function(x) (x - mean(x)) / sd(x))',
+      tests: [['z has the same rows and columns', 'is.matrix(z) && identical(dimnames(z), dimnames(scores))'], ['z is right', 'isTRUE(all.equal(z, scale(scores), check.attributes = FALSE))']],
     }),
   ],
   questions: [
@@ -82,8 +96,8 @@ export default makeTopic({
       { code: 'apply(matrix(1:4, nrow = 2), 1, sum)', output: '[1] 4 6' }),
     mc('Which is the same as `apply(m, 2, mean)` for a matrix of numbers?', ['`rowMeans(m)`', '`colMeans(m)`', '`mean(m)`', '`sapply(m, mean)`'], 1,
       'Column means. `colMeans()` is shorter and faster.'),
-    mc('What does `dim(apply(matrix(1:6, nrow = 2), 1, range))` give?', ['`[1] 2 2`', '`[1] 2 3`', '`[1] 3 2`', '`[1] 6`'], 0,
-      'Two rows of the matrix, each giving 2 values, so a 2 × 2 result: one column per row.',
+    mc('Why does `apply(m, 1, range)` give one column per row of `m`?', ['When the function gives several values, apply() puts each result in a column', 'range() makes matrices', 'apply() always swaps rows and columns', 'It doesn\'t'], 0,
+      'Wrap it in `t()` to get one row per row again.',
       { code: 'dim(apply(matrix(1:6, nrow = 2), 1, range))', output: '[1] 2 2' }),
     mc('Where does `na.rm = TRUE` go in `apply()`?', ['Before the margin', 'After the function: `apply(m, 2, mean, na.rm = TRUE)`', 'Inside the matrix', 'It can\'t be used'], 1,
       'Extra arguments are passed on to the function.',

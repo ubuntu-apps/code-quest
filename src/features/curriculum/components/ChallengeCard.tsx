@@ -278,7 +278,7 @@ export function ChallengeCard({
           sqlTables={isSql ? tables : undefined}
           id={`code-${ch.id}`}
           labelId={`code-label-${ch.id}`}
-          language={mode === 'r_tests' ? 'plain' : isSql ? 'sql' : 'python'}
+          language={mode === 'r_tests' ? 'r' : isSql ? 'sql' : 'python'}
           rows={4}
           value={draft}
           onChange={onDraftChange}

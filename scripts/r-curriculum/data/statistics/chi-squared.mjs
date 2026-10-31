@@ -1,8 +1,10 @@
 // Statistics: Counts and categories (chi-squared tests).
-import { code, makeTopic, mc, near, qShort, snippet, task } from '../_builders.mjs'
+import { code, isLogical, makeTopic, mc, near, qShort, snippet, task } from '../_builders.mjs'
 
 const LUNCH = 'lunch <- data.frame(\n  year = rep(c("Y7", "Y8"), c(45, 55)),\n  choice = c(rep(c("hot", "packed"), c(30, 15)), rep(c("hot", "packed"), c(20, 35)))\n)\n'
 const TAB = 'tab <- table(lunch$year, lunch$choice)\n'
+/** Other counts for the "works with other data" checks (the year and choice lengths must match). */
+const LUNCH_ALT = LUNCH.replace('c(45, 55)', 'c(50, 50)').replace('c(30, 15)', 'c(25, 25)').replace('c(20, 35)', 'c(25, 25)')
 
 export default makeTopic({
   id: 'chi_squared',
@@ -18,12 +20,13 @@ export default makeTopic({
     'The test needs reasonably large counts. If expected counts are below about 5, R warns that the approximation may be incorrect.',
   ],
   sandboxCode: LUNCH + TAB + 'tab\nchisq.test(tab)',
-  sandboxSnippets: [snippet('Fair dice?', 'rolls <- c(15, 22, 18, 25, 17, 23)\nchisq.test(rolls)')],
+  sandboxSnippets: [snippet('Fair dice?', 'rolls <- c(15, 22, 18, 25, 17, 23)\nchisq.test(rolls)'), snippet('Observed and expected', LUNCH + TAB + 'tab\nround(chisq.test(tab)$expected, 1)'), snippet('Small counts', 'm <- matrix(c(3, 7, 6, 4), nrow = 2)\nchisq.test(m)$expected\nfisher.test(m)$p.value')],
   readMore: { label: 'R documentation: chisq.test()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/chisq.test.html', source: 'R documentation' },
   challenges: [
     task('easy', 'The table', {
       prompt: 'Make `tab` a table of year against lunch choice.',
       starter: LUNCH,
+      alt: LUNCH_ALT,
       hint: '`tab <- table(lunch$year, lunch$choice)`',
       solution: LUNCH + TAB,
       tests: [['tab has Y7 30 15 and Y8 20 35', 'inherits(tab, "table") && identical(as.vector(tab), c(30L, 20L, 15L, 35L))']],
@@ -31,6 +34,7 @@ export default makeTopic({
     task('easy', 'The test', {
       prompt: 'Make `p` the p-value of a chi-squared test on `tab`, rounded to 3 decimal places.',
       starter: LUNCH + TAB,
+      alt: LUNCH_ALT + TAB,
       hint: '`round(chisq.test(tab)$p.value, 3)`',
       solution: LUNCH + TAB + 'p <- round(chisq.test(tab)$p.value, 3)',
       tests: [['p is 0.005', near('p', 0.005)]],
@@ -38,6 +42,7 @@ export default makeTopic({
     task('easy', 'Expected counts', {
       prompt: 'Make `expected` the expected counts if year made no difference.',
       starter: LUNCH + TAB,
+      alt: LUNCH_ALT + TAB,
       hint: '`chisq.test(tab)$expected`',
       solution: LUNCH + TAB + 'expected <- chisq.test(tab)$expected',
       tests: [['expected is 22.5, 27.5, 22.5, 27.5', 'isTRUE(all.equal(as.vector(expected), c(22.5, 27.5, 22.5, 27.5)))']],
@@ -45,6 +50,7 @@ export default makeTopic({
     task('medium', 'Shares by year', {
       prompt: 'Make `shares` the share of each choice within each year, rounded to 2 decimal places.',
       starter: LUNCH + TAB,
+      alt: LUNCH_ALT + TAB,
       hint: '`prop.table(tab, 1)` divides each row by its total.',
       solution: LUNCH + TAB + 'shares <- round(prop.table(tab, 1), 2)',
       tests: [['shares is Y7 0.67 0.33, Y8 0.36 0.64', 'isTRUE(all.equal(as.vector(shares), c(0.67, 0.36, 0.33, 0.64)))']],
@@ -52,6 +58,7 @@ export default makeTopic({
     task('medium', 'The statistic', {
       prompt: 'Make `x2` the chi-squared statistic, unnamed, rounded to 2 decimal places.',
       starter: LUNCH + TAB,
+      alt: LUNCH_ALT + TAB,
       hint: '`round(unname(chisq.test(tab)$statistic), 2)`',
       solution: LUNCH + TAB + 'x2 <- round(unname(chisq.test(tab)$statistic), 2)',
       tests: [['x2 is 7.92', near('x2', 7.92)]],
@@ -70,11 +77,27 @@ export default makeTopic({
       solution: 'flowers <- c(red = 30, yellow = 50, white = 20)\np_mix <- round(chisq.test(flowers, p = c(0.4, 0.4, 0.2))$p.value, 3)',
       tests: [['p_mix is 0.082', near('p_mix', 0.082)]],
     }),
+    task('hard', 'More than expected', {
+      prompt: 'Make `gap` the observed counts minus the counts expected if year and lunch weren\'t linked.',
+      starter: LUNCH + TAB,
+      alt: LUNCH_ALT + TAB,
+      hint: '`chisq.test(tab)$expected` has the same shape as `tab`, so you can subtract it.',
+      solution: LUNCH + TAB + 'gap <- tab - chisq.test(tab)$expected',
+      tests: [['Y7 hot is 7.5 more than expected', 'isTRUE(all.equal(gap["Y7", "hot"], 7.5)) && isTRUE(all.equal(as.vector(gap), as.vector(tab - chisq.test(tab)$expected)))']],
+    }),
     task('expert', 'Straight from the counts', {
       prompt: 'Sometimes you only have the counts. Make `m` a 2 × 2 matrix with rows Y7 (30 hot, 15 packed) and Y8 (20 hot, 35 packed), then `p_m` the chi-squared p-value, rounded to 3 decimal places.',
       hint: '`matrix(c(30, 20, 15, 35), nrow = 2)` fills column by column. Then `chisq.test(m)`.',
       solution: 'm <- matrix(c(30, 20, 15, 35), nrow = 2, dimnames = list(c("Y7", "Y8"), c("hot", "packed")))\np_m <- round(chisq.test(m)$p.value, 3)',
       tests: [['m holds the counts', 'is.matrix(m) && isTRUE(all.equal(as.vector(m), c(30, 20, 15, 35)))'], ['p_m is 0.005', near('p_m', 0.005)]],
+    }),
+    task('expert', 'Is the test safe', {
+      prompt: 'Make `safe` TRUE if every expected count in `m` is at least 5, and `p` the chi-squared p-value.',
+      starter: 'm <- matrix(c(3, 7, 6, 4), nrow = 2)\n',
+      alt: 'm <- matrix(c(30, 70, 60, 40), nrow = 2)\n',
+      hint: 'Save the test once: `res <- chisq.test(m)`. Then `all(res$expected >= 5)` and `res$p.value`.',
+      solution: 'm <- matrix(c(3, 7, 6, 4), nrow = 2)\nres <- chisq.test(m)\nsafe <- all(res$expected >= 5)\np <- res$p.value',
+      tests: [['safe is FALSE', isLogical('safe', false)], ['p is right', near('p', 'suppressWarnings(chisq.test(m))$p.value')]],
     }),
   ],
   questions: [
@@ -87,9 +110,8 @@ export default makeTopic({
       { code: '45 * 50 / 100', output: '[1] 22.5' }),
     mc('p = 0.005 for year and lunch. What can you say?', ['Year causes lunch choice', 'Strong evidence that lunch choice differs between the years', 'No link', 'Half choose hot'], 1,
       'A link, not a cause.'),
-    mc('What does `prop.table(tab, 1)` give?', ['Shares of the whole table', 'Shares within each row', 'Shares within each column', 'The counts'], 1,
-      '`1` is rows, `2` is columns.',
-      { code: 'prop.table(matrix(c(1, 3, 1, 1), nrow = 2), 1)[2, ]', output: '[1] 0.75 0.25' }),
+    mc('Why compare with expected counts rather than the raw counts?', ['The groups are different sizes, so equal counts aren\'t what "no link" looks like', 'Raw counts are always wrong', 'chisq.test() can\'t read counts', 'There is no reason'], 0,
+      'Expected counts say what each cell would hold if year and lunch weren\'t linked.'),
     mc('`chisq.test(c(15, 22, 18, 25, 17, 23))` tests against…', ['A normal distribution', 'Equal shares in each category', 'The mean', 'Zero'], 1,
       'A fair die: one sixth each.'),
     mc('What does R warn when expected counts are small?', ['Nothing', 'That the chi-squared approximation may be incorrect', 'That the data are text', 'That p is 0'], 1,

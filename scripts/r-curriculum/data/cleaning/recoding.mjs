@@ -14,7 +14,7 @@ export default makeTopic({
     'For yes/no style answers, `ifelse()` or `%in%` turns many forms into TRUE/FALSE: `answer %in% c("yes", "y", "1")`. And to merge categories, recode several into one, such as every leafy crop into `"greens"`.',
   ],
   sandboxCode: 'size_names <- c(S = "small", M = "medium", L = "large")\nsizes <- c("M", "S", "M", "L", "XL")\nunname(size_names[sizes])',
-  sandboxSnippets: [snippet('Fix variants', 'crop <- c("courgettes", "zucchini", "kale", "courgette")\ncrop[crop %in% c("courgette", "zucchini")] <- "courgettes"\ncrop')],
+  sandboxSnippets: [snippet('Fix variants', 'crop <- c("courgettes", "zucchini", "kale", "courgette")\ncrop[crop %in% c("courgette", "zucchini")] <- "courgettes"\ncrop'), snippet('A default for unknown codes', 'size_names <- c(S = "small", M = "medium", L = "large")\nout <- unname(size_names[c("S", "XL", "L")])\nout[is.na(out)] <- "other"\nout'), snippet('Group the codes', 'groups <- c("1" = "unhappy", "2" = "unhappy", "3" = "neutral", "4" = "happy", "5" = "happy")\nunname(groups[c("5", "1", "3")])')],
   readMore: { label: 'R documentation: Extract', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/Extract.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Fix one variant', {
@@ -66,12 +66,26 @@ export default makeTopic({
       solution: 'size_names <- c(S = "small", M = "medium", L = "large")\norders <- data.frame(order = 1:4, size = c("M", "S", "L", "M"))\norders$size_word <- unname(size_names[orders$size])',
       tests: [['size_word is medium small large medium', 'identical(orders$size_word, c("medium", "small", "large", "medium"))']],
     }),
+    task('hard', 'Other for the rest', {
+      prompt: 'Make `named` the size words for `codes`, with `"other"` for any code the lookup doesn\'t have.',
+      starter: 'size_names <- c(S = "small", M = "medium", L = "large")\ncodes <- c("S", "M", "XL", "L")\n',
+      hint: '`unname(size_names[codes])` gives NA for unknown codes; then `named[is.na(named)] <- "other"`.',
+      solution: 'size_names <- c(S = "small", M = "medium", L = "large")\ncodes <- c("S", "M", "XL", "L")\nnamed <- unname(size_names[codes])\nnamed[is.na(named)] <- "other"',
+      tests: [['named is small, medium, other, large', isTexts('named', 'small', 'medium', 'other', 'large')]],
+    }),
     task('expert', 'Clean, then recode', {
       prompt: 'The answers are messy. Clean them (trim, small letters), then make `agreed` TRUE for `"yes"` and `"y"`, FALSE for `"no"` and `"n"`, and NA for anything else.',
       starter: 'answers <- c(" Yes", "N", "y", "NO ", "maybe", "yes")\n',
       hint: 'A lookup works here too: `c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[clean]`, and `unname()` the result.',
       solution: 'answers <- c(" Yes", "N", "y", "NO ", "maybe", "yes")\nclean <- tolower(trimws(answers))\nagreed <- unname(c(yes = TRUE, y = TRUE, no = FALSE, n = FALSE)[clean])',
       tests: [['agreed is TRUE FALSE TRUE FALSE NA TRUE', 'identical(agreed, c(TRUE, FALSE, TRUE, FALSE, NA, TRUE))']],
+    }),
+    task('expert', 'Moods in order', {
+      prompt: 'Ratings 1 and 2 are `"unhappy"`, 3 is `"neutral"`, 4 and 5 are `"happy"`. Make `mood_counts` the count of each mood, in the order unhappy, neutral, happy.',
+      starter: 'ratings <- c("1", "5", "3", "4", "2", "5", "4")\n',
+      hint: 'A lookup: `groups <- c("1" = "unhappy", "2" = "unhappy", "3" = "neutral", "4" = "happy", "5" = "happy")`. Then make a factor with your levels and `table()` it.',
+      solution: 'ratings <- c("1", "5", "3", "4", "2", "5", "4")\ngroups <- c("1" = "unhappy", "2" = "unhappy", "3" = "neutral", "4" = "happy", "5" = "happy")\nmood <- factor(unname(groups[ratings]), levels = c("unhappy", "neutral", "happy"))\nmood_counts <- table(mood)',
+      tests: [['mood_counts is unhappy 2, neutral 1, happy 4', 'identical(as.vector(mood_counts), c(2L, 1L, 4L)) && identical(names(mood_counts), c("unhappy", "neutral", "happy"))']],
     }),
   ],
   questions: [
@@ -92,8 +106,8 @@ export default makeTopic({
       { code: 'ifelse(c("kale", "beans") %in% "kale", "greens", c("kale", "beans"))', output: '[1] "greens" "beans"' }),
     mc('Why clean text before recoding?', ['It doesn\'t matter', 'Otherwise " Yes" and "YES" won\'t match the lookup', 'For speed', 'Recoding needs numbers'], 1,
       'A lookup matches exact text.'),
-    mc('What is a lookup vector?', ['A sorted vector', 'A named vector that maps codes (names) to meanings (values)', 'A list of NAs', 'A table'], 1,
-      'Indexing it by codes gives the meanings.'),
+    mc('Why recode with a lookup vector rather than one `ifelse()` per code?', ['One named vector handles every code at once and is easy to add to', 'ifelse() can\'t recode text', 'A lookup is always faster', 'There is no difference'], 0,
+      'Codes it doesn\'t know come out as NA, so new codes stand out.'),
     mc('What does `x[!x %in% c("S", "M", "L")]` give for `x <- c("M", "XL", "s")`?', ['`[1] "M"`', '`[1] "XL" "s"`', '`[1] "XL"`', '`character(0)`'], 1,
       'The values that aren\'t in the list.',
       { code: 'x <- c("M", "XL", "s")\nx[!x %in% c("S", "M", "L")]', output: '[1] "XL" "s"' }),

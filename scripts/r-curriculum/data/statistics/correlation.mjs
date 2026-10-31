@@ -1,5 +1,5 @@
 // Statistics: Correlation.
-import { code, makeTopic, mc, near, qShort, snippet, task } from '../_builders.mjs'
+import { code, makeTopic, mc, near, qShort, same, snippet, task } from '../_builders.mjs'
 import { STUDY } from './stats-data.mjs'
 
 export default makeTopic({
@@ -14,7 +14,7 @@ export default makeTopic({
     'And the big warning: **correlation is not causation**. Revising and phone use are linked (r = −0.91), so either could be behind the scores, or something else behind both. A correlation tells you two things go together, not why.',
   ],
   sandboxCode: STUDY + 'cor(study$hours, study$score)\nround(cor(study[, c("hours", "phone", "sleep", "score")]), 2)',
-  sandboxSnippets: [snippet('One outlier', 'x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\ncor(x, y)\ny[6] <- 30\ncor(x, y)\ncor(x, y, method = "spearman")')],
+  sandboxSnippets: [snippet('One outlier', 'x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\ncor(x, y)\ny[6] <- 30\ncor(x, y)\ncor(x, y, method = "spearman")'), snippet('Every pair', STUDY + 'round(cor(study[c("hours", "phone", "sleep", "score")]), 2)'), snippet('One point matters', 'x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\ncor(x, y)\ncor(c(x, 20), c(y, 0))')],
   readMore: { label: 'R documentation: cor()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/cor.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Revision and score', {
@@ -66,12 +66,26 @@ export default makeTopic({
       solution: 'x <- c(1, 2, 3, 4, 5, 6)\ny <- c(2, 4, 5, 4, 5, 6)\nbefore <- round(cor(x, y), 2)\ny[6] <- 30\nafter <- round(cor(x, y), 2)',
       tests: [['before is 0.86', near('before', 0.86)], ['after is 0.71', near('after', 0.71)]],
     }),
+    task('hard', 'Without one student', {
+      prompt: 'Make `r_without` the correlation between `hours` and `score` with Cy left out.',
+      starter: STUDY,
+      hint: 'Keep the other rows first: `sub <- study[study$student != "Cy", ]`, then `cor(sub$hours, sub$score)`.',
+      solution: STUDY + 'sub <- study[study$student != "Cy", ]\nr_without <- cor(sub$hours, sub$score)',
+      tests: [['r_without is right', near('r_without', 'cor(study$hours[study$student != "Cy"], study$score[study$student != "Cy"])')]],
+    }),
     task('expert', 'Is it significant?', {
       prompt: 'With only 8 students, a correlation could be luck. `cor.test()` gives a p-value. Make `p` the p-value for hours and score, rounded to 4 decimal places.',
       starter: STUDY,
       hint: '`cor.test(study$hours, study$score)$p.value`',
       solution: STUDY + 'p <- round(cor.test(study$hours, study$score)$p.value, 4)',
       tests: [['p is 0.0009', near('p', 9e-04)]],
+    }),
+    task('expert', 'Strongest link first', {
+      prompt: 'Make `links` the correlations of `score` with `hours`, `phone` and `sleep`, named, with the strongest (largest in size, plus or minus) first.',
+      starter: STUDY,
+      hint: '`r <- cor(study[c("hours", "phone", "sleep")], study$score)[, 1]` gives the three, named. Sort them with `r[order(-abs(r))]`.',
+      solution: STUDY + 'r <- cor(study[c("hours", "phone", "sleep")], study$score)[, 1]\nlinks <- r[order(-abs(r))]',
+      tests: [['links is in order of strength, with names', same('links', 'local({ r <- sapply(c("hours", "phone", "sleep"), function(v) cor(study[[v]], study$score)); r[order(-abs(r))] })')]],
     }),
   ],
   questions: [
@@ -80,9 +94,8 @@ export default makeTopic({
     mc('What does `cor(c(1, 2, 3), c(2, 4, 6))` give?', ['`1`', '`2`', '`0`', '`0.5`'], 0,
       'A perfect straight line going up.',
       { code: 'cor(c(1, 2, 3), c(2, 4, 6))', output: '[1] 1' }),
-    mc('What does `cor(c(1, 2, 3), c(6, 4, 2))` give?', ['`1`', '`-1`', '`0`', '`-2`'], 1,
-      'A perfect straight line going down.',
-      { code: 'cor(c(1, 2, 3), c(6, 4, 2))', output: '[1] -1' }),
+    mc('Why can one unusual point change a correlation a lot in a small sample?', ['With few points, each one carries a big share of the calculation', 'cor() ignores the others', 'Outliers are counted twice', 'It can\'t'], 0,
+      'Plot the data, or compare with `method = "spearman"`.'),
     mc('Revision hours and scores have r = 0.93. What can you say?', ['Revising causes higher scores', 'They go together strongly; the reason needs more evidence', 'They are unrelated', 'Every student who revises scores 93'], 1,
       'Correlation is not causation.'),
     mc('Which range can a correlation take?', ['0 to 1', '−1 to 1', '0 to 100', 'Any number'], 1,

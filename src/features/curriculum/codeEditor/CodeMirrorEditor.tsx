@@ -34,7 +34,9 @@ import {
 import { localCompletionSource, python } from '@codemirror/lang-python'
 import { tags as t } from '@lezer/highlight'
 import type { KeyBarTarget } from './CodeKeyBar'
+import { rLanguage } from './rLanguage'
 import { sqlLanguage } from './sqlLanguage'
+import { R_CONSTANTS, R_FUNCTIONS, R_KEYWORDS } from '../rWords'
 import { isSqlKeyword, SQL_FUNCTIONS, SQL_KEYWORDS, sqlTableFor, sqlTablesInQuery } from '../sqlWords'
 import type { SqlTable } from '../types'
 
@@ -56,7 +58,7 @@ export interface EditorError {
 export interface CodeMirrorEditorProps {
   value: string
   onChange: (value: string) => void
-  language: 'python' | 'sql' | 'plain'
+  language: 'python' | 'sql' | 'r' | 'plain'
   /** Height to start at, in lines; the editor grows with the code. */
   minLines: number
   /** Element ids naming and describing the editor (its label, the keyboard hint). */
@@ -109,6 +111,36 @@ function suggestions(extraNames: () => string[]): CompletionSource {
     add(extraNames().map((label) => ({ label, type: 'variable' })), 1)
     add((await pythonWords(context))?.options, 0)
     return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^\w{2,}$/ } : null
+  }
+}
+
+const R_WORDS: Completion[] = [
+  ...[...R_KEYWORDS, ...R_CONSTANTS].map((label) => ({ label, type: 'keyword' })),
+  ...R_FUNCTIONS.map((label) => ({ label, type: 'function' })),
+]
+
+/**
+ * R suggestions: names already used in this code (R names can contain dots, like `is.na`),
+ * names from the challenge's instructions, then R's words. Like Python's, from the second letter.
+ */
+function rSuggestions(extraNames: () => string[]): CompletionSource {
+  const rWords = completeFromList(R_WORDS)
+  return async (context: CompletionContext) => {
+    const word = context.matchBefore(/[\w.]+/)
+    if (!context.explicit && (!word || word.to - word.from < 2)) return null
+    const from = word ? word.from : context.pos
+    const typed = word ? context.state.sliceDoc(word.from, word.to) : ''
+    const byLabel = new Map<string, Completion>()
+    const add = (options: readonly Completion[] | undefined, boost: number) => {
+      for (const option of options ?? []) {
+        if (!byLabel.has(option.label) && option.label !== typed) byLabel.set(option.label, { ...option, boost })
+      }
+    }
+    const used = new Set(context.state.doc.toString().match(/[A-Za-z.][\w.]*/g) ?? [])
+    add([...used].filter((name) => name.startsWith(typed)).map((label) => ({ label, type: 'variable' })), 2)
+    add(extraNames().filter((name) => name.startsWith(typed)).map((label) => ({ label, type: 'variable' })), 1)
+    add((await rWords(context))?.options, 0)
+    return byLabel.size > 0 ? { from, options: [...byLabel.values()], validFor: /^[\w.]{2,}$/ } : null
   }
 }
 
@@ -347,16 +379,19 @@ export default function CodeMirrorEditor({
                         () => latest.current.suggestNames ?? [],
                         () => latest.current.sqlTables ?? [],
                       )
-                    : suggestions(() => latest.current.suggestNames ?? []),
+                    : language === 'r'
+                      ? rSuggestions(() => latest.current.suggestNames ?? [])
+                      : suggestions(() => latest.current.suggestNames ?? []),
                 ],
                 filterStrict: true,
                 icons: false,
                 maxRenderedOptions: 8,
               })
             : [],
-          EditorState.tabSize.of(4),
-          indentUnit.of('    '),
-          language === 'python' ? python() : language === 'sql' ? sqlLanguage : [],
+          // R code is usually indented by two spaces, Python by four.
+          EditorState.tabSize.of(language === 'r' ? 2 : 4),
+          indentUnit.of(language === 'r' ? '  ' : '    '),
+          language === 'python' ? python() : language === 'sql' ? sqlLanguage : language === 'r' ? rLanguage : [],
           syntaxHighlighting(codeQuestHighlight),
           keymap.of([
             ...closeBracketsKeymap,

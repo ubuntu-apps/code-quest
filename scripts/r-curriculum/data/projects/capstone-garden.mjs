@@ -72,6 +72,7 @@ export default makeTopic({
       tests: [['per_family is Silva 13.4, Okafor 6.6, Li 3.5', 'isTRUE(all.equal(as.vector(per_family), c(13.4, 6.6, 3.5))) && identical(names(per_family), c("Silva", "Okafor", "Li"))']],
     }),
     task('hard', 'The blank weigh-in', {
+      alt: (s) => s.replace('17/06/2026,C,kale,\n', '17/06/2026,C,kale,1.4kg\n').replace('08/07/2026,C,kale,1.2kg', '08/07/2026,C,kale,'),
       prompt: 'Make `blank` a one-line description of the missing weigh-in, like `"C kale 2026-06-17"`: plot, crop and date, separated by spaces.',
       starter: READY,
       hint: 'Pick the row with `is.na(harvest$kg)`, then `paste(row$plot, row$crop, format(row$date))`.',

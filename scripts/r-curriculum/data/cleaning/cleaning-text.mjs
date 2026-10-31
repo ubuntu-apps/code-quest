@@ -14,7 +14,7 @@ export default makeTopic({
     'Always check the result with `table()` or `unique()`: it is the quickest way to see that every variant has been caught.',
   ],
   sandboxCode: 'crop <- c("Kale", "kale ", "KALE", "beans", " Beans")\ntable(crop)\ncrop <- tolower(trimws(crop))\ntable(crop)',
-  sandboxSnippets: [snippet('Title case', 'tools::toTitleCase(c("ana silva", "ben okafor"))')],
+  sandboxSnippets: [snippet('Title case', 'tools::toTitleCase(c("ana silva", "ben okafor"))'), snippet('See the variants', 'crop <- c("Kale", "kale ", "KALE", "beans")\ntable(crop)\ntable(tolower(trimws(crop)))'), snippet('Capital first letter', 'x <- c("kale", "BEANS")\npaste0(toupper(substr(x, 1, 1)), tolower(substr(x, 2, nchar(x))))')],
   readMore: { label: 'R documentation: trimws()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/trimws.html', source: 'R documentation' },
   challenges: [
     task('easy', 'One crop, one spelling', {
@@ -66,12 +66,26 @@ export default makeTopic({
       solution: 'harvest <- data.frame(crop = c("Kale", "kale ", "Beans", "TOMATOES", "beans"), kg = c(2.7, 2.3, 4.1, 12.4, 2.9))\nharvest$crop <- tolower(trimws(harvest$crop))\nper_crop <- tapply(harvest$kg, harvest$crop, sum)',
       tests: [['per_crop is beans 7, kale 5, tomatoes 12.4', 'isTRUE(all.equal(as.vector(per_crop), c(7, 5, 12.4))) && identical(names(per_crop), c("beans", "kale", "tomatoes"))']],
     }),
+    task('hard', 'Capital first letter only', {
+      prompt: 'Make `tidy` each crop with a capital first letter and small letters after it, like `"Tomatoes"`.',
+      starter: 'crop <- c("kale", "BEANS", "tOMATOES")\n',
+      hint: 'Take the first letter with `substr(crop, 1, 1)` and the rest with `substr(crop, 2, nchar(crop))`, change each, then `paste0()`.',
+      solution: 'crop <- c("kale", "BEANS", "tOMATOES")\ntidy <- paste0(toupper(substr(crop, 1, 1)), tolower(substr(crop, 2, nchar(crop))))',
+      tests: [['tidy is Kale, Beans, Tomatoes', isTexts('tidy', 'Kale', 'Beans', 'Tomatoes')]],
+    }),
     task('expert', 'Emails', {
       prompt: 'Emails are not case-sensitive, so make `emails` trimmed and small letters, then `n_people` the number of different people.',
       starter: 'emails <- c("Ana@Example.org", " ana@example.org", "BEN@example.org", "cy@example.org ")\n',
       hint: 'Clean with `tolower(trimws())`, then `length(unique(emails))`.',
       solution: 'emails <- c("Ana@Example.org", " ana@example.org", "BEN@example.org", "cy@example.org ")\nemails <- tolower(trimws(emails))\nn_people <- length(unique(emails))',
       tests: [['emails is cleaned', 'identical(emails, c("ana@example.org", "ana@example.org", "ben@example.org", "cy@example.org"))'], ['n_people is 3', near('n_people', 3)]],
+    }),
+    task('expert', 'Not on the list', {
+      prompt: 'Clean the crops (spaces, small letters), then make `unknown` the cleaned values that aren\'t in `allowed`, each listed once.',
+      starter: 'crop <- c(" Kale", "beans", "Courgette", "KALE", "bean", "courgette ")\nallowed <- c("kale", "beans", "courgettes")\n',
+      hint: '`cleaned <- tolower(trimws(crop))`, then `unique(cleaned[!cleaned %in% allowed])`.',
+      solution: 'crop <- c(" Kale", "beans", "Courgette", "KALE", "bean", "courgette ")\nallowed <- c("kale", "beans", "courgettes")\ncleaned <- tolower(trimws(crop))\nunknown <- unique(cleaned[!cleaned %in% allowed])',
+      tests: [['unknown is courgette, bean', isTexts('unknown', 'courgette', 'bean')]],
     }),
   ],
   questions: [
@@ -86,8 +100,8 @@ export default makeTopic({
       { code: 'tools::toTitleCase("ana silva")', output: '[1] "Ana Silva"' }),
     mc('What does `tools::` mean in `tools::toTitleCase()`?', ['A comment', 'The function comes from the tools package', 'A typo', 'It makes the function faster'], 1,
       '`package::function` calls a function from a package without loading the whole package.'),
-    mc('What does `trimws("  a  b  ")` give?', ['`"a  b"`', '`"a b"`', '`"ab"`', '`"  a  b  "`'], 0,
-      '`trimws()` only removes the spaces at the ends. Use `gsub(" +", " ", x)` for the ones inside.',
+    mc('Why does `trimws("  a  b  ")` keep the spaces between a and b?', ['trimws() only removes spaces at the start and the end', 'It removes one space at a time', 'Spaces inside count as letters', 'It removes them all'], 0,
+      'Use `gsub(" +", " ", x)` to squeeze the spaces inside.',
       { code: 'trimws("  a  b  ")', output: '[1] "a  b"' }),
     mc('Which finds spelling variants like "courgette" and "courgettes"?', ['`trimws()`', 'Looking at `table()` or `sort(unique(x))`', '`tolower()`', '`as.numeric()`'], 1,
       'Variants don\'t follow a rule, so you have to look.'),

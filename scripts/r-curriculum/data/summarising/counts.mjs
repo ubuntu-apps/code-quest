@@ -1,5 +1,5 @@
 // Summarising data: Counts and percentages.
-import { code, isText, makeTopic, mc, near, prints, qShort, same, snippet, task, uses } from '../_builders.mjs'
+import { code, isText, isTexts, makeTopic, mc, near, prints, qShort, same, snippet, task, uses } from '../_builders.mjs'
 import { ORDERS } from '../datasets.mjs'
 
 export default makeTopic({
@@ -16,7 +16,7 @@ export default makeTopic({
     'Use a factor with ordered levels when the order matters, such as sizes S, M, L: `table(factor(orders$size, levels = c("S", "M", "L")))`.',
   ],
   sandboxCode: ORDERS + 'table(orders$drink)\nround(prop.table(table(orders$drink)) * 100)\nmean(orders$price > 3)',
-  sandboxSnippets: [snippet('Sizes in order', ORDERS + 'table(factor(orders$size, levels = c("S", "M", "L")))')],
+  sandboxSnippets: [snippet('Sizes in order', ORDERS + 'table(factor(orders$size, levels = c("S", "M", "L")))'), snippet('Counts and percentages', ORDERS + 'counts <- table(orders$drink)\ncounts\nround(prop.table(counts) * 100)'), snippet('The share that match', ORDERS + 'mean(orders$price > 3) * 100')],
   readMore: { label: 'R documentation: prop.table()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/proportions.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Orders per drink', {
@@ -55,6 +55,7 @@ export default makeTopic({
       tests: [['pct_over_3 is 60', near('pct_over_3', 60)]],
     }),
     task('medium', 'The most popular', {
+      alt: (s) => s.replace('drink = c("latte", "tea", "mocha", "latte", "latte", "tea", "chai", "latte", "mocha", "tea")', 'drink = c("tea", "tea", "mocha", "latte", "tea", "tea", "chai", "latte", "mocha", "tea")'),
       prompt: 'Make `top_drink` the most ordered drink.',
       starter: ORDERS,
       hint: '`names(which.max(table(orders$drink)))`',
@@ -68,12 +69,26 @@ export default makeTopic({
       solution: ORDERS + 'drink_pct <- sort(round(prop.table(table(orders$drink)) * 100, 1), decreasing = TRUE)',
       tests: [['drink_pct is latte 40, tea 30, mocha 20, chai 10', 'identical(as.vector(drink_pct), c(40, 30, 20, 10)) && identical(names(drink_pct), c("latte", "tea", "mocha", "chai"))']],
     }),
+    task('hard', 'Large and dear', {
+      prompt: 'Make `pct_large` the percentage of all orders that are size `L` **and** cost over 3.50.',
+      starter: ORDERS,
+      hint: 'Combine the two conditions with `&`; the mean of TRUE/FALSE is a share, times 100.',
+      solution: ORDERS + 'pct_large <- mean(orders$size == "L" & orders$price > 3.5) * 100',
+      tests: [['pct_large is 30', near('pct_large', 30)]],
+    }),
     task('expert', 'A sentence for the report', {
       prompt: 'Show `latte: 40% of orders`, working out the drink and the percentage in R.',
       starter: ORDERS,
       hint: 'Find the top drink and its share, then `cat(top, ": ", pct, "% of orders\\n", sep = "")`.',
       solution: ORDERS + 'counts <- table(orders$drink)\ntop <- names(which.max(counts))\npct <- round(max(counts) / sum(counts) * 100)\ncat(top, ": ", pct, "% of orders\\n", sep = "")',
       tests: [['Shows latte: 40% of orders', prints('latte: 40% of orders')], ['Works it out with table()', uses('table(')]],
+    }),
+    task('expert', 'Counts with percentages', {
+      prompt: 'Make `report` one text per drink like `"latte: 4 (40%)"`, most common drink first, with whole-number percentages.',
+      starter: ORDERS,
+      hint: 'Sort the counts: `counts <- sort(table(orders$drink), decreasing = TRUE)`. Then `paste0(names(counts), ": ", counts, " (", round(counts / sum(counts) * 100), "%)")`.',
+      solution: ORDERS + 'counts <- sort(table(orders$drink), decreasing = TRUE)\nreport <- paste0(names(counts), ": ", counts, " (", round(counts / sum(counts) * 100), "%)")',
+      tests: [['report has the four lines', isTexts('report', 'latte: 4 (40%)', 'tea: 3 (30%)', 'mocha: 2 (20%)', 'chai: 1 (10%)')]],
     }),
   ],
   questions: [
@@ -93,8 +108,8 @@ export default makeTopic({
     mc('What does `mean(c(2.5, 3.4, 4.2) > 3) * 100` give?', ['`66.7`', '`66.66667`', '`2`', '`3.37`'], 1,
       'Two of three are over 3: 66.67%, shown with R\'s usual 7 digits.',
       { code: 'mean(c(2.5, 3.4, 4.2) > 3) * 100', output: '[1] 66.66667' }),
-    mc('What order does `table()` list text values in?', ['The order they appear', 'Alphabetical', 'Most common first', 'Random'], 1,
-      'Text is sorted alphabetically, unless it is a factor with its own levels.'),
+    mc('Why sort a table of counts before you report it?', ['Readers see the most common values first instead of an alphabetical list', 'table() needs it', 'It changes the counts', 'Sorting adds the percentages'], 0,
+      '`sort(table(x), decreasing = TRUE)` puts the biggest count first.'),
     mc('Why is `mode(x)` no use for finding the most common value?', ['It gives the storage type, such as "numeric"', 'It needs `na.rm = TRUE`', 'It only works on text', 'It sorts the values'], 0,
       'Use `names(which.max(table(x)))` for the most common value.',
       { code: 'mode(c(3, 3, 5))', output: '[1] "numeric"' }),

@@ -22,6 +22,7 @@ export default makeProject('medium', {
       tests: [['means is the mean per compost', sameFrame('means', 'aggregate(height_cm ~ compost, data = seedlings, FUN = mean)')]],
     }),
     task('easy', 'Best from the table', {
+      alt: (s) => s.replace('height_cm = c(8.2, 7.5, 9.1, 8.0,', 'height_cm = c(12.2, 11.5, 13.1, 12.0,'),
       prompt: 'Make `best` the compost with the highest mean height, read from the `means` data frame.',
       starter: SEEDLINGS + 'means <- aggregate(height_cm ~ compost, data = seedlings, FUN = mean)\n',
       hint: 'The row with the largest mean: `means$compost[which.max(means$height_cm)]`.',

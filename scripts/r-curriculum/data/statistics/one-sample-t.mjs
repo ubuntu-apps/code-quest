@@ -17,7 +17,7 @@ export default makeTopic({
     'By default the test is two-sided: too heavy and too light both count. If only one direction matters, say so: `alternative = "less"` tests whether the true mean is below `mu`.',
   ],
   sandboxCode: LOAVES + 't.test(loaf, mu = 500)',
-  sandboxSnippets: [snippet('Just the numbers', LOAVES + 'res <- t.test(loaf, mu = 500)\nround(c(t = unname(res$statistic), p = res$p.value), 3)')],
+  sandboxSnippets: [snippet('Just the numbers', LOAVES + 'res <- t.test(loaf, mu = 500)\nround(c(t = unname(res$statistic), p = res$p.value), 3)'), snippet('One side or two', LOAVES + 't.test(loaf, mu = 500)$p.value\nt.test(loaf, mu = 500, alternative = "less")$p.value'), snippet('Many claims at once', LOAVES + 'claims <- c(490, 495, 500)\nsapply(claims, function(m) t.test(loaf, mu = m)$p.value)')],
   readMore: { label: 'R documentation: t.test()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/t.test.html', source: 'R documentation' },
   challenges: [
     task('easy', 'The p-value', {
@@ -69,11 +69,25 @@ export default makeTopic({
       solution: LOAVES + 'res <- t.test(loaf, mu = 500)\ncat("mean ", round(mean(loaf), 1), " g, p = ", round(res$p.value, 3), "\\n", sep = "")',
       tests: [['Shows the line', prints('mean 495.8 g, p = 0.034')]],
     }),
+    task('hard', 'Without the outlier', {
+      prompt: 'The firm promises a mean of 30 minutes. Make `p_clean` the p-value of a t-test of that promise, leaving out deliveries of an hour or more.',
+      starter: MINUTES,
+      hint: '`t.test(minutes[minutes < 60], mu = 30)$p.value`',
+      solution: MINUTES + 'p_clean <- t.test(minutes[minutes < 60], mu = 30)$p.value',
+      tests: [['p_clean is right', near('p_clean', 't.test(minutes[minutes < 60], mu = 30)$p.value')]],
+    }),
     task('expert', 'False alarms', {
       prompt: 'If the claim is true, how often does p < 0.05 happen anyway? Set the seed to 8 and make `false_alarms` the share of 1000 samples of 10 loaves from `rnorm(10, 500, 6)` (where the claim is true) with p < 0.05. It should be near 0.05.',
       hint: '`replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05)`, then `mean()`.',
       solution: 'set.seed(8)\nfalse_alarms <- mean(replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05))',
       tests: [['false_alarms matches seed 8', near('false_alarms', 'local({ set.seed(8); mean(replicate(1000, t.test(rnorm(10, 500, 6), mu = 500)$p.value < 0.05)) })')], ['It is near 0.05', 'abs(false_alarms - 0.05) < 0.025']],
+    }),
+    task('expert', 'Which claims fit', {
+      prompt: 'Make `fits` the claimed means in `claims` that a t-test does **not** reject at the 5% level (p of 0.05 or more).',
+      starter: LOAVES + 'claims <- c(490, 495, 500, 505)\n',
+      hint: '`p <- sapply(claims, function(m) t.test(loaf, mu = m)$p.value)`, then `claims[p >= 0.05]`.',
+      solution: LOAVES + 'claims <- c(490, 495, 500, 505)\np <- sapply(claims, function(m) t.test(loaf, mu = m)$p.value)\nfits <- claims[p >= 0.05]',
+      tests: [['fits is 495', near('fits', 495)]],
     }),
   ],
   questions: [
@@ -83,8 +97,8 @@ export default makeTopic({
       'It is about the data, assuming the claim.'),
     mc('p = 0.65 for the claim "the mean is 495 g". What can you say?', ['The mean is 495 g', 'The data give no clear evidence against the claim', 'The claim is false', 'The test failed'], 1,
       'A large p-value is not proof.'),
-    mc('Which is the usual convention for "statistically significant"?', ['p > 0.05', 'p < 0.05', 'p = 1', 'p < 0.5'], 1,
-      'A convention, not a law of nature: 0.049 and 0.051 are about equally strong.'),
+    mc('Why use `t.test()` instead of just checking whether the mean is below 500?', ['A sample mean wobbles from sample to sample; the test says whether the gap is bigger than that wobble', 'The mean can\'t be worked out', 't.test() is shorter to type', 'There is no reason'], 0,
+      'A mean of 495.8 from 10 loaves could happen even if the true mean were 500.'),
     mc('What does `mu = 500` set in `t.test(loaf, mu = 500)`?', ['The sample size', 'The claimed true mean', 'The standard deviation', 'The seed'], 1,
       'Without it, `mu` is 0.'),
     mc('Why is the one-sided p (0.017) half the two-sided p (0.034)?', ['A rounding error', 'Two-sided counts surprises in both directions; one-sided counts only "too light"', 'One-sided uses fewer loaves', 'It is a different test'], 1,

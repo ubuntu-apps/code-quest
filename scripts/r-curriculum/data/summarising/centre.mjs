@@ -1,5 +1,5 @@
 // Summarising data: Centre: mean and median.
-import { code, makeTopic, mc, near, qShort, snippet, task, uses } from '../_builders.mjs'
+import { code, isLogical, makeTopic, mc, near, qShort, snippet, task, uses } from '../_builders.mjs'
 import { DELIVERIES } from '../datasets.mjs'
 
 export default makeTopic({
@@ -15,7 +15,7 @@ export default makeTopic({
     'And always remember `na.rm = TRUE` when a column has gaps, or the answer is `NA`.',
   ],
   sandboxCode: DELIVERIES + 'mean(deliveries$minutes)\nmedian(deliveries$minutes)\nmean(deliveries$minutes, trim = 0.1)',
-  sandboxSnippets: [snippet('Without the flat tyre', DELIVERIES + 'mean(deliveries$minutes[deliveries$minutes < 60])')],
+  sandboxSnippets: [snippet('Without the flat tyre', DELIVERIES + 'mean(deliveries$minutes[deliveries$minutes < 60])'), snippet('One long delivery', DELIVERIES + 'm <- deliveries$minutes\nmean(m)\nmedian(m)\nmean(m[m < 60])'), snippet('A trimmed mean', 'x <- c(10, 20, 30, 40, 1000)\nmean(x)\nmean(x, trim = 0.2)')],
   readMore: { label: 'R documentation: mean()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/mean.html', source: 'R documentation' },
   challenges: [
     task('easy', 'The mean time', {
@@ -67,12 +67,28 @@ export default makeTopic({
       solution: 'minutes <- c(24, 31, NA, 27, 35, 29)\navg <- round(mean(minutes, na.rm = TRUE), 1)',
       tests: [['avg is 29.2', near('avg', 29.2)]],
     }),
+    task('hard', 'What one delivery does', {
+      prompt: 'Make `shift` how much the longest delivery raises the mean: the mean of all the times minus the mean without the longest one, rounded to 1 decimal place.',
+      starter: DELIVERIES,
+      alt: (s) => s.replace('74', '58'),
+      hint: '`m[-which.max(m)]` leaves out the longest time.',
+      solution: DELIVERIES + 'm <- deliveries$minutes\nshift <- round(mean(m) - mean(m[-which.max(m)]), 1)',
+      tests: [['shift is 3.9', near('shift', 3.9)]],
+    }),
     task('expert', 'Mean and median side by side', {
       prompt: 'Make `centres` a named vector with the mean (rounded to 1 decimal place) and the median of the times, named `mean` and `median`.',
       starter: DELIVERIES,
       hint: '`c(mean = round(mean(deliveries$minutes), 1), median = median(deliveries$minutes))`',
       solution: DELIVERIES + 'centres <- c(mean = round(mean(deliveries$minutes), 1), median = median(deliveries$minutes))',
       tests: [['centres is mean 31.6, median 28', 'isTRUE(all.equal(centres, c(mean = 31.6, median = 28)))']],
+    }),
+    task('expert', 'Is it skewed', {
+      prompt: 'Make `skewed` TRUE when the mean delivery time is more than 10% above the median, and FALSE otherwise.',
+      starter: DELIVERIES,
+      alt: (s) => s.replace('74', '30'),
+      hint: '10% above the median is `1.1 * median(...)`. Compare the mean with it.',
+      solution: DELIVERIES + 'skewed <- mean(deliveries$minutes) > 1.1 * median(deliveries$minutes)',
+      tests: [['skewed is TRUE', isLogical('skewed', true)]],
     }),
   ],
   questions: [
@@ -87,8 +103,8 @@ export default makeTopic({
     mc('What does `mean(c(1, 2, 3, 4, 100), trim = 0.2)` give?', ['`22`', '`3`', '`2.5`', '`36.33`'], 1,
       'Trimming 20% drops the 1 and the 100, leaving the mean of 2, 3 and 4.',
       { code: 'mean(c(1, 2, 3, 4, 100), trim = 0.2)', output: '[1] 3' }),
-    mc('What does `median(c(5, NA, 9))` give?', ['`7`', '`NA`', '`5`', '`9`'], 1,
-      'Without `na.rm = TRUE`, a gap makes the answer NA.',
+    mc('Why does `median(c(5, NA, 9))` give NA?', ['The missing value could be the middle one, so R can\'t say', 'median() skips NAs', 'NA is the smallest value', 'It gives an error'], 0,
+      'Add `na.rm = TRUE`, and report how many were missing.',
       { code: 'median(c(5, NA, 9))', output: '[1] NA' }),
     mc('When are the mean and the median about the same?', ['Never', 'When values are spread evenly around the middle', 'When there are no NAs', 'When there are many values'], 1,
       'Extreme values on one side pull the mean away from the median.'),

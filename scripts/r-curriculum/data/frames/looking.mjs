@@ -1,5 +1,5 @@
 // Data frames: Looking at a data frame.
-import { code, isTexts, makeTopic, mc, near, prints, qShort, snippet, task, uses } from '../_builders.mjs'
+import { code, isText, isTexts, makeTopic, mc, near, prints, qShort, snippet, task, uses } from '../_builders.mjs'
 import { TRIPS } from '../datasets.mjs'
 
 export default makeTopic({
@@ -17,6 +17,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('The whole table', TRIPS + 'trips'),
     snippet('Size', TRIPS + 'dim(trips)\nncol(trips)'),
+    snippet('Size at a glance', TRIPS + 'dim(trips)\nnrow(trips)\nncol(trips)'),
+    snippet('summary() of a table', TRIPS + 'summary(trips)'),
   ],
   readMore: { label: 'R documentation: data.frame()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/data.frame.html', source: 'R documentation' },
   challenges: [
@@ -28,6 +30,7 @@ export default makeTopic({
       tests: [['n_trips is 8', near('n_trips', 8)], ['Uses nrow()', uses('nrow(')]],
     }),
     task('easy', 'The column names', {
+      typedOk: true,
       prompt: 'Make `columns` the column names of `trips`.',
       starter: TRIPS,
       hint: '`columns <- names(trips)`',
@@ -66,11 +69,20 @@ export default makeTopic({
       ],
     }),
     task('hard', 'What type is km', {
+      typedOk: true,
       prompt: 'Make `km_class` the class of the `km` column. (Write `trips$km` to get the column; the next stages say more.)',
       starter: TRIPS,
       hint: '`km_class <- class(trips$km)`',
       solution: TRIPS + 'km_class <- class(trips$km)',
       tests: [['km_class is "numeric"', 'identical(km_class, "numeric")']],
+    }),
+    task('hard', 'Say how big it is', {
+      prompt: 'Make `size_text` a text like `"8 trips, 5 columns"`, letting R count the rows and columns.',
+      starter: TRIPS,
+      alt: 'trips <- data.frame(id = 1:3, station = c("Park", "River", "Park"), minutes = c(10, 20, 30))\n',
+      hint: '`paste(nrow(trips), "trips,", ncol(trips), "columns")`',
+      solution: TRIPS + 'size_text <- paste(nrow(trips), "trips,", ncol(trips), "columns")',
+      tests: [['size_text is 8 trips, 5 columns', isText('size_text', '8 trips, 5 columns')]],
     }),
     task('expert', 'A one-line summary', {
       prompt: 'Show `trips has 8 rows and 5 columns`, letting R work out both numbers.',
@@ -78,6 +90,14 @@ export default makeTopic({
       hint: '`cat("trips has", nrow(trips), "rows and", ncol(trips), "columns\\n")`',
       solution: TRIPS + 'cat("trips has", nrow(trips), "rows and", ncol(trips), "columns\\n")',
       tests: [['Shows the line', prints('trips has 8 rows and 5 columns')], ['Works out the numbers', uses('nrow(') + ' && ' + uses('ncol(')]],
+    }),
+    task('expert', 'The last column', {
+      prompt: 'Make `last_col` the name of the last column, in a way that works for any table.',
+      starter: TRIPS,
+      alt: 'trips <- data.frame(id = 1:3, station = c("Park", "River", "Park"), minutes = c(10, 20, 30))\n',
+      hint: '`names(trips)` is a vector, and `ncol(trips)` is the position of its last value.',
+      solution: TRIPS + 'last_col <- names(trips)[ncol(trips)]',
+      tests: [['last_col is member', isText('last_col', 'member')]],
     }),
   ],
   questions: [
@@ -96,9 +116,8 @@ export default makeTopic({
       '`head()` shows 6 rows unless you give a number.'),
     mc('In `str()`, what does `chr` mean for a column?', ['A number', 'Text', 'TRUE/FALSE', 'A date'], 1,
       '`chr` is character: text.'),
-    mc('What does `class(data.frame(x = 1))` give?', ['`"list"`', '`"table"`', '`"data.frame"`', '`"numeric"`'], 2,
-      'A data frame is its own type.',
-      { code: 'class(data.frame(x = 1))', output: '[1] "data.frame"' }),
+    mc('Why look at `str()` before working with a new table?', ['It shows each column\'s type, so numbers stored as text are caught early', 'It sorts the table', 'It fixes the column types', 'R needs it first'], 0,
+      'A `chr` where you expected `num` means something in the data needs cleaning.'),
     mc('A column of prices shows as `chr` in `str()`. What does that mean?', ['It is fine', 'The prices are stored as text and must be converted before maths', 'The column is empty', 'The prices are rounded'], 1,
       'Text can\'t be added up; `as.numeric()` fixes it.'),
     qShort('Which function shows each column of a data frame with its type?', 'str',

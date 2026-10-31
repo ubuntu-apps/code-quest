@@ -17,7 +17,7 @@ export default makeTopic({
     code('rows <- lapply(names(parts), function(a) data.frame(area = a, n = nrow(parts[[a]]), mean = mean(parts[[a]]$minutes)))', 'do.call(rbind, rows)'),
   ],
   sandboxCode: DELIVERIES + 'by_rider <- split(deliveries$minutes, deliveries$rider)\nby_rider\nsapply(by_rider, mean)',
-  sandboxSnippets: [snippet('Split a data frame', DELIVERIES + PARTS + 'parts$south\nsapply(parts, nrow)')],
+  sandboxSnippets: [snippet('Split a data frame', DELIVERIES + PARTS + 'parts$south\nsapply(parts, nrow)'), snippet('Split, apply, combine', DELIVERIES + PARTS + 'sapply(parts, function(d) mean(d$minutes))'), snippet('Back to one table', DELIVERIES + PARTS + 'back <- do.call(rbind, parts)\nhead(back)')],
   readMore: { label: 'R documentation: split()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/split.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Minutes per rider', {
@@ -69,12 +69,26 @@ export default makeTopic({
       solution: DELIVERIES + PARTS + 'rows <- lapply(names(parts), function(a) data.frame(area = a, n = nrow(parts[[a]]), mean = round(mean(parts[[a]]$minutes), 1)))\nsummary_tab <- do.call(rbind, rows)',
       tests: [['summary_tab is north 6 23.2, south 6 40', sameFrame('summary_tab', 'data.frame(area = c("north", "south"), n = c(6, 6), mean = c(23.2, 40))')]],
     }),
+    task('hard', 'Share of long ones', {
+      prompt: 'Make `late_share` the share of deliveries over 30 minutes in each area, using the parts.',
+      starter: DELIVERIES + PARTS,
+      hint: '`sapply(parts, function(d) mean(d$minutes > 30))`',
+      solution: DELIVERIES + PARTS + 'late_share <- sapply(parts, function(d) mean(d$minutes > 30))',
+      tests: [['late_share is north 0, south 5/6', same('late_share', 'c(north = 0, south = 5 / 6)')]],
+    }),
     task('expert', 'Each rider\'s quickest trip', {
       prompt: 'Make `quickest` a data frame with each rider\'s fastest delivery: the whole row, one per rider.',
       starter: DELIVERIES,
       hint: 'Split by rider, take `d[which.min(d$minutes), ]` from each part with `lapply()`, and stack with `do.call(rbind, …)`.',
       solution: DELIVERIES + 'quick <- lapply(split(deliveries, deliveries$rider), function(d) d[which.min(d$minutes), ])\nquickest <- do.call(rbind, quick)',
       tests: [['quickest is Kit 22, Ola 26, Sam 19, with their areas', sameFrame('quickest', 'deliveries[c(7, 11, 3), ]')]],
+    }),
+    task('expert', 'Rank within each area', {
+      prompt: 'Add a column `rank`: each delivery\'s rank by minutes within its own area (1 is the quickest).',
+      starter: DELIVERIES + PARTS,
+      hint: '`ranks <- lapply(parts, function(d) rank(d$minutes))`, then `unsplit(ranks, deliveries$area)` puts the values back in the original row order.',
+      solution: DELIVERIES + PARTS + 'ranks <- lapply(parts, function(d) rank(d$minutes))\ndeliveries$rank <- unsplit(ranks, deliveries$area)',
+      tests: [['rank is right in every area', 'isTRUE(all.equal(deliveries$rank, ave(deliveries$minutes, deliveries$area, FUN = rank)))']],
     }),
   ],
   questions: [
@@ -86,9 +100,8 @@ export default makeTopic({
     mc('What does `do.call(rbind, list(data.frame(x = 1), data.frame(x = 2)))` do?', ['Stacks the two data frames', 'Makes a list', 'Adds the numbers', 'An error'], 0,
       'It is `rbind()` called with every item of the list.',
       { code: 'do.call(rbind, list(data.frame(x = 1), data.frame(x = 2)))$x', output: '[1] 1 2' }),
-    mc('What does `do.call(sum, list(1, 2, 3))` give?', ['`6`', '`list(1, 2, 3)`', '`3`', 'An error'], 0,
-      'The same as `sum(1, 2, 3)`.',
-      { code: 'do.call(sum, list(1, 2, 3))', output: '[1] 6' }),
+    mc('Why use `do.call(rbind, parts)` rather than `rbind(parts)`?', ['do.call() passes each table in the list to rbind() as its own argument', 'rbind(parts) is slower', 'do.call() sorts them', 'They are the same'], 0,
+      '`rbind(parts)` would get one argument: the whole list.'),
     mc('When is splitting yourself better than `tapply()`?', ['Never', 'When each group needs more than one column or more than one value back', 'Always', 'For one mean per group'], 1,
       '`tapply()` is shorter for one column and one summary.'),
     mc('In what order does `split()` put the groups of a text column?', ['As they appear', 'Alphabetical', 'Largest first', 'At random'], 1,

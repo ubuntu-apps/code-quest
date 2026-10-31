@@ -1,5 +1,5 @@
 // Reshaping and combining: Wide and long.
-import { code, makeTopic, mc, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
+import { code, makeTopic, mc, near, qShort, sameFrame, snippet, task, uses } from '../_builders.mjs'
 import { RAIN } from './shape-data.mjs'
 
 const LONG = 'long <- data.frame(\n  town = rep(rain$town, times = 3),\n  month = rep(c("jan", "feb", "mar"), each = 3),\n  mm = c(rain$jan, rain$feb, rain$mar)\n)\n'
@@ -18,7 +18,7 @@ export default makeTopic({
     'To go back to wide, `reshape(long, direction = "wide", idvar = "town", timevar = "month")` gives columns `mm.jan`, `mm.feb`, `mm.mar`. For a grid of numbers, `tapply(long$mm, list(long$town, long$month), sum)` gives a matrix. Text columns become alphabetical, so make month a factor with `levels = c("jan", "feb", "mar")` to keep calendar order.',
   ],
   sandboxCode: RAIN + LONG + 'long\ntapply(long$mm, long$month, sum)',
-  sandboxSnippets: [snippet('With reshape()', RAIN + RESHAPE), snippet('Back to wide', RAIN + LONG + 'reshape(long, direction = "wide", idvar = "town", timevar = "month")')],
+  sandboxSnippets: [snippet('With reshape()', RAIN + RESHAPE), snippet('Back to wide', RAIN + LONG + 'reshape(long, direction = "wide", idvar = "town", timevar = "month")'), snippet('A grid back to a table', RAIN + LONG + 'grid <- tapply(long$mm, list(long$town, long$month), sum)\ngrid[, c("jan", "feb", "mar")]')],
   readMore: { label: 'R documentation: reshape()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/stats/html/reshape.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Long by hand', {
@@ -70,6 +70,13 @@ export default makeTopic({
       solution: RAIN + LONG + 'wide <- reshape(long, direction = "wide", idvar = "town", timevar = "month")\nnames(wide) <- sub("mm.", "", names(wide), fixed = TRUE)',
       tests: [['wide matches rain', sameFrame('wide', 'rain')]],
     }),
+    task('hard', 'Share of the quarter', {
+      prompt: 'In `long`, add a column `pct`: each month\'s rain as a percentage of that town\'s total for the three months, rounded to whole numbers.',
+      starter: RAIN + LONG,
+      hint: '`totals <- tapply(long$mm, long$town, sum)` is named by town, so `totals[long$town]` gives each row its town\'s total. Use `as.vector()` to drop the names.',
+      solution: RAIN + LONG + 'totals <- tapply(long$mm, long$town, sum)\nlong$pct <- as.vector(round(100 * long$mm / totals[long$town]))',
+      tests: [['pct is right', near('as.vector(long$pct)', 'c(41, 39, 41, 31, 33, 32, 28, 29, 27)')]],
+    }),
     task('expert', 'January to March', {
       prompt: 'Using `long`, make `change` a data frame with the columns `town` and `change`: each town\'s March rainfall minus its January rainfall.',
       starter: RAIN + LONG,
@@ -77,15 +84,22 @@ export default makeTopic({
       solution: RAIN + LONG + 'm <- merge(long[long$month == "jan", ], long[long$month == "mar", ], by = "town")\nchange <- data.frame(town = m$town, change = m$mm.y - m$mm.x)',
       tests: [['change is Ashby -25, Brook -17, Corran -32', sameFrame('change', 'data.frame(town = c("Ashby", "Brook", "Corran"), change = c(-25, -17, -32))')]],
     }),
+    task('expert', 'Wide again, by hand', {
+      prompt: 'Without `reshape()`, make `wide` the same table as `rain`: a `town` column and then `jan`, `feb` and `mar`, from `long`.',
+      starter: RAIN + LONG,
+      alt: (s) => s.replace('80, 65, 92', '70, 85, 62'),
+      hint: '`grid <- tapply(long$mm, list(long$town, long$month), sum)` has the months in alphabetical order; pick `grid[, c("jan", "feb", "mar")]`, then `data.frame(town = rownames(grid), ..., row.names = NULL)`.',
+      solution: RAIN + LONG + 'grid <- tapply(long$mm, list(long$town, long$month), sum)[, c("jan", "feb", "mar")]\nwide <- data.frame(town = rownames(grid), grid, row.names = NULL)',
+      tests: [['wide is the same as rain', sameFrame('wide', 'rain')]],
+    }),
   ],
   questions: [
     mc('Which layout has one row per measurement?', ['Wide', 'Long', 'Both', 'Neither'], 1,
       'Long: a column says what was measured (town, month), one column holds the value.'),
     mc('Why is long often easier to analyse?', ['It is shorter', 'Grouping, filtering and adding new data use the usual tools, without working across columns', 'It is sorted', 'R can\'t use wide data'], 1,
       'A new month is new rows, not a new column.'),
-    mc('What does `rep(c("a", "b"), times = 2)` give?', ['`[1] "a" "b" "a" "b"`', '`[1] "a" "a" "b" "b"`', '`[1] "a" "b"`', '`[1] "ab" "ab"`'], 0,
-      '`times` repeats the whole vector; `each` repeats each value.',
-      { code: 'rep(c("a", "b"), times = 2)', output: '[1] "a" "b" "a" "b"' }),
+    mc('Why does `rep(rain$town, times = 3)` line up with `c(rain$jan, rain$feb, rain$mar)`?', ['Both go through the three towns once per month, in the same order', 'rep() sorts them', 'c() repeats the towns', 'They don\'t line up'], 0,
+      'Long data built by hand only works when every column follows the same order.'),
     mc('What does `rep(c("a", "b"), each = 2)` give?', ['`[1] "a" "b" "a" "b"`', '`[1] "a" "a" "b" "b"`', '`[1] "a" "b"`', '`[1] "aa" "bb"`'], 1,
       'Each value twice, in turn.',
       { code: 'rep(c("a", "b"), each = 2)', output: '[1] "a" "a" "b" "b"' }),

@@ -14,7 +14,7 @@ export default makeTopic({
     'To check a whole column at once: `suppressWarnings(as.numeric(x))` gives NA for the values that still aren\'t numbers, and `x[is.na(that)]` shows you which they are.',
   ],
   sandboxCode: 'price <- c("$3.40", "$12.00", "$1,250.50", " $8 ")\nprice <- gsub("$", "", price, fixed = TRUE)\nprice <- gsub(",", "", price, fixed = TRUE)\nas.numeric(trimws(price))',
-  sandboxSnippets: [snippet('Find what is still wrong', 'x <- c("12", "8 kg", "15", "n/a")\nnums <- suppressWarnings(as.numeric(x))\nx[is.na(nums)]')],
+  sandboxSnippets: [snippet('Find what is still wrong', 'x <- c("12", "8 kg", "15", "n/a")\nnums <- suppressWarnings(as.numeric(x))\nx[is.na(nums)]'), snippet('Brackets for minus', 'raw <- c("12.50", "(3.20)")\nneg <- grepl("(", raw, fixed = TRUE)\nx <- as.numeric(gsub("[()]", "", raw))\nifelse(neg, -x, x)'), snippet('What won\'t convert', 'raw <- c("12.4", "about 4", "9.8")\nraw[is.na(suppressWarnings(as.numeric(raw)))]')],
   readMore: { label: 'R documentation: grep, sub and gsub', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/grep.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Remove the dollar', {
@@ -66,6 +66,13 @@ export default makeTopic({
       solution: 'orders <- read.csv(text = "\nitem,price\ntea,$2.50\ncake,$4.20\nlunch,\\"$1,250.00\\"\n")\norders$price <- as.numeric(gsub("[$,]", "", orders$price))',
       tests: [['price is numeric 2.5, 4.2, 1250', 'is.numeric(orders$price) && isTRUE(all.equal(orders$price, c(2.5, 4.2, 1250)))']],
     }),
+    task('hard', 'Brackets mean minus', {
+      prompt: 'In this accounts file, a number in brackets is negative: `"(3.20)"` means -3.2. Make `amount` the numbers.',
+      starter: 'raw <- c("12.50", "(3.20)", "8.00", "(0.75)")\n',
+      hint: 'Mark the bracketed ones with `grepl("(", raw, fixed = TRUE)`, remove the brackets with `gsub("[()]", "", raw)`, then make those negative with `ifelse()`.',
+      solution: 'raw <- c("12.50", "(3.20)", "8.00", "(0.75)")\nneg <- grepl("(", raw, fixed = TRUE)\nx <- as.numeric(gsub("[()]", "", raw))\namount <- ifelse(neg, -x, x)',
+      tests: [['amount is 12.5, -3.2, 8, -0.75', near('amount', 'c(12.5, -3.2, 8, -0.75)')]],
+    }),
     task('expert', 'Grams and kilograms', {
       prompt: 'Some weights are in grams and some in kilograms. Make `kg` all of them in kilograms.',
       starter: 'raw <- c("500 g", "1.2 kg", "250 g", "2 kg")\n',
@@ -73,13 +80,20 @@ export default makeTopic({
       solution: 'raw <- c("500 g", "1.2 kg", "250 g", "2 kg")\nn <- as.numeric(sub(" .*", "", raw))\nkg <- ifelse(grepl("kg", raw), n, n / 1000)',
       tests: [['kg is 0.5, 1.2, 0.25, 2', near('kg', 'c(0.5, 1.2, 0.25, 2)')]],
     }),
+    task('expert', 'Hours and minutes', {
+      prompt: 'Make `minutes` the length of each session in minutes, from texts like `"1h 30m"`, `"45m"` and `"2h"`.',
+      starter: 'raw <- c("1h 30m", "45m", "2h", "2h 15m")\n',
+      hint: 'Hours: where there is an `h`, `as.numeric(sub("h.*", "", raw))`, else 0. Minutes: `sub(".*h ?", "", raw)` leaves `"30m"`, `"45m"` or `""`; remove the `m` and use 0 for the empty ones.',
+      solution: 'raw <- c("1h 30m", "45m", "2h", "2h 15m")\nhours <- ifelse(grepl("h", raw), as.numeric(sub("h.*", "", raw)), 0)\nrest <- sub(".*h ?", "", raw)\nmins <- ifelse(rest == "", 0, as.numeric(sub("m", "", rest)))\nminutes <- hours * 60 + mins',
+      tests: [['minutes is 90, 45, 120, 135', near('minutes', 'c(90, 45, 120, 135)')]],
+    }),
   ],
   questions: [
     mc('What does `as.numeric("$3.40")` give?', ['`3.4`', '`NA`, with a warning', '`340`', 'An error'], 1,
       'The `$` stops R reading it as a number.',
       { code: 'suppressWarnings(as.numeric("$3.40"))', output: '[1] NA' }),
-    mc('What does `gsub("$", "", "$3.40")` give?', ['`"3.40"`', '`"$3.40"`', '`""`', 'An error'], 1,
-      'In a pattern, `$` means "end of text", so nothing visible is removed. Add `fixed = TRUE`.',
+    mc('Why does `gsub("$", "", "$3.40")` leave the dollar sign in?', ['In a pattern, `$` means "the end of the text", not a dollar sign', 'gsub() can\'t remove symbols', 'The dollar is part of the number', 'It removes it'], 0,
+      'Add `fixed = TRUE` to match a real `$`.',
       { code: 'gsub("$", "", "$3.40")', output: '[1] "$3.40"' }),
     mc('What does `gsub("$", "", "$3.40", fixed = TRUE)` give?', ['`"3.40"`', '`"$3.40"`', '`"340"`', '`3.4`'], 0,
       '`fixed = TRUE` treats the pattern as plain text.',

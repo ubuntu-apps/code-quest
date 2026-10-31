@@ -88,11 +88,43 @@ const SQL_KEYS: CodeKey[] = [
   UNINDENT,
 ]
 
-export type KeyBarLanguage = 'python' | 'sql'
+/**
+ * The same for R: the arrow `<-` first, since it is two awkward keys, then `$` for columns,
+ * `%in%` and `~` (formulas), which sit far away on a phone keyboard.
+ */
+const R_KEYS: CodeKey[] = [
+  text('<-', 'Assignment arrow'),
+  PARENS,
+  DOUBLE_QUOTES,
+  { label: '[ ]', aria: 'Square brackets', kind: 'pair', open: '[', close: ']' },
+  text('$', 'Dollar'),
+  text(','),
+  text('=', 'Equals'),
+  text('.', 'Dot'),
+  text('_', 'Underscore'),
+  text(':'),
+  text('~', 'Tilde'),
+  text('%in%'),
+  text('#'),
+  { label: '{ }', aria: 'Curly braces', kind: 'pair', open: '{', close: '}' },
+  text('+'),
+  text('-'),
+  text('*'),
+  text('/'),
+  text('<'),
+  text('>'),
+  text('!'),
+  text('&'),
+  text('|'),
+  INDENT,
+  UNINDENT,
+]
+
+export type KeyBarLanguage = 'python' | 'sql' | 'r'
 
 /** The keys for a course; a one-line answer box gets no indent keys. */
 function keysFor(language: KeyBarLanguage, variant: 'code' | 'answer'): CodeKey[] {
-  const keys = language === 'sql' ? SQL_KEYS : PYTHON_KEYS
+  const keys = language === 'sql' ? SQL_KEYS : language === 'r' ? R_KEYS : PYTHON_KEYS
   return variant === 'answer' ? keys.filter((key) => key.kind !== 'tab' && key.kind !== 'untab') : keys
 }
 

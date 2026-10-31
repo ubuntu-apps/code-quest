@@ -7,7 +7,7 @@ export default makeTopic({
   paragraphs: [
     "Every `.py` file is a module. Put some functions in a file called `greetings.py`, and any other program in the same folder can `import greetings` and use them. The module's name is the file name without `.py`.",
     "```\n# greetings.py\ndef hello(name):\n    return f\"Hello, {name}!\"\n\nLANGUAGES = [\"en\", \"es\", \"fr\"]\n```",
-    "```\n# main.py, in the same folder\nimport greetings\n\nprint(greetings.hello(\"Ana\"))   # Hello, Ana!\nprint(greetings.LANGUAGES)      # ['en', 'es', 'fr']\n```",
+    "```text\n# main.py, in the same folder\nimport greetings\n\nprint(greetings.hello(\"Ana\"))   # Hello, Ana!\nprint(greetings.LANGUAGES)      # ['en', 'es', 'fr']\n```",
     "Splitting code into modules keeps each file short and about one thing, and lets several programs share the same code: fix a bug in `greetings.py` and every program that imports it gets the fix. A module name must work as a Python name, so `my_tools.py` is fine but `my-tools.py` can't be imported. Don't name your file after a standard module either: a `random.py` of your own would be imported instead of the real one.",
     "When Python imports a module, it runs the whole file from top to bottom, once. Every function and variable the file defines becomes part of the module. That means a `print` at the top level of a module runs during the import, which is why modules usually just **define** things and leave the doing to the program that imports them. Importing it a second time doesn't run it again: Python reuses the module it already loaded.",
     "You can try this here: the code below writes a module file, then imports it.",

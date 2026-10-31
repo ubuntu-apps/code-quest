@@ -18,6 +18,8 @@ export default makeTopic({
   sandboxSnippets: [
     snippet('Numbers as answers', 'minutes <- c(12, 47, 30)\nifelse(minutes > 30, minutes * 0.15, 0)'),
     snippet('NA stays NA', 'x <- c(5, NA, 12)\nifelse(x > 10, "big", "small")\nifelse(is.na(x), 0, x)'),
+    snippet('Answers from vectors', 'price <- c(10, 24, 8)\nmember <- c(TRUE, FALSE, TRUE)\nifelse(member, price * 0.9, price)'),
+    snippet('Three answers', 'x <- c(-2, 0, 5)\nifelse(x > 0, "plus", ifelse(x < 0, "minus", "zero"))'),
   ],
   readMore: { label: 'R documentation: ifelse()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/ifelse.html', source: 'R documentation' },
   challenges: [
@@ -32,6 +34,7 @@ export default makeTopic({
       ],
     }),
     task('easy', 'Weekend or weekday', {
+      alt: 'days <- c("Sat", "Mon", "Tue", "Sun")\n',
       prompt: 'Make `kind` `"weekend"` for `"Sat"` and `"Sun"`, and `"weekday"` for the other days.',
       starter: 'days <- c("Fri", "Sat", "Sun", "Mon")\n',
       hint: 'Use `%in%` for the condition: `ifelse(days %in% c("Sat", "Sun"), "weekend", "weekday")`.',
@@ -76,6 +79,13 @@ export default makeTopic({
       solution: 'scores <- c(71, 44, 88, 50, 39, 65)\nband <- ifelse(scores >= 70, "high", ifelse(scores >= 50, "middle", "low"))',
       tests: [['band is high low high middle low middle', isTexts('band', 'high', 'low', 'high', 'middle', 'low', 'middle')]],
     }),
+    task('hard', 'Members pay less', {
+      prompt: 'Members pay 10% less. Make `pay` what each customer pays.',
+      starter: 'price <- c(10, 24, 8, 15)\nmember <- c(TRUE, FALSE, TRUE, FALSE)\n',
+      hint: 'Both answers can be vectors: `ifelse(member, price * 0.9, price)`.',
+      solution: 'price <- c(10, 24, 8, 15)\nmember <- c(TRUE, FALSE, TRUE, FALSE)\npay <- ifelse(member, price * 0.9, price)',
+      tests: [['pay is 9, 24, 7.2, 15', near('pay', 'c(9, 24, 7.2, 15)')]],
+    }),
     task('expert', 'Fix the order', {
       prompt: 'This should label orders of 50 or more `"large"`, 20 to 49 `"medium"` and below 20 `"small"`, but every order of 20 or more comes out `"medium"`. Fix the conditions.',
       starter: 'orders <- c(12, 65, 30, 50)\nsize <- ifelse(orders >= 20, "medium", ifelse(orders >= 50, "large", "small"))',
@@ -83,14 +93,20 @@ export default makeTopic({
       solution: 'orders <- c(12, 65, 30, 50)\nsize <- ifelse(orders >= 50, "large", ifelse(orders >= 20, "medium", "small"))',
       tests: [['size is small large medium large', isTexts('size', 'small', 'large', 'medium', 'large')]],
     }),
+    task('expert', 'Up, down or same', {
+      prompt: 'Make `trend` `"up"`, `"down"` or `"same"` for each shop, comparing `now` with `last`.',
+      starter: 'last <- c(12, 15, 9, 20)\nnow <- c(14, 15, 7, 23)\n',
+      hint: 'Put one `ifelse()` inside another: `ifelse(now > last, "up", ifelse(now < last, "down", "same"))`.',
+      solution: 'last <- c(12, 15, 9, 20)\nnow <- c(14, 15, 7, 23)\ntrend <- ifelse(now > last, "up", ifelse(now < last, "down", "same"))',
+      tests: [['trend is up, same, down, up', isTexts('trend', 'up', 'same', 'down', 'up')]],
+    }),
   ],
   questions: [
     mc('What does `ifelse(c(3, 8) > 5, "big", "small")` give?', ['`[1] "small" "big"`', '`[1] "big" "small"`', '`"big"`', '`[1] FALSE  TRUE`'], 0,
       '3 is not over 5, so "small"; 8 is, so "big".',
       { code: 'ifelse(c(3, 8) > 5, "big", "small")', output: '[1] "small" "big"' }),
-    mc('What does `ifelse(c(4, NA) > 2, "yes", "no")` give?', ['`[1] "yes" "no"`', '`[1] "yes" NA`', '`[1] "yes" "yes"`', 'An error'], 1,
-      'Where the condition is NA, the answer is NA.',
-      { code: 'ifelse(c(4, NA) > 2, "yes", "no")', output: '[1] "yes" NA' }),
+    mc('Why does `ifelse(c(4, NA) > 2, "yes", "no")` give NA for the second value?', ['The condition is NA there, so R can\'t pick either answer', 'NA counts as "no"', 'ifelse() skips the last value', 'It gives an error'], 0,
+      'Deal with missing values first, for example with `is.na()`.'),
     mc('What does `ifelse(is.na(c(2, NA)), 0, c(2, NA))` give?', ['`[1] 2 0`', '`[1] 0 2`', '`[1] 2 NA`', '`[1] 0 0`'], 0,
       'The NA is replaced by 0; the 2 is kept.',
       { code: 'ifelse(is.na(c(2, NA)), 0, c(2, NA))', output: '[1] 2 0' }),

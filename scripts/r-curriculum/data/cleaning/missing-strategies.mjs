@@ -16,7 +16,7 @@ export default makeTopic({
     'Filling in ("imputing") makes the data look complete, but the filled values are guesses. Filling with the median keeps the centre unchanged but makes the spread look smaller than it is. Always report how many values were missing.',
   ],
   sandboxCode: SURVEY + 'str(survey)\ncolSums(is.na(survey))',
-  sandboxSnippets: [snippet('Fill with the median', 'x <- c(34, NA, 58, 27, 41)\nx[is.na(x)] <- median(x, na.rm = TRUE)\nx')],
+  sandboxSnippets: [snippet('Fill with the median', 'x <- c(34, NA, 58, 27, 41)\nx[is.na(x)] <- median(x, na.rm = TRUE)\nx'), snippet('Count before and after', SURVEY + 'survey$age[survey$age < 0] <- NA\nsum(is.na(survey$age))\nnrow(survey[!is.na(survey$age), ])'), snippet('Flag what you filled', 'x <- c(34, NA, 58, 27)\nwas_na <- is.na(x)\nx[was_na] <- median(x, na.rm = TRUE)\ndata.frame(x, was_na)')],
   readMore: { label: 'R documentation: NA', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/NA.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Disguised ratings', {
@@ -34,6 +34,7 @@ export default makeTopic({
       tests: [['age is 34, NA, 58, NA, 27, 41', 'identical(as.numeric(survey$age), c(34, NA, 58, NA, 27, 41))']],
     }),
     task('easy', 'How many missing', {
+      alt: (s) => s.replace('2,,4,', '2,30,4,'),
       prompt: 'Make `n_missing_age` the number of missing ages, after the last fix.',
       starter: SURVEY + 'survey$age[survey$age < 0] <- NA\n',
       hint: '`sum(is.na(survey$age))`',
@@ -68,17 +69,32 @@ export default makeTopic({
       solution: 'csv <- "visitor,rating\n1,5\n2,N/A\n3,-\n4,4\n5,"\nsurvey <- read.csv(text = csv, na.strings = c("", "N/A", "-"))',
       tests: [['rating is numeric with 3 NAs', 'is.numeric(survey$rating) && sum(is.na(survey$rating)) == 3']],
     }),
+    task('hard', 'What dropping costs', {
+      prompt: 'Make `known` the visitors with both an age and a rating, and `n_dropped` how many rows that leaves out.',
+      starter: SURVEY + 'survey$rating[survey$rating %in% c("", "N/A")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\n',
+      hint: '`survey[!is.na(survey$age) & !is.na(survey$rating), ]`, then compare the numbers of rows.',
+      solution: SURVEY + 'survey$rating[survey$rating %in% c("", "N/A")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\nknown <- survey[!is.na(survey$age) & !is.na(survey$rating), ]\nn_dropped <- nrow(survey) - nrow(known)',
+      tests: [['known is visitors 1 and 6', 'is.data.frame(known) && identical(known$visitor, c(1L, 6L))'], ['n_dropped is 4', near('n_dropped', 4)]],
+    }),
     task('expert', 'Report the gaps', {
+      alt: (s) => s.replace('2,,4,', '2,30,4,').replace('5,27,,', '5,27,4,'),
       prompt: 'Make `missing_pct` the percentage of missing values in each column of the cleaned survey, rounded to whole numbers.',
       starter: SURVEY + 'survey$rating[survey$rating %in% c("", "N/A")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\nsurvey$comment[survey$comment == ""] <- NA\n',
       hint: '`colMeans(is.na(survey))` is the share missing per column; times 100, rounded.',
       solution: SURVEY + 'survey$rating[survey$rating %in% c("", "N/A")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$age[survey$age < 0] <- NA\nsurvey$comment[survey$comment == ""] <- NA\nmissing_pct <- round(colMeans(is.na(survey)) * 100)',
       tests: [['missing_pct is visitor 0, age 33, rating 33, comment 33', same('missing_pct', 'c(visitor = 0, age = 33, rating = 33, comment = 33)')]],
     }),
+    task('expert', 'Fill and flag', {
+      prompt: 'Add `rating_filled`, the ratings with each NA replaced by the median rating, and `rating_was_na`, TRUE where a value was filled in.',
+      starter: SURVEY + 'survey$rating[survey$rating %in% c("", "N/A")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\n',
+      hint: 'Make the flag first: `survey$rating_was_na <- is.na(survey$rating)`. Copy the column, then fill the copy where the flag is TRUE.',
+      solution: SURVEY + 'survey$rating[survey$rating %in% c("", "N/A")] <- NA\nsurvey$rating <- as.numeric(survey$rating)\nsurvey$rating_was_na <- is.na(survey$rating)\nsurvey$rating_filled <- survey$rating\nsurvey$rating_filled[survey$rating_was_na] <- median(survey$rating, na.rm = TRUE)',
+      tests: [['rating_filled is 5, 4, 4.5, 3, 4.5, 5', near('survey$rating_filled', 'c(5, 4, 4.5, 3, 4.5, 5)')], ['rating_was_na marks visitors 3 and 5', 'identical(survey$rating_was_na, c(FALSE, FALSE, TRUE, FALSE, TRUE, FALSE))']],
+    }),
   ],
   questions: [
-    mc('Which of these is a missing value in disguise?', ['`34`', '`-1` in an age column', '`"Lovely"`', '`5`'], 1,
-      'An impossible value usually means "not known" or a typo.'),
+    mc('Why make a `-1` age NA instead of deleting that row?', ['The rest of the row, like the rating, is still useful', 'R can\'t delete rows', 'NA is smaller than -1', 'It makes the mean bigger'], 0,
+      'NA marks only the value that is unknown.'),
     mc('What does `as.numeric(c("5", "", "4"))` give?', ['`[1]  5 NA  4`', '`[1] 5 0 4`', 'An error', '`[1] 5 4`'], 0,
       'An empty text becomes NA.',
       { code: 'as.numeric(c("5", "", "4"))', output: '[1]  5 NA  4' }),

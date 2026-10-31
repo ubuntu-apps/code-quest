@@ -36,6 +36,7 @@ export default makeProject('easy', {
       tests: [['longest is trip 5', sameFrame('longest', 'trips[5, ]')]],
     }),
     task('medium', 'The busiest station', {
+      alt: (s) => s.replace('station = c("Park", "River", "Park", "Market", "River", "Park", "Market", "River")', 'station = c("Market", "Market", "Park", "Market", "River", "Park", "Market", "River")'),
       prompt: 'Make `busiest` the station where most trips started.',
       starter: TRIPS,
       hint: 'Count with `table()`, then `names(which.max(...))`. Park and River both have 3; `which.max()` takes the first, Park.',

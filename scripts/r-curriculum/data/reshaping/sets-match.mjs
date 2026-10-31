@@ -1,5 +1,5 @@
 // Reshaping and combining: Sets and match().
-import { code, isTexts, makeTopic, mc, near, qShort, same, snippet, task, uses } from '../_builders.mjs'
+import { code, isTexts, makeTopic, mc, near, qShort, same, sameFrame, snippet, task, uses } from '../_builders.mjs'
 
 const CLUBS = 'chess <- c("Ana", "Ben", "Cy")\nchoir <- c("Cy", "Dee", "Ana", "Eli")\n'
 const MENU = 'menu <- data.frame(drink = c("latte", "tea", "mocha", "chai"), price = c(3.4, 2.5, 4.2, 3.8))\norders <- c("tea", "latte", "latte", "flat white", "chai")\n'
@@ -16,7 +16,7 @@ export default makeTopic({
     'This is what `merge()` does under the hood, but `match()` keeps the orders in their own order, one result per order, with NA for anything unknown, which makes the gaps easy to find.',
   ],
   sandboxCode: CLUBS + 'union(chess, choir)\nintersect(chess, choir)\nsetdiff(chess, choir)',
-  sandboxSnippets: [snippet('Look up prices', MENU + 'pos <- match(orders, menu$drink)\npos\nmenu$price[pos]')],
+  sandboxSnippets: [snippet('Look up prices', MENU + 'pos <- match(orders, menu$drink)\npos\nmenu$price[pos]'), snippet('Either but not both', CLUBS + 'setdiff(union(chess, choir), intersect(chess, choir))'), snippet('Reorder with match()', MENU + 'wanted <- c("chai", "latte", "tea", "mocha")\nmenu[match(wanted, menu$drink), ]')],
   readMore: { label: 'R documentation: set operations', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/sets.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Everyone', {
@@ -55,6 +55,7 @@ export default makeTopic({
       tests: [['prices is 2.5, 3.4, 3.4, NA, 3.8', same('prices', 'c(2.5, 3.4, 3.4, NA, 3.8)')], ['Uses match()', uses('match(')]],
     }),
     task('medium', 'Not on the menu', {
+      alt: (s) => s.replace('"flat white", "chai")', '"cocoa", "chai")'),
       prompt: 'Make `missing_drinks` the orders that aren\'t on the menu, each once.',
       starter: MENU,
       hint: '`setdiff(orders, menu$drink)`',
@@ -68,12 +69,26 @@ export default makeTopic({
       solution: MENU + 'prices <- menu$price[match(orders, menu$drink)]\nknown_total <- sum(prices, na.rm = TRUE)\nn_unknown <- sum(is.na(prices))',
       tests: [['known_total is 13.1', near('known_total', 13.1)], ['n_unknown is 1', near('n_unknown', 1)]],
     }),
+    task('hard', 'In exactly one club', {
+      prompt: 'Make `one_club` the people who are in chess or choir, but not both.',
+      starter: CLUBS,
+      hint: 'Everyone, minus the ones in both: `setdiff(union(chess, choir), intersect(chess, choir))`.',
+      solution: CLUBS + 'one_club <- setdiff(union(chess, choir), intersect(chess, choir))',
+      tests: [['one_club is Ben, Dee, Eli', isTexts('one_club', 'Ben', 'Dee', 'Eli')]],
+    }),
     task('expert', 'Signed up twice?', {
       prompt: 'Two sign-up sheets were typed by different people. Make `on_both` the names that appear on both sheets, after trimming and making them small letters.',
       starter: 'sheet1 <- c("Ana ", "ben", "Cy", "DEE")\nsheet2 <- c("dee", " Eli", "ANA", "Fay")\n',
       hint: 'Clean each sheet with `tolower(trimws())` first, then `intersect()`.',
       solution: 'sheet1 <- c("Ana ", "ben", "Cy", "DEE")\nsheet2 <- c("dee", " Eli", "ANA", "Fay")\non_both <- intersect(tolower(trimws(sheet1)), tolower(trimws(sheet2)))',
       tests: [['on_both is ana, dee', isTexts('on_both', 'ana', 'dee')]],
+    }),
+    task('expert', 'Menu in a new order', {
+      prompt: 'Make `menu2` the menu rows in the order given by `wanted`.',
+      starter: MENU + 'wanted <- c("chai", "latte", "tea", "mocha")\n',
+      hint: '`match(wanted, menu$drink)` gives the row of each wanted drink. Use it as the rows: `menu[..., ]`.',
+      solution: MENU + 'wanted <- c("chai", "latte", "tea", "mocha")\nmenu2 <- menu[match(wanted, menu$drink), ]',
+      tests: [['menu2 is chai, latte, tea, mocha', sameFrame('menu2', 'menu[c(4, 1, 2, 3), ]')]],
     }),
   ],
   questions: [
@@ -83,9 +98,8 @@ export default makeTopic({
     mc('What does `intersect(c("a", "b", "c"), c("c", "a"))` give?', ['`[1] "a" "c"`', '`[1] "c" "a"`', '`[1] "b"`', '`[1] "a" "b" "c"`'], 0,
       'Values in both, in the order of the first.',
       { code: 'intersect(c("a", "b", "c"), c("c", "a"))', output: '[1] "a" "c"' }),
-    mc('What does `setdiff(c(1, 2, 3), c(2, 5))` give?', ['`[1] 1 3`', '`[1] 5`', '`[1] 1 3 5`', '`[1] 2`'], 0,
-      'In the first but not the second. The 5 isn\'t counted: setdiff is one-sided.',
-      { code: 'setdiff(c(1, 2, 3), c(2, 5))', output: '[1] 1 3' }),
+    mc('Why does `setdiff(a, b)` give a different answer from `setdiff(b, a)`?', ['It keeps what is in the first vector but not the second, so the order matters', 'setdiff() is random', 'It sorts the inputs', 'It doesn\'t'], 0,
+      '`union()` and `intersect()` give the same values either way round.'),
     mc('What does `match(c("b", "z"), c("a", "b", "c"))` give?', ['`[1]  2 NA`', '`[1] TRUE FALSE`', '`[1] "b"`', '`[1] 2 0`'], 0,
       'Positions in the table, NA when missing.',
       { code: 'match(c("b", "z"), c("a", "b", "c"))', output: '[1]  2 NA' }),

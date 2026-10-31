@@ -15,7 +15,7 @@ export default makeTopic({
     'To find what doesn\'t match, use `%in%`: `clubs[!clubs$pupil %in% pupils$id, ]` is a club row for a pupil who isn\'t on the list. When a match needs two columns, such as class **and** term, give both: `by = c("class", "term")`.',
   ],
   sandboxCode: SCHOOL + 'merge(pupils, tutors, by = "class")\nmerge(pupils, clubs, by.x = "id", by.y = "pupil")',
-  sandboxSnippets: [snippet('Keep every pupil', SCHOOL + 'merge(pupils, clubs, by.x = "id", by.y = "pupil", all.x = TRUE)')],
+  sandboxSnippets: [snippet('Keep every pupil', SCHOOL + 'merge(pupils, clubs, by.x = "id", by.y = "pupil", all.x = TRUE)'), snippet('Rows in each kind of join', SCHOOL + 'nrow(merge(pupils, clubs, by.x = "id", by.y = "pupil"))\nnrow(merge(pupils, clubs, by.x = "id", by.y = "pupil", all.x = TRUE))\nnrow(merge(pupils, clubs, by.x = "id", by.y = "pupil", all = TRUE))'), snippet('Join twice', SCHOOL + 'j <- merge(pupils, tutors, by = "class")\nmerge(j, clubs, by.x = "id", by.y = "pupil")')],
   readMore: { label: 'R documentation: merge()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/merge.html', source: 'R documentation' },
   challenges: [
     task('easy', 'Each pupil\'s tutor', {
@@ -31,6 +31,13 @@ export default makeTopic({
       hint: '`merge(pupils, clubs, by.x = "id", by.y = "pupil")`',
       solution: SCHOOL + 'joined <- merge(pupils, clubs, by.x = "id", by.y = "pupil")',
       tests: [['joined is Ana chess, Ana choir, Cy choir', 'is.data.frame(joined) && identical(joined$name, c("Ana", "Ana", "Cy")) && identical(joined$club, c("chess", "choir", "choir"))']],
+    }),
+    task('easy', 'Rows in a full join', {
+      prompt: 'Make `n_all` the number of rows when pupils and clubs are joined keeping every row of both (`all = TRUE`).',
+      starter: SCHOOL,
+      hint: '`nrow(merge(pupils, clubs, by.x = "id", by.y = "pupil", all = TRUE))`',
+      solution: SCHOOL + 'n_all <- nrow(merge(pupils, clubs, by.x = "id", by.y = "pupil", all = TRUE))',
+      tests: [['n_all is 6', near('n_all', 6)]],
     }),
     task('medium', 'Keep everyone', {
       prompt: 'Make `everyone` the same join, but keeping the pupils who are in no club.',
@@ -74,6 +81,13 @@ export default makeTopic({
       solution: SCHOOL + 'tutors2 <- data.frame(class = c("7A", "7B", "7B"), tutor = c("Ms Obi", "Mr Lund", "Mr Lund"))\nn_bad <- nrow(merge(pupils, tutors2, by = "class"))\nfixed <- merge(pupils, tutors2[!duplicated(tutors2$class), ], by = "class")',
       tests: [['n_bad is 6', near('n_bad', 6)], ['fixed has 4 rows', 'is.data.frame(fixed) && nrow(fixed) == 4']],
     }),
+    task('expert', 'Club places per class', {
+      prompt: 'Make `per_class` the number of club places taken by pupils of each class, showing both classes even if one has none.',
+      starter: SCHOOL,
+      hint: 'Join pupils and clubs first. Then count `class` as a factor with every class as a level: `table(factor(j$class, levels = sort(unique(pupils$class))))`.',
+      solution: SCHOOL + 'j <- merge(pupils, clubs, by.x = "id", by.y = "pupil")\nper_class <- table(factor(j$class, levels = sort(unique(pupils$class))))',
+      tests: [['per_class is 7A 3, 7B 0', 'identical(as.vector(per_class), c(3L, 0L)) && identical(names(per_class), c("7A", "7B"))']],
+    }),
   ],
   questions: [
     mc('When do you need `by.x` and `by.y`?', ['Always', 'When the key column has a different name in each table', 'For two keys', 'To keep every row'], 1,
@@ -92,9 +106,8 @@ export default makeTopic({
       'The last option is the other way round: pupils with no club.'),
     mc('How do you join on two columns?', ['Merge twice', '`by = c("class", "term")`', '`by.x = "class", by.y = "term"`', 'It isn\'t possible'], 1,
       'A row matches only when both columns match.'),
-    mc('What does `merge()` do with columns that have the same name but aren\'t keys?', ['Drops one', 'Keeps both, adding `.x` and `.y` to the names', 'Adds them up', 'An error'], 1,
-      'Rename them first if the suffixes would be confusing.',
-      { code: 'names(merge(data.frame(k = 1, v = 2), data.frame(k = 1, v = 3), by = "k"))', output: '[1] "k"   "v.x" "v.y"' }),
+    mc('Why can a join give more rows than either table had?', ['Each match makes a row, so a key that appears several times on both sides multiplies', 'merge() adds totals', 'It copies the whole table', 'It can\'t'], 0,
+      'Check `nrow()` before and after a join.'),
     qShort('Which merge() argument keeps every row of both tables? (name = TRUE)', 'all = TRUE',
       '`merge(a, b, all = TRUE)`'),
   ],

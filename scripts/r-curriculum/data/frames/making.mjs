@@ -16,6 +16,7 @@ export default makeTopic({
     snippet('From vectors', 'days <- c("Mon", "Tue", "Wed")\nsteps <- c(4200, 8100, 6500)\ndata.frame(day = days, steps = steps)'),
     snippet('One value repeated', 'data.frame(item = c("tea", "cake"), shop = "Corner Café")'),
     snippet('Different lengths', '# Run it and read the error\ndata.frame(a = 1:3, b = 1:2)'),
+    snippet('One value fills a column', 'data.frame(day = c("Mon", "Tue", "Wed"), shop = "Corner Café")'),
   ],
   readMore: { label: 'R documentation: data.frame()', url: 'https://stat.ethz.ch/R-manual/R-devel/library/base/html/data.frame.html', source: 'R documentation' },
   challenges: [
@@ -52,6 +53,7 @@ export default makeTopic({
       tests: [['menu has the shop on both rows', sameFrame('menu', 'data.frame(item = c("tea", "cake"), shop = c("Corner Café", "Corner Café"))')]],
     }),
     task('medium', 'Count the rows', {
+      alt: 'menu <- data.frame(item = c("latte", "tea"), price = c(3.4, 2.5))\n',
       prompt: 'Make `n_items` the number of rows in the menu you are given.',
       starter: 'menu <- data.frame(item = c("latte", "tea", "cake", "scone"), price = c(3.4, 2.5, 4.2, 2.9))\n',
       hint: '`n_items <- nrow(menu)`',
@@ -67,6 +69,13 @@ export default makeTopic({
         ['sold is 4, 2, 7', 'isTRUE(all.equal(shirts$sold, c(4, 2, 7)))'],
       ],
     }),
+    task('hard', 'A worked-out column', {
+      prompt: 'Make `bill` a data frame with a column `cups`, and a column `cost` that is the cups times the price.',
+      starter: 'cups <- c(3, 5, 2)\nprice <- 2.5\n',
+      hint: 'A column can be a calculation: `data.frame(cups = cups, cost = cups * price)`.',
+      solution: 'cups <- c(3, 5, 2)\nprice <- 2.5\nbill <- data.frame(cups = cups, cost = cups * price)',
+      tests: [['bill has cups 3, 5, 2 and cost 7.5, 12.5, 5', sameFrame('bill', 'data.frame(cups = c(3, 5, 2), cost = c(7.5, 12.5, 5))')]],
+    }),
     task('expert', 'Column names from scratch', {
       prompt: 'Make `rides` from the vectors, with the columns named `station` and `minutes` (in that order), then make `cols` its column names.',
       starter: 'where <- c("Park", "River")\nhow_long <- c(12, 47)\n',
@@ -77,6 +86,12 @@ export default makeTopic({
         ['cols is station, minutes', isTexts('cols', 'station', 'minutes')],
       ],
     }),
+    task('expert', 'A week of shifts', {
+      prompt: 'Make `plan` with a column `day` (Mon to Fri) and a column `shift` that takes turns: early, late, early, late, early. Make the shifts with `rep()`.',
+      hint: '`rep(c("early", "late"), length.out = 5)` repeats until there are 5 values.',
+      solution: 'plan <- data.frame(day = c("Mon", "Tue", "Wed", "Thu", "Fri"), shift = rep(c("early", "late"), length.out = 5))',
+      tests: [['plan has the five days and shifts', sameFrame('plan', 'data.frame(day = c("Mon", "Tue", "Wed", "Thu", "Fri"), shift = c("early", "late", "early", "late", "early"))')], ['Uses rep()', uses('rep(')]],
+    }),
   ],
   questions: [
     mc('What does `ncol(data.frame(a = 1:2, b = 3:4, c = 5:6))` give?', ['`2`', '`3`', '`6`', '`1`'], 1,
@@ -85,8 +100,8 @@ export default makeTopic({
     mc('What does `data.frame(a = 1:3, b = 1:2)` give?', ['A table with 3 rows', 'A table with 2 rows', 'An error: differing number of rows', 'NA in the last row'], 2,
       'Every column must have the same length.',
       { code: 'data.frame(a = 1:3, b = 1:2)', error: 'differing number of rows' }),
-    mc('What does `nrow(data.frame(x = 1:3, y = "a"))` give?', ['`1`', '`3`', 'An error', '`4`'], 1,
-      'A single value is repeated down the column, so there are 3 rows.',
+    mc('Why does `data.frame(x = 1:3, y = "a")` work although `y` has only one value?', ['A single value is repeated to fill every row', 'R adds NAs', 'y becomes a column name', 'It doesn\'t: it gives an error'], 0,
+      'Only a single value is repeated like this; other lengths that don\'t match give an error.',
       { code: 'nrow(data.frame(x = 1:3, y = "a"))', output: '[1] 3' }),
     mc('In R 4, what type is the column `item` in `data.frame(item = c("tea", "cake"))`?', ['factor', 'character', 'list', 'numeric'], 1,
       'Since R 4.0, text columns stay as text.',

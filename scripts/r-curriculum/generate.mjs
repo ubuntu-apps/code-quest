@@ -78,7 +78,8 @@ function buildLevel(topic) {
     challenges: unique(
       topic.id,
       'challenges',
-      topic.challenges.map((c) => ({ id: challengeId(topic.id, c.title), ...c })),
+      // `typedOk` is for check-in-browser.mjs only.
+      topic.challenges.map(({ typedOk: _typedOk, ...c }) => ({ id: challengeId(topic.id, c.title), ...c })),
     ),
     test: {
       passingScorePercent: 70,
