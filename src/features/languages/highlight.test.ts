@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { highlightPython, highlightSql, looksLikePython, looksLikeSql } from './codeHighlight'
+import { languagePack } from '.'
+
+const python = languagePack('python')!
+const sql = languagePack('sql')!
+const highlightPython = (code: string) => python.highlight(code)
+const highlightSql = (code: string) => sql.highlight(code)
+const looksLikePython = (code: string) => python.looksLikeCode(code)
+const looksLikeSql = (code: string) => sql.looksLikeCode(code)
 
 function kinds(code: string): string {
   return highlightPython(code)
@@ -73,5 +80,31 @@ describe('looksLikeSql', () => {
     expect(looksLikeSql('title | year\n------+-----')).toBe(false)
     expect(looksLikeSql('PRAGMA foreign_keys = ON;\nCREATE TABLE t (id INTEGER);')).toBe(true)
     expect(looksLikeSql('BEGIN;\nDELETE FROM loans;\nROLLBACK;')).toBe(true)
+  })
+})
+
+const highlightR = (code: string) => languagePack('r')!.highlight(code)
+
+function rKinds(code: string): string {
+  return highlightR(code)
+    .filter((t) => t.kind !== 'plain')
+    .map((t) => `${t.kind}:${t.text}`)
+    .join(' ')
+}
+
+describe('highlightR', () => {
+  it('colours keywords, constants, calls, text, numbers and comments', () => {
+    expect(rKinds('if (x > 2.5) print("big", TRUE)  # note')).toBe(
+      'keyword:if number:2.5 builtin:print string:"big" constant:TRUE comment:# note',
+    )
+  })
+
+  it('keeps a # inside text as part of the text, and dotted names whole', () => {
+    expect(rKinds('is.na(y) <- "a # b"')).toBe('builtin:is.na string:"a # b"')
+  })
+
+  it('gives back the code unchanged when joined', () => {
+    const code = 'f <- function(x, n = 1L) {\n  x[x %in% c(1, 2)] * 1e3\n}\n'
+    expect(highlightR(code).map((t) => t.text).join('')).toBe(code)
   })
 })

@@ -28,7 +28,7 @@ function textBoxTarget(el: HTMLTextAreaElement | HTMLInputElement): KeyBarTarget
 
 /** The keys for a course (see each LanguagePack's `keys`); a one-line answer box gets no indent keys. */
 function keysFor(language: string | null | undefined, variant: 'code' | 'answer'): readonly CodeKey[] {
-  const keys = (languagePack(language) ?? languagePack('python'))?.keys ?? []
+  const keys = languagePack(language)?.keys ?? []
   return variant === 'answer' ? keys.filter((key) => key.kind !== 'tab' && key.kind !== 'untab') : keys
 }
 
