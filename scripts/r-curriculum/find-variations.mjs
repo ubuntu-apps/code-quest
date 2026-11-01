@@ -12,44 +12,16 @@
  * an `alt` by hand, or `typedOk: true` when the answer is a fixed value by nature.
  */
 import { COURSE } from './data/course.mjs'
-import { candidateData, checkedVars, variationKey } from './data/_rerun.mjs'
+import { candidateData, variationKey } from './data/_rerun.mjs'
+import { RProtection } from './protection.mjs'
+import { RChecker } from '../content-check/RChecker.mjs'
+import { FetchContentSource } from '../content-check/ContentSource.mjs'
 import { runRCode, runRChallengeTests } from '../../src/features/curriculum/rSandbox.ts'
 
-const MARK = '<<cq-values>>'
-const DUMP = `
-cat("${MARK}", paste(unlist(lapply(ls(), function(n) {
-  v <- get(n)
-  if (is.function(v)) NULL else paste0("\\u0060", n, "\\u0060 <- ", paste(deparse(v), collapse = " "))
-})), collapse = "\\n"), "${MARK}", sep = "")`
-
-async function valuesAfter(code) {
-  const run = await runRCode(code + DUMP)
-  const out = run.output ?? ''
-  const from = out.indexOf(MARK)
-  const to = out.lastIndexOf(MARK)
-  if (run.error || from < 0 || to <= from) return null
-  return { printed: out.slice(0, from), values: out.slice(from + MARK.length, to).split('\n').filter(Boolean) }
-}
-
-/** The starter, then what the solution made or changed written out as fixed values (see checkR). */
-async function typedIn(c) {
-  const done = await valuesAfter(c.solution)
-  const start = await valuesAfter(c.starterCode)
-  if (!done || !start) return null
-  const values = done.values.filter((line) => !start.values.includes(line)).join('\n')
-  return `${c.starterCode}\n${values}${done.printed.trim() ? `\ncat(${JSON.stringify(done.printed)})` : ''}`
-}
-
-function rerunTest(c, alt) {
-  const tests = c.validation.tests.filter((t) => t.label !== 'Works with other data too')
-  const pairs = tests.map((t) => [t.label, t.assertion])
-  const vars = checkedVars(c.solution, pairs)
-  const output = pairs.some(([, a]) => a.includes('._cq_stdout'))
-  const assertion = `._cq_rerun(${JSON.stringify(c.starterCode)}, ${JSON.stringify(alt)}, ${JSON.stringify(c.solution)}, c(${vars.map((v) => JSON.stringify(v)).join(', ')}), output = ${output ? 'TRUE' : 'FALSE'})`
-  return [...tests, { id: `t${tests.length + 1}`, label: 'Works with other data too', assertion }]
-}
-
 export async function findVariations(sectionId) {
+  const spec = await new FetchContentSource(import.meta.env?.BASE_URL ?? '/code-quest/').languageSpec('r')
+  const checker = new RChecker(spec, { runRCode, runRChallengeTests }, COURSE)
+  const protection = new RProtection()
   const variations = {}
   const unresolved = []
   for (const section of COURSE.filter((s) => !sectionId || s.sectionId === sectionId)) {
@@ -58,14 +30,21 @@ export async function findVariations(sectionId) {
         if (c.typedOk || !c.starterCode) continue
         const where = `${section.sectionId}/${topic.id} "${c.title}"`
         globalThis.cqVariationProgress = where
-        const typed = await typedIn(c)
+        const typed = await checker.typedInCode(c)
         if (typed === null) continue
-        const good = await runRChallengeTests(c.solution, '', c.validation.tests)
-        const cheat = await runRChallengeTests(typed, '', c.validation.tests)
+        // The stage data has the challenge's own tests; the rerun test is added when publishing.
+        const own = c.validation.tests
+        const withRerun = (alt) => {
+          const assertion = protection.rerunAssertion(c.starterCode, alt, c.solution, own.map((t) => [t.label, t.assertion]))
+          return assertion ? [...own, { id: `t${own.length + 1}`, label: RProtection.LABEL, assertion }] : own
+        }
+        const published = protection.protect({ ...c })
+        const good = await runRChallengeTests(c.solution, '', published.validation.tests)
+        const cheat = await runRChallengeTests(typed, '', published.validation.tests)
         if (good.passed && !cheat.passed) continue
         let found = null
         for (const alt of candidateData(c.starterCode)) {
-          const tests = rerunTest(c, alt)
+          const tests = withRerun(alt)
           if (!(await runRChallengeTests(c.solution, '', tests)).passed) continue
           if ((await runRChallengeTests(typed, '', tests)).passed) continue
           found = alt

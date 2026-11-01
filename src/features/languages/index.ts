@@ -4,14 +4,17 @@ import { PythonPack } from './python/PythonPack'
 import { RPack } from './r/RPack'
 import { SqlPack } from './sql/SqlPack'
 
-export type { ChallengeCheckResult, ChallengeRunOptions, ChallengeTestResult, CodeKey, CodeRunResult, FenceBlock, FriendlyCodeError, RunHandlers, RunOptions } from './LanguagePack'
+export type { ChallengeCheckResult, ChallengeRunOptions, ChallengeTestResult, CodeKey, CodeRunResult, FriendlyCodeError, RunHandlers, RunOptions } from './LanguagePack'
+export type { FenceBlock } from './LanguageRules'
 export { LanguagePack } from './LanguagePack'
+export { LanguageRules } from './LanguageRules'
 export type { Token, TokenKind } from './Highlighter'
 export type { LanguageSpec } from './languageSpec'
 
 /**
  * Every language a course can be in. A new language is a folder with its language.json, a
- * LanguagePack subclass for running it and an EditorLanguage subclass, and one more pack here.
+ * LanguagePack subclass for running it and an EditorLanguage subclass, and one more pack here
+ * (see README.md in this folder).
  */
 export const LANGUAGE_PACKS: readonly LanguagePack[] = [new PythonPack(), new SqlPack(), new RPack()]
 

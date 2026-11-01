@@ -45,8 +45,8 @@ export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelP
   const runtimeCourses = courses.filter((c) => languagePack(c.id) !== null)
   const online = useOnline()
   const [selected, setSelected] = useState<string[]>(() => {
-    const preferred = languagePack(activeCourseId)?.id ?? runtimeCourses[0]?.id ?? 'python'
-    return [preferred]
+    const preferred = languagePack(activeCourseId)?.id ?? runtimeCourses[0]?.id
+    return preferred ? [preferred] : []
   })
   const status = useSyncExternalStore(
     subscribeOfflineDownloadStatus,

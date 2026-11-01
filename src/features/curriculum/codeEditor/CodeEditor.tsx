@@ -64,7 +64,7 @@ export function CodeEditor({
   id,
   value,
   onChange,
-  language = 'python',
+  language = 'plain',
   rows = 4,
   className,
   errorLine = null,

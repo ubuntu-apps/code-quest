@@ -75,7 +75,7 @@ npm run dev        # http://localhost:5173/code-quest/
 | `npm run build` | Type-check, build to `dist/`, and add `404.html` for GitHub Pages routing |
 | `npm run check` | Lint, check lesson ids, run tests, and build (what CI runs) |
 | `npm run lesson-ids:update` | Add new lessons to `scripts/lesson-ids.json` (see [Keeping learners' progress](#keeping-learners-progress)) |
-| `npm run check:content` | Run every lesson challenge to check it works (needs Python 3; pandas for the pandas lessons) |
+| `npm run check:content` | Run every lesson's code to check it works (Python and SQL need Python 3, and pandas for the pandas lessons; R needs `npm install --no-save webr@0.4.2`) |
 | `npm test` | Vitest in watch mode (`npm run test:run` for a single run) |
 | `npm run lint` | ESLint |
 | `npm run preview` | Serve the production build locally |
@@ -97,14 +97,18 @@ src/
   features/curriculum/   Learn, Progress and About screens, sandboxes, grading
     hooks/               useSandbox, useChallenges, useLevelTest, routing, loading
     views/               One component per screen
+  features/languages/    One folder per language: language.json, its runtime and editor support (see its README)
   features/editor/       In-app content editor
   components/            App shell pieces (bottom nav, install banner, share sheet)
 public/
   content/               Course JSON
   pyodide-worker.js      Python runtime worker
 scripts/
+  course-kit/            What every course generator shares (builders, generator, typed-in protection)
   python-curriculum/     Python course generator (data/ holds the source)
+  sql-curriculum/        SQL course generator
   r-curriculum/          R course generator
+  content-check/         Runs every lesson's code to check it (npm run check:content)
 ```
 
 ### Editing content
@@ -113,6 +117,7 @@ Course JSON is generated from the data files under `scripts/`:
 
 ```bash
 node scripts/python-curriculum/generate.mjs
+node scripts/sql-curriculum/generate.mjs
 node scripts/r-curriculum/generate.mjs
 ```
 
@@ -122,10 +127,10 @@ Write new challenges with the `task()` and `mc()` builders in `scripts/python-cu
 
 ```bash
 npm run check:content                                 # summary of every section
-node scripts/check-curriculum.mjs --section python/data_and_apis --verbose
+node scripts/content-check/check.mjs --section python/data_and_apis --verbose
 ```
 
-For every challenge it runs the solution (must pass), the starter code and empty code (must fail), using the same Python helpers as the app. It also flags missing prompts, hints and solutions, text-matched grading, and quizzes whose answers are always in the same position. Sections listed in `scripts/curriculum-check.json` must be clean or CI fails; add a section there once it has been rewritten.
+For every challenge it runs the solution (must pass), and the starter code, empty code and the answer typed in as fixed values (must fail), using the same Python helpers and R harness as the app. It also flags missing prompts, hints and solutions, text-matched grading, and quizzes whose answers are always in the same position. Sections listed in `scripts/curriculum-check.json` must be clean or CI fails; add a section there once it has been rewritten.
 
 You can also edit lessons in the app. In `npm run dev`, use the editor button in the header; **Save** writes straight to `public/content/`.
 

@@ -13,8 +13,6 @@
  * that are R output are tested too. Checks are not published.
  */
 import { CourseBuilders } from '../course-kit/CourseBuilders.mjs'
-import { checkedVars, otherData, variationKey } from './data/_rerun.mjs'
-import { VARIATIONS } from './data/r-variations.mjs'
 
 /** An R string literal. */
 export const rstr = (text) => JSON.stringify(text)
@@ -25,9 +23,9 @@ export class RBuilders extends CourseBuilders {
    * must give TRUE after the learner's code has run. The checker makes sure the solution
    * passes and the starter code doesn't.
    *
-   * Unless `typedOk` is set, a last check, "Works with other data too", reruns the learner's code
-   * with the starter's data changed (`alt`, else an entry in r-variations.mjs, else the default
-   * change in _rerun.mjs) and compares the results with the solution's, so an answer typed in
+   * Unless `typedOk` is set, the generator adds a last check, "Works with other data too",
+   * that reruns the learner's code with the starter's data changed (`alt`, else an entry in
+   * data/r-variations.mjs, else the default change; see protection.mjs), so an answer typed in
    * as fixed values fails. `typedOk: true` is for challenges whose answer is a fixed value by
    * nature ("make `latte` hold 3.4"); the checker then doesn't try typing it in.
    *
@@ -38,6 +36,7 @@ export class RBuilders extends CourseBuilders {
   task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '', alt, typedOk = false }) {
     return {
       ...(typedOk ? { typedOk: true } : {}),
+      ...(alt !== undefined ? { alt } : {}),
       title: this.challengeTitle(difficulty, title),
       promptMarkdown: prompt,
       starterCode: starter,
@@ -46,20 +45,9 @@ export class RBuilders extends CourseBuilders {
       validation: {
         mode: 'r_tests',
         setupCode: setup,
-        tests: this._tests(typedOk || !starter ? tests : [...tests, ...this._rerunTest(starter, solution, tests, alt)]),
+        tests: this._tests(tests),
       },
     }
-  }
-
-  /** The "Works with other data too" test, or none when there is nothing to compare. */
-  _rerunTest(starter, solution, tests, alt) {
-    const given = typeof alt === 'function' ? alt(starter) : alt
-    const other = given ?? VARIATIONS[variationKey(starter, solution)]?.alt ?? otherData(starter)
-    const vars = checkedVars(solution, tests)
-    const output = tests.some(([, assertion]) => assertion.includes('._cq_stdout'))
-    if (other === starter || (vars.length === 0 && !output)) return []
-    const varList = `c(${vars.map(rstr).join(', ')})`
-    return [['Works with other data too', `._cq_rerun(${rstr(starter)}, ${rstr(other)}, ${rstr(solution)}, ${varList}, output = ${output ? 'TRUE' : 'FALSE'})`]]
   }
 
   /**

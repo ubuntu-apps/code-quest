@@ -10,6 +10,7 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { assertUnique, challengeId, questionId } from '../curriculum-ids.mjs'
 import { applyKeepProgress, previousChallenges, readPreviousSection } from '../progress-safety.mjs'
+import { TypedInProtection } from './TypedInProtection.mjs'
 
 export class CourseGenerator {
   /** The share of quiz answers needed to pass a lesson. */
@@ -27,9 +28,11 @@ export class CourseGenerator {
    * @param {string} options.title Course title in its index.json.
    * @param {object[]} options.course Sections in course order: `{ sectionId, title, filename, topics }`.
    * @param {string} [options.unit] What the log calls a lesson ("lessons", "stages").
+   * @param {TypedInProtection} [options.protection] Adds the checks that catch typed-in answers.
    */
-  constructor({ id, title, course, unit = 'lessons' }) {
+  constructor({ id, title, course, unit = 'lessons', protection = new TypedInProtection() }) {
     this.id = id
+    this.protection = protection
     this.title = title
     this.course = course
     this.unit = unit
@@ -65,9 +68,12 @@ export class CourseGenerator {
     return topic.introTitle ?? topic.title
   }
 
-  /** A challenge as published, with its permanent id (see ../curriculum-ids.mjs). */
+  /**
+   * A challenge as published: its permanent id (see ../curriculum-ids.mjs), then the course's
+   * protection against typed-in answers (see TypedInProtection.mjs).
+   */
   buildChallenge(topic, challenge) {
-    return { id: challengeId(topic.id, challenge.title), ...challenge }
+    return this.protection.protect({ id: challengeId(topic.id, challenge.title), ...challenge })
   }
 
   /** A quiz question as published, with its permanent id. */
