@@ -2,6 +2,13 @@ export type TabId = 'learn' | 'about'
 export type LearnView = 'languages' | 'sections' | 'levels' | 'level'
 export type LevelStep = 'intro' | 'challenges' | 'quiz'
 
+/** A stage's steps, in order, with the names the learner sees. */
+export const LEVEL_STEPS: readonly { id: LevelStep; label: string }[] = [
+  { id: 'intro', label: 'Intro' },
+  { id: 'challenges', label: 'Challenges' },
+  { id: 'quiz', label: 'Gate' },
+]
+
 export const PASS_DEFAULT = 70
 export const STREAK_STORAGE_KEY = 'codequest:streak'
 export const LAST_LEVEL_STORAGE_KEY = 'codequest:lastLevel'

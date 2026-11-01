@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useLocation, type NavigateFunction } from 'react-router-dom'
 import type { TabId } from '../constants'
 import { tabPath } from '../learnPaths'
+import { scrollWhenReady } from '../scrollWhenReady'
 
 /**
  * Learn and About keep their place: switching back to Learn returns to the page the
@@ -42,25 +43,19 @@ export function useTabMemory({
     [tab, location.pathname, activeLanguageId, goToTab, navigate],
   )
 
-  // After a tab switch, scroll to the saved place once the page is tall enough (a lesson
-  // can take a moment to render), giving up after about a second.
+  // After a tab switch, scroll to the saved place once the page is tall enough.
   useEffect(() => {
     const y = pendingScroll.current
     if (y === null) return
     pendingScroll.current = null
-    let tries = 0
-    let timer = 0
-    const restore = () => {
-      const maxY = document.documentElement.scrollHeight - window.innerHeight
-      if (maxY >= y || tries >= 20) {
-        window.scrollTo(0, Math.min(y, Math.max(maxY, 0)))
-        return
-      }
-      tries += 1
-      timer = window.setTimeout(restore, 50)
+    let cancel = () => {}
+    const timer = window.setTimeout(() => {
+      cancel = scrollWhenReady(y)
+    }, 0)
+    return () => {
+      window.clearTimeout(timer)
+      cancel()
     }
-    timer = window.setTimeout(restore, 0)
-    return () => window.clearTimeout(timer)
   }, [location.pathname])
 
   return switchTab

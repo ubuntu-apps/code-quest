@@ -1,12 +1,6 @@
-import { useRef, type KeyboardEvent } from 'react'
+import { useRef, type KeyboardEvent, type Ref } from 'react'
 import { DoorClosed, DoorOpen, ScrollText, Swords } from 'lucide-react'
-import { STEP_PANEL_ID, stepTabId, type LevelStep } from '../constants'
-
-const STEP_TABS: { id: LevelStep; label: string }[] = [
-  { id: 'intro', label: 'Intro' },
-  { id: 'challenges', label: 'Challenges' },
-  { id: 'quiz', label: 'Gate' },
-]
+import { LEVEL_STEPS as STEP_TABS, STEP_PANEL_ID, stepTabId, type LevelStep } from '../constants'
 
 interface LevelStepNavProps {
   levelStep: LevelStep
@@ -19,6 +13,8 @@ interface LevelStepNavProps {
   challengeCount?: { done: number; total: number }
   /** The quiz was passed, shown as a tick on the Quiz tab. */
   testPassed?: boolean
+  /** The row, so the page can tell when it has scrolled out of view. */
+  ref?: Ref<HTMLDivElement>
 }
 
 export function LevelStepNav({
@@ -30,6 +26,7 @@ export function LevelStepNav({
   placement = 'top',
   challengeCount,
   testPassed = false,
+  ref,
 }: LevelStepNavProps) {
   const badge = (id: LevelStep): string | null => {
     if (id === 'challenges' && challengeCount && challengeCount.total > 0) {
@@ -63,6 +60,7 @@ export function LevelStepNav({
 
   return (
     <div
+      ref={ref}
       className={`cq-step-tabs-row${placement === 'bottom' ? ' cq-step-tabs-row--bottom' : ''}`}
     >
       <div
