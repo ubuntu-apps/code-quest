@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import type { Challenge, Level, TestGradeResult } from '../types'
 import { saveProgress, type LevelProgress } from '../progressStorage'
 import type { ChallengeTestResult, FriendlyCodeError } from '../../languages'
@@ -7,6 +7,8 @@ import { EditableText } from '../../editor'
 import { AddItemButton } from '../../editor'
 import { ChallengeCard } from '../components/ChallengeCard'
 import { LevelStepNav } from '../components/LevelStepNav'
+import { StepFlipper } from '../components/StepFlipper'
+import { useStepScrollMemory } from '../hooks/useStepScrollMemory'
 import { IntroStep } from './IntroStep'
 import { TestStep } from './TestStep'
 import { CodeLanguageContext } from '../codeLanguageContext'
@@ -133,10 +135,12 @@ export function LearnLevel({
   onGoToNextLevel,
   afterQuizPassed,
 }: LearnLevelProps) {
-  const handleStepChange = (step: LevelStep) => {
-    onLevelStepChange(step)
-    scrollToTop()
-  }
+  // Each step keeps its own place: back from a look at the intro to the challenge you were on.
+  useStepScrollMemory(level.id, levelStep)
+  const topTabs = useRef<HTMLDivElement>(null)
+  const bottomTabs = useRef<HTMLDivElement>(null)
+
+  const handleStepChange = onLevelStepChange
 
   const handleGoToNext = () => {
     onGoToNextLevel()
@@ -174,7 +178,7 @@ export function LearnLevel({
           value={level.title}
           onChange={onUpdateLevelTitle}
         />
-        <LevelStepNav {...stepNavProps} />
+        <LevelStepNav {...stepNavProps} ref={topTabs} />
 
         {prog.challengesReset ? (
           <div className="cq-reset-note" role="status">
@@ -278,7 +282,8 @@ export function LearnLevel({
           )}
         </div>
 
-        <LevelStepNav {...stepNavProps} placement="bottom" />
+        <LevelStepNav {...stepNavProps} placement="bottom" ref={bottomTabs} />
+        <StepFlipper levelStep={levelStep} onLevelStepChange={handleStepChange} topTabs={topTabs} bottomTabs={bottomTabs} />
       </div>
     </CodeLanguageContext.Provider>
   )

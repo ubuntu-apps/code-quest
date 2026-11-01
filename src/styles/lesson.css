@@ -55,6 +55,66 @@
   font-weight: 600;
 }
 
+/* "‹ Intro" and "Gate ›" at the bottom corners, while the step tabs are scrolled away. */
+.cq-step-flipper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+  z-index: 15;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 calc(0.75rem + env(safe-area-inset-right, 0px)) 0 calc(0.75rem + env(safe-area-inset-left, 0px));
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.cq-step-flip {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--cq-border);
+  border-radius: 999px;
+  background: var(--cq-chrome);
+  color: var(--cq-text);
+  font-size: var(--cq-text-sm);
+  box-shadow: 0 4px 14px var(--cq-shadow);
+  cursor: pointer;
+  opacity: 0.92;
+}
+
+.cq-step-flip--prev {
+  padding-left: 0.4rem;
+}
+
+.cq-step-flip--next {
+  margin-left: auto;
+  padding-right: 0.4rem;
+}
+
+.cq-step-flip:hover,
+.cq-step-flip:focus-visible {
+  opacity: 1;
+  border-color: var(--cq-accent);
+  color: var(--cq-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cq-step-flip {
+    animation: cq-step-flip-in 160ms ease-out;
+  }
+}
+
+@keyframes cq-step-flip-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
 .cq-md-pre {
   margin: 0.75rem 0;
   padding: 0.85rem;

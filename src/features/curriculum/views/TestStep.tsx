@@ -126,7 +126,7 @@ export function TestStep({
             : ''
 
           return (
-          <li key={q.id} className={`cq-test-item${itemClass}`}>
+          <li key={q.id} className={`cq-test-item${itemClass}`} data-scroll-anchor={`question-${q.id}`}>
             <div className="cq-test-prompt">
               <div className="cq-test-content">
                 <p className="cq-test-num">

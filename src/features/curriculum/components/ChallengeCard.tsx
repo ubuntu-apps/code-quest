@@ -153,6 +153,7 @@ export function ChallengeCard({
   return (
     <div
       id={`challenge-${ch.id}`}
+      data-scroll-anchor={`challenge-${ch.id}`}
       className={`cq-panel cq-challenge-card${collapsed ? ' cq-challenge-card--folded' : ''}`}
     >
       <p className="cq-challenge-number">{challengeNumber}</p>
