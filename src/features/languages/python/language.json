@@ -238,68 +238,12 @@
       "suggestFunctions"
     ]
   },
-  "keys": [
-    {
-      "special": "indent"
-    },
-    {
-      "special": "unindent"
-    },
-    ":",
-    {
-      "pair": [
-        "(",
-        ")"
-      ],
-      "aria": "Parentheses"
-    },
-    {
-      "pair": [
-        "[",
-        "]"
-      ],
-      "aria": "Square brackets"
-    },
-    {
-      "pair": [
-        "\"",
-        "\""
-      ],
-      "aria": "Double quotes"
-    },
-    {
-      "pair": [
-        "'",
-        "'"
-      ],
-      "aria": "Single quotes"
-    },
-    "=",
-    {
-      "text": "_",
-      "aria": "Underscore"
-    },
-    {
-      "text": ".",
-      "aria": "Dot"
-    },
-    ",",
-    "#",
-    {
-      "pair": [
-        "{",
-        "}"
-      ],
-      "aria": "Curly braces"
-    },
-    "+",
-    "-",
-    "*",
-    "/",
-    "<",
-    ">",
-    "!"
-  ],
+  "keys": {
+    "add": [
+      ":",
+      "#"
+    ]
+  },
   "sandbox": {
     "defaultCode": "print(\"Hello from CodeQuest!\")",
     "samples": [
@@ -329,6 +273,9 @@
       "call": "input()"
     }
   },
+  "limits": {
+    "runSeconds": 10
+  },
   "messages": {
     "status": {
       "waiting": "Waiting for the previous run to finish…",
@@ -336,6 +283,22 @@
       "loading": "Downloading Python (first run only, about 10 MB)…",
       "packages": "Downloading the packages this code uses, such as pandas (first time only)…",
       "running": "Running…"
+    },
+    "errors": {
+      "tooLong": {
+        "title": "Code took too long",
+        "tip": "Look for a loop that never ends, such as `while True:` without a `break`, or a loop condition that never becomes false."
+      },
+      "packageTimeout": {
+        "title": "Python packages took too long to download",
+        "detail": "This code imports a package (such as pandas) that has to be downloaded first, and the download did not finish.",
+        "tip": "Check your internet connection and run the code again."
+      },
+      "packageError": {
+        "title": "Could not download a Python package",
+        "detail": "This code imports a package (such as pandas or sqlite3) that has to be downloaded first, and the download failed.",
+        "tip": "Check your internet connection and run the code again."
+      }
     }
   },
   "offline": {

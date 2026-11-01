@@ -16,9 +16,14 @@ const QUESTION_WHAT = /^What (?:does|is|will) `([^`]+)`(?: (?:give|show|print|re
 const QUESTION_AFTER = /^After `([^`]+)`(?:,? and (?:then )?`([^`]+)`)?, what (?:does|is|will) `([^`]+)`(?: (?:give|show|print|return|output|be|hold|contain))?\??$/
 
 export class LanguageChecker {
-  /** @param {object} spec The language's language.json. */
-  constructor(spec) {
+  /**
+   * @param {object} spec The language's language.json.
+   * @param {{ available?: () => Promise<boolean>, start?: () => Promise<void>, stop?: () => Promise<void> } | null} engine
+   *   What runs the code (PythonEngine, WebREngine, or the app's own runtime in the browser).
+   */
+  constructor(spec, engine = null) {
     this.rules = new LanguageRules(spec)
+    this.engine = engine
   }
 
   get id() {
@@ -27,12 +32,17 @@ export class LanguageChecker {
 
   /** Whether this checker can run here (its engine is installed). */
   async available() {
-    return true
+    return this.engine?.available ? this.engine.available() : true
   }
 
   /** Called before the first section, and after the last. */
-  async start() {}
-  async stop() {}
+  async start() {
+    await this.engine?.start?.()
+  }
+
+  async stop() {
+    await this.engine?.stop?.()
+  }
 
   /**
    * Checks a section by running its code.
@@ -87,6 +97,36 @@ export class LanguageChecker {
     const after = QUESTION_AFTER.exec(prompt.trim())
     if (after) return { prelude: [after[1], after[2]].filter(Boolean).join('\n'), expr: after[3] }
     return null
+  }
+
+  /**
+   * The quiz questions that ask what some code gives, with that code. `accept` can leave out
+   * ones this language can't run (SQL runs only queries).
+   */
+  askedQuestions(level, accept = () => true) {
+    return (level.test?.questions ?? []).flatMap((q) => {
+      const asked = q.type === 'mcq' ? this.askedCode(q.prompt) : null
+      return asked && accept(asked) ? [{ where: { level: level.id, item: q.prompt }, q, asked }] : []
+    })
+  }
+
+  /**
+   * What running a challenge's answers found: the solution must pass; empty code, the starter
+   * and the answer typed in as fixed values must not. Each is `{ passed, detail? }`, or missing
+   * when it wasn't run. Only the first of empty, starter and typed-in that passes is reported.
+   */
+  reportAnswers(section, where, { solution, empty, starter, typed }, { starterBlank = false } = {}) {
+    if (solution && !solution.passed) section.add(where, 'solution-fails', solution.detail)
+    if (empty?.passed) section.add(where, 'empty-passes')
+    else if (!starterBlank && starter?.passed) section.add(where, 'starter-passes')
+    else if (typed?.passed) section.add(where, 'typed-passes')
+  }
+
+  /** Each asked question's marked answer, against what its code gave (`values[i]`, null when it couldn't run). */
+  reportQuizAnswers(section, asked, values) {
+    values.forEach((given, i) => {
+      if (given && this.wrongAnswer(asked[i].q, given)) section.add(asked[i].where, 'quiz-wrong-answer', `it gives ${given[0]}`)
+    })
   }
 
   /** A choice or a result, compared loosely: no backticks, one kind of quote, single spaces. */

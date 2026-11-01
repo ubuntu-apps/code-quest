@@ -1,6 +1,6 @@
 /**
  * Checks R stages by running them in webR, the R the app runs. The engine comes from where the
- * check runs: WebREngine in Node (CI), or the app's own rSandbox in the dev app's console
+ * check runs: WebREngine in Node (CI), or the app's own WebRRuntime in the dev app's console
  * (r-curriculum/check-in-browser.mjs).
  *
  * Every sandbox sample and "Try it" block must run without an error, unless it says it shows
@@ -23,9 +23,9 @@ cat("${DUMP_MARK}", paste(unlist(lapply(ls(), function(n) {
 })), collapse = "\\n"), "${DUMP_MARK}", sep = "")`
 
 /**
- * What runs R: `runRCode(code)` → { output, error } and `runRChallengeTests(code, setup, tests)`
- * → { passed, tests, output, error }.
- * @typedef {{ runRCode: Function, runRChallengeTests: Function, available?: () => Promise<boolean>, start?: () => Promise<void>, stop?: () => Promise<void> }} REngine
+ * What runs R: `run(code)` → { output, error } and `check(code, setup, tests)` → { passed, tests,
+ * output, error }. WebREngine in Node, or the app's WebRRuntime in the browser.
+ * @typedef {{ run: Function, check: Function, available?: () => Promise<boolean>, start?: () => Promise<void>, stop?: () => Promise<void> }} REngine
  */
 
 export class RChecker extends LanguageChecker {
@@ -36,29 +36,16 @@ export class RChecker extends LanguageChecker {
    * @param {(where: string) => void} [onProgress]
    */
   constructor(spec, engine, course, onProgress = () => {}) {
-    super(spec)
-    this.engine = engine
+    super(spec, engine)
     this.onProgress = onProgress
     this.topics = new Map(course.flatMap((s) => s.topics).map((t) => [t.id, t]))
     /** Gate questions with a check that were run. */
     this.checkedQuestions = 0
   }
 
-  async available() {
-    return this.engine.available ? this.engine.available() : true
-  }
-
-  async start() {
-    await this.engine.start?.()
-  }
-
-  async stop() {
-    await this.engine.stop?.()
-  }
-
   /** What the code prints, then its variables written out as R code. */
   async valuesAfter(code) {
-    const run = await this.engine.runRCode(code + DUMP)
+    const run = await this.engine.run(code + DUMP)
     const out = run.output ?? ''
     const from = out.indexOf(DUMP_MARK)
     const to = out.lastIndexOf(DUMP_MARK)
@@ -80,7 +67,7 @@ export class RChecker extends LanguageChecker {
 
   /** Lesson code must run, unless it says it shows an error (then it must show one). */
   async checkRuns(where, ownCode, code, section) {
-    const run = await this.engine.runRCode(code)
+    const run = await this.engine.run(code)
     const demo = this.rules.showsError(ownCode)
     if (run.error && !demo) section.add(where, 'sample-error', run.error.detail)
     else if (!run.error && demo) section.add(where, 'error-demo-runs')
@@ -97,18 +84,14 @@ export class RChecker extends LanguageChecker {
         const where = { level: level.id, item: c.title, id: c.id }
         this.onProgress(`${section.key}/${level.id} "${c.title}"`)
         const { setupCode, tests } = c.validation
-        const good = await this.engine.runRChallengeTests(c.solution, setupCode, tests)
-        if (!good.passed) {
-          const why = good.error ? good.error.detail : good.tests.filter((t) => !t.passed).map((t) => `${t.label}: ${t.detail}`).join('; ')
-          section.add(where, 'solution-fails', `${why}. Output: ${good.output}`)
-        }
-        if ((await this.engine.runRChallengeTests(c.starterCode ?? '', setupCode, tests)).passed) section.add(where, 'starter-passes')
+        const good = await this.engine.check(c.solution, setupCode, tests)
+        const why = good.error ? good.error.detail : good.tests.filter((t) => !t.passed).map((t) => `${t.label}: ${t.detail}`).join('; ')
+        const starter = await this.engine.check(c.starterCode ?? '', setupCode, tests)
         // With no starter data there is nothing to work from, so the answer is the value itself.
         const typedOk = source?.challenges.find((s) => s.title === c.title)?.typedOk
-        if (!typedOk && c.starterCode) {
-          const typed = await this.typedInCode(c)
-          if (typed !== null && (await this.engine.runRChallengeTests(typed, setupCode, tests)).passed) section.add(where, 'typed-passes')
-        }
+        const typedCode = !typedOk && c.starterCode && !starter.passed ? await this.typedInCode(c) : null
+        const typed = typedCode !== null ? await this.engine.check(typedCode, setupCode, tests) : undefined
+        this.reportAnswers(section, where, { solution: { passed: good.passed, detail: `${why}. Output: ${good.output}` }, starter, typed })
       }
       for (const q of source?.questions ?? []) {
         if (q.check) await this.checkQuestion({ level: level.id, item: q.prompt }, q.check, section)
@@ -119,7 +102,7 @@ export class RChecker extends LanguageChecker {
   /** A question's check: `{ code, output }` or `{ code, error }`. */
   async checkQuestion(where, check, section) {
     this.checkedQuestions += 1
-    const run = await this.engine.runRCode(check.code)
+    const run = await this.engine.run(check.code)
     if (check.error !== undefined) {
       const message = run.error?.detail ?? ''
       if (!message.includes(check.error)) {

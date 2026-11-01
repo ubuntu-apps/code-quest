@@ -17,7 +17,7 @@
  * SQL lessons run here too, on SQLite through Python's sqlite3 module ('sql-run' and
  * 'sql-tests' requests, the _cq_sql_* helpers).
  *
- * scripts/check-curriculum.mjs runs lesson content through these same helpers.
+ * The content checker (scripts/content-check/PythonEngine.mjs) runs lessons through these same helpers.
  */
 
 var pyodideReady = null

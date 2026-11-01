@@ -1,4 +1,4 @@
-import type { FriendlyPythonError } from './pythonErrorHelper'
+import type { FriendlyCodeError } from '../LanguagePack'
 
 /** An error SQLite reported for one statement of the learner's SQL. */
 export interface SqlErrorPayload {
@@ -17,7 +17,7 @@ function lineOf(code: string, statement: string): number | undefined {
 }
 
 /** SQLite's error message as a title, a plain explanation and a tip for beginners. */
-export function explainSqlError(error: SqlErrorPayload, code: string): FriendlyPythonError {
+export function explainSqlError(error: SqlErrorPayload, code: string): FriendlyCodeError {
   const message = error.message
   const which = error.number > 1 ? ` (in statement ${error.number})` : ''
   const base = { detail: `SQLite says: ${message}${which}`, line: lineOf(code, error.statement), errorType: 'SqlError' }

@@ -1,4 +1,4 @@
-import type { FriendlyPythonError } from './pythonSandbox'
+import type { FriendlyCodeError } from '../languages'
 import type { Level } from './types'
 import {
   CHALLENGE_XP,
@@ -127,9 +127,9 @@ export function sectionUnlockHint(previousLevels: Level[], previousTitle: string
     : `Preview · clear every gate in ${previousTitle} to start`
 }
 
-export function pythonErrorLinePointer(
+export function errorLinePointer(
   code: string,
-  err: Pick<FriendlyPythonError, 'line' | 'column'> | null | undefined,
+  err: Pick<FriendlyCodeError, 'line' | 'column'> | null | undefined,
 ) {
   if (!err?.line) return null
   const lines = code.split('\n')

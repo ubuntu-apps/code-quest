@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { explainSqlError, sqlErrorSummaryLine } from './sqlErrorHelper'
+import { explainSqlError, sqlErrorSummaryLine } from './sqlErrors'
 
 describe('explainSqlError', () => {
   it('suggests quotes when an unknown column looks like a text value', () => {

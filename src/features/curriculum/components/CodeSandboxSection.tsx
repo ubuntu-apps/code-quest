@@ -1,15 +1,11 @@
 import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { CodeEditor } from '../codeEditor'
-import {
-  CODE_RUNTIME_UNSUPPORTED_MESSAGE,
-  isCodeRuntimeSupported,
-} from '../sandboxSupport'
 import type { SandboxSnippet, SqlTable } from '../types'
 import { CodeErrorPanel } from './CodeErrorPanel'
 import { SqlTablesNote } from './SqlTablesNote'
 import { sqlTableNames } from '../../languages/sql/sqlTables'
-import { languagePack, type FriendlyCodeError } from '../../languages'
+import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported, languagePack, type FriendlyCodeError } from '../../languages'
 
 /** @deprecated Use FriendlyCodeError (languages/). */
 export type FriendlySandboxError = FriendlyCodeError
@@ -98,7 +94,7 @@ export function CodeSandboxSection({
           )
         })}
       </div>
-      {pack.hasDatabase && tables ? <SqlTablesNote tables={tables} setupSql={setupSql} /> : null}
+      {pack.hasDatabase && tables ? <SqlTablesNote pack={pack} tables={tables} setupSql={setupSql} /> : null}
       <CodeEditor
         id={`${languageId}-sandbox-input`}
         labelId={`${languageId}-sandbox-label`}

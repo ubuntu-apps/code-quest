@@ -1,12 +1,6 @@
-export interface FriendlyRError {
-  title: string
-  detail: string
-  tip?: string
-  line?: number
-  column?: number
-}
+import type { FriendlyCodeError } from '../LanguagePack'
 
-export function explainRError(raw: string): FriendlyRError {
+export function explainRError(raw: string): FriendlyCodeError {
   const detail = raw.trim() || 'Unknown R error'
   const lower = detail.toLowerCase()
 

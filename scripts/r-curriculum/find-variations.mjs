@@ -16,11 +16,12 @@ import { candidateData, variationKey } from './data/_rerun.mjs'
 import { RProtection } from './protection.mjs'
 import { RChecker } from '../content-check/RChecker.mjs'
 import { FetchContentSource } from '../content-check/ContentSource.mjs'
-import { runRCode, runRChallengeTests } from '../../src/features/curriculum/rSandbox.ts'
+import { languagePack } from '../../src/features/languages/index.ts'
 
 export async function findVariations(sectionId) {
   const spec = await new FetchContentSource(import.meta.env?.BASE_URL ?? '/code-quest/').languageSpec('r')
-  const checker = new RChecker(spec, { runRCode, runRChallengeTests }, COURSE)
+  const webR = await languagePack('r').runtime()
+  const checker = new RChecker(spec, webR, COURSE)
   const protection = new RProtection()
   const variations = {}
   const unresolved = []
@@ -39,14 +40,14 @@ export async function findVariations(sectionId) {
           return assertion ? [...own, { id: `t${own.length + 1}`, label: RProtection.LABEL, assertion }] : own
         }
         const published = protection.protect({ ...c })
-        const good = await runRChallengeTests(c.solution, '', published.validation.tests)
-        const cheat = await runRChallengeTests(typed, '', published.validation.tests)
+        const good = await webR.check(c.solution, '', published.validation.tests)
+        const cheat = await webR.check(typed, '', published.validation.tests)
         if (good.passed && !cheat.passed) continue
         let found = null
         for (const alt of candidateData(c.starterCode)) {
           const tests = withRerun(alt)
-          if (!(await runRChallengeTests(c.solution, '', tests)).passed) continue
-          if ((await runRChallengeTests(typed, '', tests)).passed) continue
+          if (!(await webR.check(c.solution, '', tests)).passed) continue
+          if ((await webR.check(typed, '', tests)).passed) continue
           found = alt
           break
         }

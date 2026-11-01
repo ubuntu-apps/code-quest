@@ -1,4 +1,4 @@
-// Checks that run a challenge again with other data (see ._cq_rerun in rSandbox.ts), so an
+// Checks that run a challenge again with other data (see ._cq_rerun in src/features/languages/r/rHarness.ts), so an
 // answer typed in as fixed values fails. The other data is made from the starter code:
 // - numbers inside c(…) or list(…), in set.seed() and in plain assignments (x <- 47.8) move
 //   up a little;

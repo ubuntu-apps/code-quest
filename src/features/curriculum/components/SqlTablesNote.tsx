@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { runSqlCode } from '../pythonSandbox'
+import type { LanguagePack } from '../../languages'
 import type { SqlTable } from '../types'
 
 /** How many rows "Peek" shows. */
@@ -10,9 +10,10 @@ type Peek = { state: 'loading' } | { state: 'done'; text: string }
 /**
  * The tables a SQL lesson's database has, with their columns, folded under one line.
  * With the lesson's `setupSql`, each table has a Peek button that shows its first rows,
- * so a learner can see what the data looks like before writing a query.
+ * so a learner can see what the data looks like before writing a query. The course's
+ * language (`pack`) runs the query.
  */
-export function SqlTablesNote({ tables, setupSql }: { tables: SqlTable[]; setupSql?: string }) {
+export function SqlTablesNote({ pack, tables, setupSql }: { pack: LanguagePack; tables: SqlTable[]; setupSql?: string }) {
   // Peeks belong to one database; a different lesson's starts with none shown.
   const [peekState, setPeekState] = useState<{ setupSql?: string; peeks: Record<string, Peek> }>({ peeks: {} })
   const peeks = peekState.setupSql === setupSql ? peekState.peeks : {}
@@ -39,8 +40,7 @@ export function SqlTablesNote({ tables, setupSql }: { tables: SqlTable[]; setupS
       return
     }
     setPeeks((prev) => ({ ...prev, [name]: { state: 'loading' } }))
-    const quoted = `"${name.replace(/"/g, '""')}"`
-    const result = await runSqlCode(`SELECT * FROM ${quoted} LIMIT ${PEEK_ROWS};`, setupSql)
+    const result = await pack.peekTable({ table: name, setupSql, rows: PEEK_ROWS })
     if (!mounted.current) return
     const text = result.error
       ? `Couldn't load the rows: ${result.error.title}`

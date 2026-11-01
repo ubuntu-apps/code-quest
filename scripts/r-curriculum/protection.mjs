@@ -1,7 +1,7 @@
 /**
  * R's protection against typed-in answers: a last test, "Works with other data too", that
  * reruns the learner's code with the starter's data changed and compares the results with the
- * solution's (`._cq_rerun` in src/features/curriculum/rHarness.ts). The other data is the
+ * solution's (`._cq_rerun` in src/features/languages/r/rHarness.ts). The other data is the
  * challenge's `alt` (text, or a function of the starter), else an entry in data/r-variations.mjs
  * (found by find-variations.mjs), else the default change in data/_rerun.mjs.
  *

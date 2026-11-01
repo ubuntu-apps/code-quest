@@ -9,17 +9,8 @@
  */
 import { LanguageChecker } from './LanguageChecker.mjs'
 
+/** Runs on PythonEngine: `new PythonChecker(spec, engine)`. */
 export class PythonChecker extends LanguageChecker {
-  /** @param {object} spec language.json  @param {import('./PythonEngine.mjs').PythonEngine} engine */
-  constructor(spec, engine) {
-    super(spec)
-    this.engine = engine
-  }
-
-  async available() {
-    return this.engine.available()
-  }
-
   /**
    * "Try it" blocks the check can't run here: ones that read the keyboard, and ones that go
    * online (urlopen), as well as ones that show an error on purpose.
@@ -32,7 +23,7 @@ export class PythonChecker extends LanguageChecker {
     const cases = []
     const caseRefs = []
     const quiz = { quiz: [], tries: [] }
-    const quizRefs = []
+    const asked = []
     const tryRefs = []
     for (const level of file.levels) {
       for (const ch of this.ownChallenges(level)) {
@@ -46,11 +37,9 @@ export class PythonChecker extends LanguageChecker {
         cases.push({ setup: ch.validation.setupCode ?? '', tests: ch.validation.tests, variants })
         caseRefs.push({ where, hasSolution: Boolean(variants.solution), starterBlank: !variants.starter.trim() })
       }
-      for (const q of level.test?.questions ?? []) {
-        const asked = q.type === 'mcq' ? this.askedCode(q.prompt) : null
-        if (!asked) continue
-        quiz.quiz.push({ lang: 'python', setup: '', ...asked })
-        quizRefs.push({ where: { level: level.id, item: q.prompt }, q })
+      for (const question of this.askedQuestions(level)) {
+        quiz.quiz.push({ lang: 'python', setup: '', ...question.asked })
+        asked.push(question)
       }
       for (const block of this.tryItBlocks(level)) {
         if (this.skipTry(block.code)) continue
@@ -62,16 +51,11 @@ export class PythonChecker extends LanguageChecker {
     const results = cases.length ? this.engine.run('run_tests', cases) : []
     results.forEach((res, i) => {
       const { where, hasSolution, starterBlank } = caseRefs[i]
-      if (hasSolution && !res.solution.passed) section.add(where, 'solution-fails', res.solution.detail)
-      if (res.empty.passed) section.add(where, 'empty-passes')
-      else if (!starterBlank && res.starter.passed) section.add(where, 'starter-passes')
-      else if (res.typed?.passed) section.add(where, 'typed-passes')
+      this.reportAnswers(section, where, { ...res, solution: hasSolution ? res.solution : undefined }, { starterBlank })
     })
 
     const ran = quiz.quiz.length || quiz.tries.length ? this.engine.run('run_quiz', quiz) : { quiz: [], tries: [] }
-    ran.quiz.forEach((values, i) => {
-      if (values && this.wrongAnswer(quizRefs[i].q, values)) section.add(quizRefs[i].where, 'quiz-wrong-answer', `it gives ${values[0]}`)
-    })
+    this.reportQuizAnswers(section, asked, ran.quiz)
     ran.tries.forEach((message, i) => {
       if (message) section.add(tryRefs[i], 'sample-error', message)
     })
