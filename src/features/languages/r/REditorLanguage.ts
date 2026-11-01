@@ -1,13 +1,7 @@
-import type { Extension } from '@codemirror/state'
 import { completeFromList, type CompletionContext, type CompletionSource } from '@codemirror/autocomplete'
 import { EditorLanguage, type SuggestionContext } from '../EditorLanguage'
-import { rLanguage } from './rSyntax'
 
 export class REditorLanguage extends EditorLanguage {
-  syntax(): Extension {
-    return rLanguage
-  }
-
   /**
    * Names already used in this code (R names can contain dots, like `is.na`), names from the
    * challenge's instructions, then R's words. Like Python's, from the second letter.

@@ -1,14 +1,8 @@
-import type { Extension } from '@codemirror/state'
 import { completeFromList, type CompletionContext, type CompletionSource } from '@codemirror/autocomplete'
 import { EditorLanguage, type SuggestionContext } from '../EditorLanguage'
-import { sqlLanguage } from './sqlSyntax'
 import { isSqlKeyword, sqlTableFor, sqlTablesInQuery } from './sqlTables'
 
 export class SqlEditorLanguage extends EditorLanguage {
-  syntax(): Extension {
-    return sqlLanguage
-  }
-
   /**
    * SQL suggestions, depending on where the cursor is:
    * - after `books.` or an alias such as `b.`: that table's columns;

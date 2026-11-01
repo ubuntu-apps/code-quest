@@ -72,6 +72,10 @@ describe('highlightSql', () => {
   it('keeps a doubled quote inside text, and shows NULL as a constant', () => {
     expect(kinds("SELECT 'it''s', NULL")).toEqual(['keyword:SELECT', "string:'it''s'", 'constant:NULL'])
   })
+
+  it('leaves a quoted name plain, even when it is a keyword', () => {
+    expect(kinds('SELECT "group", `order` FROM t')).toEqual(['keyword:SELECT', 'keyword:FROM'])
+  })
 })
 
 describe('looksLikeSql', () => {
@@ -101,6 +105,10 @@ describe('highlightR', () => {
 
   it('keeps a # inside text as part of the text, and dotted names whole', () => {
     expect(rKinds('is.na(y) <- "a # b"')).toBe('builtin:is.na string:"a # b"')
+  })
+
+  it('leaves an operator such as %in% plain (no keyword `in` inside it)', () => {
+    expect(rKinds('x %in% y; for (i in x) {}')).toBe('keyword:for keyword:in')
   })
 
   it('gives back the code unchanged when joined', () => {

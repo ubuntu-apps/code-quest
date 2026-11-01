@@ -1,9 +1,11 @@
 /**
  * Writes a course's JSON files (public/content/<course>/) from its lesson data.
  *
- * Each course has a subclass in its folder (python-curriculum/generator.mjs and so on) that
- * says where the files go and overrides the steps it does differently; its generate.mjs is
- * one line: `await new SqlCourseGenerator(COURSE).run()`.
+ * What differs between courses is mostly settings, in the `course` block of the language's
+ * language.json (what a lesson is called, shuffled quiz choices, required explanations, extra
+ * level fields, question fields left out). A course's generate.mjs is then one line:
+ * `await new CourseGenerator({ language, course: COURSE }).run()`, with its TypedInProtection
+ * if it has one. A course with steps of its own subclasses this (python-curriculum/generator.mjs).
  */
 import { mkdir, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
@@ -16,27 +18,25 @@ export class CourseGenerator {
   /** The share of quiz answers needed to pass a lesson. */
   static PASSING_SCORE_PERCENT = 70
 
-  /** Shuffle each multiple-choice question's options in a fixed order per prompt. */
-  static SHUFFLE_CHOICES = false
-
-  /** Every quiz question must say why its answer is right. */
-  static EXPLANATION_REQUIRED = true
-
   /**
    * @param {object} options
-   * @param {string} options.id Course id: the folder under public/content and the key of saved progress.
-   * @param {string} options.title Course title in its index.json.
+   * @param {object} options.language The language's language.json: its `id` (the folder under
+   *   public/content and the key of saved progress), `label` (the course title) and `course` settings.
    * @param {object[]} options.course Sections in course order: `{ sectionId, title, filename, topics }`.
-   * @param {string} [options.unit] What the log calls a lesson ("lessons", "stages").
    * @param {TypedInProtection} [options.protection] Adds the checks that catch typed-in answers.
    */
-  constructor({ id, title, course, unit = 'lessons', protection = new TypedInProtection() }) {
-    this.id = id
-    this.protection = protection
-    this.title = title
+  constructor({ language, course, protection = new TypedInProtection() }) {
+    const settings = language.course ?? {}
+    this.id = language.id
+    this.title = language.label
     this.course = course
-    this.unit = unit
-    this.outDir = resolve(dirname(fileURLToPath(import.meta.url)), '../../public/content', id)
+    this.protection = protection
+    this.unit = settings.unit ?? 'lessons'
+    this.shuffle = settings.shuffleChoices ?? false
+    this.explanationRequired = settings.explanationRequired ?? true
+    this.levelFields = settings.levelFields ?? []
+    this.omitFromQuestions = settings.omitFromQuestions ?? []
+    this.outDir = resolve(dirname(fileURLToPath(import.meta.url)), '../../public/content', this.id)
   }
 
   /** Writes the sections, then the course's index.json. */
@@ -76,16 +76,17 @@ export class CourseGenerator {
     return this.protection.protect({ id: challengeId(topic.id, challenge.title), ...challenge })
   }
 
-  /** A quiz question as published, with its permanent id. */
+  /** A quiz question as published: its permanent id, without the fields only the checker uses. */
   buildQuestion(topic, question, index) {
-    if (this.constructor.EXPLANATION_REQUIRED && !question.explanation) throw new Error(`${topic.id} question ${index + 1} has no explanation`)
+    if (this.explanationRequired && !question.explanation) throw new Error(`${topic.id} question ${index + 1} has no explanation`)
     const published = { id: questionId(topic.id, question.prompt), ...question }
-    return this.constructor.SHUFFLE_CHOICES ? this.shuffleChoices(published) : published
+    for (const field of this.omitFromQuestions) delete published[field]
+    return this.shuffle ? this.shuffleChoices(published) : published
   }
 
-  /** Fields after the quiz that only some courses' lessons have (SQL's database). */
-  levelExtras(_topic) {
-    return {}
+  /** Fields after the quiz that only some courses' lessons have (`levelFields`: SQL's database). */
+  levelExtras(topic) {
+    return Object.fromEntries(this.levelFields.map((field) => [field, topic[field]]))
   }
 
   /** Fields after the sections in index.json. */
