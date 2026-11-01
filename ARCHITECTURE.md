@@ -1,0 +1,303 @@
+# CodeQuest architecture
+
+Where each part of the app lives and how the parts talk to each other. **Level 1** is the whole system, **Level 2** zooms into each part, and **Level 3** follows one action from click to result.
+
+Contents:
+- Level 1: [The whole system](#the-whole-system) · [Where things live](#where-things-live)
+- Level 2: [Building a course](#building-a-course) · [Language packs](#language-packs) · [The app](#the-app) · [Content checker](#content-checker)
+- Level 3: [Pressing Check](#pressing-check) · [Try it and Run](#try-it-and-run) · [Adding a language](#adding-a-language)
+
+---
+
+## Level 1
+
+### The whole system
+
+Four zones: write, publish, learn, check. You write lessons as JavaScript in `scripts/`. A generator turns them into JSON under `public/content/`. The React app fetches that JSON and runs learners' code in the browser. The content checker runs every solution before anything ships.
+
+```mermaid
+flowchart LR
+  subgraph W["1 · Write (Node, your machine)"]
+    D["Lesson data<br/>scripts/*-curriculum/data/*.mjs"]
+    K["Course kit<br/>CourseBuilders · CourseGenerator"]
+    LJ["language.json<br/>(one per language)"]
+  end
+  subgraph P["2 · Publish (static files)"]
+    C["public/content/#lt;lang#gt;/<br/>index.json + section JSON"]
+    RI["public/content/index.json<br/>(which courses exist)"]
+  end
+  subgraph L["3 · Learn (browser)"]
+    A["React app<br/>CodeQuestScreen + views"]
+    LP["Language packs<br/>Python · SQL · R"]
+    RT["Runtimes<br/>Pyodide worker · webR"]
+    S["localStorage<br/>progress, drafts"]
+  end
+  subgraph Q["4 · Check (Node or browser)"]
+    CC["Content checker<br/>scripts/content-check"]
+    CI["GitHub Actions<br/>npm run check"]
+  end
+  D --> K
+  LJ --> K
+  K -- "npm run generate" --> C
+  RI --> A
+  C -- "fetch + zod" --> A
+  LJ --> LP
+  A --> LP
+  LP --> RT
+  A --> S
+  C --> CC
+  LJ --> CC
+  CI --> CC
+```
+
+One `language.json` per language feeds all three sides: the generator, the app's language pack and the checker. That file is the single place for language specifics.
+
+| Language | Runs on |
+|---|---|
+| Python | Pyodide in a Web Worker (`public/pyodide-worker.js`) |
+| SQL | SQLite through Pyodide's `sqlite3`, in the same worker |
+| R | webR, loaded from its CDN (admin-only for now) |
+
+### Where things live
+
+| Folder | What is in it | Runs in |
+|---|---|---|
+| `scripts/course-kit/` | Base classes shared by every course: `CourseBuilders`, `CourseGenerator`, `TypedInProtection`. | Node |
+| `scripts/<lang>-curriculum/` | One course: `builders.mjs`, `generator.mjs`, `protection.mjs`, `generate.mjs`, and `data/` with one folder per quest. | Node |
+| `scripts/content-check/` | The content checker: `check.mjs` CLI, `ContentChecker`, `Report`, one checker per language, the engines and the Python runners. | Node, or the browser for R |
+| `public/content/` | Generated lesson JSON the app fetches. `index.json` lists the courses; each course folder has its own `index.json` plus one file per quest. | Static files |
+| `public/pyodide-worker.js` | The Web Worker that loads Pyodide and runs Python and SQL. It also holds the test helpers the checker reuses. | Browser worker |
+| `src/features/languages/` | Language packs: `language.json`, the pack class and the editor class per language, plus the shared `Highlighter` and the registry in `index.ts`. | Browser (rules also load in Node) |
+| `src/features/curriculum/` | The learning screens: views, components, hooks, code editor, sandboxes, progress storage, curriculum loading and schemas. | Browser |
+| `src/features/editor/` | Admin edit mode: drafts, save plans, saving through the Vite dev plugin or the GitHub API. | Browser |
+| `src/features/…` | Badges, certificates, ranks, review, reminders, sound, support, feedback. | Browser |
+
+---
+
+## Level 2
+
+### Building a course
+
+Each course subclasses three base classes and only overrides what is different. The lesson files import a thin `data/_builders.mjs`, which exports the bound methods of that course's builders.
+
+```mermaid
+classDiagram
+  direction LR
+  class CourseBuilders {
+    makeTopic() makeProject()
+    snippet() mc() qShort() qPattern()
+    code() output()
+    exports()
+  }
+  class PythonBuilders { task() typedInput() }
+  class SqlBuilders { query() }
+  class RBuilders { task() near() same() prints() uses() avoids() }
+  CourseBuilders <|-- PythonBuilders
+  CourseBuilders <|-- SqlBuilders
+  CourseBuilders <|-- RBuilders
+
+  class CourseGenerator {
+    SHUFFLE_CHOICES
+    EXPLANATION_REQUIRED
+    sectionsToWrite() topicsOf()
+    buildChallenge() buildQuestion()
+    levelExtras() indexExtras() afterWrite()
+    writeSection() writeIndex()
+  }
+  class PythonCourseGenerator { side quests, explanations }
+  class SqlCourseGenerator { levelExtras: database }
+  class RCourseGenerator { SHUFFLE_CHOICES = true }
+  CourseGenerator <|-- PythonCourseGenerator
+  CourseGenerator <|-- SqlCourseGenerator
+  CourseGenerator <|-- RCourseGenerator
+
+  class TypedInProtection { protect(challenge) }
+  class PythonProtection { variations.json tests }
+  class RProtection { alt data re-run }
+  TypedInProtection <|-- PythonProtection
+  TypedInProtection <|-- RProtection
+  CourseGenerator o-- TypedInProtection : protection
+```
+
+```mermaid
+flowchart LR
+  F["data/#lt;quest#gt;/*.mjs<br/>topics, tasks, questions"] --> B["data/_builders.mjs<br/>bound builder methods"]
+  B --> F
+  F --> G["generate.mjs<br/>new XCourseGenerator().run()"]
+  J["language.json<br/>id, label"] --> G
+  G --> BC["buildChallenge<br/>id + protection.protect()"]
+  G --> BQ["buildQuestion<br/>id, explanation, shuffle"]
+  BC --> W["writeSection<br/>public/content/#lt;lang#gt;/#lt;quest#gt;.json"]
+  BQ --> W
+  W --> I["writeIndex<br/>public/content/#lt;lang#gt;/index.json"]
+```
+
+- **Typed-in protection** stops an answer that just types the expected value from passing. Python re-runs the answer with other inputs from `variations.json`. R re-runs it on different data given as `alt`. SQL needs none, because queries run against a whole table.
+- **What a course overrides:** only the hooks that differ. SQL adds the stage's `database` to each level. Python adds side quests and checks explanations. R shuffles quiz choices and drops the internal `check` field from questions.
+
+### Language packs
+
+`language.json` holds everything that is data: keywords, built-ins, colouring patterns, key-bar keys, how "Try it" spots code, what counts as an error demo, the test mode and indent size. zod validates it in `languageSpec.ts`. The classes add only what has to be code: running it, and the editor support.
+
+```mermaid
+classDiagram
+  direction TB
+  class LanguageRules {
+    spec: LanguageSpec
+    highlight(code)
+    looksLikeCode() canTry() codeToTry()
+    showsError() readsInputIn()
+  }
+  class LanguagePack {
+    keys: CodeKey[]
+    statusMessage() startMessage()
+    run(code, options)*
+    checkChallenge(answer, options)*
+    loadEditor()*
+    prepareOffline()*
+    warmUp() preload()
+  }
+  class PyodidePack { shared Pyodide worker }
+  class PythonPack
+  class SqlPack { runs on the stage database }
+  class RPack { webR, loaded lazily }
+  LanguageRules <|-- LanguagePack
+  LanguagePack <|-- PyodidePack
+  PyodidePack <|-- PythonPack
+  PyodidePack <|-- SqlPack
+  LanguagePack <|-- RPack
+  LanguageRules ..> Highlighter : uses
+
+  class EditorLanguage {
+    extensions(context)
+    completionWords
+  }
+  EditorLanguage <|-- PythonEditorLanguage
+  EditorLanguage <|-- SqlEditorLanguage
+  EditorLanguage <|-- REditorLanguage
+  EditorLanguage <|-- PlainEditorLanguage
+  LanguagePack ..> EditorLanguage : loadEditor()
+```
+
+- **The registry:** `src/features/languages/index.ts` creates the packs once in `LANGUAGE_PACKS` and looks them up with `languagePack(id)`, `packForTestMode('r_tests')` and `loadEditorLanguage(id)`.
+- **Loaded on demand:** runtimes and editor classes come in through dynamic `import()`, so opening a Python lesson never downloads webR. The app warms the pack up 1.5 s after a course opens.
+- **Shared with Node:** `LanguageRules` uses `.ts` imports that Node can load with types stripped. That lets the content checker use the same "Try it" and colouring rules as the app.
+
+### The app
+
+```mermaid
+flowchart TB
+  M["main.tsx<br/>service worker, polyfills"] --> APP["App.tsx<br/>BrowserRouter /code-quest"]
+  APP --> CQ["CodeQuestScreen<br/>header, tabs, warm-up"]
+  subgraph V["views/"]
+    LH["LearnHome<br/>pick a course"] --> LS["LearnSections<br/>quests"] --> LL["LearnLevels<br/>stages"] --> LV["LearnLevel"]
+    LV --> IS["IntroStep<br/>lesson + Try it"]
+    LV --> CH["ChallengeCard ×N"]
+    LV --> TS["TestStep<br/>the gate quiz"]
+  end
+  CQ --> LH
+  subgraph H["hooks/"]
+    UC["useCurriculum<br/>loadCurriculum + zod"]
+    UCH["useChallenges"]
+    USB["useSandbox"]
+    UP["useCourseProgress"]
+    ULT["useLevelTest"]
+  end
+  CQ --> UC
+  CH --> UCH
+  IS --> USB
+  TS --> ULT
+  UCH --> UP
+  ULT --> UP
+  UC -- "fetch" --> CONTENT[("public/content")]
+  UP --> LSG[("localStorage<br/>codequest:progress:*")]
+  UCH --> PACK["languages/<br/>LanguagePack"]
+  USB --> PACK
+  CH --> ED["codeEditor/<br/>CodeMirror + EditorLanguage"]
+```
+
+Other features (badges, ranks, certificates, review, reminders) read the same progress storage. Admin edit mode, in `src/features/editor/`, writes lesson JSON back through the Vite save plugin in dev or the GitHub API otherwise.
+
+### Content checker
+
+Run with `npm run check:content`, or `npm run check:r` for R only. Options include `--language`, `--section`, `--all-strict`, `--verbose` and `--require-engines`. It exits with 1 when something fails, and with 2 when a language engine was missing but required.
+
+```mermaid
+flowchart LR
+  CLI["check.mjs<br/>CLI options"] --> CC["ContentChecker<br/>run · checkCourse · checkShared"]
+  CFG["curriculum-check.json<br/>strict sections"] --> REP
+  CC --> REP["Report<br/>rules, strictness"]
+  CC --> SRC["ContentSource"]
+  SRC --> FS["FileContentSource<br/>Node"]
+  SRC --> FE["FetchContentSource<br/>browser"]
+  CC --> LC["LanguageChecker<br/>fences, Try it blocks, typed-in"]
+  LC --> PC["PythonChecker"]
+  LC --> SC["SqlChecker"]
+  LC --> RC["RChecker"]
+  PC --> PE["PythonEngine<br/>system python -c run_tests.py"]
+  SC --> PE
+  RC --> WE["WebREngine<br/>webR in Node"]
+  RC -.-> RB["rSandbox<br/>check-in-browser.mjs"]
+  PE --> H["test helpers taken from<br/>public/pyodide-worker.js"]
+```
+
+- **Shared rules:** `checkShared` looks for an empty prompt, a missing hint or solution, quiz patterns that don't match, and challenges a plain text match would pass.
+- **Language rules:** each solution must pass and each starter must fail. Every "Try it" sample must run. Error demos must actually fail. Typed-in answers must not pass where the section is strict.
+
+---
+
+## Level 3
+
+### Pressing Check
+
+```mermaid
+sequenceDiagram
+  actor L as Learner
+  participant CC as ChallengeCard
+  participant UC as useChallenges
+  participant P as LanguagePack
+  participant RT as Runtime
+  participant ST as localStorage
+  L->>CC: types answer, presses Check
+  CC->>UC: check(challenge, answer)
+  UC->>P: packForTestMode(validation.mode)
+  Note over UC,P: python_tests → PythonPack<br/>sql_tests → SqlPack<br/>r_tests → RPack
+  UC->>P: checkChallenge(answer, {challenge, level})
+  P->>RT: run answer + setupCode + tests
+  Note over RT: Python/SQL: pyodide-worker.js _cq_tests<br/>R: webR with the rHarness wrapper
+  RT-->>P: output, error, test results
+  P-->>UC: {passed, tests[], output, error}
+  UC->>ST: mark solved, save draft
+  UC-->>CC: result
+  CC-->>L: Pass / Fail per check, ValueDiff, friendly error
+```
+
+Stop works the same for every language: the pack gets an `AbortSignal`. For Python, the worker is thrown away and started again on the next run.
+
+### Try it and Run
+
+```mermaid
+flowchart LR
+  MD["Lesson markdown<br/>SimpleMarkdown"] --> T["tryCode.ts"]
+  T -- "pack.canTry(block)<br/>pack.codeToTry(block)" --> B["Try it button"]
+  B --> SB["CodeSandboxSection<br/>editor + Input box"]
+  SB --> US["useSandbox"]
+  US -- "pack.run(code, {level, stdin})" --> RT["Runtime"]
+  RT --> OUT["Output, or CodeErrorPanel<br/>with the error line marked"]
+  MD --> HC["HighlightedCode<br/>pack.highlight()"]
+```
+
+The rules for which blocks get a Try it button, and which ones are error demos, come from the pack's `language.json`. The Input box only shows when `readsInputIn` finds code that reads input.
+
+### Adding a language
+
+The files to touch for JavaScript (HTML works the same way):
+
+1. `src/features/languages/javascript/language.json`: keywords, colouring, key bar, Try it rules, `testMode: "javascript_tests"`.
+2. `JavaScriptPack.ts` extends `LanguagePack`: `run`, `checkChallenge`, `loadEditor`, `prepareOffline`, `errorSummaryLine`.
+3. `JavaScriptEditorLanguage.ts` extends `EditorLanguage`, then add the pack to `LANGUAGE_PACKS` in `index.ts`.
+4. `scripts/javascript-curriculum/`: a `builders.mjs` subclass with `task()`, a generator subclass, a protection subclass if needed, `generate.mjs` and `data/`.
+5. `scripts/content-check/`: a `JavaScriptChecker` and an engine, registered in `check.mjs`.
+6. Add the course to `public/content/index.json` (with `comingSoon` until it is ready).
+
+The full guide is in [`src/features/languages/README.md`](src/features/languages/README.md).

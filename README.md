@@ -83,6 +83,8 @@ npm run dev        # http://localhost:5173/code-quest/
 
 ### How it works
 
+For diagrams of how the parts fit together (the course kit, language packs, app screens, content checker, and what happens when you press Check), see [ARCHITECTURE.md](ARCHITECTURE.md).
+
 - **Content** lives in `public/content/` as JSON: `index.json` lists the languages, each language folder has its own `index.json` of sections, and each section file holds its levels (intro, challenges, quiz). The app validates every file against the Zod schemas in `src/features/curriculum/curriculumSchemas.ts`. Python quiz questions carry a one-line `explanation`, written in `scripts/python-curriculum/data/explanations/` (one per question, in order) and added by the generator.
 - **Python** runs in `public/pyodide-worker.js`, off the main thread. Runs stop after 10 seconds, the sandbox has a Stop button, and `input()` reads from the sandbox's Input box. The runtime is downloaded from the jsDelivr CDN on first use.
 - **Unlocking**: every section can be opened to preview its lessons, but its levels stay locked until the section's prerequisite is met; inside a section, each level unlocks when the previous level's quiz is passed. **Admin mode** unlocks everything for testing: on the About tab, tap the version heading 7 times to show its panel, then enter PIN `2001`. The PIN only prevents accidents; it isn't security. A section that has easy and medium projects (every section before Capstone projects) unlocks the next section once those projects are done. Other sections don't lock the next one yet; set `LOCK_SECTIONS_BY_QUIZZES` in `src/features/curriculum/constants.ts` to `true` to require every quiz in the previous section to be passed.
