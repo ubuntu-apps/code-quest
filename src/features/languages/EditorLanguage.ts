@@ -2,7 +2,9 @@ import { EditorState, type Extension } from '@codemirror/state'
 import { indentUnit } from '@codemirror/language'
 import { autocompletion, type Completion, type CompletionResult, type CompletionSource } from '@codemirror/autocomplete'
 import type { SqlTable } from '../curriculum/types'
+import { Highlighter } from './Highlighter'
 import type { LanguageSpec } from './languageSpec'
+import { patternHighlighting } from './patternHighlighting'
 
 /**
  * The code editor's (CodeMirror's) side of a language: its syntax, its suggestions while
@@ -24,17 +26,29 @@ export class EditorLanguage {
   readonly indentSize: number
   /** Keywords and functions to suggest while typing. */
   protected readonly words: Completion[]
+  /** The language's language.json (none for plain text). */
+  protected readonly spec: LanguageSpec | undefined
 
   /** @param spec The language's language.json (none for plain text). */
   constructor(spec?: LanguageSpec) {
+    this.spec = spec
     this.indentSize = spec?.editor.indentSize ?? 4
     const list = (names: string[]) => names.flatMap((name) => spec?.words[name] ?? [])
     this.words = spec ? completionWords(list(spec.editor.suggestKeywords), list(spec.editor.suggestFunctions)) : []
   }
 
-  /** The language's syntax (colours, brackets, auto-indent), or none. */
+  /**
+   * The language's syntax in the editor. By default: colours from the language.json's
+   * `highlight` patterns, as in lesson text, and its comment markers (Ctrl+/). A language
+   * with its own CodeMirror package (Python, for smart indenting) uses that instead.
+   */
   syntax(): Extension {
-    return []
+    if (!this.spec) return []
+    const commentTokens = this.spec.editor.comments
+    return [
+      patternHighlighting(new Highlighter(this.spec)),
+      commentTokens ? EditorState.languageData.of(() => [{ commentTokens }]) : [],
+    ]
   }
 
   /** Suggestions while typing, or null for none. */

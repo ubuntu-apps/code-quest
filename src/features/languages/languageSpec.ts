@@ -87,6 +87,10 @@ export const languageSpecSchema = z
       /** The word lists offered as keywords and as functions while typing. */
       suggestKeywords: z.array(z.string()),
       suggestFunctions: z.array(z.string()),
+      /** How a comment is written, for the editor's "comment out" shortcut (Ctrl+/). */
+      comments: z
+        .object({ line: z.string().optional(), block: z.object({ open: z.string(), close: z.string() }).optional() })
+        .optional(),
     }),
     /** The phone key bar: the base keys (keys.json), changed for this language. */
     keys: keysSchema,
@@ -117,6 +121,24 @@ export const languageSpecSchema = z
       }),
     }),
     offline: z.object({ stepLabel: z.string() }),
+    /**
+     * How the course generator (scripts/course-kit/CourseGenerator.mjs) writes this
+     * language's course. The app doesn't use it.
+     */
+    course: z
+      .object({
+        /** What the generator's log calls a lesson: "lessons", "stages", "topics". */
+        unit: z.string().optional(),
+        /** Shuffle each multiple-choice question's options (in a fixed order per prompt). */
+        shuffleChoices: z.boolean().optional(),
+        /** Every quiz question must say why its answer is right (default true). */
+        explanationRequired: z.boolean().optional(),
+        /** Lesson fields copied into the published level, after the quiz (SQL's `database`). */
+        levelFields: z.array(z.string()).optional(),
+        /** Question fields only the checker uses, left out of the published lessons (R's `check`). */
+        omitFromQuestions: z.array(z.string()).optional(),
+      })
+      .optional(),
   })
   .superRefine((spec, ctx) => {
     const lists = [

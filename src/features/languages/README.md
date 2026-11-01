@@ -7,7 +7,7 @@ Each course's language lives in its own folder here. What the language *is like*
 | --- | --- |
 | `<id>/language.json` | Labels, flags (Run button, Input box, table output, database, setup code), changes to the phone keys, sandbox samples, status messages, word lists, colouring patterns, "Try it" rules, indent. Checked by `languageSpec.ts` when the app starts. |
 | `<id>/<Name>Pack.ts` | A `LanguagePack` subclass: runs and checks code on the language's runtime (loaded on first use), explains errors, downloads the runtime for offline use. |
-| `<id>/<Name>EditorLanguage.ts` | An `EditorLanguage` subclass: CodeMirror's syntax and suggestion logic. Loaded only with the editor. |
+| `<id>/<Name>EditorLanguage.ts` | An `EditorLanguage` subclass: the editor's suggestions while typing. Loaded only with the editor. The editor colours code with the same `highlight` patterns as lesson text (`patternHighlighting.ts`), so it needs no syntax of its own unless the language has a CodeMirror package worth using (Python, for smart indenting). |
 
 The shared classes:
 
@@ -24,9 +24,9 @@ For a language with id `javascript`:
 
 1. **`javascript/language.json`.** Copy another language's and change it. `testMode` is the validation mode its challenges use (`javascript_tests`). Word lists are named; the colouring rules (`highlight.names`) and the editor's suggestions (`editor`) refer to them by name.
 2. **`javascript/JavaScriptPack.ts`.** Extend `LanguagePack` and pass the JSON to `super()`. Implement `run`, `checkChallenge`, `errorSummaryLine`, `loadEditor` and `prepareOffline`; override `runChallenge`, `warmUp` or `preload` as needed. Load the runtime with a dynamic `import()`, so it isn't downloaded before it is used.
-3. **`javascript/JavaScriptEditorLanguage.ts`.** Extend `EditorLanguage`: `syntax()` (a CodeMirror language) and `completionSource()` (suggestions; `this.words` has the language's words).
+3. **`javascript/JavaScriptEditorLanguage.ts`.** Extend `EditorLanguage` with `completionSource()` (suggestions; `this.words` has the language's words). Colours come from `highlight` in the JSON, and Ctrl+/ from `editor.comments`; override `syntax()` only to use a CodeMirror language package instead.
 4. **`index.ts`.** Add `new JavaScriptPack()` to `LANGUAGE_PACKS`.
-5. **The course.** A generator in `scripts/javascript-curriculum/`: builders that extend `CourseBuilders` (with a `task()` for its challenges), a generator that extends `CourseGenerator` (with a `TypedInProtection` subclass if its challenges need one), and a line in `public/content/index.json`.
+5. **The course.** In `scripts/javascript-curriculum/`: builders that extend `CourseBuilders` (with a `task()` for its challenges), and a `generate.mjs` that runs `new CourseGenerator({ language, course: COURSE })` (with a `TypedInProtection` subclass if its challenges need one). Its settings go in the `course` block of `language.json`. Then a line in `public/content/index.json`.
 6. **The checks.** A `LanguageChecker` subclass in `scripts/content-check/` that runs the code, and a line in `check.mjs`. Until then, the course gets the shared checks only.
 
 Then `npm run check:content`, `npm test`, and try a lesson in `npm run dev`.

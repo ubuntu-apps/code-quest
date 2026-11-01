@@ -97,19 +97,14 @@ classDiagram
   CourseBuilders <|-- RBuilders
 
   class CourseGenerator {
-    SHUFFLE_CHOICES
-    EXPLANATION_REQUIRED
+    settings from language.json course
     sectionsToWrite() topicsOf()
     buildChallenge() buildQuestion()
     levelExtras() indexExtras() afterWrite()
     writeSection() writeIndex()
   }
-  class PythonCourseGenerator { side quests, explanations }
-  class SqlCourseGenerator { levelExtras: database }
-  class RCourseGenerator { SHUFFLE_CHOICES = true }
+  class PythonCourseGenerator { side quests, explanations, --only }
   CourseGenerator <|-- PythonCourseGenerator
-  CourseGenerator <|-- SqlCourseGenerator
-  CourseGenerator <|-- RCourseGenerator
 
   class TypedInProtection { protect(challenge) }
   class PythonProtection { variations.json tests }
@@ -123,7 +118,7 @@ classDiagram
 flowchart LR
   F["data/#lt;quest#gt;/*.mjs<br/>topics, tasks, questions"] --> B["data/_builders.mjs<br/>bound builder methods"]
   B --> F
-  F --> G["generate.mjs<br/>new XCourseGenerator().run()"]
+  F --> G["generate.mjs<br/>new CourseGenerator({ language, course }).run()"]
   J["language.json<br/>id, label"] --> G
   G --> BC["buildChallenge<br/>id + protection.protect()"]
   G --> BQ["buildQuestion<br/>id, explanation, shuffle"]
@@ -133,7 +128,7 @@ flowchart LR
 ```
 
 - **Typed-in protection** stops an answer that just types the expected value from passing. Python re-runs the answer with other inputs from `variations.json`. R re-runs it on different data given as `alt`. SQL needs none, because queries run against a whole table.
-- **What a course overrides:** only the hooks that differ. SQL adds the stage's `database` to each level. Python adds side quests and checks explanations. R shuffles quiz choices and drops the internal `check` field from questions.
+- **What differs between courses:** mostly settings, in the `course` block of each `language.json`: SQL copies each lesson's `database` into its level, and R shuffles quiz choices and leaves out the questions' internal `check` field. SQL and R use `CourseGenerator` as it is; only Python has a subclass, for its side quests, its quiz explanations and `--only`.
 
 ### Language packs
 

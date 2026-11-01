@@ -21,15 +21,13 @@ import { PythonProtection } from './protection.mjs'
 const SECTIONS_WITH_PROJECTS = new Set(['fundamentals', 'control_flow', 'data_structures', 'functions', 'error_handling', 'file_handling', 'modules_and_packages', 'object_oriented', 'data_and_apis'])
 
 export class PythonCourseGenerator extends CourseGenerator {
-  /** Older lessons have no explanations yet. */
-  static EXPLANATION_REQUIRED = false
-
   /**
    * @param {object[]} course data/course.mjs
    * @param {{ only?: string | null }} [options] Write just this section (the index lists them all).
    */
   constructor(course, { only = null } = {}) {
-    super({ id: language.id, title: language.label, course, unit: 'topics', protection: new PythonProtection() })
+    // language.json's `course`: lessons are "topics", and older ones have no explanations yet.
+    super({ language, course, protection: new PythonProtection() })
     if (only && !course.some((s) => s.sectionId === only)) {
       throw new Error(`Unknown section "${only}". Known: ${course.map((s) => s.sectionId).join(', ')}`)
     }
