@@ -1,9 +1,9 @@
 /**
- * The R side of challenge checks, shared by the app (rSandbox.ts) and the content checkers
- * (scripts/r-curriculum/check-*.mjs), so a check runs the same way everywhere. No imports
+ * The R side of challenge checks, shared by the app (WebRRuntime.ts) and the content checker
+ * (scripts/content-check/WebREngine.mjs), so a check runs the same way everywhere. No imports
  * apart from types, so Node can load this file directly.
  */
-import type { RuntimeAssertionTest } from './types'
+import type { RuntimeAssertionTest } from '../../curriculum/types.ts'
 
 /** Separates the learner's output from the test results in a check's output. */
 const TESTS_MARKER = '<<codequest-tests>>'

@@ -1,11 +1,11 @@
 /**
  * Runs R for RChecker in Node, with webR, through the app's own test harness
- * (src/features/curriculum/rHarness.ts). webR isn't one of the app's dependencies (the app loads
+ * (src/features/languages/r/rHarness.ts). webR isn't one of the app's dependencies (the app loads
  * it from a CDN), so install it first, at the version in src/runtimeVersions.ts:
  *
  *   npm install --no-save webr@0.4.2
  */
-import { CLEAR_GLOBALS, challengeWrapper, parseChallengeOutput } from '../../src/features/curriculum/rHarness.ts'
+import { CLEAR_GLOBALS, challengeWrapper, parseChallengeOutput } from '../../src/features/languages/r/rHarness.ts'
 
 export class WebREngine {
   constructor() {
@@ -63,12 +63,14 @@ export class WebREngine {
     }
   }
 
-  runRCode = async (source) => {
+  /** Runs code like the R console (see WebRRuntime.run in the app). */
+  async run(source) {
     await this.capture(CLEAR_GLOBALS)
     return this.capture(source, { withAutoprint: true })
   }
 
-  runRChallengeTests = async (code, setup, tests) => {
+  /** A challenge's Check (see WebRRuntime.check in the app). */
+  async check(code, setup, tests) {
     const result = await this.capture(challengeWrapper(code, setup, tests))
     if (result.error) return { passed: false, tests: [], error: result.error, output: '' }
     return { ...parseChallengeOutput(result.output, tests), error: null }

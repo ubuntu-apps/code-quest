@@ -3,7 +3,7 @@
  * the test helpers. Stage files import them from data/_builders.mjs.
  *
  * R challenges are checked by R tests that run after the learner's code, in the same
- * environment (src/features/curriculum/rSandbox.ts). In a test:
+ * environment (src/features/languages/r/WebRRuntime.ts). In a test:
  * - the learner's variables are there by name (`total`, `greeting`);
  * - `._cq_stdout` is what the code printed, as the R console shows it (`[1] 5`);
  * - `._cq_code` is the code itself, to check a function was used.

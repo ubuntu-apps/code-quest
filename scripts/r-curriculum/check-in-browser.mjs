@@ -13,15 +13,16 @@ import { COURSE } from './data/course.mjs'
 import { ContentChecker } from '../content-check/ContentChecker.mjs'
 import { FetchContentSource } from '../content-check/ContentSource.mjs'
 import { RChecker } from '../content-check/RChecker.mjs'
-import { runRCode, runRChallengeTests } from '../../src/features/curriculum/rSandbox.ts'
+import { languagePack } from '../../src/features/languages/index.ts'
 
 export async function checkR(sectionId) {
   let rChecker = null
+  const webR = await languagePack('r').runtime()
   const checker = new ContentChecker({
     source: new FetchContentSource(import.meta.env?.BASE_URL ?? '/code-quest/'),
     checkers: {
       r: (spec) =>
-        (rChecker = new RChecker(spec, { runRCode, runRChallengeTests }, COURSE, (where) => {
+        (rChecker = new RChecker(spec, webR, COURSE, (where) => {
           globalThis.cqCheckProgress = where
         })),
     },

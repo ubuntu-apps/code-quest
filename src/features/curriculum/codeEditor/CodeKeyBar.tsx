@@ -1,7 +1,7 @@
 import type { RefObject } from 'react'
 import { applyEdit } from './applyEdit'
 import { computeKeyEdit, insertTextEdit, pairTextEdit, type TextEdit } from './editing'
-import { languagePack, type CodeKey } from '../../languages'
+import { BASE_KEYS, languagePack, type CodeKey } from '../../languages'
 
 /**
  * What the key bar types into: a plain text box, or the code editor (CodeMirror), which
@@ -26,9 +26,13 @@ function textBoxTarget(el: HTMLTextAreaElement | HTMLInputElement): KeyBarTarget
   }
 }
 
-/** The keys for a course (see each LanguagePack's `keys`); a one-line answer box gets no indent keys. */
+/**
+ * The keys for a course: its language's (the base set in languages/keys.json, changed in its
+ * language.json), or the base set for code without a language. A one-line answer box gets no
+ * indent keys.
+ */
 function keysFor(language: string | null | undefined, variant: 'code' | 'answer'): readonly CodeKey[] {
-  const keys = languagePack(language)?.keys ?? []
+  const keys = languagePack(language)?.keys ?? BASE_KEYS
   return variant === 'answer' ? keys.filter((key) => key.kind !== 'tab' && key.kind !== 'untab') : keys
 }
 
@@ -64,7 +68,7 @@ export function CodeKeyBar({
   target?: () => KeyBarTarget | null
   /** "answer": for a one-line quiz answer, without the indent keys. */
   variant?: 'code' | 'answer'
-  /** The course's language, whose symbols to offer: SQL needs `%`, `||` and `;` rather than Python's `:` and `#`. */
+  /** The course's language, whose keys to offer (SQL adds `;`, `%` and `||`; R adds `<-` and `$`). */
   language?: string | null
 }) {
   const press = (key: CodeKey) => {

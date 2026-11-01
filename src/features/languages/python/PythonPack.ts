@@ -1,9 +1,9 @@
-import { pythonErrorSummaryLine } from '../../curriculum/pythonErrorHelper'
 import type { LanguageBundle } from '../../curriculum/types'
 import type { EditorLanguage } from '../EditorLanguage'
 import type { ChallengeCheckResult, ChallengeRunOptions, CodeRunResult, RunOptions } from '../LanguagePack'
-import { PyodidePack, pyodideRuntime } from '../PyodidePack'
+import { PyodidePack } from '../pyodide/PyodidePack'
 import language from './language.json'
+import { pythonErrorSummaryLine } from './pythonErrors'
 
 /** Python on Pyodide, in a worker. What Python is like is in language.json. */
 export class PythonPack extends PyodidePack {
@@ -21,22 +21,22 @@ export class PythonPack extends PyodidePack {
   }
 
   async run(code: string, options: RunOptions): Promise<CodeRunResult> {
-    return (await pyodideRuntime()).runPythonCode(code, options.stdin ?? '', this.workerOptions(options))
+    return (await this.runtime()).runPython(code, options.stdin ?? '', this.runOptions(options))
   }
 
   async checkChallenge(answer: string, options: ChallengeRunOptions): Promise<ChallengeCheckResult> {
     const { setupCode, tests = [] } = options.challenge.validation
-    return (await pyodideRuntime()).runPythonChallengeTests(answer, setupCode, tests, this.workerOptions(options, true))
+    return (await this.runtime()).checkPython(answer, setupCode, tests, this.runOptions(options, true))
   }
 
   async runChallenge(answer: string, options: ChallengeRunOptions): Promise<CodeRunResult> {
     const setupCode = options.challenge.validation.setupCode
-    return (await pyodideRuntime()).runPythonChallengeCode(answer, setupCode, this.workerOptions(options))
+    return (await this.runtime()).tryPython(answer, setupCode, this.runOptions(options))
   }
 
   /** The runtime plus every package the course's code imports. */
   async prepareOffline({ bundle, signal }: { bundle: LanguageBundle; signal?: AbortSignal }): Promise<void> {
-    await (await pyodideRuntime()).preparePythonOffline(this.courseCode(bundle), signal)
+    await (await this.runtime()).prepareOffline(this.courseCode(bundle), this.runWording, signal)
   }
 
   /** All Python code in a course, so the worker can find every package it imports. */

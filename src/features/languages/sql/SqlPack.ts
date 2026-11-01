@@ -1,8 +1,8 @@
-import { sqlErrorSummaryLine } from '../../curriculum/sqlErrorHelper'
 import type { EditorLanguage } from '../EditorLanguage'
-import type { ChallengeCheckResult, ChallengeRunOptions, CodeRunResult, RunOptions } from '../LanguagePack'
-import { PyodidePack, pyodideRuntime } from '../PyodidePack'
+import type { ChallengeCheckResult, ChallengeRunOptions, CodeRunResult, RunOptions, TablePeek } from '../LanguagePack'
+import { PyodidePack } from '../pyodide/PyodidePack'
 import language from './language.json'
+import { sqlErrorSummaryLine } from './sqlErrors'
 
 /**
  * SQL on SQLite, through Python's sqlite3 on the Python worker. A lesson brings its database
@@ -26,13 +26,13 @@ export class SqlPack extends PyodidePack {
 
   async run(code: string, options: RunOptions): Promise<CodeRunResult> {
     // The sandbox shows the result tables when the run ends, not the text as it comes.
-    const worker = this.workerOptions({ ...options, onOutput: undefined })
-    return (await pyodideRuntime()).runSqlCode(code, options.level?.database?.setupSql ?? '', worker)
+    const runOptions = this.runOptions({ ...options, onOutput: undefined })
+    return (await this.runtime()).runSql(code, options.level?.database?.setupSql ?? '', runOptions)
   }
 
   async checkChallenge(answer: string, options: ChallengeRunOptions): Promise<ChallengeCheckResult> {
     const { challenge, level } = options
-    return (await pyodideRuntime()).runSqlChallengeTests(
+    return (await this.runtime()).checkSql(
       answer,
       {
         setupSql: level.database?.setupSql ?? '',
@@ -41,16 +41,22 @@ export class SqlPack extends PyodidePack {
         ordered: challenge.validation.ordered,
         checks: challenge.validation.tests,
       },
-      this.workerOptions(options, true),
+      this.runOptions(options, true),
     )
   }
 
   async runChallenge(answer: string, options: ChallengeRunOptions): Promise<CodeRunResult> {
-    return (await pyodideRuntime()).runSqlCode(answer, options.level.database?.setupSql ?? '', this.workerOptions(options))
+    return (await this.runtime()).runSql(answer, options.level.database?.setupSql ?? '', this.runOptions(options))
+  }
+
+  /** "Peek": the first rows of one of the lesson's tables. */
+  async peekTable({ table, setupSql, rows }: TablePeek): Promise<CodeRunResult> {
+    const quoted = `"${table.replace(/"/g, '""')}"`
+    return (await this.runtime()).runSql(`SELECT * FROM ${quoted} LIMIT ${rows};`, setupSql, this.runOptions())
   }
 
   /** The SQL engine only: the lessons' databases come with them. */
   async prepareOffline({ signal }: { signal?: AbortSignal }): Promise<void> {
-    await (await pyodideRuntime()).prepareSqlOffline(signal)
+    await (await this.runtime()).prepareOffline('import sqlite3', this.runWording, signal)
   }
 }

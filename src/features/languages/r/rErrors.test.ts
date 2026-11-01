@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { explainRError, rErrorSummaryLine } from './rErrorHelper'
+import { explainRError, rErrorSummaryLine } from './rErrors'
 
 describe('explainRError', () => {
   it('detects syntax errors', () => {

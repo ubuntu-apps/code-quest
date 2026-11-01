@@ -1,7 +1,10 @@
 import type { Challenge, LanguageBundle, Level } from '../curriculum/types'
 import type { EditorLanguage } from './EditorLanguage'
-import type { KeySpec } from './languageSpec'
+import { composeKeys, type CodeKey } from './keyBar'
 import { LanguageRules } from './LanguageRules'
+import type { RunWording } from './runtime/CodeRuntime'
+
+export type { CodeKey } from './keyBar'
 
 /**
  * One course's language. What it is like is data, in its `language.json` (labels, flags, keys,
@@ -60,31 +63,17 @@ export interface RunOptions extends RunHandlers {
   stdin?: string
 }
 
+/** Which rows of a lesson database's table to show (a SQL lesson's Peek). */
+export interface TablePeek {
+  table: string
+  setupSql: string
+  rows: number
+}
+
 /** A challenge's Check or Run. */
 export interface ChallengeRunOptions extends RunHandlers {
   challenge: Challenge
   level: Level
-}
-
-/** A key of the phone key bar. */
-export type CodeKey =
-  | { label: string; aria: string; kind: 'tab' | 'untab' }
-  | { label: string; aria?: string; kind: 'pair'; open: string; close: string }
-  | { label: string; aria?: string; kind: 'text'; text: string }
-
-/** A key from the JSON as the key bar's key. */
-function toCodeKey(key: KeySpec): CodeKey {
-  if (typeof key === 'string') return { label: key, kind: 'text', text: key }
-  if ('special' in key) {
-    return key.special === 'indent'
-      ? { label: '⇥', aria: 'Indent', kind: 'tab' }
-      : { label: '⇤', aria: 'Remove indent', kind: 'untab' }
-  }
-  if ('pair' in key) {
-    const [open, close] = key.pair
-    return { label: key.label ?? `${open} ${close}`, aria: key.aria, kind: 'pair', open, close }
-  }
-  return { label: key.text, aria: key.aria, kind: 'text', text: key.text }
 }
 
 export abstract class LanguagePack extends LanguageRules {
@@ -93,7 +82,12 @@ export abstract class LanguagePack extends LanguageRules {
   /** @param json The language's language.json. */
   constructor(json: unknown) {
     super(json)
-    this.keys = this.spec.keys.map(toCodeKey)
+    this.keys = composeKeys(this.id, this.spec.keys)
+  }
+
+  /** What the runtime says about a run that went wrong, in this language's words (language.json). */
+  get runWording(): RunWording {
+    return { label: this.label, runSeconds: this.spec.limits.runSeconds, ...this.spec.messages.errors }
   }
 
   /** The runtime's status, in this language's words (`loading` → "Downloading Python…"). */
@@ -138,6 +132,11 @@ export abstract class LanguagePack extends LanguageRules {
   runChallenge(answer: string, options: ChallengeRunOptions): Promise<CodeRunResult> {
     void [answer, options]
     return Promise.reject(new Error(`${this.label} challenges have no Run button`))
+  }
+
+  /** The first rows of a table in a lesson's database, as text (for languages with `hasDatabase`). */
+  peekTable(peek: TablePeek): Promise<CodeRunResult> {
+    return Promise.reject(new Error(`${this.label} lessons have no database to show ${peek.table} from`))
   }
 
   /** Called when a lesson opens (after the page has settled), to get the runtime ready. */

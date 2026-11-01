@@ -1,11 +1,10 @@
 import { useContext, useId, useRef, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
-import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported } from '../sandboxSupport'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import { useAdminMode } from '../adminMode'
 import type { Challenge, SqlTable } from '../types'
-import { packForTestMode, type ChallengeTestResult, type FriendlyCodeError } from '../../languages'
+import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported, packForTestMode, type ChallengeTestResult, type FriendlyCodeError } from '../../languages'
 import { CodeLanguageContext } from '../codeLanguageContext'
 import { CodeEditor } from '../codeEditor'
 import { namesInMarkdown } from '../codeEditor/namesInMarkdown'
@@ -259,7 +258,7 @@ export function ChallengeCard({
             {ch.solution ? <HighlightedCode code={ch.solution} /> : 'No answer available for this challenge yet.'}
           </pre>
         ) : null}
-        {hasDatabase && tables ? <SqlTablesNote tables={tables} setupSql={setupSql} /> : null}
+        {pack?.hasDatabase && tables ? <SqlTablesNote pack={pack} tables={tables} setupSql={setupSql} /> : null}
         <label className="cq-label" id={`code-label-${ch.id}`} htmlFor={`code-${ch.id}`}>
           Your answer
         </label>

@@ -1,11 +1,4 @@
-export interface FriendlyPythonError {
-  title: string
-  detail: string
-  tip?: string
-  line?: number
-  column?: number
-  errorType?: string
-}
+import type { FriendlyCodeError } from '../LanguagePack'
 
 /** One-line exception text for tooltips, e.g. `SyntaxError: invalid decimal literal`. */
 export function pythonErrorSummaryLine(detail: string): string | null {
@@ -27,11 +20,11 @@ export type PythonErrorExplanationContext = {
 
 export type PythonErrorRule = (
   context: PythonErrorExplanationContext,
-) => FriendlyPythonError | null
+) => FriendlyCodeError | null
 
 export type PythonErrorFallback = (
   context: PythonErrorExplanationContext,
-) => Promise<FriendlyPythonError | null> | FriendlyPythonError | null
+) => Promise<FriendlyCodeError | null> | FriendlyCodeError | null
 
 /** Frames that map to learner code in our Pyodide wrappers (not outer "<exec>"). */
 const USER_FRAME_RE =
@@ -134,7 +127,7 @@ function defaultRules(): PythonErrorRule[] {
   ]
 }
 
-function fallbackRule(context: PythonErrorExplanationContext): FriendlyPythonError {
+function fallbackRule(context: PythonErrorExplanationContext): FriendlyCodeError {
   const loc = parseTraceLocation(context.rawMessage)
   return {
     title: 'Execution error',
@@ -152,7 +145,7 @@ export async function explainPythonError(
     rules?: PythonErrorRule[]
     fallback?: PythonErrorFallback
   },
-): Promise<FriendlyPythonError> {
+): Promise<FriendlyCodeError> {
   const context: PythonErrorExplanationContext = { rawMessage }
   const rules = options?.rules ?? defaultRules()
 

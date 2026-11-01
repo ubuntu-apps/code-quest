@@ -11,12 +11,18 @@ import { z } from 'zod'
 const patternSchema = z.union([z.string(), z.object({ pattern: z.string(), flags: z.string().optional() })])
 
 /** A phone key: text it types (`"="`, or with a spoken name), a pair it wraps the selection in, or indent. */
-const keySchema = z.union([
+export const keySchema = z.union([
   z.string(),
   z.object({ text: z.string(), aria: z.string().optional() }),
   z.object({ pair: z.tuple([z.string(), z.string()]), aria: z.string().optional(), label: z.string().optional() }),
   z.object({ special: z.enum(['indent', 'unindent']) }),
 ])
+
+/** A language's changes to the base key bar (keys.json): keys to add, and keys to remove by what they type. */
+const keysSchema = z.object({ add: z.array(keySchema).optional(), remove: z.array(z.string()).optional() })
+
+/** A message about a run that went wrong: what to call it, what happened, and what to try. */
+const runMessageSchema = z.object({ title: z.string(), detail: z.string().optional(), tip: z.string().optional() })
 
 const tokenKindSchema = z.enum(['keyword', 'builtin', 'constant', 'string', 'number', 'comment', 'name', 'decorator', 'plain'])
 
@@ -82,14 +88,16 @@ export const languageSpecSchema = z
       suggestKeywords: z.array(z.string()),
       suggestFunctions: z.array(z.string()),
     }),
-    /** The phone key bar, slowest-to-reach first. */
-    keys: z.array(keySchema),
+    /** The phone key bar: the base keys (keys.json), changed for this language. */
+    keys: keysSchema,
     sandbox: z.object({
       defaultCode: z.string(),
       samples: z.array(z.object({ id: z.string(), label: z.string(), code: z.string() })),
       /** For languages that read input: how to spot a call that reads it, and its name. */
       input: z.object({ detect: z.string(), call: z.string() }).optional(),
     }),
+    /** How long learner code may run before it is stopped (an endless loop). */
+    limits: z.object({ runSeconds: z.number().positive() }),
     messages: z.object({
       /** The status line when a run starts, if it isn't the runtime's "running" status. */
       start: z.string().optional(),
@@ -97,6 +105,16 @@ export const languageSpecSchema = z
       status: z.record(z.string(), z.string()).optional(),
       /** Shown when "Download for offline" can't fetch the runtime. */
       runtimeLoadFailed: z.string().optional(),
+      /**
+       * Runs that went wrong, in this language's words: code that ran past `limits.runSeconds`,
+       * a Stop (its tip), and packages that took too long to download or failed to.
+       */
+      errors: z.object({
+        tooLong: runMessageSchema,
+        stopped: runMessageSchema.partial().optional(),
+        packageTimeout: runMessageSchema.optional(),
+        packageError: runMessageSchema.optional(),
+      }),
     }),
     offline: z.object({ stepLabel: z.string() }),
   })
@@ -114,6 +132,8 @@ export const languageSpecSchema = z
 export type LanguageSpec = z.infer<typeof languageSpecSchema>
 export type PatternSpec = z.infer<typeof patternSchema>
 export type KeySpec = z.infer<typeof keySchema>
+export type KeysSpec = z.infer<typeof keysSchema>
+export type RunMessageSpec = z.infer<typeof runMessageSchema>
 
 /** Checks a language.json, so a mistake in it shows up straight away rather than as odd behaviour. */
 export function parseLanguageSpec(json: unknown): LanguageSpec {

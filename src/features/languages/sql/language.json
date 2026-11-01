@@ -258,64 +258,26 @@
       "functions"
     ]
   },
-  "keys": [
-    {
-      "pair": [
-        "(",
-        ")"
-      ],
-      "aria": "Parentheses"
-    },
-    {
-      "pair": [
-        "'",
-        "'"
-      ],
-      "aria": "Single quotes"
-    },
-    ",",
-    {
-      "text": ".",
-      "aria": "Dot"
-    },
-    {
-      "text": "_",
-      "aria": "Underscore"
-    },
-    {
-      "text": ";",
-      "aria": "Semicolon"
-    },
-    "=",
-    "*",
-    {
-      "text": "%",
-      "aria": "Percent"
-    },
-    {
-      "text": "||",
-      "aria": "Join text (two bars)"
-    },
-    "<",
-    ">",
-    "-",
-    "+",
-    "/",
-    "!",
-    {
-      "pair": [
-        "\"",
-        "\""
-      ],
-      "aria": "Double quotes"
-    },
-    {
-      "special": "indent"
-    },
-    {
-      "special": "unindent"
-    }
-  ],
+  "keys": {
+    "add": [
+      {
+        "text": ";",
+        "aria": "Semicolon"
+      },
+      {
+        "text": "%",
+        "aria": "Percent"
+      },
+      {
+        "text": "||",
+        "aria": "Join text (two bars)"
+      }
+    ],
+    "remove": [
+      "[]",
+      "{}"
+    ]
+  },
   "sandbox": {
     "defaultCode": "SELECT 'Hello from CodeQuest!' AS greeting;",
     "samples": [
@@ -331,6 +293,9 @@
       }
     ]
   },
+  "limits": {
+    "runSeconds": 10
+  },
   "messages": {
     "status": {
       "waiting": "Waiting for the previous run to finish…",
@@ -338,6 +303,17 @@
       "loading": "Getting the SQL engine ready (first run only, about 10 MB)…",
       "packages": "Downloading SQLite (first run only)…",
       "running": "Running…"
+    },
+    "errors": {
+      "tooLong": {
+        "title": "The query took too long",
+        "tip": "A query that joins tables without a condition can make a huge number of rows. Check your ON or WHERE conditions."
+      },
+      "packageError": {
+        "title": "Could not download SQLite",
+        "detail": "The SQL engine has to be downloaded the first time, and the download did not finish.",
+        "tip": "Check your internet connection and run the SQL again."
+      }
     }
   },
   "offline": {

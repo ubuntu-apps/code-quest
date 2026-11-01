@@ -67,7 +67,7 @@ One `language.json` per language feeds all three sides: the generator, the app's
 | `scripts/content-check/` | The content checker: `check.mjs` CLI, `ContentChecker`, `Report`, one checker per language, the engines and the Python runners. | Node, or the browser for R |
 | `public/content/` | Generated lesson JSON the app fetches. `index.json` lists the courses; each course folder has its own `index.json` plus one file per quest. | Static files |
 | `public/pyodide-worker.js` | The Web Worker that loads Pyodide and runs Python and SQL. It also holds the test helpers the checker reuses. | Browser worker |
-| `src/features/languages/` | Language packs: `language.json`, the pack class and the editor class per language, plus the shared `Highlighter` and the registry in `index.ts`. | Browser (rules also load in Node) |
+| `src/features/languages/` | Everything about each language: per language a folder with `language.json`, its pack, editor and error classes (and R's `WebRRuntime`); `pyodide/` for the Python worker shared by Python and SQL; `runtime/` for the `CodeRuntime` base class; plus the shared `Highlighter`, the base phone keys (`keys.json`) and the registry in `index.ts`. | Browser (rules also load in Node) |
 | `src/features/curriculum/` | The learning screens: views, components, hooks, code editor, sandboxes, progress storage, curriculum loading and schemas. | Browser |
 | `src/features/editor/` | Admin edit mode: drafts, save plans, saving through the Vite dev plugin or the GitHub API. | Browser |
 | `src/features/…` | Badges, certificates, ranks, review, reminders, sound, support, feedback. | Browser |
@@ -137,7 +137,7 @@ flowchart LR
 
 ### Language packs
 
-`language.json` holds everything that is data: keywords, built-ins, colouring patterns, key-bar keys, how "Try it" spots code, what counts as an error demo, the test mode and indent size. zod validates it in `languageSpec.ts`. The classes add only what has to be code: running it, and the editor support.
+`language.json` holds everything that is data: keywords, built-ins, colouring patterns, its changes to the phone keys, how "Try it" spots code, what counts as an error demo, the test mode, indent size, how long code may run and how a run that went wrong is worded. zod validates it in `languageSpec.ts`. The classes add only what has to be code: running it, and the editor support.
 
 ```mermaid
 classDiagram
@@ -177,9 +177,23 @@ classDiagram
   EditorLanguage <|-- REditorLanguage
   EditorLanguage <|-- PlainEditorLanguage
   LanguagePack ..> EditorLanguage : loadEditor()
+
+  class CodeRuntime {
+    stopped() tooLong() cannotStart()
+    packageFailed()
+    ran() failed() checked()
+  }
+  class PyodideRuntime { one worker: runPython checkPython runSql checkSql }
+  class WebRRuntime { run() check() }
+  CodeRuntime <|-- PyodideRuntime
+  CodeRuntime <|-- WebRRuntime
+  PyodidePack ..> PyodideRuntime : runtime()
+  RPack ..> WebRRuntime : runtime()
 ```
 
 - **The registry:** `src/features/languages/index.ts` creates the packs once in `LANGUAGE_PACKS` and looks them up with `languagePack(id)`, `packForTestMode('r_tests')` and `loadEditorLanguage(id)`.
+- **Runtimes:** each runtime class extends `CodeRuntime`, which turns a Stop, a run past the time limit, a failed download or the tests' results into the same result types for every language, worded by the language's `language.json` (`limits.runSeconds`, `messages.errors`).
+- **Phone keys:** `keys.json` is the key bar every language starts from. A language's `keys` only lists what it adds (placed after the indent keys) and what it removes; code without a language gets the base set (`keyBar.ts`).
 - **Loaded on demand:** runtimes and editor classes come in through dynamic `import()`, so opening a Python lesson never downloads webR. The app warms the pack up 1.5 s after a course opens.
 - **Shared with Node:** `LanguageRules` uses `.ts` imports that Node can load with types stripped. That lets the content checker use the same "Try it" and colouring rules as the app.
 
@@ -237,12 +251,12 @@ flowchart LR
   PC --> PE["PythonEngine<br/>system python -c run_tests.py"]
   SC --> PE
   RC --> WE["WebREngine<br/>webR in Node"]
-  RC -.-> RB["rSandbox<br/>check-in-browser.mjs"]
+  RC -.-> RB["the app's WebRRuntime<br/>check-in-browser.mjs"]
   PE --> H["test helpers taken from<br/>public/pyodide-worker.js"]
 ```
 
 - **Shared rules:** `checkShared` looks for an empty prompt, a missing hint or solution, quiz patterns that don't match, and challenges a plain text match would pass.
-- **Language rules:** each solution must pass and each starter must fail. Every "Try it" sample must run. Error demos must actually fail. Typed-in answers must not pass where the section is strict.
+- **Language rules** (the verdicts are shared in `LanguageChecker`): each solution must pass and each starter must fail. Every "Try it" sample must run. Error demos must actually fail. Typed-in answers must not pass where the section is strict.
 
 ---
 
@@ -264,7 +278,7 @@ sequenceDiagram
   Note over UC,P: python_tests → PythonPack<br/>sql_tests → SqlPack<br/>r_tests → RPack
   UC->>P: checkChallenge(answer, {challenge, level})
   P->>RT: run answer + setupCode + tests
-  Note over RT: Python/SQL: pyodide-worker.js _cq_tests<br/>R: webR with the rHarness wrapper
+  Note over RT: Python/SQL: PyodideRuntime → pyodide-worker.js<br/>R: WebRRuntime with the rHarness wrapper
   RT-->>P: output, error, test results
   P-->>UC: {passed, tests[], output, error}
   UC->>ST: mark solved, save draft
@@ -272,7 +286,7 @@ sequenceDiagram
   CC-->>L: Pass / Fail per check, ValueDiff, friendly error
 ```
 
-Stop works the same for every language: the pack gets an `AbortSignal`. For Python, the worker is thrown away and started again on the next run.
+Stop works the same for every language: the pack gets an `AbortSignal`. A run past the language's time limit (`limits.runSeconds`: 10 s for Python and SQL, 45 s for R) is stopped too. Either way the runtime is thrown away (the Python worker, or webR) and started again on the next run.
 
 ### Try it and Run
 
@@ -293,8 +307,8 @@ The rules for which blocks get a Try it button, and which ones are error demos, 
 
 The files to touch for JavaScript (HTML works the same way):
 
-1. `src/features/languages/javascript/language.json`: keywords, colouring, key bar, Try it rules, `testMode: "javascript_tests"`.
-2. `JavaScriptPack.ts` extends `LanguagePack`: `run`, `checkChallenge`, `loadEditor`, `prepareOffline`, `errorSummaryLine`.
+1. `src/features/languages/javascript/language.json`: keywords, colouring, its key-bar changes (`add`, `remove`), Try it rules, `testMode: "javascript_tests"`, the time limit and its error wording.
+2. A runtime class that extends `CodeRuntime`, and `JavaScriptPack.ts` that extends `LanguagePack`: `run`, `checkChallenge`, `loadEditor`, `prepareOffline`, `errorSummaryLine`.
 3. `JavaScriptEditorLanguage.ts` extends `EditorLanguage`, then add the pack to `LANGUAGE_PACKS` in `index.ts`.
 4. `scripts/javascript-curriculum/`: a `builders.mjs` subclass with `task()`, a generator subclass, a protection subclass if needed, `generate.mjs` and `data/`.
 5. `scripts/content-check/`: a `JavaScriptChecker` and an engine, registered in `check.mjs`.

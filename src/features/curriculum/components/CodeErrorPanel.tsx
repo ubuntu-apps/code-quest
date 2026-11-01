@@ -1,6 +1,6 @@
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import type { FriendlyCodeError } from '../../languages'
-import { pythonErrorLinePointer } from '../helpers'
+import { errorLinePointer } from '../helpers'
 
 interface CodeErrorPanelProps {
   error: FriendlyCodeError
@@ -11,7 +11,7 @@ interface CodeErrorPanelProps {
 
 /** An error from running code: its title and tip, the full message on request, and where it happened. */
 export function CodeErrorPanel({ error, code, expanded, onToggleExpanded }: CodeErrorPanelProps) {
-  const pointer = pythonErrorLinePointer(code, error)
+  const pointer = errorLinePointer(code, error)
 
   return (
     <div className="cq-sandbox-error" role="alert">

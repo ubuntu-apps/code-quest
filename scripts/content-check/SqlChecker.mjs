@@ -11,17 +11,8 @@
  */
 import { LanguageChecker } from './LanguageChecker.mjs'
 
+/** Runs on PythonEngine (SQLite through Python's sqlite3): `new SqlChecker(spec, engine)`. */
 export class SqlChecker extends LanguageChecker {
-  /** @param {object} spec language.json  @param {import('./PythonEngine.mjs').PythonEngine} engine */
-  constructor(spec, engine) {
-    super(spec)
-    this.engine = engine
-  }
-
-  async available() {
-    return this.engine.available()
-  }
-
   /** The lesson's runnable SQL as [label, code]: sandbox, samples and "Try it" blocks. */
   lessonSql(level) {
     return [...this.sandboxCode(level), ...this.tryItBlocks(level).map((b) => ['"Try it" block', b.code])].filter(
@@ -34,7 +25,7 @@ export class SqlChecker extends LanguageChecker {
     const caseRefs = []
     const runRefs = []
     const quiz = { quiz: [], tries: [] }
-    const quizRefs = []
+    const asked = []
     for (const level of file.levels) {
       if (level.database) {
         for (const [item, sql] of this.lessonSql(level)) {
@@ -58,23 +49,17 @@ export class SqlChecker extends LanguageChecker {
           changesData: Boolean(ch.validation.tests?.length),
         })
       }
-      for (const q of level.test?.questions ?? []) {
-        const asked = q.type === 'mcq' ? this.askedCode(q.prompt) : null
-        // Only questions about a query's result can be run.
-        if (!asked || !/^\s*(SELECT|WITH)\b/i.test(asked.expr)) continue
-        quiz.quiz.push({ lang: 'sql', setup: level.database?.setupSql ?? '', ...asked })
-        quizRefs.push({ where: { level: level.id, item: q.prompt }, q })
+      // Only questions about a query's result can be run.
+      for (const question of this.askedQuestions(level, ({ expr }) => /^\s*(SELECT|WITH)\b/i.test(expr))) {
+        quiz.quiz.push({ lang: 'sql', setup: level.database?.setupSql ?? '', ...question.asked })
+        asked.push(question)
       }
     }
 
     const sql = data.cases.length || data.runs.length ? this.engine.run('run_sql', data) : { cases: [], runs: [] }
     sql.cases.forEach((res, i) => {
       const { where, starterBlank, changesData } = caseRefs[i]
-      const v = res.variants
-      if (!v.solution.passed) section.add(where, 'solution-fails', v.solution.detail)
-      if (v.empty.passed) section.add(where, 'empty-passes')
-      else if (!starterBlank && v.starter.passed) section.add(where, 'starter-passes')
-      else if (v.typed?.passed) section.add(where, 'typed-passes')
+      this.reportAnswers(section, where, res.variants, { starterBlank })
       if (!changesData && res.mainRows === 0) section.add(where, 'empty-result')
       if (res.altSame) section.add(where, 'alt-same')
       if (res.ties) section.add(where, 'order-ties')
@@ -84,8 +69,6 @@ export class SqlChecker extends LanguageChecker {
     })
 
     const ran = quiz.quiz.length ? this.engine.run('run_quiz', quiz) : { quiz: [] }
-    ran.quiz.forEach((values, i) => {
-      if (values && this.wrongAnswer(quizRefs[i].q, values)) section.add(quizRefs[i].where, 'quiz-wrong-answer', `it gives ${values[0]}`)
-    })
+    this.reportQuizAnswers(section, asked, ran.quiz)
   }
 }
