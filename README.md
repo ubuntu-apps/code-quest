@@ -73,7 +73,8 @@ npm run dev        # http://localhost:5173/code-quest/
 | --- | --- |
 | `npm run dev` | Dev server with hot reload |
 | `npm run build` | Type-check, build to `dist/`, and add `404.html` for GitHub Pages routing |
-| `npm run check` | Lint, check lesson ids, run tests, and build (what CI runs) |
+| `npm run check` | Lint, check lesson ids, check the course JSON is up to date, run tests, and build (what CI runs) |
+| `npm run check:generated` | Regenerate every course and fail if the JSON in `public/content/` changed (a data file edited without regenerating) |
 | `npm run lesson-ids:update` | Add new lessons to `scripts/lesson-ids.json` (see [Keeping learners' progress](#keeping-learners-progress)) |
 | `npm run check:content` | Run every lesson's code to check it works (Python and SQL need Python 3, and pandas for the pandas lessons; R needs `npm install --no-save webr@0.4.2`) |
 | `npm run check:r` | The same, for the R course only |
@@ -126,7 +127,7 @@ node scripts/sql-curriculum/generate.mjs
 node scripts/r-curriculum/generate.mjs
 ```
 
-Edit the `data/*.mjs` files, then regenerate. The course layout (section order and titles, and which topics go in each section) lives in `data/course.mjs`. Add `--only <sectionId>` to regenerate one section, e.g. `--only data_and_apis`. Challenge IDs come from the topic and the challenge's title (`json_basics-save-and-load-a-file`), and quiz question IDs from the topic and a hash of the prompt, so adding, removing or reordering items keeps learners' progress on the others. Renaming a challenge makes it a new one (`scripts/curriculum-ids.mjs`); progress saved under the older position-based IDs is moved over by the app (`progress/idMigration.ts`).
+Edit the `data/*.mjs` files, then regenerate and commit the JSON with them (`npm run check`, and so CI, fails when the JSON is out of date). The course layout (section order and titles, and which topics go in each section) lives in `data/course.mjs`. Add `--only <sectionId>` to regenerate one section, e.g. `--only data_and_apis`. Challenge IDs come from the topic and the challenge's title (`json_basics-save-and-load-a-file`), and quiz question IDs from the topic and a hash of the prompt, so adding, removing or reordering items keeps learners' progress on the others. Renaming a challenge makes it a new one (`scripts/curriculum-ids.mjs`); progress saved under the older position-based IDs is moved over by the app (`progress/idMigration.ts`).
 
 Write new challenges with the `task()` and `mc()` builders in `scripts/python-curriculum/data/_builders.mjs` (and `typedInput()` for challenges that read `input()`); see `data/fundamentals/`, `data/control-flow/`, `data/data-structures/`, `data/functions/`, `data/error-handling/`, `data/file-handling/`, `data/modules/`, `data/oop/`, `data/data-apis/` and `data/projects/` for examples. Sections listed in `scripts/curriculum-check.json` (every section of the Python course) must pass every check, or CI fails. Then run the content check:
 
