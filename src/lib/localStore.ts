@@ -120,6 +120,11 @@ function subscribeTo(matches: (key: string) => boolean, listener: () => void): (
   }
 }
 
+/** Calls `listener` once per change to any of `stores` (once, too, for a change to everything). */
+export function subscribeToStores(stores: readonly { owns: (key: string) => boolean }[], listener: () => void): () => void {
+  return subscribeTo((key) => stores.some((store) => store.owns(key)), listener)
+}
+
 // ---- Stores ----
 
 interface StoreOptions<T> {

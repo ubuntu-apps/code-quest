@@ -2,9 +2,31 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { flag, json, LocalStore, LocalStoreFamily, text } from './localStore'
 import { BACKUP_STORES, STORES } from './stores'
 
+/** A storage that refuses every write while `full` (like a full or blocked browser storage). */
+function fullStorage() {
+  const items = new Map<string, string>()
+  return {
+    full: true,
+    get length() {
+      return items.size
+    },
+    key: (i: number) => [...items.keys()][i] ?? null,
+    getItem: (key: string) => items.get(key) ?? null,
+    setItem(key: string, value: string) {
+      if (this.full) throw new Error('QuotaExceededError')
+      items.set(key, value)
+    },
+    removeItem: (key: string) => void items.delete(key),
+    clear: () => items.clear(),
+  }
+}
+
 describe('LocalStore', () => {
   beforeEach(() => localStorage.clear())
-  afterEach(() => vi.restoreAllMocks())
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+  })
 
   it('reads the fallback until something is saved, and round-trips a value', () => {
     const store = new LocalStore('test:name', { codec: text, fallback: '' })
@@ -29,22 +51,22 @@ describe('LocalStore', () => {
   })
 
   it('keeps a value for the session when storage refuses it', () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new Error('QuotaExceededError')
-    })
+    const storage = fullStorage()
+    vi.stubGlobal('localStorage', storage)
     const store = new LocalStore('test:full', { codec: text, fallback: '' })
     expect(store.set('kept')).toBe(false)
+    expect(storage.getItem('test:full')).toBeNull()
     expect(store.get()).toBe('kept')
   })
 
   it('lets storage win over a value kept for the session once storage changes (a restore, another tab)', () => {
+    const storage = fullStorage()
+    vi.stubGlobal('localStorage', storage)
     const store = new LocalStore('test:full', { codec: text, fallback: '' })
-    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new Error('QuotaExceededError')
-    })
-    store.set('kept')
-    setItem.mockRestore()
-    localStorage.setItem('test:full', 'restored')
+    expect(store.set('kept')).toBe(false)
+    expect(store.get()).toBe('kept')
+    storage.full = false
+    storage.setItem('test:full', 'restored')
     expect(store.get()).toBe('restored')
   })
 
