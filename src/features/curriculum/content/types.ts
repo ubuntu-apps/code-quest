@@ -150,7 +150,7 @@ export interface LanguageIndex {
 }
 
 export interface RootIndex {
-  /** `comingSoon` courses are listed but can't be opened yet (except in edit or admin mode). */
+  /** `comingSoon` courses are listed but can't be opened yet (except in admin mode). */
   languages: { id: string; title: string; path: string; comingSoon?: boolean }[]
 }
 

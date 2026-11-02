@@ -46,7 +46,7 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
     recordReviewAnswers(languageId, graded.byQuestion, answeredIds)
     if (graded.passed && !testedOut) markTestedOut(languageId, sectionId)
     countEvent(
-      `skip-ahead-${graded.passed ? 'passed' : 'failed'}/${sectionId}`,
+      `skip-ahead-${graded.passed ? 'passed' : 'failed'}/${languageId}/${sectionId}`,
       `Skip-ahead quiz ${graded.passed ? 'passed' : 'failed'}: ${section.sectionRef.title}`,
     )
   }

@@ -5,7 +5,7 @@ import { tabPath } from '../learnPaths'
 import { scrollWhenReady } from '../scrollWhenReady'
 
 /**
- * Learn and About keep their place: switching back to Learn returns to the page the
+ * Each tab keeps its place: switching back to Learn returns to the page the
  * learner was on (not the course page), scrolled to where they left it. Tapping the tab
  * you're already on works as before.
  */
