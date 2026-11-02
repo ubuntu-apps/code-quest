@@ -108,6 +108,8 @@ export class CourseGenerator {
     // removing an item doesn't move learners' progress onto another one.
     const challenges = topic.challenges.map((c) => this.buildChallenge(topic, c))
     const questions = topic.questions.map((q, i) => this.buildQuestion(topic, q, i))
+    // A gate with no questions would open the next stage with an empty submit (0 of 0 is 100%).
+    if (questions.length === 0) throw new Error(`${topic.id} has no gate questions`)
     assertUnique(topic.id, challenges.map((c) => c.id), 'challenges')
     assertUnique(topic.id, questions.map((q) => q.id), 'questions')
     return {

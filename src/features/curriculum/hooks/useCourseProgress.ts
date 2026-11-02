@@ -9,7 +9,7 @@ import type { ContinueTarget } from '../views/LearnHome'
 
 interface UseCourseProgressOptions {
   progressVersion: number
-  /** Edit or admin mode: everything is open. */
+  /** Admin mode: everything is open. */
   unlockAll: boolean
   displayRootIndex: RootIndex | null
   /** The open course. */
@@ -66,7 +66,7 @@ export function useCourseProgress({
     [unlockAll, bundleForView, progressVersion],
   )
 
-  /** Courses learners can open now: "coming soon" ones only in edit or admin mode. */
+  /** Courses learners can open now: "coming soon" ones only in admin mode. */
   const openableLanguages = useMemo(
     () => (displayRootIndex?.languages ?? []).filter((lang) => unlockAll || !lang.comingSoon),
     [displayRootIndex, unlockAll],

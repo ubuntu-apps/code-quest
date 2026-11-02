@@ -21,8 +21,19 @@ export function progressFormatKey(languageId: string): string {
 
 const PROGRESS_FORMAT = '2'
 
+/** Fingerprints already worked out, per challenge (a course's content doesn't change while it is open). */
+const fingerprints = new WeakMap<Challenge, string>()
+
 /** A short hash of what makes a challenge "the same challenge": its title and its checks. */
 export function challengeFingerprint(challenge: Challenge): string {
+  const known = fingerprints.get(challenge)
+  if (known !== undefined) return known
+  const fingerprint = computeFingerprint(challenge)
+  fingerprints.set(challenge, fingerprint)
+  return fingerprint
+}
+
+function computeFingerprint(challenge: Challenge): string {
   const text = JSON.stringify([challenge.title, challenge.validation])
   // FNV-1a (32-bit): fast and stable; collisions only matter between two versions of one challenge.
   let hash = 0x811c9dc5
@@ -41,6 +52,9 @@ function hasChallengeState(p: LevelProgress, id: string): boolean {
   )
 }
 
+/** Progress text already checked against a lesson, per progress id. */
+const reconciled = new Map<string, { raw: string; level: Level; trustUnstamped: boolean }>()
+
 /**
  * Checks one level's saved progress against its current challenges. Progress saved
  * before fingerprints existed (`trustUnstamped` false) counts as out of date.
@@ -48,7 +62,17 @@ function hasChallengeState(p: LevelProgress, id: string): boolean {
  */
 export function reconcileLevelProgress(languageId: string, level: Level, trustUnstamped: boolean): boolean {
   const id = progressId(languageId, level.id)
-  if (!STORES.progress.get(id)) return false
+  const raw = STORES.progress.get(id)
+  if (!raw) return false
+  // This runs after every save; progress already checked against this lesson is skipped.
+  const seen = reconciled.get(id)
+  if (seen && seen.raw === raw && seen.level === level && seen.trustUnstamped === trustUnstamped) return false
+  const changed = reconcileUnchecked(id, languageId, level, trustUnstamped)
+  reconciled.set(id, { raw: STORES.progress.get(id), level, trustUnstamped })
+  return changed
+}
+
+function reconcileUnchecked(id: string, languageId: string, level: Level, trustUnstamped: boolean): boolean {
   const prev = loadProgress(languageId, level.id)
   const stamps = prev.challengeVersions ?? {}
   const stale = new Set<string>()

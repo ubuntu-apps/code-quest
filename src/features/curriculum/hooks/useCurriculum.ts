@@ -52,7 +52,11 @@ export function useCurriculum({
   /** The course in the address isn't in the catalog, or can't be opened yet. */
   const courseNotFound = Boolean(languageId && rootIndex && !canOpen(languageId))
 
-  const languageBundles = useLanguageBundles(rootIndex, baseUrl, activeOpenableId)
+  // Home needs the course being learned; before one is picked, only the first course (the one
+  // "Start your Quest" opens), so a first visit doesn't download every course.
+  const firstOpenableId = rootIndex?.languages.find((lang) => unlockAll || !lang.comingSoon)?.id ?? null
+  const homeCourseId = activeOpenableId ?? firstOpenableId
+  const languageBundles = useLanguageBundles(rootIndex, baseUrl, homeCourseId ? [homeCourseId] : [])
 
   useEffect(() => {
     loadRootIndex(baseUrl)
