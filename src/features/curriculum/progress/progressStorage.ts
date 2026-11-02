@@ -1,4 +1,5 @@
 import { STORES } from '../../../lib/stores'
+import { subscribeToStores } from '../../../lib/localStore'
 import { requestPersistentStorageOnce } from './storagePersistence'
 
 export interface LevelProgress {
@@ -87,10 +88,7 @@ function onProgressChanged(): void {
 
 export function subscribeProgress(listener: () => void): () => void {
   progressListeners.add(listener)
-  if (!stopWatching) {
-    const stops = PROGRESS_STORES.map((store) => store.subscribe(onProgressChanged))
-    stopWatching = () => stops.forEach((stop) => stop())
-  }
+  stopWatching ??= subscribeToStores(PROGRESS_STORES, onProgressChanged)
   return () => {
     progressListeners.delete(listener)
     if (progressListeners.size === 0 && stopWatching) {

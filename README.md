@@ -147,7 +147,7 @@ Progress is saved in each learner's browser under the course id and the lesson i
 
 #### The R course
 
-The R course is being rewritten quest by quest (base R, data-analysis beginners, invented data). It is marked `comingSoon` in `public/content/index.json`, so only admin mode opens it, and `check-lesson-ids.mjs` skips it until it is released; then run `npm run lesson-ids:update`. Its data files work like SQL's: one file per stage under `scripts/r-curriculum/data/`, built with `task()`, `mc()` and the test helpers in `data/_builders.mjs` (`near`, `prints`, `uses`, `isText`…), and permanent ids from `scripts/curriculum-ids.mjs`.
+The R course is being rewritten quest by quest (base R, data-analysis beginners, invented data). It is marked `comingSoon` in `public/content/index.json`, so only admin mode opens it (its lesson files are still public on the site, so this hides the course rather than keeping it secret), and `check-lesson-ids.mjs` skips it until it is released; then run `npm run lesson-ids:update`. Its data files work like SQL's: one file per stage under `scripts/r-curriculum/data/`, built with `task()`, `mc()` and the test helpers in `data/_builders.mjs` (`near`, `prints`, `uses`, `isText`…), and permanent ids from `scripts/curriculum-ids.mjs`.
 
 R content is checked with webR, the same runner the app uses: run `npm install --no-save webr@0.4.2` once, then `npm run check:r`. To check it in the browser instead, start `npm run dev`, open the app, and in the browser console run:
 
