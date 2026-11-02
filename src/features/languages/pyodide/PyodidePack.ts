@@ -14,7 +14,9 @@ export abstract class PyodidePack extends LanguagePack {
 
   /** Starts the worker in the background, so the first Run or Check doesn't wait for it. */
   warmUp(): void {
-    void this.runtime().then((runtime) => runtime.warmUp())
+    this.runtime()
+      .then((runtime) => runtime.warmUp())
+      .catch(() => undefined) // The first run shows the error.
   }
 
   /**

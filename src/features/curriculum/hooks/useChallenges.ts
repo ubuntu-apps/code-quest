@@ -80,12 +80,19 @@ export function useChallenges(
     try {
       const pack = packForTestMode(ch.validation.mode)
       if (pack) {
-        const run = await pack.checkChallenge(answer, {
-          challenge: ch,
-          level,
-          signal: controller.signal,
-          onStatus: (message) => setCheckingMessage(ch.id, message),
-        })
+        let run: Awaited<ReturnType<typeof pack.checkChallenge>>
+        try {
+          run = await pack.checkChallenge(answer, {
+            challenge: ch,
+            level,
+            signal: controller.signal,
+            onStatus: (message) => setCheckingMessage(ch.id, message),
+          })
+        } catch (err: unknown) {
+          // The runtime itself failed (e.g. it couldn't be downloaded): not an attempt.
+          if (!controller.signal.aborted) showRunFeedback(ch.id, { tests: [], error: pack.runtimeFailedError(err) })
+          return
+        }
         // Stopped by the learner (or by leaving the level): not an attempt, so no feedback.
         if (controller.signal.aborted) return
         showRunFeedback(ch.id, run)
@@ -154,15 +161,21 @@ export function useChallenges(
     setOutput((prev) => ({ ...prev, [ch.id]: '' }))
     setErrorUiEpoch((prev) => ({ ...prev, [ch.id]: (prev[ch.id] ?? 0) + 1 }))
     try {
-      const result = await pack.runChallenge(answer, {
-        challenge: ch,
-        level,
-        signal: controller.signal,
-        onStatus: setRunningMessage,
-        onOutput: (text: string) => {
-          if (runControllers.current[ch.id] === controller) setOutput((prev) => ({ ...prev, [ch.id]: text }))
-        },
-      })
+      let result: Awaited<ReturnType<typeof pack.runChallenge>>
+      try {
+        result = await pack.runChallenge(answer, {
+          challenge: ch,
+          level,
+          signal: controller.signal,
+          onStatus: setRunningMessage,
+          onOutput: (text: string) => {
+            if (runControllers.current[ch.id] === controller) setOutput((prev) => ({ ...prev, [ch.id]: text }))
+          },
+        })
+      } catch (err: unknown) {
+        // The runtime itself failed (e.g. it couldn't be downloaded).
+        result = { output: '', error: pack.runtimeFailedError(err) }
+      }
       // Leaving the level stops the run; the new level's state is already fresh.
       if (runControllers.current[ch.id] !== controller) return
       setOutput((prev) => ({ ...prev, [ch.id]: result.output }))

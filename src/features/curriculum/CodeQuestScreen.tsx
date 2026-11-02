@@ -26,6 +26,7 @@ import { SectionCertificateNotice } from '../certificate/SectionCertificateNotic
 import { ReviewPanel } from '../review/ReviewPanel'
 import { ReadMoreModal } from './components/ReadMoreModal'
 import { LoadErrorPanel } from './components/LoadErrorPanel'
+import { NotFoundPanel } from './components/NotFoundPanel'
 import { Breadcrumbs } from './components/Breadcrumbs'
 import { AppHeader, type HeaderCourse } from './components/AppHeader'
 import { courseRank } from '../ranks/ranks'
@@ -75,6 +76,7 @@ export function CodeQuestScreen() {
     levelId,
     levelStep,
     goToTab,
+    goToLanguages,
     navigate,
     goToLanguage,
     goToSection,
@@ -97,6 +99,7 @@ export function CodeQuestScreen() {
   const {
     rootError,
     bundleError,
+    courseNotFound,
     displayRootIndex,
     bundleForView,
     languageBundles,
@@ -105,8 +108,8 @@ export function CodeQuestScreen() {
   } = useCurriculum({ baseUrl, languageId, activeLanguageId, unlockAll, progressVersion, goToLanguage })
 
   useEffect(() => {
-    if (languageId) saveSelectedLanguage(languageId)
-  }, [languageId])
+    if (languageId && displayRootIndex && !courseNotFound) saveSelectedLanguage(languageId)
+  }, [languageId, displayRootIndex, courseNotFound])
 
   const { streak, isLevelUnlocked, isSectionUnlockedFor, openableLanguages, totalXp, continueTarget } =
     useCourseProgress({
@@ -292,8 +295,11 @@ export function CodeQuestScreen() {
       )
     }
 
+    if (courseNotFound) return <NotFoundPanel what="course" onHome={goToLanguages} />
     if (bundleError) return <LoadErrorPanel message={bundleError} />
     if (!bundleForView) return <div className="cq-panel cq-muted">Loading…</div>
+    if (sectionId && !selectedSection) return <NotFoundPanel what="quest" onHome={goToLanguages} />
+    if (learnView === 'level' && !selectedLevel) return <NotFoundPanel what="stage" onHome={goToLanguages} />
 
     if (learnView === 'sections') {
       return (

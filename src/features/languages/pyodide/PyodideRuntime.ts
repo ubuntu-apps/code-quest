@@ -1,5 +1,6 @@
 import type { RuntimeAssertionTest } from '../../curriculum/content/types'
-import { PYODIDE_CDN_BASE } from '../../../runtimeVersions'
+import { PYODIDE_CACHE, PYODIDE_CDN_BASE } from '../../../runtimeVersions'
+import { forgetOpaqueRuntimeFiles } from '../../../lib/runtimeCache'
 import type { ChallengeCheckResult, ChallengeTestResult, CodeRunResult, FriendlyCodeError } from '../LanguagePack'
 import { explainPythonError } from '../python/pythonErrors'
 import { CodeRuntime, type RuntimeRunOptions, type RunWording } from '../runtime/CodeRuntime'
@@ -71,6 +72,8 @@ type JobOutcome =
   | { kind: 'package-timeout' }
   | { kind: 'package-error' }
   | { kind: 'stopped' }
+  /** The worker itself died (out of memory, say). */
+  | { kind: 'died' }
 
 type JobResult = { outcome: JobOutcome; partialOutput: string }
 
@@ -194,7 +197,7 @@ export class PyodideRuntime extends CodeRuntime {
     }
     if (outcome.kind === 'result') return
     if (outcome.kind === 'stopped') throw new Error('The download was stopped.')
-    if (outcome.kind === 'crash' || outcome.kind === 'package-error') {
+    if (outcome.kind === 'crash' || outcome.kind === 'package-error' || outcome.kind === 'died') {
       throw new Error(`Could not download what ${label} needs. Check your internet connection and try again.`)
     }
     throw new Error(`Downloading ${label} took too long. Check your internet connection and try again.`)
@@ -228,6 +231,8 @@ export class PyodideRuntime extends CodeRuntime {
         return this.stopped(wording)
       case 'crash':
         return explainPythonError(outcome.message)
+      case 'died':
+        return this.died(wording)
     }
   }
 
@@ -332,10 +337,18 @@ export class PyodideRuntime extends CodeRuntime {
     })
     this.workerReady = ready
     w.addEventListener('message', (event: MessageEvent<WorkerReply>) => this.handleWorkerMessage(event.data))
+    // The worker died during a run (out of memory, say): end the run now, not at its time limit.
+    w.addEventListener('error', () => {
+      const job = this.activeJob
+      if (this.worker !== w || !this.runtimeLoaded || !job) return
+      this.discardWorker()
+      job.settle({ kind: 'died' })
+    })
     w.postMessage({ type: 'init', cdnBase: PYODIDE_CDN_BASE })
     // A failed load must not poison later attempts (e.g. the learner comes back online).
-    ready.catch(() => {
+    ready.catch((error: unknown) => {
       if (this.worker === w) this.discardWorker()
+      if (!(error instanceof RunStoppedError)) void forgetOpaqueRuntimeFiles(PYODIDE_CACHE)
     })
     return ready
   }

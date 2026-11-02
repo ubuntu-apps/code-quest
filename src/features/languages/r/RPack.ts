@@ -16,9 +16,17 @@ export class RPack extends LanguagePack {
     super(language)
   }
 
-  /** The R runtime, loaded on first use (the content checker's browser scripts use it too). */
+  /**
+   * The R runtime, loaded on first use (the content checker's browser scripts use it too).
+   * A failed load (offline) is forgotten, so the next run tries again.
+   */
   runtime(): Promise<WebRRuntime> {
-    this.webR ??= import('./WebRRuntime').then(({ WebRRuntime }) => new WebRRuntime(this.runWording))
+    this.webR ??= import('./WebRRuntime')
+      .then(({ WebRRuntime }) => new WebRRuntime(this.runWording))
+      .catch((error: unknown) => {
+        this.webR = null
+        throw error
+      })
     return this.webR
   }
 
@@ -42,14 +50,17 @@ export class RPack extends LanguagePack {
 
   /** Starts downloading webR as soon as the course opens: it is big. */
   preload(): void {
-    void this.runtime().then((runtime) => runtime.preload())
+    this.runtime()
+      .then((runtime) => runtime.preload())
+      .catch(() => undefined) // The first run shows the error.
   }
 
-  async prepareOffline(): Promise<void> {
+  async prepareOffline({ signal }: { signal?: AbortSignal }): Promise<void> {
     try {
-      await (await this.runtime()).prepareOffline()
-    } catch {
-      throw new Error(this.spec.messages.runtimeLoadFailed ?? `Could not download the ${this.label} runtime.`)
+      await (await this.runtime()).prepareOffline(signal)
+    } catch (error: unknown) {
+      if (signal?.aborted) throw new Error('The download was stopped.', { cause: error })
+      throw new Error(this.spec.messages.runtimeLoadFailed ?? `Could not download the ${this.label} runtime.`, { cause: error })
     }
   }
 }

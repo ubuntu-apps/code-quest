@@ -2,7 +2,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
-import { PYODIDE_CDN_BASE, WEBR_CDN_BASE } from './src/runtimeVersions'
+import { PYODIDE_CACHE, PYODIDE_CDN_BASE, WEBR_CACHE, WEBR_CDN_BASE } from './src/runtimeVersions'
 
 /** Matches URLs that start with `base` (workbox matches cross-origin RegExps from the start). */
 function startsWith(base: string): RegExp {
@@ -50,7 +50,9 @@ export default defineConfig({
             urlPattern: startsWith(PYODIDE_CDN_BASE),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'codequest-pyodide',
+              // Opaque (status 0) responses too: Pyodide's main script loads that way. A bad
+              // one is dropped after a failed load (src/lib/runtimeCache.ts).
+              cacheName: PYODIDE_CACHE,
               cacheableResponse: { statuses: [0, 200] },
             },
           },
@@ -59,7 +61,7 @@ export default defineConfig({
             urlPattern: startsWith(WEBR_CDN_BASE),
             handler: 'CacheFirst',
             options: {
-              cacheName: 'codequest-webr',
+              cacheName: WEBR_CACHE,
               cacheableResponse: { statuses: [0, 200] },
             },
           },

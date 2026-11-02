@@ -55,6 +55,16 @@ export abstract class CodeRuntime {
     }
   }
 
+  /** The runtime stopped working in the middle of a run (out of memory, most likely). */
+  protected died({ label }: RunWording): FriendlyCodeError {
+    return {
+      title: `${label} stopped unexpectedly`,
+      detail: `${label} stopped working while your code ran. The device may have run short of memory.`,
+      tip: 'Run the code again. If it keeps happening, close other tabs or reload the page.',
+      errorType: 'RuntimeCrashed',
+    }
+  }
+
   /** A package the code imports took too long to download, or failed to. */
   protected packageFailed(wording: RunWording, timedOut: boolean): FriendlyCodeError {
     const message = (timedOut ? wording.packageTimeout : undefined) ?? wording.packageError

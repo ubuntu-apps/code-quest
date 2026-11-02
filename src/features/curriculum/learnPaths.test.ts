@@ -16,6 +16,10 @@ describe('learnPaths', () => {
     expect(parseAppPath('/').tab).toBe('learn')
   })
 
+  it('keeps going on a link with a broken % in it', () => {
+    expect(parseAppPath('/progress/%E0%A4%A')).toMatchObject({ tab: 'learn', langId: '%E0%A4%A' })
+  })
+
   it('parses nested learn routes', () => {
     expect(parseAppPath('/learn/python')).toMatchObject({
       tab: 'learn',

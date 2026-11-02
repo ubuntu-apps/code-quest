@@ -119,6 +119,8 @@ local({
       detail <<- conditionMessage(e)
     })
     status <- if (passed) "PASS" else "FAIL"
+    # One line per test: a message with line breaks or tabs would break the results apart.
+    detail <- gsub("[\\r\\n\\t]+", " ", detail)
     lines[i] <- paste0(t$id, "\\t", status, "\\t", detail)
   }
   cat(paste(lines, collapse = "\\n"))
@@ -127,7 +129,10 @@ local({
 `
 }
 
-/** Splits a check's output into what the learner's code printed and the test results. */
+/**
+ * Splits a check's output into what the learner's code printed and the test results. Only
+ * result lines count, and a test that didn't report counts as failed.
+ */
 export function parseChallengeOutput(
   text: string,
   tests: RuntimeAssertionTest[],
@@ -135,13 +140,14 @@ export function parseChallengeOutput(
   const result = { output: text }
   const markerAt = result.output.lastIndexOf(TESTS_MARKER)
   const learnerOutput = markerAt >= 0 ? result.output.slice(0, markerAt).replace(/\n+$/, '') : ''
-  const parsed = result.output
-    .slice(markerAt >= 0 ? markerAt + TESTS_MARKER.length : 0)
+  // No marker: the check stopped before its tests ran, so none of them reported.
+  const parsed = (markerAt >= 0 ? result.output.slice(markerAt + TESTS_MARKER.length) : '')
     .trim()
     .split('\n')
     .filter(Boolean)
-    .map((line) => {
-      const [id, status, ...detailParts] = line.split('\t')
+    .map((line) => line.split('\t'))
+    .filter(([, status]) => status === 'PASS' || status === 'FAIL')
+    .map(([id, status, ...detailParts]) => {
       const passed = status === 'PASS'
       const detail = detailParts.join('\t').trim()
       const test = tests.find((t) => t.id === id)
@@ -153,10 +159,14 @@ export function parseChallengeOutput(
       }
     })
 
+  // A test that didn't report (the check stopped part-way) counts as failed.
+  const reported = new Set(parsed.map((t) => t.id))
+  for (const t of tests) {
+    if (!reported.has(t.id)) parsed.push({ id: t.id, label: t.label, passed: false, detail: "This check didn't run." })
+  }
   return {
-    passed: parsed.length > 0 && parsed.every((t) => t.passed),
+    passed: tests.length > 0 && parsed.every((t) => t.passed),
     tests: parsed,
     output: learnerOutput,
   }
-
 }
