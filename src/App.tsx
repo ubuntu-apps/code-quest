@@ -6,6 +6,7 @@ import { ProgressFileBanner } from './components/ProgressFileBanner'
 import { learnHomePath, learnLanguagePath } from './features/curriculum/learnPaths'
 import { SupporterLanding } from './features/support/SupporterLanding'
 import { useScreenCounts } from './lib/analytics'
+import { AppErrorBoundary } from './components/AppErrorBoundary'
 
 /** The Progress tab was removed; its old links (bookmarks, installed shortcuts) open Learn. */
 function OldProgressRedirect() {
@@ -35,9 +36,11 @@ function AppRoutes() {
 function App() {
   const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
   return (
-    <BrowserRouter basename={basename}>
-      <AppRoutes />
-    </BrowserRouter>
+    <AppErrorBoundary>
+      <BrowserRouter basename={basename}>
+        <AppRoutes />
+      </BrowserRouter>
+    </AppErrorBoundary>
   )
 }
 

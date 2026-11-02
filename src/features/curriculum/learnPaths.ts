@@ -16,6 +16,15 @@ function normalizePath(pathname: string): string {
   return trimmed.startsWith('/') ? trimmed : `/${trimmed}`
 }
 
+/** A path segment decoded, or as it is when it isn't valid (a stray "%" in a link). */
+function safeDecode(segment: string): string {
+  try {
+    return decodeURIComponent(segment)
+  } catch {
+    return segment
+  }
+}
+
 export function parseAppPath(pathname: string): ParsedLearnPath {
   const path = normalizePath(pathname)
 
@@ -28,7 +37,7 @@ export function parseAppPath(pathname: string): ParsedLearnPath {
   if (progressMatch) {
     return {
       tab: 'learn',
-      langId: decodeURIComponent(progressMatch[1]),
+      langId: safeDecode(progressMatch[1]),
       sectionId: null,
       levelId: null,
       step: 'intro',

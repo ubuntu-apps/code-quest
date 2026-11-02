@@ -33,15 +33,24 @@ export function useCurriculum({
   const [rootError, setRootError] = useState<string | null>(null)
 
   const [bundle, setBundle] = useState<LanguageBundle | null>(null)
-  const [bundleError, setBundleError] = useState<string | null>(null)
+  /** Why a course couldn't be loaded, and which course it was. */
+  const [bundleFailure, setBundleFailure] = useState<{ languageId: string; message: string } | null>(null)
   const [loadedLanguageId, setLoadedLanguageId] = useState<string | null>(null)
 
+  /** Whether a course can be opened now: it is in the catalog and not "coming soon" (unless admin mode). */
+  const canOpen = useCallback(
+    (id: string) => {
+      const lang = rootIndex?.languages.find((l) => l.id === id)
+      return lang !== undefined && (unlockAll || !lang.comingSoon)
+    },
+    [rootIndex, unlockAll],
+  )
+
   /** The course picked last, unless it can't be opened now (e.g. it became "coming soon"). */
-  const activeOpenableId =
-    activeLanguageId &&
-    (unlockAll || !rootIndex?.languages.some((lang) => lang.id === activeLanguageId && lang.comingSoon))
-      ? activeLanguageId
-      : null
+  const activeOpenableId = activeLanguageId && (!rootIndex || canOpen(activeLanguageId)) ? activeLanguageId : null
+
+  /** The course in the address isn't in the catalog, or can't be opened yet. */
+  const courseNotFound = Boolean(languageId && rootIndex && !canOpen(languageId))
 
   const languageBundles = useLanguageBundles(rootIndex, baseUrl, activeOpenableId)
 
@@ -63,13 +72,13 @@ export function useCurriculum({
     const failed = result instanceof Error
     setLoadedLanguageId(failed ? null : id)
     setBundle(failed ? null : result)
-    setBundleError(failed ? result.message : null)
+    setBundleFailure(failed ? { languageId: id, message: result.message } : null)
     return failed ? null : result
   }, [])
 
   // The course in the address, when the page opens on it (a reload or a link).
   useEffect(() => {
-    if (!languageId || !rootIndex || loadedLanguageId === languageId) return
+    if (!languageId || !rootIndex || loadedLanguageId === languageId || !canOpen(languageId)) return
     const lang = rootIndex.languages.find((l) => l.id === languageId)
     if (!lang) return
     let cancelled = false
@@ -79,12 +88,16 @@ export function useCurriculum({
     return () => {
       cancelled = true
     }
-  }, [languageId, rootIndex, loadedLanguageId, fetchCourse, showCourse])
+  }, [languageId, rootIndex, loadedLanguageId, canOpen, fetchCourse, showCourse])
 
   // The course in the address, once loaded; another course loaded earlier never stands in for it.
   const bundleForView = languageId
-    ? (languageBundles[languageId] ?? (loadedLanguageId === languageId ? bundle : null))
+    ? courseNotFound
+      ? null
+      : (languageBundles[languageId] ?? (loadedLanguageId === languageId ? bundle : null))
     : bundle
+  /** The error for the course in the address only, not one left over from another course. */
+  const bundleError = bundleFailure && bundleFailure.languageId === languageId ? bundleFailure.message : null
 
   // Drop saved challenge progress that belongs to an older version of a lesson (see
   // progressFingerprint.ts). Runs again after progress changes, e.g. a restored backup.
@@ -100,16 +113,18 @@ export function useCurriculum({
   const openLanguage = useCallback(
     async (path: string, id: string): Promise<LanguageBundle | null> => {
       goToLanguage(id)
+      if (!canOpen(id)) return null
       languagePack(id)?.preload()
       if (loadedLanguageId === id && bundle) return bundle
       return showCourse(id, await fetchCourse(path))
     },
-    [goToLanguage, loadedLanguageId, bundle, fetchCourse, showCourse],
+    [goToLanguage, canOpen, loadedLanguageId, bundle, fetchCourse, showCourse],
   )
 
   return {
     rootError,
     bundleError,
+    courseNotFound,
     displayRootIndex: rootIndex,
     bundleForView,
     languageBundles,

@@ -7,3 +7,7 @@ export const PYODIDE_CDN_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VER
 
 export const WEBR_VERSION = 'v0.4.2'
 export const WEBR_CDN_BASE = `https://webr.r-wasm.org/${WEBR_VERSION}/`
+
+/** The service worker's caches for the runtimes' files (see vite.config.ts and lib/runtimeCache.ts). */
+export const PYODIDE_CACHE = 'codequest-pyodide'
+export const WEBR_CACHE = 'codequest-webr'

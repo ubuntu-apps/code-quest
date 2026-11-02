@@ -177,6 +177,8 @@ export class CourseGenerator {
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296
     }
     const labels = question.choices.map((c) => c.label)
+    // The right answer is found again by its text, so two choices with the same text would be ambiguous.
+    if (new Set(labels).size !== labels.length) throw new Error(`Two choices have the same text in "${question.prompt}"`)
     const correct = labels[question.choices.findIndex((c) => c.id === question.correctChoiceId)]
     for (let i = labels.length - 1; i > 0; i -= 1) {
       const j = Math.floor(random() * (i + 1))
