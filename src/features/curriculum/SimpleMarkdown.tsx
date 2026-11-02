@@ -1,5 +1,5 @@
 import { useContext, type FC, type ReactNode } from 'react'
-import { canTryCode, codeToTry, type FenceBlock } from './tryCode'
+import { canTryCode, codeToTry, type FenceBlock } from './content/tryCode'
 import { CodeLanguageContext } from './codeLanguageContext'
 import { HighlightedCode } from './components/HighlightedCode'
 

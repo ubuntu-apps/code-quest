@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react'
-import type { LanguageBundle, LoadedSection, RootIndex } from '../types'
-import { loadProgress } from '../progressStorage'
-import { hasTestedOut } from '../testOut'
+import type { LanguageBundle, LoadedSection, RootIndex } from '../content/types'
+import { loadProgress } from '../progress/progressStorage'
+import { hasTestedOut } from '../progress/testOut'
 import { computeLevelXp, isSectionUnlocked as checkSectionUnlocked } from '../helpers'
-import { loadStreakState, streakStatus } from '../streak'
-import { loadLastLevel } from '../lastLevel'
+import { loadStreakState, streakStatus } from '../progress/streak'
+import { loadLastLevel } from '../progress/lastLevel'
 import type { ContinueTarget } from '../views/LearnHome'
 
 interface UseCourseProgressOptions {
@@ -15,7 +15,6 @@ interface UseCourseProgressOptions {
   /** The open course. */
   bundleForView: LanguageBundle | null
   languageBundles: Record<string, LanguageBundle>
-  resolveBundle: (langId: string, fallback: LanguageBundle | undefined) => LanguageBundle | null
   activeOpenableId: string | null
 }
 
@@ -30,7 +29,6 @@ export function useCourseProgress({
   displayRootIndex,
   bundleForView,
   languageBundles,
-  resolveBundle,
   activeOpenableId,
 }: UseCourseProgressOptions) {
   // Read from storage on every progress change, so a restored backup shows its streak too.
@@ -83,14 +81,14 @@ export function useCourseProgress({
     void progressVersion
     let xp = 0
     for (const lang of catalogLanguages) {
-      const b = resolveBundle(lang.id, languageBundles[lang.id]) ?? languageBundles[lang.id]
+      const b = languageBundles[lang.id]
       if (!b) continue
       for (const { file } of b.sections) {
         for (const lvl of file.levels) xp += computeLevelXp(lang.id, lvl)
       }
     }
     return xp
-  }, [catalogLanguages, languageBundles, resolveBundle, progressVersion])
+  }, [catalogLanguages, languageBundles, progressVersion])
 
   /** The lesson opened last, or else the first open lesson whose quiz isn't passed. */
   const continueTarget = useMemo((): ContinueTarget | null => {
@@ -102,7 +100,7 @@ export function useCourseProgress({
       if (openable && (!activeOpenableId || last.languageId === activeOpenableId)) return last
     }
     for (const lang of catalogLanguages) {
-      const b = resolveBundle(lang.id, languageBundles[lang.id]) ?? languageBundles[lang.id]
+      const b = languageBundles[lang.id]
       if (!b) continue
       for (const [sectionIndex, section] of b.sections.entries()) {
         for (let i = 0; i < section.file.levels.length; i += 1) {
@@ -125,7 +123,6 @@ export function useCourseProgress({
     openableLanguages,
     catalogLanguages,
     languageBundles,
-    resolveBundle,
     isLevelUnlocked,
     progressVersion,
     activeOpenableId,

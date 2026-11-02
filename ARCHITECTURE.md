@@ -68,8 +68,9 @@ One `language.json` per language feeds all three sides: the generator, the app's
 | `public/content/` | Generated lesson JSON the app fetches. `index.json` lists the courses; each course folder has its own `index.json` plus one file per quest. | Static files |
 | `public/pyodide-worker.js` | The Web Worker that loads Pyodide and runs Python and SQL. It also holds the test helpers the checker reuses. | Browser worker |
 | `src/features/languages/` | Everything about each language: per language a folder with `language.json`, its pack, editor and error classes (and R's `WebRRuntime`); `pyodide/` for the Python worker shared by Python and SQL; `runtime/` for the `CodeRuntime` base class; plus the shared `Highlighter`, the base phone keys (`keys.json`) and the registry in `index.ts`. | Browser (rules also load in Node) |
-| `src/features/curriculum/` | The learning screens: views, components, hooks, code editor, sandboxes, progress storage, curriculum loading and schemas. | Browser |
-| `src/features/editor/` | Admin edit mode: drafts, save plans, saving through the Vite dev plugin or the GitHub API. | Browser |
+| `src/features/curriculum/` | The learning screens: views, components, hooks, code editor and sandboxes. `content/` loads and validates the course JSON and grades answers; `progress/` saves progress and handles backups, the streak and renamed lessons. | Browser |
+| `src/lib/` | `localStore.ts`, a typed value saved in the browser, and `stores.ts`, the list of every saved value and which ones go in a backup. | Browser |
+| `src/components/` | Shared pieces: the bottom bar, the install banner, `Sheet` (every pop-up), `ConfirmDialog`. | Browser |
 | `src/features/…` | Badges, certificates, ranks, review, reminders, sound, support, feedback. | Browser |
 
 ---
@@ -128,7 +129,7 @@ flowchart LR
 ```
 
 - **Typed-in protection** stops an answer that just types the expected value from passing. Python re-runs the answer with other inputs from `variations.json`. R re-runs it on different data given as `alt`. SQL needs none, because queries run against a whole table.
-- **What differs between courses:** mostly settings, in the `course` block of each `language.json`: SQL copies each lesson's `database` into its level, and R shuffles quiz choices and leaves out the questions' internal `check` field. SQL and R use `CourseGenerator` as it is; only Python has a subclass, for its side quests, its quiz explanations and `--only`.
+- **What differs between courses:** mostly settings, in the `course` block of each `language.json`: SQL copies each lesson's `database` into its level, and R shuffles quiz choices and leaves out the questions' internal `check` field. SQL and R use `CourseGenerator` as it is; only Python has a subclass, for `--only` and an index that lists every quest. Python's side quests and quiz explanations are data too: `projects` in `data/course.mjs`, and each question's explanation next to it.
 
 ### Language packs
 
@@ -203,14 +204,19 @@ flowchart TB
     LV --> IS["IntroStep<br/>lesson + Try it"]
     LV --> CH["ChallengeCard ×N"]
     LV --> TS["TestStep<br/>the gate quiz"]
+    SET["SettingsTab<br/>look, sound, offline, backup"]
+    AB["AboutTab<br/>install, feedback, version"]
   end
   CQ --> LH
+  CQ --> SET
+  CQ --> AB
   subgraph H["hooks/"]
     UC["useCurriculum<br/>loadCurriculum + zod"]
     UCH["useChallenges"]
     USB["useSandbox"]
     UP["useCourseProgress"]
     ULT["useLevelTest"]
+    UQ["useQuiz<br/>answers + result"]
   end
   CQ --> UC
   CH --> UCH
@@ -218,14 +224,17 @@ flowchart TB
   TS --> ULT
   UCH --> UP
   ULT --> UP
+  ULT --> UQ
   UC -- "fetch" --> CONTENT[("public/content")]
-  UP --> LSG[("localStorage<br/>codequest:progress:*")]
+  UP --> LST["lib/stores.ts<br/>LocalStore"] --> LSG[("localStorage<br/>codequest:*")]
   UCH --> PACK["languages/<br/>LanguagePack"]
   USB --> PACK
   CH --> ED["codeEditor/<br/>CodeMirror + EditorLanguage"]
 ```
 
-Other features (badges, ranks, certificates, review, reminders) read the same progress storage. Admin edit mode, in `src/features/editor/`, writes lesson JSON back through the Vite save plugin in dev or the GitHub API otherwise.
+`CodeQuestScreen` hands each hook's state to `LearnLevel` whole (`sandbox`, `challenges`, `test`), so a new feature in a hook doesn't need a new prop on every screen in between. The skip-ahead gate and the daily review use `useQuiz` and `PracticeQuiz`, the same answers-and-result logic as a stage's gate.
+
+Other features (badges, ranks, certificates, review, reminders, settings) save through the stores in `src/lib/stores.ts`. Each store says whether it is learner data (it goes in a backup) or a device setting (it doesn't), so a new saved value is backed up by adding one line there. Every store sends one change event, so screens showing a value update when it changes, including after a restore.
 
 ### Content checker
 

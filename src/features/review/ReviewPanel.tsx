@@ -1,15 +1,13 @@
 import { useMemo, useState } from 'react'
 import { RotateCcw } from 'lucide-react'
-import type { LanguageBundle, TestGradeResult, TestQuestion } from '../curriculum/types'
-import { gradeTest } from '../curriculum/validateAnswer'
-import { localDateKey } from '../curriculum/streak'
-import { TestStep } from '../curriculum/views/TestStep'
-import { CodeLanguageContext } from '../curriculum/codeLanguageContext'
+import type { LanguageBundle, TestQuestion } from '../curriculum/content/types'
+import { localDateKey } from '../curriculum/progress/streak'
+import { useQuiz } from '../curriculum/hooks/useQuiz'
+import { PracticeQuiz } from '../curriculum/components/PracticeQuiz'
 import { playSound } from '../sound/sound'
 import { countEvent } from '../../lib/analytics'
 import { pickReview, reviewPool, REVIEW_SIZE } from './reviewSchedule'
 import {
-  answeredQuestionIds,
   finishReviewSession,
   loadReviewState,
   recordReviewAnswers,
@@ -49,10 +47,7 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
 
   const [open, setOpen] = useState(false)
   const [questions, setQuestions] = useState<TestQuestion[]>([])
-  const [short, setShort] = useState<Record<string, string>>({})
-  const [mcq, setMcq] = useState<Record<string, string>>({})
-  const [result, setResult] = useState<TestGradeResult | null>(null)
-  const [edited, setEdited] = useState<Record<string, true>>({})
+  const quiz = useQuiz()
   const [recorded, setRecorded] = useState(false)
 
   if (pool.length < MIN_POOL) return null
@@ -63,10 +58,7 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
 
   const begin = (ids: string[]) => {
     setQuestions(ids.map((id) => byId.get(id)?.question).filter((q): q is TestQuestion => q !== undefined))
-    setShort({})
-    setMcq({})
-    setResult(null)
-    setEdited({})
+    quiz.reset()
     setRecorded(false)
     setOpen(true)
   }
@@ -83,17 +75,11 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
     begin(ids)
   }
 
-  const markEdited = (questionId: string) =>
-    setEdited((prev) => (prev[questionId] ? prev : { ...prev, [questionId]: true }))
-
   const check = () => {
-    const graded = gradeTest(questions, short, mcq, 0)
-    setResult(graded)
-    setEdited({})
+    const { graded, answeredIds: answered } = quiz.grade(questions, 0)
     // Only the first check counts: later ones come after the right answers were shown.
     if (recorded) return
     setRecorded(true)
-    const answered = answeredQuestionIds(short, mcq)
     recordReviewAnswers(languageId, graded.byQuestion, answered)
     finishReviewSession(languageId, graded.correct)
     countEvent('review-done', 'Daily review done')
@@ -104,13 +90,6 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
   }
 
   if (open) {
-    const reviewLevel = {
-      id: 'daily_review',
-      title: 'Daily review',
-      intro: { bodyMarkdown: '' },
-      challenges: [],
-      test: { passingScorePercent: 0, questions },
-    }
     const sources = Object.fromEntries(questions.map((q) => [q.id, byId.get(q.id)?.level.title ?? '']))
     return (
       <section className="cq-review cq-review--open" aria-labelledby="cq-review-title">
@@ -122,33 +101,18 @@ export function ReviewPanel({ languageId, bundle, progressVersion, onActivity }:
             Close
           </button>
         </div>
-        <CodeLanguageContext.Provider value={languageId}>
-          <TestStep
-            practice
-            questionSources={sources}
-            level={reviewLevel}
-            prog={{ challengesCompleted: [], testPassed: false, challengeAnswers: {} }}
-            testShort={short}
-            testMcq={mcq}
-            testResult={result}
-            testEdited={edited}
-            onTestShortChange={(id, value) => {
-              markEdited(id)
-              setShort((prev) => ({ ...prev, [id]: value }))
-            }}
-            onTestMcqChange={(id, choice) => {
-              markEdited(id)
-              setMcq((prev) => ({ ...prev, [id]: choice }))
-            }}
-            onUpdatePassingScore={() => undefined}
-            onUpdateQuestion={() => undefined}
-            onMoveQuestion={() => undefined}
-            onRemoveQuestion={() => undefined}
-            onAddQuestion={() => undefined}
-            onSubmit={check}
-            onRetake={() => setOpen(false)}
-          />
-        </CodeLanguageContext.Provider>
+        <PracticeQuiz
+          practice
+          languageId={languageId}
+          id="daily_review"
+          title="Daily review"
+          questions={questions}
+          passingPercent={0}
+          quiz={quiz}
+          questionSources={sources}
+          onSubmit={check}
+          onRetake={() => setOpen(false)}
+        />
       </section>
     )
   }

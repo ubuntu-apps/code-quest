@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { diffValues, type DiffSegment } from '../valueDiff'
+import { diffValues, type DiffSegment } from '../content/valueDiff'
 
 export interface ValueDiffData {
   expected: string

@@ -9,7 +9,7 @@ import {
   parseAppPath,
   tabPath,
 } from '../learnPaths'
-import { loadSelectedLanguage, saveSelectedLanguage } from '../selectedLanguageStorage'
+import { loadSelectedLanguage, saveSelectedLanguage } from '../progress/selectedLanguageStorage'
 
 function learnViewFromPath(parsed: ReturnType<typeof parseAppPath>): LearnView {
   if (parsed.tab !== 'learn') return 'languages'

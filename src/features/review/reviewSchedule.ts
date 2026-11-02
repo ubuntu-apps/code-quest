@@ -1,5 +1,5 @@
-import type { LanguageBundle, Level, TestQuestion } from '../curriculum/types'
-import { loadProgress } from '../curriculum/progressStorage'
+import type { LanguageBundle, Level, TestQuestion } from '../curriculum/content/types'
+import { loadProgress } from '../curriculum/progress/progressStorage'
 
 /**
  * Spaced review of past quiz questions, worked out without touching storage (see
@@ -138,9 +138,4 @@ export function pickReview(
   }
 
   return available.filter((c) => picked.has(c.question.id)).map((c) => c.question.id)
-}
-
-/** How many questions are due today (or overdue). */
-export function dueCount(pool: ReviewCandidate[], today: string): number {
-  return pool.filter((c) => c.item.due <= today).length
 }

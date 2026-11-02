@@ -6,7 +6,7 @@ const OPTIONS: { value: ThemeChoice; label: string }[] = [
   { value: 'dark', label: 'Dark' },
 ]
 
-/** About tab: light or dark colours, or follow the device's setting. */
+/** Settings tab: light or dark colours, or follow the device's setting. */
 export function AppearancePanel() {
   const theme = useTheme()
   return (

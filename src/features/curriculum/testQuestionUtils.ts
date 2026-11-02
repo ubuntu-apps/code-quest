@@ -1,5 +1,5 @@
-import type { TestQuestion } from './types'
-import { normalizeAnswer } from './validateAnswer'
+import type { TestQuestion } from './content/types'
+import { normalizeAnswer } from './content/validateAnswer'
 
 export function isYesNoQuestion(q: TestQuestion): boolean {
   if (q.type !== 'shortText') return false

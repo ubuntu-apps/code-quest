@@ -81,11 +81,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("No earlier line sets `guess`. What happens when this runs?\n\n```\nwhile guess != 7:\n    guess = int(input())\n```", ["The loop is skipped", "It asks for one guess", "A `NameError`: `guess` has no value yet", "It loops forever"], 2),
-    mc("Which comparison is true when the guess is too low?", ["`guess > secret`", "`guess == secret`", "`guess < secret`", "`guess != guess`"], 2),
-    mc("What happens if you forget to read a new guess inside the loop?", ["The loop never ends", "Python asks automatically", "The loop ends at once", "Nothing changes"], 0),
-    mc("In `for tries in range(1, 6):`, how many guesses does the player get?", ["6", "1", "4", "5"], 3),
-    mc("When does a `for` loop's `else:` block run?", ["After every round", "Only when the loop ends without `break`", "Only after `break`", "Never"], 1),
-    qShort("`int(input())` when the player types `07`. What number is stored?", "7"),
+    mc("No earlier line sets `guess`. What happens when this runs?\n\n```\nwhile guess != 7:\n    guess = int(input())\n```", ["The loop is skipped", "It asks for one guess", "A `NameError`: `guess` has no value yet", "It loops forever"], 2, "The condition is checked before the first round, so `guess` must already exist. Read the first guess before the loop."),
+    mc("Which comparison is true when the guess is too low?", ["`guess > secret`", "`guess == secret`", "`guess < secret`", "`guess != guess`"], 2, "A guess below the secret number is too low."),
+    mc("What happens if you forget to read a new guess inside the loop?", ["The loop never ends", "Python asks automatically", "The loop ends at once", "Nothing changes"], 0, "The condition depends on `guess`, so without a new guess it never becomes false."),
+    mc("In `for tries in range(1, 6):`, how many guesses does the player get?", ["6", "1", "4", "5"], 3, "`range(1, 6)` gives 1 to 5, which is five tries."),
+    mc("When does a `for` loop's `else:` block run?", ["After every round", "Only when the loop ends without `break`", "Only after `break`", "Never"], 1, "The `else` runs only when the player used every try without a `break` for a correct guess."),
+    qShort("`int(input())` when the player types `07`. What number is stored?", "7", "`int()` ignores leading zeros, so `\"07\"` becomes 7."),
   ],
 })

@@ -84,11 +84,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("What does `notes.txt` contain after this runs, if the file didn't exist before?\n\n```\nfor note in [\"milk\", \"eggs\"]:\n    with open(\"notes.txt\", \"a\") as f:\n        f.write(note + \"\\n\")\n```", ["Only `eggs`", "Two lines: `milk` and `eggs`", "`milkeggs` on one line", "Nothing: `\"a\"` can't create a file"], 1),
-    mc("Which mode adds a note without losing the others?", ["`\"w\"`", "`\"r\"`", "`\"a\"`", "`\"x\"`"], 2),
-    mc("What should `list_notes` do when `notes.txt` doesn't exist yet?", ["Return an empty list", "Crash with a traceback", "Create a folder", "Return `None`"], 0),
-    mc("How does `delete_note` remove a note?", ["Appends a blank line", "Opens the file with `\"x\"`", "Uses `os.remove`", "Reads all the notes, removes one, and writes the rest back with `\"w\"`"], 3),
-    qShort("`\"find milk\".partition(\" \")[2]` gives which word?", "milk"),
-    mc("Note number 1 is at which index of the list?", ["1", "0", "-1", "2"], 1),
+    mc("What does `notes.txt` contain after this runs, if the file didn't exist before?\n\n```\nfor note in [\"milk\", \"eggs\"]:\n    with open(\"notes.txt\", \"a\") as f:\n        f.write(note + \"\\n\")\n```", ["Only `eggs`", "Two lines: `milk` and `eggs`", "`milkeggs` on one line", "Nothing: `\"a\"` can't create a file"], 1, "`\"a\"` creates the file if needed and always writes at the end, so both notes are kept, each with its line break."),
+    mc("Which mode adds a note without losing the others?", ["`\"w\"`", "`\"r\"`", "`\"a\"`", "`\"x\"`"], 2, "Append mode adds to the end and keeps the existing notes."),
+    mc("What should `list_notes` do when `notes.txt` doesn't exist yet?", ["Return an empty list", "Crash with a traceback", "Create a folder", "Return `None`"], 0, "No file yet simply means no notes yet."),
+    mc("How does `delete_note` remove a note?", ["Appends a blank line", "Opens the file with `\"x\"`", "Uses `os.remove`", "Reads all the notes, removes one, and writes the rest back with `\"w\"`"], 3, "A file can't easily lose a line in the middle, so the program rewrites the whole list."),
+    qShort("`\"find milk\".partition(\" \")[2]` gives which word?", "milk", "`partition` splits at the first space into three parts, and `[2]` is everything after it."),
+    mc("Note number 1 is at which index of the list?", ["1", "0", "-1", "2"], 1, "People count from 1 and lists count from 0, so note 1 is at index 0."),
   ],
 })

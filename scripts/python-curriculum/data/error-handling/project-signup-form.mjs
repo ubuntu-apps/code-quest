@@ -88,11 +88,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why is `ValidationError` a kind of `ValueError`?", ["It must be", "Code that catches `ValueError` still catches it, and its name says what went wrong", "To make it faster", "So it can't be caught"], 1),
-    mc("What does this print?\n\n```\nproblems = []\nfor field in [\"name\", \"age\"]:\n    try:\n        if field == \"age\":\n            int(\"x\")\n    except ValueError:\n        problems.append(field)\nprint(problems)\n```", ["`[]`", "`['age']`", "`['name', 'age']`", "A `ValueError` stops the loop"], 1),
-    mc("What does `form.get(\"age\", \"\")` give when there is no `age`?", ["`\"\"`", "`None`", "A `KeyError`", "`0`"], 0),
-    mc("In `validate`, what happens when one check raises?", ["The whole function stops", "The program ends", "All later checks are skipped", "Its message is added to the list and the next check runs"], 3),
-    qShort("What does `\"  ana lima \".strip().title()` give?", "Ana Lima"),
-    mc("Why `raise ValidationError(...) from e` in `check_age`?", ["To hide the original", "So the clearer error keeps the original `ValueError` as its cause", "To skip the message", "It is required for ints"], 1),
+    mc("Why is `ValidationError` a kind of `ValueError`?", ["It must be", "Code that catches `ValueError` still catches it, and its name says what went wrong", "To make it faster", "So it can't be caught"], 1, "As a subclass, it is still caught as a `ValueError`, and its own name says exactly what failed."),
+    mc("What does this print?\n\n```\nproblems = []\nfor field in [\"name\", \"age\"]:\n    try:\n        if field == \"age\":\n            int(\"x\")\n    except ValueError:\n        problems.append(field)\nprint(problems)\n```", ["`[]`", "`['age']`", "`['name', 'age']`", "A `ValueError` stops the loop"], 1, "The `try` is inside the loop, so the error from `int(\"x\")` is caught, `age` is recorded, and the loop goes on."),
+    mc("What does `form.get(\"age\", \"\")` give when there is no `age`?", ["`\"\"`", "`None`", "A `KeyError`", "`0`"], 0, "`get` returns the default you give, here an empty string, when the key is missing."),
+    mc("In `validate`, what happens when one check raises?", ["The whole function stops", "The program ends", "All later checks are skipped", "Its message is added to the list and the next check runs"], 3, "Each check has its own `try`, so a failure is recorded and the loop moves on."),
+    qShort("What does `\"  ana lima \".strip().title()` give?", "Ana Lima", "`strip` removes the outer spaces, and `title` capitalises each word."),
+    mc("Why `raise ValidationError(...) from e` in `check_age`?", ["To hide the original", "So the clearer error keeps the original `ValueError` as its cause", "To skip the message", "It is required for ints"], 1, "`from e` keeps the original error as the cause of the clearer one."),
   ],
 })

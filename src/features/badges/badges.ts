@@ -1,5 +1,6 @@
-import type { LanguageBundle } from '../curriculum/types'
-import { loadProgress } from '../curriculum/progressStorage'
+import { STORES } from '../../lib/stores'
+import type { LanguageBundle } from '../curriculum/content/types'
+import { loadProgress } from '../curriculum/progress/progressStorage'
 import { isSectionFinished } from '../certificate/courseCompletion'
 import { OLD_RANK_IDS, RANKS, rankThresholds } from '../ranks/ranks'
 
@@ -118,7 +119,6 @@ export function badgeShownForCourse(badge: Pick<EarnedBadge, 'id' | 'kind'>, lan
 }
 
 /** Badges stay earned once earned (even if content changes later), so they are saved. */
-export const BADGES_STORAGE_KEY = 'codequest:badges'
 
 /**
  * Rank badges saved under the first rank names (`rank:sql:knight`, "SQL Knight") get the
@@ -146,8 +146,8 @@ export function renameOldRankBadges(badges: Record<string, EarnedBadge>): Record
 /** The saved badges, or null before badges were first worked out on this device. */
 export function loadEarnedBadges(): Record<string, EarnedBadge> | null {
   try {
-    const raw = localStorage.getItem(BADGES_STORAGE_KEY)
-    if (raw === null) return null
+    const raw = STORES.badges.get()
+    if (raw === '') return null
     const parsed = JSON.parse(raw) as unknown
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {}
     return renameOldRankBadges(parsed as Record<string, EarnedBadge>)
@@ -156,33 +156,17 @@ export function loadEarnedBadges(): Record<string, EarnedBadge> | null {
   }
 }
 
-const BADGES_CHANGED_EVENT = 'codequest:badges-changed'
-
 export function saveEarnedBadges(badges: Record<string, EarnedBadge>): void {
-  try {
-    localStorage.setItem(BADGES_STORAGE_KEY, JSON.stringify(badges))
-  } catch {
-    // Storage unavailable: badges are worked out again next time.
-  }
-  if (typeof window !== 'undefined') window.dispatchEvent(new Event(BADGES_CHANGED_EVENT))
+  STORES.badges.set(JSON.stringify(badges))
 }
 
 /** For useSyncExternalStore: the saved badges as stored (a string, so it compares cheaply). */
 export function badgesSnapshot(): string {
-  try {
-    return localStorage.getItem(BADGES_STORAGE_KEY) ?? ''
-  } catch {
-    return ''
-  }
+  return STORES.badges.get()
 }
 
 export function subscribeBadges(onChange: () => void): () => void {
-  window.addEventListener(BADGES_CHANGED_EVENT, onChange)
-  window.addEventListener('storage', onChange)
-  return () => {
-    window.removeEventListener(BADGES_CHANGED_EVENT, onChange)
-    window.removeEventListener('storage', onChange)
-  }
+  return STORES.badges.subscribe(onChange)
 }
 
 /**

@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { languagePack, type FriendlyCodeError } from '../../languages'
-import type { Level } from '../types'
+import type { Level } from '../content/types'
 
 function startingCode(level: Level, languageId: string | null): string {
   return level.intro.sandboxCode ?? languagePack(languageId)?.defaultSandboxCode ?? ''
@@ -95,3 +95,5 @@ export function useSandbox(languageId: string | null) {
     resetForLevel,
   }
 }
+
+export type SandboxState = ReturnType<typeof useSandbox>

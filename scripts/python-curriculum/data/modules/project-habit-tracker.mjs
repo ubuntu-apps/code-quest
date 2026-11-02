@@ -93,11 +93,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("What does `date(2025, 3, 9).isoformat()` give?", ["`\"2025-03-09\"`", "`\"2025-3-9\"`", "`\"09/03/2025\"`", "`date(2025, 3, 9)`"], 0),
-    mc("Why does every function take `today` as a parameter?", ["It is faster", "Dates need it", "So the checks can use any date instead of the real one", "To change the clock"], 2),
-    mc("What is `date(2025, 3, 1) - timedelta(days=1)`?", ["`2025-03-00`", "`2025-02-29`", "`2025-02-28`", "An error"], 2),
-    mc("How do you find the Monday of `today`'s week?", ["`today.monday()`", "`today - timedelta(days=7)`", "`date(today.year, 1, 1)`", "`today - timedelta(days=today.weekday())`"], 3),
-    qShort("`date(2025, 3, 13) - date(2025, 3, 12)` equals `timedelta(days=...)`? (a number)", "1"),
-    mc("Why turn `days` into a set?", ["Repeated dates count once, and checking `day in done` is fast", "Sets sort dates", "Sets can be saved to files", "It is required by `datetime`"], 0),
+    mc("What does `date(2025, 3, 9).isoformat()` give?", ["`\"2025-03-09\"`", "`\"2025-3-9\"`", "`\"09/03/2025\"`", "`date(2025, 3, 9)`"], 0, "`isoformat()` writes the standard `YYYY-MM-DD` text with zero-padding, the form `fromisoformat` reads back."),
+    mc("Why does every function take `today` as a parameter?", ["It is faster", "Dates need it", "So the checks can use any date instead of the real one", "To change the clock"], 2, "Passing the date in makes the functions testable with fixed dates."),
+    mc("What is `date(2025, 3, 1) - timedelta(days=1)`?", ["`2025-03-00`", "`2025-02-29`", "`2025-02-28`", "An error"], 2, "Date maths knows the calendar: the day before 1 March 2025 is 28 February, because 2025 is not a leap year."),
+    mc("How do you find the Monday of `today`'s week?", ["`today.monday()`", "`today - timedelta(days=7)`", "`date(today.year, 1, 1)`", "`today - timedelta(days=today.weekday())`"], 3, "`weekday()` is 0 on Monday, so going back that many days lands on Monday."),
+    qShort("`date(2025, 3, 13) - date(2025, 3, 12)` equals `timedelta(days=...)`? (a number)", "1", "The two dates are one day apart."),
+    mc("Why turn `days` into a set?", ["Repeated dates count once, and checking `day in done` is fast", "Sets sort dates", "Sets can be saved to files", "It is required by `datetime`"], 0, "A set drops duplicates and checks membership quickly."),
   ],
 })

@@ -1,4 +1,4 @@
-import type { SqlTable } from '../../curriculum/types'
+import type { SqlTable } from '../../curriculum/content/types'
 import language from './language.json'
 
 /** Helpers for a SQL lesson's tables: their names, and which ones a query uses (for suggestions). */

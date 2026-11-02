@@ -81,11 +81,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why compare `answer.strip().lower()` rather than `answer`?", ["It is faster", "So `Rome`, `ROME` and ` rome ` all count", "input() needs it", "To remove numbers"], 1),
-    mc("Where does `score = 0` go?", ["Inside the loop", "After the loop", "Before the loop", "In every `case`"], 2),
-    mc("Why check `percent == 100` before `percent >= 50`?", ["100 is also >= 50, so the first matching branch must be the most specific", "Python checks from the bottom", "It does not matter", "`==` is faster"], 0),
-    qShort("What does `f\"{2 / 3 * 100:.0f}\"` give?", "67"),
-    mc("In `for i in range(1, 4):`, which values does `i` take?", ["0, 1, 2", "1, 2, 3, 4", "1, 2, 3", "0 to 4"], 2),
-    mc("What does `match i:` with `case 2:` do?", ["Assigns 2 to `i`", "Runs that block when `i` is 2", "Loops twice", "Compares two strings"], 1),
+    mc("Why compare `answer.strip().lower()` rather than `answer`?", ["It is faster", "So `Rome`, `ROME` and ` rome ` all count", "input() needs it", "To remove numbers"], 1, "Removing spaces and ignoring case means the player isn't marked wrong for typing differently."),
+    mc("Where does `score = 0` go?", ["Inside the loop", "After the loop", "Before the loop", "In every `case`"], 2, "The score is created once before the loop; inside it, it would reset every question."),
+    mc("Why check `percent == 100` before `percent >= 50`?", ["100 is also >= 50, so the first matching branch must be the most specific", "Python checks from the bottom", "It does not matter", "`==` is faster"], 0, "Branches are checked top to bottom and only the first true one runs, so the specific test goes first."),
+    qShort("What does `f\"{2 / 3 * 100:.0f}\"` give?", "67", "2 / 3 * 100 is 66.67, and `.0f` rounds it to no decimals."),
+    mc("In `for i in range(1, 4):`, which values does `i` take?", ["0, 1, 2", "1, 2, 3, 4", "1, 2, 3", "0 to 4"], 2, "`range(1, 4)` starts at 1 and stops before 4."),
+    mc("What does `match i:` with `case 2:` do?", ["Assigns 2 to `i`", "Runs that block when `i` is 2", "Loops twice", "Compares two strings"], 1, "A `case` with a literal value runs when the value matches it."),
   ],
 })

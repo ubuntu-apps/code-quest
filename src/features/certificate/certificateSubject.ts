@@ -1,6 +1,6 @@
-import type { LoadedSection } from '../curriculum/types'
-import { loadProgress } from '../curriculum/progressStorage'
-import { hasTestedOut } from '../curriculum/testOut'
+import type { LoadedSection } from '../curriculum/content/types'
+import { loadProgress } from '../curriculum/progress/progressStorage'
+import { hasTestedOut } from '../curriculum/progress/testOut'
 import { computeLevelXp } from '../curriculum/helpers'
 import type { CourseCompletion } from './courseCompletion'
 

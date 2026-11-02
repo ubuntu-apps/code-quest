@@ -1,10 +1,10 @@
 import { useRef, type ReactNode } from 'react'
-import type { Challenge, Level, TestGradeResult } from '../types'
-import { saveProgress, type LevelProgress } from '../progressStorage'
-import type { ChallengeTestResult, FriendlyCodeError } from '../../languages'
+import type { Level } from '../content/types'
+import { saveProgress, type LevelProgress } from '../progress/progressStorage'
+import type { SandboxState } from '../hooks/useSandbox'
+import type { ChallengesState } from '../hooks/useChallenges'
+import type { LevelTestState } from '../hooks/useLevelTest'
 import { STEP_PANEL_ID, stepTabId, type LevelStep } from '../constants'
-import { EditableText } from '../../editor'
-import { AddItemButton } from '../../editor'
 import { ChallengeCard } from '../components/ChallengeCard'
 import { LevelStepNav } from '../components/LevelStepNav'
 import { StepFlipper } from '../components/StepFlipper'
@@ -23,58 +23,15 @@ interface LearnLevelProps {
   levelStep: LevelStep
   prog: LevelProgress
   onLevelStepChange: (step: LevelStep) => void
-  onUpdateLevelTitle: (title: string) => void
-  onUpdateIntro: (patch: Partial<Level['intro']>) => void
   onReadMoreOpen: () => void
-  sandboxCode: string
-  sandboxOutput: string
-  sandboxRunning: boolean
-  sandboxError: FriendlyCodeError | null
-  sandboxErrorUiEpoch: number
-  onSandboxCodeChange: (code: string) => void
-  onSandboxRun: (stdin: string) => void
-  onSandboxStop: () => void
-  onSandboxReset: () => void
-  onSandboxErrorClear: () => void
-  challengeDrafts: Record<string, string>
-  challengeStatus: Record<string, 'passed' | 'failed'>
-  challengeTestResults: Record<string, ChallengeTestResult[]>
-  challengeRuntimeError: Record<string, FriendlyCodeError | null>
-  challengeErrorExpanded: Record<string, boolean>
-  challengeErrorUiEpoch: Record<string, number>
-  /** Challenges being checked now, with a progress message. */
-  challengeChecking: Record<string, string>
-  /** Challenges whose code is running (Run button), with a progress message. */
-  challengeRunning: Record<string, string>
-  /** What each challenge's code printed on its last Run or Check. */
-  challengeOutput: Record<string, string | null>
-  onRunChallenge: (challenge: Challenge) => void
-  onChallengeDraftChange: (challengeId: string, value: string) => void
-  onCheckChallenge: (challenge: Challenge) => void
-  onStopChallengeCheck: (challengeId: string) => void
-  onRevealAnswer: (challengeId: string) => void
-  onUpdateChallenge: (challengeId: string, patch: Partial<Challenge>) => void
-  onMoveChallenge: (challengeId: string, direction: -1 | 1) => void
-  onRemoveChallenge: (challengeId: string) => void
-  onAddChallenge: () => void
-  onToggleChallengeErrorExpanded: (challengeId: string) => void
-  testShort: Record<string, string>
-  testMcq: Record<string, string>
-  testResult: TestGradeResult | null
-  /** Questions changed since the last Submit (their marks are hidden). */
-  testEdited: Record<string, true>
-  onTestShortChange: (questionId: string, value: string) => void
-  onTestMcqChange: (questionId: string, choiceId: string) => void
-  onUpdatePassingScore: (score: number) => void
-  onUpdateQuestion: (questionId: string, question: import('../types').TestQuestion) => void
-  onMoveQuestion: (questionId: string, direction: -1 | 1) => void
-  onRemoveQuestion: (questionId: string) => void
-  onAddQuestion: (type: 'mcq' | 'shortText') => void
-  onSubmitTest: () => void
-  onRetakeTest: () => void
-  showNext: boolean
-  nextLevelTitle: string | null
-  onGoToNextLevel: () => void
+  /** The lesson's sandbox (useSandbox). */
+  sandbox: SandboxState
+  /** The challenges' drafts, checks and results (useChallenges). */
+  challenges: ChallengesState
+  /** The gate's answers and result (useLevelTest). */
+  test: LevelTestState
+  /** The next stage, offered once the gate is cleared. */
+  nextStage: { title: string | null; show: boolean; go: () => void }
   /** Shown under a passed quiz: "Section complete" when this lesson finished its section. */
   afterQuizPassed?: ReactNode
 }
@@ -85,54 +42,11 @@ export function LearnLevel({
   levelStep,
   prog,
   onLevelStepChange,
-  onUpdateLevelTitle,
-  onUpdateIntro,
   onReadMoreOpen,
-  sandboxCode,
-  sandboxOutput,
-  sandboxRunning,
-  sandboxError,
-  sandboxErrorUiEpoch,
-  onSandboxCodeChange,
-  onSandboxRun,
-  onSandboxStop,
-  onSandboxReset,
-  onSandboxErrorClear,
-  challengeDrafts,
-  challengeStatus,
-  challengeTestResults,
-  challengeRuntimeError,
-  challengeErrorExpanded,
-  challengeErrorUiEpoch,
-  challengeChecking,
-  challengeRunning,
-  challengeOutput,
-  onRunChallenge,
-  onChallengeDraftChange,
-  onCheckChallenge,
-  onStopChallengeCheck,
-  onRevealAnswer,
-  onUpdateChallenge,
-  onMoveChallenge,
-  onRemoveChallenge,
-  onAddChallenge,
-  onToggleChallengeErrorExpanded,
-  testShort,
-  testMcq,
-  testResult,
-  testEdited,
-  onTestShortChange,
-  onTestMcqChange,
-  onUpdatePassingScore,
-  onUpdateQuestion,
-  onMoveQuestion,
-  onRemoveQuestion,
-  onAddQuestion,
-  onSubmitTest,
-  onRetakeTest,
-  showNext,
-  nextLevelTitle,
-  onGoToNextLevel,
+  sandbox,
+  challenges,
+  test,
+  nextStage,
   afterQuizPassed,
 }: LearnLevelProps) {
   // Each step keeps its own place: back from a look at the intro to the challenge you were on.
@@ -143,15 +57,15 @@ export function LearnLevel({
   const handleStepChange = onLevelStepChange
 
   const handleGoToNext = () => {
-    onGoToNextLevel()
+    nextStage.go()
     scrollToTop()
   }
 
   const isDone = (id: string) => prog.challengesCompleted.includes(id)
   const stepNavProps = {
     levelStep,
-    showNext,
-    nextLevelTitle,
+    showNext: nextStage.show,
+    nextLevelTitle: nextStage.title,
     onLevelStepChange: handleStepChange,
     onGoToNextLevel: handleGoToNext,
     challengeCount: { done: level.challenges.filter((c) => isDone(c.id)).length, total: level.challenges.length },
@@ -172,12 +86,7 @@ export function LearnLevel({
   return (
     <CodeLanguageContext.Provider value={languageId}>
       <div className="cq-stack cq-level">
-        <EditableText
-          as="h1"
-          className="cq-title"
-          value={level.title}
-          onChange={onUpdateLevelTitle}
-        />
+        <h1 className="cq-title">{level.title}</h1>
         <LevelStepNav {...stepNavProps} ref={topTabs} />
 
         {prog.challengesReset ? (
@@ -204,18 +113,8 @@ export function LearnLevel({
             <IntroStep
               level={level}
               languageId={languageId}
-              sandboxCode={sandboxCode}
-              sandboxOutput={sandboxOutput}
-              sandboxRunning={sandboxRunning}
-              sandboxError={sandboxError}
-              sandboxErrorUiEpoch={sandboxErrorUiEpoch}
-              onUpdateIntro={onUpdateIntro}
+              sandbox={sandbox}
               onReadMoreOpen={onReadMoreOpen}
-              onSandboxCodeChange={onSandboxCodeChange}
-              onSandboxRun={onSandboxRun}
-              onSandboxStop={onSandboxStop}
-              onSandboxReset={onSandboxReset}
-              onSandboxErrorClear={onSandboxErrorClear}
             />
           )}
 
@@ -229,30 +128,26 @@ export function LearnLevel({
                   setupSql={level.database?.setupSql}
                   chIndex={chIndex}
                   totalChallenges={level.challenges.length}
-                  draft={challengeDrafts[ch.id] ?? ''}
+                  draft={challenges.drafts[ch.id] ?? ''}
                   done={prog.challengesCompleted.includes(ch.id)}
-                  status={challengeStatus[ch.id]}
+                  status={challenges.status[ch.id]}
                   answerViewed={prog.answersViewed?.includes(ch.id) ?? false}
-                  testResults={challengeTestResults[ch.id] ?? []}
-                  runtimeError={challengeRuntimeError[ch.id] ?? null}
-                  errorExpanded={challengeErrorExpanded[ch.id] ?? false}
-                  errorUiEpoch={challengeErrorUiEpoch[ch.id] ?? 0}
-                  checkingMessage={challengeChecking[ch.id] ?? null}
-                  runningMessage={challengeRunning[ch.id] ?? null}
-                  output={challengeOutput[ch.id] ?? null}
-                  onRun={() => onRunChallenge(ch)}
-                  onDraftChange={(value) => onChallengeDraftChange(ch.id, value)}
-                  onCheck={() => onCheckChallenge(ch)}
-                  onStopCheck={() => onStopChallengeCheck(ch.id)}
-                  onRevealAnswer={() => onRevealAnswer(ch.id)}
-                  onUpdateChallenge={(patch) => onUpdateChallenge(ch.id, patch)}
-                  onMove={(dir) => onMoveChallenge(ch.id, dir)}
-                  onDelete={() => onRemoveChallenge(ch.id)}
-                  onToggleErrorExpanded={() => onToggleChallengeErrorExpanded(ch.id)}
+                  testResults={challenges.testResults[ch.id] ?? []}
+                  runtimeError={challenges.runtimeError[ch.id] ?? null}
+                  errorExpanded={challenges.errorExpanded[ch.id] ?? false}
+                  errorUiEpoch={challenges.errorUiEpoch[ch.id] ?? 0}
+                  checkingMessage={challenges.checking[ch.id] ?? null}
+                  runningMessage={challenges.running[ch.id] ?? null}
+                  output={challenges.output[ch.id] ?? null}
+                  onRun={() => void challenges.run(ch)}
+                  onDraftChange={(value) => challenges.changeDraft(ch.id, value)}
+                  onCheck={() => void challenges.check(ch)}
+                  onStopCheck={() => challenges.stopCheck(ch.id)}
+                  onRevealAnswer={() => challenges.revealAnswer(ch.id)}
+                  onToggleErrorExpanded={() => challenges.toggleErrorExpanded(ch.id)}
                   next={nextAfter(chIndex)}
                 />
               ))}
-              <AddItemButton label="Add challenge" onClick={onAddChallenge} />
             </section>
           )}
 
@@ -260,20 +155,15 @@ export function LearnLevel({
             <TestStep
               level={level}
               prog={prog}
-              testShort={testShort}
-              testMcq={testMcq}
-              testResult={testResult}
-              testEdited={testEdited}
-              onTestShortChange={onTestShortChange}
-              onTestMcqChange={onTestMcqChange}
-              onUpdatePassingScore={onUpdatePassingScore}
-              onUpdateQuestion={onUpdateQuestion}
-              onMoveQuestion={onMoveQuestion}
-              onRemoveQuestion={onRemoveQuestion}
-              onAddQuestion={onAddQuestion}
-              onSubmit={onSubmitTest}
-              onRetake={onRetakeTest}
-              nextLevelTitle={showNext ? nextLevelTitle : null}
+              testShort={test.short}
+              testMcq={test.mcq}
+              testResult={test.result}
+              testEdited={test.edited}
+              onTestShortChange={test.changeShort}
+              onTestMcqChange={test.changeMcq}
+              onSubmit={test.submit}
+              onRetake={test.retake}
+              nextLevelTitle={nextStage.show ? nextStage.title : null}
               onGoToNextLevel={handleGoToNext}
               challengesDone={stepNavProps.challengeCount.done}
               onGoToChallenges={() => handleStepChange('challenges')}

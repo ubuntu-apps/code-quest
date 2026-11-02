@@ -1,19 +1,20 @@
-import { useEffect, useSyncExternalStore } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { isAdminMode } from '../features/curriculum/adminMode'
 import { isStandalone } from './installPrompt'
+import { STORES } from './stores'
+import { useStore } from './localStore'
 
 /**
  * Anonymous usage counts with GoatCounter (https://www.goatcounter.com): no cookies and
  * nothing that identifies a learner. It counts screens opened and a few milestones
  * (a quiz passed, a challenge solved…), so we can see which lessons people reach and
- * where they get stuck. Learners can turn it off on the About tab.
+ * where they get stuck. Learners can turn it off on the Settings tab.
  *
  * Set GOATCOUNTER_ENDPOINT to null to switch counting off for everyone.
  */
 export const GOATCOUNTER_ENDPOINT: string | null = 'https://codequest.goatcounter.com/count'
 const SCRIPT_URL = 'https://gc.zgo.at/count.js'
-const OFF_KEY = 'codequest:analytics-off'
 
 interface GoatCounterCount {
   path: string
@@ -27,47 +28,22 @@ declare global {
   }
 }
 
-function readOff(): boolean {
-  try {
-    return localStorage.getItem(OFF_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
-let off = readOff()
-const listeners = new Set<() => void>()
-
 export function analyticsAllowed(): boolean {
-  return !off
+  return !STORES.analyticsOff.get()
 }
 
 export function setAnalyticsAllowed(allowed: boolean): void {
-  off = !allowed
-  try {
-    if (allowed) localStorage.removeItem(OFF_KEY)
-    else localStorage.setItem(OFF_KEY, '1')
-  } catch {
-    // Storage unavailable: the choice lasts until the page is closed.
-  }
+  STORES.analyticsOff.set(!allowed)
   if (!allowed) queue.length = 0
-  for (const l of listeners) l()
 }
 
 export function useAnalyticsAllowed(): boolean {
-  return useSyncExternalStore(
-    (l) => {
-      listeners.add(l)
-      return () => listeners.delete(l)
-    },
-    analyticsAllowed,
-    () => true,
-  )
+  return !useStore(STORES.analyticsOff)
 }
 
 /** Counting only happens on the live site, for learners who haven't turned it off. */
 function shouldCount(): boolean {
-  return Boolean(GOATCOUNTER_ENDPOINT) && !import.meta.env.DEV && !off && !isAdminMode()
+  return Boolean(GOATCOUNTER_ENDPOINT) && !import.meta.env.DEV && analyticsAllowed() && !isAdminMode()
 }
 
 const queue: GoatCounterCount[] = []
@@ -136,21 +112,14 @@ export function countEvent(name: string, title?: string): void {
   send({ path: name, title: title ?? name, event: true })
 }
 
-const ONCE_PREFIX = 'codequest:counted:'
-
 /**
  * A milestone counted once per device, such as finishing a lesson: the totals then show
  * roughly how many learners got that far, not how many times they retook it.
  */
 export function countOnce(name: string, title?: string): void {
   if (!shouldCount()) return
-  const key = ONCE_PREFIX + name
-  try {
-    if (localStorage.getItem(key)) return
-    localStorage.setItem(key, '1')
-  } catch {
-    // Storage unavailable: count it anyway.
-  }
+  if (STORES.counted.get(name)) return
+  STORES.counted.set(name, true)
   countEvent(name, title)
 }
 

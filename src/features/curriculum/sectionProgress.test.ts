@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from 'vitest'
-import type { Level } from './types'
+import type { Level } from './content/types'
 import {
   areRequiredSectionProjectsComplete,
   getSectionProgressStatus,
@@ -7,7 +7,7 @@ import {
   isLevelStarted,
   isSectionUnlocked,
 } from './helpers'
-import { saveProgress } from './progressStorage'
+import { saveProgress } from './progress/progressStorage'
 
 const levels: Level[] = [
   {

@@ -22,7 +22,7 @@ export class CourseGenerator {
    * @param {object} options
    * @param {object} options.language The language's language.json: its `id` (the folder under
    *   public/content and the key of saved progress), `label` (the course title) and `course` settings.
-   * @param {object[]} options.course Sections in course order: `{ sectionId, title, filename, topics }`.
+   * @param {object[]} options.course Sections in course order: `{ sectionId, title, filename, topics, projects? }`.
    * @param {TypedInProtection} [options.protection] Adds the checks that catch typed-in answers.
    */
   constructor({ language, course, protection = new TypedInProtection() }) {
@@ -54,9 +54,9 @@ export class CourseGenerator {
     return this.course.filter((section) => section.topics.length > 0)
   }
 
-  /** The lessons of a section, ready for buildLevel(). */
+  /** The lessons of a section, then its side quests (`projects`, if it has any), ready for buildLevel(). */
   topicsOf(section) {
-    return section.topics
+    return [...section.topics, ...(section.projects ?? [])]
   }
 
   levelKind(topic) {

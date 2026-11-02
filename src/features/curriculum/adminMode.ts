@@ -1,4 +1,5 @@
-import { useSyncExternalStore } from 'react'
+import { STORES } from '../../lib/stores'
+import { useStore } from '../../lib/localStore'
 
 /**
  * Admin mode unlocks every section and level, so the course can be tested
@@ -6,37 +7,18 @@ import { useSyncExternalStore } from 'react'
  * the app's code); it only stops learners from switching it on by accident.
  */
 export const ADMIN_PIN = '2001'
-const ADMIN_STORAGE_KEY = 'codequest:admin'
-
-function readStored(): boolean {
-  try {
-    return localStorage.getItem(ADMIN_STORAGE_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
-let adminMode = readStored()
-const listeners = new Set<() => void>()
 
 export function isAdminMode(): boolean {
-  return adminMode
+  return STORES.admin.get()
 }
 
 export function subscribeAdminMode(listener: () => void): () => void {
-  listeners.add(listener)
-  return () => listeners.delete(listener)
+  return STORES.admin.subscribe(listener)
 }
 
+/** Turns admin mode on or off (if storage is blocked, it lasts until the page closes). */
 export function setAdminMode(on: boolean): void {
-  adminMode = on
-  try {
-    if (on) localStorage.setItem(ADMIN_STORAGE_KEY, '1')
-    else localStorage.removeItem(ADMIN_STORAGE_KEY)
-  } catch {
-    // Storage unavailable: admin mode lasts until the page is closed.
-  }
-  for (const listener of listeners) listener()
+  STORES.admin.set(on)
 }
 
 /** Turns admin mode on if `pin` is right. Returns whether it worked. */
@@ -47,5 +29,5 @@ export function tryEnterAdminMode(pin: string): boolean {
 }
 
 export function useAdminMode(): boolean {
-  return useSyncExternalStore(subscribeAdminMode, isAdminMode, isAdminMode)
+  return useStore(STORES.admin)
 }

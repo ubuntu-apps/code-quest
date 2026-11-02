@@ -11,6 +11,7 @@ import {
 describe('learnPaths', () => {
   it('parses tab routes', () => {
     expect(parseAppPath('/about').tab).toBe('about')
+    expect(parseAppPath('/settings').tab).toBe('settings')
     expect(parseAppPath('/learn').tab).toBe('learn')
     expect(parseAppPath('/').tab).toBe('learn')
   })
@@ -53,6 +54,7 @@ describe('learnPaths', () => {
       '/learn/python/fundamentals/l1/quiz',
     )
     expect(tabPath('about')).toBe('/about')
+    expect(tabPath('settings')).toBe('/settings')
     expect(tabPath('learn', 'python')).toBe('/learn/python')
   })
 })

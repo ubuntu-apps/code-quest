@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { LanguagePack } from '../../languages'
-import type { SqlTable } from '../types'
+import type { SqlTable } from '../content/types'
 
 /** How many rows "Peek" shows. */
 const PEEK_ROWS = 5

@@ -86,11 +86,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("What does `\"2d6\".split(\"d\")` give?", ["`['2d6']`", "`[2, 6]`", "`('2', 'd', '6')`", "`['2', '6']`"], 3),
-    mc("Why is the interactive loop behind a main guard?", ["So it runs twice", "Because `input` needs it", "So importing `dice` never starts asking questions", "To make it random"], 2),
-    mc("What does `\"d20\".partition(\"d\")` give?", ["`(\"\", \"d\", \"20\")`", "`(\"d\", \"20\")`", "`[\"d20\"]`", "`(1, 20)`"], 0),
-    mc("How can checks test code that rolls random dice?", ["They can't", "They roll real dice", "They ignore the numbers", "They set a seed so the rolls repeat"], 3),
-    qShort("What should `describe([5])` return?", "5 = 5"),
-    mc("`dice.py` defines `roll(sides)` and has a main guard. Which line in another file lets you call `roll(6)` directly?", ["`import roll from dice`", "`from dice import roll`", "`import dice.roll`", "`from roll import dice`"], 1),
+    mc("What does `\"2d6\".split(\"d\")` give?", ["`['2d6']`", "`[2, 6]`", "`('2', 'd', '6')`", "`['2', '6']`"], 3, "`split(\"d\")` cuts the text at the `d` and returns the pieces as strings, so they still need `int()`."),
+    mc("Why is the interactive loop behind a main guard?", ["So it runs twice", "Because `input` needs it", "So importing `dice` never starts asking questions", "To make it random"], 2, "The guard stops the loop from running when another program imports the module."),
+    mc("What does `\"d20\".partition(\"d\")` give?", ["`(\"\", \"d\", \"20\")`", "`(\"d\", \"20\")`", "`[\"d20\"]`", "`(1, 20)`"], 0, "`partition` splits at the first `d`, and nothing comes before it."),
+    mc("How can checks test code that rolls random dice?", ["They can't", "They roll real dice", "They ignore the numbers", "They set a seed so the rolls repeat"], 3, "With the same seed, `random` gives the same rolls every time, so the expected results are known."),
+    qShort("What should `describe([5])` return?", "5 = 5", "With one die, the total is just that roll."),
+    mc("`dice.py` defines `roll(sides)` and has a main guard. Which line in another file lets you call `roll(6)` directly?", ["`import roll from dice`", "`from dice import roll`", "`import dice.roll`", "`from roll import dice`"], 1, "`from dice import roll` imports the module and makes the name `roll` available; the main guard stops the dice game from starting."),
   ],
 })

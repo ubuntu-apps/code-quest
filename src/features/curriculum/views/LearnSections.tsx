@@ -1,10 +1,9 @@
 import { Compass, LockKeyhole, Map as MapIcon, Mountain, Trophy } from 'lucide-react'
-import type { LanguageBundle } from '../types'
+import type { LanguageBundle } from '../content/types'
 import { computeLevelXp, sectionUnlockHint } from '../helpers'
-import { loadProgress } from '../progressStorage'
-import { AddItemButton, EditableText } from '../../editor'
+import { loadProgress } from '../progress/progressStorage'
 import { CatalogListItem, StatusMeta, type ProgressStatus } from '../components/CatalogListItem'
-import { hasTestedOut } from '../testOut'
+import { hasTestedOut } from '../progress/testOut'
 import { courseCompletion } from '../../certificate/courseCompletion'
 import { CertificatePanel } from '../../certificate/CertificatePanel'
 import { SupportNudge } from '../../support/SupportNudge'
@@ -14,44 +13,27 @@ import { CourseRankBadge } from '../../ranks/CourseRankBadge'
 interface LearnSectionsProps {
   bundle: LanguageBundle
   languageId: string | null
-  isEditMode: boolean
   isSectionUnlocked: (sectionIndex: number) => boolean
   onSelectSection: (sectionId: string) => void
-  onUpdateLanguageTitle: (title: string) => void
-  onUpdateSectionTitle: (sectionId: string, title: string, options?: { commit?: boolean }) => void
-  onMoveSection: (sectionId: string, direction: -1 | 1) => void
-  onRemoveSection: (sectionId: string) => void
-  onAddSection: () => void
   baseUrl: string
 }
 
 export function LearnSections({
   bundle,
   languageId,
-  isEditMode,
   isSectionUnlocked,
   onSelectSection,
-  onUpdateLanguageTitle,
-  onUpdateSectionTitle,
-  onMoveSection,
-  onRemoveSection,
-  onAddSection,
   baseUrl,
 }: LearnSectionsProps) {
-  const completion = languageId && !isEditMode ? courseCompletion(languageId, bundle) : null
-  const rank = languageId && !isEditMode ? courseRank(languageId, bundle) : null
+  const completion = languageId ? courseCompletion(languageId, bundle) : null
+  const rank = languageId ? courseRank(languageId, bundle) : null
   // Sections still being written are listed last, without lessons.
   const upcoming = bundle.index.upcoming ?? []
   const sectionCount = bundle.index.sections.length + upcoming.length
   return (
     <div className="cq-stack">
       <div className="cq-course-head">
-        <EditableText
-          as="h1"
-          className="cq-title"
-          value={bundle.index.title}
-          onChange={onUpdateLanguageTitle}
-        />
+        <h1 className="cq-title">{bundle.index.title}</h1>
         {rank ? <CourseRankBadge rank={rank} courseTitle={bundle.index.title} /> : null}
       </div>
       <p className="cq-lead">Quests</p>
@@ -78,7 +60,7 @@ export function LearnSections({
           // A section whose prerequisite isn't met can still be opened to look inside;
           // its levels stay locked.
           const testedOut = languageId ? hasTestedOut(languageId, sec.id) : false
-          const previewOnly = !isEditMode && !isSectionUnlocked(secIndex) && !testedOut
+          const previewOnly = !isSectionUnlocked(secIndex) && !testedOut
           const previousRef = bundle.index.sections[secIndex - 1]
           const previousLevels =
             bundle.sections.find((s) => s.sectionRef.id === previousRef?.id)?.file.levels ?? []
@@ -111,9 +93,6 @@ export function LearnSections({
             <CatalogListItem
               key={sec.id}
               title={sec.title}
-              titlePlaceholder="Quest title"
-              onTitleChange={(title) => onUpdateSectionTitle(sec.id, title)}
-              onTitleCommit={(title) => onUpdateSectionTitle(sec.id, title, { commit: true })}
               onClick={() => onSelectSection(sec.id)}
               eyebrow={`Quest ${secIndex + 1} of ${sectionCount}`}
               icon={
@@ -130,12 +109,6 @@ export function LearnSections({
               meta={meta}
               status={previewOnly ? undefined : status}
               progressPercent={pct}
-              listIndex={secIndex}
-              listLength={bundle.index.sections.length}
-              onMoveUp={() => onMoveSection(sec.id, -1)}
-              onMoveDown={() => onMoveSection(sec.id, 1)}
-              onRemove={() => onRemoveSection(sec.id)}
-              confirmMessage={`Delete quest "${sec.title}"?`}
             />
           )
         })}
@@ -156,7 +129,6 @@ export function LearnSections({
           </li>
         ))}
       </ul>
-      {languageId && <AddItemButton label="Add quest" onClick={onAddSection} />}
       {completion && languageId ? (
         <CertificatePanel
           languageId={languageId}

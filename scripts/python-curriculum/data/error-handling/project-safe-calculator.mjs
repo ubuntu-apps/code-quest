@@ -86,11 +86,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("Why do the small functions raise errors instead of printing them?", ["Printing is slow", "So one place can decide how errors are shown, and the functions stay simple", "Functions can't print", "Raising is shorter"], 1),
-    mc("What does `f\"{7.0:g}\"` give?", ["`7.0`", "`7.00`", "`7`", "`7g`"], 2),
-    mc("`a, op, b = \"hello\".split()` raises which exception?", ["`ValueError`", "`TypeError`", "`IndexError`", "`KeyError`"], 0),
-    mc("What does this print?\n\n```\ntry:\n    try:\n        float(\"x\")\n    except ValueError as err:\n        raise ValueError(\"Not a number: x\") from err\nexcept ValueError as e:\n    print(e.__cause__)\n```", ["`Not a number: x`", "`could not convert string to float: 'x'`", "`None`", "`x`"], 1),
-    qShort("What does `safe_calculate(\"6 * 7\")` return?", "= 42"),
-    mc("Which function turns exceptions into messages for the user?", ["All of them", "Only `safe_calculate`", "Only `calculate`", "None of them"], 1),
+    mc("Why do the small functions raise errors instead of printing them?", ["Printing is slow", "So one place can decide how errors are shown, and the functions stay simple", "Functions can't print", "Raising is shorter"], 1, "The parts raise; one top-level function decides how errors are shown."),
+    mc("What does `f\"{7.0:g}\"` give?", ["`7.0`", "`7.00`", "`7`", "`7g`"], 2, "`g` (general format) drops a trailing `.0`."),
+    mc("`a, op, b = \"hello\".split()` raises which exception?", ["`ValueError`", "`TypeError`", "`IndexError`", "`KeyError`"], 0, "`\"hello\".split()` gives one part, and unpacking needs three."),
+    mc("What does this print?\n\n```\ntry:\n    try:\n        float(\"x\")\n    except ValueError as err:\n        raise ValueError(\"Not a number: x\") from err\nexcept ValueError as e:\n    print(e.__cause__)\n```", ["`Not a number: x`", "`could not convert string to float: 'x'`", "`None`", "`x`"], 1, "`from err` stores the original exception as `__cause__`, so the clearer message doesn't lose the real one."),
+    qShort("What does `safe_calculate(\"6 * 7\")` return?", "= 42", "6 * 7 is 42, and the function puts `= ` before the result."),
+    mc("Which function turns exceptions into messages for the user?", ["All of them", "Only `safe_calculate`", "Only `calculate`", "None of them"], 1, "Only the outer function catches errors and turns them into messages; the others just raise."),
   ],
 })

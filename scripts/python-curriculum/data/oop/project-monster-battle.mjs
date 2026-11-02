@@ -82,11 +82,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("Why are `Hero` and `Mage` subclasses of `Character`?", ["To make them faster", "They are characters that add to or change what a character can do", "Python needs it for battles", "So they can't be hit"], 1),
-    mc("How does a mage out of mana hit?", ["It can't hit", "With a smaller fireball", "Like any character, through `super().hit(other)`", "It heals instead"], 2),
-    mc("Why doesn't `Battle.round` check what kind of character is attacking?", ["Each character's own `hit` decides what happens (polymorphism)", "All characters hit the same", "It uses `isinstance` elsewhere", "Mages never attack"], 0),
-    mc("What is `max(1, 3 - 5)`?", ["`-2`", "`0`", "`3`", "`1`"], 3),
-    qShort("What is `min(30, 28 + 10)`? (a number)", "30"),
-    mc("What does this print?\n\n```\nclass Character:\n    def hit(self):\n        return \"bonk\"\n\nclass Mage(Character):\n    def hit(self):\n        return \"fireball or \" + super().hit()\n\nprint(Mage().hit())\n```", ["`bonk`", "`fireball or bonk`", "`fireball or `", "A `RecursionError`"], 1),
+    mc("Why are `Hero` and `Mage` subclasses of `Character`?", ["To make them faster", "They are characters that add to or change what a character can do", "Python needs it for battles", "So they can't be hit"], 1, "Inheritance lets each kind of character reuse the shared logic and change only what is different."),
+    mc("How does a mage out of mana hit?", ["It can't hit", "With a smaller fireball", "Like any character, through `super().hit(other)`", "It heals instead"], 2, "With no mana, `Mage.hit` falls back to the normal attack through `super()`."),
+    mc("Why doesn't `Battle.round` check what kind of character is attacking?", ["Each character's own `hit` decides what happens (polymorphism)", "All characters hit the same", "It uses `isinstance` elsewhere", "Mages never attack"], 0, "Each character's own `hit` decides what happens, so the battle needs no type checks."),
+    mc("What is `max(1, 3 - 5)`?", ["`-2`", "`0`", "`3`", "`1`"], 3, "`max` returns the larger value, so damage never drops below 1, even when the defence is higher than the attack."),
+    qShort("What is `min(30, 28 + 10)`? (a number)", "30", "`min` caps the result, so healing can never take a character above its maximum hp."),
+    mc("What does this print?\n\n```\nclass Character:\n    def hit(self):\n        return \"bonk\"\n\nclass Mage(Character):\n    def hit(self):\n        return \"fireball or \" + super().hit()\n\nprint(Mage().hit())\n```", ["`bonk`", "`fireball or bonk`", "`fireball or `", "A `RecursionError`"], 1, "`Mage.hit` overrides the parent's method and uses `super().hit()` to add the parent's result."),
   ],
 })

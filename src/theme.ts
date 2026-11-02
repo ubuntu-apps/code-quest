@@ -1,21 +1,15 @@
-import { useSyncExternalStore } from 'react'
+import { STORES } from './lib/stores'
+import { useStore } from './lib/localStore'
 
-/** The learner's choice on the About tab; "system" follows the device's light/dark setting. */
+/** The learner's choice on the Settings tab; "system" follows the device's light/dark setting. */
 export type ThemeChoice = 'system' | 'light' | 'dark'
 
-const THEME_STORAGE_KEY = 'codequest:theme'
 /** The browser bar colour for each theme (matches --cq-bg in index.css). */
 const BAR_COLOURS = { dark: '#0f172a', light: '#f1f5f9' } as const
 
-const listeners = new Set<() => void>()
-
 function readChoice(): ThemeChoice {
-  try {
-    const value = localStorage.getItem(THEME_STORAGE_KEY)
-    return value === 'light' || value === 'dark' ? value : 'system'
-  } catch {
-    return 'system'
-  }
+  const value = STORES.theme.get()
+  return value === 'light' || value === 'dark' ? value : 'system'
 }
 
 let choice: ThemeChoice = 'system'
@@ -45,21 +39,11 @@ export function initTheme(): void {
 
 export function setTheme(next: ThemeChoice): void {
   choice = next
-  try {
-    if (next === 'system') localStorage.removeItem(THEME_STORAGE_KEY)
-    else localStorage.setItem(THEME_STORAGE_KEY, next)
-  } catch {
-    // Storage unavailable: the choice lasts until the page is closed.
-  }
+  STORES.theme.set(next === 'system' ? '' : next)
   apply()
-  for (const listener of listeners) listener()
-}
-
-function subscribe(listener: () => void): () => void {
-  listeners.add(listener)
-  return () => listeners.delete(listener)
 }
 
 export function useTheme(): ThemeChoice {
-  return useSyncExternalStore(subscribe, () => choice, () => choice)
+  useStore(STORES.theme)
+  return choice
 }

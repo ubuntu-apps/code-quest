@@ -81,11 +81,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("What does `any(ch.isdigit() for ch in \"abc1\")` give?", ["`False`", "`True`", "`1`", "`\"1\"`"], 1),
-    mc("When is `all(...)` true?", ["When at least one item is true", "Never", "Only when every item is true", "When the list is long"], 2),
-    mc("What does `all(len(p) >= 8 for p in [\"sunshine\", \"abc\"])` give?", ["`True`", "`[True, False]`", "`False`", "`1`"], 2),
-    mc("What does `\"!\".isalnum()` return?", ["`True`", "`\"!\"`", "An error", "`False`"], 3),
-    qShort("What is `sum([True, False, True, True])`? (a number)", "3"),
-    mc("`feedback` returns a list. Why not print the tips inside it?", ["Lists can't be printed", "Returning lets the caller decide how to show them, and makes them easy to check", "Printing is slower", "It must return something"], 1),
+    mc("What does `any(ch.isdigit() for ch in \"abc1\")` give?", ["`False`", "`True`", "`1`", "`\"1\"`"], 1, "`any` is `True` as soon as one item is true, and `\"1\"` is a digit."),
+    mc("When is `all(...)` true?", ["When at least one item is true", "Never", "Only when every item is true", "When the list is long"], 2, "`all` is `True` only if no item is false."),
+    mc("What does `all(len(p) >= 8 for p in [\"sunshine\", \"abc\"])` give?", ["`True`", "`[True, False]`", "`False`", "`1`"], 2, "`all` is only true when every item passes. `\"abc\"` is shorter than 8, so the answer is `False`."),
+    mc("What does `\"!\".isalnum()` return?", ["`True`", "`\"!\"`", "An error", "`False`"], 3, "`!` is neither a letter nor a digit, so `.isalnum()` is `False`."),
+    qShort("What is `sum([True, False, True, True])`? (a number)", "3", "`True` counts as 1 and `False` as 0, so summing the results of the rules counts how many passed."),
+    mc("`feedback` returns a list. Why not print the tips inside it?", ["Lists can't be printed", "Returning lets the caller decide how to show them, and makes them easy to check", "Printing is slower", "It must return something"], 1, "Returning the tips leaves showing them to the caller, and a list is easy to test."),
   ],
 })

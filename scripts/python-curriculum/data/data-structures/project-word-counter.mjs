@@ -80,11 +80,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why make every word lowercase first?", ["It is faster", "So `Data` and `data` count as the same word", "Sets need lowercase", "To remove punctuation"], 1),
-    mc("What does `\"wins!\".strip(\".,!?\")` give?", ["`\"wins\"`", "`\"wins!\"`", "`\"!\"`", "`\"\"`"], 0),
-    mc("Which counts the different words in `words`?", ["`len(words)`", "`words.count()`", "`len(set(words))`", "`sorted(words)`"], 2),
-    mc("What does `counts.get(w, 0) + 1` do for a new word?", ["Raises a `KeyError`", "Gives 0", "Adds the word twice", "Gives 1, its first count"], 3),
-    qShort("What is `len(set([\"data\", \"code\", \"data\"]))`? (a number)", "2"),
-    mc("Why would ties make \"the top three\" unclear?", ["Ties raise errors", "Words with equal counts could come in either order", "Dicts can't hold equal values", "They can't happen"], 1),
+    mc("Why make every word lowercase first?", ["It is faster", "So `Data` and `data` count as the same word", "Sets need lowercase", "To remove punctuation"], 1, "Python compares strings case-sensitively, so lowercasing makes the same word count once."),
+    mc("What does `\"wins!\".strip(\".,!?\")` give?", ["`\"wins\"`", "`\"wins!\"`", "`\"!\"`", "`\"\"`"], 0, "`strip` with characters removes any of them from both ends, here the `!`."),
+    mc("Which counts the different words in `words`?", ["`len(words)`", "`words.count()`", "`len(set(words))`", "`sorted(words)`"], 2, "A set keeps one copy of each word, so its length is the number of different words."),
+    mc("What does `counts.get(w, 0) + 1` do for a new word?", ["Raises a `KeyError`", "Gives 0", "Adds the word twice", "Gives 1, its first count"], 3, "`get` gives 0 for a word not seen yet, so its first count becomes 1."),
+    qShort("What is `len(set([\"data\", \"code\", \"data\"]))`? (a number)", "2", "The set holds `data` and `code`."),
+    mc("Why would ties make \"the top three\" unclear?", ["Ties raise errors", "Words with equal counts could come in either order", "Dicts can't hold equal values", "They can't happen"], 1, "Words with equal counts have no natural order, so sort ties by the word itself as well."),
   ],
 })

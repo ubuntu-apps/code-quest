@@ -88,11 +88,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("Why check dates with both a regex and `date.fromisoformat`?", ["The regex is faster", "The regex checks the shape; `fromisoformat` rejects impossible dates like 30 February", "Either alone is enough", "To convert the date"], 1),
-    mc("Why lowercase and strip the region?", ["SQL needs lowercase", "To save space", "So `North ` and `north` count as the same region", "It is required by CSV"], 2),
-    mc("Why keep a list of rejected rows?", ["So bad data is reported, not silently lost", "To insert them later", "SQLite needs it", "To count the lines"], 0),
-    mc("What does `:date` in an SQL statement do?", ["Inserts today's date", "Starts a comment", "Formats the date", "Takes the value from the `date` key of the row dict"], 3),
-    qShort("Which SQL clause combines rows that share a value, like a region? (two words)", "GROUP BY"),
-    mc("What does `substr(date, 1, 7)` give for `2025-03-14`?", ["`2025-03`", "`2025`", "`03-14`", "`2025-03-14`"], 0),
+    mc("Why check dates with both a regex and `date.fromisoformat`?", ["The regex is faster", "The regex checks the shape; `fromisoformat` rejects impossible dates like 30 February", "Either alone is enough", "To convert the date"], 1, "A pattern can check the format but not the calendar, so use both."),
+    mc("Why lowercase and strip the region?", ["SQL needs lowercase", "To save space", "So `North ` and `north` count as the same region", "It is required by CSV"], 2, "Normalising first means one region isn't counted twice under different spellings."),
+    mc("Why keep a list of rejected rows?", ["So bad data is reported, not silently lost", "To insert them later", "SQLite needs it", "To count the lines"], 0, "Rejected rows are listed so problems are visible and can be fixed."),
+    mc("What does `:date` in an SQL statement do?", ["Inserts today's date", "Starts a comment", "Formats the date", "Takes the value from the `date` key of the row dict"], 3, "`:date` is a named placeholder filled from the dict's `date` key."),
+    qShort("Which SQL clause combines rows that share a value, like a region? (two words)", "GROUP BY", "`GROUP BY` puts rows with the same value together for `SUM` or `COUNT`."),
+    mc("What does `substr(date, 1, 7)` give for `2025-03-14`?", ["`2025-03`", "`2025`", "`03-14`", "`2025-03-14`"], 0, "`substr` counts from 1, so the first 7 characters are the year and month."),
   ],
 })

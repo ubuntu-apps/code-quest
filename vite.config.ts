@@ -2,7 +2,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
-import { curriculumSavePlugin } from './scripts/vite-curriculum-save-plugin'
 import { PYODIDE_CDN_BASE, WEBR_CDN_BASE } from './src/runtimeVersions'
 
 /** Matches URLs that start with `base` (workbox matches cross-origin RegExps from the start). */
@@ -21,7 +20,6 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    curriculumSavePlugin(),
     VitePWA({
       // Ask before reloading into a new version (see src/pwaUpdate.ts).
       registerType: 'prompt',

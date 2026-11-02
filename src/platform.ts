@@ -76,8 +76,3 @@ export function detectPlatform(): Platform {
   if (/iphone|ipad|ipod|ios/i.test(ua)) return 'ios'
   return 'desktop'
 }
-
-export function installInstructions(platform: Platform): string {
-  const guide = INSTALL_GUIDES.find((g) => g.platform === platform) ?? INSTALL_GUIDES[2]
-  return [guide.title, ...guide.steps.map((step, i) => `${i + 1}. ${step}`)].join('\n')
-}

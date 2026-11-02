@@ -1,0 +1,178 @@
+import { z } from 'zod'
+import { isValidationMode } from './validationModes'
+import type {
+  ValidationMode,
+  LanguageIndex,
+  RootIndex,
+  SectionFile,
+} from './types'
+
+const runtimeAssertionTestSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  assertion: z.string(),
+})
+
+const validationSchema = z.object({
+  mode: z.custom<ValidationMode>((value) => typeof value === 'string' && isValidationMode(value), 'Unknown validation mode'),
+  pattern: z.string().optional(),
+  needles: z.array(z.string()).optional(),
+  expected: z.string().optional(),
+  setupCode: z.string().optional(),
+  tests: z.array(runtimeAssertionTestSchema).optional(),
+  ordered: z.boolean().optional(),
+})
+
+const sqlDatabaseSchema = z.object({
+  setupSql: z.string(),
+  altSetupSql: z.string().optional(),
+  tables: z.array(z.object({ name: z.string(), columns: z.array(z.string()) })),
+})
+
+const mcqChoiceSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+})
+
+const mcqQuestionSchema = z.object({
+  id: z.string(),
+  type: z.literal('mcq'),
+  prompt: z.string(),
+  choices: z.array(mcqChoiceSchema),
+  correctChoiceId: z.string(),
+  explanation: z.string().optional(),
+})
+
+const shortTextQuestionSchema = z.object({
+  id: z.string(),
+  type: z.literal('shortText'),
+  prompt: z.string(),
+  validation: validationSchema,
+  explanation: z.string().optional(),
+})
+
+const testQuestionSchema = z.discriminatedUnion('type', [
+  mcqQuestionSchema,
+  shortTextQuestionSchema,
+])
+
+const challengeSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  promptMarkdown: z.string(),
+  starterCode: z.string().optional(),
+  hints: z.array(z.string()).optional(),
+  hint: z.string().optional(),
+  solution: z.string().optional(),
+  validation: validationSchema,
+  acceptedFingerprints: z.array(z.string()).optional(),
+})
+
+const levelIntroSchema = z.object({
+  title: z.string().optional(),
+  bodyMarkdown: z.string(),
+  sandboxCode: z.string().optional(),
+  readMore: z
+    .object({
+      label: z.string().optional(),
+      url: z.string(),
+      source: z.string(),
+    })
+    .optional(),
+})
+
+const sandboxSnippetSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  code: z.string(),
+})
+
+const levelSchema = z.object({
+  id: z.string(),
+  formerIds: z.array(z.string()).optional(),
+  title: z.string(),
+  kind: z.enum(['topic', 'project']).optional(),
+  projectDifficulty: z.enum(['easy', 'medium', 'hard']).optional(),
+  sandboxSnippets: z.array(sandboxSnippetSchema).optional(),
+  intro: levelIntroSchema,
+  challenges: z.array(challengeSchema),
+  test: z.object({
+    passingScorePercent: z.number().optional(),
+    questions: z.array(testQuestionSchema),
+  }),
+  database: sqlDatabaseSchema.optional(),
+})
+
+export const sectionFileSchema = z.object({
+  sectionId: z.string(),
+  title: z.string().optional(),
+  levels: z.array(levelSchema),
+})
+
+const sectionRefSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  path: z.string(),
+})
+
+export const languageIndexSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  sections: z.array(sectionRefSchema),
+  upcoming: z.array(z.object({ id: z.string(), title: z.string() })).optional(),
+})
+
+export const rootIndexSchema = z.object({
+  languages: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      path: z.string(),
+      comingSoon: z.boolean().optional(),
+    }),
+  ),
+})
+
+const loadedSectionSchema = z.object({
+  sectionRef: sectionRefSchema,
+  file: sectionFileSchema,
+})
+
+export const languageBundleSchema = z.object({
+  index: languageIndexSchema,
+  sections: z.array(loadedSectionSchema),
+})
+
+function formatZodIssues(source: string, error: z.ZodError): string {
+  const details = error.issues
+    .map((issue) => {
+      const path = issue.path.length > 0 ? issue.path.join('.') : '(root)'
+      return `${path}: ${issue.message}`
+    })
+    .join('; ')
+  return `Invalid curriculum JSON (${source}): ${details}`
+}
+
+function parseWithSchema<T>(
+  schema: z.ZodType<T>,
+  data: unknown,
+  source: string,
+): T {
+  const result = schema.safeParse(data)
+  if (!result.success) {
+    throw new Error(formatZodIssues(source, result.error))
+  }
+  return result.data
+}
+
+export function parseRootIndex(data: unknown, source: string): RootIndex {
+  return parseWithSchema(rootIndexSchema, data, source)
+}
+
+export function parseLanguageIndex(data: unknown, source: string): LanguageIndex {
+  return parseWithSchema(languageIndexSchema, data, source)
+}
+
+export function parseSectionFile(data: unknown, source: string): SectionFile {
+  return parseWithSchema(sectionFileSchema, data, source)
+}

@@ -5,7 +5,7 @@ import { CodeTextareaWithErrorLine } from './CodeTextareaWithErrorLine'
 import { hasCoarsePointer } from './pointer'
 import { editorLanguageFor } from './preloadCodeEditor'
 import type { CodeMirrorEditorProps, EditorError } from './CodeMirrorEditor'
-import type { SqlTable } from '../types'
+import type { SqlTable } from '../content/types'
 
 /** Downloaded on first use (see preloadCodeEditor), so pages without code stay light. */
 const CodeMirrorEditor = lazy(() => import('./CodeMirrorEditor'))

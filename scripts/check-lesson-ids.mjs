@@ -13,7 +13,7 @@
  *
  * To rename a lesson: change its `id` in the data file and add the old one to its
  * `formerIds`, e.g. `formerIds: ['hello']`, then regenerate. The app moves learners'
- * progress over (src/features/curriculum/levelRenames.ts). Never remove an id from
+ * progress over (src/features/curriculum/progress/levelRenames.ts). Never remove an id from
  * lesson-ids.json.
  */
 import { readFileSync, writeFileSync } from 'node:fs'

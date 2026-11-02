@@ -77,11 +77,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("What does `n % d == 0` tell you?", ["`n` is even", "`d` divides `n` evenly", "`n` is prime", "`d` is bigger than `n`"], 1),
-    mc("What does this print?\n\n```\nn = 15\nfor d in range(2, n):\n    if n % d == 0:\n        print(d)\n        break\n```", ["`3`", "`5`", "`3` and then `5`", "Nothing"], 0),
-    mc("Which loop line tries divisors `d` only while `d` is at most the square root of `n`?", ["`while d <= n * n:`", "`while d * d > n:`", "`while d * d <= n:`", "`while d < n // 2:`"], 2),
-    mc("When does the inner loop's `else:` add the number?", ["After every divisor", "When a divisor was found", "Always", "When the loop ended without `break`, so no divisor was found"], 3),
-    qShort("What is `91 % 7`? (a number)", "0"),
-    mc("Why `range(2, limit + 1)`?", ["To skip 2", "So the limit itself is included", "Because primes are odd", "range needs three numbers"], 1),
+    mc("What does `n % d == 0` tell you?", ["`n` is even", "`d` divides `n` evenly", "`n` is prime", "`d` is bigger than `n`"], 1, "A remainder of 0 means `d` goes into `n` exactly."),
+    mc("What does this print?\n\n```\nn = 15\nfor d in range(2, n):\n    if n % d == 0:\n        print(d)\n        break\n```", ["`3`", "`5`", "`3` and then `5`", "Nothing"], 0, "3 is the first number that divides 15 evenly, and `break` ends the loop straight after printing it."),
+    mc("Which loop line tries divisors `d` only while `d` is at most the square root of `n`?", ["`while d <= n * n:`", "`while d * d > n:`", "`while d * d <= n:`", "`while d < n // 2:`"], 2, "`d * d <= n` is true exactly while `d` is no bigger than the square root of `n`, without needing `math.sqrt`."),
+    mc("When does the inner loop's `else:` add the number?", ["After every divisor", "When a divisor was found", "Always", "When the loop ended without `break`, so no divisor was found"], 3, "The `else` runs only when no `break` happened, which means no divisor was found."),
+    qShort("What is `91 % 7`? (a number)", "0", "7 × 13 is 91, so it divides exactly and 91 isn't prime."),
+    mc("Why `range(2, limit + 1)`?", ["To skip 2", "So the limit itself is included", "Because primes are odd", "range needs three numbers"], 1, "`range` stops before its stop value, so `+ 1` is needed to include the limit."),
   ],
 })

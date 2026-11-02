@@ -1,6 +1,6 @@
-import type { LanguageBundle, Level } from '../curriculum/types'
-import { loadProgress } from '../curriculum/progressStorage'
-import { hasTestedOut } from '../curriculum/testOut'
+import type { LanguageBundle, Level } from '../curriculum/content/types'
+import { loadProgress } from '../curriculum/progress/progressStorage'
+import { hasTestedOut } from '../curriculum/progress/testOut'
 import { computeLevelXp } from '../curriculum/helpers'
 
 export interface CourseCompletion {

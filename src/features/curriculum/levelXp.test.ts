@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { computeLevelXp } from './helpers'
-import { saveProgress } from './progressStorage'
-import type { Level } from './types'
+import { saveProgress } from './progress/progressStorage'
+import type { Level } from './content/types'
 
 const level: Level = {
   id: 'lvl',

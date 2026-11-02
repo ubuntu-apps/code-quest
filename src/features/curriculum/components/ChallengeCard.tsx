@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import { useAdminMode } from '../adminMode'
-import type { Challenge, SqlTable } from '../types'
+import type { Challenge, SqlTable } from '../content/types'
 import { CODE_RUNTIME_UNSUPPORTED_MESSAGE, isCodeRuntimeSupported, packForTestMode, type ChallengeTestResult, type FriendlyCodeError } from '../../languages'
 import { CodeLanguageContext } from '../codeLanguageContext'
 import { CodeEditor } from '../codeEditor'
@@ -15,14 +15,6 @@ import { ValueDiff } from './ValueDiff'
 import { HighlightedCode } from './HighlightedCode'
 import { reportProblemUrl } from '../reportProblem'
 import { countEvent } from '../../../lib/analytics'
-import {
-  EditableMarkdown,
-  EditableText,
-  EditableTextarea,
-  EditableValidationEditor,
-  ListEditorActions,
-  useEditorMode,
-} from '../../editor'
 
 interface ChallengeCardProps {
   challenge: Challenge
@@ -48,9 +40,6 @@ interface ChallengeCardProps {
   onCheck: () => void
   onStopCheck: () => void
   onRevealAnswer: () => void
-  onUpdateChallenge: (patch: Partial<Challenge>) => void
-  onMove: (direction: -1 | 1) => void
-  onDelete: () => void
   onToggleErrorExpanded: () => void
   /** Where to go after solving this one: the next unsolved challenge, or the quiz. */
   next?: { label: string; go: () => void }
@@ -80,19 +69,15 @@ export function ChallengeCard({
   onCheck,
   onStopCheck,
   onRevealAnswer,
-  onUpdateChallenge,
-  onMove,
-  onDelete,
   onToggleErrorExpanded,
   next,
   tables,
   setupSql,
 }: ChallengeCardProps) {
-  const { isEditingLocal } = useEditorMode()
   // Admin mode (for testing) opens answers straight away, without the XP penalty.
   const isAdmin = useAdminMode()
   // Challenges solved before the lesson was opened start folded, so the open ones stand out.
-  const [collapsed, setCollapsed] = useState(() => done && !isEditingLocal)
+  const [collapsed, setCollapsed] = useState(() => done)
   const [showHint, setShowHint] = useState(false)
   // Counted once per visit: how many learners needed the hint, not how often it was toggled.
   const hintCounted = useRef(false)
@@ -116,10 +101,10 @@ export function ChallengeCard({
   const showOutput = output !== null && (output !== '' || running || !runtimeErr)
   // The answer unlocks after one Check attempt, so learners try first.
   // (Where code can't run, Check is unavailable, so the answer is open from the start.)
-  const answerUnlocked = isEditingLocal || isAdmin || done || answerViewed || status !== undefined || cannotRun
+  const answerUnlocked = isAdmin || done || answerViewed || status !== undefined || cannotRun
   const answerNote = !answerUnlocked
     ? 'Press Check once to unlock the answer.'
-    : !done && !answerViewed && !isEditingLocal && !isAdmin && !cannotRun
+    : !done && !answerViewed && !isAdmin && !cannotRun
       ? `Solving after viewing the answer earns ${CHALLENGE_XP_AFTER_ANSWER} XP instead of ${CHALLENGE_XP}.`
       : null
 
@@ -142,7 +127,7 @@ export function ChallengeCard({
   const promptNames = [...namesInMarkdown(ch.promptMarkdown), ...sqlTableNames(hasDatabase ? tables : undefined)]
 
   const toggleAnswer = () => {
-    if (!showAnswer && !done && !answerViewed && !isEditingLocal && !isAdmin) onRevealAnswer()
+    if (!showAnswer && !done && !answerViewed && !isAdmin) onRevealAnswer()
     setShowAnswer((v) => !v)
   }
 
@@ -158,24 +143,9 @@ export function ChallengeCard({
     >
       <p className="cq-challenge-number">{challengeNumber}</p>
       <div className="cq-card-row cq-card-row--panel">
-        <EditableText
-          as="h2"
-          className="cq-subtitle"
-          value={ch.title}
-          onChange={(title) => onUpdateChallenge({ title })}
-        />
+        <h2 className="cq-subtitle">{ch.title}</h2>
         <div className="cq-challenge-head-actions">
           {collapsed && done ? <span className="cq-badge cq-badge--ok">Solved</span> : null}
-          {collapsed ? null : (
-            <ListEditorActions
-              canMoveUp={chIndex > 0}
-              canMoveDown={chIndex < totalChallenges - 1}
-              onMoveUp={() => onMove(-1)}
-              onMoveDown={() => onMove(1)}
-              confirmMessage={`Delete challenge "${ch.title}"?`}
-              onDelete={onDelete}
-            />
-          )}
           <button
             type="button"
             className="cq-icon-btn cq-challenge-toggle"
@@ -190,36 +160,7 @@ export function ChallengeCard({
         </div>
       </div>
       <div id={bodyId} hidden={collapsed}>
-        <EditableMarkdown
-          value={ch.promptMarkdown}
-          onChange={(promptMarkdown) => onUpdateChallenge({ promptMarkdown })}
-        />
-        {isEditingLocal && (
-          <>
-            <EditableTextarea
-              label="Starter code"
-              rows={2}
-              value={ch.starterCode ?? ''}
-              onChange={(starterCode) => onUpdateChallenge({ starterCode })}
-            />
-            <EditableTextarea
-              label="Hint"
-              rows={2}
-              value={ch.hint ?? ch.hints?.[0] ?? ''}
-              onChange={(hint) => onUpdateChallenge({ hint, hints: undefined })}
-            />
-            <EditableTextarea
-              label="Solution (answer code)"
-              rows={4}
-              value={ch.solution ?? ''}
-              onChange={(solution) => onUpdateChallenge({ solution })}
-            />
-            <EditableValidationEditor
-              validation={ch.validation}
-              onChange={(validation) => onUpdateChallenge({ validation })}
-            />
-          </>
-        )}
+        <SimpleMarkdown text={ch.promptMarkdown} />
         <div className="cq-challenge-help-row">
           <button
             type="button"
@@ -364,16 +305,14 @@ export function ChallengeCard({
             ))}
           </ul>
         )}
-        {!isEditingLocal ? (
-          <a
-            className="cq-report-link"
-            href={reportProblemUrl(`the challenge "${ch.title}"`, `challenge ${ch.id}`)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Report a problem with this challenge
-          </a>
-        ) : null}
+        <a
+          className="cq-report-link"
+          href={reportProblemUrl(`the challenge "${ch.title}"`, `challenge ${ch.id}`)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Report a problem with this challenge
+        </a>
       </div>
     </div>
   )

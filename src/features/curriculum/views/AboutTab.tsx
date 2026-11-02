@@ -1,24 +1,15 @@
 import { useState } from 'react'
 import { detectPlatform, INSTALL_GUIDES, type InstallGuide } from '../../../platform'
-import { EditableText } from '../../editor'
-import { OfflinePanel } from '../components/OfflinePanel'
+import { ABOUT_LEAD } from '../appText'
 import { VersionPanel } from '../components/VersionPanel'
 import { AdminPanel } from '../components/AdminPanel'
 import { useAdminMode } from '../adminMode'
-import { ProgressBackupPanel } from '../components/ProgressBackupPanel'
-import { PrivacyPanel } from '../components/PrivacyPanel'
-import { AppearancePanel } from '../components/AppearancePanel'
-import { SoundPanel } from '../../sound/SoundPanel'
 import { SupportPanel } from '../../support/SupportPanel'
 import { promptInstall, useInstallState } from '../../../lib/installPrompt'
 import { FeedbackPanel } from '../../feedback/FeedbackPanel'
 
 interface AboutTabProps {
-  aboutLead: string
-  onUpdateLead: (text: string) => void
   baseUrl: string
-  courses: { id: string; title: string }[]
-  activeCourseId: string | null
 }
 
 function InstallGuideSteps({ guide, current = false }: { guide: InstallGuide; current?: boolean }) {
@@ -34,13 +25,7 @@ function InstallGuideSteps({ guide, current = false }: { guide: InstallGuide; cu
   )
 }
 
-export function AboutTab({
-  aboutLead,
-  onUpdateLead,
-  baseUrl,
-  courses,
-  activeCourseId,
-}: AboutTabProps) {
+export function AboutTab({ baseUrl }: AboutTabProps) {
   const currentPlatform = detectPlatform()
   const currentGuide = INSTALL_GUIDES.find((g) => g.platform === currentPlatform)
   const { canInstall, installed, justInstalled } = useInstallState()
@@ -53,7 +38,7 @@ export function AboutTab({
   return (
     <div className="cq-stack cq-about">
       <h1 className="cq-title">About</h1>
-      <EditableText as="p" className="cq-lead" value={aboutLead} onChange={onUpdateLead} />
+      <p className="cq-lead">{ABOUT_LEAD}</p>
       <section>
         <h2 className="cq-subtitle">Install CodeQuest</h2>
         {installed ? (
@@ -102,11 +87,6 @@ export function AboutTab({
       </section>
       <FeedbackPanel installed={installed} />
       <SupportPanel baseUrl={baseUrl} />
-      <AppearancePanel />
-      <SoundPanel />
-      <OfflinePanel baseUrl={baseUrl} courses={courses} activeCourseId={activeCourseId} />
-      <ProgressBackupPanel />
-      <PrivacyPanel />
       {isAdmin || adminRevealed ? <AdminPanel /> : null}
       <VersionPanel onRevealAdmin={() => setAdminRevealed(true)} />
     </div>

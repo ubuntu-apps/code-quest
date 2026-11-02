@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Award } from 'lucide-react'
-import type { LoadedSection } from '../curriculum/types'
+import type { LoadedSection } from '../curriculum/content/types'
 import { isSectionFinished } from './courseCompletion'
 import { sectionSubject } from './certificateSubject'
 import { CertificateModal } from './CertificateModal'

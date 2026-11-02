@@ -1,6 +1,6 @@
 /**
  * What Python lesson files import. The builders themselves are in ../builders.mjs.
- * Quiz explanations live in data/explanations/, one per question in order.
+ * A quiz question's explanation is its last argument: `mc(prompt, options, correct, explanation)`.
  */
 import { PythonBuilders } from '../builders.mjs'
 

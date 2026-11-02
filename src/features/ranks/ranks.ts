@@ -1,4 +1,4 @@
-import type { LanguageBundle } from '../curriculum/types'
+import type { LanguageBundle } from '../curriculum/content/types'
 import { isSectionFinished } from '../certificate/courseCompletion'
 
 /**

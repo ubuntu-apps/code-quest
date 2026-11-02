@@ -1,10 +1,9 @@
 import type { ReactNode } from 'react'
 import { DoorClosed, DoorOpen } from 'lucide-react'
-import type { Level, TestGradeResult, TestQuestion } from '../types'
-import type { LevelProgress } from '../progressStorage'
+import type { Level, TestGradeResult } from '../content/types'
+import type { LevelProgress } from '../progress/progressStorage'
 import { PASS_DEFAULT } from '../constants'
 import { InlineMarkdown, SimpleMarkdown } from '../SimpleMarkdown'
-import { AddItemButton, EditableTestQuestionEditor, ListEditorActions, useEditorMode } from '../../editor'
 import { YesNoQuestionInput } from '../components/YesNoQuestionInput'
 import { isYesNoQuestion, yesNoCorrectAnswer } from '../testQuestionUtils'
 import { reportProblemUrl } from '../reportProblem'
@@ -20,11 +19,6 @@ interface TestStepProps {
   testEdited: Record<string, true>
   onTestShortChange: (questionId: string, value: string) => void
   onTestMcqChange: (questionId: string, choiceId: string) => void
-  onUpdatePassingScore: (score: number) => void
-  onUpdateQuestion: (questionId: string, question: TestQuestion) => void
-  onMoveQuestion: (questionId: string, direction: -1 | 1) => void
-  onRemoveQuestion: (questionId: string) => void
-  onAddQuestion: (type: 'mcq' | 'shortText') => void
   onSubmit: () => void
   onRetake: () => void
   /** Shown as a "Next lesson" button once the quiz is passed (null: no next lesson). */
@@ -53,11 +47,6 @@ export function TestStep({
   testEdited,
   onTestShortChange,
   onTestMcqChange,
-  onUpdatePassingScore,
-  onUpdateQuestion,
-  onMoveQuestion,
-  onRemoveQuestion,
-  onAddQuestion,
   onSubmit,
   onRetake,
   nextLevelTitle = null,
@@ -68,11 +57,9 @@ export function TestStep({
   practice = false,
   questionSources,
 }: TestStepProps) {
-  const { isEditingLocal } = useEditorMode()
   // Before a first attempt, nudge learners who skipped most of the challenges (not a lock).
   const challengesTotal = level.challenges.length
   const suggestPractice =
-    !isEditingLocal &&
     !prog.testPassed &&
     testResult === null &&
     challengesDone !== undefined &&
@@ -99,19 +86,7 @@ export function TestStep({
       {practice ? null : (
         <p className="cq-muted">
           To clear the gate:{' '}
-          {isEditingLocal ? (
-            <input
-              type="number"
-              className="cq-editable-input"
-              style={{ width: '4rem', display: 'inline' }}
-              min={0}
-              max={100}
-              value={level.test.passingScorePercent ?? PASS_DEFAULT}
-              onChange={(e) => onUpdatePassingScore(Number(e.target.value))}
-            />
-          ) : (
-            (level.test.passingScorePercent ?? PASS_DEFAULT)
-          )}
+          {level.test.passingScorePercent ?? PASS_DEFAULT}
           % · {prog.testPassed ? "You've cleared this gate before." : 'Answer every question, then press Check my answers.'}
         </p>
       )}
@@ -215,29 +190,13 @@ export function TestStep({
                       </div>
                     ) : null}
                   </div>
-                  <ListEditorActions
-                    canMoveUp={qi > 0}
-                    canMoveDown={qi < level.test.questions.length - 1}
-                    onMoveUp={() => onMoveQuestion(q.id, -1)}
-                    onMoveDown={() => onMoveQuestion(q.id, 1)}
-                    confirmMessage="Delete this gate question?"
-                    onDelete={() => onRemoveQuestion(q.id)}
-                  />
                 </div>
-                <EditableTestQuestionEditor
-                  question={q}
-                  onChange={(question) => onUpdateQuestion(q.id, question)}
-                />
               </div>
             </div>
           </li>
           )
         })}
       </ul>
-      <div className="cq-row cq-test-add-buttons">
-        <AddItemButton label="Add MCQ" onClick={() => onAddQuestion('mcq')} />
-        <AddItemButton label="Add short-text" onClick={() => onAddQuestion('shortText')} />
-      </div>
       <div className="cq-row">
         <button
           type="button"
@@ -290,7 +249,7 @@ export function TestStep({
           {!revealAnswers && ' · Change the answers marked Incorrect and submit again. Correct answers are shown once you clear the gate.'}
         </p>
       )}
-      {testResult && resultCurrent && testResult.passed && !isEditingLocal ? afterPass : null}
+      {testResult && resultCurrent && testResult.passed ? afterPass : null}
       {testResult && resultCurrent && testResult.passed && nextLevelTitle && onGoToNextLevel ? (
         <div className="cq-row">
           <button type="button" className="cq-btn cq-btn--primary" onClick={onGoToNextLevel}>
@@ -301,16 +260,14 @@ export function TestStep({
       {testResult && !resultCurrent && (
         <p className="cq-muted">Answers you changed are no longer marked. Submit again to see your new score.</p>
       )}
-      {!isEditingLocal ? (
-        <a
-          className="cq-report-link"
-          href={reportProblemUrl(`the gate for "${level.title}"`, `gate for stage ${level.id}`)}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Report a problem with this gate
-        </a>
-      ) : null}
+      <a
+        className="cq-report-link"
+        href={reportProblemUrl(`the gate for "${level.title}"`, `gate for stage ${level.id}`)}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Report a problem with this gate
+      </a>
     </section>
   )
 }
