@@ -1,5 +1,4 @@
 import { ChevronLeft } from 'lucide-react'
-import { EditorHeaderButton } from '../../editor'
 import { RankIcon } from '../../ranks/RankIcon'
 import type { RankDef } from '../../ranks/ranks'
 
@@ -12,7 +11,7 @@ export interface HeaderCourse {
 
 /**
  * The "Skip to content" link and the bar at the top: Back, the app name (with the course
- * being learned, the rank in it and its XP) and the editor button.
+ * being learned, the rank in it and its XP).
  */
 export function AppHeader({
   showBack,
@@ -69,7 +68,6 @@ export function AppHeader({
           ) : null}
           {isAdmin ? <span className="cq-admin-badge">Admin</span> : null}
         </div>
-        <EditorHeaderButton />
       </header>
     </>
   )

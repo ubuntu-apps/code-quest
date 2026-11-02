@@ -1,12 +1,9 @@
 import { useState, type ReactNode } from 'react'
 import { BellRing, ChevronRight, Compass, Flame, Lock, Snowflake, Zap } from 'lucide-react'
-import type { RootIndex } from '../types'
-import type { ContentSource } from '../../editor/curriculumDraftStorage'
-import { AddItemButton } from '../../editor'
-import { EditableText } from '../../editor'
+import type { RootIndex } from '../content/types'
+import { HOME_LEAD } from '../appText'
 import { CatalogListItem } from '../components/CatalogListItem'
-import { ContentSourceToggle } from '../components/ContentSourceToggle'
-import { FREEZE_EVERY_DAYS, type StreakStatus } from '../streak'
+import { FREEZE_EVERY_DAYS, type StreakStatus } from '../progress/streak'
 import { ReminderSheet } from '../../reminders/ReminderSheet'
 
 export interface ContinueTarget {
@@ -31,24 +28,14 @@ interface LearnHomeProps {
   badges?: ReactNode
   /** The app's address, for the reminder's link. */
   appUrl: string
-  homeLead: string
-  isEditMode: boolean
   /** Edit and admin mode can open courses marked "coming soon". */
   canOpenComingSoon: boolean
-  contentSource: ContentSource
-  onContentSourceChange: (source: ContentSource) => void
-  onImportFromGitHub?: () => void
   onContinue: () => void
   onOpenLanguage: (path: string, id: string) => void
   /** The course Home shows progress for (null: none picked yet, or edit mode). */
   activeCourseId?: string | null
   /** Makes another course the one Home shows, without leaving Home. */
   onSelectCourse?: (id: string) => void
-  onUpdateHomeLead: (text: string) => void
-  onUpdateLanguage: (langId: string, patch: { title?: string; id?: string }) => void
-  onMoveLanguage: (langId: string, direction: -1 | 1) => void
-  onRemoveLanguage: (langId: string) => void
-  onAddLanguage: () => void
 }
 
 export function LearnHome({
@@ -62,21 +49,11 @@ export function LearnHome({
   review,
   badges,
   appUrl,
-  homeLead,
-  isEditMode,
   canOpenComingSoon,
-  contentSource,
-  onContentSourceChange,
-  onImportFromGitHub,
   onContinue,
   onOpenLanguage,
   activeCourseId = null,
   onSelectCourse,
-  onUpdateHomeLead,
-  onUpdateLanguage,
-  onMoveLanguage,
-  onRemoveLanguage,
-  onAddLanguage,
 }: LearnHomeProps) {
   const [reminderOpen, setReminderOpen] = useState(false)
   const streakCount = streak.count
@@ -97,27 +74,19 @@ export function LearnHome({
     : null
   const courseList = (
     <>
-      <EditableText as="p" className="cq-lead" value={homeLead} onChange={onUpdateHomeLead} />
+      <p className="cq-lead">{HOME_LEAD}</p>
       <ul className="cq-card-list">
-        {displayRootIndex.languages.map((lang, langIndex) => (
+        {displayRootIndex.languages.map((lang) => (
           <CatalogListItem
             key={lang.id}
             title={lang.title}
-            onTitleChange={(title) => onUpdateLanguage(lang.id, { title })}
             onClick={() => onOpenLanguage(lang.path, lang.id)}
             meta={lang.comingSoon ? <span className="cq-card-meta">Coming soon</span> : undefined}
             locked={lang.comingSoon === true && !canOpenComingSoon}
             disabled={lang.comingSoon === true && !canOpenComingSoon}
-            listIndex={langIndex}
-            listLength={displayRootIndex.languages.length}
-            onMoveUp={() => onMoveLanguage(lang.id, -1)}
-            onMoveDown={() => onMoveLanguage(lang.id, 1)}
-            onRemove={() => onRemoveLanguage(lang.id)}
-            confirmMessage={`Delete language "${lang.title}"?`}
           />
         ))}
       </ul>
-      <AddItemButton label="Add language" onClick={onAddLanguage} />
     </>
   )
 
@@ -164,13 +133,6 @@ export function LearnHome({
         </button>
       ) : null}
       {activeCourse ? null : courseList}
-      {isEditMode && (
-        <ContentSourceToggle
-          contentSource={contentSource}
-          onChange={onContentSourceChange}
-          onImportFromGitHub={onImportFromGitHub}
-        />
-      )}
       <div className="cq-panel cq-home-panel">
         <button
           type="button"

@@ -74,11 +74,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why wrap `input()` in `float()` here?", ["`input()` returns text, and maths needs a number","`float()` makes input faster","It removes spaces","`print` needs it"], 0),
-    mc("`celsius = float(\"25\")`. What is `celsius * 9 / 5 + 32`?", ["`77`", "`77.0`", "`\"77.0\"`", "A `TypeError`"], 1),
-    mc("What does `f\"{6.21371:.2f}\"` give?", ["`6.2`","`6.22`","`6.21`","`6.21371`"], 2),
-    mc("With `c = 25.0` and `f = 77.0`, which line prints `25.0 °C = 77.0 °F`?", ["`print(\"{c} °C = {f} °F\")`", "`print(c, \"°C =\", f, \"°F\", sep=\"\")`", "`print(f\"{c} °C = {f} °F\")`", "`print(f\"{c}°C = {f}°F\")`"], 2),
-    mc("The user types `abc`. What does `float(input())` do?", ["Returns `0.0`","Raises a `ValueError`","Returns `\"abc\"`","Returns `None`"], 1),
-    qShort("What does `print(f\"{-40 * 9 / 5 + 32:.1f}\")` show?", "-40.0"),
+    mc("Why wrap `input()` in `float()` here?", ["`input()` returns text, and maths needs a number","`float()` makes input faster","It removes spaces","`print` needs it"], 0, "`input()` always gives text, and a calculation needs a number, so `float()` converts it."),
+    mc("`celsius = float(\"25\")`. What is `celsius * 9 / 5 + 32`?", ["`77`", "`77.0`", "`\"77.0\"`", "A `TypeError`"], 1, "`float(\"25\")` gives the number 25.0, and maths with a float (or `/`) gives a float: 77.0."),
+    mc("What does `f\"{6.21371:.2f}\"` give?", ["`6.2`","`6.22`","`6.21`","`6.21371`"], 2, "`.2f` keeps two decimal places, and 6.21371 rounds to 6.21."),
+    mc("With `c = 25.0` and `f = 77.0`, which line prints `25.0 °C = 77.0 °F`?", ["`print(\"{c} °C = {f} °F\")`", "`print(c, \"°C =\", f, \"°F\", sep=\"\")`", "`print(f\"{c} °C = {f} °F\")`", "`print(f\"{c}°C = {f}°F\")`"], 2, "Only the f-string fills in the values with the spaces as written. Without `f` the braces are printed as they are, and `sep=\"\"` removes the spaces."),
+    mc("The user types `abc`. What does `float(input())` do?", ["Returns `0.0`","Raises a `ValueError`","Returns `\"abc\"`","Returns `None`"], 1, "`float()` can't make a number from letters, so it raises a `ValueError`."),
+    qShort("What does `print(f\"{-40 * 9 / 5 + 32:.1f}\")` show?", "-40.0", "-40 * 9 / 5 + 32 is -40.0, and `:.1f` shows it with one decimal place."),
   ],
 })

@@ -1,4 +1,4 @@
-import type { RuntimeAssertionTest } from '../../curriculum/types'
+import type { RuntimeAssertionTest } from '../../curriculum/content/types'
 import { WEBR_CDN_BASE } from '../../../runtimeVersions'
 import type { ChallengeCheckResult, CodeRunResult, FriendlyCodeError } from '../LanguagePack'
 import { CodeRuntime, type RunWording } from '../runtime/CodeRuntime'

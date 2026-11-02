@@ -9,18 +9,16 @@ import '../../styles/challenges.css'
 import '../../styles/sandbox.css'
 import '../../styles/quiz.css'
 import '../../styles/about.css'
-import '../../styles/editor-mode.css'
 import '../../styles/support.css'
 import '../../styles/badges.css'
 import '../../styles/review.css'
 
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BookOpen, Info, Share2 } from 'lucide-react'
-import type { Level } from './types'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { BookOpen, Info, Settings, Share2 } from 'lucide-react'
+import type { Level } from './content/types'
 import { useAdminMode } from './adminMode'
-import { loadRootIndex } from './loadCurriculum'
-import { loadProgress, notifyProgressChanged } from './progressStorage'
-import { hasTestedOut } from './testOut'
+import { loadProgress, notifyProgressChanged } from './progress/progressStorage'
+import { hasTestedOut } from './progress/testOut'
 import { languagePack } from '../languages'
 import { preloadCodeEditor } from './codeEditor'
 import { playSound } from '../sound/sound'
@@ -34,22 +32,13 @@ import { courseRank } from '../ranks/ranks'
 import { Notices } from './components/Notices'
 import { BottomNav, type BottomNavItem } from '../../components/BottomNav/BottomNav'
 import { ShareSheet } from '../../components/ShareSheet'
-import { detectPlatform, installInstructions } from '../../platform'
-import {
-  useEditorAbout,
-  useEditorCatalog,
-  useEditorDraft,
-  useEditorGitHub,
-  useEditorMode,
-  useEditorConfirm,
-} from '../editor'
-import { mergeAboutContent } from '../editor/aboutContent'
+import { detectPlatform } from '../../platform'
 import type { TabId } from './constants'
 import { useLearnRoute } from './hooks/useLearnRoute'
 import { useTabMemory } from './hooks/useTabMemory'
 import { learnBreadcrumbs } from './learnPaths'
-import { rememberLastLevel } from './lastLevel'
-import { clearSelectedLanguage, saveSelectedLanguage } from './selectedLanguageStorage'
+import { rememberLastLevel } from './progress/lastLevel'
+import { saveSelectedLanguage } from './progress/selectedLanguageStorage'
 import { recordDailyActivity, sectionStartHint } from './helpers'
 import { useChallenges } from './hooks/useChallenges'
 import { useCourseProgress } from './hooks/useCourseProgress'
@@ -66,14 +55,10 @@ import { LearnSections } from './views/LearnSections'
 import { LearnLevels } from './views/LearnLevels'
 import { LearnLevel } from './views/LearnLevel'
 import { AboutTab } from './views/AboutTab'
-
-/** Editing toolbar, downloaded only when someone switches to edit mode. */
-const EditorToolbar = lazy(() =>
-  import('../editor/EditModeToolbar').then((m) => ({ default: m.EditorToolbar })),
-)
+import { SettingsTab } from './views/SettingsTab'
 
 /**
- * The whole app: header, the Learn and About pages, and the bottom bar. Loading content
+ * The whole app: header, the Learn, Settings and About pages, and the bottom bar. Loading content
  * and working out progress live in hooks (useCurriculum, useCourseProgress); each page
  * is a view in ./views.
  */
@@ -81,44 +66,6 @@ export function CodeQuestScreen() {
   const baseUrl = import.meta.env.BASE_URL
   const [platform] = useState(() => detectPlatform())
   const progressVersion = useProgressVersion()
-  const { isEditMode, contentSource, setContentSource, githubHomeLead } = useEditorMode()
-  const {
-    homeLead,
-    updateHomeLead,
-    updateLanguage,
-    updateLanguageTitle,
-    updateSectionTitle,
-    updateLevelTitle,
-    updateLevelIntro,
-    updateChallenge,
-    updateTestPassingScore,
-    updateTestQuestion,
-  } = useEditorDraft()
-  const {
-    addLanguage,
-    removeLanguage,
-    moveLanguage,
-    addSection,
-    removeSection,
-    moveSection,
-    addLevel,
-    removeLevel,
-    moveLevel,
-    addChallenge,
-    removeChallenge,
-    moveChallenge,
-    addTestQuestion,
-    removeTestQuestion,
-    moveTestQuestion,
-  } = useEditorCatalog()
-  const {
-    aboutContent,
-    initAboutContent,
-    updateAboutLead,
-  } = useEditorAbout()
-  const { importFromGitHub } = useEditorGitHub()
-  const { requestConfirm } = useEditorConfirm()
-
   const {
     tab,
     learnView,
@@ -144,8 +91,8 @@ export function CodeQuestScreen() {
   const { shareNotice, shareSheetOpen, openShareSheet, closeShareSheet, handleShareSelect } = useShareSheet()
 
   const isAdmin = useAdminMode()
-  /** The editor and admin mode can open everything. */
-  const unlockAll = isEditMode || isAdmin
+  /** Admin mode (for testing) opens everything. */
+  const unlockAll = isAdmin
 
   const {
     rootError,
@@ -154,11 +101,7 @@ export function CodeQuestScreen() {
     bundleForView,
     languageBundles,
     activeOpenableId,
-    useLocalContent,
-    resolveBundle,
     openLanguage,
-    forgetBundle,
-    replaceRootIndex,
   } = useCurriculum({ baseUrl, languageId, activeLanguageId, unlockAll, progressVersion, goToLanguage })
 
   useEffect(() => {
@@ -172,17 +115,8 @@ export function CodeQuestScreen() {
       displayRootIndex,
       bundleForView,
       languageBundles,
-      resolveBundle,
       activeOpenableId,
     })
-
-  const displayHomeLead = useLocalContent ? homeLead : githubHomeLead
-
-  const githubAboutContent = useMemo(
-    () => mergeAboutContent(installInstructions(platform).split('\n').slice(1), null),
-    [platform],
-  )
-  const displayAboutContent = useLocalContent ? aboutContent : githubAboutContent
 
   const selectedSection = useMemo(() => {
     if (!bundleForView || !sectionId) return null
@@ -221,17 +155,17 @@ export function CodeQuestScreen() {
     },
     [showBadges],
   )
-  // Badges follow the published course being learned (not edit-mode drafts).
+  // Badges follow the course being learned.
   const badges = useBadges({
     progressVersion,
     languageId: activeOpenableId,
-    bundle: !isEditMode && activeOpenableId ? (languageBundles[activeOpenableId] ?? null) : null,
+    bundle: activeOpenableId ? (languageBundles[activeOpenableId] ?? null) : null,
     totalXp,
     onEarned: onBadgesEarned,
   })
 
   // The top bar: the course being learned, the rank in it and its XP (as on Home).
-  const headerBundle = !isEditMode && activeOpenableId ? (languageBundles[activeOpenableId] ?? null) : null
+  const headerBundle = activeOpenableId ? (languageBundles[activeOpenableId] ?? null) : null
   const headerCourse = useMemo((): HeaderCourse | null => {
     void progressVersion
     if (!activeOpenableId || !headerBundle) return null
@@ -324,35 +258,6 @@ export function CodeQuestScreen() {
     openLevel(sectionId, nextLevel.id)
   }, [languageId, sectionId, nextLevel, openLevel])
 
-  const handleRemoveLanguage = (langId: string) => {
-    removeLanguage(langId)
-    if (activeLanguageId === langId) clearSelectedLanguage()
-    if (languageId === langId) {
-      forgetBundle()
-      backFromLearn()
-    }
-  }
-
-  const handleRemoveSection = (secId: string) => {
-    if (!languageId) return
-    removeSection(languageId, secId)
-    if (sectionId === secId) {
-      goToLanguage(languageId)
-    }
-  }
-
-  const handleRemoveLevel = (secId: string, lvlId: string) => {
-    if (!languageId) return
-    removeLevel(languageId, secId, lvlId)
-    if (levelId === lvlId) {
-      goToSection(languageId, secId)
-    }
-  }
-
-  useEffect(() => {
-    initAboutContent(installInstructions(platform).split('\n').slice(1))
-  }, [platform, initAboutContent])
-
   const renderLearn = () => {
     if (rootError) return <LoadErrorPanel message={rootError} />
     if (!displayRootIndex) return <div className="cq-panel cq-muted">Loading catalog…</div>
@@ -368,7 +273,7 @@ export function CodeQuestScreen() {
           totalXp={totalXp}
           streak={streak}
           review={
-            !isEditMode && activeOpenableId && languageBundles[activeOpenableId] ? (
+            activeOpenableId && languageBundles[activeOpenableId] ? (
               <ReviewPanel
                 languageId={activeOpenableId}
                 bundle={languageBundles[activeOpenableId]}
@@ -379,31 +284,11 @@ export function CodeQuestScreen() {
           }
           badges={<BadgesPanel earned={badges.earned} toEarn={badges.toEarn} />}
           appUrl={`${window.location.origin}${baseUrl}`}
-          homeLead={displayHomeLead}
-          isEditMode={isEditMode}
           canOpenComingSoon={unlockAll}
-          contentSource={contentSource}
-          onContentSourceChange={setContentSource}
-          onImportFromGitHub={() => {
-            void (async () => {
-              const ok = await requestConfirm(
-                'Replace local drafts with content from public/content/? Unsaved local changes will be lost.',
-                { title: 'Replace drafts', confirmLabel: 'Yes, replace' },
-              )
-              if (!ok) return
-              await importFromGitHub(baseUrl)
-              replaceRootIndex(await loadRootIndex(baseUrl))
-            })()
-          }}
           onContinue={() => continueTarget && void openLevelByPath(continueTarget)}
           onOpenLanguage={(path, id) => void openLanguage(path, id)}
-          activeCourseId={isEditMode ? null : activeOpenableId}
+          activeCourseId={activeOpenableId}
           onSelectCourse={selectCourse}
-          onUpdateHomeLead={updateHomeLead}
-          onUpdateLanguage={updateLanguage}
-          onMoveLanguage={moveLanguage}
-          onRemoveLanguage={handleRemoveLanguage}
-          onAddLanguage={addLanguage}
         />
       )
     }
@@ -416,16 +301,8 @@ export function CodeQuestScreen() {
         <LearnSections
           bundle={bundleForView}
           languageId={languageId}
-          isEditMode={isEditMode}
           isSectionUnlocked={(index) => languageId ? isSectionUnlockedFor(languageId, index) : true}
           onSelectSection={(id) => languageId && goToSection(languageId, id)}
-          onUpdateLanguageTitle={(title) => languageId && updateLanguageTitle(languageId, title)}
-          onUpdateSectionTitle={(id, title, options) =>
-            languageId && updateSectionTitle(languageId, id, title, options)
-          }
-          onMoveSection={(id, dir) => languageId && moveSection(languageId, id, dir)}
-          onRemoveSection={handleRemoveSection}
-          onAddSection={() => languageId && addSection(languageId)}
           baseUrl={baseUrl}
         />
       )
@@ -433,7 +310,7 @@ export function CodeQuestScreen() {
 
     // "Section complete" with its certificate, once every lesson here is passed (or skipped ahead).
     const sectionCertificate =
-      bundleForView && selectedSection && languageId && !isEditMode ? (
+      bundleForView && selectedSection && languageId ? (
         <SectionCertificateNotice
           languageId={languageId}
           courseTitle={bundleForView.index.title}
@@ -451,7 +328,6 @@ export function CodeQuestScreen() {
         <LearnLevels
           selectedSection={selectedSection}
           languageId={languageId}
-          isEditMode={isEditMode}
           isLevelUnlocked={(_levels, index) =>
             bundleForView ? isLevelUnlocked(languageId, bundleForView.sections, selectedSectionIndex, index) : true
           }
@@ -471,17 +347,11 @@ export function CodeQuestScreen() {
           onOpenLevel={(lvl) => {
             if (secId) openLevel(secId, lvl.id)
           }}
-          onUpdateSectionTitle={(title) => updateSectionTitle(languageId, secId, title)}
-          onUpdateLevelTitle={(lvlId, title) => updateLevelTitle(languageId, secId, lvlId, title)}
-          onMoveLevel={(lvlId, dir) => moveLevel(languageId, secId, lvlId, dir)}
-          onRemoveLevel={(lvlId) => handleRemoveLevel(secId, lvlId)}
-          onAddLevel={() => addLevel(languageId, secId)}
         />
       )
     }
 
     if (learnView === 'level' && selectedSection && selectedLevel && languageId) {
-      const secId = selectedSection.sectionRef.id
       void progressVersion
       const prog = loadProgress(languageId, selectedLevel.id)
       const showNext =
@@ -496,60 +366,11 @@ export function CodeQuestScreen() {
           levelStep={levelStep}
           prog={prog}
           onLevelStepChange={goToLevelStep}
-          onUpdateLevelTitle={(title) => updateLevelTitle(languageId, secId, selectedLevel.id, title)}
-          onUpdateIntro={(patch) => updateLevelIntro(languageId, secId, selectedLevel.id, patch)}
           onReadMoreOpen={() => setReadMoreOpen(true)}
-          sandboxCode={sandbox.code}
-          sandboxOutput={sandbox.output}
-          sandboxRunning={sandbox.running}
-          sandboxError={sandbox.error}
-          sandboxErrorUiEpoch={sandbox.errorUiEpoch}
-          onSandboxCodeChange={sandbox.setCode}
-          onSandboxRun={(stdin) => void sandbox.run(stdin)}
-          onSandboxStop={sandbox.stop}
-          onSandboxReset={() => sandbox.reset(selectedLevel)}
-          onSandboxErrorClear={sandbox.clearError}
-          challengeDrafts={challenges.drafts}
-          challengeStatus={challenges.status}
-          challengeTestResults={challenges.testResults}
-          challengeRuntimeError={challenges.runtimeError}
-          challengeErrorExpanded={challenges.errorExpanded}
-          challengeErrorUiEpoch={challenges.errorUiEpoch}
-          challengeChecking={challenges.checking}
-          challengeRunning={challenges.running}
-          challengeOutput={challenges.output}
-          onRunChallenge={(ch) => void challenges.run(ch)}
-          onChallengeDraftChange={challenges.changeDraft}
-          onCheckChallenge={(ch) => void challenges.check(ch)}
-          onStopChallengeCheck={challenges.stopCheck}
-          onRevealAnswer={challenges.revealAnswer}
-          onUpdateChallenge={(chId, patch) =>
-            updateChallenge(languageId, secId, selectedLevel.id, chId, patch)
-          }
-          onMoveChallenge={(chId, dir) => moveChallenge(languageId, secId, selectedLevel.id, chId, dir)}
-          onRemoveChallenge={(chId) => removeChallenge(languageId, secId, selectedLevel.id, chId)}
-          onAddChallenge={() => addChallenge(languageId, secId, selectedLevel.id)}
-          onToggleChallengeErrorExpanded={challenges.toggleErrorExpanded}
-          testShort={levelTest.short}
-          testMcq={levelTest.mcq}
-          testResult={levelTest.result}
-          testEdited={levelTest.edited}
-          onTestShortChange={levelTest.changeShort}
-          onTestMcqChange={levelTest.changeMcq}
-          onUpdatePassingScore={(score) =>
-            updateTestPassingScore(languageId, secId, selectedLevel.id, score)
-          }
-          onUpdateQuestion={(qId, question) =>
-            updateTestQuestion(languageId, secId, selectedLevel.id, qId, question)
-          }
-          onMoveQuestion={(qId, dir) => moveTestQuestion(languageId, secId, selectedLevel.id, qId, dir)}
-          onRemoveQuestion={(qId) => removeTestQuestion(languageId, secId, selectedLevel.id, qId)}
-          onAddQuestion={(type) => addTestQuestion(languageId, secId, selectedLevel.id, type)}
-          onSubmitTest={levelTest.submit}
-          onRetakeTest={levelTest.retake}
-          showNext={showNext}
-          nextLevelTitle={nextLevel?.title ?? null}
-          onGoToNextLevel={goToNextLevel}
+          sandbox={sandbox}
+          challenges={challenges}
+          test={levelTest}
+          nextStage={{ title: nextLevel?.title ?? null, show: showNext, go: goToNextLevel }}
           afterQuizPassed={sectionCertificate}
         />
       )
@@ -588,10 +409,11 @@ export function CodeQuestScreen() {
       ? 'cq-shell cq-shell--android'
       : platform === 'ios'
         ? 'cq-shell cq-shell--ios'
-        : 'cq-shell') + (isEditMode ? ' cq-shell--edit-mode' : '')
+        : 'cq-shell')
 
   const navItems: BottomNavItem[] = [
     { id: 'learn', label: 'Learn', icon: BookOpen },
+    { id: 'settings', label: 'Settings', icon: Settings },
     { id: 'about', label: 'About', icon: Info },
     { id: 'share', label: 'Share', icon: Share2, onAction: openShareSheet },
   ]
@@ -600,12 +422,6 @@ export function CodeQuestScreen() {
     <div className={shellClassName}>
       <AppHeader showBack={showBack} onBack={back} isAdmin={isAdmin} course={headerCourse} />
 
-      {isEditMode ? (
-        <Suspense fallback={null}>
-          <EditorToolbar languageId={languageId} sectionId={sectionId} />
-        </Suspense>
-      ) : null}
-
       <main id="cq-main" className="cq-main" tabIndex={-1}>
         {tab === 'learn' ? (
           <>
@@ -613,15 +429,10 @@ export function CodeQuestScreen() {
             {renderLearn()}
           </>
         ) : null}
-        {tab === 'about' && (
-          <AboutTab
-            aboutLead={displayAboutContent.lead}
-            onUpdateLead={updateAboutLead}
-            baseUrl={baseUrl}
-            courses={openableLanguages}
-            activeCourseId={activeLanguageId ?? null}
-          />
+        {tab === 'settings' && (
+          <SettingsTab baseUrl={baseUrl} courses={openableLanguages} activeCourseId={activeLanguageId ?? null} />
         )}
+        {tab === 'about' && <AboutTab baseUrl={baseUrl} />}
       </main>
 
       <Notices xpToast={xpToast} badgeToast={badgeToast} shareNotice={shareNotice} />

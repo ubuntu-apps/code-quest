@@ -16,6 +16,7 @@ import { modulesTopics } from './modules.mjs'
 import { oopTopics } from './oop.mjs'
 import { dataApisTopics } from './data-apis.mjs'
 import { projectsTopics } from './projects.mjs'
+import { sectionProjectsFor } from './section-projects.mjs'
 
 const allTopics = new Map(
   [
@@ -41,7 +42,7 @@ function topics(...ids) {
   })
 }
 
-export const COURSE = [
+const SECTIONS = [
   {
     sectionId: 'fundamentals',
     filename: 'fundamentals.json',
@@ -111,3 +112,9 @@ export const COURSE = [
     ),
   },
 ]
+
+/**
+ * The course, with each section's side quests (data/section-projects.mjs) after its topics.
+ * Easy and medium side quests must be done to unlock the next section.
+ */
+export const COURSE = SECTIONS.map((section) => ({ ...section, projects: sectionProjectsFor(section.sectionId) }))

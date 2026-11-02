@@ -1,13 +1,13 @@
 import type { FriendlyCodeError } from '../languages'
-import type { Level } from './types'
+import type { Level } from './content/types'
 import {
   CHALLENGE_XP,
   CHALLENGE_XP_AFTER_ANSWER,
   LOCK_SECTIONS_BY_QUIZZES,
   TEST_XP,
 } from './constants'
-import { loadProgress } from './progressStorage'
-import { hasTestedOut } from './testOut'
+import { loadProgress } from './progress/progressStorage'
+import { hasTestedOut } from './progress/testOut'
 
 // The streak lives in streak.ts; these re-exports keep older imports working.
 export {
@@ -16,7 +16,7 @@ export {
   localDateKey,
   recordDailyActivity,
   type StreakState,
-} from './streak'
+} from './progress/streak'
 
 /**
  * IDs of this level's challenges that are marked complete. Saved progress can hold

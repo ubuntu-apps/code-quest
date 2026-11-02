@@ -80,11 +80,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("Why does every function take `accounts` as its first argument?", ["Python requires a dict", "So the caller hands over the data and no globals are needed", "To make the names longer", "Dicts can't be global"], 1),
-    mc("What does `open_account(bank, \"Ben\")` use as Ben's balance?", ["Nothing: it raises an error", "`None`", "The default, 0", "100"], 2),
-    mc("Why build `transfer` from `withdraw` and `deposit`?", ["The rules (like \"not enough money\") live in one place and are reused", "It is shorter to type", "Functions must call other functions", "It is faster"], 0),
-    mc("`withdraw` returns `True` or `False`. What does that let the caller do?", ["Nothing", "Print automatically", "Skip the dict", "Decide what to do next, such as reply `Not enough money`"], 3),
-    qShort("What does `f\"${70:.2f}\"` give?", "$70.00"),
-    mc("What does `key=lambda n: (-accounts[n], n)` sort by?", ["Name only", "Balance from high to low, then name", "Balance from low to high", "The order they were opened"], 1),
+    mc("Why does every function take `accounts` as its first argument?", ["Python requires a dict", "So the caller hands over the data and no globals are needed", "To make the names longer", "Dicts can't be global"], 1, "Passing the data in makes each function clear about what it uses and easy to test."),
+    mc("What does `open_account(bank, \"Ben\")` use as Ben's balance?", ["Nothing: it raises an error", "`None`", "The default, 0", "100"], 2, "`balance` defaults to 0 when it isn't given."),
+    mc("Why build `transfer` from `withdraw` and `deposit`?", ["The rules (like \"not enough money\") live in one place and are reused", "It is shorter to type", "Functions must call other functions", "It is faster"], 0, "Reusing the two functions keeps each rule in one place."),
+    mc("`withdraw` returns `True` or `False`. What does that let the caller do?", ["Nothing", "Print automatically", "Skip the dict", "Decide what to do next, such as reply `Not enough money`"], 3, "A returned `True` or `False` reports success, and the caller decides what to do or print."),
+    qShort("What does `f\"${70:.2f}\"` give?", "$70.00", "`.2f` always shows two decimals, and the `$` is ordinary text before the braces."),
+    mc("What does `key=lambda n: (-accounts[n], n)` sort by?", ["Name only", "Balance from high to low, then name", "Balance from low to high", "The order they were opened"], 1, "The minus sign sorts balances from high to low; names break the ties."),
   ],
 })

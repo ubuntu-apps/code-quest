@@ -7,7 +7,7 @@ import {
   initProgressFile,
   resolveProgressFile,
   subscribeProgressFile,
-} from '../features/curriculum/progressFile'
+} from '../features/curriculum/progress/progressFile'
 
 const stages = (n: number) => `${n} ${n === 1 ? 'stage' : 'stages'}`
 

@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import type { ReactNode } from 'react'
-import { useEditorConfirm } from '../../editor'
+import { ConfirmDialog } from '../../../components/ConfirmDialog'
+import { useConfirmDialog } from '../../../components/useConfirmDialog'
 import {
   backupFileName,
   countLevels,
   createProgressBackup,
   parseProgressBackup,
   restoreProgressBackup,
-} from '../progressBackup'
+} from '../progress/progressBackup'
 import {
   allowProgressFile,
   chooseProgressFile,
@@ -16,8 +17,8 @@ import {
   resolveProgressFile,
   stopProgressFile,
   subscribeProgressFile,
-} from '../progressFile'
-import { getStoragePersistence, type StoragePersistence } from '../storagePersistence'
+} from '../progress/progressFile'
+import { getStoragePersistence, type StoragePersistence } from '../progress/storagePersistence'
 import { saveFile, savedMessage } from '../../../lib/saveFile'
 
 const BACKUP_TYPE = { description: 'CodeQuest progress backup', mimeType: 'application/json', extension: '.json' }
@@ -139,7 +140,7 @@ function ProgressFileControls() {
 
 /** Download / restore a file with the learner's progress, so it survives cleared storage or a new device. */
 export function ProgressBackupPanel() {
-  const { requestConfirm } = useEditorConfirm()
+  const { confirmState, requestConfirm, closeConfirm } = useConfirmDialog()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [notice, setNotice] = useState<{ text: string; error?: boolean } | null>(null)
   const [persistence, setPersistence] = useState<StoragePersistence>('unsupported')
@@ -226,6 +227,13 @@ export function ProgressBackupPanel() {
           {notice.text}
         </p>
       ) : null}
+      <ConfirmDialog
+        open={confirmState !== null}
+        message={confirmState?.message ?? ''}
+        {...confirmState?.options}
+        onConfirm={() => closeConfirm(true)}
+        onCancel={() => closeConfirm(false)}
+      />
     </section>
   )
 }

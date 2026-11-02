@@ -1,5 +1,5 @@
-import type { LanguageBundle, Level, TestQuestion } from '../curriculum/types'
-import { loadProgress } from '../curriculum/progressStorage'
+import type { LanguageBundle, Level, TestQuestion } from '../curriculum/content/types'
+import { loadProgress } from '../curriculum/progress/progressStorage'
 
 /**
  * Spaced review of past quiz questions, worked out without touching storage (see

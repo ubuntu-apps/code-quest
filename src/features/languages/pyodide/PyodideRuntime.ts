@@ -1,4 +1,4 @@
-import type { RuntimeAssertionTest } from '../../curriculum/types'
+import type { RuntimeAssertionTest } from '../../curriculum/content/types'
 import { PYODIDE_CDN_BASE } from '../../../runtimeVersions'
 import type { ChallengeCheckResult, ChallengeTestResult, CodeRunResult, FriendlyCodeError } from '../LanguagePack'
 import { explainPythonError } from '../python/pythonErrors'

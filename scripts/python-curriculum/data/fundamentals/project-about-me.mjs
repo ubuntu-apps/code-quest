@@ -76,11 +76,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("What does this print?\n\n```\nname = \"Sam\"\nprint(\"Hi\", name)\nname = \"Ana\"\n```", ["`Hi Sam`", "`Hi Ana`", "`Hi name`", "`Hi Sam` and then `Hi Ana`"], 0),
-    mc("What does `\"sam rivera\".upper()` give?", ["`Sam Rivera`","`SAM RIVERA`","`sam rivera`","`SAM rivera`"], 1),
-    mc("What does `f\"{10220:,}\"` give?", ["`10220`","`10.220`","`10,220`","`10 220`"], 2),
-    mc("What does `\"=\" * 5` give?", ["`=5`","`5=`","An error","`=====`"], 3),
-    mc("With `born = 1998` and `year = 2026`, what does `print(f\"Age: {year - born}\")` show?", ["`Age: year - born`", "`Age: {28}`", "`Age:28`", "`Age: 28`"], 3),
-    qShort("Which string method turns every letter into a capital? (name only)", "upper"),
+    mc("What does this print?\n\n```\nname = \"Sam\"\nprint(\"Hi\", name)\nname = \"Ana\"\n```", ["`Hi Sam`", "`Hi Ana`", "`Hi name`", "`Hi Sam` and then `Hi Ana`"], 0, "Python runs the lines in order: `print` uses the value `name` has at that moment. The change on the last line comes too late."),
+    mc("What does `\"sam rivera\".upper()` give?", ["`Sam Rivera`","`SAM RIVERA`","`sam rivera`","`SAM rivera`"], 1, "`.upper()` turns every letter into a capital."),
+    mc("What does `f\"{10220:,}\"` give?", ["`10220`","`10.220`","`10,220`","`10 220`"], 2, "The `,` format option groups the digits in thousands."),
+    mc("What does `\"=\" * 5` give?", ["`=5`","`5=`","An error","`=====`"], 3, "Multiplying a string by 5 repeats it 5 times."),
+    mc("With `born = 1998` and `year = 2026`, what does `print(f\"Age: {year - born}\")` show?", ["`Age: year - born`", "`Age: {28}`", "`Age:28`", "`Age: 28`"], 3, "Inside `{}` an f-string works out the expression, so `year - born` becomes 28."),
+    qShort("Which string method turns every letter into a capital? (name only)", "upper", "`.upper()` returns the text with every letter in capitals."),
   ],
 })

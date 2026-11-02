@@ -85,11 +85,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("What does this print?\n\n```\nimport json\n\ndef fake_api(method, path):\n    return 200, '{\"title\": \"Emma\"}'\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n    def title(self, path):\n        status, text = self.api(\"GET\", path)\n        return json.loads(text)[\"title\"]\n\nprint(BookClient(fake_api).title(\"/books/1\"))\n```", ["`{\"title\": \"Emma\"}`", "`200`", "`Emma`", "A network error"], 2),
-    mc("Why do all requests go through `_call`?", ["It is a rule of REST", "To make more requests", "The error handling and JSON decoding are written once", "To slow them down"], 2),
-    mc("Which status codes does `_call` turn into an `ApiError`?", ["400 and up", "Only 404", "Only 500", "Anything but 200"], 0),
-    mc("How does `all_books` know when to stop?", ["After 3 pages", "When a page is empty", "When it gets an error", "When `next_page` is `None`"], 3),
-    qShort("Which HTTP method does `add_book` use? (one word)", "POST"),
-    mc("Why build the query with `urlencode`?", ["It sorts the books", "It safely encodes spaces and symbols, like the one in `Jane Austen`", "It adds the page number", "It is required for GET"], 1),
+    mc("What does this print?\n\n```\nimport json\n\ndef fake_api(method, path):\n    return 200, '{\"title\": \"Emma\"}'\n\nclass BookClient:\n    def __init__(self, api):\n        self.api = api\n    def title(self, path):\n        status, text = self.api(\"GET\", path)\n        return json.loads(text)[\"title\"]\n\nprint(BookClient(fake_api).title(\"/books/1\"))\n```", ["`{\"title\": \"Emma\"}`", "`200`", "`Emma`", "A network error"], 2, "The client calls whatever `api` function it was given, so a fake one answers without any network."),
+    mc("Why do all requests go through `_call`?", ["It is a rule of REST", "To make more requests", "The error handling and JSON decoding are written once", "To slow them down"], 2, "One helper keeps the status checks and decoding in one place."),
+    mc("Which status codes does `_call` turn into an `ApiError`?", ["400 and up", "Only 404", "Only 500", "Anything but 200"], 0, "4xx and 5xx statuses are errors, so `_call` raises for anything 400 or above."),
+    mc("How does `all_books` know when to stop?", ["After 3 pages", "When a page is empty", "When it gets an error", "When `next_page` is `None`"], 3, "The API sets `next_page` to `None` on the last page."),
+    qShort("Which HTTP method does `add_book` use? (one word)", "POST", "`POST` creates a new resource."),
+    mc("Why build the query with `urlencode`?", ["It sorts the books", "It safely encodes spaces and symbols, like the one in `Jane Austen`", "It adds the page number", "It is required for GET"], 1, "`urlencode` escapes the space so the query stays valid."),
   ],
 })

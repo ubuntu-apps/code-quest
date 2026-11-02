@@ -1,24 +1,15 @@
 /**
  * Writes the Python course (public/content/python). On top of the shared steps
- * (../course-kit/CourseGenerator.mjs) it adds:
- * - each section's side quests (data/section-projects.mjs);
- * - the quiz explanations (data/explanations/), one per question in order;
- * - the extra "other values" checks (protection.mjs);
- * - `--only <sectionId>` to write one section.
+ * (../course-kit/CourseGenerator.mjs) it adds `--only <sectionId>` to write one section,
+ * lists every section in the index (even without lessons yet), and removes files from the
+ * old naming. Its side quests are each section's `projects` (data/course.mjs), and its
+ * "other values" checks are in protection.mjs.
  */
 import { readdir, unlink } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import language from '../../src/features/languages/python/language.json' with { type: 'json' }
 import { CourseGenerator } from '../course-kit/CourseGenerator.mjs'
-import { sectionProjectsFor } from './data/section-projects.mjs'
-import { EXPLANATIONS } from './data/explanations/index.mjs'
 import { PythonProtection } from './protection.mjs'
-
-/**
- * Sections that get their "Easy/Medium/Hard project" levels (data/section-projects.mjs).
- * Note: easy and medium projects must be completed to unlock the next section.
- */
-const SECTIONS_WITH_PROJECTS = new Set(['fundamentals', 'control_flow', 'data_structures', 'functions', 'error_handling', 'file_handling', 'modules_and_packages', 'object_oriented', 'data_and_apis'])
 
 export class PythonCourseGenerator extends CourseGenerator {
   /**
@@ -26,7 +17,7 @@ export class PythonCourseGenerator extends CourseGenerator {
    * @param {{ only?: string | null }} [options] Write just this section (the index lists them all).
    */
   constructor(course, { only = null } = {}) {
-    // language.json's `course`: lessons are "topics", and older ones have no explanations yet.
+    // language.json's `course`: lessons are called "topics".
     super({ language, course, protection: new PythonProtection() })
     if (only && !course.some((s) => s.sectionId === only)) {
       throw new Error(`Unknown section "${only}". Known: ${course.map((s) => s.sectionId).join(', ')}`)
@@ -45,27 +36,6 @@ export class PythonCourseGenerator extends CourseGenerator {
 
   indexExtras() {
     return {}
-  }
-
-  topicsOf(section) {
-    const projects = SECTIONS_WITH_PROJECTS.has(section.sectionId) ? sectionProjectsFor(section.sectionId) : []
-    return [...section.topics, ...projects]
-  }
-
-  buildLevel(topic) {
-    // One explanation per quiz question, in order. A count that doesn't match means the
-    // quiz changed, so the explanations must be updated too.
-    const explanations = EXPLANATIONS[topic.id]
-    if (explanations && explanations.length !== topic.questions.length) {
-      throw new Error(`${topic.id}: ${explanations.length} quiz explanations for ${topic.questions.length} questions (data/explanations/)`)
-    }
-    return super.buildLevel(topic)
-  }
-
-  /** Explanations come from data/explanations/, and are optional. */
-  buildQuestion(topic, question, index) {
-    const explanation = EXPLANATIONS[topic.id]?.[index] ?? question.explanation
-    return super.buildQuestion(topic, { ...question, explanation: explanation || undefined }, index)
   }
 
   /** Removes section files from the old naming (`section_1.json`). */

@@ -79,11 +79,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("What is `\"remove pear 3\".split()`?", ["`\"remove\", \"pear\", \"3\"`", "`[\"remove\", \"pear\", \"3\"]`", "`[\"remove pear 3\"]`", "`(\"remove\", \"pear\", 3)`"], 1),
-    mc("Why check `len(parts) == 3` before using `parts[2]`?", ["So a short command doesn't raise an `IndexError`", "It makes the program faster", "`split` needs it", "To sort the parts"], 0),
-    mc("Why use `inventory.get(item, 0)` when removing?", ["To add the item", "To sort the inventory", "So an item that isn't in stock counts as 0 instead of raising a `KeyError`", "It deletes the item"], 2),
-    mc("Which loop keeps reading commands until `quit`?", ["`for command in input():`", "`while command:` with no input", "`for _ in range(10):`", "`while True:` with a `break` on `quit`"], 3),
-    mc("How do you print the items in alphabetical order?", ["Loop over `sorted(inventory)`", "Loop over `inventory.values()`", "Use `inventory.sort()`", "Dicts are always alphabetical"], 0),
-    qShort("What does `\", \".join([\"kiwi\", \"pear\"])` give?", "kiwi, pear"),
+    mc("What is `\"remove pear 3\".split()`?", ["`\"remove\", \"pear\", \"3\"`", "`[\"remove\", \"pear\", \"3\"]`", "`[\"remove pear 3\"]`", "`(\"remove\", \"pear\", 3)`"], 1, "`split()` returns a list of the words in the string."),
+    mc("Why check `len(parts) == 3` before using `parts[2]`?", ["So a short command doesn't raise an `IndexError`", "It makes the program faster", "`split` needs it", "To sort the parts"], 0, "A command with fewer than 3 words has no `parts[2]`, and reading it would raise an `IndexError`."),
+    mc("Why use `inventory.get(item, 0)` when removing?", ["To add the item", "To sort the inventory", "So an item that isn't in stock counts as 0 instead of raising a `KeyError`", "It deletes the item"], 2, "`get` gives 0 for a missing item instead of raising a `KeyError`."),
+    mc("Which loop keeps reading commands until `quit`?", ["`for command in input():`", "`while command:` with no input", "`for _ in range(10):`", "`while True:` with a `break` on `quit`"], 3, "`while True:` keeps going, and `break` ends it when the user types `quit`."),
+    mc("How do you print the items in alphabetical order?", ["Loop over `sorted(inventory)`", "Loop over `inventory.values()`", "Use `inventory.sort()`", "Dicts are always alphabetical"], 0, "`sorted` returns the dict's keys in alphabetical order."),
+    qShort("What does `\", \".join([\"kiwi\", \"pear\"])` give?", "kiwi, pear", "`join` puts `\", \"` between the items."),
   ],
 })

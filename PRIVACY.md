@@ -13,7 +13,7 @@ Everything a learner does in CodeQuest is saved only in their own browser, on th
 - settings such as theme and sounds
 - the name a learner types on a certificate, if they make one
 
-None of this is sent to us or to anyone else. Learners can delete it by clearing the site's data in their browser, and can move it to another device with the backup file on the About tab.
+None of this is sent to us or to anyone else. Learners can delete it by clearing the site's data in their browser, and can move it to another device with the backup file on the Settings tab.
 
 ## Anonymous usage counts
 
@@ -21,7 +21,7 @@ To see which stages people reach and where they get stuck, CodeQuest sends anony
 
 - No cookies, and no identifier for the learner or device.
 - Nothing the learner types is sent: no code, answers or names.
-- Any learner can turn counting off on the About tab, under Privacy.
+- Any learner can turn counting off on the Settings tab, under Privacy.
 - Counting doesn't happen when the app is offline or the counter is blocked.
 
 [GoatCounter's website](https://www.goatcounter.com) describes what it receives and keeps.

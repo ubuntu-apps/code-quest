@@ -1,7 +1,7 @@
 import { useId } from 'react'
 import { GOATCOUNTER_ENDPOINT, setAnalyticsAllowed, useAnalyticsAllowed } from '../../../lib/analytics'
 
-/** About tab: what CodeQuest counts, and a switch to turn it off on this device. */
+/** Settings tab: what CodeQuest counts, and a switch to turn it off on this device. */
 export function PrivacyPanel() {
   const allowed = useAnalyticsAllowed()
   const id = useId()

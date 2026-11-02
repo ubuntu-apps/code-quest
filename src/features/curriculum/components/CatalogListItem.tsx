@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react'
-import { EditableText, ListEditorActions } from '../../editor'
 
 /** Where the learner is with a lesson or section; each has its own colour. */
 export type ProgressStatus = 'not-started' | 'in-progress' | 'challenges-done' | 'passed'
@@ -16,15 +15,8 @@ export function StatusMeta({ status, label, details }: { status: ProgressStatus;
 
 interface CatalogListItemProps {
   title: string
-  onTitleChange: (title: string) => void
-  onTitleCommit?: (title: string) => void
-  titlePlaceholder?: string
   onClick: () => void
   meta?: ReactNode
-  metaEditable?: {
-    value: string
-    onChange: (value: string) => void
-  }
   progressPercent?: number
   /** Small line above the title, e.g. "Stage 3 of 14". */
   eyebrow?: ReactNode
@@ -34,34 +26,18 @@ interface CatalogListItemProps {
   status?: ProgressStatus
   locked?: boolean
   disabled?: boolean
-  listIndex: number
-  listLength: number
-  onMoveUp: () => void
-  onMoveDown: () => void
-  onRemove: () => void
-  confirmMessage: string
 }
 
 export function CatalogListItem({
   title,
-  onTitleChange,
-  onTitleCommit,
-  titlePlaceholder,
   onClick,
   meta,
-  metaEditable,
   progressPercent,
   eyebrow,
   icon,
   status,
   locked = false,
   disabled = false,
-  listIndex,
-  listLength,
-  onMoveUp,
-  onMoveDown,
-  onRemove,
-  confirmMessage,
 }: CatalogListItemProps) {
   return (
     <li className="cq-card-list-item">
@@ -74,22 +50,8 @@ export function CatalogListItem({
         >
           <span className="cq-card-body">
           {eyebrow ? <span className="cq-card-eyebrow">{eyebrow}</span> : null}
-          <EditableText
-            className="cq-card-title"
-            value={title}
-            placeholder={titlePlaceholder}
-            onChange={onTitleChange}
-            onCommit={onTitleCommit}
-          />
-          {metaEditable ? (
-            <EditableText
-              className="cq-card-meta"
-              value={metaEditable.value}
-              onChange={metaEditable.onChange}
-            />
-          ) : meta ? (
-            meta
-          ) : null}
+          <span className="cq-card-title">{title}</span>
+          {meta ?? null}
           {progressPercent !== undefined && (
             // Decorative: the card's text already says how many levels are complete, and a
             // progress bar inside a button isn't read out anyway.
@@ -104,14 +66,6 @@ export function CatalogListItem({
             </span>
           ) : null}
         </button>
-        <ListEditorActions
-          canMoveUp={listIndex > 0}
-          canMoveDown={listIndex < listLength - 1}
-          onMoveUp={onMoveUp}
-          onMoveDown={onMoveDown}
-          confirmMessage={confirmMessage}
-          onDelete={onRemove}
-        />
       </div>
     </li>
   )

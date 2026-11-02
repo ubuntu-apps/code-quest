@@ -3,7 +3,7 @@
  * (scripts/content-check/WebREngine.mjs), so a check runs the same way everywhere. No imports
  * apart from types, so Node can load this file directly.
  */
-import type { RuntimeAssertionTest } from '../../curriculum/types.ts'
+import type { RuntimeAssertionTest } from '../../curriculum/content/types.ts'
 
 /** Separates the learner's output from the test results in a check's output. */
 const TESTS_MARKER = '<<codequest-tests>>'

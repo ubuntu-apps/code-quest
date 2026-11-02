@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { isYesNoQuestion, yesNoCorrectAnswer, yesNoDisplayPrompt } from './testQuestionUtils'
-import type { TestQuestion } from './types'
+import type { TestQuestion } from './content/types'
 
 describe('isYesNoQuestion', () => {
   it('detects short-text questions with yes/no expected answers', () => {

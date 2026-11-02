@@ -1,12 +1,9 @@
-import { useSyncExternalStore } from 'react'
-import { localDateKey } from '../curriculum/streak'
+import { STORES } from '../../lib/stores'
+import { useStoreEntry } from '../../lib/localStore'
+import { localDateKey } from '../curriculum/progress/streak'
 import { applyAnswers, type ReviewItem } from './reviewSchedule'
 
-/** One key per course: `codequest:review:python`. Included in progress backups. */
-export const REVIEW_PREFIX = 'codequest:review:'
-/** Fired when the saved review state changes, so open panels re-read it. */
-export const REVIEW_CHANGED_EVENT = 'codequest:review-changed'
-const CHANGED_EVENT = REVIEW_CHANGED_EVENT
+/** Saved per course (STORES.review: `codequest:review:python`), and included in progress backups. */
 
 /** Today's review: which questions, and how it went once checked. */
 export interface ReviewSession {
@@ -25,7 +22,7 @@ export interface ReviewState {
 
 export function loadReviewState(languageId: string): ReviewState {
   try {
-    const raw = localStorage.getItem(REVIEW_PREFIX + languageId)
+    const raw = STORES.review.get(languageId)
     const parsed = raw ? (JSON.parse(raw) as Partial<ReviewState>) : null
     return { items: parsed?.items && typeof parsed.items === 'object' ? parsed.items : {}, session: parsed?.session }
   } catch {
@@ -33,13 +30,8 @@ export function loadReviewState(languageId: string): ReviewState {
   }
 }
 
-function saveReviewState(languageId: string, state: ReviewState): void {
-  try {
-    localStorage.setItem(REVIEW_PREFIX + languageId, JSON.stringify(state))
-  } catch {
-    // Storage full or blocked: review still works, it just won't remember.
-  }
-  window.dispatchEvent(new Event(CHANGED_EVENT))
+export function saveReviewState(languageId: string, state: ReviewState): void {
+  STORES.review.set(languageId, JSON.stringify(state))
 }
 
 /**
@@ -84,27 +76,7 @@ export function finishReviewSession(languageId: string, correct: number, now = n
   saveReviewState(languageId, { ...state, session: { ...session, done: true, correct, rounds: session.rounds + 1 } })
 }
 
-function subscribe(onChange: () => void): () => void {
-  window.addEventListener(CHANGED_EVENT, onChange)
-  window.addEventListener('storage', onChange)
-  return () => {
-    window.removeEventListener(CHANGED_EVENT, onChange)
-    window.removeEventListener('storage', onChange)
-  }
-}
-
 /** The saved review state as text, so components re-render when it changes. */
 export function useReviewSnapshot(languageId: string | null): string {
-  return useSyncExternalStore(
-    subscribe,
-    () => {
-      if (!languageId) return ''
-      try {
-        return localStorage.getItem(REVIEW_PREFIX + languageId) ?? ''
-      } catch {
-        return ''
-      }
-    },
-    () => '',
-  )
+  return useStoreEntry(STORES.review, languageId)
 }

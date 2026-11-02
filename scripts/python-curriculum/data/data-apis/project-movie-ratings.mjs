@@ -81,11 +81,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("Why does `load_ratings` note skipped rows instead of ignoring them?", ["It is faster", "So nothing disappears silently", "CSV requires it", "To make the file smaller"], 1),
-    mc("Why start the line count at 2 with `enumerate(..., start=2)`?", ["Lists start at 2", "To skip a row", "Line 1 of the file is the header", "It is a typo"], 2),
-    mc("What does `sort_keys=True` do in `json.dump`?", ["Writes the keys in alphabetical order", "Sorts the values", "Removes duplicates", "Nothing for dicts"], 0),
-    mc("How does sorting by `(-average, name)` order movies?", ["By name only", "Lowest first", "Randomly", "Highest average first, ties alphabetically"], 3),
-    qShort("What is `round((5 + 4) / 2, 1)`? (a number)", "4.5"),
-    mc("Why is `\"two\"` skipped?", ["It is a word, so `int()` raises `ValueError`", "It is too long", "It is lowercase", "Two stars aren't allowed"], 0),
+    mc("Why does `load_ratings` note skipped rows instead of ignoring them?", ["It is faster", "So nothing disappears silently", "CSV requires it", "To make the file smaller"], 1, "Reporting skipped rows means bad data is noticed, not silently dropped."),
+    mc("Why start the line count at 2 with `enumerate(..., start=2)`?", ["Lists start at 2", "To skip a row", "Line 1 of the file is the header", "It is a typo"], 2, "The header is line 1, so the first data row is line 2."),
+    mc("What does `sort_keys=True` do in `json.dump`?", ["Writes the keys in alphabetical order", "Sorts the values", "Removes duplicates", "Nothing for dicts"], 0, "`sort_keys=True` writes dict keys in sorted order, so the output is the same every time."),
+    mc("How does sorting by `(-average, name)` order movies?", ["By name only", "Lowest first", "Randomly", "Highest average first, ties alphabetically"], 3, "The minus sign puts high averages first, and the name breaks ties."),
+    qShort("What is `round((5 + 4) / 2, 1)`? (a number)", "4.5", "The brackets add first, `/` gives 4.5, and rounding to one place keeps it as 4.5."),
+    mc("Why is `\"two\"` skipped?", ["It is a word, so `int()` raises `ValueError`", "It is too long", "It is lowercase", "Two stars aren't allowed"], 0, "`int(\"two\")` raises `ValueError`, so the row is reported and skipped."),
   ],
 })

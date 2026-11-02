@@ -1,4 +1,4 @@
-export type TabId = 'learn' | 'about'
+export type TabId = 'learn' | 'settings' | 'about'
 export type LearnView = 'languages' | 'sections' | 'levels' | 'level'
 export type LevelStep = 'intro' | 'challenges' | 'quiz'
 
@@ -10,9 +10,6 @@ export const LEVEL_STEPS: readonly { id: LevelStep; label: string }[] = [
 ]
 
 export const PASS_DEFAULT = 70
-export const STREAK_STORAGE_KEY = 'codequest:streak'
-export const LAST_LEVEL_STORAGE_KEY = 'codequest:lastLevel'
-export const SELECTED_LANGUAGE_STORAGE_KEY = 'codequest:selectedLanguage'
 /**
  * Lock a section until every topic quiz in the previous section is passed. (A section
  * with easy/medium projects always gates the next one on those projects instead.)

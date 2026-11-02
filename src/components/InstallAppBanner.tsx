@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
-import { INSTALL_BANNER_DISMISS_KEY } from './installBannerStorage'
+import { STORES } from '../lib/stores'
+import { useStore } from '../lib/localStore'
 import { promptInstall, useInstallState } from '../lib/installPrompt'
 import { parseAppPath } from '../features/curriculum/learnPaths'
 
@@ -8,19 +9,11 @@ function isIos(): boolean {
   return /iphone|ipad|ipod/i.test(navigator.userAgent)
 }
 
-function readDismissed(): boolean {
-  try {
-    return localStorage.getItem(INSTALL_BANNER_DISMISS_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-
 /** A small bar offering to install the app. Closed once, it stays closed (About still has an Install button). */
 export function InstallAppBanner() {
   const { canInstall, installed, justInstalled } = useInstallState()
   const { pathname } = useLocation()
-  const [dismissed, setDismissed] = useState(readDismissed)
+  const dismissed = useStore(STORES.installBannerDismissed)
   const ios = useMemo(() => isIos(), [])
 
   // The About tab has its own Install button and steps.
@@ -30,14 +23,8 @@ export function InstallAppBanner() {
   const showIosInstructions = ios && !canInstall
   if (!showInstallButton && !showIosInstructions) return null
 
-  const onDismiss = () => {
-    try {
-      localStorage.setItem(INSTALL_BANNER_DISMISS_KEY, '1')
-    } catch {
-      // Storage unavailable: it stays closed until the page is reloaded.
-    }
-    setDismissed(true)
-  }
+  // If storage is blocked, it stays closed until the page is reloaded.
+  const onDismiss = () => STORES.installBannerDismissed.set(true)
 
   return (
     <section className="cq-install-banner" aria-label="Install CodeQuest app">

@@ -1,45 +1,26 @@
-import { useSyncExternalStore } from 'react'
+import { STORES } from '../../lib/stores'
+import { useStore } from '../../lib/localStore'
 
 /**
  * Short confirmation sounds, made by the browser's Web Audio API (no sound files, so
  * nothing to download and they work offline). Each step has its own sound; learners can
- * turn them off on the About page.
+ * turn them off on the Settings tab.
  */
 export type SoundName = 'checkPass' | 'checkFail' | 'quizPass' | 'quizFail' | 'badge' | 'levelUp'
 
-const SOUND_KEY = 'codequest:sound'
-const CHANGED_EVENT = 'codequest:sound-changed'
 /** Overall loudness: confirmation, not a fanfare. */
 const MASTER_VOLUME = 0.14
 
 export function isSoundOn(): boolean {
-  try {
-    return localStorage.getItem(SOUND_KEY) !== 'off'
-  } catch {
-    return true
-  }
+  return STORES.sound.get()
 }
 
 export function setSoundOn(on: boolean): void {
-  try {
-    localStorage.setItem(SOUND_KEY, on ? 'on' : 'off')
-  } catch {
-    // Storage unavailable: the choice lasts until the page closes.
-  }
-  window.dispatchEvent(new Event(CHANGED_EVENT))
-}
-
-function subscribe(onChange: () => void): () => void {
-  window.addEventListener(CHANGED_EVENT, onChange)
-  window.addEventListener('storage', onChange)
-  return () => {
-    window.removeEventListener(CHANGED_EVENT, onChange)
-    window.removeEventListener('storage', onChange)
-  }
+  STORES.sound.set(on)
 }
 
 export function useSoundOn(): boolean {
-  return useSyncExternalStore(subscribe, isSoundOn, () => true)
+  return useStore(STORES.sound)
 }
 
 let context: AudioContext | null = null

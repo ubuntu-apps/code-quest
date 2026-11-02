@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { Level, TestQuestion } from '../curriculum/types'
+import type { Level, TestQuestion } from '../curriculum/content/types'
 import { addDays, applyAnswers, pickReview, REVIEW_INTERVALS, type ReviewCandidate, type ReviewItem } from './reviewSchedule'
 
 const TODAY = '2026-10-20'

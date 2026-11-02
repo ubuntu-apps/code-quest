@@ -1,18 +1,11 @@
-import { Suspense, lazy } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { CodeQuestScreen } from './features/curriculum/CodeQuestScreen'
 import { InstallAppBanner } from './components/InstallAppBanner'
 import { UpdateBanner } from './components/UpdateBanner'
 import { ProgressFileBanner } from './components/ProgressFileBanner'
-import { EditorProvider } from './features/editor'
 import { learnHomePath, learnLanguagePath } from './features/curriculum/learnPaths'
 import { SupporterLanding } from './features/support/SupporterLanding'
 import { useScreenCounts } from './lib/analytics'
-
-/** GitHub sign-in landing page for editors; learners never load it. */
-const GitHubAuthCallback = lazy(() =>
-  import('./features/editor/GitHubAuthCallback').then((m) => ({ default: m.GitHubAuthCallback })),
-)
 
 /** The Progress tab was removed; its old links (bookmarks, installed shortcuts) open Learn. */
 function OldProgressRedirect() {
@@ -23,19 +16,11 @@ function OldProgressRedirect() {
 function AppRoutes() {
   useScreenCounts()
   return (
-    <EditorProvider>
+    <>
       <InstallAppBanner />
       <UpdateBanner />
       <ProgressFileBanner />
       <Routes>
-        <Route
-          path="/auth/callback"
-          element={
-            <Suspense fallback={null}>
-              <GitHubAuthCallback />
-            </Suspense>
-          }
-        />
         {/* The thank-you link supporters get after paying (see supportConfig.ts). */}
         <Route path="/supporter" element={<SupporterLanding />} />
         <Route path="/" element={<Navigate to={learnHomePath()} replace />} />
@@ -43,7 +28,7 @@ function AppRoutes() {
         <Route path="/progress/:langId" element={<OldProgressRedirect />} />
         <Route path="/*" element={<CodeQuestScreen />} />
       </Routes>
-    </EditorProvider>
+    </>
   )
 }
 

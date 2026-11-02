@@ -85,11 +85,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why does the analyser skip broken lines instead of stopping?", ["Python can't read them", "Real logs often contain odd lines, and one shouldn't spoil the report", "They are always empty", "To make it faster"], 1),
-    mc("What does `\"a b c d e\".split(\" \", 2)` give?", ["`[\"a\", \"b\", \"c\", \"d\", \"e\"]`", "`[\"a\", \"b\"]`", "`[\"a\", \"b\", \"c d e\"]`", "`[\"a b\", \"c d e\"]`"], 2),
-    mc("Why write the original `line` when copying errors?", ["It already ends with its `\\n` and stays exactly as logged", "Lines can't be changed", "It is shorter", "To remove the date"], 0),
-    mc("How is \"the most common error\" found?", ["The first error", "The longest message", "Sorting the file", "Counting messages in a dict and taking `max` by count"], 3),
-    qShort("What is `\"09:20:44\"[:2]`?", "09"),
-    mc("What should `analyse` do when the log doesn't exist?", ["Write an empty report", "Return a clear message and write nothing", "Crash", "Create the log"], 1),
+    mc("Why does the analyser skip broken lines instead of stopping?", ["Python can't read them", "Real logs often contain odd lines, and one shouldn't spoil the report", "They are always empty", "To make it faster"], 1, "Skipping and counting odd lines keeps the analysis going."),
+    mc("What does `\"a b c d e\".split(\" \", 2)` give?", ["`[\"a\", \"b\", \"c\", \"d\", \"e\"]`", "`[\"a\", \"b\"]`", "`[\"a\", \"b\", \"c d e\"]`", "`[\"a b\", \"c d e\"]`"], 2, "`maxsplit=2` splits at most twice, so the message keeps its spaces."),
+    mc("Why write the original `line` when copying errors?", ["It already ends with its `\\n` and stays exactly as logged", "Lines can't be changed", "It is shorter", "To remove the date"], 0, "Copying the original line keeps it identical, newline included."),
+    mc("How is \"the most common error\" found?", ["The first error", "The longest message", "Sorting the file", "Counting messages in a dict and taking `max` by count"], 3, "A dict counts each message, and `max` with a key finds the largest count."),
+    qShort("What is `\"09:20:44\"[:2]`?", "09", "`[:2]` takes the first two characters, the hour."),
+    mc("What should `analyse` do when the log doesn't exist?", ["Write an empty report", "Return a clear message and write nothing", "Crash", "Create the log"], 1, "A missing input file is reported clearly, and no empty report is written."),
   ],
 })

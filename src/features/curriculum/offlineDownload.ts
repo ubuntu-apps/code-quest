@@ -1,9 +1,9 @@
-import { loadLanguageBundle, loadRootIndex } from './loadCurriculum'
+import { loadLanguageBundle, loadRootIndex } from './content/loadCurriculum'
 import { LANGUAGE_PACKS } from '../languages'
-import { requestPersistentStorageOnce } from './storagePersistence'
-import type { LanguageBundle } from './types'
+import { requestPersistentStorageOnce } from './progress/storagePersistence'
+import type { LanguageBundle } from './content/types'
+import { STORES } from '../../lib/stores'
 
-const OFFLINE_STATE_KEY = 'codequest:offline'
 
 /** Thrown by downloadForOffline when its signal is aborted. */
 export class OfflineDownloadCancelled extends Error {
@@ -24,7 +24,7 @@ export type OfflineStep = 'lessons' | (string & {})
 
 export function loadOfflineState(): OfflineState | null {
   try {
-    const raw = localStorage.getItem(OFFLINE_STATE_KEY)
+    const raw = STORES.offline.get()
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<OfflineState>
     if (typeof parsed.downloadedAt !== 'string' || !Array.isArray(parsed.runtimes)) return null
@@ -35,11 +35,8 @@ export function loadOfflineState(): OfflineState | null {
 }
 
 function saveOfflineState(state: OfflineState): void {
-  try {
-    localStorage.setItem(OFFLINE_STATE_KEY, JSON.stringify(state))
-  } catch {
-    // Not fatal: only the "last downloaded" note is lost.
-  }
+  // Not fatal if it can't be saved: only the "last downloaded" note is lost.
+  STORES.offline.set(JSON.stringify(state))
 }
 
 /** True when a service worker controls this page, so fetched files land in its caches. */
@@ -117,7 +114,7 @@ export type OfflineDownloadStatus =
   | { kind: 'cancelled' }
   | { kind: 'error'; message: string }
 
-// The download lives here rather than in the About tab, so it keeps going (and
+// The download lives here rather than in the Settings tab, so it keeps going (and
 // keeps its progress) when the learner switches tabs, and can't be started twice.
 let downloadStatus: OfflineDownloadStatus = { kind: 'idle' }
 let downloadController: AbortController | null = null

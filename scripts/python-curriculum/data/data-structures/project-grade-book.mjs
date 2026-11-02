@@ -73,11 +73,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("With `grades = {\"Ana\": 91, \"Ben\": 78}`, what is `min(grades, key=grades.get)`?", ["`78`", "`'Ben'`", "`'Ana'`", "`('Ben', 78)`"], 1),
-    mc("What does `grades.values()` give?", ["The scores", "The names", "The `(name, score)` pairs", "The number of students"], 0),
-    mc("What does `max(grades, key=grades.get)` return?", ["The highest score", "The last name", "A sorted list", "The name with the highest score"], 3),
-    mc("What does this print?\n\n```\nscore = 80\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelif score >= 70:\n    print(\"C\")\n```", ["`A`", "`C`", "`B` and then `C`", "`B`"], 3),
-    qShort("What is `len({\"Ana\": 91, \"Ben\": 78})`? (a number)", "2"),
-    mc("Which gives the names from the best score to the worst?", ["`sorted(grades)`", "`sorted(grades, key=grades.get, reverse=True)`", "`grades.sort()`", "`reversed(grades)`"], 1),
+    mc("With `grades = {\"Ana\": 91, \"Ben\": 78}`, what is `min(grades, key=grades.get)`?", ["`78`", "`'Ben'`", "`'Ana'`", "`('Ben', 78)`"], 1, "Looping over a dict gives its keys, and `key=grades.get` compares them by their scores, so the name with the lowest score comes back."),
+    mc("What does `grades.values()` give?", ["The scores", "The names", "The `(name, score)` pairs", "The number of students"], 0, "`.values()` gives just the values, here the scores."),
+    mc("What does `max(grades, key=grades.get)` return?", ["The highest score", "The last name", "A sorted list", "The name with the highest score"], 3, "`key=grades.get` compares by score but returns the name."),
+    mc("What does this print?\n\n```\nscore = 80\nif score >= 90:\n    print(\"A\")\nelif score >= 80:\n    print(\"B\")\nelif score >= 70:\n    print(\"C\")\n```", ["`A`", "`C`", "`B` and then `C`", "`B`"], 3, "Only the first branch whose condition is true runs. 80 >= 80 is true, so `B` is printed and the rest is skipped."),
+    qShort("What is `len({\"Ana\": 91, \"Ben\": 78})`? (a number)", "2", "`len` of a dict counts its keys."),
+    mc("Which gives the names from the best score to the worst?", ["`sorted(grades)`", "`sorted(grades, key=grades.get, reverse=True)`", "`grades.sort()`", "`reversed(grades)`"], 1, "Sorting the names by their scores, with `reverse=True`, puts the highest first."),
   ],
 })

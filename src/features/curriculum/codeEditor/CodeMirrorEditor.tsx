@@ -16,7 +16,7 @@ import { HighlightStyle, bracketMatching, indentOnInput, syntaxHighlighting } fr
 import { acceptCompletion, closeBrackets, closeBracketsKeymap, completionKeymap, completionStatus } from '@codemirror/autocomplete'
 import { tags as t } from '@lezer/highlight'
 import type { KeyBarTarget } from './CodeKeyBar'
-import type { SqlTable } from '../types'
+import type { SqlTable } from '../content/types'
 import type { EditorLanguage } from '../../languages/EditorLanguage'
 
 /** The error from the last Run or Check, shown on its line. */

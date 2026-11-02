@@ -1,4 +1,4 @@
-import type { SandboxSnippet } from '../curriculum/types.ts'
+import type { SandboxSnippet } from '../curriculum/content/types.ts'
 import { Highlighter, type Token } from './Highlighter.ts'
 import { parseLanguageSpec, toRegExp, type LanguageSpec } from './languageSpec.ts'
 

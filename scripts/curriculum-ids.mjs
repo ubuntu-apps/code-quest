@@ -8,7 +8,7 @@
  * new item, which is right: it has become a different exercise.
  *
  * Saved progress from before these ids used `lesson_ch3` and `lesson_q3`; the app moves it
- * over once (src/features/curriculum/idMigration.ts).
+ * over once (src/features/curriculum/progress/idMigration.ts).
  */
 
 /** `Medium: Jump the queue` → `jump-the-queue`. */

@@ -1,139 +1,44 @@
-import type { Level } from '../types'
-import {
-  EditableBlock,
-  EditableMarkdown,
-  EditableText,
-  EditableTextarea,
-  useEditorMode,
-} from '../../editor'
+import type { Level } from '../content/types'
+import { SimpleMarkdown } from '../SimpleMarkdown'
 import { CodeSandboxSection } from '../components/CodeSandboxSection'
-import { languagePack, type FriendlyCodeError } from '../../languages'
+import { languagePack } from '../../languages'
+import type { SandboxState } from '../hooks/useSandbox'
 
 interface IntroStepProps {
   level: Level
   languageId: string
-  sandboxCode: string
-  sandboxOutput: string
-  sandboxRunning: boolean
-  sandboxError: FriendlyCodeError | null
-  sandboxErrorUiEpoch: number
-  onUpdateIntro: (patch: Partial<Level['intro']>) => void
+  /** The lesson's sandbox (useSandbox). */
+  sandbox: SandboxState
   onReadMoreOpen: () => void
-  onSandboxCodeChange: (code: string) => void
-  onSandboxRun: (stdin: string) => void
-  onSandboxStop: () => void
-  onSandboxReset: () => void
-  onSandboxErrorClear: () => void
 }
 
 export function IntroStep({
   level,
   languageId,
-  sandboxCode,
-  sandboxOutput,
-  sandboxRunning,
-  sandboxError,
-  sandboxErrorUiEpoch,
-  onUpdateIntro,
+  sandbox,
   onReadMoreOpen,
-  onSandboxCodeChange,
-  onSandboxRun,
-  onSandboxStop,
-  onSandboxReset,
-  onSandboxErrorClear,
 }: IntroStepProps) {
   // Courses whose code runs here get "Try it" buttons and the sandbox.
   const hasCode = languagePack(languageId) !== null
-  const { isEditingLocal } = useEditorMode()
 
   /** "Try it" on a lesson's code block: load it into the sandbox below and scroll there. */
   const tryCode = (code: string) => {
-    onSandboxCodeChange(code)
-    onSandboxErrorClear()
+    sandbox.setCode(code)
+    sandbox.clearError()
     document.getElementById('cq-sandbox')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
     <section className="cq-panel">
       {/* The level's name is already the page heading, so an intro title that repeats it is skipped. */}
-      {(isEditingLocal || (level.intro.title && level.intro.title !== level.title)) && (
-        <EditableText
-          as="h2"
-          className="cq-subtitle"
-          value={level.intro.title ?? ''}
-          placeholder="Intro title"
-          onChange={(title) => onUpdateIntro({ title })}
-        />
-      )}
-      <EditableMarkdown
-        value={level.intro.bodyMarkdown}
-        onChange={(bodyMarkdown) => onUpdateIntro({ bodyMarkdown })}
-        onTryCode={hasCode ? tryCode : undefined}
-      />
-      {(level.intro.readMore || isEditingLocal) && (
+      {level.intro.title && level.intro.title !== level.title && <h2 className="cq-subtitle">{level.intro.title}</h2>}
+      <SimpleMarkdown text={level.intro.bodyMarkdown} onTryCode={hasCode ? tryCode : undefined} />
+      {level.intro.readMore && (
         <div className="cq-row">
-          {level.intro.readMore && !isEditingLocal ? (
-            <button type="button" className="cq-btn cq-btn--primary" onClick={onReadMoreOpen}>
-              {level.intro.readMore.label ?? 'Read more'}
-            </button>
-          ) : (
-            isEditingLocal && (
-              <button
-                type="button"
-                className="cq-btn cq-btn--primary"
-                onClick={onReadMoreOpen}
-                disabled={!level.intro.readMore}
-              >
-                Preview read more
-              </button>
-            )
-          )}
+          <button type="button" className="cq-btn cq-btn--primary" onClick={onReadMoreOpen}>
+            {level.intro.readMore.label ?? 'Read more'}
+          </button>
         </div>
-      )}
-      {isEditingLocal && (
-        <EditableBlock label="Read more link">
-          <EditableText
-            value={level.intro.readMore?.label ?? ''}
-            placeholder="Button label"
-            onChange={(label) =>
-              onUpdateIntro({
-                readMore: {
-                  label,
-                  url: level.intro.readMore?.url ?? '',
-                  source: level.intro.readMore?.source ?? '',
-                },
-              })
-            }
-          />
-          <EditableTextarea
-            label="URL"
-            rows={1}
-            value={level.intro.readMore?.url ?? ''}
-            onChange={(url) =>
-              onUpdateIntro({
-                readMore: {
-                  label: level.intro.readMore?.label,
-                  url,
-                  source: level.intro.readMore?.source ?? '',
-                },
-              })
-            }
-          />
-          <EditableTextarea
-            label="Source credit"
-            rows={1}
-            value={level.intro.readMore?.source ?? ''}
-            onChange={(source) =>
-              onUpdateIntro({
-                readMore: {
-                  label: level.intro.readMore?.label,
-                  url: level.intro.readMore?.url ?? '',
-                  source,
-                },
-              })
-            }
-          />
-        </EditableBlock>
       )}
       {hasCode && (
         <CodeSandboxSection
@@ -141,16 +46,16 @@ export function IntroStep({
           tables={level.database?.tables}
           setupSql={level.database?.setupSql}
           snippets={level.sandboxSnippets}
-          code={sandboxCode}
-          onCodeChange={onSandboxCodeChange}
-          output={sandboxOutput}
-          running={sandboxRunning}
-          error={sandboxError}
-          errorUiEpoch={sandboxErrorUiEpoch}
-          onRun={onSandboxRun}
-          onStop={onSandboxStop}
-          onReset={onSandboxReset}
-          onErrorClear={onSandboxErrorClear}
+          code={sandbox.code}
+          onCodeChange={sandbox.setCode}
+          output={sandbox.output}
+          running={sandbox.running}
+          error={sandbox.error}
+          errorUiEpoch={sandbox.errorUiEpoch}
+          onRun={(stdin) => void sandbox.run(stdin)}
+          onStop={sandbox.stop}
+          onReset={() => sandbox.reset(level)}
+          onErrorClear={sandbox.clearError}
         />
       )}
     </section>

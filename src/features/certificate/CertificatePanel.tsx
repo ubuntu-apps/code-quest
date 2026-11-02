@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Award } from 'lucide-react'
-import type { LanguageBundle } from '../curriculum/types'
+import type { LanguageBundle } from '../curriculum/content/types'
 import { isSectionFinished, type CourseCompletion } from './courseCompletion'
 import { courseSubject, sectionSubject, type CertificateSubject } from './certificateSubject'
 import { CertificateModal } from './CertificateModal'

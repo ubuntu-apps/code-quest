@@ -1,4 +1,4 @@
-import type { LanguageBundle } from '../../curriculum/types'
+import type { LanguageBundle } from '../../curriculum/content/types'
 import type { EditorLanguage } from '../EditorLanguage'
 import type { ChallengeCheckResult, ChallengeRunOptions, CodeRunResult, RunOptions } from '../LanguagePack'
 import { PyodidePack } from '../pyodide/PyodidePack'

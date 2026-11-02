@@ -1,6 +1,6 @@
 import { playSound, setSoundOn, useSoundOn } from './sound'
 
-/** About tab: confirmation sounds on or off. */
+/** Settings tab: confirmation sounds on or off. */
 export function SoundPanel() {
   const on = useSoundOn()
   const choose = (value: boolean) => {

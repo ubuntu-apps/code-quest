@@ -78,11 +78,11 @@ export default makeProject("easy", {
     }),
   ],
   questions: [
-    mc("Why does each tool **return** its answer instead of printing it?", ["Printing is not allowed in functions", "So other code, like `report`, can use the answer", "It is faster", "Returning prints it too"], 1),
-    mc("What does `\"  hello   world \".split()` give?", ["`[\"\", \"hello\", \"\", \"world\", \"\"]`", "`[\"hello world\"]`", "`[\"hello\", \"world\"]`", "An error"], 2),
-    mc("What does `ch.isalpha()` check?", ["Whether `ch` is a letter", "Whether `ch` is a capital", "Whether `ch` is a vowel", "Whether `ch` is a digit"], 0),
-    mc("What does this print?\n\n```\ndef shout(s):\n    return s.upper() + \"!\"\n\ndef both(s):\n    return shout(s) + \" \" + s\n\nprint(both(\"hi\"))\n```", ["`HI! hi`", "`HI!`", "`hi HI!`", "`None`"], 0),
-    qShort("What is `\"Odd\"[0].upper() + \"odd\"[1:]`?", "Odd"),
-    mc("What does `\"\\n\".join([\"a\", \"b\"])` give?", ["`\"a\\nb\"`: two lines", "`\"ab\"`", "`[\"a\", \"b\"]`", "`\"a b\"`"], 0),
+    mc("Why does each tool **return** its answer instead of printing it?", ["Printing is not allowed in functions", "So other code, like `report`, can use the answer", "It is faster", "Returning prints it too"], 1, "A returned value can be used by other code, and the caller can still print it."),
+    mc("What does `\"  hello   world \".split()` give?", ["`[\"\", \"hello\", \"\", \"world\", \"\"]`", "`[\"hello world\"]`", "`[\"hello\", \"world\"]`", "An error"], 2, "`split()` with no argument ignores extra spaces and gives only the words."),
+    mc("What does `ch.isalpha()` check?", ["Whether `ch` is a letter", "Whether `ch` is a capital", "Whether `ch` is a vowel", "Whether `ch` is a digit"], 0, "`.isalpha()` is `True` for letters only."),
+    mc("What does this print?\n\n```\ndef shout(s):\n    return s.upper() + \"!\"\n\ndef both(s):\n    return shout(s) + \" \" + s\n\nprint(both(\"hi\"))\n```", ["`HI! hi`", "`HI!`", "`hi HI!`", "`None`"], 0, "`both` uses the value `shout` returns, `HI!`, and adds the original text after it."),
+    qShort("What is `\"Odd\"[0].upper() + \"odd\"[1:]`?", "Odd", "The first letter as a capital, plus the rest from index 1: \"O\" + \"dd\"."),
+    mc("What does `\"\\n\".join([\"a\", \"b\"])` give?", ["`\"a\\nb\"`: two lines", "`\"ab\"`", "`[\"a\", \"b\"]`", "`\"a b\"`"], 0, "`\\n` between the items puts each one on its own line."),
   ],
 })

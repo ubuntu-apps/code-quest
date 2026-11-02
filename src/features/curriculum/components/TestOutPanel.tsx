@@ -1,18 +1,17 @@
 import { useState } from 'react'
-import type { LoadedSection, TestGradeResult, TestQuestion } from '../types'
-import { gradeTest } from '../validateAnswer'
+import type { LoadedSection, TestQuestion } from '../content/types'
 import { playSound } from '../../sound/sound'
-import { answeredQuestionIds, recordReviewAnswers } from '../../review/reviewStorage'
+import { recordReviewAnswers } from '../../review/reviewStorage'
 import { countEvent } from '../../../lib/analytics'
-import { TestStep } from '../views/TestStep'
-import { CodeLanguageContext } from '../codeLanguageContext'
+import { useQuiz } from '../hooks/useQuiz'
+import { PracticeQuiz } from './PracticeQuiz'
 import {
   buildTestOutQuestions,
   canTestOut,
   hasTestedOut,
   markTestedOut,
   TEST_OUT_PASS_PERCENT,
-} from '../testOut'
+} from '../progress/testOut'
 
 interface TestOutPanelProps {
   languageId: string
@@ -30,32 +29,21 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
   const levels = section.file.levels
   const [open, setOpen] = useState(false)
   const [questions, setQuestions] = useState<TestQuestion[]>([])
-  const [short, setShort] = useState<Record<string, string>>({})
-  const [mcq, setMcq] = useState<Record<string, string>>({})
-  const [result, setResult] = useState<TestGradeResult | null>(null)
-  const [edited, setEdited] = useState<Record<string, true>>({})
+  const quiz = useQuiz()
   const testedOut = hasTestedOut(languageId, sectionId)
 
   if (!canTestOut(levels)) return null
 
   const start = () => {
     setQuestions(buildTestOutQuestions(levels))
-    setShort({})
-    setMcq({})
-    setResult(null)
-    setEdited({})
+    quiz.reset()
     setOpen(true)
   }
 
-  const markEdited = (questionId: string) =>
-    setEdited((prev) => (prev[questionId] ? prev : { ...prev, [questionId]: true }))
-
   const submit = () => {
-    const graded = gradeTest(questions, short, mcq, TEST_OUT_PASS_PERCENT)
-    setResult(graded)
-    setEdited({})
+    const { graded, answeredIds } = quiz.grade(questions, TEST_OUT_PASS_PERCENT)
     playSound(graded.passed ? 'quizPass' : 'quizFail')
-    recordReviewAnswers(languageId, graded.byQuestion, answeredQuestionIds(short, mcq))
+    recordReviewAnswers(languageId, graded.byQuestion, answeredIds)
     if (graded.passed && !testedOut) markTestedOut(languageId, sectionId)
     countEvent(
       `skip-ahead-${graded.passed ? 'passed' : 'failed'}/${sectionId}`,
@@ -91,15 +79,6 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
     )
   }
 
-  // TestStep shows any quiz; this one is a made-up "level" holding the picked questions.
-  const quizLevel = {
-    id: `testout_${sectionId}`,
-    title: `${section.sectionRef.title} skip-ahead gate`,
-    intro: { bodyMarkdown: '' },
-    challenges: [],
-    test: { passingScorePercent: TEST_OUT_PASS_PERCENT, questions },
-  }
-
   return (
     <section className="cq-testout cq-testout--open">
       <div className="cq-card-row cq-card-row--panel">
@@ -108,37 +87,23 @@ export function TestOutPanel({ languageId, section, nextSectionTitle }: TestOutP
           Close
         </button>
       </div>
-      {result?.passed ? (
+      {quiz.result?.passed ? (
         <p className="cq-testout-done" role="status">
           {`Passed! You can now open ${unlocks}.`}
         </p>
       ) : null}
-      <CodeLanguageContext.Provider value={languageId}>
-        <TestStep
-          level={quizLevel}
-          prog={{ challengesCompleted: [], testPassed: testedOut, challengeAnswers: {} }}
-          testShort={short}
-          testMcq={mcq}
-          testResult={result}
-          testEdited={edited}
-          onTestShortChange={(id, value) => {
-            markEdited(id)
-            setShort((prev) => ({ ...prev, [id]: value }))
-          }}
-          onTestMcqChange={(id, choice) => {
-            markEdited(id)
-            setMcq((prev) => ({ ...prev, [id]: choice }))
-          }}
-          onUpdatePassingScore={() => undefined}
-          onUpdateQuestion={() => undefined}
-          onMoveQuestion={() => undefined}
-          onRemoveQuestion={() => undefined}
-          onAddQuestion={() => undefined}
-          onSubmit={submit}
-          // "Retake" draws a new set of questions.
-          onRetake={start}
-        />
-      </CodeLanguageContext.Provider>
+      <PracticeQuiz
+        languageId={languageId}
+        id={`testout_${sectionId}`}
+        title={`${section.sectionRef.title} skip-ahead gate`}
+        questions={questions}
+        passingPercent={TEST_OUT_PASS_PERCENT}
+        quiz={quiz}
+        passedBefore={testedOut}
+        onSubmit={submit}
+        // "Retake" draws a new set of questions.
+        onRetake={start}
+      />
     </section>
   )
 }

@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from 'react'
-import { loadProgress, saveChallengeDraft, saveProgress } from '../progressStorage'
+import { loadProgress, saveChallengeDraft, saveProgress } from '../progress/progressStorage'
 import { packForTestMode, type ChallengeTestResult, type FriendlyCodeError } from '../../languages'
-import type { Challenge, Level } from '../types'
-import { validateAgainst } from '../validateAnswer'
+import type { Challenge, Level } from '../content/types'
+import { validateAgainst } from '../content/validateAnswer'
 import { CHALLENGE_XP, CHALLENGE_XP_AFTER_ANSWER } from '../constants'
 import { playSound } from '../../sound/sound'
 import { countEvent } from '../../../lib/analytics'
@@ -246,3 +246,5 @@ export function useChallenges(
     resetForLevel,
   }
 }
+
+export type ChallengesState = ReturnType<typeof useChallenges>

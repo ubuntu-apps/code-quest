@@ -3,7 +3,7 @@
  * Shared by the Python, SQL and R generators. See also check-lesson-ids.mjs.
  *
  * Saved progress for a challenge carries a fingerprint of the challenge (its title and
- * checks; see src/features/curriculum/progressFingerprint.ts). When the checks change, the
+ * checks; see src/features/curriculum/progress/progressFingerprint.ts). When the checks change, the
  * app drops the learner's solved mark, because the exercise may have changed. When the
  * change is only a fix (a typo in an expected value, a test that was too strict), add
  * `keepProgress: true` to the challenge in the data file. The generator then compares the
@@ -17,7 +17,7 @@ import { existsSync, readFileSync } from 'node:fs'
 /**
  * The challenge's checks as the app sees them: the app reads content through its Zod
  * schemas, which put an object's keys in schema order. Keep this in step with
- * `validationSchema` in src/features/curriculum/curriculumSchemas.ts.
+ * `validationSchema` in src/features/curriculum/content/curriculumSchemas.ts.
  */
 function appValidation(validation) {
   const out = {}
@@ -31,7 +31,7 @@ function appValidation(validation) {
   return out
 }
 
-/** Same as challengeFingerprint() in src/features/curriculum/progressFingerprint.ts. */
+/** Same as challengeFingerprint() in src/features/curriculum/progress/progressFingerprint.ts. */
 export function challengeFingerprint(challenge) {
   const text = JSON.stringify([challenge.title, appValidation(challenge.validation)])
   let hash = 0x811c9dc5

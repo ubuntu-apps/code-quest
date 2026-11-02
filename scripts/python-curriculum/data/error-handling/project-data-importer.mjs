@@ -94,11 +94,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("Why give the importer its own `RowError`?", ["Python needs one", "So callers can catch exactly \"a bad row\", separate from other errors", "It is faster", "To avoid messages"], 1),
-    mc("With `class RowError(ValueError): pass`, what does `isinstance(RowError(\"bad age\"), ValueError)` give?", ["`False`", "An error", "`True`", "`RowError`"], 2),
-    mc("In normal mode, what happens to a bad row?", ["It is skipped, logged as a warning and listed in the problems", "The import stops", "It is imported anyway", "The program crashes"], 0),
-    mc("Where does the \"Import finished\" log line go, so it always runs?", ["In `else`", "In `except`", "After the `return`", "In `finally`"], 3),
-    qShort("`\"Dev, 25\".split(\",\")` gives how many fields? (a number)", "2"),
-    mc("What does strict mode do?", ["Skips more rows", "Stops at the first bad row by raising a `RowError`", "Turns off logging", "Ignores blank lines"], 1),
+    mc("Why give the importer its own `RowError`?", ["Python needs one", "So callers can catch exactly \"a bad row\", separate from other errors", "It is faster", "To avoid messages"], 1, "Its own exception type lets callers handle bad rows separately from other failures."),
+    mc("With `class RowError(ValueError): pass`, what does `isinstance(RowError(\"bad age\"), ValueError)` give?", ["`False`", "An error", "`True`", "`RowError`"], 2, "A `RowError` is a kind of `ValueError`, so code that catches `ValueError` catches it too."),
+    mc("In normal mode, what happens to a bad row?", ["It is skipped, logged as a warning and listed in the problems", "The import stops", "It is imported anyway", "The program crashes"], 0, "In normal mode a bad row is reported and skipped, so the good rows still get imported."),
+    mc("Where does the \"Import finished\" log line go, so it always runs?", ["In `else`", "In `except`", "After the `return`", "In `finally`"], 3, "`finally` always runs, whether the import succeeded or raised."),
+    qShort("`\"Dev, 25\".split(\",\")` gives how many fields? (a number)", "2", "Splitting on the comma gives the part before it and the part after it."),
+    mc("What does strict mode do?", ["Skips more rows", "Stops at the first bad row by raising a `RowError`", "Turns off logging", "Ignores blank lines"], 1, "Strict mode raises on the first bad row instead of skipping it."),
   ],
 })

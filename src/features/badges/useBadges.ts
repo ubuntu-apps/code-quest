@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useSyncExternalStore } from 'react'
-import type { LanguageBundle } from '../curriculum/types'
-import { loadStreakState } from '../curriculum/streak'
+import type { LanguageBundle } from '../curriculum/content/types'
+import { loadStreakState } from '../curriculum/progress/streak'
 import {
   badgeDefinitions,
   badgesSnapshot,

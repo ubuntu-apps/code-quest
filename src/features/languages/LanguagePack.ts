@@ -1,4 +1,4 @@
-import type { Challenge, LanguageBundle, Level } from '../curriculum/types'
+import type { Challenge, LanguageBundle, Level } from '../curriculum/content/types'
 import type { EditorLanguage } from './EditorLanguage'
 import { composeKeys, type CodeKey } from './keyBar'
 import { LanguageRules } from './LanguageRules'

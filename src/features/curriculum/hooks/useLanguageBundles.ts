@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react'
-import { lessonLoadErrorMessage, loadLanguageBundle } from '../loadCurriculum'
-import type { LanguageBundle, RootIndex } from '../types'
+import { lessonLoadErrorMessage, loadLanguageBundle } from '../content/loadCurriculum'
+import type { LanguageBundle, RootIndex } from '../content/types'
 
-export function useLanguageBundles(
-  rootIndex: RootIndex | null,
-  baseUrl: string,
-  syncBundle: (langId: string, bundle: LanguageBundle) => void,
-  getBundle?: (langId: string) => LanguageBundle | null,
-  /** Load only this course (the one being learned). Null loads every course. */
-  onlyLanguageId?: string | null,
-) {
+/** Loads the courses in the catalog: only `onlyLanguageId` (the one being learned), or all of them. */
+export function useLanguageBundles(rootIndex: RootIndex | null, baseUrl: string, onlyLanguageId?: string | null) {
   const [bundles, setBundles] = useState<Record<string, LanguageBundle>>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -26,18 +20,10 @@ export function useLanguageBundles(
           ? rootIndex.languages.filter((lang) => lang.id === onlyLanguageId)
           : rootIndex.languages
         const entries = await Promise.all(
-          languages.map(async (lang) => {
-            const b = await loadLanguageBundle(baseUrl, lang.path, {
-              fallbackBundle: getBundle?.(lang.id) ?? null,
-            })
-            return [lang.id, b] as const
-          }),
+          languages.map(async (lang) => [lang.id, await loadLanguageBundle(baseUrl, lang.path)] as const),
         )
-        if (!cancelled) {
-          // Keep courses loaded earlier in the session (e.g. before switching course).
-          setBundles((prev) => ({ ...prev, ...Object.fromEntries(entries) }))
-          for (const [langId, b] of entries) syncBundle(langId, b)
-        }
+        // Keep courses loaded earlier in the session (e.g. before switching course).
+        if (!cancelled) setBundles((prev) => ({ ...prev, ...Object.fromEntries(entries) }))
       } catch (e: unknown) {
         if (!cancelled) {
           setBundles({})
@@ -51,7 +37,7 @@ export function useLanguageBundles(
     return () => {
       cancelled = true
     }
-  }, [rootIndex, baseUrl, syncBundle, getBundle, onlyLanguageId])
+  }, [rootIndex, baseUrl, onlyLanguageId])
 
   return {
     bundles: rootIndex ? bundles : {},

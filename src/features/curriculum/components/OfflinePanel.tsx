@@ -39,7 +39,7 @@ function useOnline(): boolean {
   return online
 }
 
-/** About tab: download all lessons and code runners so CodeQuest works without internet. */
+/** Settings tab: download all lessons and code runners so CodeQuest works without internet. */
 export function OfflinePanel({ baseUrl, courses, activeCourseId }: OfflinePanelProps) {
   // Courses whose code runs in the browser, so their runtime can be downloaded.
   const runtimeCourses = courses.filter((c) => languagePack(c.id) !== null)

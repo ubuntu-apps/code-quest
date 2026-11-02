@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { CodeEditor } from '../codeEditor'
-import type { SandboxSnippet, SqlTable } from '../types'
+import type { SandboxSnippet, SqlTable } from '../content/types'
 import { CodeErrorPanel } from './CodeErrorPanel'
 import { SqlTablesNote } from './SqlTablesNote'
 import { sqlTableNames } from '../../languages/sql/sqlTables'

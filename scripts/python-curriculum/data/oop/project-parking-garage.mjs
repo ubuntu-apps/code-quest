@@ -86,11 +86,11 @@ export default makeProject("medium", {
     }),
   ],
   questions: [
-    mc("Why do `Motorbike` and `Car` only change `rate`?", ["They can't have methods", "The fee calculation is the same, so they inherit `fee` from `Vehicle`", "Rates are required", "To save memory"], 1),
-    mc("How does `Van` add its minimum charge?", ["It copies `Vehicle.fee`", "It changes `rate` to 10", "It overrides `fee` and builds on `super().fee(hours)`", "The garage checks for vans"], 2),
-    mc("Why doesn't `Garage.leave` need to know which kind of vehicle it has?", ["Each vehicle works out its own fee: it just calls `vehicle.fee(...)`", "All vehicles pay the same", "It checks `type()`", "It doesn't charge vans"], 0),
-    mc("What does `math.ceil(2.25)` give?", ["`2`", "`2.25`", "`2.5`", "`3`"], 3),
-    mc("What does this print?\n\n```\nclass Vehicle:\n    rate = 1.0\n    def fee(self, hours):\n        return self.rate * hours\n\nclass Car(Vehicle):\n    rate = 2.5\n\nprint(Car().fee(2))\n```", ["`2.0`", "`5.0`", "`2.5`", "An `AttributeError`"], 1),
-    mc("What is the garage holding vehicles an example of?", ["Inheritance", "Composition", "A data class", "Duck typing only"], 1),
+    mc("Why do `Motorbike` and `Car` only change `rate`?", ["They can't have methods", "The fee calculation is the same, so they inherit `fee` from `Vehicle`", "Rates are required", "To save memory"], 1, "Subclasses inherit `fee`, so only the rate differs."),
+    mc("How does `Van` add its minimum charge?", ["It copies `Vehicle.fee`", "It changes `rate` to 10", "It overrides `fee` and builds on `super().fee(hours)`", "The garage checks for vans"], 2, "The override reuses the parent's calculation, then applies the minimum."),
+    mc("Why doesn't `Garage.leave` need to know which kind of vehicle it has?", ["Each vehicle works out its own fee: it just calls `vehicle.fee(...)`", "All vehicles pay the same", "It checks `type()`", "It doesn't charge vans"], 0, "Polymorphism: `leave` calls `fee`, and each vehicle answers for itself."),
+    mc("What does `math.ceil(2.25)` give?", ["`2`", "`2.25`", "`2.5`", "`3`"], 3, "`ceil` rounds up to the next whole number."),
+    mc("What does this print?\n\n```\nclass Vehicle:\n    rate = 1.0\n    def fee(self, hours):\n        return self.rate * hours\n\nclass Car(Vehicle):\n    rate = 2.5\n\nprint(Car().fee(2))\n```", ["`2.0`", "`5.0`", "`2.5`", "An `AttributeError`"], 1, "`Car` inherits `fee`, and `self.rate` finds the car's own `rate` first, so the fee is 2.5 * 2."),
+    mc("What is the garage holding vehicles an example of?", ["Inheritance", "Composition", "A data class", "Duck typing only"], 1, "The garage holds vehicles but isn't one, so this is composition."),
   ],
 })

@@ -34,8 +34,8 @@ export function parseAppPath(pathname: string): ParsedLearnPath {
       step: 'intro',
     }
   }
-  if (path === '/about') {
-    return { tab: 'about', langId: null, sectionId: null, levelId: null, step: 'intro' }
+  if (path === '/about' || path === '/settings') {
+    return { tab: path === '/about' ? 'about' : 'settings', langId: null, sectionId: null, levelId: null, step: 'intro' }
   }
 
   if (path === '/' || path === '/learn') {
@@ -88,10 +88,6 @@ export function learnLevelPath(
 export function tabPath(tab: TabId, langId?: string | null): string {
   if (tab === 'learn') return langId ? learnLanguagePath(langId) : learnHomePath()
   return `/${tab}`
-}
-
-export function authCallbackPath(): string {
-  return '/auth/callback'
 }
 
 /**

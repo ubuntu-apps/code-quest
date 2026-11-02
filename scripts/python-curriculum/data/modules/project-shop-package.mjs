@@ -86,11 +86,11 @@ export default makeProject("hard", {
     }),
   ],
   questions: [
-    mc("What makes `shop` a regular package?", ["Its name", "The `__init__.py` file in the folder", "The `main.py` file", "Being imported"], 1),
-    mc("Why do the modules use absolute imports like `from shop.prices import price_of`?", ["They are shorter", "Relative imports are not allowed", "They work both when imported and when a file is run directly", "They are faster"], 2),
-    mc("Which module should import nothing from the rest of the shop?", ["`prices`", "`cart`", "`receipt`", "`main`"], 0),
-    mc("Why does `add` call `price_of(item)` before changing the cart?", ["To print the price", "To round the total", "To make the cart a dict", "So an unknown item raises an error and the cart stays unchanged"], 3),
-    mc("Which file brings the package's most useful names together?", ["`main.py`", "`prices.py`", "`shop.py`", "`__init__.py`"], 3),
-    mc("`main.py` ends with a bare `main()` call and no guard. What happens when a test runs `import main`?", ["Nothing until the test calls `main()`", "An `ImportError`", "A shopping session starts during the import", "Python skips the call"], 2),
+    mc("What makes `shop` a regular package?", ["Its name", "The `__init__.py` file in the folder", "The `main.py` file", "Being imported"], 1, "A folder with `__init__.py` is a regular package."),
+    mc("Why do the modules use absolute imports like `from shop.prices import price_of`?", ["They are shorter", "Relative imports are not allowed", "They work both when imported and when a file is run directly", "They are faster"], 2, "Absolute imports work however the program is started."),
+    mc("Which module should import nothing from the rest of the shop?", ["`prices`", "`cart`", "`receipt`", "`main`"], 0, "`prices` is the base module that others build on, so it depends on none of them."),
+    mc("Why does `add` call `price_of(item)` before changing the cart?", ["To print the price", "To round the total", "To make the cart a dict", "So an unknown item raises an error and the cart stays unchanged"], 3, "Checking the price first means a bad item fails before the cart changes."),
+    mc("Which file brings the package's most useful names together?", ["`main.py`", "`prices.py`", "`shop.py`", "`__init__.py`"], 3, "`__init__.py` can re-export key names, so users can import them from `shop` directly."),
+    mc("`main.py` ends with a bare `main()` call and no guard. What happens when a test runs `import main`?", ["Nothing until the test calls `main()`", "An `ImportError`", "A shopping session starts during the import", "Python skips the call"], 2, "Importing runs the whole file, so a bare `main()` starts the program. The guard runs it only when the file is the program."),
   ],
 })

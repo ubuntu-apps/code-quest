@@ -1,7 +1,7 @@
 import { EditorState, type Extension } from '@codemirror/state'
 import { indentUnit } from '@codemirror/language'
 import { autocompletion, type Completion, type CompletionResult, type CompletionSource } from '@codemirror/autocomplete'
-import type { SqlTable } from '../curriculum/types'
+import type { SqlTable } from '../curriculum/content/types'
 import { Highlighter } from './Highlighter'
 import type { LanguageSpec } from './languageSpec'
 import { patternHighlighting } from './patternHighlighting'
