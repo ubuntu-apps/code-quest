@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { isValidationMode } from './validationModes'
 import type {
   ValidationMode,
-  LanguageBundle,
   LanguageIndex,
   RootIndex,
   SectionFile,
@@ -176,35 +175,4 @@ export function parseLanguageIndex(data: unknown, source: string): LanguageIndex
 
 export function parseSectionFile(data: unknown, source: string): SectionFile {
   return parseWithSchema(sectionFileSchema, data, source)
-}
-
-export function parseLanguageBundle(data: unknown, source: string): LanguageBundle {
-  return parseWithSchema(languageBundleSchema, data, source)
-}
-
-export function safeParseRootIndex(data: unknown, source: string): RootIndex | null {
-  const result = rootIndexSchema.safeParse(data)
-  if (!result.success) {
-    console.warn(formatZodIssues(source, result.error))
-    return null
-  }
-  return result.data
-}
-
-export function safeParseLanguageBundle(data: unknown, source: string): LanguageBundle | null {
-  const result = languageBundleSchema.safeParse(data)
-  if (!result.success) {
-    console.warn(formatZodIssues(source, result.error))
-    return null
-  }
-  return result.data
-}
-
-export function safeParseHomeLead(data: unknown, source: string): string | null {
-  const result = z.string().safeParse(data)
-  if (!result.success) {
-    console.warn(formatZodIssues(source, result.error))
-    return null
-  }
-  return result.data
 }

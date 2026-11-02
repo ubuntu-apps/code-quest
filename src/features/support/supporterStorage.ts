@@ -3,14 +3,9 @@ import { useStore } from '../../lib/localStore'
 import { SUPPORT_CONFIG } from './supportConfig'
 
 /**
- * Supporter status is kept on this device only (there are no accounts). It travels
- * with a progress backup, so it moves to a new device with the learner's progress.
+ * Whether this device has a supporter code; updates when one is redeemed. Supporter status
+ * is kept on this device only (there are no accounts) and travels with a progress backup.
  */
-export function isSupporter(): boolean {
-  return STORES.supporter.get() !== ''
-}
-
-/** Whether this device has a supporter code; updates when one is redeemed. */
 export function useIsSupporter(): boolean {
   return useStore(STORES.supporter) !== ''
 }

@@ -17,7 +17,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, Info, Settings, Share2 } from 'lucide-react'
 import type { Level } from './content/types'
 import { useAdminMode } from './adminMode'
-import { loadProgress, notifyProgressChanged } from './progress/progressStorage'
+import { loadProgress } from './progress/progressStorage'
 import { hasTestedOut } from './progress/testOut'
 import { languagePack } from '../languages'
 import { preloadCodeEditor } from './codeEditor'
@@ -138,7 +138,6 @@ export function CodeQuestScreen() {
 
   const recordActivity = useCallback(() => {
     recordDailyActivity()
-    notifyProgressChanged()
   }, [])
   const { xpToast, showXp } = useXpToast(totalXp)
   const { badgeToast, showBadges } = useBadgeToast()

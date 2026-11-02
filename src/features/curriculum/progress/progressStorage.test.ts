@@ -1,4 +1,5 @@
 import { STORES } from '../../../lib/stores'
+import { notifyStorageChanged } from '../../../lib/localStore'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   getProgressSnapshot,
@@ -54,6 +55,19 @@ describe('progressStorage', () => {
     unsubscribe()
     saveProgress('python', 'x', { challengesCompleted: ['a'], testPassed: false })
     expect(listener).toHaveBeenCalledTimes(1)
+  })
+
+  it('notifies subscribers when the streak changes or a backup is restored', () => {
+    const listener = vi.fn()
+    const unsubscribe = subscribeProgress(listener)
+    STORES.streak.set(JSON.stringify({ lastDay: '2026-11-01', count: 1 }))
+    expect(listener).toHaveBeenCalledTimes(1)
+    notifyStorageChanged('*')
+    expect(listener).toHaveBeenCalledTimes(2)
+    // Device settings aren't progress.
+    STORES.sound.set(false)
+    expect(listener).toHaveBeenCalledTimes(2)
+    unsubscribe()
   })
 })
 

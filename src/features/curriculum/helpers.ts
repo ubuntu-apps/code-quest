@@ -61,10 +61,6 @@ export function getSectionProgressStatus(
   return 'in_progress'
 }
 
-export function computeSectionXp(languageId: string, levels: Level[]): number {
-  return levels.reduce((sum, level) => sum + computeLevelXp(languageId, level), 0)
-}
-
 export function isProjectLevel(level: Level): boolean {
   return level.kind === 'project'
 }

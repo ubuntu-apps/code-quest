@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { LanguageBundle, RootIndex } from '../content/types'
 import { lessonLoadErrorMessage, loadLanguageBundle, loadRootIndex } from '../content/loadCurriculum'
-import { notifyProgressChanged } from '../progress/progressStorage'
 import { reconcileLanguageProgress } from '../progress/progressFingerprint'
 import { languagePack } from '../../languages'
 import { useLanguageBundles } from './useLanguageBundles'
@@ -44,7 +43,7 @@ export function useCurriculum({
       ? activeLanguageId
       : null
 
-  const { bundles: languageBundles } = useLanguageBundles(rootIndex, baseUrl, activeOpenableId)
+  const languageBundles = useLanguageBundles(rootIndex, baseUrl, activeOpenableId)
 
   useEffect(() => {
     loadRootIndex(baseUrl)
@@ -82,7 +81,10 @@ export function useCurriculum({
     }
   }, [languageId, rootIndex, loadedLanguageId, fetchCourse, showCourse])
 
-  const bundleForView = (languageId ? languageBundles[languageId] : undefined) ?? bundle
+  // The course in the address, once loaded; another course loaded earlier never stands in for it.
+  const bundleForView = languageId
+    ? (languageBundles[languageId] ?? (loadedLanguageId === languageId ? bundle : null))
+    : bundle
 
   // Drop saved challenge progress that belongs to an older version of a lesson (see
   // progressFingerprint.ts). Runs again after progress changes, e.g. a restored backup.
@@ -90,11 +92,8 @@ export function useCurriculum({
     void progressVersion
     const loaded: Record<string, LanguageBundle> = { ...languageBundles }
     if (bundle && loadedLanguageId) loaded[loadedLanguageId] = bundle
-    let dropped = false
-    for (const [langId, b] of Object.entries(loaded)) {
-      if (reconcileLanguageProgress(langId, b)) dropped = true
-    }
-    if (dropped) notifyProgressChanged()
+    // Each change it saves tells progress-driven views (and runs this again, finding nothing).
+    for (const [langId, b] of Object.entries(loaded)) reconcileLanguageProgress(langId, b)
   }, [languageBundles, bundle, loadedLanguageId, progressVersion])
 
   /** Opens a course's page and loads it, if it isn't loaded already. */

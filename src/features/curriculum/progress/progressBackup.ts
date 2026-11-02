@@ -1,6 +1,5 @@
 import { notifyStorageChanged } from '../../../lib/localStore'
 import { BACKUP_STORES, STORES } from '../../../lib/stores'
-import { notifyProgressChanged } from './progressStorage'
 
 /** Learner data only (the stores marked `backup` in lib/stores.ts), never this device's settings. */
 export function isBackupKey(key: string): boolean {
@@ -100,7 +99,6 @@ export function restoreProgressBackup(backup: ProgressBackup, storage: BackupSto
     if (!keptOnRestore(key)) storage.removeItem(key)
   }
   for (const [key, value] of Object.entries(backup.entries)) storage.setItem(key, value)
-  notifyProgressChanged()
   // Every open screen reads its saved data again.
   notifyStorageChanged('*')
   return countLevels(backup.entries)

@@ -52,13 +52,12 @@ export function loadProgress(languageId: string, levelId: string): LevelProgress
 export function saveProgress(languageId: string, levelId: string, p: LevelProgress): void {
   STORES.progress.set(progressId(languageId, levelId), JSON.stringify(p))
   requestPersistentStorageOnce()
-  notifyProgressChanged()
 }
 
 /**
  * Saves a challenge's draft answer while the learner types. Drafts don't change
- * progress, XP or unlocking, so this skips notifying listeners (which would make
- * every progress-driven view recompute on each keystroke).
+ * progress, XP or unlocking, so the write is quiet: progress-driven views don't
+ * recompute on each keystroke (the backup file picks drafts up on its next check).
  */
 export function saveChallengeDraft(languageId: string, levelId: string, challengeId: string, answer: string): void {
   const prev = loadProgress(languageId, levelId)
@@ -67,23 +66,40 @@ export function saveChallengeDraft(languageId: string, levelId: string, challeng
     challengeAnswers: { ...(prev.challengeAnswers ?? {}), [challengeId]: answer },
   }
   // Storage full or unavailable: the draft stays in memory for this session.
-  STORES.progress.set(progressId(languageId, levelId), JSON.stringify(next))
+  STORES.progress.set(progressId(languageId, levelId), JSON.stringify(next), { quiet: true })
 }
+
+/**
+ * What progress-driven views (XP, unlocking, badges, Continue) are drawn from: lessons'
+ * progress, skipped-ahead quests and the streak. A change to any of them, here, in another
+ * tab or from a restored backup, moves the version on.
+ */
+const PROGRESS_STORES = [STORES.progress, STORES.testOut, STORES.streak]
 
 let progressVersion = 0
 const progressListeners = new Set<() => void>()
+let stopWatching: (() => void) | null = null
+
+function onProgressChanged(): void {
+  progressVersion += 1
+  for (const listener of progressListeners) listener()
+}
 
 export function subscribeProgress(listener: () => void): () => void {
   progressListeners.add(listener)
-  return () => progressListeners.delete(listener)
+  if (!stopWatching) {
+    const stops = PROGRESS_STORES.map((store) => store.subscribe(onProgressChanged))
+    stopWatching = () => stops.forEach((stop) => stop())
+  }
+  return () => {
+    progressListeners.delete(listener)
+    if (progressListeners.size === 0 && stopWatching) {
+      stopWatching()
+      stopWatching = null
+    }
+  }
 }
 
 export function getProgressSnapshot(): number {
   return progressVersion
-}
-
-/** Tells progress-driven views to re-read storage (e.g. after a backup is restored). */
-export function notifyProgressChanged(): void {
-  progressVersion += 1
-  for (const listener of progressListeners) listener()
 }

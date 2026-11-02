@@ -132,6 +132,11 @@ interface StoreOptions<T> {
   keepOnRestore?: boolean
 }
 
+interface WriteOptions {
+  /** Don't tell open screens (they'd redraw on every keystroke). */
+  quiet?: boolean
+}
+
 /** What both kinds of store share. */
 abstract class StoreBase<T> {
   readonly codec: Codec<T>
@@ -140,8 +145,12 @@ abstract class StoreBase<T> {
   readonly keepOnRestore: boolean
   /** The last string read for each key, and what it decoded to, so reads stay the same object. */
   private readonly cache = new Map<string, { raw: string | null; value: T }>()
-  /** Values storage refused to save: they last until the page closes. */
-  private readonly unsaved = new Map<string, T>()
+  /**
+   * Values storage refused to save, with what storage held then. They last until the page
+   * closes, or until storage holds something else (a restored backup, another tab): then
+   * storage wins.
+   */
+  private readonly unsaved = new Map<string, { value: T; storedThen: string | null }>()
 
   constructor({ codec, fallback, backup = false, keepOnRestore = false }: StoreOptions<T>) {
     this.codec = codec
@@ -153,9 +162,23 @@ abstract class StoreBase<T> {
   /** Whether this store saves `key`. */
   abstract owns(key: string): boolean
 
+  /** The value kept in memory for `key`, while storage still holds what it did when the write failed. */
+  private unsavedFor(key: string, raw: string | null): { value: T } | null {
+    const entry = this.unsaved.get(key)
+    if (!entry) return null
+    if (entry.storedThen === raw) return entry
+    this.unsaved.delete(key)
+    return null
+  }
+
+  protected hasUnsaved(key: string): boolean {
+    return this.unsavedFor(key, readRaw(key)) !== null
+  }
+
   protected readKey(key: string): T {
-    if (this.unsaved.has(key)) return this.unsaved.get(key) as T
     const raw = readRaw(key)
+    const unsaved = this.unsavedFor(key, raw)
+    if (unsaved) return unsaved.value
     const cached = this.cache.get(key)
     if (cached && cached.raw === raw) return cached.value
     const value = raw === null ? this.fallback : this.codec.decode(raw)
@@ -163,15 +186,19 @@ abstract class StoreBase<T> {
     return value
   }
 
-  /** Saves a value (the fallback, or an empty encoding, removes the entry) and tells open screens. */
-  protected writeKey(key: string, value: T): boolean {
+  /**
+   * Saves a value (the fallback, or an empty encoding, removes the entry) and tells open
+   * screens, unless `quiet` (a draft saved on every keystroke).
+   */
+  protected writeKey(key: string, value: T, { quiet = false }: WriteOptions = {}): boolean {
     const encoded = this.codec.encode(value)
+    const storedThen = readRaw(key)
     let ok = true
     if (value === this.fallback || encoded === '') removeRaw(key)
     else ok = writeRaw(key, encoded)
     if (ok) this.unsaved.delete(key)
-    else this.unsaved.set(key, value)
-    notifyStorageChanged(key)
+    else this.unsaved.set(key, { value, storedThen })
+    if (!quiet) notifyStorageChanged(key)
     return ok
   }
 
@@ -201,8 +228,8 @@ export class LocalStore<T> extends StoreBase<T> {
   get = (): T => this.readKey(this.key)
 
   /** Saves the value; false if storage refused it. */
-  set(value: T): boolean {
-    return this.writeKey(this.key, value)
+  set(value: T, options?: WriteOptions): boolean {
+    return this.writeKey(this.key, value, options)
   }
 
   update(change: (previous: T) => T): boolean {
@@ -235,12 +262,13 @@ export class LocalStoreFamily<T> extends StoreBase<T> {
     return this.readKey(this.keyFor(id))
   }
 
+  /** Whether a value is saved for `id` (in storage, or kept in memory when storage refused it). */
   has(id: string): boolean {
-    return readRaw(this.keyFor(id)) !== null
+    return this.hasUnsaved(this.keyFor(id)) || readRaw(this.keyFor(id)) !== null
   }
 
-  set(id: string, value: T): boolean {
-    return this.writeKey(this.keyFor(id), value)
+  set(id: string, value: T, options?: WriteOptions): boolean {
+    return this.writeKey(this.keyFor(id), value, options)
   }
 
   update(id: string, change: (previous: T) => T): boolean {

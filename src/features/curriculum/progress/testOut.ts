@@ -1,5 +1,4 @@
 import { STORES } from '../../../lib/stores'
-import { notifyProgressChanged } from './progressStorage'
 import type { Level, TestQuestion } from '../content/types'
 
 /**
@@ -20,7 +19,6 @@ export function hasTestedOut(languageId: string, sectionId: string): boolean {
 
 export function markTestedOut(languageId: string, sectionId: string, now = new Date()): void {
   STORES.testOut.set(`${languageId}:${sectionId}`, JSON.stringify({ passedAt: now.toISOString() }))
-  notifyProgressChanged()
 }
 
 /** A random pick of `count` items, in a random order. */

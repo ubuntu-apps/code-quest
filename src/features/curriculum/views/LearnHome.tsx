@@ -28,11 +28,11 @@ interface LearnHomeProps {
   badges?: ReactNode
   /** The app's address, for the reminder's link. */
   appUrl: string
-  /** Edit and admin mode can open courses marked "coming soon". */
+  /** Admin mode can open courses marked "coming soon". */
   canOpenComingSoon: boolean
   onContinue: () => void
   onOpenLanguage: (path: string, id: string) => void
-  /** The course Home shows progress for (null: none picked yet, or edit mode). */
+  /** The course Home shows progress for (null: none picked yet). */
   activeCourseId?: string | null
   /** Makes another course the one Home shows, without leaving Home. */
   onSelectCourse?: (id: string) => void
@@ -68,7 +68,7 @@ export function LearnHome({
           : 'Done for today. See you tomorrow!'
 
   // The course Home shows progress for. Picked: a switcher next to the title. Not picked
-  // yet (a new learner) or editing: the full course cards, first thing on the page.
+  // yet (a new learner): the full course cards, first thing on the page.
   const activeCourse = activeCourseId
     ? (displayRootIndex.languages.find((lang) => lang.id === activeCourseId) ?? null)
     : null

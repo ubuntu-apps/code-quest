@@ -37,6 +37,27 @@ describe('LocalStore', () => {
     expect(store.get()).toBe('kept')
   })
 
+  it('lets storage win over a value kept for the session once storage changes (a restore, another tab)', () => {
+    const store = new LocalStore('test:full', { codec: text, fallback: '' })
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError')
+    })
+    store.set('kept')
+    setItem.mockRestore()
+    localStorage.setItem('test:full', 'restored')
+    expect(store.get()).toBe('restored')
+  })
+
+  it('saves quietly when asked, without telling subscribers', () => {
+    const store = new LocalStore('test:draft', { codec: text, fallback: '' })
+    const listener = vi.fn()
+    const unsubscribe = store.subscribe(listener)
+    store.set('typing', { quiet: true })
+    expect(store.get()).toBe('typing')
+    expect(listener).not.toHaveBeenCalled()
+    unsubscribe()
+  })
+
   it('tells subscribers when it changes, and not when another key does', () => {
     const store = new LocalStore('test:a', { codec: text, fallback: '' })
     const other = new LocalStore('test:b', { codec: text, fallback: '' })
@@ -79,5 +100,14 @@ describe('the stores', () => {
   it('use different keys and prefixes', () => {
     const names = Object.values(STORES).map((store) => ('key' in store ? store.key : store.prefix))
     expect(new Set(names).size).toBe(names.length)
+  })
+
+  it('never own another store\'s entries (no key starts with another store\'s prefix)', () => {
+    const stores = Object.values(STORES)
+    for (const store of stores) {
+      const name = 'key' in store ? store.key : store.prefix
+      const owners = stores.filter((other) => other.owns(name + ('prefix' in store ? 'x' : '')))
+      expect(owners).toEqual([store])
+    }
   })
 })

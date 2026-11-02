@@ -139,8 +139,3 @@ export function pickReview(
 
   return available.filter((c) => picked.has(c.question.id)).map((c) => c.question.id)
 }
-
-/** How many questions are due today (or overdue). */
-export function dueCount(pool: ReviewCandidate[], today: string): number {
-  return pool.filter((c) => c.item.due <= today).length
-}

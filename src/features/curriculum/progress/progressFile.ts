@@ -8,8 +8,7 @@
 
 import { countLevels, createProgressBackup, parseProgressBackup, restoreProgressBackup } from './progressBackup'
 import type { ProgressBackup } from './progressBackup'
-import { subscribeProgress } from './progressStorage'
-import { STORES } from '../../../lib/stores'
+import { BACKUP_STORES } from '../../../lib/stores'
 
 /** The permission methods Chrome and Edge add to file handles (not yet in TypeScript's DOM types). */
 interface PermissionedHandle extends FileSystemFileHandle {
@@ -164,9 +163,10 @@ function scheduleSave(): void {
 function startWatching(): void {
   if (started) return
   started = true
-  subscribeProgress(scheduleSave)
-  STORES.review.subscribe(scheduleSave)
-  // Catches anything saved without a change notice (streak, certificates).
+  // Everything that goes in a backup tells this when it changes, here or in another tab.
+  for (const store of BACKUP_STORES) store.subscribe(scheduleSave)
+  // Drafts are saved quietly while the learner types; this picks them up, and retries
+  // after a write that failed.
   window.setInterval(() => void writeFile(), CHECK_EVERY_MS)
   // Save straight away when the learner switches away or closes the tab.
   document.addEventListener('visibilitychange', () => {

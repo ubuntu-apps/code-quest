@@ -1,6 +1,6 @@
 import type { LanguageBundle, Level } from '../content/types'
 import { STORES } from '../../../lib/stores'
-import { loadProgress, notifyProgressChanged, progressId, type LevelProgress } from './progressStorage'
+import { loadProgress, progressId, type LevelProgress } from './progressStorage'
 import type { ReviewState } from '../../review/reviewStorage'
 
 /**
@@ -124,6 +124,5 @@ export function migrateRenamedLevels(languageId: string, bundle: LanguageBundle)
   if (renames.size === 0) return false
   moveReviewIds(languageId, renames)
   moveLastLevel(languageId, renames, sectionOf)
-  if (moved) notifyProgressChanged()
   return moved
 }
