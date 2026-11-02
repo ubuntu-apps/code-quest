@@ -36,7 +36,7 @@ jobs:
       - name: Lint, test, and build
         run: npm run check
 
-      # Runs every Python challenge's solution, starter and empty code (see scripts/check-curriculum.mjs).
+      # Runs every Python challenge's solution, starter and empty code (see scripts/content-check/).
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -48,7 +48,7 @@ jobs:
           pip install "pandas==2.2.*"
           npm run check:content
 
-      # Runs every R challenge's solution, starter and typed-in answer in webR (see scripts/r-curriculum/check-core.mjs).
+      # Runs every R challenge's solution, starter and typed-in answer in webR (see scripts/content-check/RChecker.mjs).
       # webR isn't an app dependency (the app loads it from a CDN), so it is installed here, at the version in src/runtimeVersions.ts.
       - name: Check R lesson content
         run: |
