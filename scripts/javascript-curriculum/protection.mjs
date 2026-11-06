@@ -50,7 +50,10 @@ export class JavaScriptProtection extends TypedInProtection {
   protect({ alt, typedOk, ...challenge }) {
     const { starterCode: starter, solution, validation } = challenge
     if (typedOk || !starter) return challenge
-    const other = typeof alt === 'function' ? alt(starter) : (alt ?? otherData(starter))
+    const given = typeof alt === 'function' ? alt(starter) : alt
+    // A challenge's own other data keeps the starter's line ending, so the lines after it stay apart.
+    const ending = /\s*$/.exec(starter)[0]
+    const other = given === undefined ? otherData(starter) : given.replace(/\s*$/, '') + ending
     const assertions = validation.tests.map((t) => t.assertion)
     const vars = checkedVars(solution, assertions)
     const output = assertions.some((a) => /_cq_(prints|output|lines)/.test(a))

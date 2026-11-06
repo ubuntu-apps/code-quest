@@ -2057,6 +2057,3230 @@
           }
         ]
       }
+    },
+    {
+      "id": "math",
+      "title": "Math: rounding and more",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "three_roundings",
+          "label": "Three roundings",
+          "code": "const x = 7.5\nconsole.log(Math.round(x), Math.floor(x), Math.ceil(x), Math.trunc(x))"
+        },
+        {
+          "id": "largest_and_smallest",
+          "label": "Largest and smallest",
+          "code": "console.log(Math.max(12, 48, 7), Math.min(12, 48, 7))"
+        },
+        {
+          "id": "two_decimals",
+          "label": "Two decimals",
+          "code": "const total = 10 / 3\nconsole.log(total)\nconsole.log(total.toFixed(2))\nconsole.log(Math.round(total * 100) / 100)"
+        },
+        {
+          "id": "a_circle",
+          "label": "A circle",
+          "code": "const r = 3\nconsole.log(Math.PI * r ** 2)"
+        }
+      ],
+      "intro": {
+        "title": "Math: rounding and more",
+        "bodyMarkdown": "`Math` is a built-in toolbox of maths functions. You use each one as `Math.` and its name, with the number in brackets.\n\n```\nconsole.log(Math.round(4.6), Math.floor(4.6), Math.ceil(4.2))\nconsole.log(Math.max(3, 9, 5), Math.min(3, 9, 5))\nconsole.log(Math.abs(-7), Math.sqrt(81))\n```\n\nThere are three ways to round to a whole number. `Math.round` goes to the nearest (`4.5` becomes `5`), `Math.floor` always goes down, and `Math.ceil` always goes up. `Math.trunc` simply cuts off the decimals.\n\n`Math.max` and `Math.min` take any number of values and give the largest or smallest. `Math.abs` gives the distance from zero, so it turns `-7` into `7`. `Math.sqrt` is the square root, and `Math.PI` is π.\n\nTo round to 2 decimal places for showing, use a number's `toFixed(2)`: `(4.567).toFixed(2)` gives `\"4.57\"`. It gives **text**, which is right for showing a price but not for more maths.\n\n```\nconst price = 19.999\nconsole.log(price.toFixed(2))\nconsole.log((0.1 + 0.2).toFixed(2))\n```\n\nTo round and keep a number, scale up, round and scale back: `Math.round(price * 100) / 100`.\n\n`Math.random()` gives a different decimal between 0 and 1 each time, which games use for dice and shuffling. Because its answer changes, the challenges here don't use it.",
+        "sandboxCode": "console.log(Math.round(4.6), Math.floor(4.6), Math.ceil(4.2))\nconsole.log(Math.max(3, 9, 5), Math.min(3, 9, 5))\nconsole.log(Math.abs(-7), Math.sqrt(81))\nconsole.log((19.999).toFixed(2))",
+        "readMore": {
+          "label": "MDN: Math",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "math-round-to-the-nearest",
+          "title": "Easy: Round to the nearest",
+          "promptMarkdown": "Set `rounded` to `score` rounded to the nearest whole number.",
+          "starterCode": "const score = 8.6\n",
+          "hint": "`Math.round(score)`.",
+          "solution": "const score = 8.6\nconst rounded = Math.round(score)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "rounded is 9",
+                "assertion": "Object.is(rounded, 9)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Math.round",
+                "assertion": "_cq_code.includes(\"Math.round\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const score = 8.6\\n\", \"const score = 8.7\\n\", \"const score = 8.6\\nconst rounded = Math.round(score)\", [\"rounded\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-the-biggest",
+          "title": "Easy: The biggest",
+          "promptMarkdown": "Set `best` to the largest of the three scores.",
+          "starterCode": "const a = 42\nconst b = 87\nconst c = 65\n",
+          "hint": "`Math.max(a, b, c)`.",
+          "solution": "const a = 42\nconst b = 87\nconst c = 65\nconst best = Math.max(a, b, c)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "best is 87",
+                "assertion": "Object.is(best, 87)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Math.max",
+                "assertion": "_cq_code.includes(\"Math.max\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const a = 42\\nconst b = 87\\nconst c = 65\\n\", \"const a = 43\\nconst b = 89\\nconst c = 68\\n\", \"const a = 42\\nconst b = 87\\nconst c = 65\\nconst best = Math.max(a, b, c)\", [\"best\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-how-far-apart",
+          "title": "Easy: How far apart",
+          "promptMarkdown": "Set `gap` to the distance between `x` and `y`, always positive: `Math.abs(x - y)`.",
+          "starterCode": "const x = 3\nconst y = 11\n",
+          "hint": "`x - y` is `-8`; `Math.abs` makes it `8`.",
+          "solution": "const x = 3\nconst y = 11\nconst gap = Math.abs(x - y)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "gap is 8",
+                "assertion": "Object.is(gap, 8)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Math.abs",
+                "assertion": "_cq_code.includes(\"Math.abs\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const x = 3\\nconst y = 11\\n\", \"const x = 4\\nconst y = 13\\n\", \"const x = 3\\nconst y = 11\\nconst gap = Math.abs(x - y)\", [\"gap\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-boxes-needed",
+          "title": "Medium: Boxes needed",
+          "promptMarkdown": "Each box holds 6 eggs. Set `boxes` to how many boxes 26 eggs need (a part-full box still counts).",
+          "starterCode": "const eggs = 26\nconst perBox = 6\n",
+          "hint": "Divide and always round up: `Math.ceil(eggs / perBox)`.",
+          "solution": "const eggs = 26\nconst perBox = 6\nconst boxes = Math.ceil(eggs / perBox)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "boxes is 5",
+                "assertion": "Object.is(boxes, 5)"
+              },
+              {
+                "id": "t2",
+                "label": "Rounds up",
+                "assertion": "_cq_code.includes(\"Math.ceil\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const eggs = 26\\nconst perBox = 6\\n\", \"const eggs = 27\\nconst perBox = 8\\n\", \"const eggs = 26\\nconst perBox = 6\\nconst boxes = Math.ceil(eggs / perBox)\", [\"boxes\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-full-teams",
+          "title": "Medium: Full teams",
+          "promptMarkdown": "`players` people form teams of 5. Set `teams` to the number of full teams.",
+          "starterCode": "const players = 23\n",
+          "hint": "Divide and round down: `Math.floor(players / 5)`.",
+          "solution": "const players = 23\nconst teams = Math.floor(players / 5)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "teams is 4",
+                "assertion": "Object.is(teams, 4)"
+              },
+              {
+                "id": "t2",
+                "label": "Rounds down",
+                "assertion": "_cq_code.includes(\"Math.floor\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const players = 23\\n\", \"const players = 24\\n\", \"const players = 23\\nconst teams = Math.floor(players / 5)\", [\"teams\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-show-a-price",
+          "title": "Medium: Show a price",
+          "promptMarkdown": "Show `price` with exactly 2 decimal places: `3.50`.",
+          "starterCode": "const price = 3.5\n",
+          "hint": "`price.toFixed(2)` gives the text `\"3.50\"`.",
+          "solution": "const price = 3.5\nconsole.log(price.toFixed(2))",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 3.50",
+                "assertion": "_cq_prints(\"3.50\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses toFixed",
+                "assertion": "_cq_code.includes(\"toFixed(2)\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const price = 3.5\\n\", \"const price = 3.6\\n\", \"const price = 3.5\\nconsole.log(price.toFixed(2))\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-round-and-keep-a-number",
+          "title": "Hard: Round and keep a number",
+          "promptMarkdown": "Set `share` to the bill divided by 3, rounded to 2 decimal places, as a number (not text).",
+          "starterCode": "const bill = 100\n",
+          "hint": "Scale up, round, scale back: `Math.round(bill / 3 * 100) / 100`.",
+          "solution": "const bill = 100\nconst share = Math.round(bill / 3 * 100) / 100",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "share is the number 33.33",
+                "assertion": "typeof share === 'number' && Math.abs(share - 33.33) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Math.round",
+                "assertion": "_cq_code.includes(\"Math.round\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const bill = 100\\n\", \"const bill = 101\\n\", \"const bill = 100\\nconst share = Math.round(bill / 3 * 100) / 100\", [\"share\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-the-longest-side",
+          "title": "Hard: The longest side",
+          "promptMarkdown": "A right-angled triangle has short sides `a` and `b`. Set `c`, the long side, to the square root of `a ** 2 + b ** 2`.",
+          "starterCode": "const a = 6\nconst b = 8\n",
+          "hint": "`Math.sqrt(a ** 2 + b ** 2)`.",
+          "solution": "const a = 6\nconst b = 8\nconst c = Math.sqrt(a ** 2 + b ** 2)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "c is 10",
+                "assertion": "typeof c === 'number' && Math.abs(c - 10) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Math.sqrt",
+                "assertion": "_cq_code.includes(\"Math.sqrt\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const a = 6\\nconst b = 8\\n\", \"const a = 7\\nconst b = 10\\n\", \"const a = 6\\nconst b = 8\\nconst c = Math.sqrt(a ** 2 + b ** 2)\", [\"c\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-area-of-a-circle",
+          "title": "Expert: Area of a circle",
+          "promptMarkdown": "Show the area of a circle of radius `r` (π times r squared), rounded to 1 decimal place: `Area: 50.3`.",
+          "starterCode": "const r = 4\n",
+          "hint": "`(Math.PI * r ** 2).toFixed(1)`, shown after the text `\"Area:\"`.",
+          "solution": "const r = 4\nconsole.log(\"Area:\", (Math.PI * r ** 2).toFixed(1))",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Area: 50.3",
+                "assertion": "_cq_prints(\"Area: 50.3\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Math.PI",
+                "assertion": "_cq_code.includes(\"Math.PI\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works it out",
+                "assertion": "!_cq_code.includes(\"50.3\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const r = 4\\n\", \"const r = 5\\n\", \"const r = 4\\nconsole.log(\\\"Area:\\\", (Math.PI * r ** 2).toFixed(1))\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "math-keep-it-in-range",
+          "title": "Expert: Keep it in range",
+          "promptMarkdown": "A volume must stay between 0 and 10. Set `safe` to `volume` limited to that range, using `Math.min` and `Math.max` together.",
+          "starterCode": "const volume = 14\n",
+          "hint": "`Math.max(0, Math.min(10, volume))`: the inner one caps it at 10, the outer keeps it at least 0.",
+          "solution": "const volume = 14\nconst safe = Math.max(0, Math.min(10, volume))",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "safe is 10",
+                "assertion": "Object.is(safe, 10)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Math.min and Math.max",
+                "assertion": "_cq_code.includes(\"Math.min\") && _cq_code.includes(\"Math.max\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const volume = 14\\n\", \"const volume = -3\\n\", \"const volume = 14\\nconst safe = Math.max(0, Math.min(10, volume))\", [\"safe\"], false)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "math-q-1dtzra9",
+            "type": "mcq",
+            "prompt": "What does `Math.floor(7.9)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "8.0"
+              },
+              {
+                "id": "b",
+                "label": "8"
+              },
+              {
+                "id": "c",
+                "label": "7.9"
+              },
+              {
+                "id": "d",
+                "label": "7"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "floor always rounds down."
+          },
+          {
+            "id": "math-q-rjmzsu",
+            "type": "mcq",
+            "prompt": "What does `Math.ceil(7.1)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "7.0"
+              },
+              {
+                "id": "b",
+                "label": "8"
+              },
+              {
+                "id": "c",
+                "label": "7"
+              },
+              {
+                "id": "d",
+                "label": "7.1"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "ceil always rounds up."
+          },
+          {
+            "id": "math-q-m8r7bg",
+            "type": "mcq",
+            "prompt": "What does `Math.round(2.5)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "2.5"
+              },
+              {
+                "id": "b",
+                "label": "2.0"
+              },
+              {
+                "id": "c",
+                "label": "3"
+              },
+              {
+                "id": "d",
+                "label": "2"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "round goes to the nearest whole number, and .5 goes up."
+          },
+          {
+            "id": "math-q-fs19vt",
+            "type": "mcq",
+            "prompt": "What does `Math.max(4, 11, 2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "2"
+              },
+              {
+                "id": "b",
+                "label": "17"
+              },
+              {
+                "id": "c",
+                "label": "4"
+              },
+              {
+                "id": "d",
+                "label": "11"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "max gives the largest of its values."
+          },
+          {
+            "id": "math-q-19xcwjc",
+            "type": "mcq",
+            "prompt": "What does `(2.456).toFixed(2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The text \"2.45\""
+              },
+              {
+                "id": "b",
+                "label": "The text \"2.46\""
+              },
+              {
+                "id": "c",
+                "label": "The number 2.45"
+              },
+              {
+                "id": "d",
+                "label": "The number 2.46"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "toFixed rounds and gives text, ready to show."
+          },
+          {
+            "id": "math-q-64mmxb",
+            "type": "mcq",
+            "prompt": "What does `Math.abs(-12)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "12"
+              },
+              {
+                "id": "b",
+                "label": "0"
+              },
+              {
+                "id": "c",
+                "label": "-12"
+              },
+              {
+                "id": "d",
+                "label": "144"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "abs gives the distance from zero."
+          },
+          {
+            "id": "math-q-xlu20v",
+            "type": "mcq",
+            "prompt": "Which gives the number of full teams of 4 from 18 players?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`Math.round(18 / 4)`"
+              },
+              {
+                "id": "b",
+                "label": "`Math.floor(18 / 4)`"
+              },
+              {
+                "id": "c",
+                "label": "`18 % 4`"
+              },
+              {
+                "id": "d",
+                "label": "`Math.ceil(18 / 4)`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Full teams means rounding down: 4 teams, with 2 players left over."
+          },
+          {
+            "id": "math-q-vpx082",
+            "type": "mcq",
+            "prompt": "What does `Math.sqrt(49)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "24.5"
+              },
+              {
+                "id": "b",
+                "label": "49"
+              },
+              {
+                "id": "c",
+                "label": "7"
+              },
+              {
+                "id": "d",
+                "label": "2401"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The square root of 49 is 7, because 7 × 7 is 49."
+          },
+          {
+            "id": "math-q-ustix",
+            "type": "shortText",
+            "prompt": "Which `Math` function always rounds down? (just its name)",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "floor"
+            },
+            "explanation": "`Math.floor` rounds down; `Math.ceil` rounds up."
+          }
+        ]
+      }
+    },
+    {
+      "id": "strings",
+      "title": "Strings: working with text",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "joining",
+          "label": "Joining",
+          "code": "const greeting = \"Hello, \" + \"world\" + \"!\"\nconsole.log(greeting)"
+        },
+        {
+          "id": "adding_on",
+          "label": "Adding on",
+          "code": "let message = \"Well done\"\nmessage += \", Sam\"\nmessage += \"!\"\nconsole.log(message)"
+        },
+        {
+          "id": "length_and_indexes",
+          "label": "Length and indexes",
+          "code": "const word = \"JavaScript\"\nconsole.log(word.length)\nconsole.log(word[0], word[4], word[word.length - 1])"
+        },
+        {
+          "id": "past_the_end",
+          "label": "Past the end",
+          "code": "const word = \"cat\"\nconsole.log(word[3])"
+        }
+      ],
+      "intro": {
+        "title": "Strings: working with text",
+        "bodyMarkdown": "A piece of text is called a **string**. `+` joins strings together; this is called **concatenation**. It adds no spaces of its own, so put them in the text where you want them:\n\n```\nconst first = \"Ada\"\nconst last = \"Lovelace\"\nconst full = first + \" \" + last\nconsole.log(full)\n```\n\n`+=` adds to the end of a string you already have: `message += \"!\"`.\n\nEvery string has a `length`: how many characters it has, counting spaces and punctuation. `\"Hello\".length` is `5`. It has no brackets, because it is a value the string carries, not something it does.\n\nEach character has a position, its **index**, counting from **0**. `word[0]` is the first character, and the last one is `word[word.length - 1]`, because a 5-letter word's indexes go from 0 to 4. `word.at(-1)` is a shortcut for the last character.\n\n```\nconst word = \"Hello\"\nconsole.log(word.length, word[0], word[4], word.at(-1))\n```\n\nAn index past the end gives `undefined`, JavaScript's value for \"nothing here\".\n\nStrings can't be changed in place: `word[0] = \"J\"` does nothing. To change a string you build a new one, such as `\"J\" + word.slice(1)` (you will meet `slice` in the string methods stage).",
+        "sandboxCode": "const first = \"Ada\"\nconst last = \"Lovelace\"\nconst full = first + \" \" + last\nconsole.log(full)\nconsole.log(full.length, full[0], full.at(-1))",
+        "readMore": {
+          "label": "MDN: String",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "strings-join-two-words",
+          "title": "Easy: Join two words",
+          "promptMarkdown": "Set `full` to `first` and `last` joined with a space between them.",
+          "starterCode": "const first = \"Grace\"\nconst last = \"Hopper\"\n",
+          "hint": "`first + \" \" + last`.",
+          "solution": "const first = \"Grace\"\nconst last = \"Hopper\"\nconst full = first + \" \" + last",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "full is Grace Hopper",
+                "assertion": "Object.is(full, \"Grace Hopper\")"
+              },
+              {
+                "id": "t2",
+                "label": "Joins with +",
+                "assertion": "_cq_code.includes(\"+\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const first = \\\"Grace\\\"\\nconst last = \\\"Hopper\\\"\\n\", \"const first = \\\"Grace2\\\"\\nconst last = \\\"Hopper2\\\"\\n\", \"const first = \\\"Grace\\\"\\nconst last = \\\"Hopper\\\"\\nconst full = first + \\\" \\\" + last\", [\"full\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-how-long",
+          "title": "Easy: How long?",
+          "promptMarkdown": "Set `count` to the number of characters in `password`.",
+          "starterCode": "const password = \"sunflower42\"\n",
+          "hint": "`password.length`, without brackets.",
+          "solution": "const password = \"sunflower42\"\nconst count = password.length",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "count is 11",
+                "assertion": "Object.is(count, 11)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses length",
+                "assertion": "_cq_code.includes(\".length\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const password = \\\"sunflower42\\\"\\n\", \"const password = \\\"sunflower422\\\"\\n\", \"const password = \\\"sunflower42\\\"\\nconst count = password.length\", [\"count\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-the-first-letter",
+          "title": "Easy: The first letter",
+          "promptMarkdown": "Set `initial` to the first character of `name`.",
+          "starterCode": "const name = \"Maya\"\n",
+          "hint": "Indexes start at 0: `name[0]`.",
+          "solution": "const name = \"Maya\"\nconst initial = name[0]",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "initial is M",
+                "assertion": "Object.is(initial, \"M\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const name = \\\"Maya\\\"\\n\", \"const name = \\\"Leo\\\"\\n\", \"const name = \\\"Maya\\\"\\nconst initial = name[0]\", [\"initial\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-the-last-letter",
+          "title": "Medium: The last letter",
+          "promptMarkdown": "Set `lastLetter` to the last character of `word`, without counting the letters yourself.",
+          "starterCode": "const word = \"keyboard\"\n",
+          "hint": "The last index is `word.length - 1`, or use `word.at(-1)`.",
+          "solution": "const word = \"keyboard\"\nconst lastLetter = word[word.length - 1]",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "lastLetter is d",
+                "assertion": "Object.is(lastLetter, \"d\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const word = \\\"keyboard\\\"\\n\", \"const word = \\\"keyboard2\\\"\\n\", \"const word = \\\"keyboard\\\"\\nconst lastLetter = word[word.length - 1]\", [\"lastLetter\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-a-greeting",
+          "title": "Medium: A greeting",
+          "promptMarkdown": "Set `greeting` to `Hello, ` followed by the name and `!`, then show it: `Hello, Sam!`.",
+          "starterCode": "const name = \"Sam\"\n",
+          "hint": "`\"Hello, \" + name + \"!\"`: the space is inside the first text.",
+          "solution": "const name = \"Sam\"\nconst greeting = \"Hello, \" + name + \"!\"\nconsole.log(greeting)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "greeting is right",
+                "assertion": "Object.is(greeting, \"Hello, Sam!\")"
+              },
+              {
+                "id": "t2",
+                "label": "Shows it",
+                "assertion": "_cq_prints(\"Hello, Sam!\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const name = \\\"Sam\\\"\\n\", \"const name = \\\"Sam2\\\"\\n\", \"const name = \\\"Sam\\\"\\nconst greeting = \\\"Hello, \\\" + name + \\\"!\\\"\\nconsole.log(greeting)\", [\"greeting\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-build-it-up",
+          "title": "Medium: Build it up",
+          "promptMarkdown": "Start `list` as `\"Milk\"` and use `+=` twice to make it `\"Milk, Eggs, Bread\"`.",
+          "starterCode": "let list = \"Milk\"\n",
+          "hint": "`list += \", Eggs\"`, then `list += \", Bread\"`.",
+          "solution": "let list = \"Milk\"\nlist += \", Eggs\"\nlist += \", Bread\"",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "list is right",
+                "assertion": "Object.is(list, \"Milk, Eggs, Bread\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses += twice",
+                "assertion": "(_cq_code.match(/\\+=/g) || []).length >= 2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-initials",
+          "title": "Hard: Initials",
+          "promptMarkdown": "Set `initials` to the first letters of `first` and `last` with a dot after each: `A.L.`",
+          "starterCode": "const first = \"Ada\"\nconst last = \"Lovelace\"\n",
+          "hint": "`first[0] + \".\" + last[0] + \".\"`.",
+          "solution": "const first = \"Ada\"\nconst last = \"Lovelace\"\nconst initials = first[0] + \".\" + last[0] + \".\"",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "initials is A.L.",
+                "assertion": "Object.is(initials, \"A.L.\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const first = \\\"Ada\\\"\\nconst last = \\\"Lovelace\\\"\\n\", \"const first = \\\"Tim\\\"\\nconst last = \\\"Berners\\\"\\n\", \"const first = \\\"Ada\\\"\\nconst last = \\\"Lovelace\\\"\\nconst initials = first[0] + \\\".\\\" + last[0] + \\\".\\\"\", [\"initials\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-first-and-last",
+          "title": "Hard: First and last",
+          "promptMarkdown": "Show the first and last characters of `city` together with a dash: `L-n` for London.",
+          "starterCode": "const city = \"London\"\n",
+          "hint": "`city[0] + \"-\" + city[city.length - 1]`.",
+          "solution": "const city = \"London\"\nconsole.log(city[0] + \"-\" + city[city.length - 1])",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows L-n",
+                "assertion": "_cq_prints(\"L-n\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const city = \\\"London\\\"\\n\", \"const city = \\\"Paris\\\"\\n\", \"const city = \\\"London\\\"\\nconsole.log(city[0] + \\\"-\\\" + city[city.length - 1])\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-fix-the-join",
+          "title": "Expert: Fix the join",
+          "promptMarkdown": "This should show `I have 3 cats`, but it shows `I have3cats`. Fix the joins.",
+          "starterCode": "const count = 3\nconsole.log(\"I have\" + count + \"cats\")",
+          "hint": "`+` adds no spaces. Put a space at the end of `\"I have \"` and the start of `\" cats\"`.",
+          "solution": "const count = 3\nconsole.log(\"I have \" + count + \" cats\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows I have 3 cats",
+                "assertion": "_cq_prints(\"I have 3 cats\")"
+              },
+              {
+                "id": "t2",
+                "label": "Still uses count",
+                "assertion": "new RegExp(\"\\\\+\\\\s*count\\\\s*\\\\+\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const count = 3\\nconsole.log(\\\"I have\\\" + count + \\\"cats\\\")\", \"const count = 4\\nconsole.log(\\\"I have\\\" + count + \\\"cats\\\")\", \"const count = 3\\nconsole.log(\\\"I have \\\" + count + \\\" cats\\\")\", [\"count\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "strings-middle-character",
+          "title": "Expert: Middle character",
+          "promptMarkdown": "`word` has an odd number of letters. Set `middle` to the letter in the middle (`e` in `level`, `n` in `banjo`). Work out its index from the length.",
+          "starterCode": "const word = \"level\"\n",
+          "hint": "The middle index is `Math.floor(word.length / 2)`.",
+          "solution": "const word = \"level\"\nconst middle = word[Math.floor(word.length / 2)]",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "middle is v",
+                "assertion": "Object.is(middle, \"v\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses the length",
+                "assertion": "_cq_code.includes(\"length\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const word = \\\"level\\\"\\n\", \"const word = \\\"banjo\\\"\\n\", \"const word = \\\"level\\\"\\nconst middle = word[Math.floor(word.length / 2)]\", [\"middle\"], false)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "strings-q-y8dmgk",
+            "type": "mcq",
+            "prompt": "What does `\"ice\" + \"cream\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"icecream\""
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "\"ice+cream\""
+              },
+              {
+                "id": "d",
+                "label": "\"ice cream\""
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`+` joins strings exactly, with no space added."
+          },
+          {
+            "id": "strings-q-v70ns6",
+            "type": "mcq",
+            "prompt": "What is `\"Hello\".length`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error: it needs brackets"
+              },
+              {
+                "id": "b",
+                "label": "5"
+              },
+              {
+                "id": "c",
+                "label": "4"
+              },
+              {
+                "id": "d",
+                "label": "6"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "length counts the characters; it's a value, so no brackets."
+          },
+          {
+            "id": "strings-q-11a78pw",
+            "type": "mcq",
+            "prompt": "After `const w = \"cat\"`, what is `w[0]`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "undefined"
+              },
+              {
+                "id": "b",
+                "label": "\"a\""
+              },
+              {
+                "id": "c",
+                "label": "\"t\""
+              },
+              {
+                "id": "d",
+                "label": "\"c\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Indexes start at 0."
+          },
+          {
+            "id": "strings-q-1cp06hf",
+            "type": "mcq",
+            "prompt": "After `const w = \"cat\"`, what is `w[3]`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "\"t\""
+              },
+              {
+                "id": "c",
+                "label": "undefined"
+              },
+              {
+                "id": "d",
+                "label": "\"\""
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The indexes are 0, 1 and 2; past the end there is nothing."
+          },
+          {
+            "id": "strings-q-9ykbui",
+            "type": "mcq",
+            "prompt": "Which gives the last character of `word`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`word.last`"
+              },
+              {
+                "id": "b",
+                "label": "`word[-1]`"
+              },
+              {
+                "id": "c",
+                "label": "`word[word.length - 1]`"
+              },
+              {
+                "id": "d",
+                "label": "`word[word.length]`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The last index is one less than the length. (`word.at(-1)` works too.)"
+          },
+          {
+            "id": "strings-q-1v04su",
+            "type": "mcq",
+            "prompt": "What does `\"A\" + 1 + 2` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"A12\""
+              },
+              {
+                "id": "b",
+                "label": "3"
+              },
+              {
+                "id": "c",
+                "label": "\"A3\""
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Once the left side is text, each `+` joins: \"A\" + 1 is \"A1\", then \"A12\"."
+          },
+          {
+            "id": "strings-q-k2vecd",
+            "type": "mcq",
+            "prompt": "What is `\" hi \".length`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "6"
+              },
+              {
+                "id": "b",
+                "label": "4"
+              },
+              {
+                "id": "c",
+                "label": "3"
+              },
+              {
+                "id": "d",
+                "label": "2"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Spaces count as characters."
+          },
+          {
+            "id": "strings-q-1tdpjp7",
+            "type": "mcq",
+            "prompt": "After `let s = \"go\"` and `s += \"al\"`, what is `s`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"go al\""
+              },
+              {
+                "id": "b",
+                "label": "\"algo\""
+              },
+              {
+                "id": "c",
+                "label": "\"go\""
+              },
+              {
+                "id": "d",
+                "label": "\"goal\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`+=` adds to the end."
+          },
+          {
+            "id": "strings-q-1c4enqb",
+            "type": "shortText",
+            "prompt": "What is the index of the first character of a string?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "0"
+            },
+            "explanation": "Counting starts at 0."
+          }
+        ]
+      }
+    },
+    {
+      "id": "template_literals",
+      "title": "Template literals",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "expressions",
+          "label": "Expressions",
+          "code": "const w = 8\nconst h = 3\nconsole.log(`${w} × ${h} = ${w * h}`)"
+        },
+        {
+          "id": "money",
+          "label": "Money",
+          "code": "const total = 13.5\nconsole.log(`Total: $${total.toFixed(2)}`)"
+        },
+        {
+          "id": "several_lines",
+          "label": "Several lines",
+          "code": "const name = \"Ana\"\nconst card = `Name: ${name}\nLevel: 3\nXP: 120`\nconsole.log(card)"
+        },
+        {
+          "id": "quotes_or_backticks",
+          "label": "Quotes or backticks?",
+          "code": "const name = \"Ana\"\nconsole.log(\"Hi ${name}\")\nconsole.log(`Hi ${name}`)"
+        }
+      ],
+      "intro": {
+        "title": "Template literals",
+        "bodyMarkdown": "Joining text with `+` gets fiddly: quotes, plus signs and spaces everywhere. A **template literal** is easier. It is text in backticks (`` ` ``, usually at the top left of the keyboard), and `${…}` drops a value straight into it:\n\n```\nconst name = \"Sam\"\nconst age = 12\nconsole.log(`${name} is ${age} years old`)\n```\n\nInside `${…}` you can put any expression, not just a variable: `${price * 2}`, `${name.length}` or `${Math.round(score)}` are worked out first, then put in the text.\n\n```\nconst price = 4.5\nconst count = 3\nconsole.log(`${count} items cost ${price * count}`)\nconsole.log(`Total: $${(price * count).toFixed(2)}`)\n```\n\nThe `$` before `{` is what marks the gap. A `$` on its own, as in `$13.50`, is just a character, so `$${total}` shows a dollar sign and then the value.\n\nA template literal can also go over several lines: the line breaks inside the backticks are kept. And both kinds of quote can go inside one without escapes: `` `It's \"fine\"` ``.\n\n```\nconst poem = `Roses are red,\nViolets are blue.`\nconsole.log(poem)\n```\n\nOnly backticks do this. In `\"Hi ${name}\"`, with ordinary quotes, `${name}` is just shown as it is.",
+        "sandboxCode": "const name = \"Sam\"\nconst age = 12\nconsole.log(`${name} is ${age} years old`)\nconsole.log(`Next year: ${age + 1}`)",
+        "readMore": {
+          "label": "MDN: template literals",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "template_literals-say-hi",
+          "title": "Easy: Say hi",
+          "promptMarkdown": "Use a template literal to show `Hi, Zoe!` with the name from the variable.",
+          "starterCode": "const name = \"Zoe\"\n",
+          "hint": "`` console.log(`Hi, ${name}!`) ``, with backticks around the text.",
+          "solution": "const name = \"Zoe\"\nconsole.log(`Hi, ${name}!`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Hi, Zoe!",
+                "assertion": "_cq_prints(\"Hi, Zoe!\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses a template literal",
+                "assertion": "_cq_code.includes(\"${name}\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const name = \\\"Zoe\\\"\\n\", \"const name = \\\"Zoe2\\\"\\n\", \"const name = \\\"Zoe\\\"\\nconsole.log(`Hi, ${name}!`)\", [\"name\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-two-values",
+          "title": "Easy: Two values",
+          "promptMarkdown": "Show `Rex is 4 years old` with one template literal and both variables.",
+          "starterCode": "const pet = \"Rex\"\nconst age = 4\n",
+          "hint": "`${pet} is ${age} years old`.",
+          "solution": "const pet = \"Rex\"\nconst age = 4\nconsole.log(`${pet} is ${age} years old`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the sentence",
+                "assertion": "_cq_prints(\"Rex is 4 years old\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses ${pet} and ${age}",
+                "assertion": "_cq_code.includes(\"${pet}\") && _cq_code.includes(\"${age}\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const pet = \\\"Rex\\\"\\nconst age = 4\\n\", \"const pet = \\\"Rex2\\\"\\nconst age = 5\\n\", \"const pet = \\\"Rex\\\"\\nconst age = 4\\nconsole.log(`${pet} is ${age} years old`)\", [\"pet\",\"age\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-store-it",
+          "title": "Easy: Store it",
+          "promptMarkdown": "Set `label` to a template literal that gives `Room 12`, using `room`.",
+          "starterCode": "const room = 12\n",
+          "hint": "`` const label = `Room ${room}` ``.",
+          "solution": "const room = 12\nconst label = `Room ${room}`",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "label is Room 12",
+                "assertion": "Object.is(label, \"Room 12\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses a template literal",
+                "assertion": "_cq_code.includes(\"${room}\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const room = 12\\n\", \"const room = 13\\n\", \"const room = 12\\nconst label = `Room ${room}`\", [\"room\",\"label\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-work-it-out-inside",
+          "title": "Medium: Work it out inside",
+          "promptMarkdown": "Show `3 tickets cost 27` with the total worked out inside the `${…}`.",
+          "starterCode": "const tickets = 3\nconst price = 9\n",
+          "hint": "`${tickets} tickets cost ${tickets * price}`.",
+          "solution": "const tickets = 3\nconst price = 9\nconsole.log(`${tickets} tickets cost ${tickets * price}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the line",
+                "assertion": "_cq_prints(\"3 tickets cost 27\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works it out inside ${}",
+                "assertion": "new RegExp(\"\\\\$\\\\{[^}]*\\\\*[^}]*\\\\}\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Doesn't type the total in",
+                "assertion": "!_cq_code.includes(\"27\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const tickets = 3\\nconst price = 9\\n\", \"const tickets = 4\\nconst price = 11\\n\", \"const tickets = 3\\nconst price = 9\\nconsole.log(`${tickets} tickets cost ${tickets * price}`)\", [\"tickets\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-a-price-tag",
+          "title": "Medium: A price tag",
+          "promptMarkdown": "Show `Total: $7.50`, with the dollar sign and 2 decimal places.",
+          "starterCode": "const total = 7.5\n",
+          "hint": "A `$` before `${…}` is just a character: `` `Total: $${total.toFixed(2)}` ``.",
+          "solution": "const total = 7.5\nconsole.log(`Total: $${total.toFixed(2)}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Total: $7.50",
+                "assertion": "_cq_prints(\"Total: $7.50\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses toFixed",
+                "assertion": "_cq_code.includes(\"toFixed(2)\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const total = 7.5\\n\", \"const total = 7.6\\n\", \"const total = 7.5\\nconsole.log(`Total: $${total.toFixed(2)}`)\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-from-to-backticks",
+          "title": "Medium: From + to backticks",
+          "promptMarkdown": "Rewrite the line with a template literal instead of `+`. It should still show `Ada scored 95 points`.",
+          "starterCode": "const player = \"Ada\"\nconst points = 95\nconsole.log(player + \" scored \" + points + \" points\")",
+          "hint": "`` `${player} scored ${points} points` ``, with no `+` left.",
+          "solution": "const player = \"Ada\"\nconst points = 95\nconsole.log(`${player} scored ${points} points`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the line",
+                "assertion": "_cq_prints(\"Ada scored 95 points\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses a template literal",
+                "assertion": "_cq_code.includes(\"${player}\")"
+              },
+              {
+                "id": "t3",
+                "label": "No + left",
+                "assertion": "!_cq_code.includes(\"+\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const player = \\\"Ada\\\"\\nconst points = 95\\nconsole.log(player + \\\" scored \\\" + points + \\\" points\\\")\", \"const player = \\\"Ada2\\\"\\nconst points = 96\\nconsole.log(player + \\\" scored \\\" + points + \\\" points\\\")\", \"const player = \\\"Ada\\\"\\nconst points = 95\\nconsole.log(`${player} scored ${points} points`)\", [\"player\",\"points\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-fix-the-quotes",
+          "title": "Hard: Fix the quotes",
+          "promptMarkdown": "This shows `Welcome, ${user}` instead of the name. Fix it so it shows `Welcome, Kim`.",
+          "starterCode": "const user = \"Kim\"\nconsole.log(\"Welcome, ${user}\")",
+          "hint": "Only backticks fill in `${…}`. Swap the double quotes for backticks.",
+          "solution": "const user = \"Kim\"\nconsole.log(`Welcome, ${user}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Welcome, Kim",
+                "assertion": "_cq_prints(\"Welcome, Kim\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const user = \\\"Kim\\\"\\nconsole.log(\\\"Welcome, ${user}\\\")\", \"const user = \\\"Kim2\\\"\\nconsole.log(\\\"Welcome, ${user}\\\")\", \"const user = \\\"Kim\\\"\\nconsole.log(`Welcome, ${user}`)\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-a-name-card",
+          "title": "Hard: A name card",
+          "promptMarkdown": "Set `card` to one template literal over two lines that shows `Name: Leo` on the first line and `Age: 10` on the second, then show it.",
+          "starterCode": "const name = \"Leo\"\nconst age = 10\n",
+          "hint": "Press Enter inside the backticks: write `Name: ${name}`, a new line, then `Age: ${age}`, all inside one pair of backticks.",
+          "solution": "const name = \"Leo\"\nconst age = 10\nconst card = `Name: ${name}\nAge: ${age}`\nconsole.log(card)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the two lines",
+                "assertion": "_cq_prints(\"Name: Leo\", \"Age: 10\")"
+              },
+              {
+                "id": "t2",
+                "label": "card holds both lines",
+                "assertion": "Object.is(card, \"Name: Leo\\nAge: 10\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const name = \\\"Leo\\\"\\nconst age = 10\\n\", \"const name = \\\"Leo2\\\"\\nconst age = 11\\n\", \"const name = \\\"Leo\\\"\\nconst age = 10\\nconst card = `Name: ${name}\\nAge: ${age}`\\nconsole.log(card)\", [\"card\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-next-birthday",
+          "title": "Expert: Next birthday",
+          "promptMarkdown": "Show `Mia is 9 now and will be 10 next year`, working out the next age inside the template literal.",
+          "starterCode": "const name = \"Mia\"\nconst age = 9\n",
+          "hint": "`${age + 1}` works out the next age.",
+          "solution": "const name = \"Mia\"\nconst age = 9\nconsole.log(`${name} is ${age} now and will be ${age + 1} next year`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the sentence",
+                "assertion": "_cq_prints(\"Mia is 9 now and will be 10 next year\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works out the next age",
+                "assertion": "new RegExp(\"\\\\$\\\\{\\\\s*age\\\\s*\\\\+\\\\s*1\\\\s*\\\\}\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const name = \\\"Mia\\\"\\nconst age = 9\\n\", \"const name = \\\"Mia2\\\"\\nconst age = 10\\n\", \"const name = \\\"Mia\\\"\\nconst age = 9\\nconsole.log(`${name} is ${age} now and will be ${age + 1} next year`)\", [\"age\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "template_literals-quotes-inside",
+          "title": "Expert: Quotes inside",
+          "promptMarkdown": "Show `Sam said \"it's done\" at 5`, with both kinds of quote, using one template literal and both variables.",
+          "starterCode": "const who = \"Sam\"\nconst hour = 5\n",
+          "hint": "Inside backticks, `\"` and `'` are just characters: `` `${who} said \"it's done\" at ${hour}` ``.",
+          "solution": "const who = \"Sam\"\nconst hour = 5\nconsole.log(`${who} said \"it's done\" at ${hour}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the line",
+                "assertion": "_cq_prints(\"Sam said \\\"it's done\\\" at 5\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses both variables",
+                "assertion": "_cq_code.includes(\"${who}\") && _cq_code.includes(\"${hour}\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const who = \\\"Sam\\\"\\nconst hour = 5\\n\", \"const who = \\\"Sam2\\\"\\nconst hour = 6\\n\", \"const who = \\\"Sam\\\"\\nconst hour = 5\\nconsole.log(`${who} said \\\"it's done\\\" at ${hour}`)\", [\"who\",\"hour\"], true)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "template_literals-q-bgbuit",
+            "type": "mcq",
+            "prompt": "After `const n = 3`, what does `` console.log(`n is ${n}`) `` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "n is 3"
+              },
+              {
+                "id": "b",
+                "label": "`n is 3`"
+              },
+              {
+                "id": "c",
+                "label": "n is ${n}"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Backticks fill in `${n}` with its value."
+          },
+          {
+            "id": "template_literals-q-7b3v2x",
+            "type": "mcq",
+            "prompt": "After `const n = 3`, what does `console.log(\"n is ${n}\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "n is ${n}"
+              },
+              {
+                "id": "b",
+                "label": "An error"
+              },
+              {
+                "id": "c",
+                "label": "n is 3"
+              },
+              {
+                "id": "d",
+                "label": "n is"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Ordinary quotes don't fill anything in."
+          },
+          {
+            "id": "template_literals-q-11lwqsi",
+            "type": "mcq",
+            "prompt": "What does `` `${2 + 3}` `` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"5\""
+              },
+              {
+                "id": "b",
+                "label": "\"23\""
+              },
+              {
+                "id": "c",
+                "label": "5 as a number"
+              },
+              {
+                "id": "d",
+                "label": "\"2 + 3\""
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The expression is worked out, then put in the text."
+          },
+          {
+            "id": "template_literals-q-nsqor7",
+            "type": "mcq",
+            "prompt": "Which character surrounds a template literal?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "The slash /"
+              },
+              {
+                "id": "b",
+                "label": "The double quote \""
+              },
+              {
+                "id": "c",
+                "label": "The backtick `"
+              },
+              {
+                "id": "d",
+                "label": "The single quote '"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Template literals use backticks."
+          },
+          {
+            "id": "template_literals-q-t3xxs8",
+            "type": "mcq",
+            "prompt": "After `const p = 4`, what does `` `$${p}` `` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"4\""
+              },
+              {
+                "id": "b",
+                "label": "\"$p\""
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "\"$4\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The first `$` is just a character; `${p}` is the gap."
+          },
+          {
+            "id": "template_literals-q-1p20cd",
+            "type": "mcq",
+            "prompt": "Can a template literal go over several lines?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No, never"
+              },
+              {
+                "id": "b",
+                "label": "Only with \\n"
+              },
+              {
+                "id": "c",
+                "label": "Yes: the line breaks are kept"
+              },
+              {
+                "id": "d",
+                "label": "Only in comments"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Line breaks inside backticks are part of the text."
+          },
+          {
+            "id": "template_literals-q-3frxj7",
+            "type": "mcq",
+            "prompt": "After `const a = \"x\"`, what does `` `${a}${a}` `` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"aa\""
+              },
+              {
+                "id": "b",
+                "label": "\"x x\""
+              },
+              {
+                "id": "c",
+                "label": "\"${a}${a}\""
+              },
+              {
+                "id": "d",
+                "label": "\"xx\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Two gaps next to each other give the value twice, with nothing between."
+          },
+          {
+            "id": "template_literals-q-1d0b9r9",
+            "type": "mcq",
+            "prompt": "Why use template literals instead of `+`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They are the only way to join text"
+              },
+              {
+                "id": "b",
+                "label": "They are easier to read and need no extra quotes or plus signs"
+              },
+              {
+                "id": "c",
+                "label": "They run much faster"
+              },
+              {
+                "id": "d",
+                "label": "They change numbers into words"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "They make text with values in it simpler to write and read."
+          },
+          {
+            "id": "template_literals-q-1ibrnn5",
+            "type": "shortText",
+            "prompt": "What two characters start a gap for a value in a template literal?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "${"
+            },
+            "explanation": "`${` starts the gap and `}` ends it."
+          }
+        ]
+      }
+    },
+    {
+      "id": "string_methods",
+      "title": "String methods",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "tidy_text",
+          "label": "Tidy text",
+          "code": "const raw = \"   Hello there   \"\nconsole.log(`[${raw.trim()}]`)\nconsole.log(raw.trim().toLowerCase())"
+        },
+        {
+          "id": "search",
+          "label": "Search",
+          "code": "const email = \"sam@example.com\"\nconsole.log(email.includes(\"@\"), email.endsWith(\".com\"), email.indexOf(\"@\"))"
+        },
+        {
+          "id": "slices",
+          "label": "Slices",
+          "code": "const date = \"2026-11-06\"\nconsole.log(date.slice(0, 4), date.slice(5, 7), date.slice(-2))"
+        },
+        {
+          "id": "replace_and_pad",
+          "label": "Replace and pad",
+          "code": "console.log(\"a-b-c\".replace(\"-\", \"+\"), \"a-b-c\".replaceAll(\"-\", \"+\"))\nconsole.log(\"7\".padStart(3, \"0\"), \"=\".repeat(10))"
+        }
+      ],
+      "intro": {
+        "title": "String methods",
+        "bodyMarkdown": "Strings come with **methods**: things a string can do, written after a dot with brackets. Each gives back a **new** string (or another value) and leaves the original as it was.\n\n```\nconst name = \"  ada Lovelace  \"\nconsole.log(name.trim())\nconsole.log(name.toUpperCase())\nconsole.log(name.toLowerCase())\n```\n\n`trim()` removes spaces from both ends. `toUpperCase()` and `toLowerCase()` change the letters. Methods can be chained, one after another: `name.trim().toUpperCase()`.\n\n`includes(\"x\")` tells you whether some text appears (`true` or `false`), and `startsWith` and `endsWith` check the two ends. `indexOf(\"x\")` gives where it first appears, or `-1` if it doesn't.\n\n`slice(start, end)` cuts out a part: from index `start` up to, but not including, `end`. Leave out `end` to go to the end, and use a negative number to count from the end: `slice(-4)` is the last 4 characters.\n\n```\nconst word = \"JavaScript\"\nconsole.log(word.slice(0, 4), word.slice(4), word.slice(-6))\nconsole.log(word.includes(\"Script\"), word.indexOf(\"S\"))\n```\n\n`replace(a, b)` swaps the first `a` for `b`, and `replaceAll` swaps every one. `repeat(n)` repeats a string, and `padStart(length, fill)` adds fill at the start until the string is that long, which is handy for lining up numbers: `\"7\".padStart(3, \"0\")` is `\"007\"`.\n\nBecause strings never change, a method on its own does nothing you can see: `name.trim()` gives a trimmed copy, so store it (`const clean = name.trim()`) or show it.",
+        "sandboxCode": "const name = \"  ada Lovelace  \"\nconsole.log(name.trim().toUpperCase())\nconst word = \"JavaScript\"\nconsole.log(word.slice(0, 4), word.slice(-6))\nconsole.log(word.includes(\"Script\"))",
+        "readMore": {
+          "label": "MDN: string methods",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String#instance_methods",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "string_methods-shout-it",
+          "title": "Easy: Shout it",
+          "promptMarkdown": "Set `loud` to `message` in capital letters.",
+          "starterCode": "const message = \"help\"\n",
+          "hint": "`message.toUpperCase()`.",
+          "solution": "const message = \"help\"\nconst loud = message.toUpperCase()",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "loud is HELP",
+                "assertion": "Object.is(loud, \"HELP\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses toUpperCase",
+                "assertion": "_cq_code.includes(\"toUpperCase()\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const message = \\\"help\\\"\\n\", \"const message = \\\"help2\\\"\\n\", \"const message = \\\"help\\\"\\nconst loud = message.toUpperCase()\", [\"loud\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-trim-the-spaces",
+          "title": "Easy: Trim the spaces",
+          "promptMarkdown": "Set `clean` to `input` without the spaces at either end.",
+          "starterCode": "const input = \"   pizza   \"\n",
+          "hint": "`input.trim()`.",
+          "solution": "const input = \"   pizza   \"\nconst clean = input.trim()",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "clean is pizza",
+                "assertion": "Object.is(clean, \"pizza\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses trim",
+                "assertion": "_cq_code.includes(\"trim()\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const input = \\\"   pizza   \\\"\\n\", \"const input = \\\"   pizza   2\\\"\\n\", \"const input = \\\"   pizza   \\\"\\nconst clean = input.trim()\", [\"clean\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-does-it-include",
+          "title": "Easy: Does it include?",
+          "promptMarkdown": "Set `hasAt` to whether `email` includes an `@`.",
+          "starterCode": "const email = \"kim@school.org\"\n",
+          "hint": "`email.includes(\"@\")` gives true or false.",
+          "solution": "const email = \"kim@school.org\"\nconst hasAt = email.includes(\"@\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "hasAt is true",
+                "assertion": "Object.is(hasAt, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses includes",
+                "assertion": "_cq_code.includes(\"includes(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const email = \\\"kim@school.org\\\"\\n\", \"const email = \\\"kim.school.org\\\"\\n\", \"const email = \\\"kim@school.org\\\"\\nconst hasAt = email.includes(\\\"@\\\")\", [\"hasAt\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-the-year",
+          "title": "Medium: The year",
+          "promptMarkdown": "Set `year` to the first 4 characters of `date`.",
+          "starterCode": "const date = \"2026-11-06\"\n",
+          "hint": "`date.slice(0, 4)`: from index 0 up to (not including) 4.",
+          "solution": "const date = \"2026-11-06\"\nconst year = date.slice(0, 4)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "year is \"2026\"",
+                "assertion": "Object.is(year, \"2026\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses slice",
+                "assertion": "_cq_code.includes(\"slice(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const date = \\\"2026-11-06\\\"\\n\", \"const date = \\\"1999-01-31\\\"\\n\", \"const date = \\\"2026-11-06\\\"\\nconst year = date.slice(0, 4)\", [\"year\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-tidy-a-name",
+          "title": "Medium: Tidy a name",
+          "promptMarkdown": "Set `tidy` to `raw` trimmed and in lower case, by chaining two methods.",
+          "starterCode": "const raw = \"  ALEX  \"\n",
+          "hint": "`raw.trim().toLowerCase()`.",
+          "solution": "const raw = \"  ALEX  \"\nconst tidy = raw.trim().toLowerCase()",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tidy is alex",
+                "assertion": "Object.is(tidy, \"alex\")"
+              },
+              {
+                "id": "t2",
+                "label": "Chains the methods",
+                "assertion": "new RegExp(\"trim\\\\(\\\\)\\\\s*\\\\.toLowerCase\\\\(\\\\)|toLowerCase\\\\(\\\\)\\\\s*\\\\.trim\\\\(\\\\)\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const raw = \\\"  ALEX  \\\"\\n\", \"const raw = \\\"  ALEX  2\\\"\\n\", \"const raw = \\\"  ALEX  \\\"\\nconst tidy = raw.trim().toLowerCase()\", [\"tidy\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-swap-a-word",
+          "title": "Medium: Swap a word",
+          "promptMarkdown": "Set `fixed` to `text` with `cat` replaced by `dog`.",
+          "starterCode": "const text = \"I love my cat\"\n",
+          "hint": "`text.replace(\"cat\", \"dog\")`.",
+          "solution": "const text = \"I love my cat\"\nconst fixed = text.replace(\"cat\", \"dog\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "fixed is I love my dog",
+                "assertion": "Object.is(fixed, \"I love my dog\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses replace",
+                "assertion": "_cq_code.includes(\"replace(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const text = \\\"I love my cat\\\"\\n\", \"const text = \\\"My cat is called Tom\\\"\\n\", \"const text = \\\"I love my cat\\\"\\nconst fixed = text.replace(\\\"cat\\\", \\\"dog\\\")\", [\"fixed\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-mask-a-card-number",
+          "title": "Hard: Mask a card number",
+          "promptMarkdown": "Show only the last 4 digits of `card`, after `**** `: `**** 4321`.",
+          "starterCode": "const card = \"1234567887654321\"\n",
+          "hint": "`card.slice(-4)` is the last 4 characters. Put it in a template literal after `**** `.",
+          "solution": "const card = \"1234567887654321\"\nconsole.log(`**** ${card.slice(-4)}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows **** 4321",
+                "assertion": "_cq_prints(\"**** 4321\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses slice",
+                "assertion": "_cq_code.includes(\"slice(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const card = \\\"1234567887654321\\\"\\n\", \"const card = \\\"4000123412349876\\\"\\n\", \"const card = \\\"1234567887654321\\\"\\nconsole.log(`**** ${card.slice(-4)}`)\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-order-number",
+          "title": "Hard: Order number",
+          "promptMarkdown": "Order numbers are 5 digits with zeros in front. Set `code` to `n` written that way: 42 becomes `\"00042\"`.",
+          "starterCode": "const n = 42\n",
+          "hint": "Make it text first: `String(n).padStart(5, \"0\")`.",
+          "solution": "const n = 42\nconst code = String(n).padStart(5, \"0\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "code is \"00042\"",
+                "assertion": "Object.is(code, \"00042\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses padStart",
+                "assertion": "_cq_code.includes(\"padStart(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const n = 42\\n\", \"const n = 43\\n\", \"const n = 42\\nconst code = String(n).padStart(5, \\\"0\\\")\", [\"code\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-capitalise-a-word",
+          "title": "Expert: Capitalise a word",
+          "promptMarkdown": "Set `nice` to `word` with its first letter in capitals and the rest in lower case: `hELLO` becomes `Hello`.",
+          "starterCode": "const word = \"hELLO\"\n",
+          "hint": "`word[0].toUpperCase() + word.slice(1).toLowerCase()`.",
+          "solution": "const word = \"hELLO\"\nconst nice = word[0].toUpperCase() + word.slice(1).toLowerCase()",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "nice is Hello",
+                "assertion": "Object.is(nice, \"Hello\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const word = \\\"hELLO\\\"\\n\", \"const word = \\\"wORLD\\\"\\n\", \"const word = \\\"hELLO\\\"\\nconst nice = word[0].toUpperCase() + word.slice(1).toLowerCase()\", [\"nice\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "string_methods-the-username",
+          "title": "Expert: The username",
+          "promptMarkdown": "Set `user` to the part of `email` before the `@`. Find the `@` with `indexOf`, then slice up to it.",
+          "starterCode": "const email = \"maya.lopez@mail.com\"\n",
+          "hint": "`email.slice(0, email.indexOf(\"@\"))`.",
+          "solution": "const email = \"maya.lopez@mail.com\"\nconst user = email.slice(0, email.indexOf(\"@\"))",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "user is maya.lopez",
+                "assertion": "Object.is(user, \"maya.lopez\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses indexOf",
+                "assertion": "_cq_code.includes(\"indexOf(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const email = \\\"maya.lopez@mail.com\\\"\\n\", \"const email = \\\"sam@school.org\\\"\\n\", \"const email = \\\"maya.lopez@mail.com\\\"\\nconst user = email.slice(0, email.indexOf(\\\"@\\\"))\", [\"user\"], false)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "string_methods-q-mp2rr7",
+            "type": "mcq",
+            "prompt": "What does `\"Hi\".toUpperCase()` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "\"hi\""
+              },
+              {
+                "id": "c",
+                "label": "\"HI\""
+              },
+              {
+                "id": "d",
+                "label": "\"Hi\""
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "toUpperCase gives a copy in capitals."
+          },
+          {
+            "id": "string_methods-q-190tm1e",
+            "type": "mcq",
+            "prompt": "What does `\"  a b  \".trim()` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"  a b\""
+              },
+              {
+                "id": "b",
+                "label": "\"ab\""
+              },
+              {
+                "id": "c",
+                "label": "\"a b\""
+              },
+              {
+                "id": "d",
+                "label": "\"a b  \""
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "trim removes spaces from both ends only, not the middle."
+          },
+          {
+            "id": "string_methods-q-1yj7v9d",
+            "type": "mcq",
+            "prompt": "What does `\"banana\".indexOf(\"n\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3"
+              },
+              {
+                "id": "b",
+                "label": "1"
+              },
+              {
+                "id": "c",
+                "label": "2"
+              },
+              {
+                "id": "d",
+                "label": "-1"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "It gives the first position: b is 0, a is 1, n is 2."
+          },
+          {
+            "id": "string_methods-q-1o50td8",
+            "type": "mcq",
+            "prompt": "What does `\"JavaScript\".slice(0, 4)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"Scri\""
+              },
+              {
+                "id": "b",
+                "label": "\"Java\""
+              },
+              {
+                "id": "c",
+                "label": "\"JavaS\""
+              },
+              {
+                "id": "d",
+                "label": "\"avaS\""
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "From index 0 up to, not including, index 4."
+          },
+          {
+            "id": "string_methods-q-1c7dgzz",
+            "type": "mcq",
+            "prompt": "What does `\"hello\".slice(-3)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"he\""
+              },
+              {
+                "id": "b",
+                "label": "\"hel\""
+              },
+              {
+                "id": "c",
+                "label": "\"lo\""
+              },
+              {
+                "id": "d",
+                "label": "\"llo\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "A negative start counts from the end."
+          },
+          {
+            "id": "string_methods-q-117q02d",
+            "type": "mcq",
+            "prompt": "What does `\"a-b-c\".replace(\"-\", \"+\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"abc\""
+              },
+              {
+                "id": "b",
+                "label": "\"a-b-c\""
+              },
+              {
+                "id": "c",
+                "label": "\"a+b+c\""
+              },
+              {
+                "id": "d",
+                "label": "\"a+b-c\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "replace swaps only the first match; replaceAll swaps every one."
+          },
+          {
+            "id": "string_methods-q-1fj8n53",
+            "type": "mcq",
+            "prompt": "After `const s = \"hi\"` and `s.toUpperCase()`, what is `s`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"HI\""
+              },
+              {
+                "id": "b",
+                "label": "\"hi\""
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "undefined"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Methods give new strings; the original never changes."
+          },
+          {
+            "id": "string_methods-q-ai87sw",
+            "type": "mcq",
+            "prompt": "What does `\"7\".padStart(3, \"0\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"7\""
+              },
+              {
+                "id": "b",
+                "label": "\"700\""
+              },
+              {
+                "id": "c",
+                "label": "\"0007\""
+              },
+              {
+                "id": "d",
+                "label": "\"007\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "It adds zeros at the start until the text is 3 characters long."
+          },
+          {
+            "id": "string_methods-q-zxvl0e",
+            "type": "shortText",
+            "prompt": "What does `\"cat\".includes(\"dog\")` give?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "false"
+            },
+            "explanation": "includes gives true or false; \"cat\" doesn't contain \"dog\"."
+          }
+        ]
+      }
+    },
+    {
+      "id": "types",
+      "title": "Types and conversion",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "typeof",
+          "label": "typeof",
+          "code": "console.log(typeof 3.5)\nconsole.log(typeof \"text\")\nconsole.log(typeof false)\nconsole.log(typeof undefined)"
+        },
+        {
+          "id": "text_that_looks_like_a_number",
+          "label": "Text that looks like a number",
+          "code": "const a = \"10\"\nconst b = \"5\"\nconsole.log(a + b)\nconsole.log(Number(a) + Number(b))"
+        },
+        {
+          "id": "reading_numbers",
+          "label": "Reading numbers",
+          "code": "console.log(parseInt(\"42 apples\"))\nconsole.log(parseFloat(\"1.5 litres\"))\nconsole.log(parseInt(\"7.9\"))"
+        },
+        {
+          "id": "nan",
+          "label": "NaN",
+          "code": "const n = Number(\"ten\")\nconsole.log(n, n + 1, Number.isNaN(n), typeof n)"
+        }
+      ],
+      "intro": {
+        "title": "Types and conversion",
+        "bodyMarkdown": "Every value has a **type**. So far you have met `number` (`7`, `2.5`), `string` (`\"hi\"`) and, in the next stage, `boolean` (`true` or `false`). `undefined` means \"no value yet\". `typeof` tells you a value's type, as text:\n\n```\nconsole.log(typeof 42, typeof \"42\", typeof true, typeof undefined)\n```\n\n`42` and `\"42\"` look alike but are different: one is a number, the other is text. Text that comes from outside a program, such as what someone types into a form, is always a string, even when it is digits.\n\nThat matters with `+`. If either side is a string, `+` joins instead of adding: `\"5\" + 3` is `\"53\"`. The other maths operators only work on numbers, so they turn the text into a number first: `\"5\" * 3` is `15` and `\"5\" - 3` is `2`. Relying on that is confusing, so convert on purpose.\n\n```\nconsole.log(\"5\" + 3, \"5\" * 3, \"5\" - 3)\nconsole.log(Number(\"5\") + 3)\n```\n\n`Number(text)` turns text into a number. `parseInt(text)` and `parseFloat(text)` read a number from the start of text and stop at the first character that doesn't fit, so `parseInt(\"12px\")` is `12`; `parseInt` also drops any decimals. `String(value)` turns a value into text.\n\nWhen text isn't a number at all, the result is `NaN`, \"Not a Number\": `Number(\"hello\")` is `NaN`. Any maths with `NaN` gives `NaN` again, so check with `Number.isNaN(value)`. Oddly, `typeof NaN` is `\"number\"`.\n\n```\nconsole.log(Number(\"hello\"), parseInt(\"12px\"), parseFloat(\"3.75kg\"))\nconsole.log(Number.isNaN(Number(\"abc\")))\n```",
+        "sandboxCode": "console.log(typeof 42, typeof \"42\", typeof true)\nconsole.log(\"5\" + 3, \"5\" * 3)\nconsole.log(Number(\"5\") + 3)\nconsole.log(Number(\"hello\"), parseInt(\"12px\"))",
+        "readMore": {
+          "label": "MDN: JavaScript data types",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Data_structures",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "types-what-type",
+          "title": "Easy: What type?",
+          "promptMarkdown": "Set `kind` to the type of `value`, using `typeof`.",
+          "starterCode": "const value = \"2026\"\n",
+          "hint": "`typeof value` gives the type as text.",
+          "solution": "const value = \"2026\"\nconst kind = typeof value",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "kind is \"string\"",
+                "assertion": "Object.is(kind, \"string\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses typeof",
+                "assertion": "_cq_code.includes(\"typeof\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const value = \\\"2026\\\"\\n\", \"const value = 2026\\n\", \"const value = \\\"2026\\\"\\nconst kind = typeof value\", [\"kind\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-text-to-number",
+          "title": "Easy: Text to number",
+          "promptMarkdown": "Set `count` to the number in the text `typed`.",
+          "starterCode": "const typed = \"42\"\n",
+          "hint": "`Number(typed)`.",
+          "solution": "const typed = \"42\"\nconst count = Number(typed)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "count is the number 42",
+                "assertion": "Object.is(count, 42)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const typed = \\\"42\\\"\\n\", \"const typed = \\\"432\\\"\\n\", \"const typed = \\\"42\\\"\\nconst count = Number(typed)\", [\"count\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-number-to-text",
+          "title": "Easy: Number to text",
+          "promptMarkdown": "Set `text` to `year` as a string.",
+          "starterCode": "const year = 2026\n",
+          "hint": "`String(year)`.",
+          "solution": "const year = 2026\nconst text = String(year)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "text is \"2026\"",
+                "assertion": "Object.is(text, \"2026\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const year = 2026\\n\", \"const year = 2027\\n\", \"const year = 2026\\nconst text = String(year)\", [\"text\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-add-don-t-join",
+          "title": "Medium: Add, don't join",
+          "promptMarkdown": "This shows `105` instead of `15`. Convert both values to numbers so it adds them.",
+          "starterCode": "const a = \"10\"\nconst b = \"5\"\nconsole.log(a + b)",
+          "hint": "`Number(a) + Number(b)`.",
+          "solution": "const a = \"10\"\nconst b = \"5\"\nconsole.log(Number(a) + Number(b))",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 15",
+                "assertion": "_cq_prints(\"15\")"
+              },
+              {
+                "id": "t2",
+                "label": "Converts them",
+                "assertion": "_cq_code.includes(\"Number(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const a = \\\"10\\\"\\nconst b = \\\"5\\\"\\nconsole.log(a + b)\", \"const a = \\\"112\\\"\\nconst b = \\\"72\\\"\\nconsole.log(a + b)\", \"const a = \\\"10\\\"\\nconst b = \\\"5\\\"\\nconsole.log(Number(a) + Number(b))\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-read-the-width",
+          "title": "Medium: Read the width",
+          "promptMarkdown": "Set `width` to the number at the start of `css`: `120` from `\"120px\"`.",
+          "starterCode": "const css = \"120px\"\n",
+          "hint": "`Number(\"120px\")` is NaN, but `parseInt` stops at the `p`.",
+          "solution": "const css = \"120px\"\nconst width = parseInt(css)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "width is 120",
+                "assertion": "Object.is(width, 120)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses parseInt",
+                "assertion": "_cq_code.includes(\"parseInt(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const css = \\\"120px\\\"\\n\", \"const css = \\\"120px2\\\"\\n\", \"const css = \\\"120px\\\"\\nconst width = parseInt(css)\", [\"width\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-a-decimal-price",
+          "title": "Medium: A decimal price",
+          "promptMarkdown": "Set `price` to the decimal number in `label`: `4.75` from `\"4.75 EUR\"`.",
+          "starterCode": "const label = \"4.75 EUR\"\n",
+          "hint": "`parseFloat` keeps the decimals; `parseInt` would drop them.",
+          "solution": "const label = \"4.75 EUR\"\nconst price = parseFloat(label)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "price is 4.75",
+                "assertion": "Object.is(price, 4.75)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses parseFloat",
+                "assertion": "_cq_code.includes(\"parseFloat(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const label = \\\"4.75 EUR\\\"\\n\", \"const label = \\\"4.76 EUR2\\\"\\n\", \"const label = \\\"4.75 EUR\\\"\\nconst price = parseFloat(label)\", [\"price\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-is-it-a-number",
+          "title": "Hard: Is it a number?",
+          "promptMarkdown": "Set `bad` to whether `Number(answer)` is NaN.",
+          "starterCode": "const answer = \"twelve\"\n",
+          "hint": "`Number.isNaN(Number(answer))`.",
+          "solution": "const answer = \"twelve\"\nconst bad = Number.isNaN(Number(answer))",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "bad is true",
+                "assertion": "Object.is(bad, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses Number.isNaN",
+                "assertion": "_cq_code.includes(\"Number.isNaN(\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const answer = \\\"twelve\\\"\\n\", \"const answer = \\\"12\\\"\\n\", \"const answer = \\\"twelve\\\"\\nconst bad = Number.isNaN(Number(answer))\", [\"bad\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-total-of-a-form",
+          "title": "Hard: Total of a form",
+          "promptMarkdown": "A form gives quantities as text. Set `total` to the three added up as numbers.",
+          "starterCode": "const small = \"3\"\nconst medium = \"4\"\nconst large = \"2\"\n",
+          "hint": "Convert each one: `Number(small) + Number(medium) + Number(large)`.",
+          "solution": "const small = \"3\"\nconst medium = \"4\"\nconst large = \"2\"\nconst total = Number(small) + Number(medium) + Number(large)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is the number 9",
+                "assertion": "Object.is(total, 9)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const small = \\\"3\\\"\\nconst medium = \\\"4\\\"\\nconst large = \\\"2\\\"\\n\", \"const small = \\\"10\\\"\\nconst medium = \\\"1\\\"\\nconst large = \\\"7\\\"\\n\", \"const small = \\\"3\\\"\\nconst medium = \\\"4\\\"\\nconst large = \\\"2\\\"\\nconst total = Number(small) + Number(medium) + Number(large)\", [\"total\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-digits-in-a-number",
+          "title": "Expert: Digits in a number",
+          "promptMarkdown": "Set `digits` to how many digits `n` has, by turning it into text and taking its length.",
+          "starterCode": "const n = 123456\n",
+          "hint": "`String(n).length`.",
+          "solution": "const n = 123456\nconst digits = String(n).length",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "digits is 6",
+                "assertion": "Object.is(digits, 6)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses the length",
+                "assertion": "_cq_code.includes(\".length\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const n = 123456\\n\", \"const n = 98\\n\", \"const n = 123456\\nconst digits = String(n).length\", [\"digits\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "types-fix-the-average",
+          "title": "Expert: Fix the average",
+          "promptMarkdown": "The scores come as text, so the average is wrong (`4528.5`). Fix it so `average` is `48.5`.",
+          "starterCode": "const s1 = \"45\"\nconst s2 = \"52\"\nconst average = (s1 + s2) / 2",
+          "hint": "`+` joins text. Convert before adding: `(Number(s1) + Number(s2)) / 2`.",
+          "solution": "const s1 = \"45\"\nconst s2 = \"52\"\nconst average = (Number(s1) + Number(s2)) / 2",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "average is 48.5",
+                "assertion": "Object.is(average, 48.5)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const s1 = \\\"45\\\"\\nconst s2 = \\\"52\\\"\\nconst average = (s1 + s2) / 2\", \"const s1 = \\\"462\\\"\\nconst s2 = \\\"542\\\"\\nconst average = (s1 + s2) / 5\", \"const s1 = \\\"45\\\"\\nconst s2 = \\\"52\\\"\\nconst average = (Number(s1) + Number(s2)) / 2\", [\"average\"], false)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "types-q-1vk6g2l",
+            "type": "mcq",
+            "prompt": "What does `\"5\" + 3` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "8"
+              },
+              {
+                "id": "b",
+                "label": "\"53\""
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "\"8\""
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "With a string on one side, + joins."
+          },
+          {
+            "id": "types-q-jy6840",
+            "type": "mcq",
+            "prompt": "What does `\"5\" * 3` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "15"
+              },
+              {
+                "id": "b",
+                "label": "\"53\""
+              },
+              {
+                "id": "c",
+                "label": "\"555\""
+              },
+              {
+                "id": "d",
+                "label": "NaN"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "* only works on numbers, so the text becomes 5 first."
+          },
+          {
+            "id": "types-q-flayzl",
+            "type": "mcq",
+            "prompt": "What does `typeof \"42\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"string\""
+              },
+              {
+                "id": "b",
+                "label": "\"number\""
+              },
+              {
+                "id": "c",
+                "label": "42"
+              },
+              {
+                "id": "d",
+                "label": "\"text\""
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "It's in quotes, so it's a string."
+          },
+          {
+            "id": "types-q-q1tz3m",
+            "type": "mcq",
+            "prompt": "What does `Number(\"hello\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"hello\""
+              },
+              {
+                "id": "b",
+                "label": "NaN"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "0"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Text that isn't a number converts to NaN, \"Not a Number\"."
+          },
+          {
+            "id": "types-q-1jf3v0e",
+            "type": "mcq",
+            "prompt": "What does `parseInt(\"12px\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"12\""
+              },
+              {
+                "id": "b",
+                "label": "12px"
+              },
+              {
+                "id": "c",
+                "label": "NaN"
+              },
+              {
+                "id": "d",
+                "label": "12"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "parseInt reads digits from the start and stops at the first letter."
+          },
+          {
+            "id": "types-q-r6gznr",
+            "type": "mcq",
+            "prompt": "What does `parseInt(\"7.9\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "NaN"
+              },
+              {
+                "id": "b",
+                "label": "8"
+              },
+              {
+                "id": "c",
+                "label": "7"
+              },
+              {
+                "id": "d",
+                "label": "7.9"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "parseInt keeps only the whole part; use parseFloat for decimals."
+          },
+          {
+            "id": "types-q-nv126",
+            "type": "mcq",
+            "prompt": "What does `typeof NaN` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"NaN\""
+              },
+              {
+                "id": "b",
+                "label": "\"string\""
+              },
+              {
+                "id": "c",
+                "label": "\"number\""
+              },
+              {
+                "id": "d",
+                "label": "\"undefined\""
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Strange but true: NaN is a special number value."
+          },
+          {
+            "id": "types-q-1ghn68r",
+            "type": "mcq",
+            "prompt": "What does `NaN + 1` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "1"
+              },
+              {
+                "id": "b",
+                "label": "0"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "NaN"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Any maths with NaN gives NaN."
+          },
+          {
+            "id": "types-q-n993x5",
+            "type": "shortText",
+            "prompt": "What does `typeof true` give? (just the word)",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "boolean"
+            },
+            "explanation": "true and false are booleans."
+          }
+        ]
+      }
+    },
+    {
+      "id": "comparing",
+      "title": "True or false: comparing values",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "comparing_numbers",
+          "label": "Comparing numbers",
+          "code": "const score = 72\nconsole.log(score > 50, score >= 72, score < 72, score === 100)"
+        },
+        {
+          "id": "comparing_text",
+          "label": "Comparing text",
+          "code": "console.log(\"cat\" === \"cat\", \"cat\" === \"Cat\")\nconsole.log(\"Cat\".toLowerCase() === \"cat\")"
+        },
+        {
+          "id": "strict_or_loose",
+          "label": "Strict or loose",
+          "code": "console.log(5 === \"5\", 5 == \"5\")\nconsole.log(0 == \"\", 0 === \"\")"
+        },
+        {
+          "id": "and_or_not",
+          "label": "And, or, not",
+          "code": "const sunny = true\nconst warm = false\nconsole.log(sunny && warm, sunny || warm, !warm)"
+        }
+      ],
+      "intro": {
+        "title": "True or false: comparing values",
+        "bodyMarkdown": "A **boolean** is one of two values, `true` or `false`. You get one whenever you compare two values:\n\n```\nconst age = 14\nconsole.log(age > 12, age < 10, age >= 14, age <= 13)\n```\n\n`>` and `<` are greater and less than, and `>=` and `<=` include equal. `===` asks whether two values are the same, and `!==` whether they are different. A single `=` is not a comparison: it gives a variable a value.\n\n```\nconst password = \"open-sesame\"\nconsole.log(password === \"open-sesame\", password !== \"letmein\")\n```\n\n`===` is strict: the type has to match too, so `5 === \"5\"` is `false` (a number isn't a string). There is also a loose `==` that converts types first, so `5 == \"5\"` is `true`, along with surprises like `0 == \"\"`. Always use `===` and `!==`.\n\nStrings compare letter by letter and are case-sensitive: `\"cat\" === \"Cat\"` is `false`. To compare without caring about case, change both first: `a.toLowerCase() === b.toLowerCase()`.\n\nBooleans can be stored and combined. `&&` (and) is true only when both sides are true; `||` (or) is true when at least one is; `!` (not) turns one around.\n\n```\nconst age = 15\nconst hasTicket = true\nconst canEnter = age >= 12 && hasTicket\nconsole.log(canEnter, !canEnter, age < 12 || hasTicket)\n```\n\nIn the next quest, these true-or-false values decide what a program does, with `if` and loops.",
+        "sandboxCode": "const age = 14\nconsole.log(age > 12, age === 14, age !== 14)\nconsole.log(5 === \"5\", 5 == \"5\")\nconsole.log(age >= 12 && age < 18)",
+        "readMore": {
+          "label": "MDN: comparison operators",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_operators#comparison_operators",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "comparing-old-enough",
+          "title": "Easy: Old enough?",
+          "promptMarkdown": "Set `canVote` to whether `age` is 18 or more.",
+          "starterCode": "const age = 21\n",
+          "hint": "`age >= 18`.",
+          "solution": "const age = 21\nconst canVote = age >= 18",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "canVote is true",
+                "assertion": "Object.is(canVote, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Compares with >=",
+                "assertion": "_cq_code.includes(\">=\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const age = 21\\n\", \"const age = 16\\n\", \"const age = 21\\nconst canVote = age >= 18\", [\"canVote\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-below-zero",
+          "title": "Easy: Below zero",
+          "promptMarkdown": "Set `freezing` to whether `temp` is less than 0.",
+          "starterCode": "const temp = -4\n",
+          "hint": "`temp < 0`.",
+          "solution": "const temp = -4\nconst freezing = temp < 0",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "freezing is true",
+                "assertion": "Object.is(freezing, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const temp = -4\\n\", \"const temp = 6\\n\", \"const temp = -4\\nconst freezing = temp < 0\", [\"freezing\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-the-right-code",
+          "title": "Easy: The right code",
+          "promptMarkdown": "Set `correct` to whether `guess` is exactly `\"1234\"`, using `===`.",
+          "starterCode": "const guess = \"1234\"\n",
+          "hint": "`guess === \"1234\"`.",
+          "solution": "const guess = \"1234\"\nconst correct = guess === \"1234\"",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "correct is true",
+                "assertion": "Object.is(correct, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses ===",
+                "assertion": "_cq_code.includes(\"===\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const guess = \\\"1234\\\"\\n\", \"const guess = \\\"4321\\\"\\n\", \"const guess = \\\"1234\\\"\\nconst correct = guess === \\\"1234\\\"\", [\"correct\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-not-the-same",
+          "title": "Medium: Not the same",
+          "promptMarkdown": "Set `changed` to whether `newName` is different from `oldName`.",
+          "starterCode": "const oldName = \"Sam\"\nconst newName = \"Sami\"\n",
+          "hint": "`newName !== oldName`.",
+          "solution": "const oldName = \"Sam\"\nconst newName = \"Sami\"\nconst changed = newName !== oldName",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "changed is true",
+                "assertion": "Object.is(changed, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses !==",
+                "assertion": "_cq_code.includes(\"!==\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const oldName = \\\"Sam\\\"\\nconst newName = \\\"Sami\\\"\\n\", \"const oldName = \\\"Sam\\\"\\nconst newName = \\\"Sam\\\"\\n\", \"const oldName = \\\"Sam\\\"\\nconst newName = \\\"Sami\\\"\\nconst changed = newName !== oldName\", [\"changed\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-strict-please",
+          "title": "Medium: Strict, please",
+          "promptMarkdown": "This says the number and the text match. Change the comparison so `same` is `false`: they are different types.",
+          "starterCode": "const id = 7\nconst typed = \"7\"\nconst same = id == typed",
+          "hint": "Use the strict `===`, which checks the type too.",
+          "solution": "const id = 7\nconst typed = \"7\"\nconst same = id === typed",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "same is false",
+                "assertion": "Object.is(same, false)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses ===",
+                "assertion": "_cq_code.includes(\"===\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const id = 7\\nconst typed = \\\"7\\\"\\nconst same = id == typed\", \"const id = 8\\nconst typed = \\\"92\\\"\\nconst same = id == typed\", \"const id = 7\\nconst typed = \\\"7\\\"\\nconst same = id === typed\", [\"same\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-any-case",
+          "title": "Medium: Any case",
+          "promptMarkdown": "Set `match` to whether `answer` is `paris` in any mix of capitals, by changing it to lower case first.",
+          "starterCode": "const answer = \"PaRiS\"\n",
+          "hint": "`answer.toLowerCase() === \"paris\"`.",
+          "solution": "const answer = \"PaRiS\"\nconst match = answer.toLowerCase() === \"paris\"",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "match is true",
+                "assertion": "Object.is(match, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses toLowerCase",
+                "assertion": "_cq_code.includes(\"toLowerCase()\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const answer = \\\"PaRiS\\\"\\n\", \"const answer = \\\"London\\\"\\n\", \"const answer = \\\"PaRiS\\\"\\nconst match = answer.toLowerCase() === \\\"paris\\\"\", [\"match\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-a-teenager",
+          "title": "Hard: A teenager",
+          "promptMarkdown": "Set `teen` to whether `age` is from 13 up to 19, with `&&`.",
+          "starterCode": "const age = 15\n",
+          "hint": "`age >= 13 && age <= 19`.",
+          "solution": "const age = 15\nconst teen = age >= 13 && age <= 19",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "teen is true",
+                "assertion": "Object.is(teen, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses &&",
+                "assertion": "_cq_code.includes(\"&&\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const age = 15\\n\", \"const age = 21\\n\", \"const age = 15\\nconst teen = age >= 13 && age <= 19\", [\"teen\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-a-day-off",
+          "title": "Hard: A day off",
+          "promptMarkdown": "Set `dayOff` to whether `day` is `\"Saturday\"` or `\"Sunday\"`, with `||`.",
+          "starterCode": "const day = \"Sunday\"\n",
+          "hint": "Each side is a full comparison: `day === \"Saturday\" || day === \"Sunday\"`.",
+          "solution": "const day = \"Sunday\"\nconst dayOff = day === \"Saturday\" || day === \"Sunday\"",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "dayOff is true",
+                "assertion": "Object.is(dayOff, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses ||",
+                "assertion": "_cq_code.includes(\"||\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const day = \\\"Sunday\\\"\\n\", \"const day = \\\"Monday\\\"\\n\", \"const day = \\\"Sunday\\\"\\nconst dayOff = day === \\\"Saturday\\\" || day === \\\"Sunday\\\"\", [\"dayOff\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-free-entry",
+          "title": "Expert: Free entry",
+          "promptMarkdown": "Entry is free for children under 5 and adults 65 or over. Set `free` to whether `age` gets in free, then show `Free: true`.",
+          "starterCode": "const age = 70\n",
+          "hint": "`age < 5 || age >= 65`, then `` console.log(`Free: ${free}`) ``.",
+          "solution": "const age = 70\nconst free = age < 5 || age >= 65\nconsole.log(`Free: ${free}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "free is true",
+                "assertion": "Object.is(free, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Shows Free: true",
+                "assertion": "_cq_prints(\"Free: true\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const age = 70\\n\", \"const age = 30\\n\", \"const age = 70\\nconst free = age < 5 || age >= 65\\nconsole.log(`Free: ${free}`)\", [\"free\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "comparing-password-rules",
+          "title": "Expert: Password rules",
+          "promptMarkdown": "A password is good when it is at least 8 characters long and is not `\"password\"`. Set `good` for `pw`.",
+          "starterCode": "const pw = \"sunflower\"\n",
+          "hint": "`pw.length >= 8 && pw !== \"password\"`.",
+          "solution": "const pw = \"sunflower\"\nconst good = pw.length >= 8 && pw !== \"password\"",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "good is true",
+                "assertion": "Object.is(good, true)"
+              },
+              {
+                "id": "t2",
+                "label": "Checks the length",
+                "assertion": "_cq_code.includes(\"length\")"
+              },
+              {
+                "id": "t3",
+                "label": "Combines with &&",
+                "assertion": "_cq_code.includes(\"&&\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const pw = \\\"sunflower\\\"\\n\", \"const pw = \\\"password\\\"\\n\", \"const pw = \\\"sunflower\\\"\\nconst good = pw.length >= 8 && pw !== \\\"password\\\"\", [\"good\"], false)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "comparing-q-smx46w",
+            "type": "mcq",
+            "prompt": "What does `7 > 3` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "true"
+              },
+              {
+                "id": "b",
+                "label": "\"7 > 3\""
+              },
+              {
+                "id": "c",
+                "label": "4"
+              },
+              {
+                "id": "d",
+                "label": "false"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "7 is greater than 3."
+          },
+          {
+            "id": "comparing-q-edzjqb",
+            "type": "mcq",
+            "prompt": "What does `5 === \"5\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "true"
+              },
+              {
+                "id": "b",
+                "label": "NaN"
+              },
+              {
+                "id": "c",
+                "label": "An error"
+              },
+              {
+                "id": "d",
+                "label": "false"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "=== checks the type too: a number isn't a string."
+          },
+          {
+            "id": "comparing-q-ky8qqo",
+            "type": "mcq",
+            "prompt": "What does `5 == \"5\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "false"
+              },
+              {
+                "id": "b",
+                "label": "true"
+              },
+              {
+                "id": "c",
+                "label": "\"55\""
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "The loose == converts types first, which is why it's best avoided."
+          },
+          {
+            "id": "comparing-q-1uwj8yx",
+            "type": "mcq",
+            "prompt": "What does `\"cat\" === \"Cat\"` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "false"
+              },
+              {
+                "id": "c",
+                "label": "true"
+              },
+              {
+                "id": "d",
+                "label": "undefined"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Comparing strings is case-sensitive."
+          },
+          {
+            "id": "comparing-q-wid5lz",
+            "type": "mcq",
+            "prompt": "What does `10 >= 10` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "10"
+              },
+              {
+                "id": "b",
+                "label": "true"
+              },
+              {
+                "id": "c",
+                "label": "20"
+              },
+              {
+                "id": "d",
+                "label": "false"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": ">= includes equal."
+          },
+          {
+            "id": "comparing-q-16eh1sj",
+            "type": "mcq",
+            "prompt": "What does `true && false` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "true"
+              },
+              {
+                "id": "b",
+                "label": "undefined"
+              },
+              {
+                "id": "c",
+                "label": "false"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "&& needs both sides to be true."
+          },
+          {
+            "id": "comparing-q-160t0wr",
+            "type": "mcq",
+            "prompt": "What does `false || true` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "true"
+              },
+              {
+                "id": "b",
+                "label": "undefined"
+              },
+              {
+                "id": "c",
+                "label": "false"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "|| needs only one side to be true."
+          },
+          {
+            "id": "comparing-q-131ladn",
+            "type": "mcq",
+            "prompt": "What's the difference between `=` and `===`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`=` gives a value; `===` compares"
+              },
+              {
+                "id": "b",
+                "label": "None"
+              },
+              {
+                "id": "c",
+                "label": "`===` gives a value; `=` compares"
+              },
+              {
+                "id": "d",
+                "label": "`=` is for text only"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "A single = assigns; === asks whether two values are the same."
+          },
+          {
+            "id": "comparing-q-lgi6gz",
+            "type": "shortText",
+            "prompt": "What does `!true` give?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "false"
+            },
+            "explanation": "! turns true into false and false into true."
+          }
+        ]
+      }
     }
   ]
 }
