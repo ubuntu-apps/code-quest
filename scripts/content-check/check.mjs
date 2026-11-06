@@ -4,7 +4,7 @@
  * Usage: node scripts/content-check/check.mjs [--language r] [--section python/data_and_apis] [--all-strict] [--verbose] [--require-engines]
  *   (npm run check:content)
  *
- * Python and SQL run on Python 3 (python3 or python on PATH, or set CQ_PYTHON; pandas for the
+ * JavaScript runs in Node itself. Python and SQL run on Python 3 (python3 or python on PATH, or set CQ_PYTHON; pandas for the
  * pandas lessons). R runs in webR: npm install --no-save webr@0.4.2 first. A course whose engine
  * isn't installed gets the shared checks only, unless it is asked for with --language, or every
  * engine is required with --require-engines (CI): then the check stops with an error.
@@ -22,6 +22,8 @@ import { PythonChecker } from './PythonChecker.mjs'
 import { SqlChecker } from './SqlChecker.mjs'
 import { RChecker } from './RChecker.mjs'
 import { WebREngine } from './WebREngine.mjs'
+import { JavaScriptChecker } from './JavaScriptChecker.mjs'
+import { NodeJsEngine } from './NodeJsEngine.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const args = process.argv.slice(2)
@@ -34,9 +36,12 @@ const checkers = {
   python: (spec) => new PythonChecker(spec, python),
   sql: (spec) => new SqlChecker(spec, python),
   r: (spec) => new RChecker(spec, new WebREngine(), RCourse),
+  javascript: (spec) => new JavaScriptChecker(spec, new NodeJsEngine(), JSCourse),
 }
 // The R stages' data (for `typedOk` and the questions' checks), loaded only when R is checked.
 const RCourse = !language || language === 'r' ? (await import('../r-curriculum/data/course.mjs')).COURSE : []
+// The JavaScript stages' data (for `typedOk` and the questions' checks). JavaScript runs in Node itself.
+const JSCourse = !language || language === 'javascript' ? (await import('../javascript-curriculum/data/course.mjs')).COURSE : []
 
 const checker = new ContentChecker({
   source: new FileContentSource(root),

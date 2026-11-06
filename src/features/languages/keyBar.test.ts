@@ -19,6 +19,7 @@ describe('the phone key bar', () => {
     expect(labels(languagePack('python')!.keys).slice(0, 4)).toEqual(['⇥', '⇤', ':', '#'])
     expect(labels(languagePack('sql')!.keys).slice(0, 5)).toEqual(['⇥', '⇤', ';', '%', '||'])
     expect(labels(languagePack('r')!.keys).slice(0, 4)).toEqual(['⇥', '⇤', '<-', '$'])
+    expect(labels(languagePack('javascript')!.keys).slice(0, 5)).toEqual(['⇥', '⇤', ';', '` `', '=>'])
   })
 
   it('leaves out the keys a language removes', () => {

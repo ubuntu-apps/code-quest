@@ -58,7 +58,7 @@ If you use CodeQuest with learners, I would love to hear how it goes: [send feed
 
 ## For developers
 
-CodeQuest is an installable web app (PWA) built with React, TypeScript and Vite. In the code and content files, a quest is a **section**, a stage is a **level** (`kind: 'project'` for side quests), and a gate is a level's **test** (its quiz). Python runs with [Pyodide](https://pyodide.org) in a Web Worker, SQL runs on SQLite through Pyodide's `sqlite3`, and R will run with [WebR](https://docs.r-wasm.org/webr/). The Java files in `public/content/java/` are a draft that is not listed in the app; to publish them, add a `java` entry to `public/content/index.json`.
+CodeQuest is an installable web app (PWA) built with React, TypeScript and Vite. In the code and content files, a quest is a **section**, a stage is a **level** (`kind: 'project'` for side quests), and a gate is a level's **test** (its quiz). Python runs with [Pyodide](https://pyodide.org) in a Web Worker, SQL runs on SQLite through Pyodide's `sqlite3`, R will run with [WebR](https://docs.r-wasm.org/webr/), and JavaScript runs on the browser's own engine in a Web Worker (R and JavaScript are admin-only for now). The Java files in `public/content/java/` are a draft that is not listed in the app; to publish them, add a `java` entry to `public/content/index.json`.
 
 ### Getting started
 
