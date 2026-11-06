@@ -480,6 +480,1583 @@
           }
         ]
       }
+    },
+    {
+      "id": "showing_values",
+      "title": "Showing values",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "several_values",
+          "label": "Several values",
+          "code": "console.log(\"Score:\", 7, \"of\", 10)"
+        },
+        {
+          "id": "quotes_inside",
+          "label": "Quotes inside",
+          "code": "console.log(\"It's sunny\")\nconsole.log('She said \"hi\"')\nconsole.log(\"She said \\\"hi\\\"\")"
+        },
+        {
+          "id": "escapes",
+          "label": "Escapes",
+          "code": "console.log(\"One\\nTwo\\nThree\")\nconsole.log(\"Name\\tScore\")\nconsole.log(\"C:\\\\Users\")"
+        },
+        {
+          "id": "blank_line",
+          "label": "Blank line",
+          "code": "console.log(\"Top\")\nconsole.log()\nconsole.log(\"Bottom\")"
+        }
+      ],
+      "intro": {
+        "title": "Showing values",
+        "bodyMarkdown": "`console.log()` can show several values at once. Separate them with commas and it puts one space between each:\n\n```\nconsole.log(\"Apples:\", 3, \"Pears:\", 5)\nconsole.log(10, 20, 30)\n```\n\nNumbers can be whole (`7`), decimal (`2.5`) or negative (`-4`). JavaScript works out any maths before it shows the result, so `console.log(20 - 13.75)` shows `6.25`.\n\nAn empty `console.log()` shows an empty line, which is handy for spacing output out.\n\nText can hold the other kind of quote: `\"It's sunny\"` uses double quotes around a single quote, and `'She said \"hi\"'` the other way round.\n\nA backslash starts an **escape**: a special character inside text. `\\n` starts a new line, `\\t` is a tab, `\\\"` is a double quote inside double quotes, and `\\\\` is one backslash.\n\n```\nconsole.log(\"Line one\\nLine two\")\nconsole.log(\"Name\\tScore\")\nconsole.log(\"She said \\\"hi\\\"\")\n```\n\nLines are shown in the order the code runs them, top to bottom. To change the order of the output, change the order of the lines.",
+        "sandboxCode": "console.log(\"Apples:\", 3, \"Pears:\", 5)\nconsole.log()\nconsole.log(\"Change:\", 20 - 13.75)\nconsole.log(\"Line one\\nLine two\")",
+        "readMore": {
+          "label": "MDN: console.log()",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/API/console/log_static",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "showing_values-three-values",
+          "title": "Easy: Three values",
+          "promptMarkdown": "Show `Apples 3 Pears 5` by giving `console.log` four values separated by commas: two texts and two numbers.",
+          "starterCode": "console.log()",
+          "hint": "`console.log(\"Apples\", 3, \"Pears\", 5)`: the commas become spaces.",
+          "solution": "console.log(\"Apples\", 3, \"Pears\", 5)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Apples 3 Pears 5",
+                "assertion": "_cq_prints(\"Apples 3 Pears 5\")"
+              },
+              {
+                "id": "t2",
+                "label": "Gives the numbers as numbers",
+                "assertion": "new RegExp(\",\\\\s*3\\\\s*,\", \"\").test(_cq_code) && new RegExp(\",\\\\s*5\\\\s*\\\\)\", \"\").test(_cq_code)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-a-blank-line",
+          "title": "Easy: A blank line",
+          "promptMarkdown": "Show `Top`, then an empty line, then `Bottom`.",
+          "starterCode": "console.log(\"Top\")\n\nconsole.log(\"Bottom\")",
+          "hint": "An empty `console.log()` shows an empty line.",
+          "solution": "console.log(\"Top\")\nconsole.log()\nconsole.log(\"Bottom\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Top, an empty line, then Bottom",
+                "assertion": "_cq_prints(\"Top\", \"\", \"Bottom\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-a-quote-inside",
+          "title": "Easy: A quote inside",
+          "promptMarkdown": "Show `It's sunny`.",
+          "starterCode": "console.log()",
+          "hint": "Put the text in double quotes, so the single quote inside is just a character: `\"It's sunny\"`.",
+          "solution": "console.log(\"It's sunny\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows It's sunny",
+                "assertion": "_cq_prints(\"It's sunny\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-double-quotes-inside",
+          "title": "Medium: Double quotes inside",
+          "promptMarkdown": "Show `She said \"hi\"`, with the double quotes.",
+          "starterCode": "console.log()",
+          "hint": "Use single quotes around the text, or write each inner quote as `\\\"`.",
+          "solution": "console.log('She said \"hi\"')",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows She said \"hi\"",
+                "assertion": "_cq_prints(\"She said \\\"hi\\\"\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-two-lines-one-log",
+          "title": "Medium: Two lines, one log",
+          "promptMarkdown": "Show `Line one` and `Line two` on separate lines with a single `console.log`.",
+          "starterCode": "console.log()",
+          "hint": "Put `\\n` in the text where the new line starts: `\"Line one\\nLine two\"`.",
+          "solution": "console.log(\"Line one\\nLine two\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the two lines",
+                "assertion": "_cq_prints(\"Line one\", \"Line two\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses one console.log",
+                "assertion": "(_cq_code.match(/console\\.log/g) || []).length === 1"
+              },
+              {
+                "id": "t3",
+                "label": "Uses \\n for the new line",
+                "assertion": "_cq_code.includes(\"\\\\n\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-work-out-the-change",
+          "title": "Medium: Work out the change",
+          "promptMarkdown": "A snack costs 13.75 and you pay with 20. Show `Change: 6.25`, letting JavaScript work out the change.",
+          "starterCode": "console.log()",
+          "hint": "Two values: the text `\"Change:\"` and the sum `20 - 13.75`.",
+          "solution": "console.log(\"Change:\", 20 - 13.75)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Change: 6.25",
+                "assertion": "_cq_prints(\"Change: 6.25\")"
+              },
+              {
+                "id": "t2",
+                "label": "Lets JavaScript work it out",
+                "assertion": "!_cq_code.includes(\"6.25\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-put-it-in-order",
+          "title": "Hard: Put it in order",
+          "promptMarkdown": "Rearrange the lines so the countdown shows `3`, `2`, `1`, `Go!`, one per line.",
+          "starterCode": "console.log(\"Go!\")\nconsole.log(2)\nconsole.log(3)\nconsole.log(1)",
+          "hint": "Lines run from top to bottom. Move `console.log(3)` to the top and `console.log(\"Go!\")` to the bottom.",
+          "solution": "console.log(3)\nconsole.log(2)\nconsole.log(1)\nconsole.log(\"Go!\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 3, 2, 1, Go!",
+                "assertion": "_cq_prints(\"3\", \"2\", \"1\", \"Go!\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-a-tab-between",
+          "title": "Hard: A tab between",
+          "promptMarkdown": "Show `Name`, a tab, then `Score`, with one text that uses the tab escape.",
+          "starterCode": "console.log()",
+          "hint": "The tab escape is `\\t`: `\"Name\\tScore\"`.",
+          "solution": "console.log(\"Name\\tScore\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Name, a tab, then Score",
+                "assertion": "_cq_prints(\"Name\\tScore\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses \\t",
+                "assertion": "_cq_code.includes(\"\\\\t\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-minutes-in-a-day-and-a-week",
+          "title": "Expert: Minutes in a day and a week",
+          "promptMarkdown": "Show `Minutes in a day: 1440` and then `Minutes in a week: 10080`. Let JavaScript calculate both numbers from 24 hours, 60 minutes and 7 days.",
+          "starterCode": "console.log(\"Minutes in a day:\", )\n",
+          "hint": "A day is `24 * 60` minutes, and a week is `7 * 24 * 60`.",
+          "solution": "console.log(\"Minutes in a day:\", 24 * 60)\nconsole.log(\"Minutes in a week:\", 7 * 24 * 60)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows both lines",
+                "assertion": "_cq_prints(\"Minutes in a day: 1440\", \"Minutes in a week: 10080\")"
+              },
+              {
+                "id": "t2",
+                "label": "Lets JavaScript work them out",
+                "assertion": "!_cq_code.includes(\"1440\") && !_cq_code.includes(\"10080\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "showing_values-fix-the-backslash",
+          "title": "Expert: Fix the backslash",
+          "promptMarkdown": "This should show `Saved in C:\\new folder`, but the `\\n` starts a new line instead. Fix it so it shows one backslash and the word `new`.",
+          "starterCode": "console.log(\"Saved in C:\\new folder\")",
+          "hint": "In text, `\\\\` is one backslash. Write `C:\\\\new`.",
+          "solution": "console.log(\"Saved in C:\\\\new folder\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the path on one line",
+                "assertion": "_cq_prints(\"Saved in C:\\\\new folder\")"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "showing_values-q-mn062e",
+            "type": "mcq",
+            "prompt": "What does `console.log(\"Total:\", 4, 2)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Total: 6"
+              },
+              {
+                "id": "b",
+                "label": "Total:42"
+              },
+              {
+                "id": "c",
+                "label": "Total: 4, 2"
+              },
+              {
+                "id": "d",
+                "label": "Total: 4 2"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Each value is shown with one space between; nothing is added together."
+          },
+          {
+            "id": "showing_values-q-1t1rj4a",
+            "type": "mcq",
+            "prompt": "What does an empty `console.log()` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An empty line"
+              },
+              {
+                "id": "b",
+                "label": "undefined"
+              },
+              {
+                "id": "c",
+                "label": "Nothing at all"
+              },
+              {
+                "id": "d",
+                "label": "An error"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "With nothing inside, it writes a line with nothing on it."
+          },
+          {
+            "id": "showing_values-q-1ntdkwu",
+            "type": "mcq",
+            "prompt": "Which line shows `It's late`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`console.log(\"It's late\")`"
+              },
+              {
+                "id": "b",
+                "label": "`console.log('It's late')`"
+              },
+              {
+                "id": "c",
+                "label": "`console.log(It's late)`"
+              },
+              {
+                "id": "d",
+                "label": "`console.log(\"It\"s late\")`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "In double quotes, a single quote is just a character. In single quotes it would end the text early."
+          },
+          {
+            "id": "showing_values-q-12mpkg1",
+            "type": "mcq",
+            "prompt": "What does `\\n` do inside text?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Shows the letter n"
+              },
+              {
+                "id": "b",
+                "label": "Starts a new line"
+              },
+              {
+                "id": "c",
+                "label": "Adds a space"
+              },
+              {
+                "id": "d",
+                "label": "Ends the text"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "`\\n` is the escape for a new line."
+          },
+          {
+            "id": "showing_values-q-xcgwix",
+            "type": "mcq",
+            "prompt": "What does `console.log(10 - 2.5)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "8"
+              },
+              {
+                "id": "b",
+                "label": "7.5"
+              },
+              {
+                "id": "c",
+                "label": "10 - 2.5"
+              },
+              {
+                "id": "d",
+                "label": "7,5"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "JavaScript works out the sum first. Decimals are written with a dot."
+          },
+          {
+            "id": "showing_values-q-13p87i",
+            "type": "mcq",
+            "prompt": "How many lines does `console.log(\"a\\nb\\nc\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "0"
+              },
+              {
+                "id": "b",
+                "label": "3"
+              },
+              {
+                "id": "c",
+                "label": "1"
+              },
+              {
+                "id": "d",
+                "label": "2"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Each `\\n` starts a new line, so a, b and c are on three lines."
+          },
+          {
+            "id": "showing_values-q-1lnbb1f",
+            "type": "mcq",
+            "prompt": "How do you show one backslash, `\\`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`\"\\\"`"
+              },
+              {
+                "id": "b",
+                "label": "`\"\\\\\"`"
+              },
+              {
+                "id": "c",
+                "label": "`\"\\n\"`"
+              },
+              {
+                "id": "d",
+                "label": "`\"/\"`"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A backslash starts an escape, so a real backslash is written as two."
+          },
+          {
+            "id": "showing_values-q-yhy5d4",
+            "type": "shortText",
+            "prompt": "Which escape puts a tab inside text? (two characters)",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "\\t"
+            },
+            "explanation": "`\\t` is the tab escape."
+          },
+          {
+            "id": "showing_values-q-1fgdo8v",
+            "type": "mcq",
+            "prompt": "Code logs `\"B\"` on its first line and `\"A\"` on its second. What does it show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Only B"
+              },
+              {
+                "id": "b",
+                "label": "B, then A"
+              },
+              {
+                "id": "c",
+                "label": "Only A"
+              },
+              {
+                "id": "d",
+                "label": "A, then B"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Lines run from top to bottom, so the output is in the same order."
+          }
+        ]
+      }
+    },
+    {
+      "id": "variables",
+      "title": "Variables: let and const",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "make_and_use",
+          "label": "Make and use",
+          "code": "const city = \"Lisbon\"\nconst year = 2026\nconsole.log(city, year)"
+        },
+        {
+          "id": "change_a_let",
+          "label": "Change a let",
+          "code": "let lives = 3\nlives = lives - 1\nconsole.log(\"Lives left:\", lives)"
+        },
+        {
+          "id": "name_or_text",
+          "label": "Name or text?",
+          "code": "const pet = \"Rex\"\nconsole.log(pet)\nconsole.log(\"pet\")"
+        },
+        {
+          "id": "changing_a_const",
+          "label": "Changing a const",
+          "code": "// Run this and read the error.\nconst limit = 10\nlimit = 20"
+        }
+      ],
+      "intro": {
+        "title": "Variables: let and const",
+        "bodyMarkdown": "A **variable** is a name for a value, so you can use it again later. You make one with `const` or `let`, a name, `=` and the value:\n\n```\nconst name = \"Alex\"\nlet score = 7\nconsole.log(name, \"has\", score, \"points\")\n```\n\nUse the name without quotes: `console.log(name)` shows `Alex`, while `console.log(\"name\")` shows the word `name`.\n\n`const` is for a value that won't change. `let` is for one that will: you give it a new value with `=`, without writing `let` again.\n\n```\nlet score = 7\nscore = 10\nconsole.log(score)\n```\n\nA new value can use the old one: `score = score + 5` takes the current score, adds 5 and stores the result. Changing a `const` is a `TypeError: Assignment to constant variable.`, which is the point of `const`: it protects values that should stay put. Start with `const`, and switch to `let` when a value needs to change.\n\nNames can use letters, digits, `_` and `$`, but can't start with a digit or contain spaces. JavaScript names usually use **camelCase**: `totalPrice`, `firstName`. Names are case-sensitive, so `score` and `Score` are different variables.\n\nEach name can be made once: a second `let score` is a `SyntaxError`. Using a variable before the line that makes it is a `ReferenceError`.\n\nYou may also see `var` in older code. It is the old way to make variables; `let` and `const` replace it.",
+        "sandboxCode": "const name = \"Alex\"\nlet score = 7\nconsole.log(name, \"has\", score, \"points\")\nscore = score + 5\nconsole.log(name, \"now has\", score)",
+        "readMore": {
+          "label": "MDN: declaring variables",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Grammar_and_types#declarations",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "variables-your-first-variable",
+          "title": "Easy: Your first variable",
+          "promptMarkdown": "Make a `const` called `city` that holds `\"Paris\"`, then show it.",
+          "starterCode": "",
+          "hint": "`const city = \"Paris\"`, then `console.log(city)`.",
+          "solution": "const city = \"Paris\"\nconsole.log(city)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "city is Paris",
+                "assertion": "Object.is(city, \"Paris\")"
+              },
+              {
+                "id": "t2",
+                "label": "Shows Paris",
+                "assertion": "_cq_prints(\"Paris\")"
+              },
+              {
+                "id": "t3",
+                "label": "Shows the variable, not the text",
+                "assertion": "new RegExp(\"console\\\\.log\\\\(\\\\s*city\\\\s*\\\\)\", \"\").test(_cq_code)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-a-number-variable",
+          "title": "Easy: A number variable",
+          "promptMarkdown": "Make a `let` called `age` that holds `12`, then show it.",
+          "starterCode": "",
+          "hint": "`let age = 12`, then `console.log(age)`.",
+          "solution": "let age = 12\nconsole.log(age)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "age is 12",
+                "assertion": "Object.is(age, 12)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses let",
+                "assertion": "new RegExp(\"\\\\blet\\\\s+age\\\\b\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Shows 12",
+                "assertion": "_cq_prints(\"12\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-use-two-variables",
+          "title": "Easy: Use two variables",
+          "promptMarkdown": "Show the dog's name and age in one line, like `Rex 4`, using the two variables.",
+          "starterCode": "const dogName = \"Rex\"\nconst dogAge = 4\n",
+          "hint": "Give `console.log` both names, separated by a comma.",
+          "solution": "const dogName = \"Rex\"\nconst dogAge = 4\nconsole.log(dogName, dogAge)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Rex 4",
+                "assertion": "_cq_prints(\"Rex 4\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses the variables",
+                "assertion": "_cq_code.includes(\"dogName\") && new RegExp(\"console\\\\.log\\\\([^)]*dogAge\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const dogName = \\\"Rex\\\"\\nconst dogAge = 4\\n\", \"const dogName = \\\"Rex2\\\"\\nconst dogAge = 5\\n\", \"const dogName = \\\"Rex\\\"\\nconst dogAge = 4\\nconsole.log(dogName, dogAge)\", [\"dogName\",\"dogAge\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-change-a-let",
+          "title": "Medium: Change a let",
+          "promptMarkdown": "The score starts at 7. Change it to 10 on the second line (don't write `let` again), then show it.",
+          "starterCode": "let score = 7\n",
+          "hint": "`score = 10`, then `console.log(score)`.",
+          "solution": "let score = 7\nscore = 10\nconsole.log(score)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "score is 10",
+                "assertion": "Object.is(score, 10)"
+              },
+              {
+                "id": "t2",
+                "label": "Shows 10",
+                "assertion": "_cq_prints(\"10\")"
+              },
+              {
+                "id": "t3",
+                "label": "Keeps the first line",
+                "assertion": "_cq_code.includes(\"let score = 7\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-add-to-it",
+          "title": "Medium: Add to it",
+          "promptMarkdown": "Add 5 to `points` using its current value (`points = points + …`), then show it.",
+          "starterCode": "let points = 20\n",
+          "hint": "`points = points + 5` uses the old value to make the new one.",
+          "solution": "let points = 20\npoints = points + 5\nconsole.log(points)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "points is 5 more than it started",
+                "assertion": "Object.is(points, 25)"
+              },
+              {
+                "id": "t2",
+                "label": "Builds on the old value",
+                "assertion": "new RegExp(\"points\\\\s*=\\\\s*points\\\\s*\\\\+\\\\s*5\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Shows it",
+                "assertion": "_cq_prints(\"25\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"let points = 20\\n\", \"let points = 21\\n\", \"let points = 20\\npoints = points + 5\\nconsole.log(points)\", [\"points\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-fix-the-const",
+          "title": "Medium: Fix the const",
+          "promptMarkdown": "This code stops with `TypeError: Assignment to constant variable.` Change one word so it runs and shows `4`.",
+          "starterCode": "const goals = 3\ngoals = goals + 1\nconsole.log(goals)",
+          "hint": "A value that changes needs `let`, not `const`.",
+          "solution": "let goals = 3\ngoals = goals + 1\nconsole.log(goals)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 4",
+                "assertion": "_cq_prints(\"4\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses let",
+                "assertion": "new RegExp(\"\\\\blet\\\\s+goals\\\\b\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const goals = 3\\ngoals = goals + 1\\nconsole.log(goals)\", \"const goals = 4\\ngoals = goals + 1\\nconsole.log(goals)\", \"let goals = 3\\ngoals = goals + 1\\nconsole.log(goals)\", [\"goals\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-swap-two-values",
+          "title": "Hard: Swap two values",
+          "promptMarkdown": "Swap the values of `left` and `right`, so `left` holds `\"tea\"` and `right` holds `\"coffee\"`. Use a third variable to hold one of them while you swap.",
+          "starterCode": "let left = \"coffee\"\nlet right = \"tea\"\n\nconsole.log(left, right)",
+          "hint": "Keep `left` in a `const temp`, set `left = right`, then `right = temp`.",
+          "solution": "let left = \"coffee\"\nlet right = \"tea\"\nconst temp = left\nleft = right\nright = temp\nconsole.log(left, right)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "left is tea, right is coffee",
+                "assertion": "Object.is(left, \"tea\") && Object.is(right, \"coffee\")"
+              },
+              {
+                "id": "t2",
+                "label": "Shows tea coffee",
+                "assertion": "_cq_prints(\"tea coffee\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"let left = \\\"coffee\\\"\\nlet right = \\\"tea\\\"\\n\\nconsole.log(left, right)\", \"let left = \\\"coffee2\\\"\\nlet right = \\\"tea2\\\"\\n\\nconsole.log(left, right)\", \"let left = \\\"coffee\\\"\\nlet right = \\\"tea\\\"\\nconst temp = left\\nleft = right\\nright = temp\\nconsole.log(left, right)\", [\"left\",\"right\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-fix-the-names",
+          "title": "Hard: Fix the names",
+          "promptMarkdown": "This code has two mistakes with names. Fix them so it shows `Total: 9`.",
+          "starterCode": "const apples = 4\nconst pears = 5\nconst total = Apples + pear\nconsole.log(\"Total:\", total)",
+          "hint": "Names are case-sensitive and must be spelled exactly as they were made: `apples` and `pears`.",
+          "solution": "const apples = 4\nconst pears = 5\nconst total = apples + pears\nconsole.log(\"Total:\", total)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is apples plus pears",
+                "assertion": "total === apples + pears"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the total",
+                "assertion": "_cq_prints(\"Total: 9\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const apples = 4\\nconst pears = 5\\nconst total = Apples + pear\\nconsole.log(\\\"Total:\\\", total)\", \"const apples = 5\\nconst pears = 7\\nconst total = Apples + pear\\nconsole.log(\\\"Total:\\\", total)\", \"const apples = 4\\nconst pears = 5\\nconst total = apples + pears\\nconsole.log(\\\"Total:\\\", total)\", [\"apples\",\"pears\",\"total\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-a-running-total",
+          "title": "Expert: A running total",
+          "promptMarkdown": "A shop takes three payments: 12, 30 and 8. Start `total` at 0, add each payment to it on its own line, then show `Total: 50`.",
+          "starterCode": "const first = 12\nconst second = 30\nconst third = 8\n",
+          "hint": "`let total = 0`, then `total = total + first`, and the same for `second` and `third`.",
+          "solution": "const first = 12\nconst second = 30\nconst third = 8\nlet total = 0\ntotal = total + first\ntotal = total + second\ntotal = total + third\nconsole.log(\"Total:\", total)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is the sum of the payments",
+                "assertion": "total === first + second + third"
+              },
+              {
+                "id": "t2",
+                "label": "Starts from 0",
+                "assertion": "new RegExp(\"let\\\\s+total\\\\s*=\\\\s*0\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Shows Total: 50",
+                "assertion": "_cq_prints(\"Total: 50\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const first = 12\\nconst second = 30\\nconst third = 8\\n\", \"const first = 13\\nconst second = 32\\nconst third = 11\\n\", \"const first = 12\\nconst second = 30\\nconst third = 8\\nlet total = 0\\ntotal = total + first\\ntotal = total + second\\ntotal = total + third\\nconsole.log(\\\"Total:\\\", total)\", [\"first\",\"second\",\"third\",\"total\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "variables-before-or-after",
+          "title": "Expert: Before or after?",
+          "promptMarkdown": "This stops with `ReferenceError: Cannot access 'price' before initialization`. Reorder the lines so it shows `Price: 8`.",
+          "starterCode": "console.log(\"Price:\", price)\nconst price = 8",
+          "hint": "A variable must be made before the line that uses it.",
+          "solution": "const price = 8\nconsole.log(\"Price:\", price)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Price: 8",
+                "assertion": "_cq_prints(\"Price: 8\")"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the variable",
+                "assertion": "new RegExp(\"console\\\\.log\\\\([^)]*price\\\\s*\\\\)\", \"\").test(_cq_code)"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"console.log(\\\"Price:\\\", price)\\nconst price = 8\", \"console.log(\\\"Price:\\\", price)\\nconst price = 9\", \"const price = 8\\nconsole.log(\\\"Price:\\\", price)\", [\"price\"], true)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "variables-q-zlvh6",
+            "type": "mcq",
+            "prompt": "After `let n = 3` and `n = n + 2`, what does `console.log(n)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "2"
+              },
+              {
+                "id": "c",
+                "label": "3"
+              },
+              {
+                "id": "d",
+                "label": "5"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`n + 2` uses the current value, 3, so n becomes 5."
+          },
+          {
+            "id": "variables-q-dt0066",
+            "type": "mcq",
+            "prompt": "What happens with `const x = 1` then `x = 2`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A SyntaxError"
+              },
+              {
+                "id": "b",
+                "label": "x stays 1 silently"
+              },
+              {
+                "id": "c",
+                "label": "A TypeError: a const can't change"
+              },
+              {
+                "id": "d",
+                "label": "x becomes 2"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Giving a const a new value is a `TypeError: Assignment to constant variable.`"
+          },
+          {
+            "id": "variables-q-4h77g5",
+            "type": "mcq",
+            "prompt": "After `const pet = \"Rex\"`, what does `console.log(\"pet\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "pet"
+              },
+              {
+                "id": "c",
+                "label": "Rex"
+              },
+              {
+                "id": "d",
+                "label": "\"Rex\""
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "In quotes it's the text \"pet\", not the variable."
+          },
+          {
+            "id": "variables-q-1gcy40l",
+            "type": "mcq",
+            "prompt": "Which is a valid variable name?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`totalPrice`"
+              },
+              {
+                "id": "b",
+                "label": "`total-price`"
+              },
+              {
+                "id": "c",
+                "label": "`2total`"
+              },
+              {
+                "id": "d",
+                "label": "`total price`"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Names can't have spaces or dashes, or start with a digit. camelCase is the usual style."
+          },
+          {
+            "id": "variables-q-dam1c",
+            "type": "mcq",
+            "prompt": "When should you use `let` instead of `const`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "For text only"
+              },
+              {
+                "id": "b",
+                "label": "Always"
+              },
+              {
+                "id": "c",
+                "label": "When the value will change"
+              },
+              {
+                "id": "d",
+                "label": "For numbers only"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Start with const; use let when the variable needs a new value later."
+          },
+          {
+            "id": "variables-q-1p19os4",
+            "type": "mcq",
+            "prompt": "What does `let a = 1` followed by `let a = 2` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "a becomes 2"
+              },
+              {
+                "id": "b",
+                "label": "A SyntaxError"
+              },
+              {
+                "id": "c",
+                "label": "Two variables called a"
+              },
+              {
+                "id": "d",
+                "label": "a stays 1"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A name can be made with let or const only once in the same place."
+          },
+          {
+            "id": "variables-q-7d62cq",
+            "type": "mcq",
+            "prompt": "Are `score` and `Score` the same variable?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "No: names are case-sensitive"
+              },
+              {
+                "id": "b",
+                "label": "Yes"
+              },
+              {
+                "id": "c",
+                "label": "Only with let"
+              },
+              {
+                "id": "d",
+                "label": "Only with const"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "JavaScript treats different capital letters as different names."
+          },
+          {
+            "id": "variables-q-m0b7fw",
+            "type": "shortText",
+            "prompt": "Which keyword makes a variable that can't be given a new value?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "const"
+            },
+            "explanation": "`const` protects a value from being changed."
+          },
+          {
+            "id": "variables-q-gsoxkw",
+            "type": "mcq",
+            "prompt": "After `let x = 4` and `x = x * 2` and `x = x - 1`, what is `x`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3"
+              },
+              {
+                "id": "b",
+                "label": "7"
+              },
+              {
+                "id": "c",
+                "label": "8"
+              },
+              {
+                "id": "d",
+                "label": "4"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "4 × 2 is 8, then 8 − 1 is 7."
+          }
+        ]
+      }
+    },
+    {
+      "id": "numbers",
+      "title": "Numbers and arithmetic",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "remainder",
+          "label": "Remainder",
+          "code": "console.log(10 % 3)\nconsole.log(8 % 2, 9 % 2)\nconsole.log(125 % 60)"
+        },
+        {
+          "id": "order_of_operations",
+          "label": "Order of operations",
+          "code": "console.log(2 + 3 * 4)\nconsole.log((2 + 3) * 4)\nconsole.log(2 * 3 ** 2)"
+        },
+        {
+          "id": "shortcuts",
+          "label": "Shortcuts",
+          "code": "let lives = 3\nlives -= 1\nlives++\nconsole.log(lives)"
+        },
+        {
+          "id": "decimals",
+          "label": "Decimals",
+          "code": "console.log(0.1 + 0.2)\nconsole.log(1 / 3)\nconsole.log(5 / 0)"
+        }
+      ],
+      "intro": {
+        "title": "Numbers and arithmetic",
+        "bodyMarkdown": "JavaScript has the usual maths operators: `+` add, `-` subtract, `*` multiply, `/` divide, and two more: `%` gives the **remainder** after dividing, and `**` raises to a power.\n\n```\nconsole.log(7 + 2, 7 - 2, 7 * 2, 7 / 2)\nconsole.log(7 % 2, 2 ** 3)\n```\n\nWhole numbers and decimals are the same kind of value, a `number`, so `7 / 2` is simply `3.5`. Dividing by zero doesn't stop the program: it gives `Infinity`.\n\n`%` is useful more often than it looks: `n % 2` is `0` for even numbers and `1` for odd ones, and `125 % 60` is the minutes left over after taking out whole hours.\n\nAs in maths, `*`, `/` and `%` are worked out before `+` and `-`, and `**` before all of them. Brackets change the order: `2 + 3 * 4` is `14`, but `(2 + 3) * 4` is `20`.\n\nShortcuts change a variable using its own value: `score += 5` means `score = score + 5`, and there are `-=`, `*=` and `/=` too. `count++` adds 1 and `count--` takes 1 away.\n\n```\nlet score = 10\nscore += 5\nscore *= 2\nlet count = 0\ncount++\nconsole.log(score, count)\n```\n\nComputers store decimals in binary, so a few of them can't be stored exactly: `0.1 + 0.2` gives `0.30000000000000004`. That is normal in every language. When it matters (money, for example), round the result, as the Math stage shows.",
+        "sandboxCode": "console.log(7 + 2, 7 - 2, 7 * 2, 7 / 2)\nconsole.log(7 % 2, 2 ** 3)\nconsole.log(2 + 3 * 4, (2 + 3) * 4)\nconsole.log(0.1 + 0.2)",
+        "readMore": {
+          "label": "MDN: arithmetic operators",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_operators#arithmetic_operators",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "numbers-area-of-a-rectangle",
+          "title": "Easy: Area of a rectangle",
+          "promptMarkdown": "Set `area` to the rectangle's width times its height, then show it.",
+          "starterCode": "const width = 8\nconst height = 5\n",
+          "hint": "`const area = width * height`, then `console.log(area)`.",
+          "solution": "const width = 8\nconst height = 5\nconst area = width * height\nconsole.log(area)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "area is width times height",
+                "assertion": "Object.is(area, 40)"
+              },
+              {
+                "id": "t2",
+                "label": "Shows it",
+                "assertion": "_cq_prints(\"40\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const width = 8\\nconst height = 5\\n\", \"const width = 9\\nconst height = 7\\n\", \"const width = 8\\nconst height = 5\\nconst area = width * height\\nconsole.log(area)\", [\"area\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-share-the-pizza",
+          "title": "Easy: Share the pizza",
+          "promptMarkdown": "Eight slices shared by `people` friends: set `each` to how many slices each person gets.",
+          "starterCode": "const slices = 8\nconst people = 4\n",
+          "hint": "Divide: `slices / people`.",
+          "solution": "const slices = 8\nconst people = 4\nconst each = slices / people",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "each is slices divided by people",
+                "assertion": "Object.is(each, 2)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const slices = 8\\nconst people = 4\\n\", \"const slices = 9\\nconst people = 6\\n\", \"const slices = 8\\nconst people = 4\\nconst each = slices / people\", [\"each\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-a-power",
+          "title": "Easy: A power",
+          "promptMarkdown": "Set `cube` to `side` to the power of 3.",
+          "starterCode": "const side = 4\n",
+          "hint": "The power operator is `**`: `side ** 3`.",
+          "solution": "const side = 4\nconst cube = side ** 3",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "cube is 64",
+                "assertion": "Object.is(cube, 64)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses **",
+                "assertion": "_cq_code.includes(\"**\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const side = 4\\n\", \"const side = 5\\n\", \"const side = 4\\nconst cube = side ** 3\", [\"cube\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-even-or-odd",
+          "title": "Medium: Even or odd",
+          "promptMarkdown": "Set `remainder` to what is left when `n` is divided by 2 (0 for even numbers, 1 for odd).",
+          "starterCode": "const n = 17\n",
+          "hint": "The remainder operator is `%`: `n % 2`.",
+          "solution": "const n = 17\nconst remainder = n % 2",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "remainder is 1 for 17",
+                "assertion": "Object.is(remainder, 1)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses %",
+                "assertion": "_cq_code.includes(\"%\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const n = 17\\n\", \"const n = 18\\n\", \"const n = 17\\nconst remainder = n % 2\", [\"remainder\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-hours-and-minutes",
+          "title": "Medium: Hours and minutes",
+          "promptMarkdown": "A film lasts 135 minutes. Set `hours` to the whole hours (use `Math.floor(minutes / 60)`) and `rest` to the minutes left over, then show `2 h 15 min`.",
+          "starterCode": "const minutes = 135\n",
+          "hint": "`rest` is the remainder: `minutes % 60`. Show `hours, \"h\", rest, \"min\"`.",
+          "solution": "const minutes = 135\nconst hours = Math.floor(minutes / 60)\nconst rest = minutes % 60\nconsole.log(hours, \"h\", rest, \"min\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "hours is 2",
+                "assertion": "Object.is(hours, 2)"
+              },
+              {
+                "id": "t2",
+                "label": "rest is 15",
+                "assertion": "Object.is(rest, 15)"
+              },
+              {
+                "id": "t3",
+                "label": "Shows 2 h 15 min",
+                "assertion": "_cq_prints(\"2 h 15 min\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const minutes = 135\\n\", \"const minutes = 136\\n\", \"const minutes = 135\\nconst hours = Math.floor(minutes / 60)\\nconst rest = minutes % 60\\nconsole.log(hours, \\\"h\\\", rest, \\\"min\\\")\", [\"hours\",\"rest\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-brackets-first",
+          "title": "Medium: Brackets first",
+          "promptMarkdown": "The average of `a` and `b` should be `15`, but this gives `20`. Add brackets so the sum is worked out first.",
+          "starterCode": "const a = 10\nconst b = 20\nconst average = a + b / 2",
+          "hint": "Division comes before addition. Put brackets around `a + b`.",
+          "solution": "const a = 10\nconst b = 20\nconst average = (a + b) / 2",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "average is 15",
+                "assertion": "Object.is(average, 15)"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const a = 10\\nconst b = 20\\nconst average = a + b / 2\", \"const a = 11\\nconst b = 22\\nconst average = a + b / 5\", \"const a = 10\\nconst b = 20\\nconst average = (a + b) / 2\", [\"average\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-level-up",
+          "title": "Hard: Level up",
+          "promptMarkdown": "Use the shortcuts: add 50 to `xp` with `+=`, then double it with `*=`, then add 1 to `level` with `++`. Show `xp` and `level`.",
+          "starterCode": "let xp = 100\nlet level = 1\n",
+          "hint": "`xp += 50`, `xp *= 2`, `level++`, then `console.log(xp, level)`.",
+          "solution": "let xp = 100\nlet level = 1\nxp += 50\nxp *= 2\nlevel++\nconsole.log(xp, level)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "xp is 300 and level is 2",
+                "assertion": "Object.is(xp, 300) && Object.is(level, 2)"
+              },
+              {
+                "id": "t2",
+                "label": "Uses +=, *= and ++",
+                "assertion": "_cq_code.includes(\"+=\") && _cq_code.includes(\"*=\") && _cq_code.includes(\"++\")"
+              },
+              {
+                "id": "t3",
+                "label": "Shows 300 2",
+                "assertion": "_cq_prints(\"300 2\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"let xp = 100\\nlet level = 1\\n\", \"let xp = 101\\nlet level = 3\\n\", \"let xp = 100\\nlet level = 1\\nxp += 50\\nxp *= 2\\nlevel++\\nconsole.log(xp, level)\", [\"xp\",\"level\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-price-with-tax",
+          "title": "Hard: Price with tax",
+          "promptMarkdown": "Set `total` to the price plus 20% tax (the price times `1 + taxRate`).",
+          "starterCode": "const price = 45\nconst taxRate = 0.2\n",
+          "hint": "`price * (1 + taxRate)`: the brackets make the 1.2 first.",
+          "solution": "const price = 45\nconst taxRate = 0.2\nconst total = price * (1 + taxRate)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "total is 54",
+                "assertion": "typeof total === 'number' && Math.abs(total - 54) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const price = 45\\nconst taxRate = 0.2\\n\", \"const price = 46\\nconst taxRate = 0.4\\n\", \"const price = 45\\nconst taxRate = 0.2\\nconst total = price * (1 + taxRate)\", [\"total\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-celsius-to-fahrenheit",
+          "title": "Expert: Celsius to Fahrenheit",
+          "promptMarkdown": "Set `fahrenheit` to `celsius` converted: times 9, divided by 5, plus 32. Then show `25 °C is 77 °F`.",
+          "starterCode": "const celsius = 25\n",
+          "hint": "`celsius * 9 / 5 + 32`. Show `celsius, \"°C is\", fahrenheit, \"°F\"`.",
+          "solution": "const celsius = 25\nconst fahrenheit = celsius * 9 / 5 + 32\nconsole.log(celsius, \"°C is\", fahrenheit, \"°F\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "fahrenheit is 77",
+                "assertion": "typeof fahrenheit === 'number' && Math.abs(fahrenheit - 77) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the line",
+                "assertion": "_cq_prints(\"25 °C is 77 °F\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works it out",
+                "assertion": "!_cq_code.includes(\"77\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const celsius = 25\\n\", \"const celsius = 26\\n\", \"const celsius = 25\\nconst fahrenheit = celsius * 9 / 5 + 32\\nconsole.log(celsius, \\\"°C is\\\", fahrenheit, \\\"°F\\\")\", [\"fahrenheit\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "numbers-seconds-to-a-clock",
+          "title": "Expert: Seconds to a clock",
+          "promptMarkdown": "`total` is a number of seconds. Set `hours`, `minutes` and `seconds` to how it reads on a clock (4000 seconds is 1 hour, 6 minutes and 40 seconds).",
+          "starterCode": "const total = 4000\n",
+          "hint": "`hours = Math.floor(total / 3600)`, `minutes = Math.floor((total % 3600) / 60)`, `seconds = total % 60`.",
+          "solution": "const total = 4000\nconst hours = Math.floor(total / 3600)\nconst minutes = Math.floor((total % 3600) / 60)\nconst seconds = total % 60",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "hours is 1",
+                "assertion": "Object.is(hours, 1)"
+              },
+              {
+                "id": "t2",
+                "label": "minutes is 6",
+                "assertion": "Object.is(minutes, 6)"
+              },
+              {
+                "id": "t3",
+                "label": "seconds is 40",
+                "assertion": "Object.is(seconds, 40)"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const total = 4000\\n\", \"const total = 4001\\n\", \"const total = 4000\\nconst hours = Math.floor(total / 3600)\\nconst minutes = Math.floor((total % 3600) / 60)\\nconst seconds = total % 60\", [\"hours\",\"minutes\",\"seconds\"], false)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "numbers-q-aewv3i",
+            "type": "mcq",
+            "prompt": "What does `console.log(2 + 3 * 4)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "14"
+              },
+              {
+                "id": "b",
+                "label": "9"
+              },
+              {
+                "id": "c",
+                "label": "24"
+              },
+              {
+                "id": "d",
+                "label": "20"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Multiplication comes first: 3 × 4 is 12, plus 2 is 14."
+          },
+          {
+            "id": "numbers-q-ll2cak",
+            "type": "mcq",
+            "prompt": "What does `console.log(17 % 5)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3"
+              },
+              {
+                "id": "b",
+                "label": "3.4"
+              },
+              {
+                "id": "c",
+                "label": "2"
+              },
+              {
+                "id": "d",
+                "label": "12"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "17 ÷ 5 is 3 with 2 left over; `%` gives the 2."
+          },
+          {
+            "id": "numbers-q-19tgbkk",
+            "type": "mcq",
+            "prompt": "What does `console.log(7 / 2)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3.5"
+              },
+              {
+                "id": "b",
+                "label": "3 r1"
+              },
+              {
+                "id": "c",
+                "label": "4"
+              },
+              {
+                "id": "d",
+                "label": "3"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "JavaScript has one number type, so dividing gives the decimal answer."
+          },
+          {
+            "id": "numbers-q-uojdj2",
+            "type": "mcq",
+            "prompt": "What does `console.log(2 ** 4)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "24"
+              },
+              {
+                "id": "b",
+                "label": "6"
+              },
+              {
+                "id": "c",
+                "label": "8"
+              },
+              {
+                "id": "d",
+                "label": "16"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "`**` is a power: 2 × 2 × 2 × 2 is 16."
+          },
+          {
+            "id": "numbers-q-p5vl8r",
+            "type": "mcq",
+            "prompt": "After `let x = 10` and `x -= 3`, what is `x`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "7"
+              },
+              {
+                "id": "b",
+                "label": "13"
+              },
+              {
+                "id": "c",
+                "label": "3"
+              },
+              {
+                "id": "d",
+                "label": "-3"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "`x -= 3` is short for `x = x - 3`."
+          },
+          {
+            "id": "numbers-q-1gdjg1b",
+            "type": "mcq",
+            "prompt": "Why does `0.1 + 0.2` give `0.30000000000000004`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Some decimals can't be stored exactly in binary"
+              },
+              {
+                "id": "b",
+                "label": "It is a bug in JavaScript"
+              },
+              {
+                "id": "c",
+                "label": "The numbers are text"
+              },
+              {
+                "id": "d",
+                "label": "Because of the order of operations"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "It happens in every language; round the result when it matters."
+          },
+          {
+            "id": "numbers-q-iqi5l1",
+            "type": "mcq",
+            "prompt": "What does `console.log((2 + 3) * 4)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "9"
+              },
+              {
+                "id": "b",
+                "label": "24"
+              },
+              {
+                "id": "c",
+                "label": "14"
+              },
+              {
+                "id": "d",
+                "label": "20"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "The brackets come first: 5 × 4 is 20."
+          },
+          {
+            "id": "numbers-q-quo5ec",
+            "type": "mcq",
+            "prompt": "What does `console.log(5 / 0)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "0"
+              },
+              {
+                "id": "c",
+                "label": "NaN"
+              },
+              {
+                "id": "d",
+                "label": "Infinity"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Dividing a number by zero gives Infinity in JavaScript."
+          },
+          {
+            "id": "numbers-q-1bcp4cd",
+            "type": "shortText",
+            "prompt": "After `let n = 4` and `n++`, what is `n`?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "5"
+            },
+            "explanation": "`++` adds 1."
+          }
+        ]
+      }
     }
   ]
 }

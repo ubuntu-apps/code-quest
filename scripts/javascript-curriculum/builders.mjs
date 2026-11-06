@@ -26,13 +26,18 @@ export class JavaScriptBuilders extends CourseBuilders {
    * typed in don't. `typedOk: true` is for challenges whose answer is a fixed value by nature
    * ("print `Hello, world!`"); the checker then doesn't try typing it in.
    *
+   * Unless `typedOk` is set, the generator adds a last check, "Works with other data too", that
+   * reruns the code with the starter's values changed (`alt`, else the default change; see
+   * protection.mjs), so an answer typed in as fixed values fails.
+   *
    * @param {'easy'|'medium'|'hard'|'expert'} difficulty
    * @param {string} title
-   * @param {{ prompt: string, starter?: string, hint: string, solution: string, tests: [string, string][], setup?: string, typedOk?: boolean }} spec
+   * @param {{ prompt: string, starter?: string, hint: string, solution: string, tests: [string, string][], setup?: string, typedOk?: boolean, alt?: string | ((starter: string) => string) }} spec
    */
-  task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '', typedOk = false }) {
+  task(difficulty, title, { prompt, starter = '', hint, solution, tests, setup = '', typedOk = false, alt }) {
     return {
       ...(typedOk ? { typedOk: true } : {}),
+      ...(alt !== undefined ? { alt } : {}),
       title: this.challengeTitle(difficulty, title),
       promptMarkdown: prompt,
       starterCode: starter,

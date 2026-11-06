@@ -25,6 +25,26 @@ export class JavaScriptChecker extends LanguageChecker {
     this.checkedQuestions = 0
   }
 
+  /**
+   * The learner's "answer typed in": the starter code, then what the solution made written out
+   * as fixed values (`const total = 13.5`), then its output logged as fixed text.
+   */
+  async typedInCode(challenge) {
+    const starter = challenge.starterCode ?? ''
+    const declared = (code) => [...code.matchAll(/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)/g)].map((m) => m[1])
+    const fresh = [...new Set(declared(challenge.solution))].filter((name) => !declared(starter).includes(name))
+    const MARK = '<<cq-values>>'
+    const dump = `\n;console.log(${JSON.stringify(MARK)} + JSON.stringify({ ${fresh.map((n) => `${JSON.stringify(n)}: typeof ${n} === 'function' ? undefined : ${n}`).join(', ')} }))`
+    const run = await this.engine.run(challenge.solution + dump, challenge.validation.setupCode)
+    if (run.error) return null
+    const at = run.output.lastIndexOf(MARK)
+    if (at < 0) return null
+    const printed = run.output.slice(0, at).replace(/\n$/, '')
+    const values = JSON.parse(run.output.slice(at + MARK.length))
+    const lines = Object.entries(values).map(([name, value]) => `const ${name} = ${JSON.stringify(value)}`)
+    return [starter, ...lines, ...(printed ? [`console.log(${JSON.stringify(printed)})`] : [])].filter(Boolean).join('\n')
+  }
+
   /** Lesson code must run, unless it says it shows an error (then it must show one). */
   async checkRuns(where, ownCode, code, section) {
     const run = await this.engine.run(code)
@@ -48,7 +68,8 @@ export class JavaScriptChecker extends LanguageChecker {
         const empty = await this.engine.check('', setupCode, tests)
         const starter = await this.engine.check(c.starterCode ?? '', setupCode, tests)
         const typedOk = source?.challenges.find((s) => s.title === c.title)?.typedOk
-        const typed = !typedOk && good.passed && good.output.trim() ? await this.engine.check(`console.log(${JSON.stringify(good.output)})`, setupCode, tests) : undefined
+        const typedCode = !typedOk && good.passed ? await this.typedInCode(c) : null
+        const typed = typedCode !== null ? await this.engine.check(typedCode, setupCode, tests) : undefined
         this.reportAnswers(section, where, { solution: { passed: good.passed, detail: `${why}. Output: ${good.output}` }, empty, starter, typed })
       }
       for (const q of source?.questions ?? []) {

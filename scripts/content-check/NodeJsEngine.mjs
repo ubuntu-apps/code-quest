@@ -17,8 +17,8 @@ export class NodeJsEngine {
   }
 
   /** Runs code: { output, error } with error `{ detail }` ("ReferenceError: x is not defined"). */
-  async run(code) {
-    const result = await this.execute({ code })
+  async run(code, setupCode) {
+    const result = await this.execute({ code, ...(setupCode ? { setupCode } : {}) })
     return { output: result.output, error: result.error ? { detail: `${result.error.name}: ${result.error.message}` } : null }
   }
 

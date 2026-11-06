@@ -11,7 +11,10 @@
  * - `_cq_output`: everything logged, as text (lines joined with \n);
  * - `_cq_lines`: the logged lines, with spaces at line ends removed;
  * - `_cq_code`: the code itself, to check a feature was used;
- * - `_cq_prints(...lines)`: the output is exactly these lines (a difference is highlighted).
+ * - `_cq_prints(...lines)`: the output is exactly these lines (a difference is highlighted);
+ * - `_cq_rerun(starter, alt, solution, vars, output)`: runs the code again with the starter's
+ *   values swapped for others, and the solution the same way, and compares the named variables
+ *   (and the output), so an answer typed in as fixed values fails.
  * The host stops a run that goes on too long by ending the worker.
  */
 import type { RuntimeAssertionTest } from '../../curriculum/content/types.ts'
@@ -183,7 +186,48 @@ function syntaxLine(code: string): { line?: number } {
 
 // ---- Running ----
 
-const TEST_NAMES = ['_cq_code', '_cq_prints']
+const TEST_NAMES = ['_cq_code', '_cq_prints', '_cq_rerun']
+
+/**
+ * The code with the starter's lines swapped for the other data's: the whole starter if the code
+ * still has it, else line by line. Null when the learner rewrote every starter line (nothing to
+ * swap: the rerun then passes).
+ */
+export function swapStarter(code: string, starter: string, alt: string): string | null {
+  if (starter && code.includes(starter)) return code.replace(starter, alt)
+  const from = starter.split('\n')
+  const to = alt.split('\n')
+  if (from.length !== to.length) return null
+  let out = code
+  let changed = false
+  from.forEach((line, i) => {
+    if (line !== to[i] && line.trim() && out.includes(line)) {
+      out = out.replace(line, to[i]!)
+      changed = true
+    }
+  })
+  return changed ? out : null
+}
+
+/** Runs code on its own, quietly: what it logged and the named variables, or null if it failed. */
+async function runQuietly(code: string, setupCode: string, vars: string[]): Promise<{ output: string; values: unknown[] } | null> {
+  const lines: string[] = []
+  const quiet = { log: (...v: unknown[]) => lines.push(formatLog(v)), info: () => undefined, warn: () => undefined, error: () => undefined, debug: () => undefined, table: () => undefined, clear: () => undefined }
+  quiet.info = quiet.log
+  const read = vars.map((v) => `typeof ${v} === 'undefined' ? undefined : ${v}`).join(', ')
+  try {
+    const fn = new AsyncFunction('console', `${setupCode ? setupCode + '\n' : ''}${code}\n;return [${read}]`)
+    const values = (await fn(quiet)) as unknown[]
+    return { output: lines.join('\n'), values }
+  } catch {
+    return null
+  }
+}
+
+function sameValue(a: unknown, b: unknown): boolean {
+  if (typeof a === 'number' && typeof b === 'number') return Object.is(a, b) || Math.abs(a - b) < 1e-9
+  return inspect(a) === inspect(b)
+}
 
 /**
  * Runs code (and a challenge's tests). Never throws: an error in the code is in `error`, and a
@@ -293,9 +337,18 @@ export async function runJavaScript(code: string, { setupCode = '', tests, onOut
     return passed
   }
 
+  const rerun = async (starter: string, alt: string, solution: string, vars: string[], compareOutput = false) => {
+    const mine = swapStarter(code, starter, alt)
+    if (mine === null) return true
+    const [a, b] = await Promise.all([runQuietly(mine, setupCode, vars), runQuietly(swapStarter(solution, starter, alt) ?? solution, setupCode, vars)])
+    if (!a || !b) return false
+    if (compareOutput && a.output !== b.output) return false
+    return vars.every((_, i) => sameValue(a.values[i], b.values[i]))
+  }
+
   let checks: unknown
   try {
-    checks = await fn(console, setTimeout, clearTimeout, setInterval, clearInterval, code, prints)
+    checks = await fn(console, setTimeout, clearTimeout, setInterval, clearInterval, code, prints, rerun)
     await allTimersDone()
     if (timerError) throw timerError
   } catch (e) {

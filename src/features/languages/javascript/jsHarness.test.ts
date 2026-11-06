@@ -67,3 +67,23 @@ describe('inspect', () => {
     expect(inspect([[[[1]]]])).toBe('[ [ [ [Array] ] ] ]')
   })
 })
+
+describe('_cq_rerun', () => {
+  const starter = 'const price = 4.5\nconst quantity = 3'
+  const alt = 'const price = 5.6\nconst quantity = 4'
+  const solution = `${starter}\nconst subtotal = price * quantity`
+  const rerunTest = (vars: string[]) => test('other', `_cq_rerun(${JSON.stringify(starter)}, ${JSON.stringify(alt)}, ${JSON.stringify(solution)}, ${JSON.stringify(vars)})`)
+
+  it('passes an answer that works it out, and fails one typed in', async () => {
+    const worked = await runJavaScript(`${starter}\nconst subtotal = quantity * price`, { tests: [rerunTest(['subtotal'])] })
+    expect(worked.tests?.[0]?.passed).toBe(true)
+    const typed = await runJavaScript(`${starter}\nconst subtotal = 13.5`, { tests: [rerunTest(['subtotal'])] })
+    expect(typed.tests?.[0]?.passed).toBe(false)
+  })
+
+  it('compares the output too when asked', async () => {
+    const t = test('o', `_cq_rerun("const n = 2", "const n = 5", "const n = 2\\nconsole.log(n * 2)", [], true)`)
+    expect((await runJavaScript('const n = 2\nconsole.log(n + n)', { tests: [t] })).tests?.[0]?.passed).toBe(true)
+    expect((await runJavaScript('const n = 2\nconsole.log(4)', { tests: [t] })).tests?.[0]?.passed).toBe(false)
+  })
+})
