@@ -116,3 +116,31 @@ describe('highlightR', () => {
     expect(highlightR(code).map((t) => t.text).join('')).toBe(code)
   })
 })
+
+describe('JavaScript colouring and "Try it"', () => {
+  const js = languagePack('javascript')!
+  const jsKinds = (code: string) =>
+    js
+      .highlight(code)
+      .filter((t) => t.kind !== 'plain')
+      .map((t) => `${t.kind}:${t.text}`)
+      .join(' ')
+
+  it('colours keywords, calls, strings, template literals, numbers and comments', () => {
+    expect(jsKinds('const total = Math.round(2.5) // round it')).toBe('keyword:const builtin:round number:2.5 comment:// round it')
+    expect(jsKinds('function greet(name) { return `Hi ${name}` }')).toBe('keyword:function name:greet keyword:return string:`Hi ${name}`')
+    expect(jsKinds('let ok = true; /* note */ null')).toBe('keyword:let constant:true comment:/* note */ constant:null')
+  })
+
+  it('gives back the code unchanged when joined', () => {
+    const code = 'console.log("a // b", \'c\', 1_000, .5e3, 0xff)\n'
+    expect(js.highlight(code).map((t) => t.text).join('')).toBe(code)
+  })
+
+  it('offers "Try it" for code, not for output', () => {
+    expect(js.looksLikeCode('console.log("Hello, world!")')).toBe(true)
+    expect(js.looksLikeCode('let score = 7\nscore += 1')).toBe(true)
+    expect(js.looksLikeCode('Hello, world!')).toBe(false)
+    expect(js.looksLikeCode('8760')).toBe(false)
+  })
+})

@@ -1,0 +1,485 @@
+{
+  "sectionId": "first_steps",
+  "title": "First steps",
+  "levels": [
+    {
+      "id": "first_program",
+      "title": "Your first program",
+      "kind": "topic",
+      "sandboxSnippets": [
+        {
+          "id": "hello",
+          "label": "Hello",
+          "code": "console.log(\"Hello, world!\")\nconsole.log(\"I'm learning JavaScript.\")"
+        },
+        {
+          "id": "numbers_and_maths",
+          "label": "Numbers and maths",
+          "code": "console.log(7)\nconsole.log(6 * 7)\nconsole.log(100 - 1)"
+        },
+        {
+          "id": "text_or_maths",
+          "label": "Text or maths?",
+          "code": "console.log(\"6 * 7\")\nconsole.log(6 * 7)\nconsole.log(\"6 * 7 =\", 6 * 7)"
+        },
+        {
+          "id": "comments",
+          "label": "Comments",
+          "code": "// This whole line is a comment\nconsole.log(\"Comments are skipped\") // and so is this part"
+        },
+        {
+          "id": "read_an_error",
+          "label": "Read an error",
+          "code": "// Run this and read the error.\n// Then fix the typo and run it again.\nconsole.lgo(\"Hello\")"
+        }
+      ],
+      "intro": {
+        "title": "Your first program",
+        "bodyMarkdown": "JavaScript is the programming language of the web: every website you use runs it in your browser, to make pages react when you click, type and scroll. It runs on servers and in apps too. Your browser already has JavaScript built in, so in CodeQuest your code runs right here, with nothing to install.\n\nA JavaScript program is a list of instructions that run from top to bottom, one line at a time. You type code into the sandbox or a challenge, press **Run** or **Check**, and the browser runs it.\n\nYour first instruction is `console.log()`. Whatever you put inside the brackets is shown as output. Text goes in quotes, so JavaScript knows it is text and not code. Numbers and maths don't need quotes.\n\n```\nconsole.log(\"Hello, world!\")\nconsole.log(42)\nconsole.log(2 + 3)\n```\n\nEach `console.log()` writes one line. The quotes make all the difference: `console.log(\"2 + 3\")` shows the text `2 + 3`, while `console.log(2 + 3)` works out the sum and shows `5`. You can give `console.log` several things separated by commas, and it shows them with a space between: `console.log(\"2 + 3 =\", 2 + 3)` shows `2 + 3 = 5`.\n\nText can go in double quotes (`\"Hi\"`) or single quotes (`'Hi'`): both work, as long as the two ends match. CodeQuest mostly uses double quotes.\n\nLines that start with `//` are **comments**. JavaScript skips them; they are notes for the people who read the code. A comment can also go at the end of a line.\n\n```\n// Say hello\nconsole.log(\"Hi!\") // this line shows Hi!\n```\n\nMistakes are normal, and JavaScript tells you about them. When it can't run your code, it stops and shows an **error**. `SyntaxError` means the code isn't written correctly, such as a missing bracket or quote. `ReferenceError: Console is not defined` means JavaScript doesn't know a name, usually because of a typo.\n\nJavaScript is case-sensitive: `console.log` works, `Console.log` doesn't. Spelling matters exactly in the text you show too, because the challenges compare your output character by character.\n\nYou will often see lines that end with a semicolon, like `console.log(\"Hi\");`. JavaScript adds them where they are missing, so they are optional here; CodeQuest leaves them out.",
+        "sandboxCode": "console.log(\"Hello, world!\")\nconsole.log(42)\nconsole.log(2 + 3)\nconsole.log(\"2 + 3\")\nconsole.log(\"2 + 3 =\", 2 + 3)",
+        "readMore": {
+          "label": "MDN: What is JavaScript?",
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/What_is_JavaScript",
+          "source": "MDN Web Docs"
+        }
+      },
+      "challenges": [
+        {
+          "id": "first_program-say-hello",
+          "title": "Easy: Say hello",
+          "promptMarkdown": "Show exactly `Hello, world!`",
+          "starterCode": "console.log()",
+          "hint": "Put the text in quotes inside the brackets: `console.log(\"...\")`.",
+          "solution": "console.log(\"Hello, world!\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Hello, world!",
+                "assertion": "_cq_prints(\"Hello, world!\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-show-a-number",
+          "title": "Easy: Show a number",
+          "promptMarkdown": "Show the number `2026`.",
+          "starterCode": "console.log()",
+          "hint": "Numbers don't need quotes: `console.log(2026)`.",
+          "solution": "console.log(2026)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 2026",
+                "assertion": "_cq_prints(\"2026\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-two-lines",
+          "title": "Easy: Two lines",
+          "promptMarkdown": "Show `Ready` on one line and `Set` on the next.",
+          "starterCode": "console.log(\"Ready\")\n",
+          "hint": "Each `console.log()` writes its own line, so you need a second one.",
+          "solution": "console.log(\"Ready\")\nconsole.log(\"Set\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Ready, then Set",
+                "assertion": "_cq_prints(\"Ready\", \"Set\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-let-javascript-do-the-maths",
+          "title": "Medium: Let JavaScript do the maths",
+          "promptMarkdown": "How many hours are in a year? Show the result of 365 days times 24 hours. Let JavaScript work it out: use `*` for multiplication.",
+          "starterCode": "console.log()",
+          "hint": "Put the calculation inside the brackets, without quotes: `console.log(365 * 24)`.",
+          "solution": "console.log(365 * 24)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 8760",
+                "assertion": "_cq_prints(\"8760\")"
+              },
+              {
+                "id": "t2",
+                "label": "Lets JavaScript multiply",
+                "assertion": "_cq_code.includes(\"*\")"
+              },
+              {
+                "id": "t3",
+                "label": "Doesn't type the answer in",
+                "assertion": "!_cq_code.includes(\"8760\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-text-and-maths-together",
+          "title": "Medium: Text and maths together",
+          "promptMarkdown": "Show `7 + 8 = 15`. Write the first part as text and let JavaScript calculate the `15`.",
+          "starterCode": "console.log()",
+          "hint": "Give `console.log` two things, separated by a comma: the text `\"7 + 8 =\"` and the sum `7 + 8`.",
+          "solution": "console.log(\"7 + 8 =\", 7 + 8)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows 7 + 8 = 15",
+                "assertion": "_cq_prints(\"7 + 8 = 15\")"
+              },
+              {
+                "id": "t2",
+                "label": "Lets JavaScript work out the 15",
+                "assertion": "!_cq_code.includes(\"15\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-fix-the-capital-letter",
+          "title": "Medium: Fix the capital letter",
+          "promptMarkdown": "This line fails. Run it, read the error, then fix it so it shows `Welcome`.",
+          "starterCode": "Console.log(\"Welcome\")",
+          "hint": "JavaScript is case-sensitive. It is `console`, all lowercase.",
+          "solution": "console.log(\"Welcome\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows Welcome",
+                "assertion": "_cq_prints(\"Welcome\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-fix-the-quotes",
+          "title": "Hard: Fix the quotes",
+          "promptMarkdown": "This line has a `SyntaxError`. Fix it so it shows `JavaScript is fun`.",
+          "starterCode": "console.log(\"JavaScript is fun)",
+          "hint": "Text needs a quote at both ends. One is missing before the closing bracket.",
+          "solution": "console.log(\"JavaScript is fun\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows JavaScript is fun",
+                "assertion": "_cq_prints(\"JavaScript is fun\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-comment-it-out",
+          "title": "Hard: Comment it out",
+          "promptMarkdown": "Turn the middle line into a comment, so only the other two lines are shown. Don't delete it.",
+          "starterCode": "console.log(\"Keep me\")\nconsole.log(\"Skip me\")\nconsole.log(\"Keep me too\")",
+          "hint": "Put `//` at the start of the middle line. JavaScript skips everything after `//`.",
+          "solution": "console.log(\"Keep me\")\n// console.log(\"Skip me\")\nconsole.log(\"Keep me too\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows only the first and last lines",
+                "assertion": "_cq_prints(\"Keep me\", \"Keep me too\")"
+              },
+              {
+                "id": "t2",
+                "label": "Keeps the middle line, as a comment",
+                "assertion": "_cq_code.includes(\"Skip me\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-seconds-in-a-week",
+          "title": "Expert: Seconds in a week",
+          "promptMarkdown": "Show `Seconds in a week: 604800`. Let JavaScript calculate the number from 7 days, 24 hours, 60 minutes and 60 seconds.",
+          "starterCode": "console.log()",
+          "hint": "Multiply all four numbers: `7 * 24 * 60 * 60`. Give `console.log` the text and the calculation, separated by a comma.",
+          "solution": "console.log(\"Seconds in a week:\", 7 * 24 * 60 * 60)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the right line",
+                "assertion": "_cq_prints(\"Seconds in a week: 604800\")"
+              },
+              {
+                "id": "t2",
+                "label": "Lets JavaScript work out the number",
+                "assertion": "!_cq_code.includes(\"604800\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "first_program-fix-three-mistakes",
+          "title": "Expert: Fix three mistakes",
+          "promptMarkdown": "This shopping list has three mistakes. Fix them so it shows `Shopping list`, `Apples: 4`, `Total items: 7` and `Done`, one per line. Keep the sum: let JavaScript add `4 + 3`.",
+          "starterCode": "console.log(\"Shopping list\")\nConsole.log(\"Apples:\", 4)\nconsole.log(\"Total items:\", 4 + 3\nconsol.log(\"Done\")",
+          "hint": "Run it and fix one error at a time: a capital letter, a missing bracket, and a misspelled name.",
+          "solution": "console.log(\"Shopping list\")\nconsole.log(\"Apples:\", 4)\nconsole.log(\"Total items:\", 4 + 3)\nconsole.log(\"Done\")",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the four lines",
+                "assertion": "_cq_prints(\"Shopping list\", \"Apples: 4\", \"Total items: 7\", \"Done\")"
+              },
+              {
+                "id": "t2",
+                "label": "Keeps the sum",
+                "assertion": "_cq_code.includes(\"4 + 3\")"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "first_program-q-vi2ps4",
+            "type": "mcq",
+            "prompt": "What does `console.log(2 + 3)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "5"
+              },
+              {
+                "id": "b",
+                "label": "\"2 + 3\""
+              },
+              {
+                "id": "c",
+                "label": "2 + 3"
+              },
+              {
+                "id": "d",
+                "label": "23"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "Without quotes, JavaScript works out the sum first and shows the result."
+          },
+          {
+            "id": "first_program-q-l6lbvo",
+            "type": "mcq",
+            "prompt": "What does `console.log(\"2 + 3\")` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "An error"
+              },
+              {
+                "id": "b",
+                "label": "5"
+              },
+              {
+                "id": "c",
+                "label": "\"2 + 3\""
+              },
+              {
+                "id": "d",
+                "label": "2 + 3"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "In quotes it is text, so it is shown exactly as written, without the quotes."
+          },
+          {
+            "id": "first_program-q-1gh31bf",
+            "type": "mcq",
+            "prompt": "Which line shows `Hello`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`print(\"Hello\")`"
+              },
+              {
+                "id": "b",
+                "label": "`console.log(Hello)`"
+              },
+              {
+                "id": "c",
+                "label": "`console.log(\"Hello\")`"
+              },
+              {
+                "id": "d",
+                "label": "`Console.log(\"Hello\")`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "It is `console.log`, all lowercase, with the text in quotes."
+          },
+          {
+            "id": "first_program-q-13xsau0",
+            "type": "mcq",
+            "prompt": "What does JavaScript do with a line that starts with `//`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Runs it twice"
+              },
+              {
+                "id": "b",
+                "label": "Shows it"
+              },
+              {
+                "id": "c",
+                "label": "Stops the program"
+              },
+              {
+                "id": "d",
+                "label": "Skips it: it is a comment"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Comments are notes for people; JavaScript ignores them."
+          },
+          {
+            "id": "first_program-q-txz6n4",
+            "type": "mcq",
+            "prompt": "What does `console.log(\"Sum:\", 4 + 4)` show?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Sum:8"
+              },
+              {
+                "id": "b",
+                "label": "\"Sum:\" 8"
+              },
+              {
+                "id": "c",
+                "label": "Sum: 8"
+              },
+              {
+                "id": "d",
+                "label": "Sum: 4 + 4"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "Several values are shown with a space between, and `4 + 4` is worked out first."
+          },
+          {
+            "id": "first_program-q-1018y0o",
+            "type": "mcq",
+            "prompt": "Which error does `Console.log(\"Hi\")` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "TypeError"
+              },
+              {
+                "id": "b",
+                "label": "SyntaxError"
+              },
+              {
+                "id": "c",
+                "label": "No error: it shows Hi"
+              },
+              {
+                "id": "d",
+                "label": "ReferenceError"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "JavaScript is case-sensitive, so `Console` is a name it doesn't know."
+          },
+          {
+            "id": "first_program-q-zcq0ld",
+            "type": "mcq",
+            "prompt": "What usually causes a `SyntaxError`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Too many lines"
+              },
+              {
+                "id": "b",
+                "label": "A missing bracket or quote"
+              },
+              {
+                "id": "c",
+                "label": "Showing a number"
+              },
+              {
+                "id": "d",
+                "label": "A misspelled name"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "A SyntaxError means the code isn't written in a way JavaScript can read, such as text without its closing quote."
+          },
+          {
+            "id": "first_program-q-r1f9pz",
+            "type": "shortText",
+            "prompt": "Which word comes before `.log` in the instruction that shows output?",
+            "validation": {
+              "mode": "equalsNormalized",
+              "expected": "console"
+            },
+            "explanation": "`console.log()` writes a line of output."
+          },
+          {
+            "id": "first_program-q-gv7imx",
+            "type": "mcq",
+            "prompt": "Are the semicolons in `console.log(\"Hi\");` needed?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "Only on the first line"
+              },
+              {
+                "id": "b",
+                "label": "No: JavaScript adds them where they are missing"
+              },
+              {
+                "id": "c",
+                "label": "They turn the line into a comment"
+              },
+              {
+                "id": "d",
+                "label": "Yes, on every line"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Semicolons are optional in most code; JavaScript inserts them at line ends."
+          }
+        ]
+      }
+    }
+  ]
+}

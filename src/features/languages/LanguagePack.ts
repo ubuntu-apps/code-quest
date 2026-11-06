@@ -9,7 +9,7 @@ export type { CodeKey } from './keyBar'
 /**
  * One course's language. What it is like is data, in its `language.json` (labels, flags, keys,
  * samples, messages, words, colouring and "Try it" rules; see languageSpec.ts). This class
- * turns that into what the app asks for; each language's subclass (PythonPack, SqlPack, RPack)
+ * turns that into what the app asks for; each language's subclass (PythonPack, SqlPack, RPack, JavaScriptPack)
  * adds only what has to be code: running and checking it on its runtime, and its editor support.
  * The packs are registered in ./index.ts, and the app asks `languagePack(id)` instead of
  * testing `languageId === 'python'`.

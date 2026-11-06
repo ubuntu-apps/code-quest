@@ -28,8 +28,8 @@ flowchart LR
   end
   subgraph L["3 · Learn (browser)"]
     A["React app<br/>CodeQuestScreen + views"]
-    LP["Language packs<br/>Python · SQL · R"]
-    RT["Runtimes<br/>Pyodide worker · webR"]
+    LP["Language packs<br/>Python · SQL · R · JavaScript"]
+    RT["Runtimes<br/>Pyodide worker · webR · JS worker"]
     S["localStorage<br/>progress, drafts"]
   end
   subgraph Q["4 · Check (Node or browser)"]
@@ -57,6 +57,7 @@ One `language.json` per language feeds all three sides: the generator, the app's
 | Python | Pyodide in a Web Worker (`public/pyodide-worker.js`) |
 | SQL | SQLite through Pyodide's `sqlite3`, in the same worker |
 | R | webR, loaded from its CDN (admin-only for now) |
+| JavaScript | The browser's own engine, in a new Web Worker per run (`javascript/jsWorker.ts`); nothing to download (admin-only for now) |
 
 ### Where things live
 

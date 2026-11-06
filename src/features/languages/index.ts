@@ -1,5 +1,6 @@
 import type { LanguagePack } from './LanguagePack'
 import type { EditorLanguage } from './EditorLanguage'
+import { JavaScriptPack } from './javascript/JavaScriptPack'
 import { PythonPack } from './python/PythonPack'
 import { RPack } from './r/RPack'
 import { SqlPack } from './sql/SqlPack'
@@ -18,7 +19,7 @@ export type { LanguageSpec } from './languageSpec'
  * LanguagePack subclass for running it and an EditorLanguage subclass, and one more pack here
  * (see README.md in this folder).
  */
-export const LANGUAGE_PACKS: readonly LanguagePack[] = [new PythonPack(), new SqlPack(), new RPack()]
+export const LANGUAGE_PACKS: readonly LanguagePack[] = [new PythonPack(), new SqlPack(), new RPack(), new JavaScriptPack()]
 
 const BY_ID = new Map(LANGUAGE_PACKS.map((pack) => [pack.id, pack]))
 const BY_TEST_MODE = new Map<string, LanguagePack>(LANGUAGE_PACKS.map((pack) => [pack.testMode, pack]))

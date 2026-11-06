@@ -1,0 +1,289 @@
+{
+  "id": "javascript",
+  "label": "JavaScript",
+  "testMode": "javascript_tests",
+  "features": {
+    "runChallenges": true,
+    "readsInput": false,
+    "tableOutput": false,
+    "database": false,
+    "setupCode": true
+  },
+  "words": {
+    "keywords": [
+      "let",
+      "const",
+      "var",
+      "if",
+      "else",
+      "for",
+      "while",
+      "do",
+      "break",
+      "continue",
+      "return",
+      "function",
+      "class",
+      "extends",
+      "new",
+      "this",
+      "super",
+      "typeof",
+      "instanceof",
+      "in",
+      "of",
+      "switch",
+      "case",
+      "default",
+      "try",
+      "catch",
+      "finally",
+      "throw",
+      "async",
+      "await",
+      "yield",
+      "import",
+      "export",
+      "from",
+      "delete",
+      "void",
+      "static",
+      "get",
+      "set"
+    ],
+    "constants": [
+      "true",
+      "false",
+      "null",
+      "undefined",
+      "NaN",
+      "Infinity"
+    ],
+    "functions": [
+      "console.log",
+      "console.error",
+      "console.table",
+      "Math.round",
+      "Math.floor",
+      "Math.ceil",
+      "Math.max",
+      "Math.min",
+      "Math.abs",
+      "Math.sqrt",
+      "Math.random",
+      "Math.PI",
+      "Math.trunc",
+      "Number",
+      "Number.isInteger",
+      "Number.isNaN",
+      "String",
+      "Boolean",
+      "parseInt",
+      "parseFloat",
+      "isNaN",
+      "Array.isArray",
+      "Array.from",
+      "Object.keys",
+      "Object.values",
+      "Object.entries",
+      "Object.assign",
+      "JSON.stringify",
+      "JSON.parse",
+      "setTimeout",
+      "setInterval",
+      "clearTimeout",
+      "clearInterval",
+      "Promise",
+      "Promise.all",
+      "Date",
+      "Map",
+      "Set",
+      "Error",
+      "toUpperCase",
+      "toLowerCase",
+      "trim",
+      "includes",
+      "indexOf",
+      "slice",
+      "splice",
+      "replace",
+      "replaceAll",
+      "split",
+      "join",
+      "padStart",
+      "padEnd",
+      "startsWith",
+      "endsWith",
+      "repeat",
+      "toFixed",
+      "length",
+      "push",
+      "pop",
+      "shift",
+      "unshift",
+      "map",
+      "filter",
+      "reduce",
+      "find",
+      "findIndex",
+      "some",
+      "every",
+      "sort",
+      "forEach",
+      "concat",
+      "reverse",
+      "flat",
+      "flatMap",
+      "at"
+    ]
+  },
+  "highlight": {
+    "tokens": [
+      {
+        "kind": "comment",
+        "pattern": "//[^\\n]*|/\\*[\\s\\S]*?(?:\\*/|$)"
+      },
+      {
+        "kind": "string",
+        "pattern": "`(?:\\\\[\\s\\S]|[^`\\\\])*`?|\"(?:\\\\[\\s\\S]|[^\"\\\\\\n])*\"?|'(?:\\\\[\\s\\S]|[^'\\\\\\n])*'?"
+      },
+      {
+        "kind": "number",
+        "pattern": "\\b(?:0[xXbBoO][\\da-fA-F_]+n?|\\d[\\d_]*(?:\\.[\\d_]*)?(?:[eE][+-]?\\d+)?n?)|\\.\\d[\\d_]*(?:[eE][+-]?\\d+)?"
+      },
+      {
+        "kind": "name",
+        "pattern": "[A-Za-z_$][\\w$]*"
+      }
+    ],
+    "names": [
+      {
+        "kind": "keyword",
+        "words": "keywords"
+      },
+      {
+        "kind": "constant",
+        "words": "constants"
+      },
+      {
+        "kind": "name",
+        "after": [
+          "function",
+          "class",
+          "new"
+        ]
+      },
+      {
+        "kind": "builtin",
+        "call": true
+      }
+    ]
+  },
+  "tryIt": {
+    "commentPrefix": "//",
+    "codeLines": [
+      "^\\s*(let|const|var|if|for|while|function|class|return|switch|try|throw|async|await)\\b",
+      "^\\s*[A-Za-z_$][\\w$.\\[\\]'\"]*\\s*(\\*\\*|[+\\-*/%])?=(?!=)",
+      "^\\s*[A-Za-z_$][\\w$.]*\\(",
+      "^\\s*[A-Za-z_$][\\w$]*\\s*(\\+\\+|--)"
+    ],
+    "notCodeLines": [
+      "^(>|\\$) ",
+      "^\\s*(node|npm|npx|cd)\\s"
+    ],
+    "errorDemo": "//.*\\b(error|Error)\\b"
+  },
+  "editor": {
+    "indentSize": 2,
+    "suggestKeywords": [
+      "keywords",
+      "constants"
+    ],
+    "suggestFunctions": [
+      "functions"
+    ],
+    "comments": {
+      "line": "//",
+      "block": {
+        "open": "/*",
+        "close": "*/"
+      }
+    }
+  },
+  "keys": {
+    "add": [
+      ";",
+      {
+        "pair": [
+          "`",
+          "`"
+        ],
+        "aria": "Backticks"
+      },
+      {
+        "text": "=>",
+        "aria": "Arrow"
+      },
+      {
+        "text": "$",
+        "aria": "Dollar"
+      },
+      ":",
+      "&",
+      "|",
+      "?"
+    ]
+  },
+  "sandbox": {
+    "defaultCode": "console.log(\"Hello from CodeQuest!\")",
+    "samples": [
+      {
+        "id": "hello",
+        "label": "Hello",
+        "code": "console.log(\"Hello, JavaScript!\")"
+      },
+      {
+        "id": "variables",
+        "label": "Variables",
+        "code": "const name = \"Alex\"\nlet score = 7\nconsole.log(name)\nconsole.log(score)"
+      },
+      {
+        "id": "loop",
+        "label": "Loop",
+        "code": "for (let i = 0; i < 3; i++) {\n  console.log(\"Step\", i)\n}"
+      },
+      {
+        "id": "function",
+        "label": "Function",
+        "code": "function add(a, b) {\n  return a + b\n}\n\nconsole.log(add(2, 3))"
+      }
+    ]
+  },
+  "limits": {
+    "runSeconds": 10
+  },
+  "messages": {
+    "status": {
+      "running": "Running…"
+    },
+    "errors": {
+      "tooLong": {
+        "title": "Code took too long",
+        "tip": "Look for a loop that never ends, such as `while (true)` without a `break`, or a loop condition that never becomes false."
+      },
+      "stopped": {
+        "tip": "If it seemed stuck, look for a loop whose condition never becomes false."
+      }
+    }
+  },
+  "offline": {
+    "stepLabel": "Getting JavaScript ready…"
+  },
+  "course": {
+    "unit": "stages",
+    "shuffleChoices": true,
+    "omitFromQuestions": [
+      "check"
+    ]
+  }
+}
