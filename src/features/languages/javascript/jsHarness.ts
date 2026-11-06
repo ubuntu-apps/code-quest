@@ -212,8 +212,11 @@ export function swapStarter(code: string, starter: string, alt: string): string 
 /** Runs code on its own, quietly: what it logged and the named variables, or null if it failed. */
 async function runQuietly(code: string, setupCode: string, vars: string[]): Promise<{ output: string; values: unknown[] } | null> {
   const lines: string[] = []
-  const quiet = { log: (...v: unknown[]) => lines.push(formatLog(v)), info: () => undefined, warn: () => undefined, error: () => undefined, debug: () => undefined, table: () => undefined, clear: () => undefined }
-  quiet.info = quiet.log
+  const log = (...values: unknown[]) => {
+    lines.push(formatLog(values))
+  }
+  const ignore = () => undefined
+  const quiet = { log, info: log, debug: log, warn: ignore, error: ignore, table: ignore, clear: ignore }
   const read = vars.map((v) => `typeof ${v} === 'undefined' ? undefined : ${v}`).join(', ')
   try {
     const fn = new AsyncFunction('console', `${setupCode ? setupCode + '\n' : ''}${code}\n;return [${read}]`)
