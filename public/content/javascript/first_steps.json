@@ -5281,6 +5281,1018 @@
           }
         ]
       }
+    },
+    {
+      "id": "proj_name_badge",
+      "title": "Easy side quest: A name badge",
+      "kind": "project",
+      "projectDifficulty": "easy",
+      "sandboxSnippets": [
+        {
+          "id": "repeat_and_pad",
+          "label": "Repeat and pad",
+          "code": "console.log(\"-\".repeat(20))\nconsole.log(`[${\"Hi\".padEnd(6)}]`)\nconsole.log(`[${\"Hi\".padStart(6)}]`)"
+        },
+        {
+          "id": "line_lengths",
+          "label": "Line lengths",
+          "code": "const line = `| ${\"Designer\".padEnd(18)} |`\nconsole.log(line, line.length)"
+        }
+      ],
+      "intro": {
+        "title": "Easy side quest: A name badge",
+        "bodyMarkdown": "Time to put First steps together: a name badge for a conference, drawn with text. From these details:\n\n```\nconst first = \"Maya\"\nconst last = \"Lopez\"\nconst role = \"Designer\"\nconst year = 2026\n```\n\nthe finished program shows:\n\n```text\n+--------------------+\n| MAYA LOPEZ         |\n| Designer           |\n| Member since 2026  |\n+--------------------+\n```\n\nEvery line is 22 characters wide. The border is `+`, 20 dashes and `+`: `\"-\".repeat(20)` makes the dashes. Each middle line is `| `, the text, then `\" |\"`, with the text made 18 characters long by `padEnd(18)`, which adds spaces at the end (as `padStart` adds them at the start).\n\nBuild it in steps; the last challenges put it together.",
+        "sandboxCode": "const first = \"Maya\"\nconst last = \"Lopez\"\nconst name = `${first} ${last}`.toUpperCase()\nconsole.log(\"+\" + \"-\".repeat(20) + \"+\")\nconsole.log(`| ${name.padEnd(18)} |`)"
+      },
+      "challenges": [
+        {
+          "id": "proj_name_badge-the-name",
+          "title": "Easy: The name",
+          "promptMarkdown": "Set `name` to the first and last names with a space between, in capitals: `MAYA LOPEZ`.",
+          "starterCode": "const first = \"Maya\"\nconst last = \"Lopez\"\n",
+          "hint": "`` `${first} ${last}`.toUpperCase() ``.",
+          "solution": "const first = \"Maya\"\nconst last = \"Lopez\"\nconst name = `${first} ${last}`.toUpperCase()",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "name is MAYA LOPEZ",
+                "assertion": "Object.is(name, \"MAYA LOPEZ\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const first = \\\"Maya\\\"\\nconst last = \\\"Lopez\\\"\\n\", \"const first = \\\"Maya2\\\"\\nconst last = \\\"Lopez2\\\"\\n\", \"const first = \\\"Maya\\\"\\nconst last = \\\"Lopez\\\"\\nconst name = `${first} ${last}`.toUpperCase()\", [\"name\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_name_badge-the-border",
+          "title": "Easy: The border",
+          "promptMarkdown": "Set `border` to `+`, 20 dashes and `+`, using `repeat`.",
+          "starterCode": "",
+          "hint": "`\"+\" + \"-\".repeat(20) + \"+\"`.",
+          "solution": "const border = \"+\" + \"-\".repeat(20) + \"+\"",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "border is right",
+                "assertion": "Object.is(border, \"+--------------------+\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses repeat",
+                "assertion": "_cq_code.includes(\"repeat(20)\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_name_badge-one-badge-line",
+          "title": "Medium: One badge line",
+          "promptMarkdown": "Set `line` to `| `, the role padded to 18 characters, then ` |`: `| Designer           |` (22 characters).",
+          "starterCode": "const role = \"Designer\"\n",
+          "hint": "`` `| ${role.padEnd(18)} |` ``.",
+          "solution": "const role = \"Designer\"\nconst line = `| ${role.padEnd(18)} |`",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "line is right",
+                "assertion": "Object.is(line, \"| Designer           |\")"
+              },
+              {
+                "id": "t2",
+                "label": "line is 22 characters",
+                "assertion": "line.length === 22"
+              },
+              {
+                "id": "t3",
+                "label": "Uses padEnd",
+                "assertion": "_cq_code.includes(\"padEnd(18)\")"
+              },
+              {
+                "id": "t4",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const role = \\\"Designer\\\"\\n\", \"const role = \\\"Designer2\\\"\\n\", \"const role = \\\"Designer\\\"\\nconst line = `| ${role.padEnd(18)} |`\", [\"line\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_name_badge-member-since",
+          "title": "Medium: Member since",
+          "promptMarkdown": "Set `since` to `Member since ` and the year: `Member since 2026`.",
+          "starterCode": "const year = 2026\n",
+          "hint": "`` `Member since ${year}` ``.",
+          "solution": "const year = 2026\nconst since = `Member since ${year}`",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "since is right",
+                "assertion": "Object.is(since, \"Member since 2026\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const year = 2026\\n\", \"const year = 2027\\n\", \"const year = 2026\\nconst since = `Member since ${year}`\", [\"since\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_name_badge-the-whole-badge",
+          "title": "Hard: The whole badge",
+          "promptMarkdown": "Show the whole badge: the border, the name, the role, the member line, then the border again, each middle line padded to 18 characters inside `| ` and ` |`.",
+          "starterCode": "const first = \"Maya\"\nconst last = \"Lopez\"\nconst role = \"Designer\"\nconst year = 2026\n",
+          "hint": "Make `name`, `since` and `border` as before, then five `console.log` lines; each middle one is `` `| ${text.padEnd(18)} |` ``.",
+          "solution": "const first = \"Maya\"\nconst last = \"Lopez\"\nconst role = \"Designer\"\nconst year = 2026\nconst name = `${first} ${last}`.toUpperCase()\nconst since = `Member since ${year}`\nconst border = \"+\" + \"-\".repeat(20) + \"+\"\nconsole.log(border)\nconsole.log(`| ${name.padEnd(18)} |`)\nconsole.log(`| ${role.padEnd(18)} |`)\nconsole.log(`| ${since.padEnd(18)} |`)\nconsole.log(border)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the badge",
+                "assertion": "_cq_prints(\"+--------------------+\", \"| MAYA LOPEZ         |\", \"| Designer           |\", \"| Member since 2026  |\", \"+--------------------+\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const first = \\\"Maya\\\"\\nconst last = \\\"Lopez\\\"\\nconst role = \\\"Designer\\\"\\nconst year = 2026\\n\", \"const first = \\\"Tom\\\"\\nconst last = \\\"Ng\\\"\\nconst role = \\\"Engineer\\\"\\nconst year = 2019\\n\", \"const first = \\\"Maya\\\"\\nconst last = \\\"Lopez\\\"\\nconst role = \\\"Designer\\\"\\nconst year = 2026\\nconst name = `${first} ${last}`.toUpperCase()\\nconst since = `Member since ${year}`\\nconst border = \\\"+\\\" + \\\"-\\\".repeat(20) + \\\"+\\\"\\nconsole.log(border)\\nconsole.log(`| ${name.padEnd(18)} |`)\\nconsole.log(`| ${role.padEnd(18)} |`)\\nconsole.log(`| ${since.padEnd(18)} |`)\\nconsole.log(border)\", [\"since\"], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_name_badge-a-badge-that-fits",
+          "title": "Expert: A badge that fits",
+          "promptMarkdown": "Long names won't fit in 18 characters. Set `width` to the length of the longest of `name`, `role` and `since`, then show the badge with the border and padding sized to fit: dashes `width + 2` long, and each text padded to `width`.",
+          "starterCode": "const name = \"ALEXANDRA VON SCHMIDT\"\nconst role = \"Designer\"\nconst since = \"Member since 2026\"\n",
+          "hint": "`Math.max(name.length, role.length, since.length)` gives the width. The border is `\"+\" + \"-\".repeat(width + 2) + \"+\"`, and each line `` `| ${text.padEnd(width)} |` ``.",
+          "solution": "const name = \"ALEXANDRA VON SCHMIDT\"\nconst role = \"Designer\"\nconst since = \"Member since 2026\"\nconst width = Math.max(name.length, role.length, since.length)\nconst border = \"+\" + \"-\".repeat(width + 2) + \"+\"\nconsole.log(border)\nconsole.log(`| ${name.padEnd(width)} |`)\nconsole.log(`| ${role.padEnd(width)} |`)\nconsole.log(`| ${since.padEnd(width)} |`)\nconsole.log(border)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "width is the longest length",
+                "assertion": "Object.is(width, 21)"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the badge",
+                "assertion": "_cq_prints(\"+-----------------------+\", \"| ALEXANDRA VON SCHMIDT |\", \"| Designer              |\", \"| Member since 2026     |\", \"+-----------------------+\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const name = \\\"ALEXANDRA VON SCHMIDT\\\"\\nconst role = \\\"Designer\\\"\\nconst since = \\\"Member since 2026\\\"\\n\", \"const name = \\\"JO KIM\\\"\\nconst role = \\\"Chief Technology Officer\\\"\\nconst since = \\\"Member since 2001\\\"\\n\", \"const name = \\\"ALEXANDRA VON SCHMIDT\\\"\\nconst role = \\\"Designer\\\"\\nconst since = \\\"Member since 2026\\\"\\nconst width = Math.max(name.length, role.length, since.length)\\nconst border = \\\"+\\\" + \\\"-\\\".repeat(width + 2) + \\\"+\\\"\\nconsole.log(border)\\nconsole.log(`| ${name.padEnd(width)} |`)\\nconsole.log(`| ${role.padEnd(width)} |`)\\nconsole.log(`| ${since.padEnd(width)} |`)\\nconsole.log(border)\", [\"since\",\"width\"], true)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_name_badge-q-1r12wp4",
+            "type": "mcq",
+            "prompt": "What does `\"ab\".repeat(3)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"ababab\""
+              },
+              {
+                "id": "b",
+                "label": "\"ab ab ab\""
+              },
+              {
+                "id": "c",
+                "label": "\"aabbb\""
+              },
+              {
+                "id": "d",
+                "label": "\"ab3\""
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "repeat joins copies of the string with nothing between."
+          },
+          {
+            "id": "proj_name_badge-q-1r4bzht",
+            "type": "mcq",
+            "prompt": "How long is `\"Hi\".padEnd(5)`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "3 characters"
+              },
+              {
+                "id": "b",
+                "label": "5 characters"
+              },
+              {
+                "id": "c",
+                "label": "2 characters"
+              },
+              {
+                "id": "d",
+                "label": "7 characters"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "padEnd adds spaces at the end until the text is 5 long."
+          },
+          {
+            "id": "proj_name_badge-q-11mrhbc",
+            "type": "mcq",
+            "prompt": "What does `` `| ${\"x\".padEnd(3)} |` `` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"|   x |\""
+              },
+              {
+                "id": "b",
+                "label": "\"| x |\""
+              },
+              {
+                "id": "c",
+                "label": "\"|x  |\""
+              },
+              {
+                "id": "d",
+                "label": "\"| x   |\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "\"x\" becomes \"x  \" (3 characters), between \"| \" and \" |\"."
+          },
+          {
+            "id": "proj_name_badge-q-138c3to",
+            "type": "mcq",
+            "prompt": "What does `\"Lopez\".toUpperCase()` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"L\""
+              },
+              {
+                "id": "b",
+                "label": "\"LOPEZ\""
+              },
+              {
+                "id": "c",
+                "label": "\"lopez\""
+              },
+              {
+                "id": "d",
+                "label": "\"Lopez\""
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Every letter becomes a capital."
+          },
+          {
+            "id": "proj_name_badge-q-lm4v7a",
+            "type": "mcq",
+            "prompt": "What does `Math.max(\"Designer\".length, \"Maya\".length)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "8"
+              },
+              {
+                "id": "b",
+                "label": "\"Designer\""
+              },
+              {
+                "id": "c",
+                "label": "4"
+              },
+              {
+                "id": "d",
+                "label": "12"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "The lengths are 8 and 4; max gives 8."
+          },
+          {
+            "id": "proj_name_badge-q-1u4qlj1",
+            "type": "mcq",
+            "prompt": "Which pads text at the start instead of the end?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "`padEnd`"
+              },
+              {
+                "id": "b",
+                "label": "`repeat`"
+              },
+              {
+                "id": "c",
+                "label": "`padStart`"
+              },
+              {
+                "id": "d",
+                "label": "`trim`"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "padStart adds at the start, which lines numbers up on the right."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_shopping_receipt",
+      "title": "Medium side quest: A shopping receipt",
+      "kind": "project",
+      "projectDifficulty": "medium",
+      "sandboxSnippets": [
+        {
+          "id": "money",
+          "label": "Money",
+          "code": "const amount = 1.04\nconsole.log(`$${amount.toFixed(2)}`)\nconsole.log(`$${(13).toFixed(2)}`)"
+        },
+        {
+          "id": "percent",
+          "label": "Percent",
+          "code": "const taxRate = 0.08\nconsole.log(`${Math.round(taxRate * 100)}%`)"
+        }
+      ],
+      "intro": {
+        "title": "Medium side quest: A shopping receipt",
+        "bodyMarkdown": "A receipt for one item, with tax. From these details:\n\n```\nconst item = \"Notebook\"\nconst price = 3.25\nconst quantity = 4\nconst taxRate = 0.08\n```\n\nthe finished program shows:\n\n```text\n4 x Notebook\nSubtotal: $13.00\nTax (8%): $1.04\nTotal: $14.04\n```\n\nThe subtotal is the price times the quantity, the tax is the subtotal times the tax rate, and the total is the two added. Money is shown with 2 decimal places, using `toFixed(2)`, and the tax rate as a percentage: `Math.round(taxRate * 100)`.\n\nBuild it in steps; the last challenge puts it all together.",
+        "sandboxCode": "const price = 3.25\nconst quantity = 4\nconst subtotal = price * quantity\nconsole.log(`Subtotal: $${subtotal.toFixed(2)}`)"
+      },
+      "challenges": [
+        {
+          "id": "proj_shopping_receipt-the-subtotal",
+          "title": "Easy: The subtotal",
+          "promptMarkdown": "Set `subtotal` to the price times the quantity.",
+          "starterCode": "const price = 3.25\nconst quantity = 4\n",
+          "hint": "`price * quantity`.",
+          "solution": "const price = 3.25\nconst quantity = 4\nconst subtotal = price * quantity",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "subtotal is 13",
+                "assertion": "typeof subtotal === 'number' && Math.abs(subtotal - 13) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const price = 3.25\\nconst quantity = 4\\n\", \"const price = 3.26\\nconst quantity = 6\\n\", \"const price = 3.25\\nconst quantity = 4\\nconst subtotal = price * quantity\", [\"subtotal\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_shopping_receipt-the-first-line",
+          "title": "Easy: The first line",
+          "promptMarkdown": "Set `first` to the quantity, ` x ` and the item: `4 x Notebook`.",
+          "starterCode": "const item = \"Notebook\"\nconst quantity = 4\n",
+          "hint": "`` `${quantity} x ${item}` ``.",
+          "solution": "const item = \"Notebook\"\nconst quantity = 4\nconst first = `${quantity} x ${item}`",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "first is 4 x Notebook",
+                "assertion": "Object.is(first, \"4 x Notebook\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const item = \\\"Notebook\\\"\\nconst quantity = 4\\n\", \"const item = \\\"Notebook2\\\"\\nconst quantity = 5\\n\", \"const item = \\\"Notebook\\\"\\nconst quantity = 4\\nconst first = `${quantity} x ${item}`\", [\"first\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_shopping_receipt-tax-and-total",
+          "title": "Medium: Tax and total",
+          "promptMarkdown": "Set `tax` to the subtotal times the tax rate, and `total` to the subtotal plus the tax.",
+          "starterCode": "const subtotal = 13\nconst taxRate = 0.08\n",
+          "hint": "`const tax = subtotal * taxRate`, then `const total = subtotal + tax`.",
+          "solution": "const subtotal = 13\nconst taxRate = 0.08\nconst tax = subtotal * taxRate\nconst total = subtotal + tax",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "tax is 1.04",
+                "assertion": "typeof tax === 'number' && Math.abs(tax - 1.04) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "total is 14.04",
+                "assertion": "typeof total === 'number' && Math.abs(total - 14.04) < 1e-9"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const subtotal = 13\\nconst taxRate = 0.08\\n\", \"const subtotal = 14\\nconst taxRate = 0.10\\n\", \"const subtotal = 13\\nconst taxRate = 0.08\\nconst tax = subtotal * taxRate\\nconst total = subtotal + tax\", [\"tax\",\"total\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_shopping_receipt-the-tax-label",
+          "title": "Medium: The tax label",
+          "promptMarkdown": "Set `label` to `Tax (8%):` with the percentage worked out from `taxRate`.",
+          "starterCode": "const taxRate = 0.08\n",
+          "hint": "`` `Tax (${Math.round(taxRate * 100)}%):` ``.",
+          "solution": "const taxRate = 0.08\nconst label = `Tax (${Math.round(taxRate * 100)}%):`",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "label is right",
+                "assertion": "Object.is(label, \"Tax (8%):\")"
+              },
+              {
+                "id": "t2",
+                "label": "Rounds the percentage",
+                "assertion": "_cq_code.includes(\"Math.round\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const taxRate = 0.08\\n\", \"const taxRate = 0.09\\n\", \"const taxRate = 0.08\\nconst label = `Tax (${Math.round(taxRate * 100)}%):`\", [\"label\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_shopping_receipt-money-lines",
+          "title": "Hard: Money lines",
+          "promptMarkdown": "Show `Subtotal: $13.00` and then `Total: $14.04`, with 2 decimal places.",
+          "starterCode": "const subtotal = 13\nconst total = 14.04\n",
+          "hint": "A `$` before `${…}` is just a character: `` `Subtotal: $${subtotal.toFixed(2)}` ``.",
+          "solution": "const subtotal = 13\nconst total = 14.04\nconsole.log(`Subtotal: $${subtotal.toFixed(2)}`)\nconsole.log(`Total: $${total.toFixed(2)}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows both lines",
+                "assertion": "_cq_prints(\"Subtotal: $13.00\", \"Total: $14.04\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses toFixed",
+                "assertion": "_cq_code.includes(\"toFixed(2)\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const subtotal = 13\\nconst total = 14.04\\n\", \"const subtotal = 14\\nconst total = 14.06\\n\", \"const subtotal = 13\\nconst total = 14.04\\nconsole.log(`Subtotal: $${subtotal.toFixed(2)}`)\\nconsole.log(`Total: $${total.toFixed(2)}`)\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_shopping_receipt-the-whole-receipt",
+          "title": "Expert: The whole receipt",
+          "promptMarkdown": "Show the whole receipt from the four details: the item line, the subtotal, the tax with its percentage, and the total.",
+          "starterCode": "const item = \"Notebook\"\nconst price = 3.25\nconst quantity = 4\nconst taxRate = 0.08\n",
+          "hint": "Work out `subtotal`, `tax` and `total` first, then four `console.log` lines with template literals and `toFixed(2)`.",
+          "solution": "const item = \"Notebook\"\nconst price = 3.25\nconst quantity = 4\nconst taxRate = 0.08\nconst subtotal = price * quantity\nconst tax = subtotal * taxRate\nconst total = subtotal + tax\nconsole.log(`${quantity} x ${item}`)\nconsole.log(`Subtotal: $${subtotal.toFixed(2)}`)\nconsole.log(`Tax (${Math.round(taxRate * 100)}%): $${tax.toFixed(2)}`)\nconsole.log(`Total: $${total.toFixed(2)}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the receipt",
+                "assertion": "_cq_prints(\"4 x Notebook\", \"Subtotal: $13.00\", \"Tax (8%): $1.04\", \"Total: $14.04\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const item = \\\"Notebook\\\"\\nconst price = 3.25\\nconst quantity = 4\\nconst taxRate = 0.08\\n\", \"const item = \\\"Pen\\\"\\nconst price = 1.2\\nconst quantity = 5\\nconst taxRate = 0.2\\n\", \"const item = \\\"Notebook\\\"\\nconst price = 3.25\\nconst quantity = 4\\nconst taxRate = 0.08\\nconst subtotal = price * quantity\\nconst tax = subtotal * taxRate\\nconst total = subtotal + tax\\nconsole.log(`${quantity} x ${item}`)\\nconsole.log(`Subtotal: $${subtotal.toFixed(2)}`)\\nconsole.log(`Tax (${Math.round(taxRate * 100)}%): $${tax.toFixed(2)}`)\\nconsole.log(`Total: $${total.toFixed(2)}`)\", [], true)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_shopping_receipt-q-r3jjxx",
+            "type": "mcq",
+            "prompt": "What does `(13).toFixed(2)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "13.00"
+              },
+              {
+                "id": "b",
+                "label": "\"13.00\""
+              },
+              {
+                "id": "c",
+                "label": "\"13\""
+              },
+              {
+                "id": "d",
+                "label": "13"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "toFixed gives text with exactly that many decimals."
+          },
+          {
+            "id": "proj_shopping_receipt-q-1ew9emr",
+            "type": "mcq",
+            "prompt": "After `const t = 2.5`, what does `` `$${t}` `` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"2.5\""
+              },
+              {
+                "id": "b",
+                "label": "\"$${t}\""
+              },
+              {
+                "id": "c",
+                "label": "\"$2.5\""
+              },
+              {
+                "id": "d",
+                "label": "\"$t\""
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "The first $ is a character; ${t} is the gap."
+          },
+          {
+            "id": "proj_shopping_receipt-q-12g86t0",
+            "type": "mcq",
+            "prompt": "What does `Math.round(0.08 * 100)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "0.08"
+              },
+              {
+                "id": "b",
+                "label": "8"
+              },
+              {
+                "id": "c",
+                "label": "80"
+              },
+              {
+                "id": "d",
+                "label": "8.0"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "0.08 × 100 is 8."
+          },
+          {
+            "id": "proj_shopping_receipt-q-cxd5ts",
+            "type": "mcq",
+            "prompt": "Why use `toFixed(2)` for money?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "So amounts always show 2 decimals, like $13.00"
+              },
+              {
+                "id": "b",
+                "label": "It makes the maths exact"
+              },
+              {
+                "id": "c",
+                "label": "It adds tax"
+              },
+              {
+                "id": "d",
+                "label": "It turns text into numbers"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "It rounds for showing; 13 would otherwise show as just 13."
+          },
+          {
+            "id": "proj_shopping_receipt-q-1lgm70c",
+            "type": "mcq",
+            "prompt": "What does `4 * 3.25` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "12.25"
+              },
+              {
+                "id": "b",
+                "label": "13"
+              },
+              {
+                "id": "c",
+                "label": "7.25"
+              },
+              {
+                "id": "d",
+                "label": "\"43.25\""
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "4 × 3.25 is 13."
+          },
+          {
+            "id": "proj_shopping_receipt-q-1owmxve",
+            "type": "mcq",
+            "prompt": "Is the result of `toFixed` a number or text?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "A boolean"
+              },
+              {
+                "id": "b",
+                "label": "A number"
+              },
+              {
+                "id": "c",
+                "label": "undefined"
+              },
+              {
+                "id": "d",
+                "label": "Text"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "It is text, ready to show; use the number itself for more maths."
+          }
+        ]
+      }
+    },
+    {
+      "id": "proj_temperature_table",
+      "title": "Hard side quest: A temperature table",
+      "kind": "project",
+      "projectDifficulty": "hard",
+      "sandboxSnippets": [
+        {
+          "id": "right_aligned_numbers",
+          "label": "Right-aligned numbers",
+          "code": "console.log(String(5).padStart(4))\nconsole.log(String(50).padStart(4))\nconsole.log(String(500).padStart(4))"
+        },
+        {
+          "id": "both_ways",
+          "label": "Both ways",
+          "code": "const c = 100\nconst f = c * 9 / 5 + 32\nconsole.log(f, (f - 32) * 5 / 9)"
+        }
+      ],
+      "intro": {
+        "title": "Hard side quest: A temperature table",
+        "bodyMarkdown": "A table that converts temperatures between Celsius and Fahrenheit, with the numbers lined up on the right:\n\n```text\n  °C     °F\n   0   32.0\n  25   77.0\n 100  212.0\n```\n\nFahrenheit is Celsius times 9, divided by 5, plus 32. To go back, take 32 away and multiply by 5/9.\n\nEach row is the Celsius value padded to 4 characters, then the Fahrenheit value with 1 decimal padded to 7: `` `${String(c).padStart(4)}${f.toFixed(1).padStart(7)}` ``. `padStart` lines numbers up on the right, as a table needs. (`padStart` works on text, so the number is turned into a string first.)\n\nIn the next quest, loops will make tables of any size. For now, there are three rows.",
+        "sandboxCode": "const c = 25\nconst f = c * 9 / 5 + 32\nconsole.log(`${\"°C\".padStart(4)}${\"°F\".padStart(7)}`)\nconsole.log(`${String(c).padStart(4)}${f.toFixed(1).padStart(7)}`)"
+      },
+      "challenges": [
+        {
+          "id": "proj_temperature_table-to-fahrenheit",
+          "title": "Easy: To Fahrenheit",
+          "promptMarkdown": "Set `f` to `c` in Fahrenheit.",
+          "starterCode": "const c = 25\n",
+          "hint": "`c * 9 / 5 + 32`.",
+          "solution": "const c = 25\nconst f = c * 9 / 5 + 32",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "f is 77",
+                "assertion": "typeof f === 'number' && Math.abs(f - 77) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const c = 25\\n\", \"const c = 26\\n\", \"const c = 25\\nconst f = c * 9 / 5 + 32\", [\"f\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_temperature_table-back-to-celsius",
+          "title": "Easy: Back to Celsius",
+          "promptMarkdown": "Set `c` to `f` in Celsius.",
+          "starterCode": "const f = 212\n",
+          "hint": "`(f - 32) * 5 / 9`: the brackets matter.",
+          "solution": "const f = 212\nconst c = (f - 32) * 5 / 9",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "c is 100",
+                "assertion": "typeof c === 'number' && Math.abs(c - 100) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const f = 212\\n\", \"const f = 213\\n\", \"const f = 212\\nconst c = (f - 32) * 5 / 9\", [\"c\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_temperature_table-the-header",
+          "title": "Medium: The header",
+          "promptMarkdown": "Set `header` to `°C` padded to 4 characters and `°F` padded to 7, so it reads `  °C     °F`.",
+          "starterCode": "",
+          "hint": "`` `${\"°C\".padStart(4)}${\"°F\".padStart(7)}` ``.",
+          "solution": "const header = `${\"°C\".padStart(4)}${\"°F\".padStart(7)}`",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "header is right",
+                "assertion": "Object.is(header, \"  °C     °F\")"
+              },
+              {
+                "id": "t2",
+                "label": "Uses padStart",
+                "assertion": "_cq_code.includes(\"padStart(\")"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_temperature_table-one-row",
+          "title": "Medium: One row",
+          "promptMarkdown": "Set `row` to `c` padded to 4 characters and its Fahrenheit value with 1 decimal padded to 7: `  25   77.0`.",
+          "starterCode": "const c = 25\n",
+          "hint": "Work out `f` first. Then `` `${String(c).padStart(4)}${f.toFixed(1).padStart(7)}` ``.",
+          "solution": "const c = 25\nconst f = c * 9 / 5 + 32\nconst row = `${String(c).padStart(4)}${f.toFixed(1).padStart(7)}`",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "row is right",
+                "assertion": "Object.is(row, \"  25   77.0\")"
+              },
+              {
+                "id": "t2",
+                "label": "row is 11 characters",
+                "assertion": "row.length === 11"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const c = 25\\n\", \"const c = 26\\n\", \"const c = 25\\nconst f = c * 9 / 5 + 32\\nconst row = `${String(c).padStart(4)}${f.toFixed(1).padStart(7)}`\", [\"row\"], false)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_temperature_table-the-table",
+          "title": "Hard: The table",
+          "promptMarkdown": "Show the header and a row for each of `c1`, `c2` and `c3`.",
+          "starterCode": "const c1 = 0\nconst c2 = 25\nconst c3 = 100\n",
+          "hint": "Work out `f1`, `f2` and `f3`, then show the header and three rows made the same way as in the last challenge.",
+          "solution": "const c1 = 0\nconst c2 = 25\nconst c3 = 100\nconst f1 = c1 * 9 / 5 + 32\nconst f2 = c2 * 9 / 5 + 32\nconst f3 = c3 * 9 / 5 + 32\nconsole.log(`${\"°C\".padStart(4)}${\"°F\".padStart(7)}`)\nconsole.log(`${String(c1).padStart(4)}${f1.toFixed(1).padStart(7)}`)\nconsole.log(`${String(c2).padStart(4)}${f2.toFixed(1).padStart(7)}`)\nconsole.log(`${String(c3).padStart(4)}${f3.toFixed(1).padStart(7)}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "Shows the table",
+                "assertion": "_cq_prints(\"  °C     °F\", \"   0   32.0\", \"  25   77.0\", \" 100  212.0\")"
+              },
+              {
+                "id": "t2",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const c1 = 0\\nconst c2 = 25\\nconst c3 = 100\\n\", \"const c1 = -10\\nconst c2 = 37\\nconst c3 = 60\\n\", \"const c1 = 0\\nconst c2 = 25\\nconst c3 = 100\\nconst f1 = c1 * 9 / 5 + 32\\nconst f2 = c2 * 9 / 5 + 32\\nconst f3 = c3 * 9 / 5 + 32\\nconsole.log(`${\\\"°C\\\".padStart(4)}${\\\"°F\\\".padStart(7)}`)\\nconsole.log(`${String(c1).padStart(4)}${f1.toFixed(1).padStart(7)}`)\\nconsole.log(`${String(c2).padStart(4)}${f2.toFixed(1).padStart(7)}`)\\nconsole.log(`${String(c3).padStart(4)}${f3.toFixed(1).padStart(7)}`)\", [], true)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "proj_temperature_table-add-kelvin",
+          "title": "Expert: Add Kelvin",
+          "promptMarkdown": "Scientists use Kelvin: Celsius plus 273.15. Show a header and one row with a third column, Kelvin with 2 decimals padded to 9: `  °C     °F        K` and then `  25   77.0   298.15`.",
+          "starterCode": "const c = 25\n",
+          "hint": "`const k = c + 273.15`. Add `` ${\"K\".padStart(9)} `` to the header and `` ${k.toFixed(2).padStart(9)} `` to the row.",
+          "solution": "const c = 25\nconst f = c * 9 / 5 + 32\nconst k = c + 273.15\nconsole.log(`${\"°C\".padStart(4)}${\"°F\".padStart(7)}${\"K\".padStart(9)}`)\nconsole.log(`${String(c).padStart(4)}${f.toFixed(1).padStart(7)}${k.toFixed(2).padStart(9)}`)",
+          "validation": {
+            "mode": "javascript_tests",
+            "setupCode": "",
+            "tests": [
+              {
+                "id": "t1",
+                "label": "k is 298.15",
+                "assertion": "typeof k === 'number' && Math.abs(k - 298.15) < 1e-9"
+              },
+              {
+                "id": "t2",
+                "label": "Shows the header and the row",
+                "assertion": "_cq_prints(\"  °C     °F        K\", \"  25   77.0   298.15\")"
+              },
+              {
+                "id": "t3",
+                "label": "Works with other data too",
+                "assertion": "_cq_rerun(\"const c = 25\\n\", \"const c = 26\\n\", \"const c = 25\\nconst f = c * 9 / 5 + 32\\nconst k = c + 273.15\\nconsole.log(`${\\\"°C\\\".padStart(4)}${\\\"°F\\\".padStart(7)}${\\\"K\\\".padStart(9)}`)\\nconsole.log(`${String(c).padStart(4)}${f.toFixed(1).padStart(7)}${k.toFixed(2).padStart(9)}`)\", [\"k\"], true)"
+              }
+            ]
+          }
+        }
+      ],
+      "test": {
+        "passingScorePercent": 70,
+        "questions": [
+          {
+            "id": "proj_temperature_table-q-1brs5y2",
+            "type": "mcq",
+            "prompt": "What does `String(7).padStart(3)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"7\""
+              },
+              {
+                "id": "b",
+                "label": "\"7  \""
+              },
+              {
+                "id": "c",
+                "label": "\"007\""
+              },
+              {
+                "id": "d",
+                "label": "\"  7\""
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "padStart adds spaces at the start until it is 3 long."
+          },
+          {
+            "id": "proj_temperature_table-q-mzzm8s",
+            "type": "mcq",
+            "prompt": "What is 0 °C in Fahrenheit (`0 * 9 / 5 + 32`)?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "32"
+              },
+              {
+                "id": "b",
+                "label": "-32"
+              },
+              {
+                "id": "c",
+                "label": "17.8"
+              },
+              {
+                "id": "d",
+                "label": "0"
+              }
+            ],
+            "correctChoiceId": "a",
+            "explanation": "0 × 9 / 5 is 0, plus 32 is 32."
+          },
+          {
+            "id": "proj_temperature_table-q-d7t3wh",
+            "type": "mcq",
+            "prompt": "Why must the brackets stay in `(f - 32) * 5 / 9`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "They turn f into text"
+              },
+              {
+                "id": "b",
+                "label": "They make it faster"
+              },
+              {
+                "id": "c",
+                "label": "JavaScript needs brackets around every sum"
+              },
+              {
+                "id": "d",
+                "label": "Without them, only 32 is multiplied"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "* comes before -, so without brackets it would be f - (32 * 5 / 9)."
+          },
+          {
+            "id": "proj_temperature_table-q-1shmbti",
+            "type": "mcq",
+            "prompt": "What does `(77).toFixed(1)` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "\"77\""
+              },
+              {
+                "id": "b",
+                "label": "\"77.00\""
+              },
+              {
+                "id": "c",
+                "label": "\"77.0\""
+              },
+              {
+                "id": "d",
+                "label": "77"
+              }
+            ],
+            "correctChoiceId": "c",
+            "explanation": "One decimal place, as text."
+          },
+          {
+            "id": "proj_temperature_table-q-15q2xfx",
+            "type": "mcq",
+            "prompt": "Why does a number need `String(…)` before `padStart`?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "It isn't needed for any value"
+              },
+              {
+                "id": "b",
+                "label": "It rounds the number"
+              },
+              {
+                "id": "c",
+                "label": "Numbers can't be shown"
+              },
+              {
+                "id": "d",
+                "label": "padStart is a string method"
+              }
+            ],
+            "correctChoiceId": "d",
+            "explanation": "Numbers don't have padStart; turn them into text first."
+          },
+          {
+            "id": "proj_temperature_table-q-1hlxn66",
+            "type": "mcq",
+            "prompt": "What does `25 + 273.15` give?",
+            "choices": [
+              {
+                "id": "a",
+                "label": "273.4"
+              },
+              {
+                "id": "b",
+                "label": "298.15"
+              },
+              {
+                "id": "c",
+                "label": "\"25273.15\""
+              },
+              {
+                "id": "d",
+                "label": "298"
+              }
+            ],
+            "correctChoiceId": "b",
+            "explanation": "Both are numbers, so + adds."
+          }
+        ]
+      }
     }
   ]
 }
