@@ -6,10 +6,11 @@
 //  6. Errors and debugging  7. Classes  8. Asynchronous JavaScript  9. Text, data and modules
 // 10. Capstone projects.
 import { firstStepsTopics } from './first-steps.mjs'
+import { decisionsLoopsTopics } from './decisions-loops.mjs'
 
 export const COURSE = [
   { sectionId: 'first_steps', title: 'First steps', filename: 'first_steps.json', topics: firstStepsTopics },
-  { sectionId: 'decisions_loops', title: 'Decisions and loops', filename: 'decisions_loops.json', topics: [] },
+  { sectionId: 'decisions_loops', title: 'Decisions and loops', filename: 'decisions_loops.json', topics: decisionsLoopsTopics },
   { sectionId: 'arrays_objects', title: 'Arrays and objects', filename: 'arrays_objects.json', topics: [] },
   { sectionId: 'functions', title: 'Functions', filename: 'functions.json', topics: [] },
   { sectionId: 'working_with_lists', title: 'Working with lists', filename: 'working_with_lists.json', topics: [] },
