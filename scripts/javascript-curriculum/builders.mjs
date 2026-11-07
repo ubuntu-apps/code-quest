@@ -102,6 +102,15 @@ export class JavaScriptBuilders extends CourseBuilders {
     return `typeof ${name} === 'number' && Math.abs(${name} - ${value}) < 1e-9`
   }
 
+  /**
+   * Running `call` (JavaScript, e.g. `'greet("Zed")'`) logs exactly these lines. What it logs is
+   * caught, so it stays out of the learner's output. Values are joined as text, so use it for
+   * functions that log text and numbers.
+   */
+  logsWhen(call, ...lines) {
+    return `((_cq_log, _cq_got) => { console.log = (...v) => { _cq_got.push(...v.map(String).join(" ").split("\\n")) }; try { ${call} } finally { console.log = _cq_log } return JSON.stringify(_cq_got) === ${jsstr(JSON.stringify(lines))} })(console.log, [])`
+  }
+
   /** `name` is the same as a JavaScript value, compared as JSON: `same('nums', '[2, 4, 6]')`. */
   same(name, jsValue) {
     return `JSON.stringify(${name}) === JSON.stringify(${jsValue})`

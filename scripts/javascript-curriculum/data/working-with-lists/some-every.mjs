@@ -1,0 +1,103 @@
+// Working with lists: some and every. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'some_every',
+  title: 'some and every: yes-or-no questions',
+  paragraphs: [
+    'Sometimes you don\'t need the matching items, just an answer: *is there* a late payment? *Are all* the boxes ticked? **`some`** and **`every`** answer with `true` or `false`.',
+    '```\nconst scores = [72, 41, 88, 95]\nconsole.log(scores.some((s) => s < 50))\nconsole.log(scores.every((s) => s >= 50))\n```',
+    '`some` is `true` if **at least one** item passes the test. `every` is `true` only if **all** of them do. Both stop early: `some` at the first pass, `every` at the first fail.',
+    'They are the list versions of `||` and `&&`, and read almost like English:',
+    '```\nconst tasks = [\n  { title: "plan", done: true },\n  { title: "build", done: false },\n]\nconst allDone = tasks.every((t) => t.done)\nconst started = tasks.some((t) => t.done)\nconsole.log(allDone, started)\n```',
+    'Watch the empty list: `[].some(...)` is `false` (nothing passed), but `[].every(...)` is `true` (nothing failed). If an empty list should not count as "all done", check `length` too.',
+    'They are also a neat way to check input: `password.split("").some((ch) => "0123456789".includes(ch))` asks "is there a digit?".',
+  ],
+  sandboxCode: 'const scores = [72, 41, 88, 95]\nconsole.log(scores.some((s) => s < 50), scores.every((s) => s >= 50))\nconsole.log([].some((s) => s), [].every((s) => s))',
+  sandboxSnippets: [
+    snippet('Any adults?', 'const ages = [9, 12, 34]\nconsole.log(ages.some((a) => a >= 18))'),
+    snippet('All filled in', 'const answers = ["yes", "", "no"]\nconsole.log(answers.every((a) => a !== ""))'),
+    snippet('Stops early', 'const nums = [1, 2, 3, 4]\nnums.some((n) => {\n  console.log("checking", n)\n  return n === 2\n})'),
+    snippet('Has a digit?', 'const pw = "secret7"\nconsole.log(pw.split("").some((ch) => "0123456789".includes(ch)))'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Global_Objects/Array/some', 'MDN: Array.prototype.some()'),
+  challenges: [
+    task('easy', 'Any negative?', {
+      prompt: 'Set `anyNegative` to whether any number in `nums` is below 0, using `some`.',
+      starter: 'const nums = [4, 7, -2, 9]\n',
+      hint: '`nums.some((n) => n < 0)`.',
+      solution: 'const nums = [4, 7, -2, 9]\nconst anyNegative = nums.some((n) => n < 0)',
+      tests: [['anyNegative is true', is('anyNegative', true)], ['Uses some', uses('.some(')]],
+      alt: 'const nums = [4, 7, 2, 9]',
+    }),
+    task('easy', 'All passed?', {
+      prompt: 'Set `allPassed` to whether every score is 50 or more, using `every`.',
+      starter: 'const scores = [72, 55, 88, 49]\n',
+      hint: '`scores.every((s) => s >= 50)`.',
+      solution: 'const scores = [72, 55, 88, 49]\nconst allPassed = scores.every((s) => s >= 50)',
+      tests: [['allPassed is false', is('allPassed', false)], ['Uses every', uses('.every(')]],
+      alt: 'const scores = [72, 55, 88, 50]',
+    }),
+    task('easy', 'All done?', {
+      prompt: 'Set `allDone` to whether every task is `done`.',
+      starter: 'const tasks = [\n  { title: "plan", done: true },\n  { title: "build", done: true },\n  { title: "test", done: false },\n]\n',
+      hint: '`tasks.every((t) => t.done)`.',
+      solution: 'const tasks = [\n  { title: "plan", done: true },\n  { title: "build", done: true },\n  { title: "test", done: false },\n]\nconst allDone = tasks.every((t) => t.done)',
+      tests: [['allDone is false', is('allDone', false)], ['Uses every', uses('.every(')]],
+      alt: 'const tasks = [\n  { title: "plan", done: true },\n  { title: "build", done: true },\n  { title: "test", done: true },\n]',
+    }),
+    task('medium', 'Has a digit', {
+      prompt: 'Write `hasDigit(text)`, returning whether `text` has a digit in it, using `some`.',
+      hint: '`text.split("").some((ch) => "0123456789".includes(ch))`.',
+      solution: 'function hasDigit(text) {\n  return text.split("").some((ch) => "0123456789".includes(ch))\n}',
+      tests: [['secret7', is('hasDigit("secret7")', true)], ['secret', is('hasDigit("secret")', false)], ['Empty', is('hasDigit("")', false)], ['Uses some', uses('.some(')]],
+    }),
+    task('medium', 'Form filled in', {
+      prompt: 'Write `complete(answers)`, returning whether every answer is a non-empty text after trimming spaces.',
+      hint: '`answers.every((a) => a.trim() !== "")`.',
+      solution: 'function complete(answers) {\n  return answers.every((a) => a.trim() !== "")\n}',
+      tests: [['All filled', is('complete(["yes", "no"])', true)], ['One blank', is('complete(["yes", "  "])', false)], ['Uses every', uses('.every(')]],
+    }),
+    task('medium', 'Sold out?', {
+      prompt: 'Write `soldOut(products)`, returning `true` when no product has `stock` above 0.',
+      hint: '`products.every((p) => p.stock === 0)`, or `!products.some((p) => p.stock > 0)`.',
+      solution: 'function soldOut(products) {\n  return !products.some((p) => p.stock > 0)\n}',
+      tests: [['Some left', is('soldOut([{ stock: 0 }, { stock: 2 }])', false)], ['None left', is('soldOut([{ stock: 0 }, { stock: 0 }])', true)], ['Uses some or every', '/\\.(some|every)\\(/.test(_cq_code)']],
+    }),
+    task('hard', 'Not empty, all done', {
+      prompt: 'Write `finished(tasks)`, returning `true` only if there is at least one task and every task is `done`.',
+      hint: '`every` is true for an empty list, so: `tasks.length > 0 && tasks.every((t) => t.done)`.',
+      solution: 'function finished(tasks) {\n  return tasks.length > 0 && tasks.every((t) => t.done)\n}',
+      tests: [['All done', is('finished([{ done: true }])', true)], ['One left', is('finished([{ done: true }, { done: false }])', false)], ['Empty list', is('finished([])', false)]],
+    }),
+    task('hard', 'Sorted?', {
+      prompt: 'Write `isSorted(nums)`, returning whether each number is no smaller than the one before, using `every` with the index.',
+      hint: '`nums.every((n, i) => i === 0 || n >= nums[i - 1])`.',
+      solution: 'function isSorted(nums) {\n  return nums.every((n, i) => i === 0 || n >= nums[i - 1])\n}',
+      tests: [['Sorted', is('isSorted([1, 2, 2, 5])', true)], ['Not sorted', is('isSorted([1, 3, 2])', false)], ['Empty', is('isSorted([])', true)], ['Uses every', uses('.every(')]],
+    }),
+    task('expert', 'Your own some and every', {
+      prompt: 'Write `mySome(list, test)` and `myEvery(list, test)` without `.some` or `.every`. Each should stop as soon as it knows the answer.',
+      hint: '`mySome`: return true at the first pass, else false. `myEvery`: return false at the first fail, else true.',
+      solution: 'function mySome(list, test) {\n  for (const x of list) {\n    if (test(x)) return true\n  }\n  return false\n}\nfunction myEvery(list, test) {\n  for (const x of list) {\n    if (!test(x)) return false\n  }\n  return true\n}',
+      tests: [['mySome', 'mySome([1, 5], (n) => n > 3) === true && mySome([1, 2], (n) => n > 3) === false && mySome([], () => true) === false'], ['myEvery', 'myEvery([4, 5], (n) => n > 3) === true && myEvery([1, 5], (n) => n > 3) === false && myEvery([], () => false) === true'], ['Stop early', '(() => { let c = 0; mySome([1, 2, 3], (n) => { c++; return n === 1 }); myEvery([1, 2, 3], (n) => { c++; return n !== 1 }); return c === 2 })()'], ['No .some or .every', '!/\\.(some|every)\\(/.test(_cq_code)']],
+    }),
+    task('expert', 'Valid grid', {
+      prompt: 'Write `validGrid(rows)`: `true` when every row has the same length as the first, and every value in every row is a number from 0 to 9.',
+      hint: '`rows.every((row) => row.length === rows[0].length && row.every((v) => v >= 0 && v <= 9))`.',
+      solution: 'function validGrid(rows) {\n  return rows.every((row) => row.length === rows[0].length && row.every((v) => typeof v === "number" && v >= 0 && v <= 9))\n}',
+      tests: [['Valid', is('validGrid([[1, 2], [3, 4]])', true)], ['Ragged', is('validGrid([[1, 2], [3]])', false)], ['Out of range', is('validGrid([[1, 12], [3, 4]])', false)], ['Uses every', uses('.every(')]],
+    }),
+  ],
+  questions: [
+    mc('When is `some` true?', ['When at least one item passes', 'When every item passes', 'When none pass', 'When the list is empty'], 0, 'One is enough.'),
+    mc('When is `every` true?', ['When no item fails', 'When one item passes', 'Never for numbers', 'When the list has one item'], 0, 'All must pass.'),
+    mc('What does this show?\n```\nconsole.log([3, 8, 1].some((n) => n > 5))\n```', ['`true`', '`false`', '`8`', '`[ 8 ]`'], 0, '8 passes.', { code: 'console.log([3, 8, 1].some((n) => n > 5))', output: 'true' }),
+    mc('What does this show?\n```\nconsole.log([3, 8, 1].every((n) => n > 2))\n```', ['`false`', '`true`', '`[ 3, 8 ]`', '`1`'], 0, '1 fails.', { code: 'console.log([3, 8, 1].every((n) => n > 2))', output: 'false' }),
+    mc('What is `[].every((x) => false)`?', ['true', 'false', 'undefined', 'An error'], 0, 'Nothing failed.', { code: 'console.log([].every((x) => false))', output: 'true' }),
+    mc('What is `[].some((x) => true)`?', ['false', 'true', 'undefined', 'An error'], 0, 'Nothing passed.', { code: 'console.log([].some((x) => true))', output: 'false' }),
+    mc('`!list.some(test)` means the same as…', ['`list.every((x) => !test(x))`', '`list.every(test)`', '`list.some((x) => !test(x))`', '`list.filter(test)`'], 0, '"None pass" is "all fail".'),
+    mc('Does `some` look at every item?', ['No, it stops at the first item that passes', 'Yes, always', 'Only for numbers', 'Only the first'], 0, 'It stops when it knows.'),
+    qShort('Which method checks whether all the items pass a test?', 'every', 'list.every(test).'),
+  ],
+})

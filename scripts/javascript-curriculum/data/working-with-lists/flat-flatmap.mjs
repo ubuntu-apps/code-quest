@@ -1,0 +1,103 @@
+// Working with lists: flat, flatMap and making arrays. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'flat_flatmap',
+  title: 'flat, flatMap and making lists',
+  paragraphs: [
+    'Lists often hold lists: each order has items, each class has students. **`flat`** joins the inner lists into one.',
+    '```\nconst byDay = [["run", "read"], ["swim"], ["read", "cook"]]\nconsole.log(byDay.flat())\n```',
+    '`flat()` goes one level deep. For lists inside lists inside lists, give a depth, `flat(2)`, or `flat(Infinity)` for all the way down.',
+    'A very common pattern is "map each item to a list, then flatten". **`flatMap`** does both in one step:',
+    '```\nconst orders = [\n  { id: 1, items: ["tea", "jam"] },\n  { id: 2, items: ["bread"] },\n]\nconsole.log(orders.flatMap((o) => o.items))\n\nconst sentences = ["the cat sat", "on the mat"]\nconsole.log(sentences.flatMap((s) => s.split(" ")))\n```',
+    '`flatMap` can also *drop* items, by returning `[]`, or turn one item into several. Returning `[x]` keeps it as it is.',
+    'You also often need to **make** a list. `Array.from({ length: 5 }, (_, i) => i + 1)` builds `[1, 2, 3, 4, 5]`: the function is called for each position with its index (the `_` is a name for the parameter you don\'t use). `Array(3).fill(0)` gives `[0, 0, 0]`. And `Array.from("hello")` splits text into letters.',
+    '```\nconsole.log(Array.from({ length: 5 }, (_, i) => i + 1))\nconsole.log(Array.from({ length: 4 }, (_, i) => i * i))\nconsole.log(Array(3).fill("-"))\n```',
+  ],
+  sandboxCode: 'const byDay = [["run", "read"], ["swim"], ["read", "cook"]]\nconsole.log(byDay.flat())\nconsole.log(["a b", "c"].flatMap((s) => s.split(" ")))\nconsole.log(Array.from({ length: 5 }, (_, i) => i + 1))',
+  sandboxSnippets: [
+    snippet('Depth', 'const deep = [1, [2, [3, [4]]]]\nconsole.log(deep.flat(), deep.flat(2), deep.flat(Infinity))'),
+    snippet('Drop and keep', 'const nums = [1, 2, 3, 4]\nconsole.log(nums.flatMap((n) => (n % 2 === 0 ? [n, n] : [])))'),
+    snippet('Make a list', 'console.log(Array.from({ length: 3 }, (_, i) => `Room ${i + 1}`))'),
+    snippet('Letters', 'console.log(Array.from("hello"), [..."hi"])'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Global_Objects/Array/flatMap', 'MDN: Array.prototype.flatMap()'),
+  challenges: [
+    task('easy', 'One list', {
+      prompt: 'Set `all` to every activity in `byDay` in one list, using `flat`.',
+      starter: 'const byDay = [["run", "read"], ["swim"], ["read", "cook"]]\n',
+      hint: '`byDay.flat()`.',
+      solution: 'const byDay = [["run", "read"], ["swim"], ["read", "cook"]]\nconst all = byDay.flat()',
+      tests: [['all is right', same('all', '["run", "read", "swim", "read", "cook"]')], ['Uses flat', uses('.flat(')]],
+    }),
+    task('easy', 'Count to ten', {
+      prompt: 'Set `numbers` to `[1, 2, …, 10]` using `Array.from`.',
+      hint: '`Array.from({ length: 10 }, (_, i) => i + 1)`.',
+      solution: 'const numbers = Array.from({ length: 10 }, (_, i) => i + 1)',
+      tests: [['numbers is right', same('numbers', '[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]')], ['Uses Array.from', uses('Array.from(')]],
+    }),
+    task('easy', 'All the way down', {
+      prompt: 'Set `flatList` to every number in `deep` in one flat list.',
+      starter: 'const deep = [1, [2, [3, [4, [5]]]]]\n',
+      hint: '`deep.flat(Infinity)`.',
+      solution: 'const deep = [1, [2, [3, [4, [5]]]]]\nconst flatList = deep.flat(Infinity)',
+      tests: [['flatList is right', same('flatList', '[1, 2, 3, 4, 5]')], ['Uses flat', uses('.flat(')]],
+    }),
+    task('medium', 'Every item ordered', {
+      prompt: 'Set `items` to every item from every order, in one list, with `flatMap`.',
+      starter: 'const orders = [\n  { id: 1, items: ["tea", "jam"] },\n  { id: 2, items: ["bread"] },\n  { id: 3, items: ["milk", "eggs"] },\n]\n',
+      hint: '`orders.flatMap((o) => o.items)`.',
+      solution: 'const orders = [\n  { id: 1, items: ["tea", "jam"] },\n  { id: 2, items: ["bread"] },\n  { id: 3, items: ["milk", "eggs"] },\n]\nconst items = orders.flatMap((o) => o.items)',
+      tests: [['items is right', same('items', '["tea", "jam", "bread", "milk", "eggs"]')], ['Uses flatMap', uses('.flatMap(')]],
+    }),
+    task('medium', 'All the words', {
+      prompt: 'Set `words` to every word in `lines` (split at spaces), in one list.',
+      starter: 'const lines = ["the cat sat", "on the mat"]\n',
+      hint: '`lines.flatMap((l) => l.split(" "))`.',
+      solution: 'const lines = ["the cat sat", "on the mat"]\nconst words = lines.flatMap((l) => l.split(" "))',
+      tests: [['words is right', same('words', '["the", "cat", "sat", "on", "the", "mat"]')], ['Uses flatMap', uses('.flatMap(')]],
+    }),
+    task('medium', 'A row of dashes', {
+      prompt: 'Write `row(n)`, returning an array of `n` dashes `"-"`, using `Array(n).fill(...)`.',
+      hint: '`return Array(n).fill("-")`.',
+      solution: 'function row(n) {\n  return Array(n).fill("-")\n}',
+      tests: [['row(3)', same('row(3)', '["-", "-", "-"]')], ['row(0)', same('row(0)', '[]')], ['Uses fill', uses('.fill(')]],
+    }),
+    task('hard', 'Drop and double', {
+      prompt: 'Set `out` with one `flatMap`: drop the negative numbers, and put each other number in twice.',
+      starter: 'const nums = [3, -1, 5, -7, 0]\n',
+      hint: 'Return `[]` for a negative, else `[n, n]`.',
+      solution: 'const nums = [3, -1, 5, -7, 0]\nconst out = nums.flatMap((n) => (n < 0 ? [] : [n, n]))',
+      tests: [['out is right', same('out', '[3, 3, 5, 5, 0, 0]')], ['Uses flatMap', uses('.flatMap(')]],
+    }),
+    task('hard', 'Seat labels', {
+      prompt: 'Write `seats(rows, perRow)`, returning labels like `A1, A2, B1, B2` for rows A, B, C… and seats 1 to `perRow`, using `Array.from` and `flatMap`.',
+      hint: 'Make the row letters with `Array.from({ length: rows }, (_, r) => String.fromCharCode(65 + r))` (65 is "A"), then `flatMap` each letter to its `perRow` seats.',
+      solution: 'function seats(rows, perRow) {\n  return Array.from({ length: rows }, (_, r) => String.fromCharCode(65 + r)).flatMap((letter) =>\n    Array.from({ length: perRow }, (_, s) => `${letter}${s + 1}`),\n  )\n}',
+      tests: [['2 by 2', same('seats(2, 2)', '["A1", "A2", "B1", "B2"]')], ['3 by 1', same('seats(3, 1)', '["A1", "B1", "C1"]')], ['Uses flatMap', uses('.flatMap(')]],
+    }),
+    task('expert', 'Every pair', {
+      prompt: 'Write `pairs(list)`, returning every pair `[a, b]` where `a` comes before `b` in the list, using `flatMap`.',
+      hint: '`list.flatMap((a, i) => list.slice(i + 1).map((b) => [a, b]))`.',
+      solution: 'function pairs(list) {\n  return list.flatMap((a, i) => list.slice(i + 1).map((b) => [a, b]))\n}',
+      tests: [['Three items', same('pairs(["a", "b", "c"])', '[["a", "b"], ["a", "c"], ["b", "c"]]')], ['One item', same('pairs([1])', '[]')], ['Uses flatMap', uses('.flatMap(')]],
+    }),
+    task('expert', 'Your own flat', {
+      prompt: 'Write `myFlat(list)`, flattening one level like `list.flat()`, without `.flat` or `.flatMap`.',
+      hint: 'For each item: if it is an array, push each of its items; else push the item.',
+      solution: 'function myFlat(list) {\n  const out = []\n  for (const item of list) {\n    if (Array.isArray(item)) {\n      out.push(...item)\n    } else {\n      out.push(item)\n    }\n  }\n  return out\n}',
+      tests: [['One level', same('myFlat([1, [2, 3], [4]])', '[1, 2, 3, 4]')], ['Only one level', same('myFlat([1, [2, [3]]])', '[1, 2, [3]]')], ['No .flat', '!/\\.flat(Map)?\\(/.test(_cq_code)']],
+    }),
+  ],
+  questions: [
+    mc('What does `[[1, 2], [3]].flat()` give?', ['`[1, 2, 3]`', '`[[1, 2], [3]]`', '`6`', '`[1, [2, 3]]`'], 0, 'The inner lists are joined.', { code: 'console.log([[1, 2], [3]].flat())', output: '[ 1, 2, 3 ]' }),
+    mc('How deep does `flat()` go with no argument?', ['One level', 'All the way', 'Two levels', 'None'], 0, 'Use flat(Infinity) for all levels.'),
+    mc('What does this show?\n```\nconsole.log([1, [2, [3]]].flat())\n```', ['`[ 1, 2, [ 3 ] ]`', '`[ 1, 2, 3 ]`', '`[ 1, [ 2, [ 3 ] ] ]`', 'An error'], 0, 'Only one level is flattened.', { code: 'console.log([1, [2, [3]]].flat())', output: '[ 1, 2, [ 3 ] ]' }),
+    mc('`list.flatMap(f)` is the same as…', ['`list.map(f).flat()`', '`list.flat().map(f)`', '`list.filter(f).flat()`', '`list.map(f)`'], 0, 'Map, then flatten one level.'),
+    mc('In `flatMap`, what does returning `[]` do?', ['Drops that item', 'Keeps it', 'Adds an empty array', 'An error'], 0, 'Nothing to flatten in.', { code: 'console.log([1, 2, 3].flatMap((n) => (n === 2 ? [] : [n])))', output: '[ 1, 3 ]' }),
+    mc('What does `Array.from({ length: 3 }, (_, i) => i * 2)` give?', ['`[0, 2, 4]`', '`[2, 4, 6]`', '`[0, 1, 2]`', '`[3, 3, 3]`'], 0, 'Each index times 2.', { code: 'console.log(Array.from({ length: 3 }, (_, i) => i * 2))', output: '[ 0, 2, 4 ]' }),
+    mc('What does `Array(2).fill("x")` give?', ['`["x", "x"]`', '`["x"]`', '`"xx"`', '`[2, "x"]`'], 0, 'Two places, both filled.', { code: 'console.log(Array(2).fill("x"))', output: "[ 'x', 'x' ]" }),
+    mc('What is `_` in `(_, i) => i + 1`?', ['A name for a parameter that isn\'t used', 'A special keyword', 'The array', 'An error'], 0, 'Just a variable name, by habit.'),
+    qShort('Which method maps each item to a list and flattens the result, in one step?', 'flatMap', 'list.flatMap(fn).'),
+  ],
+})

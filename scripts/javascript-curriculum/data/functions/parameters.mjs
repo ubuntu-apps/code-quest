@@ -1,0 +1,103 @@
+// Functions: Parameters. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, logsWhen, makeTopic, mc, prints, qShort, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'parameters',
+  title: 'Parameters',
+  paragraphs: [
+    'A function that does the same thing every time is useful, but one you can hand information to is far more so. The names in the `()` of a declaration are its **parameters**: variables that get their values when the function is called.',
+    '```\nfunction greet(name) {\n  console.log(`Hello, ${name}!`)\n}\n\ngreet("Mia")\ngreet("Leo")\n```',
+    'The values in a call, `"Mia"` and `"Leo"`, are the **arguments**. Each call fills `name` with its own argument, so the same code greets anyone.',
+    'A function can take several parameters, separated by commas. Arguments fill them in order: the first argument goes to the first parameter, and so on.',
+    '```\nfunction showPrice(item, price) {\n  console.log(`${item}: $${price.toFixed(2)}`)\n}\n\nshowPrice("Tea", 3)\nshowPrice("Cake", 4.5)\n```',
+    'Any value can be an argument: a number, text, a variable, an array, or a calculation like `price * 2`, which is worked out before the call.',
+    'Give a function fewer arguments than it has parameters and the missing ones are `undefined`. Give it more and the extra ones are ignored. Neither is an error, so mistakes here are easy to miss.',
+    '```\nfunction pair(a, b) {\n  console.log(a, b)\n}\n\npair(1)\npair(1, 2, 3)\n```',
+    'Parameters only exist inside their function. Changing a parameter (say, `name = "Bob"`) changes the function\'s own copy, not the variable that was passed in.',
+  ],
+  sandboxCode: 'function greet(name) {\n  console.log(`Hello, ${name}!`)\n}\n\ngreet("Mia")\ngreet("Leo")',
+  sandboxSnippets: [
+    snippet('Two parameters', 'function add(a, b) {\n  console.log(a + b)\n}\nadd(2, 3)\nadd(10, -4)'),
+    snippet('Order matters', 'function intro(name, age) {\n  console.log(`${name} is ${age}`)\n}\nintro("Sam", 30)\nintro(30, "Sam")'),
+    snippet('Missing arguments', 'function show(a, b) {\n  console.log(a, b)\n}\nshow("only one")'),
+    snippet('A variable as argument', 'function shout(text) {\n  console.log(text.toUpperCase())\n}\nconst word = "help"\nshout(word)\nshout(word + "!")'),
+  ],
+  readMore: MDN('Glossary/Parameter', 'MDN: Parameter'),
+  challenges: [
+    task('easy', 'Hello, you', {
+      prompt: 'Write `greet(name)`, which shows `Hello, NAME!`. Call it with `"Ada"`.',
+      hint: '`` console.log(`Hello, ${name}!`) `` inside the function.',
+      solution: 'function greet(name) {\n  console.log(`Hello, ${name}!`)\n}\ngreet("Ada")',
+      tests: [['Greets Ada', prints('Hello, Ada!')], ['greet("Zed") greets Zed', logsWhen('greet("Zed")', 'Hello, Zed!')]],
+    }),
+    task('easy', 'Pass a variable', {
+      prompt: 'Call `shout` with the variable `word`.',
+      starter: 'function shout(text) {\n  console.log(text.toUpperCase() + "!")\n}\nconst word = "hooray"\n',
+      hint: '`shout(word)`.',
+      solution: 'function shout(text) {\n  console.log(text.toUpperCase() + "!")\n}\nconst word = "hooray"\nshout(word)',
+      tests: [['Shouts it', prints('HOORAY!')], ['Passes word', uses('shout(word)')]],
+    }),
+    task('easy', 'Twice', {
+      prompt: 'Write `double(n)`, which shows `n * 2`. Call it with `21`.',
+      hint: '`function double(n) { console.log(n * 2) }`.',
+      solution: 'function double(n) {\n  console.log(n * 2)\n}\ndouble(21)',
+      tests: [['Shows 42', prints('42')], ['double(5) shows 10', logsWhen('double(5)', '10')]],
+    }),
+    task('medium', 'Two parameters', {
+      prompt: 'Write `area(width, height)`, which shows `Area: N`. Call it with `4` and `7`.',
+      hint: '`` console.log(`Area: ${width * height}`) ``.',
+      solution: 'function area(width, height) {\n  console.log(`Area: ${width * height}`)\n}\narea(4, 7)',
+      tests: [['Shows Area: 28', prints('Area: 28')], ['area(3, 5) shows Area: 15', logsWhen('area(3, 5)', 'Area: 15')]],
+    }),
+    task('medium', 'Price tag', {
+      prompt: 'Write `tag(item, price)`, which shows `Tea: $3.00` (price to 2 decimal places). Call it for `"Cake"` at `4.5`.',
+      hint: '`` `${item}: $${price.toFixed(2)}` ``.',
+      solution: 'function tag(item, price) {\n  console.log(`${item}: $${price.toFixed(2)}`)\n}\ntag("Cake", 4.5)',
+      tests: [['Shows the tag', prints('Cake: $4.50')], ['tag("Pie", 12) shows Pie: $12.00', logsWhen('tag("Pie", 12)', 'Pie: $12.00')]],
+    }),
+    task('medium', 'Fix the order', {
+      prompt: 'The output is wrong because the arguments are in the wrong order. Fix the call.',
+      starter: 'function intro(name, age) {\n  console.log(`${name} is ${age}`)\n}\nintro(30, "Sam")\n',
+      hint: 'Arguments fill parameters in order: name first.',
+      solution: 'function intro(name, age) {\n  console.log(`${name} is ${age}`)\n}\nintro("Sam", 30)',
+      tests: [['Shows Sam is 30', prints('Sam is 30')], ['Calls intro', uses('intro("Sam", 30)')]],
+      typedOk: true,
+    }),
+    task('hard', 'Repeat it', {
+      prompt: 'Write `repeat(text, times)`, which shows `text` that many times, one per line. Call it with `"hip"` and `3`.',
+      hint: 'A `for` loop from 0 to `times` inside the function.',
+      solution: 'function repeat(text, times) {\n  for (let i = 0; i < times; i++) {\n    console.log(text)\n  }\n}\nrepeat("hip", 3)',
+      tests: [['Shows hip 3 times', prints('hip', 'hip', 'hip')], ['repeat("ho", 2) shows ho twice', logsWhen('repeat("ho", 2)', 'ho', 'ho')], ['repeat("x", 0) shows nothing', logsWhen('repeat("x", 0)')]],
+    }),
+    task('hard', 'A whole list', {
+      prompt: 'Write `listAll(items)`, which shows each item of the array as `- item`. Call it with `shopping`.',
+      starter: 'const shopping = ["milk", "eggs", "jam"]\n',
+      hint: '`` for (const item of items) console.log(`- ${item}`) ``.',
+      solution: 'const shopping = ["milk", "eggs", "jam"]\nfunction listAll(items) {\n  for (const item of items) {\n    console.log(`- ${item}`)\n  }\n}\nlistAll(shopping)',
+      tests: [['Shows the list', prints('- milk', '- eggs', '- jam')], ['Works for other lists', logsWhen('listAll(["a", "b"])', '- a', '- b')]],
+    }),
+    task('expert', 'Box it', {
+      prompt: 'Write `box(text)`, which shows `text` in a box of `*` as wide as the text plus 4: for `"Hi"`, `******`, `* Hi *`, `******`. Call it with `"Hello"`.',
+      hint: 'The border is `"*".repeat(text.length + 4)`.',
+      solution: 'function box(text) {\n  const border = "*".repeat(text.length + 4)\n  console.log(border)\n  console.log(`* ${text} *`)\n  console.log(border)\n}\nbox("Hello")',
+      tests: [['Boxes Hello', prints('*********', '* Hello *', '*********')], ['box("Hi") fits too', logsWhen('box("Hi")', '******', '* Hi *', '******')]],
+    }),
+    task('expert', 'Times table', {
+      prompt: 'Write `table(n, upTo)`, which shows `n x 1 = n` up to `n x upTo`. Call it with `7` and `3`.',
+      hint: 'A loop from 1 to `upTo`, showing `` `${n} x ${i} = ${n * i}` ``.',
+      solution: 'function table(n, upTo) {\n  for (let i = 1; i <= upTo; i++) {\n    console.log(`${n} x ${i} = ${n * i}`)\n  }\n}\ntable(7, 3)',
+      tests: [['Shows the table', prints('7 x 1 = 7', '7 x 2 = 14', '7 x 3 = 21')], ['table(2, 2) works too', logsWhen('table(2, 2)', '2 x 1 = 2', '2 x 2 = 4')]],
+    }),
+  ],
+  questions: [
+    mc('In `function greet(name)`, what is `name`?', ['A parameter', 'An argument', 'The function\'s result', 'A string'], 0, 'Parameters are the names in the declaration.'),
+    mc('In `greet("Mia")`, what is `"Mia"`?', ['An argument', 'A parameter', 'A declaration', 'A name'], 0, 'Arguments are the values in a call.'),
+    mc('What does this show?\n```\nfunction f(a, b) {\n  console.log(a, b)\n}\nf(3)\n```', ['`3 undefined`', '`3`', 'An error', '`3 3`'], 0, 'The missing argument is undefined.', { code: 'function f(a, b) {\n  console.log(a, b)\n}\nf(3)', output: '3 undefined' }),
+    mc('What happens to an extra argument, as in `f(1, 2, 3)` for `f(a, b)`?', ['It is ignored', 'It is an error', 'It goes into b', 'It replaces a'], 0, 'Extra arguments are not used.'),
+    mc('What does this show?\n```\nfunction f(x, y) {\n  console.log(y, x)\n}\nf("a", "b")\n```', ['`b a`', '`a b`', '`a a`', 'An error'], 0, 'Arguments fill parameters in order.', { code: 'function f(x, y) {\n  console.log(y, x)\n}\nf("a", "b")', output: 'b a' }),
+    mc('What does this show?\n```\nlet n = 5\nfunction bump(n) {\n  n = n + 1\n}\nbump(n)\nconsole.log(n)\n```', ['`5`', '`6`', '`undefined`', 'An error'], 0, 'The function changes its own copy of n.', { code: 'let n = 5\nfunction bump(n) {\n  n = n + 1\n}\nbump(n)\nconsole.log(n)', output: '5' }),
+    mc('What does `f(2 * 3)` pass to `f`?', ['6', '"2 * 3"', '2 and 3', 'Nothing'], 0, 'The calculation is worked out first.'),
+    mc('How are several parameters separated?', ['With commas', 'With spaces', 'With semicolons', 'With +'], 0, 'function f(a, b, c).'),
+    qShort('What is a missing argument\'s value inside the function?', 'undefined', 'Missing arguments are undefined.'),
+  ],
+})
