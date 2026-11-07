@@ -7,11 +7,12 @@
 // 10. Capstone projects.
 import { firstStepsTopics } from './first-steps.mjs'
 import { decisionsLoopsTopics } from './decisions-loops.mjs'
+import { arraysObjectsTopics } from './arrays-objects.mjs'
 
 export const COURSE = [
   { sectionId: 'first_steps', title: 'First steps', filename: 'first_steps.json', topics: firstStepsTopics },
   { sectionId: 'decisions_loops', title: 'Decisions and loops', filename: 'decisions_loops.json', topics: decisionsLoopsTopics },
-  { sectionId: 'arrays_objects', title: 'Arrays and objects', filename: 'arrays_objects.json', topics: [] },
+  { sectionId: 'arrays_objects', title: 'Arrays and objects', filename: 'arrays_objects.json', topics: arraysObjectsTopics },
   { sectionId: 'functions', title: 'Functions', filename: 'functions.json', topics: [] },
   { sectionId: 'working_with_lists', title: 'Working with lists', filename: 'working_with_lists.json', topics: [] },
   { sectionId: 'errors_debugging', title: 'Errors and debugging', filename: 'errors_debugging.json', topics: [] },
