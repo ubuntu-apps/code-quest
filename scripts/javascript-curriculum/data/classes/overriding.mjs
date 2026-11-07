@@ -1,0 +1,103 @@
+// Classes: Overriding methods. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'overriding',
+  title: 'Overriding methods',
+  paragraphs: [
+    'A subclass can give its own version of a method it inherited. This is **overriding**: when the method is called on a subclass instance, the subclass version wins.',
+    '```\nclass Animal {\n  constructor(name) {\n    this.name = name\n  }\n  speak() {\n    return `${this.name} makes a sound`\n  }\n}\nclass Dog extends Animal {\n  speak() {\n    return `${this.name} barks`\n  }\n}\nclass Cat extends Animal {}\n\nconsole.log(new Dog("Rex").speak())\nconsole.log(new Cat("Tom").speak())\n```',
+    'To build on the parent\'s version instead of replacing it, call it with **`super.method()`** and add to the result:',
+    '```\nclass Account {\n  constructor(balance) {\n    this.balance = balance\n  }\n  describe() {\n    return `Balance $${this.balance}`\n  }\n}\nclass Savings extends Account {\n  describe() {\n    return `${super.describe()} (savings)`\n  }\n}\nconsole.log(new Savings(100).describe())\n```',
+    'Overriding makes something powerful possible: code that works with **any** subclass without knowing which it has. Every shape has an `area`, worked out its own way, so one loop can handle a mixed list. This is called **polymorphism** ("many shapes").',
+    '```\nclass Shape {\n  get area() {\n    return 0\n  }\n}\nclass Square extends Shape {\n  constructor(side) {\n    super()\n    this.side = side\n  }\n  get area() {\n    return this.side ** 2\n  }\n}\nclass Circle extends Shape {\n  constructor(r) {\n    super()\n    this.r = r\n  }\n  get area() {\n    return Math.PI * this.r ** 2\n  }\n}\n\nconst shapes = [new Square(2), new Circle(1), new Square(3)]\nconst total = shapes.reduce((sum, s) => sum + s.area, 0)\nconsole.log(total.toFixed(2))\n```',
+    'A parent method can also be a placeholder that every subclass is meant to override. Throwing an error in it, like `throw new Error("Subclasses must define area")`, makes a forgotten override easy to spot.',
+  ],
+  sandboxCode: 'class Animal {\n  speak() {\n    return "..."\n  }\n}\nclass Dog extends Animal {\n  speak() {\n    return "Woof"\n  }\n}\nclass Duck extends Animal {\n  speak() {\n    return `${super.speak()} Quack`\n  }\n}\nfor (const a of [new Animal(), new Dog(), new Duck()]) console.log(a.speak())',
+  sandboxSnippets: [
+    snippet('toString override', 'class Point {\n  constructor(x, y) {\n    this.x = x\n    this.y = y\n  }\n  toString() {\n    return `(${this.x}, ${this.y})`\n  }\n}\nconsole.log(`${new Point(1, 2)}`, String({}))'),
+    snippet('Must override', '// This shows an error: area was not overridden\nclass Shape {\n  area() {\n    throw new Error("Subclasses must define area")\n  }\n}\nclass Blob extends Shape {}\nnew Blob().area()'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Operators/super', 'MDN: super'),
+  challenges: [
+    task('easy', 'Your own version', {
+      prompt: 'Override `speak()` in `Cat` to return `NAME meows`.',
+      starter: 'class Animal {\n  constructor(name) {\n    this.name = name\n  }\n  speak() {\n    return `${this.name} makes a sound`\n  }\n}\nclass Cat extends Animal {}\n',
+      hint: 'Add `speak() { … }` inside `Cat`.',
+      solution: 'class Animal {\n  constructor(name) {\n    this.name = name\n  }\n  speak() {\n    return `${this.name} makes a sound`\n  }\n}\nclass Cat extends Animal {\n  speak() {\n    return `${this.name} meows`\n  }\n}',
+      tests: [['Cat', is('new Cat("Tom").speak()', 'Tom meows')], ['Animal unchanged', is('new Animal("X").speak()', 'X makes a sound')]],
+    }),
+    task('easy', 'Build on super', {
+      prompt: 'Override `describe()` in `Savings` to return the parent\'s description followed by ` (savings)`.',
+      starter: 'class Account {\n  constructor(balance) {\n    this.balance = balance\n  }\n  describe() {\n    return `Balance $${this.balance}`\n  }\n}\nclass Savings extends Account {}\n',
+      hint: '`` describe() { return `${super.describe()} (savings)` } ``.',
+      solution: 'class Account {\n  constructor(balance) {\n    this.balance = balance\n  }\n  describe() {\n    return `Balance $${this.balance}`\n  }\n}\nclass Savings extends Account {\n  describe() {\n    return `${super.describe()} (savings)`\n  }\n}',
+      tests: [['Savings', is('new Savings(100).describe()', 'Balance $100 (savings)')], ['Uses super', uses('super.describe()')]],
+    }),
+    task('easy', 'Override toString', {
+      prompt: 'Give `Money` a `toString()` so `` `${new Money(1250)}` `` is `$12.50` (the amount is in cents).',
+      starter: 'class Money {\n  constructor(cents) {\n    this.cents = cents\n  }\n}\n',
+      hint: '`` toString() { return `$${(this.cents / 100).toFixed(2)}` } ``.',
+      solution: 'class Money {\n  constructor(cents) {\n    this.cents = cents\n  }\n  toString() {\n    return `$${(this.cents / 100).toFixed(2)}`\n  }\n}',
+      tests: [['1250', is('`${new Money(1250)}`', '$12.50')], ['5', is('String(new Money(5))', '$0.05')]],
+    }),
+    task('medium', 'Shapes with area', {
+      prompt: 'Write `Square` and `Circle` extending `Shape`, each overriding the `area` getter (`side²` and `π r²`).',
+      starter: 'class Shape {\n  get area() {\n    return 0\n  }\n}\n',
+      hint: 'Each constructor calls `super()` and stores its size.',
+      solution: 'class Shape {\n  get area() {\n    return 0\n  }\n}\nclass Square extends Shape {\n  constructor(side) {\n    super()\n    this.side = side\n  }\n  get area() {\n    return this.side ** 2\n  }\n}\nclass Circle extends Shape {\n  constructor(r) {\n    super()\n    this.r = r\n  }\n  get area() {\n    return Math.PI * this.r ** 2\n  }\n}',
+      tests: [['Square', is('new Square(3).area', 9)], ['Circle', 'Math.abs(new Circle(1).area - Math.PI) < 1e-9'], ['Both are Shapes', 'new Square(1) instanceof Shape && new Circle(1) instanceof Shape']],
+    }),
+    task('medium', 'Total area', {
+      prompt: 'Write `totalArea(shapes)`, adding up `area` for any list of shapes.',
+      starter: 'class Square {\n  constructor(side) {\n    this.side = side\n  }\n  get area() {\n    return this.side ** 2\n  }\n}\nclass Rect {\n  constructor(w, h) {\n    this.w = w\n    this.h = h\n  }\n  get area() {\n    return this.w * this.h\n  }\n}\n',
+      hint: '`shapes.reduce((sum, s) => sum + s.area, 0)`; it doesn\'t need to know the kind.',
+      solution: 'class Square {\n  constructor(side) {\n    this.side = side\n  }\n  get area() {\n    return this.side ** 2\n  }\n}\nclass Rect {\n  constructor(w, h) {\n    this.w = w\n    this.h = h\n  }\n  get area() {\n    return this.w * this.h\n  }\n}\nfunction totalArea(shapes) {\n  return shapes.reduce((sum, s) => sum + s.area, 0)\n}',
+      tests: [['Mixed', is('totalArea([new Square(2), new Rect(3, 5), new Square(1)])', 20)], ['Empty', is('totalArea([])', 0)]],
+    }),
+    task('medium', 'Speak, all of you', {
+      prompt: 'Set `sounds` to what each animal in `zoo` says, using one `map` with `speak()`.',
+      starter: 'class Animal {\n  speak() {\n    return "..."\n  }\n}\nclass Dog extends Animal {\n  speak() {\n    return "Woof"\n  }\n}\nclass Cow extends Animal {\n  speak() {\n    return "Moo"\n  }\n}\nconst zoo = [new Dog(), new Animal(), new Cow()]\n',
+      hint: '`zoo.map((a) => a.speak())`.',
+      solution: 'class Animal {\n  speak() {\n    return "..."\n  }\n}\nclass Dog extends Animal {\n  speak() {\n    return "Woof"\n  }\n}\nclass Cow extends Animal {\n  speak() {\n    return "Moo"\n  }\n}\nconst zoo = [new Dog(), new Animal(), new Cow()]\nconst sounds = zoo.map((a) => a.speak())',
+      tests: [['sounds is right', same('sounds', '["Woof", "...", "Moo"]')], ['Uses speak', uses('.speak()')]],
+    }),
+    task('hard', 'Must override', {
+      prompt: 'Make `Shape`\'s `area()` throw an `Error("Subclasses must define area")`. Then write `Triangle extends Shape` (`base`, `height`) whose `area()` is half base × height.',
+      starter: 'class Shape {\n  area() {\n    return 0\n  }\n}\n',
+      hint: 'Replace the parent\'s body with the throw; the subclass overrides it.',
+      solution: 'class Shape {\n  area() {\n    throw new Error("Subclasses must define area")\n  }\n}\nclass Triangle extends Shape {\n  constructor(base, height) {\n    super()\n    this.base = base\n    this.height = height\n  }\n  area() {\n    return (this.base * this.height) / 2\n  }\n}',
+      tests: [['Triangle', is('new Triangle(4, 3).area()', 6)], ['Shape throws', '(() => { try { new Shape().area() } catch (e) { return e.message === "Subclasses must define area" } return false })()']],
+    }),
+    task('hard', 'Discounts', {
+      prompt: 'Write `SaleItem extends Item`, whose constructor also takes `percentOff`, overriding the `price` getter to take that percent off the parent\'s price (using `super.price`).',
+      starter: 'class Item {\n  constructor(name, basePrice) {\n    this.name = name\n    this.basePrice = basePrice\n  }\n  get price() {\n    return this.basePrice\n  }\n}\n',
+      hint: '`get price() { return super.price * (1 - this.percentOff / 100) }`.',
+      solution: 'class Item {\n  constructor(name, basePrice) {\n    this.name = name\n    this.basePrice = basePrice\n  }\n  get price() {\n    return this.basePrice\n  }\n}\nclass SaleItem extends Item {\n  constructor(name, basePrice, percentOff) {\n    super(name, basePrice)\n    this.percentOff = percentOff\n  }\n  get price() {\n    return super.price * (1 - this.percentOff / 100)\n  }\n}',
+      tests: [['25% off', is('new SaleItem("Lamp", 40, 25).price', 30)], ['Full price', is('new Item("Lamp", 40).price', 40)], ['Uses super.price', uses('super.price')]],
+    }),
+    task('expert', 'Notifications', {
+      prompt: 'Write `Notifier` with `send(to, text)` returning `[base] to: text`. Override it in `EmailNotifier` (`[email] to: text`) and `SmsNotifier`, whose message is cut to 20 characters of `text` (using `super.send` with the shortened text, then replacing `[base]` with `[sms]`).',
+      hint: 'Each subclass: `return super.send(to, …).replace("[base]", "[email]")` and so on.',
+      solution: 'class Notifier {\n  send(to, text) {\n    return `[base] ${to}: ${text}`\n  }\n}\nclass EmailNotifier extends Notifier {\n  send(to, text) {\n    return super.send(to, text).replace("[base]", "[email]")\n  }\n}\nclass SmsNotifier extends Notifier {\n  send(to, text) {\n    return super.send(to, text.slice(0, 20)).replace("[base]", "[sms]")\n  }\n}',
+      tests: [['Email', is('new EmailNotifier().send("kim@x.io", "Hello")', '[email] kim@x.io: Hello')], ['SMS', is('new SmsNotifier().send("555", "Meet me at the station at noon")', '[sms] 555: Meet me at the stati')], ['Any notifier', same('[new Notifier(), new EmailNotifier()].map((n) => n.send("a", "b"))', '["[base] a: b", "[email] a: b"]')]],
+    }),
+    task('expert', 'Employees\' pay', {
+      prompt: 'Write `Employee` (`name`, `pay()` returns 0), `Salaried extends Employee` (`yearly`; `pay()` is yearly ÷ 12, rounded to whole), and `Hourly extends Employee` (`rate`, `hours`; `pay()` is rate × hours, with hours over 160 paid 1.5×). Then `payroll(staff)` returns lines `NAME: $PAY`.',
+      hint: 'Overtime: `Math.min(hours, 160) * rate + Math.max(hours - 160, 0) * rate * 1.5`.',
+      solution: 'class Employee {\n  constructor(name) {\n    this.name = name\n  }\n  pay() {\n    return 0\n  }\n}\nclass Salaried extends Employee {\n  constructor(name, yearly) {\n    super(name)\n    this.yearly = yearly\n  }\n  pay() {\n    return Math.round(this.yearly / 12)\n  }\n}\nclass Hourly extends Employee {\n  constructor(name, rate, hours) {\n    super(name)\n    this.rate = rate\n    this.hours = hours\n  }\n  pay() {\n    const normal = Math.min(this.hours, 160) * this.rate\n    const extra = Math.max(this.hours - 160, 0) * this.rate * 1.5\n    return normal + extra\n  }\n}\nfunction payroll(staff) {\n  return staff.map((e) => `${e.name}: $${e.pay()}`)\n}',
+      tests: [['Payroll', same('payroll([new Salaried("Ana", 60000), new Hourly("Ben", 20, 170), new Employee("Cal")])', '["Ana: $5000", "Ben: $3500", "Cal: $0"]')], ['No overtime', is('new Hourly("x", 10, 100).pay()', 1000)]],
+    }),
+  ],
+  questions: [
+    mc('What is overriding?', ['A subclass giving its own version of an inherited method', 'Deleting a method', 'Calling a method twice', 'Making a method static'], 0, 'The subclass version wins.'),
+    mc('What does this show?\n```\nclass A {\n  hi() {\n    return "A"\n  }\n}\nclass B extends A {\n  hi() {\n    return "B"\n  }\n}\nconsole.log(new B().hi())\n```', ['`B`', '`A`', '`AB`', 'An error'], 0, 'B\'s version wins.', { code: 'class A {\n  hi() {\n    return "A"\n  }\n}\nclass B extends A {\n  hi() {\n    return "B"\n  }\n}\nconsole.log(new B().hi())', output: 'B' }),
+    mc('How does an override use the parent\'s version?', ['`super.method()`', '`this.method()`', '`parent.method()`', '`super()`'], 0, 'super.describe().'),
+    mc('What does this show?\n```\nclass A {\n  hi() {\n    return "A"\n  }\n}\nclass B extends A {\n  hi() {\n    return super.hi() + "B"\n  }\n}\nconsole.log(new B().hi())\n```', ['`AB`', '`B`', '`A`', '`BA`'], 0, 'The parent\'s result plus B.', { code: 'class A {\n  hi() {\n    return "A"\n  }\n}\nclass B extends A {\n  hi() {\n    return super.hi() + "B"\n  }\n}\nconsole.log(new B().hi())', output: 'AB' }),
+    mc('What is polymorphism?', ['One piece of code working with many kinds of object through the same method', 'A class with many constructors', 'Copying a class', 'A kind of error'], 0, 'shape.area for any shape.'),
+    mc('Why might a parent method just throw an error?', ['So a subclass that forgets to override it fails loudly', 'To stop inheritance', 'It is required', 'To make it private'], 0, 'A placeholder.'),
+    mc('If a subclass doesn\'t override a method, what runs?', ['The parent\'s version', 'Nothing', 'An error', 'The grandparent\'s, always'], 0, 'It is inherited.'),
+    mc('`totalArea(shapes)` adds up `s.area`. Does it need to know each shape\'s class?', ['No: each shape works out its own area', 'Yes', 'Only for circles', 'Only if they are Squares'], 0, 'That is the point of polymorphism.'),
+    qShort('Which keyword calls the parent class\'s version of a method?', 'super', 'super.method()'),
+  ],
+})

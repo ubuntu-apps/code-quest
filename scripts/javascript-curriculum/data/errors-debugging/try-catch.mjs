@@ -1,0 +1,101 @@
+// Errors and debugging: try and catch. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'try_catch',
+  title: 'try and catch',
+  paragraphs: [
+    'Some errors aren\'t bugs: the file is missing, the user typed nonsense, a network call failed. Your program should cope with them instead of stopping. **`try`…`catch`** lets it.',
+    '```\ntry {\n  console.log("before")\n  null.length\n  console.log("never reached")\n} catch (error) {\n  console.log("Something went wrong:", error.message)\n}\nconsole.log("still running")\n```',
+    'JavaScript runs the `try` block. If an error happens, it stops that block at once and jumps to `catch`, handing it the error. If nothing goes wrong, `catch` is skipped. Either way the program carries on after.',
+    'The caught error is an object. `error.name` is its type (`"TypeError"`) and `error.message` says what happened. You can show a friendly message, use a fallback value, or log it and move on.',
+    'A classic use is reading data that might be broken. `JSON.parse` turns text into a value, and throws a `SyntaxError` if the text isn\'t valid:',
+    '```\nfunction readSettings(text) {\n  try {\n    return JSON.parse(text)\n  } catch (error) {\n    return { theme: "light" }\n  }\n}\nconsole.log(readSettings(\'{"theme":"dark"}\'))\nconsole.log(readSettings("oops"))\n```',
+    'Keep `try` blocks small, around just the code that can fail, so you know what you are catching. And don\'t use `catch` to hide bugs: catching every error and doing nothing makes problems silent and much harder to find. If you don\'t need the error, you can write `catch { … }` with no name.',
+  ],
+  sandboxCode: 'try {\n  null.length\n} catch (error) {\n  console.log(error.name, "-", error.message)\n}\nconsole.log("still running")',
+  sandboxSnippets: [
+    snippet('No error', 'try {\n  console.log("all fine")\n} catch (error) {\n  console.log("not shown")\n}'),
+    snippet('Bad JSON', 'try {\n  JSON.parse("{oops}")\n} catch (error) {\n  console.log(error.name)\n}'),
+    snippet('A fallback', 'let data\ntry {\n  data = JSON.parse("not json")\n} catch {\n  data = []\n}\nconsole.log(data)'),
+    snippet('In a loop', 'for (const text of ["1", "x", "[2]"]) {\n  try {\n    console.log(JSON.parse(text))\n  } catch {\n    console.log("skipped", text)\n  }\n}'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Statements/try...catch', 'MDN: try...catch'),
+  challenges: [
+    task('easy', 'Catch it', {
+      prompt: 'Wrap the risky line in `try`…`catch` so the program shows `Oops!` instead of stopping, then `Done`.',
+      starter: 'null.length\nconsole.log("Done")\n',
+      hint: '`try { null.length } catch { console.log("Oops!") }`.',
+      solution: 'try {\n  null.length\n} catch {\n  console.log("Oops!")\n}\nconsole.log("Done")',
+      tests: [['Shows both lines', '_cq_prints("Oops!", "Done")'], ['Uses try and catch', '_cq_code.includes("try") && _cq_code.includes("catch")']],
+      typedOk: true,
+    }),
+    task('easy', 'The message', {
+      prompt: 'In the `catch`, set `message` to the error\'s message.',
+      starter: 'let message = ""\ntry {\n  JSON.parse("{bad}")\n} catch (error) {\n}\n',
+      hint: '`message = error.message`.',
+      solution: 'let message = ""\ntry {\n  JSON.parse("{bad}")\n} catch (error) {\n  message = error.message\n}',
+      tests: [['message is set', 'typeof message === "string" && message.length > 0'], ['Uses error.message', uses('error.message')]],
+    }),
+    task('easy', 'The name', {
+      prompt: 'Set `kind` to the `name` of the error that `undefined.size` throws, using `try`…`catch`.',
+      hint: '`try { undefined.size } catch (e) { kind = e.name }`; start with `let kind`.',
+      solution: 'let kind\ntry {\n  undefined.size\n} catch (e) {\n  kind = e.name\n}',
+      tests: [['kind is TypeError', is('kind', 'TypeError')], ['Uses .name', uses('.name')]],
+    }),
+    task('medium', 'Safe parse', {
+      prompt: 'Write `safeParse(text)`, returning `JSON.parse(text)`, or `null` if it throws.',
+      hint: '`try { return JSON.parse(text) } catch { return null }`.',
+      solution: 'function safeParse(text) {\n  try {\n    return JSON.parse(text)\n  } catch {\n    return null\n  }\n}',
+      tests: [['Valid', same('safeParse(\'{"a":1}\')', '{ a: 1 }')], ['A list', same('safeParse("[1,2]")', '[1, 2]')], ['Invalid', is('safeParse("oops")', null)]],
+    }),
+    task('medium', 'With a fallback', {
+      prompt: 'Write `readSettings(text)`, returning the parsed settings, or `{ theme: "light" }` when the text is broken.',
+      hint: 'Same shape as `safeParse`, with the default object in `catch`.',
+      solution: 'function readSettings(text) {\n  try {\n    return JSON.parse(text)\n  } catch {\n    return { theme: "light" }\n  }\n}',
+      tests: [['Valid', same('readSettings(\'{"theme":"dark"}\')', '{ theme: "dark" }')], ['Broken', same('readSettings("{theme}")', '{ theme: "light" }')]],
+    }),
+    task('medium', 'Keep going', {
+      prompt: 'Set `numbers` to the parsed values of the texts in `raw` that are valid JSON, skipping the broken ones.',
+      starter: 'const raw = ["1", "x", "42", "{", "7"]\n',
+      hint: 'A loop with `try { numbers.push(JSON.parse(t)) } catch { }` inside.',
+      solution: 'const raw = ["1", "x", "42", "{", "7"]\nconst numbers = []\nfor (const t of raw) {\n  try {\n    numbers.push(JSON.parse(t))\n  } catch {\n    // skip it\n  }\n}',
+      tests: [['numbers is right', same('numbers', '[1, 42, 7]')], ['Uses try', uses('try')]],
+    }),
+    task('hard', 'Count the failures', {
+      prompt: 'Write `countBad(texts)`, returning how many of the texts fail to parse as JSON.',
+      hint: 'Add 1 in the `catch`.',
+      solution: 'function countBad(texts) {\n  let bad = 0\n  for (const t of texts) {\n    try {\n      JSON.parse(t)\n    } catch {\n      bad++\n    }\n  }\n  return bad\n}',
+      tests: [['Two bad', is('countBad(["1", "x", "[]", "{"])', 2)], ['None', is('countBad(["true"])', 0)], ['Empty', is('countBad([])', 0)]],
+    }),
+    task('hard', 'Report the error', {
+      prompt: 'Write `attempt(fn)`, which calls `fn()` and returns `{ ok: true, value }`, or `{ ok: false, error: "Name: message" }` if it throws.',
+      hint: 'In the catch: `` return { ok: false, error: `${e.name}: ${e.message}` } ``.',
+      solution: 'function attempt(fn) {\n  try {\n    return { ok: true, value: fn() }\n  } catch (e) {\n    return { ok: false, error: `${e.name}: ${e.message}` }\n  }\n}',
+      tests: [['Works', same('attempt(() => 5)', '{ ok: true, value: 5 }')], ['Fails', is('attempt(() => JSON.parse("x")).ok', false)], ['Error text', 'attempt(() => null.x).error.startsWith("TypeError: ")']],
+    }),
+    task('expert', 'Only the risky part', {
+      prompt: 'Write `total(texts)`, adding up the numbers in a list of JSON texts. Broken texts count as 0, but a text that parses to something that isn\'t a number should also count as 0. Keep the `try` around just `JSON.parse`.',
+      hint: 'Parse in a `try` into a variable; after it, add the value only if `typeof value === "number"`.',
+      solution: 'function total(texts) {\n  let sum = 0\n  for (const t of texts) {\n    let value\n    try {\n      value = JSON.parse(t)\n    } catch {\n      value = 0\n    }\n    if (typeof value === "number") sum += value\n  }\n  return sum\n}',
+      tests: [['Mixed', is('total(["1", "x", "2.5", "\\"7\\"", "[3]"])', 3.5)], ['Empty', is('total([])', 0)]],
+    }),
+    task('expert', 'First that works', {
+      prompt: 'Write `firstValid(texts)`, returning the parsed value of the first text that is valid JSON, or `undefined` if none are.',
+      hint: 'Loop; in the `try`, `return JSON.parse(t)`; in the `catch`, carry on.',
+      solution: 'function firstValid(texts) {\n  for (const t of texts) {\n    try {\n      return JSON.parse(t)\n    } catch {\n      // try the next one\n    }\n  }\n  return undefined\n}',
+      tests: [['Second one', same('firstValid(["{", "[1]", "2"])', '[1]')], ['None', is('firstValid(["x", "y"])', undefined)], ['First', is('firstValid(["0", "1"])', 0)]],
+    }),
+  ],
+  questions: [
+    mc('When does the `catch` block run?', ['Only when an error happens in the try block', 'Always', 'Never', 'Before the try block'], 0, 'Otherwise it is skipped.'),
+    mc('What does this show?\n```\ntry {\n  console.log("a")\n  null.x\n  console.log("b")\n} catch {\n  console.log("c")\n}\n```', ['`a` then `c`', '`a`, `b`, `c`', '`c`', '`a` then `b`'], 0, 'The try block stops at the error.', { code: 'try {\n  console.log("a")\n  null.x\n  console.log("b")\n} catch {\n  console.log("c")\n}', output: 'a\nc' }),
+    mc('After a caught error, does the code after the `try`…`catch` run?', ['Yes', 'No', 'Only if catch returns', 'Only once'], 0, 'The program carries on.'),
+    mc('What is `error.message`?', ['Text saying what went wrong', 'The error\'s type', 'The line number', 'The code that failed'], 0, 'name is the type.'),
+    mc('What does `JSON.parse("oops")` do?', ['Throws a SyntaxError', 'Returns null', 'Returns "oops"', 'Returns undefined'], 0, 'It isn\'t valid JSON.', { code: '// This shows an error\nJSON.parse("oops")', error: 'SyntaxError' }),
+    mc('Why keep `try` blocks small?', ['So you know which code you are catching errors from', 'They are slow', 'They can only hold one line', 'They hide output'], 0, 'Don\'t catch more than you mean to.'),
+    mc('What is wrong with `catch {}` around everything?', ['It hides bugs silently', 'It is a SyntaxError', 'It makes code slower', 'Nothing'], 0, 'Problems go unnoticed.'),
+    mc('What does `JSON.parse("[1, 2]")` give?', ['The array [1, 2]', 'The text "[1, 2]"', 'An error', 'undefined'], 0, 'Valid JSON becomes a value.', { code: 'console.log(JSON.parse("[1, 2]"))', output: '[ 1, 2 ]' }),
+    qShort('Which word starts the block that handles an error?', 'catch', 'try { … } catch (error) { … }'),
+  ],
+})

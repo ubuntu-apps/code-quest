@@ -4,7 +4,7 @@ import { JavaScriptBuilders, jsstr } from '../builders.mjs'
 export const builders = new JavaScriptBuilders()
 export const {
   makeTopic, makeProject, snippet, mc, qShort, qPattern, code, output, task,
-  prints, uses, avoids, matches, is, near, same, logsWhen,
+  prints, uses, avoids, matches, is, near, same, logsWhen, throwsWhen,
 } = builders.exports()
 export { jsstr }
 

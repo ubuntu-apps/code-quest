@@ -1,0 +1,102 @@
+// Errors and debugging: ?. and ??. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'optional_chaining',
+  title: 'Missing values: ?. and ??',
+  paragraphs: [
+    'The most common error of all is `TypeError: Cannot read properties of undefined`. It happens when you read into something that isn\'t there: a user with no address, a list item past the end, a setting nobody set.',
+    '**Optional chaining**, `?.`, reads a property only if the thing before it exists. If it is `null` or `undefined`, the whole expression gives `undefined` instead of an error:',
+    '```\nconst ana = { name: "Ana", address: { city: "Lima" } }\nconst ben = { name: "Ben" }\n\nconsole.log(ana.address?.city)\nconsole.log(ben.address?.city)\n```',
+    'It works for indexes and calls too: `list?.[0]` and `user.greet?.()` (call it only if it exists).',
+    'Then **`??`** (the nullish coalescing operator) gives a fallback when a value is `null` or `undefined`:',
+    '```\nconst ben = { name: "Ben" }\nconsole.log(ben.address?.city ?? "Unknown city")\n```',
+    'Why `??` and not `||`? `||` falls back for *any* falsy value, including `0`, `""` and `false`, which are often real answers. `??` only falls back when the value is truly missing:',
+    '```\nconst settings = { volume: 0, nickname: "" }\nconsole.log(settings.volume || 5, settings.volume ?? 5)\nconsole.log(settings.nickname || "anon", settings.nickname ?? "anon")\n```',
+    '`??=` sets a variable or property only if it is missing: `options.size ??= 10`.',
+    'Don\'t sprinkle `?.` everywhere. Use it where a value is *allowed* to be missing. If something should always be there, an error when it isn\'t tells you about a real bug.',
+  ],
+  sandboxCode: 'const ben = { name: "Ben" }\nconsole.log(ben.address?.city)\nconsole.log(ben.address?.city ?? "Unknown city")\nconsole.log(0 || 5, 0 ?? 5)',
+  sandboxSnippets: [
+    snippet('Without ?.', '// This shows an error: no address\nconst ben = { name: "Ben" }\nconsole.log(ben.address.city)'),
+    snippet('Indexes', 'const empty = []\nconst missing = undefined\nconsole.log(empty[0]?.name, missing?.[0])'),
+    snippet('Optional call', 'const plugin = { name: "x" }\nconsole.log(plugin.start?.() ?? "no start function")'),
+    snippet('??=', 'const options = { colour: "red" }\noptions.size ??= 10\noptions.colour ??= "blue"\nconsole.log(options)'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Operators/Optional_chaining', 'MDN: Optional chaining (?.)'),
+  challenges: [
+    task('easy', 'Safe city', {
+      prompt: 'Set `city` to `user.address.city` without an error when there is no address.',
+      starter: 'const user = { name: "Ben" }\n',
+      hint: '`user.address?.city`.',
+      solution: 'const user = { name: "Ben" }\nconst city = user.address?.city',
+      tests: [['city is undefined', is('city', undefined)], ['Uses ?.', uses('?.')]],
+    }),
+    task('easy', 'With a fallback', {
+      prompt: 'Write `cityOf(user)`, returning the user\'s `address.city`, or `"Unknown"`.',
+      hint: '`user.address?.city ?? "Unknown"`.',
+      solution: 'function cityOf(user) {\n  return user.address?.city ?? "Unknown"\n}',
+      tests: [['Has one', is('cityOf({ address: { city: "Lima" } })', 'Lima')], ['No address', is('cityOf({})', 'Unknown')], ['No city', is('cityOf({ address: {} })', 'Unknown')]],
+    }),
+    task('easy', 'Zero is a real answer', {
+      prompt: '`volume` should be 0 here, but `||` turns it into 5. Fix it.',
+      starter: 'const settings = { volume: 0 }\nconst volume = settings.volume || 5\n',
+      hint: 'Use `??`, which only falls back for null or undefined.',
+      solution: 'const settings = { volume: 0 }\nconst volume = settings.volume ?? 5',
+      tests: [['volume is 0', is('volume', 0)], ['Uses ??', uses('??')]],
+    }),
+    task('medium', 'First item\'s name', {
+      prompt: 'Write `firstName(list)`, returning the `name` of the first item, or `"none"` for an empty list or a missing list.',
+      hint: '`list?.[0]?.name ?? "none"`.',
+      solution: 'function firstName(list) {\n  return list?.[0]?.name ?? "none"\n}',
+      tests: [['Has one', is('firstName([{ name: "Ana" }])', 'Ana')], ['Empty', is('firstName([])', 'none')], ['Missing', is('firstName(undefined)', 'none')]],
+    }),
+    task('medium', 'Call if there', {
+      prompt: 'Write `start(plugin)`, returning what `plugin.onStart()` returns, or `"skipped"` if the plugin has no `onStart`.',
+      hint: '`plugin.onStart?.() ?? "skipped"`.',
+      solution: 'function start(plugin) {\n  return plugin.onStart?.() ?? "skipped"\n}',
+      tests: [['Has one', is('start({ onStart: () => "started" })', 'started')], ['None', is('start({})', 'skipped')]],
+    }),
+    task('medium', 'Fill the gaps', {
+      prompt: 'Write `withDefaults(options)`, which sets `size` to 10 and `colour` to `"blue"` only where they are missing (keep 0 and `""`), and returns `options`.',
+      hint: '`options.size ??= 10` and `options.colour ??= "blue"`.',
+      solution: 'function withDefaults(options) {\n  options.size ??= 10\n  options.colour ??= "blue"\n  return options\n}',
+      tests: [['Empty', same('withDefaults({})', '{ size: 10, colour: "blue" }')], ['Keeps values', same('withDefaults({ size: 0, colour: "" })', '{ size: 0, colour: "" }')], ['Mixed', same('withDefaults({ colour: "red" })', '{ colour: "red", size: 10 }')]],
+    }),
+    task('hard', 'Deep settings', {
+      prompt: 'Write `setting(config, section, key, fallback)`, returning `config[section][key]`, or `fallback` if any part is missing.',
+      hint: '`config?.[section]?.[key] ?? fallback`.',
+      solution: 'function setting(config, section, key, fallback) {\n  return config?.[section]?.[key] ?? fallback\n}',
+      tests: [['Found', is('setting({ ui: { theme: "dark" } }, "ui", "theme", "light")', 'dark')], ['No key', is('setting({ ui: {} }, "ui", "theme", "light")', 'light')], ['No section', is('setting({}, "ui", "theme", "light")', 'light')], ['No config', is('setting(null, "ui", "theme", "light")', 'light')], ['False is a value', is('setting({ ui: { sound: false } }, "ui", "sound", true)', false)]],
+    }),
+    task('hard', 'Order summary', {
+      prompt: 'Write `summary(order)`, returning `NAME: N items` where `NAME` is `order.customer.name` (or `"Guest"`) and `N` is the length of `order.items` (or 0).',
+      hint: 'Two `?.` … `??` expressions.',
+      solution: 'function summary(order) {\n  const name = order.customer?.name ?? "Guest"\n  const count = order.items?.length ?? 0\n  return `${name}: ${count} items`\n}',
+      tests: [['Full', is('summary({ customer: { name: "Kim" }, items: [1, 2] })', 'Kim: 2 items')], ['Guest', is('summary({ items: [1] })', 'Guest: 1 items')], ['Nothing', is('summary({})', 'Guest: 0 items')]],
+    }),
+    task('expert', 'Get by path', {
+      prompt: 'Write `get(obj, path, fallback)`, where `path` is text like `"user.address.city"`. Follow each part safely and return the value, or `fallback` if any step is missing.',
+      hint: 'Split at `"."`; loop, doing `value = value?.[part]`; finally `return value ?? fallback`.',
+      solution: 'function get(obj, path, fallback) {\n  let value = obj\n  for (const part of path.split(".")) {\n    value = value?.[part]\n  }\n  return value ?? fallback\n}',
+      tests: [['Deep', is('get({ user: { address: { city: "Lima" } } }, "user.address.city", "?")', 'Lima')], ['Missing', is('get({ user: {} }, "user.address.city", "?")', '?')], ['Zero', is('get({ a: { b: 0 } }, "a.b", 9)', 0)], ['Arrays', is('get({ list: ["x", "y"] }, "list.1", "?")', 'y')]],
+    }),
+    task('expert', 'Totals with gaps', {
+      prompt: 'Write `total(orders)`, adding up `order.payment.amount` across the orders. Missing payments or amounts count as 0, but a missing `orders` list should give 0 too.',
+      hint: '`(orders ?? []).reduce((sum, o) => sum + (o?.payment?.amount ?? 0), 0)`.',
+      solution: 'function total(orders) {\n  return (orders ?? []).reduce((sum, o) => sum + (o?.payment?.amount ?? 0), 0)\n}',
+      tests: [['Mixed', is('total([{ payment: { amount: 5 } }, {}, { payment: {} }, { payment: { amount: 2.5 } }])', 7.5)], ['Missing list', is('total(undefined)', 0)], ['Null item', is('total([null, { payment: { amount: 1 } }])', 1)]],
+    }),
+  ],
+  questions: [
+    mc('What does `undefined?.name` give?', ['undefined', 'An error', 'null', '""'], 0, '?. stops safely.', { code: 'const u = undefined\nconsole.log(u?.name)', output: 'undefined' }),
+    mc('What does `null ?? "x"` give?', ['"x"', 'null', 'An error', 'undefined'], 0, '?? falls back for null and undefined.', { code: 'console.log(null ?? "x")', output: 'x' }),
+    mc('What does `0 ?? 5` give?', ['0', '5', 'undefined', 'NaN'], 0, '0 isn\'t missing.', { code: 'console.log(0 ?? 5)', output: '0' }),
+    mc('What does `0 || 5` give?', ['5', '0', 'true', 'undefined'], 0, '|| falls back for any falsy value.', { code: 'console.log(0 || 5)', output: '5' }),
+    mc('How do you call `fn` only if it exists?', ['`fn?.()`', '`fn()?`', '`?fn()`', '`fn?()`'], 0, 'The ?. goes before the brackets.'),
+    mc('What does `x ??= 3` do?', ['Sets x to 3 only if x is null or undefined', 'Always sets x to 3', 'Checks if x is 3', 'Adds 3'], 0, 'Fill in only what is missing.'),
+    mc('What does this show?\n```\nconst list = []\nconsole.log(list[0]?.name ?? "empty")\n```', ['`empty`', '`undefined`', 'An error', '`""`'], 0, 'No first item, so the fallback.', { code: 'const list = []\nconsole.log(list[0]?.name ?? "empty")', output: 'empty' }),
+    mc('When should you NOT use `?.`?', ['When the value should always be there, so an error points to a real bug', 'With objects', 'With arrays', 'In functions'], 0, 'Don\'t hide bugs.'),
+    qShort('Which operator gives a fallback only for null or undefined?', '??', 'value ?? fallback'),
+  ],
+})

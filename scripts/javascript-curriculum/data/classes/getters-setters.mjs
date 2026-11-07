@@ -1,0 +1,102 @@
+// Classes: Getters and setters. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, throwsWhen } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'getters_setters',
+  title: 'Getters and setters',
+  paragraphs: [
+    'Some values are worked out from others: a rectangle\'s area, a person\'s full name. You could write a method, `rect.area()`, but a **getter** lets you read it like a property, `rect.area`, with no brackets:',
+    '```\nclass Rectangle {\n  constructor(width, height) {\n    this.width = width\n    this.height = height\n  }\n  get area() {\n    return this.width * this.height\n  }\n}\n\nconst r = new Rectangle(3, 4)\nconsole.log(r.area)\nr.width = 10\nconsole.log(r.area)\n```',
+    'A getter is a method marked with **`get`**. It runs every time the property is read, so it is always up to date: change `width` and `area` follows.',
+    'A **setter**, marked **`set`**, runs when the property is *assigned*. It gets the new value and can check or convert it before storing:',
+    '```\nclass Person {\n  constructor(first, last) {\n    this.first = first\n    this.last = last\n  }\n  get fullName() {\n    return `${this.first} ${this.last}`\n  }\n  set fullName(text) {\n    const [first, last] = text.split(" ")\n    this.first = first\n    this.last = last\n  }\n}\n\nconst p = new Person("Ada", "Byron")\np.fullName = "Ada Lovelace"\nconsole.log(p.last, p.fullName)\n```',
+    'A setter and the value it stores can\'t share a name, or the setter would call itself forever. The habit is to store it under the name with an underscore, like `_age`, or (better, next stage but one) in a private field.',
+    '```\nclass Player {\n  constructor(age) {\n    this.age = age\n  }\n  get age() {\n    return this._age\n  }\n  set age(value) {\n    if (value < 0) throw new RangeError("Age can\'t be negative")\n    this._age = value\n  }\n}\nconst p = new Player(30)\nconsole.log(p.age)\n```',
+    'Notice the constructor\'s `this.age = age` goes through the setter too, so even the starting value is checked. A getter with no setter makes a property you can read but not set.',
+  ],
+  sandboxCode: 'class Rectangle {\n  constructor(width, height) {\n    this.width = width\n    this.height = height\n  }\n  get area() {\n    return this.width * this.height\n  }\n}\nconst r = new Rectangle(3, 4)\nconsole.log(r.area)\nr.width = 10\nconsole.log(r.area)',
+  sandboxSnippets: [
+    snippet('Always up to date', 'class Cart {\n  constructor() {\n    this.items = []\n  }\n  get count() {\n    return this.items.length\n  }\n}\nconst c = new Cart()\nc.items.push("tea", "jam")\nconsole.log(c.count)'),
+    snippet('Checked on set', '// This shows an error from the setter\nclass Volume {\n  set level(v) {\n    if (v < 0 || v > 10) throw new RangeError("0 to 10 only")\n    this._level = v\n  }\n}\nconst vol = new Volume()\nvol.level = 5\nvol.level = 99'),
+    snippet('Read only', 'class Circle {\n  constructor(r) {\n    this.r = r\n  }\n  get diameter() {\n    return this.r * 2\n  }\n}\nconst c = new Circle(3)\nc.diameter = 100\nconsole.log(c.diameter)'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Functions/get', 'MDN: getter'),
+  challenges: [
+    task('easy', 'A getter', {
+      prompt: 'Give `Rectangle` a getter `area`, so `new Rectangle(3, 4).area` is 12.',
+      starter: 'class Rectangle {\n  constructor(width, height) {\n    this.width = width\n    this.height = height\n  }\n}\n',
+      hint: '`get area() { return this.width * this.height }`.',
+      solution: 'class Rectangle {\n  constructor(width, height) {\n    this.width = width\n    this.height = height\n  }\n  get area() {\n    return this.width * this.height\n  }\n}',
+      tests: [['area is 12', is('new Rectangle(3, 4).area', 12)], ['Follows changes', '(() => { const r = new Rectangle(1, 1); r.height = 7; return r.area === 7 })()'], ['A getter, not a method', 'typeof new Rectangle(2, 2).area === "number"']],
+    }),
+    task('easy', 'Full name', {
+      prompt: 'Give `Person` a getter `fullName` returning `FIRST LAST`.',
+      starter: 'class Person {\n  constructor(first, last) {\n    this.first = first\n    this.last = last\n  }\n}\n',
+      hint: '`` get fullName() { return `${this.first} ${this.last}` } ``.',
+      solution: 'class Person {\n  constructor(first, last) {\n    this.first = first\n    this.last = last\n  }\n  get fullName() {\n    return `${this.first} ${this.last}`\n  }\n}',
+      tests: [['fullName', is('new Person("Ada", "Lovelace").fullName', 'Ada Lovelace')]],
+    }),
+    task('easy', 'How many', {
+      prompt: 'Give `Playlist` a getter `length` returning how many songs it has.',
+      starter: 'class Playlist {\n  constructor() {\n    this.songs = []\n  }\n  add(song) {\n    this.songs.push(song)\n  }\n}\n',
+      hint: '`get length() { return this.songs.length }`.',
+      solution: 'class Playlist {\n  constructor() {\n    this.songs = []\n  }\n  add(song) {\n    this.songs.push(song)\n  }\n  get length() {\n    return this.songs.length\n  }\n}',
+      tests: [['Counts', '(() => { const p = new Playlist(); p.add("a"); p.add("b"); return p.length === 2 })()'], ['Empty', is('new Playlist().length', 0)]],
+    }),
+    task('medium', 'Celsius and Fahrenheit', {
+      prompt: 'Write a class `Temperature` storing `celsius`, with a getter and setter `fahrenheit` (F = C × 1.8 + 32) that reads and changes `celsius`.',
+      hint: '`set fahrenheit(f) { this.celsius = (f - 32) / 1.8 }`.',
+      solution: 'class Temperature {\n  constructor(celsius) {\n    this.celsius = celsius\n  }\n  get fahrenheit() {\n    return this.celsius * 1.8 + 32\n  }\n  set fahrenheit(f) {\n    this.celsius = (f - 32) / 1.8\n  }\n}',
+      tests: [['Read', is('new Temperature(100).fahrenheit', 212)], ['Set', '(() => { const t = new Temperature(0); t.fahrenheit = 50; return Math.abs(t.celsius - 10) < 1e-9 })()']],
+    }),
+    task('medium', 'Set the full name', {
+      prompt: 'Add a setter `fullName` to `Person` that splits the text at the space and sets `first` and `last`.',
+      starter: 'class Person {\n  constructor(first, last) {\n    this.first = first\n    this.last = last\n  }\n  get fullName() {\n    return `${this.first} ${this.last}`\n  }\n}\n',
+      hint: '`set fullName(text) { const [first, last] = text.split(" "); … }`.',
+      solution: 'class Person {\n  constructor(first, last) {\n    this.first = first\n    this.last = last\n  }\n  get fullName() {\n    return `${this.first} ${this.last}`\n  }\n  set fullName(text) {\n    const [first, last] = text.split(" ")\n    this.first = first\n    this.last = last\n  }\n}',
+      tests: [['Sets both', '(() => { const p = new Person("a", "b"); p.fullName = "Grace Hopper"; return p.first === "Grace" && p.last === "Hopper" && p.fullName === "Grace Hopper" })()']],
+    }),
+    task('medium', 'Checked on set', {
+      prompt: 'Give `Player` a getter and setter `age`, storing it as `_age`. The setter throws a `RangeError` for anything that isn\'t a whole number of 0 or more. The constructor should set `this.age`, so it is checked too.',
+      starter: 'class Player {\n  constructor(name, age) {\n    this.name = name\n    this.age = age\n  }\n}\n',
+      hint: '`set age(value) { if (!Number.isInteger(value) || value < 0) throw new RangeError(…); this._age = value }`.',
+      solution: 'class Player {\n  constructor(name, age) {\n    this.name = name\n    this.age = age\n  }\n  get age() {\n    return this._age\n  }\n  set age(value) {\n    if (!Number.isInteger(value) || value < 0) throw new RangeError("Age must be a whole number of 0 or more")\n    this._age = value\n  }\n}',
+      tests: [['Good', is('new Player("Kim", 30).age', 30)], ['Bad in constructor', throwsWhen('new Player("Al", -1)', 'RangeError')], ['Bad later', '(() => { const p = new Player("Kim", 3); try { p.age = 2.5 } catch (e) { return e instanceof RangeError && p.age === 3 } return false })()']],
+    }),
+    task('hard', 'Read-only total', {
+      prompt: 'Write a class `Order` with `lines` (empty), `add(price, qty)`, and getters `total` (price × qty summed) and `isEmpty`.',
+      hint: '`get isEmpty() { return this.lines.length === 0 }`.',
+      solution: 'class Order {\n  constructor() {\n    this.lines = []\n  }\n  add(price, qty) {\n    this.lines.push({ price, qty })\n  }\n  get total() {\n    return this.lines.reduce((sum, l) => sum + l.price * l.qty, 0)\n  }\n  get isEmpty() {\n    return this.lines.length === 0\n  }\n}',
+      tests: [['Total', '(() => { const o = new Order(); o.add(2, 3); o.add(5, 1); return o.total === 11 && o.isEmpty === false })()'], ['Empty', '(() => { const o = new Order(); return o.total === 0 && o.isEmpty === true })()']],
+    }),
+    task('hard', 'Trimmed names', {
+      prompt: 'Write a class `Contact` with a getter and setter `name` (stored as `_name`): the setter trims the text and throws an `Error("Name is required")` if that leaves nothing. A getter `initial` gives the first letter, upper-cased.',
+      hint: 'Trim in the setter; check for `""`.',
+      solution: 'class Contact {\n  constructor(name) {\n    this.name = name\n  }\n  get name() {\n    return this._name\n  }\n  set name(text) {\n    const t = text.trim()\n    if (t === "") throw new Error("Name is required")\n    this._name = t\n  }\n  get initial() {\n    return this._name[0].toUpperCase()\n  }\n}',
+      tests: [['Trims', is('new Contact("  kim ").name', 'kim')], ['Initial', is('new Contact("kim").initial', 'K')], ['Blank', throwsWhen('new Contact("   ")', 'Name is required')]],
+    }),
+    task('expert', 'A progress bar', {
+      prompt: 'Write a class `Progress` with `done` and `total`. A setter `done` keeps the value between 0 and `total` (clamp it, no error), stored as `_done`. Getters: `percent` (whole number, rounded) and `bar`, ten characters of `#` for each 10% done and `-` for the rest.',
+      hint: '`Math.min(Math.max(v, 0), this.total)`; the bar has `Math.floor(percent / 10)` `#`s.',
+      solution: 'class Progress {\n  constructor(total) {\n    this.total = total\n    this.done = 0\n  }\n  get done() {\n    return this._done\n  }\n  set done(v) {\n    this._done = Math.min(Math.max(v, 0), this.total)\n  }\n  get percent() {\n    return Math.round((this._done / this.total) * 100)\n  }\n  get bar() {\n    const filled = Math.floor(this.percent / 10)\n    return "#".repeat(filled) + "-".repeat(10 - filled)\n  }\n}',
+      tests: [['Half', '(() => { const p = new Progress(8); p.done = 4; return p.percent === 50 && p.bar === "#####-----" })()'], ['Clamped', '(() => { const p = new Progress(5); p.done = 99; return p.done === 5 && p.bar === "##########" })()'], ['Below zero', '(() => { const p = new Progress(5); p.done = -3; return p.done === 0 && p.percent === 0 })()']],
+    }),
+    task('expert', 'Money in cents', {
+      prompt: 'Write a class `Price` that stores whole `cents`. Give it a getter and setter `dollars` (setting `4.99` stores 499, rounding to the nearest cent), and a getter `label` like `$4.99`.',
+      hint: '`set dollars(d) { this.cents = Math.round(d * 100) }`.',
+      solution: 'class Price {\n  constructor(cents) {\n    this.cents = cents\n  }\n  get dollars() {\n    return this.cents / 100\n  }\n  set dollars(d) {\n    this.cents = Math.round(d * 100)\n  }\n  get label() {\n    return `$${this.dollars.toFixed(2)}`\n  }\n}',
+      tests: [['Read', is('new Price(1250).dollars', 12.5)], ['Set', '(() => { const p = new Price(0); p.dollars = 4.999; return p.cents === 500 })()'], ['Label', is('new Price(499).label', '$4.99')]],
+    }),
+  ],
+  questions: [
+    mc('How do you read a getter called `area`?', ['`shape.area`', '`shape.area()`', '`shape.get(area)`', '`get shape.area`'], 0, 'Like a property, no brackets.'),
+    mc('When does a getter run?', ['Every time the property is read', 'Once, in the constructor', 'Only when set', 'Never'], 0, 'So it is always up to date.'),
+    mc('When does a setter run?', ['When the property is assigned', 'When it is read', 'When the class is made', 'Never on its own'], 0, 'obj.x = value calls it.'),
+    mc('What does this show?\n```\nclass R {\n  constructor() {\n    this.w = 2\n  }\n  get double() {\n    return this.w * 2\n  }\n}\nconst r = new R()\nr.w = 5\nconsole.log(r.double)\n```', ['`10`', '`4`', '`undefined`', 'An error'], 0, 'Worked out on each read.', { code: 'class R {\n  constructor() {\n    this.w = 2\n  }\n  get double() {\n    return this.w * 2\n  }\n}\nconst r = new R()\nr.w = 5\nconsole.log(r.double)', output: '10' }),
+    mc('Why store a setter\'s value as `_age` rather than `age`?', ['Setting `this.age` inside the setter would call itself forever', 'Underscores are faster', 'JavaScript requires it', 'To hide it completely'], 0, 'Different name, no loop.'),
+    mc('What happens when you assign to a getter with no setter?', ['Nothing changes here', 'It replaces the getter', 'The getter is deleted', 'It sets a hidden copy'], 0, 'It is read-only. (Inside class code, which is strict, it is a TypeError instead.)', { code: 'class C {\n  get x() {\n    return 1\n  }\n}\nconst c = new C()\nc.x = 9\nconsole.log(c.x)', output: '1' }),
+    mc('Does `this.age = age` in the constructor use the setter?', ['Yes, so the first value is checked too', 'No', 'Only if it is a number', 'Only the second time'], 0, 'Any assignment goes through it.'),
+    mc('Which keyword marks a setter?', ['`set`', '`get`', '`setter`', '`=`'], 0, 'set name(value) { … }'),
+    qShort('Which keyword marks a method you read like a property?', 'get', 'get area() { … }'),
+  ],
+})

@@ -1,0 +1,101 @@
+// Classes: Methods in classes. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'class_methods',
+  title: 'Methods in classes',
+  paragraphs: [
+    'A class describes what its objects can **do**, as well as what they hold. Methods go inside the class body, next to the constructor, in the same short form as object methods:',
+    '```\nclass Account {\n  constructor(owner) {\n    this.owner = owner\n    this.balance = 0\n  }\n\n  deposit(amount) {\n    this.balance += amount\n  }\n\n  summary() {\n    return `${this.owner}: $${this.balance}`\n  }\n}\n\nconst a = new Account("Kim")\na.deposit(50)\nconsole.log(a.summary())\n```',
+    'Every instance gets the methods, but they aren\'t copied into each one: they are shared, stored once on the class. `this` tells each call which instance it is working on.',
+    'Methods can call other methods with `this.otherMethod()`, and use the instance\'s data with `this.property`. A method that changes the object can `return this` so calls chain.',
+    'A special method, **`toString()`**, decides how an instance turns into text, for example inside a template literal:',
+    '```\nclass Point {\n  constructor(x, y) {\n    this.x = x\n    this.y = y\n  }\n  toString() {\n    return `(${this.x}, ${this.y})`\n  }\n}\nconsole.log(`At ${new Point(3, 4)}`)\n```',
+    'Watch out when you pass a method as a callback: `setTimeout(a.summary, 100)` hands over the function without its object, so `this` is lost. Wrap it: `() => a.summary()`.',
+  ],
+  sandboxCode: 'class Counter {\n  constructor() {\n    this.count = 0\n  }\n  add() {\n    this.count++\n    return this\n  }\n}\nconst c = new Counter()\nc.add().add().add()\nconsole.log(c.count)',
+  sandboxSnippets: [
+    snippet('Shared methods', 'class Dog {\n  bark() {\n    return "Woof"\n  }\n}\nconst a = new Dog()\nconst b = new Dog()\nconsole.log(a.bark === b.bark, Object.keys(a))'),
+    snippet('toString', 'class Money {\n  constructor(cents) {\n    this.cents = cents\n  }\n  toString() {\n    return `$${(this.cents / 100).toFixed(2)}`\n  }\n}\nconsole.log(`Total: ${new Money(1250)}`)'),
+    snippet('Losing this', 'class Greeter {\n  constructor(name) {\n    this.name = name\n  }\n  hi() {\n    return `Hi, ${this?.name}`\n  }\n}\nconst g = new Greeter("Kim")\nconst loose = g.hi\nconst run = (fn) => fn()\nconsole.log(g.hi())\nconsole.log(loose())\nconsole.log(run(() => g.hi()))'),
+    snippet('Calling another method', 'class Circle {\n  constructor(r) {\n    this.r = r\n  }\n  area() {\n    return Math.PI * this.r ** 2\n  }\n  describe() {\n    return `Area ${this.area().toFixed(1)}`\n  }\n}\nconsole.log(new Circle(2).describe())'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Classes#methods', 'MDN: Class methods'),
+  challenges: [
+    task('easy', 'Add a method', {
+      prompt: 'Add a method `speak()` to `Dog` that returns `NAME says Woof`.',
+      starter: 'class Dog {\n  constructor(name) {\n    this.name = name\n  }\n}\n',
+      hint: '`` speak() { return `${this.name} says Woof` } `` inside the class.',
+      solution: 'class Dog {\n  constructor(name) {\n    this.name = name\n  }\n  speak() {\n    return `${this.name} says Woof`\n  }\n}',
+      tests: [['Rex', is('new Dog("Rex").speak()', 'Rex says Woof')], ['Fido', is('new Dog("Fido").speak()', 'Fido says Woof')]],
+    }),
+    task('easy', 'Deposit and withdraw', {
+      prompt: 'Add `deposit(n)` and `withdraw(n)` methods to `Account`, changing `balance`.',
+      starter: 'class Account {\n  constructor(owner) {\n    this.owner = owner\n    this.balance = 0\n  }\n}\n',
+      hint: '`deposit(n) { this.balance += n }`, and the same with `-=`.',
+      solution: 'class Account {\n  constructor(owner) {\n    this.owner = owner\n    this.balance = 0\n  }\n  deposit(n) {\n    this.balance += n\n  }\n  withdraw(n) {\n    this.balance -= n\n  }\n}',
+      tests: [['Works', '(() => { const a = new Account("Kim"); a.deposit(50); a.withdraw(20); return a.balance === 30 })()']],
+    }),
+    task('easy', 'Area', {
+      prompt: 'Write a class `Rectangle` (`width`, `height`) with methods `area()` and `isSquare()`.',
+      hint: '`isSquare() { return this.width === this.height }`.',
+      solution: 'class Rectangle {\n  constructor(width, height) {\n    this.width = width\n    this.height = height\n  }\n  area() {\n    return this.width * this.height\n  }\n  isSquare() {\n    return this.width === this.height\n  }\n}',
+      tests: [['area', is('new Rectangle(3, 4).area()', 12)], ['Not square', is('new Rectangle(3, 4).isSquare()', false)], ['Square', is('new Rectangle(5, 5).isSquare()', true)]],
+    }),
+    task('medium', 'toString', {
+      prompt: 'Give `Point` a `toString()` returning `(X, Y)`, so `` `${new Point(3, 4)}` `` is `(3, 4)`.',
+      starter: 'class Point {\n  constructor(x, y) {\n    this.x = x\n    this.y = y\n  }\n}\n',
+      hint: '`` toString() { return `(${this.x}, ${this.y})` } ``.',
+      solution: 'class Point {\n  constructor(x, y) {\n    this.x = x\n    this.y = y\n  }\n  toString() {\n    return `(${this.x}, ${this.y})`\n  }\n}',
+      tests: [['In text', is('`${new Point(3, 4)}`', '(3, 4)')], ['Negative', is('String(new Point(-1, 0))', '(-1, 0)')]],
+    }),
+    task('medium', 'A to-do list', {
+      prompt: 'Write a class `TodoList` with `items` (empty), `add(text)` (push `{ text, done: false }`), `complete(text)` (set that item\'s `done`) and `left()` (how many aren\'t done).',
+      hint: '`complete` can use `this.items.find((i) => i.text === text)`.',
+      solution: 'class TodoList {\n  constructor() {\n    this.items = []\n  }\n  add(text) {\n    this.items.push({ text, done: false })\n  }\n  complete(text) {\n    const item = this.items.find((i) => i.text === text)\n    if (item) item.done = true\n  }\n  left() {\n    return this.items.filter((i) => !i.done).length\n  }\n}',
+      tests: [['Works', '(() => { const t = new TodoList(); t.add("wash"); t.add("dry"); t.complete("wash"); return t.left() === 1 && t.items[0].done === true })()'], ['Unknown item', '(() => { const t = new TodoList(); t.add("a"); t.complete("zzz"); return t.left() === 1 })()']],
+    }),
+    task('medium', 'Chainable', {
+      prompt: 'Write a class `Calculator` starting `value` at 0, with `add(n)`, `subtract(n)` and `times(n)` that each `return this`, and `result()`.',
+      hint: 'Every changing method ends `return this`.',
+      solution: 'class Calculator {\n  constructor() {\n    this.value = 0\n  }\n  add(n) {\n    this.value += n\n    return this\n  }\n  subtract(n) {\n    this.value -= n\n    return this\n  }\n  times(n) {\n    this.value *= n\n    return this\n  }\n  result() {\n    return this.value\n  }\n}',
+      tests: [['Chains', is('new Calculator().add(5).times(3).subtract(1).result()', 14)], ['Fresh each time', is('new Calculator().result()', 0)]],
+    }),
+    task('hard', 'Methods using methods', {
+      prompt: 'Write a class `Cart` with `lines` (empty), `add(name, price, qty = 1)`, `total()` (sum of price × qty), and `receipt()` returning `N items, $TOTAL` (total to 2 places, N the sum of qty) using `this.total()`.',
+      hint: '`receipt()` can call `this.total()` and add up the qtys.',
+      solution: 'class Cart {\n  constructor() {\n    this.lines = []\n  }\n  add(name, price, qty = 1) {\n    this.lines.push({ name, price, qty })\n  }\n  total() {\n    return this.lines.reduce((sum, l) => sum + l.price * l.qty, 0)\n  }\n  receipt() {\n    const count = this.lines.reduce((n, l) => n + l.qty, 0)\n    return `${count} items, $${this.total().toFixed(2)}`\n  }\n}',
+      tests: [['Receipt', '(() => { const c = new Cart(); c.add("tea", 2.5, 2); c.add("cake", 4); return c.total() === 9 && c.receipt() === "3 items, $9.00" })()'], ['Empty', is('new Cart().receipt()', '0 items, $0.00')]],
+    }),
+    task('hard', 'Keep this', {
+      prompt: '`later` loses `this`. Fix the last line so `result` is `Hi, Kim` (keep `run` as it is).',
+      starter: 'class Greeter {\n  constructor(name) {\n    this.name = name\n  }\n  hi() {\n    return `Hi, ${this?.name}`\n  }\n}\nfunction run(fn) {\n  return fn()\n}\nconst g = new Greeter("Kim")\nconst result = run(g.hi)\n',
+      hint: 'Pass a wrapper: `run(() => g.hi())`.',
+      solution: 'class Greeter {\n  constructor(name) {\n    this.name = name\n  }\n  hi() {\n    return `Hi, ${this?.name}`\n  }\n}\nfunction run(fn) {\n  return fn()\n}\nconst g = new Greeter("Kim")\nconst result = run(() => g.hi())',
+      tests: [['result is right', is('result', 'Hi, Kim')]],
+    }),
+    task('expert', 'A stopwatch', {
+      prompt: 'Write a class `Stopwatch` with `laps` (empty) and `elapsed` (0). `tick(seconds)` adds to `elapsed`; `lap()` pushes the time since the last lap (or start) to `laps`; `fastest()` returns the shortest lap, or `null` with none.',
+      hint: 'Keep `this.lastLap = 0`; in `lap()`, push `this.elapsed - this.lastLap`, then update `lastLap`.',
+      solution: 'class Stopwatch {\n  constructor() {\n    this.elapsed = 0\n    this.lastLap = 0\n    this.laps = []\n  }\n  tick(seconds) {\n    this.elapsed += seconds\n  }\n  lap() {\n    this.laps.push(this.elapsed - this.lastLap)\n    this.lastLap = this.elapsed\n  }\n  fastest() {\n    return this.laps.length === 0 ? null : Math.min(...this.laps)\n  }\n}',
+      tests: [['Laps', '(() => { const s = new Stopwatch(); s.tick(30); s.lap(); s.tick(25); s.lap(); s.tick(40); s.lap(); return JSON.stringify(s.laps) === "[30,25,40]" && s.fastest() === 25 })()'], ['No laps', is('new Stopwatch().fastest()', null)]],
+    }),
+    task('expert', 'A queue', {
+      prompt: 'Write a class `Queue` with `enqueue(x)` (add to the back, return `this`), `dequeue()` (remove and return the front, or `undefined`), `peek()` (the front without removing), and `size()`.',
+      hint: 'Keep an array; `push` to add, `shift` to remove.',
+      solution: 'class Queue {\n  constructor() {\n    this.items = []\n  }\n  enqueue(x) {\n    this.items.push(x)\n    return this\n  }\n  dequeue() {\n    return this.items.shift()\n  }\n  peek() {\n    return this.items[0]\n  }\n  size() {\n    return this.items.length\n  }\n}',
+      tests: [['First in, first out', '(() => { const q = new Queue(); q.enqueue("a").enqueue("b"); return q.peek() === "a" && q.dequeue() === "a" && q.dequeue() === "b" && q.size() === 0 })()'], ['Empty', is('new Queue().dequeue()', undefined)]],
+    }),
+  ],
+  questions: [
+    mc('Where do a class\'s methods go?', ['Inside the class body, next to the constructor', 'Inside the constructor', 'Outside the class', 'In a separate file'], 0, 'class X { constructor() {} method() {} }'),
+    mc('Are methods copied into every instance?', ['No, they are shared on the class', 'Yes', 'Only the constructor', 'Only if used'], 0, 'Stored once.'),
+    mc('What does this show?\n```\nclass C {\n  constructor() {\n    this.n = 1\n  }\n  inc() {\n    this.n++\n    return this\n  }\n}\nconsole.log(new C().inc().inc().n)\n```', ['`3`', '`2`', '`1`', 'An error'], 0, 'Two increments from 1.', { code: 'class C {\n  constructor() {\n    this.n = 1\n  }\n  inc() {\n    this.n++\n    return this\n  }\n}\nconsole.log(new C().inc().inc().n)', output: '3' }),
+    mc('How does a method call another method on the same object?', ['`this.other()`', '`other()`', '`self.other()`', '`super.other()`'], 0, 'Through this.'),
+    mc('What does `toString()` control?', ['How an instance becomes text, like in a template literal', 'What console.log shows', 'The class name', 'Nothing'], 0, '`${point}` uses it.'),
+    mc('What happens to `this` with `setTimeout(a.summary, 100)`?', ['It is lost: the function is passed without its object', 'It stays as a', 'It becomes setTimeout', 'An error at once'], 0, 'Wrap it: () => a.summary().'),
+    mc('What does this show?\n```\nclass P {\n  toString() {\n    return "P!"\n  }\n}\nconsole.log(`${new P()}`)\n```', ['`P!`', '`[object Object]`', '`P {}`', 'An error'], 0, 'The template uses toString.', { code: 'class P {\n  toString() {\n    return "P!"\n  }\n}\nconsole.log(`${new P()}`)', output: 'P!' }),
+    mc('Why might a method `return this`?', ['So calls can be chained', 'It is required', 'To copy the object', 'To end the program'], 0, 'a.add(1).add(2).'),
+    qShort('Which method decides how an object becomes text?', 'toString', 'toString() { … }'),
+  ],
+})

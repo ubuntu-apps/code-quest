@@ -1,0 +1,101 @@
+// Errors and debugging: Checking your own code. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, throwsWhen } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'testing_code',
+  title: 'Checking your own code with tests',
+  paragraphs: [
+    'Every challenge in this course checks your code with **tests**: small pieces of code that call yours with known inputs and compare the answer with what it should be. You can write them for your own code too, and catch bugs before anyone else sees them.',
+    'The simplest test is an **assertion**: a check that throws if something that should be true isn\'t.',
+    '```\nfunction assert(condition, message) {\n  if (!condition) throw new Error(`Test failed: ${message}`)\n}\n\nconst add = (a, b) => a + b\nassert(add(2, 3) === 5, "2 + 3 is 5")\nassert(add(-1, 1) === 0, "-1 + 1 is 0")\nconsole.log("All tests passed")\n```',
+    'Comparing arrays and objects with `===` checks whether they are the *same object*, not whether they hold the same things, so `[1, 2] === [1, 2]` is `false`. Compare them as text with `JSON.stringify`, or item by item.',
+    'Good tests try more than the obvious case. Think about **edge cases**: an empty list, zero, a negative number, one item, text with spaces or capitals, the biggest and smallest allowed values. Bugs hide at the edges.',
+    'A tiny test runner makes this tidy: give each test a name, run them all, and report which passed instead of stopping at the first failure.',
+    '```\nfunction test(name, fn) {\n  try {\n    fn()\n    console.log(`✓ ${name}`)\n  } catch (e) {\n    console.log(`✗ ${name}: ${e.message}`)\n  }\n}\n\nconst double = (n) => n * 2\ntest("doubles 4", () => {\n  if (double(4) !== 8) throw new Error(`got ${double(4)}`)\n})\ntest("doubles 0", () => {\n  if (double(0) !== 0) throw new Error(`got ${double(0)}`)\n})\n```',
+    'Real projects use testing tools such as Vitest or Jest, which work the same way with more help built in. CodeQuest\'s own code is tested like that.',
+  ],
+  sandboxCode: 'function assert(condition, message) {\n  if (!condition) throw new Error(`Test failed: ${message}`)\n}\nconst add = (a, b) => a + b\nassert(add(2, 3) === 5, "2 + 3 is 5")\nconsole.log("All tests passed")',
+  sandboxSnippets: [
+    snippet('Same object?', 'console.log([1, 2] === [1, 2], JSON.stringify([1, 2]) === JSON.stringify([1, 2]))'),
+    snippet('A failing test', '// This shows an error: the test fails\nconst half = (n) => n / 3\nif (half(10) !== 5) throw new Error(`Test failed: half(10) gave ${half(10)}`)'),
+  ],
+  readMore: MDN('Learn_web_development/Extensions/Testing', 'MDN: Cross-browser testing'),
+  challenges: [
+    task('easy', 'Write assert', {
+      prompt: 'Write `assert(condition, message)`, throwing an `Error` with `Test failed: MESSAGE` when `condition` is falsy.',
+      hint: '`` if (!condition) throw new Error(`Test failed: ${message}`) ``.',
+      solution: 'function assert(condition, message) {\n  if (!condition) throw new Error(`Test failed: ${message}`)\n}',
+      tests: [['Passes quietly', '(() => { assert(true, "x"); return true })()'], ['Fails loudly', throwsWhen('assert(1 > 2, "one is more than two")', 'Test failed: one is more than two')]],
+    }),
+    task('easy', 'Same contents', {
+      prompt: 'Write `sameList(a, b)`, returning whether two arrays hold the same items in the same order.',
+      hint: '`JSON.stringify(a) === JSON.stringify(b)`.',
+      solution: 'function sameList(a, b) {\n  return JSON.stringify(a) === JSON.stringify(b)\n}',
+      tests: [['Same', is('sameList([1, 2], [1, 2])', true)], ['Different order', is('sameList([1, 2], [2, 1])', false)], ['Different length', is('sameList([1], [1, 1])', false)]],
+    }),
+    task('easy', 'Find the edge case', {
+      prompt: '`average([])` gives `NaN`. Fix it to give `0` for an empty list.',
+      starter: 'function average(nums) {\n  return nums.reduce((a, b) => a + b, 0) / nums.length\n}\n',
+      hint: 'A guard clause: `if (nums.length === 0) return 0`.',
+      solution: 'function average(nums) {\n  if (nums.length === 0) return 0\n  return nums.reduce((a, b) => a + b, 0) / nums.length\n}',
+      tests: [['Empty', is('average([])', 0)], ['Normal', is('average([2, 4])', 3)]],
+    }),
+    task('medium', 'A test runner', {
+      prompt: 'Write `test(name, fn)`: call `fn`; return `"✓ NAME"` if it doesn\'t throw, or `"✗ NAME: MESSAGE"` if it does.',
+      hint: '`try { fn(); return …✓… } catch (e) { return …✗… }`.',
+      solution: 'function test(name, fn) {\n  try {\n    fn()\n    return `✓ ${name}`\n  } catch (e) {\n    return `✗ ${name}: ${e.message}`\n  }\n}',
+      tests: [['Pass', is('test("adds", () => {})', '✓ adds')], ['Fail', is('test("adds", () => { throw new Error("got 4") })', '✗ adds: got 4')]],
+    }),
+    task('medium', 'Expect equal', {
+      prompt: 'Write `expectEqual(actual, expected)`, throwing an `Error` with `Expected EXPECTED, got ACTUAL` (both as JSON) when they differ as JSON.',
+      hint: '`const a = JSON.stringify(actual)`, same for expected; compare; throw with both in the message.',
+      solution: 'function expectEqual(actual, expected) {\n  const a = JSON.stringify(actual)\n  const e = JSON.stringify(expected)\n  if (a !== e) throw new Error(`Expected ${e}, got ${a}`)\n}',
+      tests: [['Equal', '(() => { expectEqual([1, 2], [1, 2]); return true })()'], ['Different', throwsWhen('expectEqual([1], [2])', 'Expected [2], got [1]')], ['Text', throwsWhen('expectEqual("a", "b")', 'Expected "b", got "a"')]],
+    }),
+    task('medium', 'Spot the broken function', {
+      prompt: 'Two versions of `capitalise` are given. Set `broken` to `"a"` or `"b"`: whichever gives the wrong answer for at least one of `"hello"`, `"x"` and `""` (the answer for `""` should be `""`).',
+      starter: 'const a = (t) => t[0].toUpperCase() + t.slice(1)\nconst b = (t) => t.slice(0, 1).toUpperCase() + t.slice(1)\n',
+      hint: 'Try each on `""`. `t[0]` of an empty text is `undefined`.',
+      solution: 'const a = (t) => t[0].toUpperCase() + t.slice(1)\nconst b = (t) => t.slice(0, 1).toUpperCase() + t.slice(1)\nconst broken = "a"',
+      tests: [['broken is right', is('broken', 'a')]],
+      typedOk: true,
+    }),
+    task('hard', 'Run them all', {
+      prompt: 'Write `runAll(tests)`, where `tests` is an object from names to functions. Run each and return `{ passed, failed }`: counts of the ones that did and didn\'t throw.',
+      hint: 'Loop over `Object.entries(tests)` with a `try` around each.',
+      solution: 'function runAll(tests) {\n  let passed = 0\n  let failed = 0\n  for (const [name, fn] of Object.entries(tests)) {\n    try {\n      fn()\n      passed++\n    } catch {\n      failed++\n    }\n  }\n  return { passed, failed }\n}',
+      tests: [['Mixed', same('runAll({ a: () => {}, b: () => { throw new Error("x") }, c: () => {} })', '{ passed: 2, failed: 1 }')], ['None', same('runAll({})', '{ passed: 0, failed: 0 }')]],
+    }),
+    task('hard', 'Edge cases for max', {
+      prompt: '`largest` is wrong for some lists. Find and fix the bug so it works for all-negative lists, and returns `undefined` for an empty one.',
+      starter: 'function largest(nums) {\n  let best = 0\n  for (const n of nums) {\n    if (n > best) best = n\n  }\n  return best\n}\n',
+      hint: 'Starting at 0 is the bug. Start at `nums[0]` (which is `undefined` for an empty list).',
+      solution: 'function largest(nums) {\n  let best = nums[0]\n  for (const n of nums) {\n    if (n > best) best = n\n  }\n  return best\n}',
+      tests: [['Positive', is('largest([3, 9, 2])', 9)], ['All negative', is('largest([-5, -2, -9])', -2)], ['Empty', is('largest([])', undefined)], ['One', is('largest([7])', 7)]],
+    }),
+    task('expert', 'Table of cases', {
+      prompt: 'Write `checkCases(fn, cases)`, where each case is `[input, expected]`. Return the list of failures as `fn(INPUT) gave ACTUAL, expected EXPECTED`, using JSON for the values.',
+      hint: 'For each `[input, expected]`, compare `JSON.stringify(fn(input))` with `JSON.stringify(expected)`.',
+      solution: 'function checkCases(fn, cases) {\n  const failures = []\n  for (const [input, expected] of cases) {\n    const actual = fn(input)\n    if (JSON.stringify(actual) !== JSON.stringify(expected)) {\n      failures.push(`fn(${JSON.stringify(input)}) gave ${JSON.stringify(actual)}, expected ${JSON.stringify(expected)}`)\n    }\n  }\n  return failures\n}',
+      tests: [['One failure', same('checkCases((n) => n * 2, [[1, 2], [2, 5], [0, 0]])', '["fn(2) gave 4, expected 5"]')], ['All pass', same('checkCases((t) => t.length, [["ab", 2]])', '[]')]],
+    }),
+    task('expert', 'Test and fix', {
+      prompt: '`isLeapYear` passes for 2024 and 2023 but is wrong for 1900 and 2000. A leap year divides by 4, except years that divide by 100, unless they also divide by 400. Fix it.',
+      starter: 'function isLeapYear(year) {\n  return year % 4 === 0\n}\n',
+      hint: '`(year % 4 === 0 && year % 100 !== 0) || year % 400 === 0`.',
+      solution: 'function isLeapYear(year) {\n  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0\n}',
+      tests: [['2024', is('isLeapYear(2024)', true)], ['2023', is('isLeapYear(2023)', false)], ['1900', is('isLeapYear(1900)', false)], ['2000', is('isLeapYear(2000)', true)]],
+    }),
+  ],
+  questions: [
+    mc('What is a test?', ['Code that calls your code with known inputs and checks the answers', 'A kind of error', 'A comment', 'A way to run code faster'], 0, 'It checks your code for you.'),
+    mc('What does `[1, 2] === [1, 2]` give?', ['false', 'true', 'An error', 'undefined'], 0, 'They are two different arrays.', { code: 'console.log([1, 2] === [1, 2])', output: 'false' }),
+    mc('What is an edge case?', ['An unusual input at the limits, like an empty list or zero', 'The first test', 'A test that always fails', 'An error message'], 0, 'Bugs hide at the edges.'),
+    mc('What does an assertion do when its check is false?', ['Throws an error', 'Returns false quietly', 'Logs and carries on', 'Fixes the code'], 0, 'It stops loudly.'),
+    mc('Why should a test runner catch errors?', ['So one failing test doesn\'t stop the rest from running', 'To hide failures', 'To make tests pass', 'It shouldn\'t'], 0, 'Report every result.'),
+    mc('Which list is an edge case for "find the largest"?', ['`[]`', '`[3, 9, 2]`', '`[1, 2, 3]`', '`[10, 20]`'], 0, 'Empty lists catch many bugs.'),
+    mc('What does this show?\n```\nconst a = (t) => t[0]\nconsole.log(a(""))\n```', ['`undefined`', '`""`', 'An error', '`null`'], 0, 'There is no first letter.', { code: 'const a = (t) => t[0]\nconsole.log(a(""))', output: 'undefined' }),
+    mc('Which compares two arrays\' contents simply?', ['`JSON.stringify(a) === JSON.stringify(b)`', '`a === b`', '`a == b`', '`a.equals(b)`'], 0, 'Compare them as text.'),
+    qShort('What do you call an unusual input at the limits, like an empty list? (two words)', 'edge case', 'An edge case.'),
+  ],
+})

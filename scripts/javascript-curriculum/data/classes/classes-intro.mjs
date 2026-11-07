@@ -1,0 +1,102 @@
+// Classes: Classes and constructors. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'classes_intro',
+  title: 'Classes and constructors',
+  paragraphs: [
+    'When you need many objects of the same shape, like lots of users, accounts or shapes, writing each one out by hand gets old fast. A **class** is a blueprint: it describes what each object has and can do, and you make as many as you like from it.',
+    '```\nclass Dog {\n  constructor(name, age) {\n    this.name = name\n    this.age = age\n  }\n}\n\nconst rex = new Dog("Rex", 3)\nconst fido = new Dog("Fido", 7)\nconsole.log(rex.name, fido.age)\nconsole.log(rex)\n```',
+    'The **`constructor`** is a special method that runs when you make a new object with **`new`**. Its job is to set up the object, usually by copying arguments onto `this`. Each object made from a class is called an **instance** of it.',
+    'Class names start with a capital letter by habit (`Dog`, `BankAccount`), so they stand out from ordinary functions and variables.',
+    'Forgetting `new` is an error: `Dog("Rex")` gives `TypeError: Class constructor Dog cannot be invoked without \'new\'`.',
+    'The constructor can also set properties that don\'t come from arguments, like a starting value, or work something out:',
+    '```\nclass Account {\n  constructor(owner, opening = 0) {\n    this.owner = owner\n    this.balance = opening\n    this.history = []\n  }\n}\n\nconst a = new Account("Kim")\nconsole.log(a)\n```',
+    '`instanceof` checks which class an object came from: `rex instanceof Dog` is `true`.',
+  ],
+  sandboxCode: 'class Dog {\n  constructor(name, age) {\n    this.name = name\n    this.age = age\n  }\n}\n\nconst rex = new Dog("Rex", 3)\nconsole.log(rex, rex instanceof Dog)',
+  sandboxSnippets: [
+    snippet('Many instances', 'class Point {\n  constructor(x, y) {\n    this.x = x\n    this.y = y\n  }\n}\nconst points = [new Point(0, 0), new Point(3, 4)]\nconsole.log(points)'),
+    snippet('Forgot new', '// This shows an error: a class needs new\nclass Cat {\n  constructor(name) {\n    this.name = name\n  }\n}\nCat("Tom")'),
+    snippet('Defaults', 'class Timer {\n  constructor(seconds = 60) {\n    this.seconds = seconds\n    this.running = false\n  }\n}\nconsole.log(new Timer(), new Timer(10))'),
+    snippet('Each is separate', 'class Box {\n  constructor() {\n    this.items = []\n  }\n}\nconst a = new Box()\nconst b = new Box()\na.items.push("x")\nconsole.log(a.items, b.items)'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Classes', 'MDN: Classes'),
+  challenges: [
+    task('easy', 'Your first class', {
+      prompt: 'Write a class `Book` whose constructor takes `title` and `author` and stores them on `this`.',
+      hint: '`class Book { constructor(title, author) { this.title = title; this.author = author } }`.',
+      solution: 'class Book {\n  constructor(title, author) {\n    this.title = title\n    this.author = author\n  }\n}',
+      tests: [['Stores them', '(() => { const b = new Book("Dune", "Herbert"); return b.title === "Dune" && b.author === "Herbert" })()'], ['Is a Book', 'new Book("a", "b") instanceof Book']],
+    }),
+    task('easy', 'Make one', {
+      prompt: 'Make `pet`, a new `Pet` named `"Rex"` of kind `"dog"`.',
+      starter: 'class Pet {\n  constructor(name, kind) {\n    this.name = name\n    this.kind = kind\n  }\n}\n',
+      hint: '`const pet = new Pet("Rex", "dog")`.',
+      solution: 'class Pet {\n  constructor(name, kind) {\n    this.name = name\n    this.kind = kind\n  }\n}\nconst pet = new Pet("Rex", "dog")',
+      tests: [['pet is a Pet', 'pet instanceof Pet'], ['Its data', 'pet.name === "Rex" && pet.kind === "dog"']],
+    }),
+    task('easy', 'Fix the missing new', {
+      prompt: 'This throws a `TypeError`. Fix it.',
+      starter: 'class Point {\n  constructor(x, y) {\n    this.x = x\n    this.y = y\n  }\n}\nconst p = Point(3, 4)\n',
+      hint: 'Classes are made with `new`.',
+      solution: 'class Point {\n  constructor(x, y) {\n    this.x = x\n    this.y = y\n  }\n}\nconst p = new Point(3, 4)',
+      tests: [['p is a Point', 'p instanceof Point && p.x === 3 && p.y === 4']],
+    }),
+    task('medium', 'Starting values', {
+      prompt: 'Write a class `Account` with a constructor taking `owner` and `opening` (default 0). Set `owner`, `balance` (to `opening`) and `history` (an empty array).',
+      hint: '`constructor(owner, opening = 0)`.',
+      solution: 'class Account {\n  constructor(owner, opening = 0) {\n    this.owner = owner\n    this.balance = opening\n    this.history = []\n  }\n}',
+      tests: [['Default', same('new Account("Kim")', '{ owner: "Kim", balance: 0, history: [] }')], ['Opening', is('new Account("Al", 50).balance', 50)], ['Separate histories', '(() => { const a = new Account("a"); const b = new Account("b"); a.history.push(1); return b.history.length === 0 })()']],
+    }),
+    task('medium', 'Worked out', {
+      prompt: 'Write a class `Rectangle` whose constructor takes `width` and `height` and also sets `area` to their product.',
+      hint: '`this.area = width * height`.',
+      solution: 'class Rectangle {\n  constructor(width, height) {\n    this.width = width\n    this.height = height\n    this.area = width * height\n  }\n}',
+      tests: [['3 by 4', same('new Rectangle(3, 4)', '{ width: 3, height: 4, area: 12 }')], ['5 by 5', is('new Rectangle(5, 5).area', 25)]],
+    }),
+    task('medium', 'A list of instances', {
+      prompt: 'Set `players` to an array of `Player`s, one for each name in `names`, each with a `score` of 0.',
+      starter: 'class Player {\n  constructor(name) {\n    this.name = name\n    this.score = 0\n  }\n}\nconst names = ["Ana", "Ben", "Cal"]\n',
+      hint: '`names.map((n) => new Player(n))`.',
+      solution: 'class Player {\n  constructor(name) {\n    this.name = name\n    this.score = 0\n  }\n}\nconst names = ["Ana", "Ben", "Cal"]\nconst players = names.map((n) => new Player(n))',
+      tests: [['All Players', 'players.length === 3 && players.every((p) => p instanceof Player)'], ['Names', same('players.map((p) => p.name)', '["Ana", "Ben", "Cal"]')]],
+    }),
+    task('hard', 'Check the input', {
+      prompt: 'Write a class `Temperature` whose constructor takes `celsius` and throws a `RangeError("Below absolute zero")` if it is below -273.15. Store it as `celsius`.',
+      hint: 'A guard clause at the top of the constructor.',
+      solution: 'class Temperature {\n  constructor(celsius) {\n    if (celsius < -273.15) throw new RangeError("Below absolute zero")\n    this.celsius = celsius\n  }\n}',
+      tests: [['Fine', is('new Temperature(20).celsius', 20)], ['Too cold', '(() => { try { new Temperature(-300) } catch (e) { return e instanceof RangeError } return false })()']],
+    }),
+    task('hard', 'From an object', {
+      prompt: 'Write a class `User` whose constructor takes one object `{ name, email, admin = false }` (destructured) and stores the three properties, with `name` trimmed.',
+      hint: '`constructor({ name, email, admin = false }) { this.name = name.trim() … }`.',
+      solution: 'class User {\n  constructor({ name, email, admin = false }) {\n    this.name = name.trim()\n    this.email = email\n    this.admin = admin\n  }\n}',
+      tests: [['Default admin', same('new User({ name: " Kim ", email: "k@x.io" })', '{ name: "Kim", email: "k@x.io", admin: false }')], ['Admin', is('new User({ name: "Al", email: "a@x.io", admin: true }).admin', true)]],
+    }),
+    task('expert', 'Count the instances', {
+      prompt: 'Write a class `Ticket` whose constructor takes `event` and gives each ticket a `number`: 1 for the first ticket made, 2 for the next, and so on. Keep the count in a variable outside the class.',
+      hint: '`let made = 0` before the class; in the constructor, `made++` then `this.number = made`.',
+      solution: 'let made = 0\nclass Ticket {\n  constructor(event) {\n    made++\n    this.event = event\n    this.number = made\n  }\n}',
+      tests: [['Numbers go up', '(() => { const a = new Ticket("gig"); const b = new Ticket("gig"); return b.number === a.number + 1 && a.event === "gig" })()']],
+    }),
+    task('expert', 'A deck of cards', {
+      prompt: 'Write a class `Card` (`rank`, `suit`) and set `deck` to all 52 cards: ranks `A 2 3 4 5 6 7 8 9 10 J Q K` in each of the suits `♠ ♥ ♦ ♣`, suit by suit.',
+      starter: 'const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]\nconst suits = ["♠", "♥", "♦", "♣"]\n',
+      hint: '`suits.flatMap((suit) => ranks.map((rank) => new Card(rank, suit)))`.',
+      solution: 'const ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]\nconst suits = ["♠", "♥", "♦", "♣"]\nclass Card {\n  constructor(rank, suit) {\n    this.rank = rank\n    this.suit = suit\n  }\n}\nconst deck = suits.flatMap((suit) => ranks.map((rank) => new Card(rank, suit)))',
+      tests: [['52 cards', 'deck.length === 52 && deck.every((c) => c instanceof Card)'], ['In order', 'deck[0].rank === "A" && deck[0].suit === "♠" && deck[13].suit === "♥" && deck[51].rank === "K"']],
+    }),
+  ],
+  questions: [
+    mc('What is a class?', ['A blueprint for making objects of the same shape', 'A kind of loop', 'An array of objects', 'A CSS style'], 0, 'Instances are made from it.'),
+    mc('When does the `constructor` run?', ['When an object is made with `new`', 'When the class is declared', 'Every time a method is called', 'Never on its own'], 0, 'It sets the new object up.'),
+    mc('What does this show?\n```\nclass P {\n  constructor(x) {\n    this.x = x\n  }\n}\nconsole.log(new P(5).x)\n```', ['`5`', '`undefined`', '`P`', 'An error'], 0, 'The constructor stored it.', { code: 'class P {\n  constructor(x) {\n    this.x = x\n  }\n}\nconsole.log(new P(5).x)', output: '5' }),
+    mc('What happens without `new`, as in `Dog("Rex")`?', ['A TypeError', 'It makes a Dog', 'It returns undefined', 'It makes a plain object'], 0, 'Classes need new.', { code: '// This shows an error\nclass Dog {}\nDog()', error: 'TypeError' }),
+    mc('What is an object made from a class called?', ['An instance', 'A method', 'A constructor', 'A prototype'], 0, 'rex is an instance of Dog.'),
+    mc('What does `console.log(new Dog("Rex", 3))` show, for the lesson\'s Dog?', ['`Dog { name: \'Rex\', age: 3 }`', '`{ name: \'Rex\', age: 3 }`', '`Dog`', '`[object Object]`'], 0, 'The class name comes first.', { code: 'class Dog {\n  constructor(name, age) {\n    this.name = name\n    this.age = age\n  }\n}\nconsole.log(new Dog("Rex", 3))', output: "Dog { name: 'Rex', age: 3 }" }),
+    mc('Why do class names start with a capital?', ['A habit, so they stand out', 'JavaScript requires it', 'It makes them faster', 'Lower case is an error'], 0, 'Dog, BankAccount.'),
+    mc('Do two instances share an array made in the constructor?', ['No: each `new` makes its own', 'Yes', 'Only if empty', 'Only with const'], 0, 'The constructor runs again each time.'),
+    qShort('Which keyword makes a new object from a class?', 'new', 'new Dog("Rex")'),
+  ],
+})
