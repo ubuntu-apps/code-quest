@@ -1,0 +1,102 @@
+// Errors and debugging: throw. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, throwsWhen, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'throw',
+  title: 'throw: raising your own errors',
+  paragraphs: [
+    'JavaScript throws errors when *it* finds a problem. Your functions can do the same when *they* find one, with **`throw`**:',
+    '```\nfunction divide(a, b) {\n  if (b === 0) {\n    throw new Error("Cannot divide by zero")\n  }\n  return a / b\n}\n\nconsole.log(divide(10, 2))\ntry {\n  divide(1, 0)\n} catch (error) {\n  console.log(error.message)\n}\n```',
+    '`throw` stops the function at once, like `return`, but instead of giving a value back it sends an error up to whoever called it, and on up until some `catch` handles it. If nothing catches it, the program stops with that error.',
+    'Throw an **`Error` object**, made with `new Error("message")`, not a bare string. Error objects carry a `name`, a `message`, and a record of where they came from, which makes them far easier to debug.',
+    'Why throw instead of returning something like `-1` or `null`? A returned "bad" value is easy to forget to check, and then flows on through the program until something much later goes strangely wrong. A thrown error can\'t be ignored: it stops things right where the problem is.',
+    'Use the built-in error types when they fit. `TypeError` for a value of the wrong kind, `RangeError` for a number outside what is allowed:',
+    '```\nfunction setVolume(level) {\n  if (typeof level !== "number") throw new TypeError("Volume must be a number")\n  if (level < 0 || level > 10) throw new RangeError("Volume must be 0 to 10")\n  return `Volume ${level}`\n}\n\nconsole.log(setVolume(7))\ntry {\n  setVolume(99)\n} catch (e) {\n  console.log(e.name, e.message)\n}\n```',
+    'The checks at the top of a function, which throw (or return) early on bad input, are called **guard clauses**. They keep the main code below simple, because by then the input is known to be good.',
+  ],
+  sandboxCode: 'function divide(a, b) {\n  if (b === 0) throw new Error("Cannot divide by zero")\n  return a / b\n}\nconsole.log(divide(10, 2))\ntry {\n  divide(1, 0)\n} catch (error) {\n  console.log(error.message)\n}',
+  sandboxSnippets: [
+    snippet('Not caught', '// This shows an error that nothing catches\nfunction fail() {\n  throw new Error("Nobody caught me")\n}\nfail()'),
+    snippet('Up the calls', 'function inner() {\n  throw new Error("from inner")\n}\nfunction outer() {\n  inner()\n  console.log("not reached")\n}\ntry {\n  outer()\n} catch (e) {\n  console.log("caught:", e.message)\n}'),
+    snippet('Error types', 'try {\n  throw new RangeError("too big")\n} catch (e) {\n  console.log(e.name, e instanceof RangeError, e instanceof Error)\n}'),
+    snippet('Guard clauses', 'function greet(name) {\n  if (!name) throw new Error("A name is needed")\n  return `Hello, ${name}!`\n}\nconsole.log(greet("Ada"))'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Statements/throw', 'MDN: throw'),
+  challenges: [
+    task('easy', 'No dividing by zero', {
+      prompt: 'Make `divide` throw `new Error("Cannot divide by zero")` when `b` is 0.',
+      starter: 'function divide(a, b) {\n  return a / b\n}\n',
+      hint: '`if (b === 0) throw new Error("Cannot divide by zero")` at the top.',
+      solution: 'function divide(a, b) {\n  if (b === 0) throw new Error("Cannot divide by zero")\n  return a / b\n}',
+      tests: [['divide(10, 2) is 5', is('divide(10, 2)', 5)], ['divide(1, 0) throws', throwsWhen('divide(1, 0)', 'Cannot divide by zero')]],
+    }),
+    task('easy', 'A name is needed', {
+      prompt: 'Write `greet(name)`, returning `Hello, NAME!`, but throwing an `Error` with the message `A name is needed` when `name` is an empty text.',
+      hint: '`if (name === "") throw new Error("A name is needed")`.',
+      solution: 'function greet(name) {\n  if (name === "") throw new Error("A name is needed")\n  return `Hello, ${name}!`\n}',
+      tests: [['Greets', is('greet("Ada")', 'Hello, Ada!')], ['Empty throws', throwsWhen('greet("")', 'A name is needed')]],
+    }),
+    task('easy', 'Catch your own', {
+      prompt: 'Call `withdraw(50)` inside a `try`, and in the `catch` set `problem` to the error\'s message.',
+      starter: 'let balance = 20\nfunction withdraw(amount) {\n  if (amount > balance) throw new Error("Not enough money")\n  balance -= amount\n}\nlet problem = ""\n',
+      hint: '`try { withdraw(50) } catch (e) { problem = e.message }`.',
+      solution: 'let balance = 20\nfunction withdraw(amount) {\n  if (amount > balance) throw new Error("Not enough money")\n  balance -= amount\n}\nlet problem = ""\ntry {\n  withdraw(50)\n} catch (e) {\n  problem = e.message\n}',
+      tests: [['problem is set', is('problem', 'Not enough money')], ['balance unchanged', is('balance', 20)], ['Uses try', uses('try')]],
+    }),
+    task('medium', 'The right type', {
+      prompt: 'Write `setVolume(level)`: throw a `TypeError` if `level` isn\'t a number, a `RangeError` if it is below 0 or above 10, else return `Volume N`.',
+      hint: 'Two guard clauses: `typeof level !== "number"`, then the range.',
+      solution: 'function setVolume(level) {\n  if (typeof level !== "number") throw new TypeError("Volume must be a number")\n  if (level < 0 || level > 10) throw new RangeError("Volume must be 0 to 10")\n  return `Volume ${level}`\n}',
+      tests: [['Volume 7', is('setVolume(7)', 'Volume 7')], ['Text', throwsWhen('setVolume("7")', 'TypeError')], ['Too high', throwsWhen('setVolume(11)', 'RangeError')], ['Too low', throwsWhen('setVolume(-1)', 'RangeError')]],
+    }),
+    task('medium', 'Square roots', {
+      prompt: 'Write `root(n)`, returning `Math.sqrt(n)`, but throwing a `RangeError` with the message `No square root of a negative number` for negative `n`.',
+      hint: 'A guard clause: `if (n < 0) throw new RangeError(…)`.',
+      solution: 'function root(n) {\n  if (n < 0) throw new RangeError("No square root of a negative number")\n  return Math.sqrt(n)\n}',
+      tests: [['root(9) is 3', is('root(9)', 3)], ['root(0) is 0', is('root(0)', 0)], ['root(-4) throws', throwsWhen('root(-4)', 'RangeError: No square root of a negative number')]],
+    }),
+    task('medium', 'Not a bare string', {
+      prompt: '`check` throws a bare string. Change it to throw a proper `Error` with the same message.',
+      starter: 'function check(age) {\n  if (age < 0) throw "Age can\'t be negative"\n  return age\n}\n',
+      hint: '`throw new Error("Age can\'t be negative")`.',
+      solution: 'function check(age) {\n  if (age < 0) throw new Error("Age can\'t be negative")\n  return age\n}',
+      tests: [['Throws an Error', '(() => { try { check(-1) } catch (e) { return e instanceof Error && e.message === "Age can\'t be negative" } return false })()'], ['Good ages pass', is('check(30)', 30)]],
+    }),
+    task('hard', 'Up through the calls', {
+      prompt: '`checkout` calls `charge`, which throws. Catch the error in `checkout` and return `Payment failed: MESSAGE`; otherwise return `Paid $N`.',
+      starter: 'function charge(amount) {\n  if (amount > 100) throw new Error("Over the limit")\n  return amount\n}\nfunction checkout(amount) {\n  return `Paid $${charge(amount)}`\n}\n',
+      hint: 'Put the `return` with `charge` inside a `try`, and return the failure text from `catch`.',
+      solution: 'function charge(amount) {\n  if (amount > 100) throw new Error("Over the limit")\n  return amount\n}\nfunction checkout(amount) {\n  try {\n    return `Paid $${charge(amount)}`\n  } catch (e) {\n    return `Payment failed: ${e.message}`\n  }\n}',
+      tests: [['Pays', is('checkout(40)', 'Paid $40')], ['Fails', is('checkout(500)', 'Payment failed: Over the limit')]],
+    }),
+    task('hard', 'Every item checked', {
+      prompt: 'Write `parseAges(list)`, returning the list as numbers. If any item isn\'t a whole number of 0 or more, throw an `Error` saying `Bad age: ITEM`.',
+      hint: 'For each item: `const n = Number(item)`; if `!Number.isInteger(n) || n < 0`, throw.',
+      solution: 'function parseAges(list) {\n  return list.map((item) => {\n    const n = Number(item)\n    if (!Number.isInteger(n) || n < 0) throw new Error(`Bad age: ${item}`)\n    return n\n  })\n}',
+      tests: [['Good list', same('parseAges(["3", "40", "0"])', '[3, 40, 0]')], ['Bad item', throwsWhen('parseAges(["3", "x"])', 'Bad age: x')], ['Negative', throwsWhen('parseAges(["-2"])', 'Bad age: -2')], ['Decimal', throwsWhen('parseAges(["2.5"])', 'Bad age: 2.5')]],
+    }),
+    task('expert', 'Throw or return?', {
+      prompt: 'Write `findUser(users, id)`, returning the user with that `id`, or throwing an `Error` with `No user with id ID` when there is none. Then write `nameOrGuest(users, id)`, which uses `findUser` and returns the name, or `"Guest"` if it throws.',
+      hint: '`find`, then throw if the result is `undefined`. `nameOrGuest` wraps the call in `try`.',
+      solution: 'function findUser(users, id) {\n  const user = users.find((u) => u.id === id)\n  if (user === undefined) throw new Error(`No user with id ${id}`)\n  return user\n}\nfunction nameOrGuest(users, id) {\n  try {\n    return findUser(users, id).name\n  } catch {\n    return "Guest"\n  }\n}',
+      tests: [['Finds', is('findUser([{ id: 1, name: "Ana" }], 1).name', 'Ana')], ['Throws', throwsWhen('findUser([], 7)', 'No user with id 7')], ['Name', is('nameOrGuest([{ id: 1, name: "Ana" }], 1)', 'Ana')], ['Guest', is('nameOrGuest([], 1)', 'Guest')]],
+    }),
+    task('expert', 'A stack that complains', {
+      prompt: 'Write `makeStack(limit)`, returning `{ push, pop, size }`. `push(x)` throws a `RangeError("Stack is full")` when there are already `limit` items; `pop()` throws an `Error("Stack is empty")` when there are none; `size()` gives the count.',
+      hint: 'Keep a private array in a closure, with a guard clause in `push` and `pop`.',
+      solution: 'function makeStack(limit) {\n  const items = []\n  return {\n    push: (x) => {\n      if (items.length >= limit) throw new RangeError("Stack is full")\n      items.push(x)\n    },\n    pop: () => {\n      if (items.length === 0) throw new Error("Stack is empty")\n      return items.pop()\n    },\n    size: () => items.length,\n  }\n}',
+      tests: [['Push and pop', '(() => { const s = makeStack(2); s.push(1); s.push(2); return s.pop() === 2 && s.size() === 1 })()'], ['Full', '(() => { const s = makeStack(1); s.push(1); try { s.push(2) } catch (e) { return e.name === "RangeError" && e.message === "Stack is full" } return false })()'], ['Empty', throwsWhen('makeStack(3).pop()', 'Stack is empty')]],
+    }),
+  ],
+  questions: [
+    mc('What does `throw` do?', ['Stops the function and sends an error up to whoever called it', 'Shows a message and carries on', 'Returns undefined', 'Ends the whole program, always'], 0, 'It goes up until something catches it.'),
+    mc('What should you throw?', ['An Error object, like `new Error("…")`', 'A string', 'A number', 'Nothing'], 0, 'Error objects carry a name, a message and where they came from.'),
+    mc('What does this show?\n```\ntry {\n  throw new RangeError("too big")\n} catch (e) {\n  console.log(e.name)\n}\n```', ['`RangeError`', '`too big`', '`Error`', 'Nothing'], 0, 'name is the type.', { code: 'try {\n  throw new RangeError("too big")\n} catch (e) {\n  console.log(e.name)\n}', output: 'RangeError' }),
+    mc('What happens to an error nobody catches?', ['The program stops with it', 'It is ignored', 'It becomes undefined', 'It is logged and the code carries on'], 0, 'Uncaught errors stop the run.'),
+    mc('Why throw rather than return `-1` for bad input?', ['A thrown error can\'t be ignored by mistake', 'It is shorter', 'Returning -1 is an error', 'They are the same'], 0, 'A bad value can slip through unnoticed.'),
+    mc('Which type fits "the number must be 1 to 5"?', ['RangeError', 'TypeError', 'SyntaxError', 'ReferenceError'], 0, 'The value is outside what is allowed.'),
+    mc('What are checks at the top of a function that stop early on bad input called?', ['Guard clauses', 'Catch blocks', 'Base cases', 'Defaults'], 0, 'They guard the code below.'),
+    mc('Is a `RangeError` also an `Error`?', ['Yes', 'No', 'Only if caught', 'Only in a function'], 0, 'All the built-in types are kinds of Error.', { code: 'console.log(new RangeError("x") instanceof Error)', output: 'true' }),
+    qShort('Which word sends an error up from a function?', 'throw', 'throw new Error("…")'),
+  ],
+})

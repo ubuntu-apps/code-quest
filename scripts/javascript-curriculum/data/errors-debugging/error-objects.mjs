@@ -1,0 +1,102 @@
+// Errors and debugging: Error objects. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, throwsWhen, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'error_objects',
+  title: 'Error objects: name, message and kind',
+  paragraphs: [
+    'A caught error is an ordinary object you can inspect. Every error has a **`name`** (its type) and a **`message`**. It also has a `stack`, a text trace of the function calls that led to it, which tools use to point at the line.',
+    '```\ntry {\n  JSON.parse("{")\n} catch (e) {\n  console.log(e.name)\n  console.log(e.message)\n  console.log(e instanceof SyntaxError)\n}\n```',
+    'Often you want to handle **some** errors and not others. **`instanceof`** checks an error\'s kind. Handle the ones you expect, and **rethrow** the rest with `throw e`, so real bugs aren\'t swallowed:',
+    '```\nfunction readNumber(text) {\n  try {\n    return JSON.parse(text)\n  } catch (e) {\n    if (e instanceof SyntaxError) return 0\n    throw e\n  }\n}\nconsole.log(readNumber("12"), readNumber("oops"))\n```',
+    'You can attach extra information to an error. The standard way to say "this error happened because of that one" is the **`cause`** option: `new Error("Could not load settings", { cause: e })`. The new error explains what *your* code was trying to do, while `cause` keeps the original details.',
+    'You can also add your own properties, like a `code` that other code can check without reading the message:',
+    '```\nfunction withdraw(balance, amount) {\n  if (amount > balance) {\n    const error = new Error("Not enough money")\n    error.code = "INSUFFICIENT_FUNDS"\n    throw error\n  }\n  return balance - amount\n}\ntry {\n  withdraw(10, 50)\n} catch (e) {\n  console.log(e.code)\n}\n```',
+    'Messages are for people, so make them say what went wrong and, where you can, with which value: `Age must be 0 or more, got -3` is much more useful than `Invalid`.',
+  ],
+  sandboxCode: 'try {\n  JSON.parse("{")\n} catch (e) {\n  console.log(e.name, "|", e.message, "|", e instanceof SyntaxError)\n}',
+  sandboxSnippets: [
+    snippet('Kinds', 'const errors = [new TypeError("t"), new RangeError("r"), new Error("e")]\nfor (const e of errors) console.log(e.name, e instanceof TypeError)'),
+    snippet('Rethrow', 'try {\n  try {\n    null.x\n  } catch (e) {\n    if (e instanceof SyntaxError) console.log("handled")\n    else throw e\n  }\n} catch (outer) {\n  console.log("outer caught", outer.name)\n}'),
+    snippet('A cause', 'try {\n  try {\n    JSON.parse("{")\n  } catch (e) {\n    throw new Error("Could not load settings", { cause: e })\n  }\n} catch (e) {\n  console.log(e.message, "/", e.cause.name)\n}'),
+    snippet('A code', 'const err = new Error("Not found")\nerr.code = 404\nconsole.log(err.code, err.message)'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Global_Objects/Error', 'MDN: Error'),
+  challenges: [
+    task('easy', 'What kind?', {
+      prompt: 'Write `kindOf(fn)`, which calls `fn` and returns the `name` of the error it throws, or `"none"`.',
+      hint: '`try { fn() } catch (e) { return e.name }`, then `return "none"`.',
+      solution: 'function kindOf(fn) {\n  try {\n    fn()\n  } catch (e) {\n    return e.name\n  }\n  return "none"\n}',
+      tests: [['TypeError', is('kindOf(() => null.x)', 'TypeError')], ['SyntaxError', is('kindOf(() => JSON.parse("{"))', 'SyntaxError')], ['none', is('kindOf(() => 1)', 'none')]],
+    }),
+    task('easy', 'instanceof', {
+      prompt: 'Set `isRange` to whether `err` is a `RangeError`, using `instanceof`.',
+      starter: 'const err = new RangeError("Too many")\n',
+      hint: '`err instanceof RangeError`.',
+      solution: 'const err = new RangeError("Too many")\nconst isRange = err instanceof RangeError',
+      tests: [['isRange is true', is('isRange', true)], ['Uses instanceof', uses('instanceof')]],
+      alt: 'const err = new TypeError("Too many")',
+    }),
+    task('easy', 'A helpful message', {
+      prompt: 'Make `checkAge` throw a `RangeError` with the message `Age must be 0 or more, got AGE`.',
+      starter: 'function checkAge(age) {\n  if (age < 0) throw new RangeError("Invalid")\n  return age\n}\n',
+      hint: 'A template literal: `` `Age must be 0 or more, got ${age}` ``.',
+      solution: 'function checkAge(age) {\n  if (age < 0) throw new RangeError(`Age must be 0 or more, got ${age}`)\n  return age\n}',
+      tests: [['-3', throwsWhen('checkAge(-3)', 'RangeError: Age must be 0 or more, got -3')], ['-1', throwsWhen('checkAge(-1)', 'got -1')], ['Good age', is('checkAge(4)', 4)]],
+    }),
+    task('medium', 'Only the expected one', {
+      prompt: 'Change `readNumber` so it returns 0 only for a `SyntaxError`, and rethrows any other error.',
+      starter: 'function readNumber(text) {\n  try {\n    return JSON.parse(text)\n  } catch (e) {\n    return 0\n  }\n}\n',
+      hint: '`if (e instanceof SyntaxError) return 0`, then `throw e`.',
+      solution: 'function readNumber(text) {\n  try {\n    return JSON.parse(text)\n  } catch (e) {\n    if (e instanceof SyntaxError) return 0\n    throw e\n  }\n}',
+      tests: [['Number', is('readNumber("12")', 12)], ['Broken', is('readNumber("x")', 0)], ['Rethrows others', '(() => { const original = JSON.parse; JSON.parse = () => { throw new TypeError("odd") }; try { readNumber("1"); return false } catch (e) { return e.name === "TypeError" } finally { JSON.parse = original } })()']],
+    }),
+    task('medium', 'With a code', {
+      prompt: 'Write `withdraw(balance, amount)`, returning the new balance, or throwing an `Error("Not enough money")` with a `code` of `"INSUFFICIENT_FUNDS"` when `amount` is more than `balance`.',
+      hint: 'Make the error, set `error.code = …`, then `throw error`.',
+      solution: 'function withdraw(balance, amount) {\n  if (amount > balance) {\n    const error = new Error("Not enough money")\n    error.code = "INSUFFICIENT_FUNDS"\n    throw error\n  }\n  return balance - amount\n}',
+      tests: [['Withdraws', is('withdraw(50, 20)', 30)], ['Message', throwsWhen('withdraw(10, 50)', 'Not enough money')], ['Code', '(() => { try { withdraw(1, 2) } catch (e) { return e.code === "INSUFFICIENT_FUNDS" } return false })()']],
+    }),
+    task('medium', 'Message by kind', {
+      prompt: 'Write `friendly(e)`, returning `"Please enter a number"` for a `TypeError`, `"That number is out of range"` for a `RangeError`, and `"Something went wrong"` otherwise.',
+      hint: 'Two `instanceof` checks, then the default.',
+      solution: 'function friendly(e) {\n  if (e instanceof TypeError) return "Please enter a number"\n  if (e instanceof RangeError) return "That number is out of range"\n  return "Something went wrong"\n}',
+      tests: [['TypeError', is('friendly(new TypeError("x"))', 'Please enter a number')], ['RangeError', is('friendly(new RangeError("x"))', 'That number is out of range')], ['Other', is('friendly(new Error("x"))', 'Something went wrong')]],
+    }),
+    task('hard', 'Keep the cause', {
+      prompt: 'Write `loadSettings(text)`, returning the parsed JSON. If parsing fails, throw a new `Error("Could not load settings")` with the original error as its `cause`.',
+      hint: '`throw new Error("Could not load settings", { cause: e })` in the `catch`.',
+      solution: 'function loadSettings(text) {\n  try {\n    return JSON.parse(text)\n  } catch (e) {\n    throw new Error("Could not load settings", { cause: e })\n  }\n}',
+      tests: [['Loads', same('loadSettings(\'{"a":1}\')', '{ a: 1 }')], ['New message', throwsWhen('loadSettings("{")', 'Could not load settings')], ['Keeps the cause', '(() => { try { loadSettings("{") } catch (e) { return e.cause instanceof SyntaxError } return false })()']],
+    }),
+    task('hard', 'Describe it', {
+      prompt: 'Write `describe(e)`, returning `"Name: message"`, and if the error has a `cause`, adding ` (because Name: message)` for the cause.',
+      hint: 'Build the first part, then `if (e.cause)` add the second.',
+      solution: 'function describe(e) {\n  let text = `${e.name}: ${e.message}`\n  if (e.cause) text += ` (because ${e.cause.name}: ${e.cause.message})`\n  return text\n}',
+      tests: [['Plain', is('describe(new TypeError("bad"))', 'TypeError: bad')], ['With a cause', is('describe(new Error("Load failed", { cause: new RangeError("too big") }))', 'Error: Load failed (because RangeError: too big)')]],
+    }),
+    task('expert', 'Retry on one kind', {
+      prompt: 'Write `retry(fn, times)`: call `fn`; if it throws an error with `code` `"BUSY"`, try again, up to `times` calls in all. Return the first result. Rethrow any other error at once, and rethrow the last `"BUSY"` error if every try fails.',
+      hint: 'A loop from 1 to `times` with a `try` inside. In the `catch`: if `e.code !== "BUSY"` or it was the last try, `throw e`.',
+      solution: 'function retry(fn, times) {\n  for (let i = 1; i <= times; i++) {\n    try {\n      return fn()\n    } catch (e) {\n      if (e.code !== "BUSY" || i === times) throw e\n    }\n  }\n}',
+      tests: [['Succeeds on try 3', '(() => { let n = 0; const fn = () => { n++; if (n < 3) { const e = new Error("busy"); e.code = "BUSY"; throw e } return "ok" }; return retry(fn, 5) === "ok" && n === 3 })()'], ['Gives up', '(() => { let n = 0; const fn = () => { n++; const e = new Error("busy"); e.code = "BUSY"; throw e }; try { retry(fn, 2) } catch (e) { return e.code === "BUSY" && n === 2 } return false })()'], ['Other errors at once', '(() => { let n = 0; const fn = () => { n++; throw new TypeError("no") }; try { retry(fn, 5) } catch (e) { return e.name === "TypeError" && n === 1 } return false })()']],
+    }),
+    task('expert', 'Collect the problems', {
+      prompt: 'Write `checkAll(items, check)`: call `check(item)` for each item, and return an array of `"ITEM: message"` for each one that throws (the others are fine).',
+      hint: 'Loop with a `try` around `check(item)`; push in the `catch`.',
+      solution: 'function checkAll(items, check) {\n  const problems = []\n  for (const item of items) {\n    try {\n      check(item)\n    } catch (e) {\n      problems.push(`${item}: ${e.message}`)\n    }\n  }\n  return problems\n}',
+      tests: [['Two problems', same('checkAll([5, -1, 20, 3], (n) => { if (n < 0) throw new Error("negative"); if (n > 10) throw new Error("too big") })', '["-1: negative", "20: too big"]')], ['None', same('checkAll([1], () => {})', '[]')]],
+    }),
+  ],
+  questions: [
+    mc('What does `e.name` give?', ['The kind of error, like "TypeError"', 'The message', 'The line', 'The function name'], 0, 'message is the text.'),
+    mc('What does this show?\n```\ntry {\n  JSON.parse("{")\n} catch (e) {\n  console.log(e instanceof SyntaxError)\n}\n```', ['`true`', '`false`', '`SyntaxError`', 'An error'], 0, 'Bad JSON gives a SyntaxError.', { code: 'try {\n  JSON.parse("{")\n} catch (e) {\n  console.log(e instanceof SyntaxError)\n}', output: 'true' }),
+    mc('What does `throw e` in a `catch` do?', ['Rethrows the error for someone else to handle', 'Ignores it', 'Shows it and carries on', 'Is a SyntaxError'], 0, 'Pass on what you can\'t handle.'),
+    mc('Why rethrow errors you didn\'t expect?', ['So real bugs aren\'t hidden', 'To make code faster', 'To count them', 'You must always rethrow'], 0, 'Only handle what you understand.'),
+    mc('What is `cause` for?', ['Keeping the original error inside a new one', 'Setting the error type', 'Stopping the program', 'Giving a line number'], 0, 'new Error("…", { cause: e }).'),
+    mc('What does this show?\n```\nconst e = new Error("Not found")\ne.code = 404\nconsole.log(e.code)\n```', ['`404`', '`Not found`', '`undefined`', 'An error'], 0, 'Errors are objects; you can add properties.', { code: 'const e = new Error("Not found")\ne.code = 404\nconsole.log(e.code)', output: '404' }),
+    mc('Which message is most helpful?', ['`Age must be 0 or more, got -3`', '`Invalid`', '`Error`', '`Oops`'], 0, 'Say what went wrong and with what.'),
+    mc('Is a `TypeError` an instance of `Error`?', ['Yes', 'No', 'Only when thrown', 'Only with a message'], 0, 'Every built-in error type is.'),
+    qShort('Which operator checks whether an error is a certain kind, like `e … TypeError`?', 'instanceof', 'e instanceof TypeError'),
+  ],
+})

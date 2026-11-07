@@ -111,6 +111,14 @@ export class JavaScriptBuilders extends CourseBuilders {
     return `((_cq_log, _cq_got) => { console.log = (...v) => { _cq_got.push(...v.map(String).join(" ").split("\\n")) }; try { ${call} } finally { console.log = _cq_log } return JSON.stringify(_cq_got) === ${jsstr(JSON.stringify(lines))} })(console.log, [])`
   }
 
+  /**
+   * Running `call` (JavaScript, e.g. `'divide(1, 0)'`) throws an error whose `name: message`
+   * contains `text` (e.g. `'RangeError'` or `'Cannot divide by zero'`).
+   */
+  throwsWhen(call, text) {
+    return `(() => { try { ${call} } catch (_cq_e) { return (String(_cq_e?.name) + ": " + String(_cq_e?.message)).includes(${jsstr(text)}) } return false })()`
+  }
+
   /** `name` is the same as a JavaScript value, compared as JSON: `same('nums', '[2, 4, 6]')`. */
   same(name, jsValue) {
     return `JSON.stringify(${name}) === JSON.stringify(${jsValue})`

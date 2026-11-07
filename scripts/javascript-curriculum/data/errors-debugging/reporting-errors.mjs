@@ -1,0 +1,100 @@
+// Errors and debugging: Throw, return or carry on. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, throwsWhen } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'reporting_errors',
+  title: 'Throw, return or carry on?',
+  paragraphs: [
+    'When something goes wrong, a function has three choices. Picking the right one makes code much easier to work with.',
+    '**Throw** when the caller made a mistake or the problem should stop things: a negative quantity, a missing required argument, a broken file. The error can\'t be ignored.',
+    '**Return a "not found" value** (`undefined`, `null`, `-1`) when "nothing" is a normal answer, like `find` does. Searching for a user who doesn\'t exist isn\'t an error.',
+    '**Return a result object** when failing is expected and the caller will usually want to handle it right there, like checking a form. A common shape is `{ ok: true, value }` or `{ ok: false, error }`:',
+    '```\nfunction parseAge(text) {\n  const n = Number(text)\n  if (text.trim() === "" || !Number.isInteger(n)) return { ok: false, error: "Age must be a whole number" }\n  if (n < 0) return { ok: false, error: "Age can\'t be negative" }\n  return { ok: true, value: n }\n}\n\nconst result = parseAge("abc")\nif (result.ok) {\n  console.log("Age:", result.value)\n} else {\n  console.log("Problem:", result.error)\n}\n```',
+    'When processing many items, one bad item usually shouldn\'t stop the rest. Catch per item, keep the good ones, and collect the problems to report at the end:',
+    '```\nconst rows = ["3", "x", "7"]\nconst good = []\nconst bad = []\nfor (const [i, row] of rows.entries()) {\n  const n = Number(row)\n  if (Number.isFinite(n)) good.push(n)\n  else bad.push(`row ${i + 1}: "${row}"`)\n}\nconsole.log(good, bad)\n```',
+    'And catch errors at the level that can actually *do* something about them, often near the top where you can tell the user. Catching deep down only to log and carry on usually leaves the program in a muddle.',
+  ],
+  sandboxCode: 'function parseAge(text) {\n  const n = Number(text)\n  if (text.trim() === "" || !Number.isInteger(n)) return { ok: false, error: "Age must be a whole number" }\n  return { ok: true, value: n }\n}\nconsole.log(parseAge("42"), parseAge("abc"))',
+  sandboxSnippets: [
+    snippet('Not found is normal', 'const users = [{ id: 1 }]\nconsole.log(users.find((u) => u.id === 9))'),
+    snippet('Handle the result', 'const r = { ok: false, error: "Too short" }\nconsole.log(r.ok ? `Value: ${r.value}` : `Error: ${r.error}`)'),
+    snippet('Carry on', 'const texts = ["1", "{", "2"]\nconst out = []\nfor (const t of texts) {\n  try {\n    out.push(JSON.parse(t))\n  } catch {\n    out.push(null)\n  }\n}\nconsole.log(out)'),
+  ],
+  readMore: MDN('Web/JavaScript/Guide/Control_flow_and_error_handling', 'MDN: Control flow and error handling'),
+  challenges: [
+    task('easy', 'A result object', {
+      prompt: 'Write `parseAge(text)`, returning `{ ok: true, value: N }` for a whole number, or `{ ok: false, error: "Age must be a whole number" }`.',
+      hint: '`const n = Number(text)`; check blank text and `Number.isInteger(n)`.',
+      solution: 'function parseAge(text) {\n  const n = Number(text)\n  if (text.trim() === "" || !Number.isInteger(n)) return { ok: false, error: "Age must be a whole number" }\n  return { ok: true, value: n }\n}',
+      tests: [['Good', same('parseAge("42")', '{ ok: true, value: 42 }')], ['Bad', same('parseAge("4.5")', '{ ok: false, error: "Age must be a whole number" }')], ['Blank', is('parseAge("").ok', false)]],
+    }),
+    task('easy', 'Use the result', {
+      prompt: 'Set `message` to `Age: N` if `result` is ok, else `Problem: ERROR`.',
+      starter: 'const result = { ok: false, error: "Age must be a whole number" }\n',
+      hint: '`` result.ok ? `Age: ${result.value}` : `Problem: ${result.error}` ``.',
+      solution: 'const result = { ok: false, error: "Age must be a whole number" }\nconst message = result.ok ? `Age: ${result.value}` : `Problem: ${result.error}`',
+      tests: [['message is right', is('message', 'Problem: Age must be a whole number')]],
+      alt: 'const result = { ok: true, value: 31 }',
+    }),
+    task('easy', 'Not found is fine', {
+      prompt: 'Write `priceOf(menu, item)`, returning the price from the `menu` object, or `null` if the item isn\'t on it. Don\'t throw.',
+      hint: '`item in menu ? menu[item] : null`.',
+      solution: 'function priceOf(menu, item) {\n  return item in menu ? menu[item] : null\n}',
+      tests: [['On the menu', is('priceOf({ tea: 3 }, "tea")', 3)], ['Not on it', is('priceOf({ tea: 3 }, "pie")', null)], ['Free', is('priceOf({ water: 0 }, "water")', 0)]],
+    }),
+    task('medium', 'Throw for misuse', {
+      prompt: 'Write `repeat(text, times)`: throw a `TypeError` if `text` isn\'t a string, a `RangeError` if `times` isn\'t a whole number of 0 or more, else return `text` repeated.',
+      hint: 'These are caller mistakes, so throw. Then `text.repeat(times)`.',
+      solution: 'function repeat(text, times) {\n  if (typeof text !== "string") throw new TypeError("text must be a string")\n  if (!Number.isInteger(times) || times < 0) throw new RangeError("times must be a whole number of 0 or more")\n  return text.repeat(times)\n}',
+      tests: [['Repeats', is('repeat("ab", 3)', 'ababab')], ['Zero', is('repeat("x", 0)', '')], ['Bad text', throwsWhen('repeat(5, 2)', 'TypeError')], ['Bad times', throwsWhen('repeat("x", -1)', 'RangeError')]],
+    }),
+    task('medium', 'Good and bad rows', {
+      prompt: 'Write `split(rows)`, returning `{ good, bad }`: `good` is the rows that are finite numbers (as numbers), `bad` lists the others as `row N: "TEXT"` (N counts from 1).',
+      hint: 'Loop over `rows.entries()`; `Number.isFinite(Number(row))` and not blank.',
+      solution: 'function split(rows) {\n  const good = []\n  const bad = []\n  for (const [i, row] of rows.entries()) {\n    const n = Number(row)\n    if (row.trim() !== "" && Number.isFinite(n)) good.push(n)\n    else bad.push(`row ${i + 1}: "${row}"`)\n  }\n  return { good, bad }\n}',
+      tests: [['Mixed', same('split(["3", "x", "7", ""])', '{ good: [3, 7], bad: [\'row 2: "x"\', \'row 4: ""\'] }')], ['All good', same('split(["1"])', '{ good: [1], bad: [] }')]],
+    }),
+    task('medium', 'Turn a throw into a result', {
+      prompt: 'Write `toResult(fn)`, returning `{ ok: true, value }` from `fn()`, or `{ ok: false, error: MESSAGE }` if it throws.',
+      hint: '`try { return { ok: true, value: fn() } } catch (e) { return { ok: false, error: e.message } }`.',
+      solution: 'function toResult(fn) {\n  try {\n    return { ok: true, value: fn() }\n  } catch (e) {\n    return { ok: false, error: e.message }\n  }\n}',
+      tests: [['Works', same('toResult(() => 2 + 2)', '{ ok: true, value: 4 }')], ['Throws', same('toResult(() => { throw new Error("nope") })', '{ ok: false, error: "nope" }')]],
+    }),
+    task('hard', 'Check a password', {
+      prompt: 'Write `checkPassword(pw)`, returning `{ ok: true }` or `{ ok: false, errors: [...] }` listing every rule broken: `"At least 8 characters"`, `"Include a number"`.',
+      hint: 'Collect messages in an array; ok when it is empty.',
+      solution: 'function checkPassword(pw) {\n  const errors = []\n  if (pw.length < 8) errors.push("At least 8 characters")\n  if (!pw.split("").some((ch) => "0123456789".includes(ch))) errors.push("Include a number")\n  return errors.length === 0 ? { ok: true } : { ok: false, errors }\n}',
+      tests: [['Good', same('checkPassword("secret123")', '{ ok: true }')], ['Short', same('checkPassword("abc1")', '{ ok: false, errors: ["At least 8 characters"] }')], ['Both', same('checkPassword("abc")', '{ ok: false, errors: ["At least 8 characters", "Include a number"] }')]],
+    }),
+    task('hard', 'Import with a report', {
+      prompt: 'Write `importUsers(lines)`. Each line is `name,age`. Return `{ users, skipped }`: `users` are `{ name, age }` for lines with a name and a whole-number age; `skipped` counts the rest.',
+      hint: 'Split each line at `","`; check the name and `Number.isInteger(Number(age))`.',
+      solution: 'function importUsers(lines) {\n  const users = []\n  let skipped = 0\n  for (const line of lines) {\n    const [name, ageText] = line.split(",")\n    const age = Number(ageText)\n    if (name?.trim() && ageText?.trim() && Number.isInteger(age)) {\n      users.push({ name: name.trim(), age })\n    } else {\n      skipped++\n    }\n  }\n  return { users, skipped }\n}',
+      tests: [['Mixed', same('importUsers(["Ana,31", "Ben,x", ",20", "Cal, 40", "Dee"])', '{ users: [{ name: "Ana", age: 31 }, { name: "Cal", age: 40 }], skipped: 3 }')], ['None', same('importUsers([])', '{ users: [], skipped: 0 }')]],
+    }),
+    task('expert', 'All or nothing', {
+      prompt: 'Write `allResults(results)`: given a list of result objects, return `{ ok: true, value: [all values] }` if every one is ok, else the first failed result.',
+      hint: '`const failed = results.find((r) => !r.ok)`; if found, return it.',
+      solution: 'function allResults(results) {\n  const failed = results.find((r) => !r.ok)\n  if (failed) return failed\n  return { ok: true, value: results.map((r) => r.value) }\n}',
+      tests: [['All ok', same('allResults([{ ok: true, value: 1 }, { ok: true, value: 2 }])', '{ ok: true, value: [1, 2] }')], ['One failed', same('allResults([{ ok: true, value: 1 }, { ok: false, error: "x" }, { ok: false, error: "y" }])', '{ ok: false, error: "x" }')], ['Empty', same('allResults([])', '{ ok: true, value: [] }')]],
+    }),
+    task('expert', 'Chain the steps', {
+      prompt: 'Write `then(result, fn)`: if `result` is ok, return `fn(result.value)` (which gives another result); otherwise return `result` unchanged. Then set `final` to `then(parse("21"), double)`.',
+      starter: 'const parse = (t) => (Number.isFinite(Number(t)) ? { ok: true, value: Number(t) } : { ok: false, error: "Not a number" })\nconst double = (n) => (n > 100 ? { ok: false, error: "Too big" } : { ok: true, value: n * 2 })\n',
+      hint: '`return result.ok ? fn(result.value) : result`.',
+      solution: 'const parse = (t) => (Number.isFinite(Number(t)) ? { ok: true, value: Number(t) } : { ok: false, error: "Not a number" })\nconst double = (n) => (n > 100 ? { ok: false, error: "Too big" } : { ok: true, value: n * 2 })\nfunction then(result, fn) {\n  return result.ok ? fn(result.value) : result\n}\nconst final = then(parse("21"), double)',
+      tests: [['final', same('final', '{ ok: true, value: 42 }')], ['Bad text', same('then(parse("x"), double)', '{ ok: false, error: "Not a number" }')], ['Too big', same('then(parse("500"), double)', '{ ok: false, error: "Too big" }')]],
+    }),
+  ],
+  questions: [
+    mc('A user searches for a product that doesn\'t exist. What should the search return?', ['A "not found" value like undefined or an empty list', 'Throw an error', 'Stop the program', '-999'], 0, 'Nothing found is a normal answer.'),
+    mc('Someone calls `setAge(-5)`. What should it do?', ['Throw an error: the caller made a mistake', 'Return -5', 'Return undefined', 'Ignore it'], 0, 'Misuse should be loud.'),
+    mc('What is a result object?', ['An object like `{ ok, value }` or `{ ok, error }` that says how it went', 'An Error', 'An array of errors', 'A function'], 0, 'The caller checks ok.'),
+    mc('What does this show?\n```\nconst r = { ok: false, error: "Too short" }\nconsole.log(r.ok ? r.value : r.error)\n```', ['`Too short`', '`undefined`', '`false`', 'An error'], 0, 'Not ok, so the error.', { code: 'const r = { ok: false, error: "Too short" }\nconsole.log(r.ok ? r.value : r.error)', output: 'Too short' }),
+    mc('Processing 1,000 rows, one is broken. What usually makes sense?', ['Skip it, keep going, and report it at the end', 'Stop at once', 'Ignore it silently', 'Start again'], 0, 'One bad row shouldn\'t lose the rest.'),
+    mc('Where is the best place to catch an error?', ['Where the code can actually do something about it', 'As deep as possible', 'Everywhere', 'Nowhere'], 0, 'Often near the top, to tell the user.'),
+    mc('Why can a result object be easier than try/catch for a form?', ['Failing is expected, and the caller handles it right there', 'It is faster', 'try/catch can\'t be used in forms', 'It hides errors'], 0, 'Expected failures are just data.'),
+    mc('What does `["a", "b"].entries()` give in a `for…of`?', ['[index, item] pairs', 'Only indexes', 'Only items', 'The length'], 0, 'Handy for row numbers.', { code: 'for (const [i, x] of ["a", "b"].entries()) console.log(i, x)', output: '0 a\n1 b' }),
+    qShort('In `{ ok: false, error }`, which property says whether it worked?', 'ok', 'Check result.ok first.'),
+  ],
+})
