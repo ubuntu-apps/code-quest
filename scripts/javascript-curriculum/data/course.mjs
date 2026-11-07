@@ -9,13 +9,14 @@ import { firstStepsTopics } from './first-steps.mjs'
 import { decisionsLoopsTopics } from './decisions-loops.mjs'
 import { arraysObjectsTopics } from './arrays-objects.mjs'
 import { functionsTopics } from './functions.mjs'
+import { workingWithListsTopics } from './working-with-lists.mjs'
 
 export const COURSE = [
   { sectionId: 'first_steps', title: 'First steps', filename: 'first_steps.json', topics: firstStepsTopics },
   { sectionId: 'decisions_loops', title: 'Decisions and loops', filename: 'decisions_loops.json', topics: decisionsLoopsTopics },
   { sectionId: 'arrays_objects', title: 'Arrays and objects', filename: 'arrays_objects.json', topics: arraysObjectsTopics },
   { sectionId: 'functions', title: 'Functions', filename: 'functions.json', topics: functionsTopics },
-  { sectionId: 'working_with_lists', title: 'Working with lists', filename: 'working_with_lists.json', topics: [] },
+  { sectionId: 'working_with_lists', title: 'Working with lists', filename: 'working_with_lists.json', topics: workingWithListsTopics },
   { sectionId: 'errors_debugging', title: 'Errors and debugging', filename: 'errors_debugging.json', topics: [] },
   { sectionId: 'classes', title: 'Classes', filename: 'classes.json', topics: [] },
   { sectionId: 'async', title: 'Asynchronous JavaScript', filename: 'async.json', topics: [] },

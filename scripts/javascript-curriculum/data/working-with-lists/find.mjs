@@ -1,0 +1,102 @@
+// Working with lists: find and findIndex. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'find',
+  title: 'find: the first match',
+  paragraphs: [
+    '`filter` gives every match. Often you want just one: the user with this id, the first score over 90. **`find`** returns the first item that passes your test, and stops looking as soon as it finds it.',
+    '```\nconst users = [\n  { id: 1, name: "Ana" },\n  { id: 2, name: "Ben" },\n  { id: 3, name: "Cal" },\n]\nconsole.log(users.find((u) => u.id === 2))\nconsole.log(users.find((u) => u.id === 9))\n```',
+    'When nothing matches, `find` gives `undefined`, so check before using the result: `user ? user.name : "Unknown"`, or the shortcut `user?.name ?? "Unknown"` (`?.` gives `undefined` instead of an error when `user` is missing).',
+    '**`findIndex`** returns the *position* of the first match instead, or `-1` if there is none. It is what you need to change or remove an item in place.',
+    '```\nconst scores = [55, 72, 91, 98]\nconsole.log(scores.findIndex((s) => s > 90))\nconsole.log(scores.findIndex((s) => s > 100))\n```',
+    '`findLast` and `findLastIndex` do the same from the end, giving the *last* match.',
+    'For a plain value, the simpler tools you already know still fit: `includes(x)` for yes or no, and `indexOf(x)` for its position. Use `find` when the test is more than "equals this", or the items are objects.',
+  ],
+  sandboxCode: 'const users = [\n  { id: 1, name: "Ana" },\n  { id: 2, name: "Ben" },\n]\nconsole.log(users.find((u) => u.id === 2))\nconsole.log(users.findIndex((u) => u.name === "Ana"))',
+  sandboxSnippets: [
+    snippet('Not found', 'const nums = [1, 2, 3]\nconsole.log(nums.find((n) => n > 5), nums.findIndex((n) => n > 5))'),
+    snippet('Safe use', 'const users = [{ id: 1, name: "Ana" }]\nconst u = users.find((x) => x.id === 7)\nconsole.log(u?.name ?? "Unknown")'),
+    snippet('From the end', 'const temps = [12, 25, 18, 27, 15]\nconsole.log(temps.find((t) => t > 20), temps.findLast((t) => t > 20))'),
+    snippet('Change in place', 'const cart = [{ item: "tea", qty: 1 }, { item: "jam", qty: 2 }]\nconst i = cart.findIndex((c) => c.item === "jam")\ncart[i].qty++\nconsole.log(cart)'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Global_Objects/Array/find', 'MDN: Array.prototype.find()'),
+  challenges: [
+    task('easy', 'First big one', {
+      prompt: 'Set `first` to the first number over 50 in `nums`, using `find`.',
+      starter: 'const nums = [12, 48, 63, 7, 90]\n',
+      hint: '`nums.find((n) => n > 50)`.',
+      solution: 'const nums = [12, 48, 63, 7, 90]\nconst first = nums.find((n) => n > 50)',
+      tests: [['first is 63', is('first', 63)], ['Uses find', uses('.find(')]],
+    }),
+    task('easy', 'By id', {
+      prompt: 'Set `user` to the user whose `id` is 3.',
+      starter: 'const users = [\n  { id: 1, name: "Ana" },\n  { id: 3, name: "Cal" },\n  { id: 7, name: "Gus" },\n]\n',
+      hint: '`users.find((u) => u.id === 3)`.',
+      solution: 'const users = [\n  { id: 1, name: "Ana" },\n  { id: 3, name: "Cal" },\n  { id: 7, name: "Gus" },\n]\nconst user = users.find((u) => u.id === 3)',
+      tests: [['user is Cal', same('user', '{ id: 3, name: "Cal" }')], ['It is the same object', 'user === users[1]'], ['Uses find', uses('.find(')]],
+    }),
+    task('easy', 'Where is it?', {
+      prompt: 'Set `at` to the index of the first word that starts with `"b"`, using `findIndex`.',
+      starter: 'const words = ["apple", "kiwi", "banana", "blueberry"]\n',
+      hint: '`words.findIndex((w) => w.startsWith("b"))`.',
+      solution: 'const words = ["apple", "kiwi", "banana", "blueberry"]\nconst at = words.findIndex((w) => w.startsWith("b"))',
+      tests: [['at is 2', is('at', 2)], ['Uses findIndex', uses('.findIndex(')]],
+    }),
+    task('medium', 'Name or Unknown', {
+      prompt: 'Write `nameOf(users, id)`, returning the name of the user with that id, or `"Unknown"` if there isn\'t one.',
+      hint: '`return users.find((u) => u.id === id)?.name ?? "Unknown"`.',
+      solution: 'function nameOf(users, id) {\n  return users.find((u) => u.id === id)?.name ?? "Unknown"\n}',
+      tests: [['Found', is('nameOf([{ id: 1, name: "Ana" }], 1)', 'Ana')], ['Missing', is('nameOf([{ id: 1, name: "Ana" }], 2)', 'Unknown')], ['Empty list', is('nameOf([], 1)', 'Unknown')], ['Uses find', uses('.find(')]],
+    }),
+    task('medium', 'The last one', {
+      prompt: 'Set `lastHot` to the last temperature above 20, using `findLast`.',
+      starter: 'const temps = [12, 25, 18, 27, 15]\n',
+      hint: '`temps.findLast((t) => t > 20)`.',
+      solution: 'const temps = [12, 25, 18, 27, 15]\nconst lastHot = temps.findLast((t) => t > 20)',
+      tests: [['lastHot is 27', is('lastHot', 27)], ['Uses findLast', uses('.findLast(')]],
+    }),
+    task('medium', 'Add one more', {
+      prompt: 'Find the `"jam"` line in `cart` with `findIndex`, and add 1 to its `qty`.',
+      starter: 'const cart = [\n  { item: "tea", qty: 1 },\n  { item: "jam", qty: 2 },\n]\n',
+      hint: '`const i = cart.findIndex((c) => c.item === "jam")`, then `cart[i].qty++`.',
+      solution: 'const cart = [\n  { item: "tea", qty: 1 },\n  { item: "jam", qty: 2 },\n]\nconst i = cart.findIndex((c) => c.item === "jam")\ncart[i].qty++',
+      tests: [['jam qty is 3', 'cart[1].qty === 3'], ['tea unchanged', 'cart[0].qty === 1'], ['Uses findIndex', uses('.findIndex(')]],
+    }),
+    task('hard', 'Add or increase', {
+      prompt: 'Write `addToCart(cart, item)`: if `item` is already in `cart` (an array of `{ item, qty }`), add 1 to its qty; otherwise push `{ item, qty: 1 }`. Return the cart.',
+      hint: 'Use `find`; if it found a line, `line.qty++`, else push a new one.',
+      solution: 'function addToCart(cart, item) {\n  const line = cart.find((c) => c.item === item)\n  if (line) {\n    line.qty++\n  } else {\n    cart.push({ item, qty: 1 })\n  }\n  return cart\n}',
+      tests: [['New item', same('addToCart([], "tea")', '[{ item: "tea", qty: 1 }]')], ['Same item twice', same('addToCart(addToCart([], "tea"), "tea")', '[{ item: "tea", qty: 2 }]')], ['Two items', same('addToCart([{ item: "tea", qty: 1 }], "jam")', '[{ item: "tea", qty: 1 }, { item: "jam", qty: 1 }]')]],
+    }),
+    task('hard', 'Remove by id', {
+      prompt: 'Write `removeById(list, id)`, which removes the item with that `id` from `list` in place (using `findIndex` and `splice`) and returns `true`, or returns `false` if there is none.',
+      hint: '`const i = list.findIndex(...)`; if `i === -1` return false; else `list.splice(i, 1)` and return true.',
+      solution: 'function removeById(list, id) {\n  const i = list.findIndex((x) => x.id === id)\n  if (i === -1) return false\n  list.splice(i, 1)\n  return true\n}',
+      tests: [['Removes it', '(() => { const l = [{ id: 1 }, { id: 2 }]; return removeById(l, 1) === true && l.length === 1 && l[0].id === 2 })()'], ['Not there', '(() => { const l = [{ id: 1 }]; return removeById(l, 5) === false && l.length === 1 })()']],
+    }),
+    task('expert', 'Your own find', {
+      prompt: 'Write `myFind(list, test)`, returning the first item that passes `test`, or `undefined`, without `.find`. Stop as soon as you find it.',
+      hint: 'In a `for…of` loop, `if (test(item)) return item`. After the loop, `return undefined`.',
+      solution: 'function myFind(list, test) {\n  for (const item of list) {\n    if (test(item)) return item\n  }\n  return undefined\n}',
+      tests: [['Finds', is('myFind([1, 4, 9], (n) => n > 3)', 4)], ['Missing', is('myFind([1], (n) => n > 3)', undefined)], ['Stops early', '(() => { let calls = 0; myFind([1, 2, 3, 4], (n) => { calls++; return n === 2 }); return calls === 2 })()'], ['No .find', '!_cq_code.includes(".find(")']],
+    }),
+    task('expert', 'Pair that adds up', {
+      prompt: 'Write `pairFor(nums, target)`, returning `[a, b]`, the first two different items (by position) that add up to `target`, or `null`. Use `find` (or `findIndex`) inside a loop.',
+      hint: 'For each index `i`, look for `nums[j]` with `j > i` and `nums[i] + nums[j] === target`.',
+      solution: 'function pairFor(nums, target) {\n  for (let i = 0; i < nums.length; i++) {\n    const j = nums.findIndex((n, k) => k > i && nums[i] + n === target)\n    if (j !== -1) return [nums[i], nums[j]]\n  }\n  return null\n}',
+      tests: [['Finds a pair', same('pairFor([2, 7, 11, 15], 9)', '[2, 7]')], ['Not the same item twice', same('pairFor([5, 1, 5], 10)', '[5, 5]')], ['None', is('pairFor([1, 2], 10)', null)], ['Uses find or findIndex', '/\\.find(Index)?\\(/.test(_cq_code)']],
+    }),
+  ],
+  questions: [
+    mc('What does `find` give back?', ['The first item that passes the test', 'Every item that passes', 'The index of the first match', 'true or false'], 0, 'Just one item.'),
+    mc('What does `find` give when nothing matches?', ['undefined', 'null', '-1', 'An empty array'], 0, 'No match, no item.', { code: 'console.log([1, 2].find((n) => n > 5))', output: 'undefined' }),
+    mc('What does `findIndex` give when nothing matches?', ['-1', 'undefined', '0', 'null'], 0, 'Like indexOf.', { code: 'console.log([1, 2].findIndex((n) => n > 5))', output: '-1' }),
+    mc('What does this show?\n```\nconsole.log([4, 9, 16].findIndex((n) => n > 5))\n```', ['`1`', '`9`', '`2`', '`[ 9, 16 ]`'], 0, '9 is at index 1.', { code: 'console.log([4, 9, 16].findIndex((n) => n > 5))', output: '1' }),
+    mc('What does `u?.name` give when `u` is undefined?', ['undefined', 'An error', '""', 'null'], 0, '?. stops safely.', { code: 'const u = undefined\nconsole.log(u?.name)', output: 'undefined' }),
+    mc('What does this show?\n```\nconsole.log([3, 8, 5, 9].findLast((n) => n > 4))\n```', ['`9`', '`8`', '`5`', '`3`'], 0, 'The last match is 9.', { code: 'console.log([3, 8, 5, 9].findLast((n) => n > 4))', output: '9' }),
+    mc('Is the item `find` gives a copy?', ['No, it is the same object that is in the list', 'Yes, always', 'Only for numbers', 'Only with findIndex'], 0, 'Changing it changes the list\'s item.'),
+    mc('For a plain value, which is simplest to ask "is it in the list"?', ['`includes`', '`find`', '`findIndex`', '`filter`'], 0, 'includes(value) gives true or false.'),
+    qShort('Which method gives the position of the first item that passes a test?', 'findIndex', 'list.findIndex(test).'),
+  ],
+})
