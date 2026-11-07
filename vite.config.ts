@@ -11,7 +11,7 @@ function startsWith(base: string): RegExp {
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/code-quest/',
+base: '/',
   build: {
     // iPhone 6 tops out at iOS 12 / Safari 12, which cannot parse optional
     // chaining (?.), nullish coalescing (??) or logical-assignment operators.
@@ -76,7 +76,7 @@ export default defineConfig({
         'pwa-512x512-maskable.png',
       ],
       manifest: {
-        id: '/code-quest/',
+        id: '/',
         name: 'CodeQuest',
         short_name: 'CodeQuest',
         description: 'Learn to code through quests of hands-on challenges.',
@@ -85,8 +85,8 @@ export default defineConfig({
         display: 'standalone',
         display_override: ['standalone', 'fullscreen'],
         orientation: 'any',
-        start_url: '/code-quest/',
-        scope: '/code-quest/',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
             src: 'pwa-192x192.png',
