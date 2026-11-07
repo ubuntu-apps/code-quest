@@ -1,0 +1,100 @@
+// Functions: Closures. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'closures',
+  title: 'Closures: functions that remember',
+  paragraphs: [
+    'A function can return another function. The inner one is made fresh on each call, and it can use the outer function\'s parameters and variables:',
+    '```\nfunction multiplier(factor) {\n  return (n) => n * factor\n}\n\nconst double = multiplier(2)\nconst triple = multiplier(3)\nconsole.log(double(5), triple(5))\n```',
+    'Here is the surprising part: `multiplier` has finished running by the time `double(5)` is called, yet `double` still knows `factor` is 2. A function keeps access to the variables around it where it was made, even after that code is done. This is a **closure**: the function "closes over" those variables.',
+    'Each call of `multiplier` makes a new `factor`, so `double` and `triple` each remember their own.',
+    'Closures can also remember a variable that *changes*. This counter keeps `count` private: nothing outside can touch it, except through the function it returns.',
+    '```\nfunction makeCounter() {\n  let count = 0\n  return () => {\n    count++\n    return count\n  }\n}\n\nconst next = makeCounter()\nconsole.log(next(), next(), next())\nconst other = makeCounter()\nconsole.log(other())\n```',
+    'To give back several functions that share the same private state, return them in an object:',
+    '```\nfunction makeWallet(start) {\n  let money = start\n  return {\n    spend: (n) => { money -= n },\n    balance: () => money,\n  }\n}\n\nconst wallet = makeWallet(20)\nwallet.spend(5)\nconsole.log(wallet.balance())\n```',
+    'You will see closures whenever a function is made to be used later: callbacks that remember settings, counters, and "function factories" like `multiplier` that make customised functions.',
+  ],
+  sandboxCode: 'function makeCounter() {\n  let count = 0\n  return () => {\n    count++\n    return count\n  }\n}\n\nconst next = makeCounter()\nconsole.log(next(), next(), next())',
+  sandboxSnippets: [
+    snippet('A factory', 'function greeter(greeting) {\n  return (name) => `${greeting}, ${name}!`\n}\nconst hello = greeter("Hello")\nconst hola = greeter("Hola")\nconsole.log(hello("Mia"), hola("Leo"))'),
+    snippet('Separate counters', 'function makeCounter() {\n  let count = 0\n  return () => ++count\n}\nconst a = makeCounter()\nconst b = makeCounter()\nconsole.log(a(), a(), b())'),
+    snippet('Private', 'function makeSecret() {\n  const secret = "owl"\n  return (guess) => guess === secret\n}\nconst check = makeSecret()\nconsole.log(check("cat"), check("owl"), typeof secret)'),
+    snippet('Shared state', 'function makeWallet(start) {\n  let money = start\n  return { spend: (n) => { money -= n }, balance: () => money }\n}\nconst w = makeWallet(20)\nw.spend(5)\nw.spend(3)\nconsole.log(w.balance())'),
+  ],
+  readMore: MDN('Web/JavaScript/Guide/Closures', 'MDN: Closures'),
+  challenges: [
+    task('easy', 'Make a multiplier', {
+      prompt: 'Use `multiplier` to set `times10` to a function that multiplies by 10.',
+      starter: 'function multiplier(factor) {\n  return (n) => n * factor\n}\n',
+      hint: '`const times10 = multiplier(10)`.',
+      solution: 'function multiplier(factor) {\n  return (n) => n * factor\n}\nconst times10 = multiplier(10)',
+      tests: [['times10(4) is 40', is('times10(4)', 40)], ['times10(0.5) is 5', is('times10(0.5)', 5)]],
+    }),
+    task('easy', 'Return a function', {
+      prompt: 'Write `adder(amount)`, which returns a function that adds `amount` to its argument.',
+      hint: '`return (n) => n + amount`.',
+      solution: 'function adder(amount) {\n  return (n) => n + amount\n}',
+      tests: [['adder(5)(10) is 15', is('adder(5)(10)', 15)], ['adder(-1)(1) is 0', is('adder(-1)(1)', 0)], ['Returns a function', 'typeof adder(1) === "function"']],
+    }),
+    task('easy', 'A greeter', {
+      prompt: 'Write `greeter(greeting)`, returning a function that takes a name and returns `greeting, name!`.',
+      hint: '`` return (name) => `${greeting}, ${name}!` ``.',
+      solution: 'function greeter(greeting) {\n  return (name) => `${greeting}, ${name}!`\n}',
+      tests: [['Hello, Mia!', is('greeter("Hello")("Mia")', 'Hello, Mia!')], ['Hola, Leo!', is('greeter("Hola")("Leo")', 'Hola, Leo!')]],
+    }),
+    task('medium', 'A counter', {
+      prompt: 'Write `makeCounter()`, returning a function that gives 1, then 2, then 3… each time it is called.',
+      hint: '`let count = 0` inside `makeCounter`; the returned function adds 1 and returns it.',
+      solution: 'function makeCounter() {\n  let count = 0\n  return () => {\n    count++\n    return count\n  }\n}',
+      tests: [['Counts 1, 2, 3', '(() => { const next = makeCounter(); return next() === 1 && next() === 2 && next() === 3 })()'], ['Counters are separate', '(() => { const a = makeCounter(); a(); a(); const b = makeCounter(); return b() === 1 && a() === 3 })()']],
+    }),
+    task('medium', 'Count by steps', {
+      prompt: 'Write `makeStepper(step)`, returning a function that gives `step`, `2 * step`, `3 * step`… on each call.',
+      hint: 'Keep a running total inside and add `step` each call.',
+      solution: 'function makeStepper(step) {\n  let total = 0\n  return () => {\n    total += step\n    return total\n  }\n}',
+      tests: [['By 5', '(() => { const s = makeStepper(5); return s() === 5 && s() === 10 && s() === 15 })()'], ['By 2', '(() => { const s = makeStepper(2); s(); return s() === 4 })()']],
+    }),
+    task('medium', 'Check a secret', {
+      prompt: 'Write `lock(code)`, returning a function that takes a guess and returns `true` only if it equals `code`.',
+      hint: '`return (guess) => guess === code`.',
+      solution: 'function lock(code) {\n  return (guess) => guess === code\n}',
+      tests: [['Right guess', is('lock("1234")("1234")', true)], ['Wrong guess', is('lock("1234")("0000")', false)], ['Each lock is separate', '(() => { const a = lock("a"); const b = lock("b"); return a("a") && !a("b") && b("b") })()']],
+    }),
+    task('hard', 'Limited tries', {
+      prompt: 'Write `withTries(code, tries)`: it returns a function that takes a guess and returns `"open"` if right, `"wrong"` if not, and `"locked"` once `tries` wrong guesses have been made (even for the right code).',
+      hint: 'Keep a count of wrong guesses inside. Check "locked" first.',
+      solution: 'function withTries(code, tries) {\n  let wrong = 0\n  return (guess) => {\n    if (wrong >= tries) return "locked"\n    if (guess === code) return "open"\n    wrong++\n    return "wrong"\n  }\n}',
+      tests: [['Opens', is('withTries("7", 2)("7")', 'open')], ['Locks after 2 wrong', '(() => { const t = withTries("7", 2); return t("1") === "wrong" && t("2") === "wrong" && t("7") === "locked" })()'], ['A right guess doesn\'t use a try', '(() => { const t = withTries("7", 1); return t("7") === "open" && t("7") === "open" })()']],
+    }),
+    task('hard', 'A wallet', {
+      prompt: 'Write `makeWallet(start)`, returning `{ add, spend, balance }`: `add(n)` and `spend(n)` change a private amount, and `balance()` returns it.',
+      hint: '`let money = start`, then three small arrow functions in the returned object.',
+      solution: 'function makeWallet(start) {\n  let money = start\n  return {\n    add: (n) => {\n      money += n\n    },\n    spend: (n) => {\n      money -= n\n    },\n    balance: () => money,\n  }\n}',
+      tests: [['Starts at start', is('makeWallet(20).balance()', 20)], ['Adds and spends', '(() => { const w = makeWallet(20); w.spend(5); w.add(10); return w.balance() === 25 })()'], ['Wallets are separate', '(() => { const a = makeWallet(1); const b = makeWallet(1); a.add(5); return b.balance() === 1 })()']],
+    }),
+    task('expert', 'Only once', {
+      prompt: 'Write `once(fn)`, returning a function that calls `fn` the first time and returns its result, then keeps returning that first result without calling `fn` again.',
+      hint: 'Keep `done` and `result` inside. On a call, if not done: `result = fn()`, `done = true`. Return `result`.',
+      solution: 'function once(fn) {\n  let done = false\n  let result\n  return () => {\n    if (!done) {\n      result = fn()\n      done = true\n    }\n    return result\n  }\n}',
+      tests: [['Same result each time', '(() => { let n = 0; const f = once(() => ++n); return f() === 1 && f() === 1 })()'], ['fn runs once', '(() => { let calls = 0; const f = once(() => { calls++; return "x" }); f(); f(); f(); return calls === 1 })()']],
+    }),
+    task('expert', 'Remember answers', {
+      prompt: 'Write `remember(fn)`, returning a function of one argument that gives `fn(x)`, but works each answer out only once, keeping answers in a `Map`.',
+      hint: 'Make `const saved = new Map()` inside. If `saved.has(x)`, return `saved.get(x)`; else work it out, `set` it, return it.',
+      solution: 'function remember(fn) {\n  const saved = new Map()\n  return (x) => {\n    if (saved.has(x)) return saved.get(x)\n    const answer = fn(x)\n    saved.set(x, answer)\n    return answer\n  }\n}',
+      tests: [['Gives the right answers', '(() => { const sq = remember((n) => n * n); return sq(4) === 16 && sq(5) === 25 })()'], ['Works each out once', '(() => { let calls = 0; const f = remember((n) => { calls++; return n + 1 }); f(1); f(1); f(2); f(1); return calls === 2 })()'], ['Uses a Map', uses('Map(')]],
+    }),
+  ],
+  questions: [
+    mc('What is a closure?', ['A function that keeps access to the variables around where it was made', 'A function that ends a program', 'A function with no parameters', 'A loop inside a function'], 0, 'It "closes over" them.'),
+    mc('What does this show?\n```\nfunction multiplier(f) {\n  return (n) => n * f\n}\nconst double = multiplier(2)\nconst triple = multiplier(3)\nconsole.log(double(5), triple(5))\n```', ['`10 15`', '`10 10`', '`5 5`', 'An error'], 0, 'Each made function remembers its own factor.', { code: 'function multiplier(f) {\n  return (n) => n * f\n}\nconst double = multiplier(2)\nconst triple = multiplier(3)\nconsole.log(double(5), triple(5))', output: '10 15' }),
+    mc('What does this show?\n```\nfunction makeCounter() {\n  let c = 0\n  return () => ++c\n}\nconst a = makeCounter()\nconst b = makeCounter()\nconsole.log(a(), a(), b())\n```', ['`1 2 1`', '`1 1 1`', '`1 2 3`', 'An error'], 0, 'a and b have their own count.', { code: 'function makeCounter() {\n  let c = 0\n  return () => ++c\n}\nconst a = makeCounter()\nconst b = makeCounter()\nconsole.log(a(), a(), b())', output: '1 2 1' }),
+    mc('What does `adder(3)(4)` give, for `const adder = (a) => (b) => a + b`?', ['7', '3', 'A function', 'An error'], 0, 'adder(3) is a function; calling it with 4 gives 7.', { code: 'const adder = (a) => (b) => a + b\nconsole.log(adder(3)(4))', output: '7' }),
+    mc('Can code outside `makeCounter` change its `count` directly?', ['No: it is private to the closure', 'Yes, as makeCounter.count', 'Yes, it is global', 'Only once'], 0, 'Only the returned function can reach it.'),
+    mc('When `multiplier(2)` has finished, is `factor` gone?', ['No: the returned function still uses it', 'Yes, always', 'Only if it is a number', 'It becomes undefined'], 0, 'A closure keeps it alive.'),
+    mc('How can a factory give back several functions that share state?', ['Return them in an object', 'Return them one by one', 'Use globals', 'It can\'t'], 0, 'return { add, balance }'),
+    mc('What does this show?\n```\nfunction makeWallet(m) {\n  return { spend: (n) => { m -= n }, balance: () => m }\n}\nconst w = makeWallet(20)\nw.spend(5)\nconsole.log(w.balance())\n```', ['`15`', '`20`', '`5`', 'An error'], 0, 'spend changes the private money.', { code: 'function makeWallet(m) {\n  return { spend: (n) => { m -= n }, balance: () => m }\n}\nconst w = makeWallet(20)\nw.spend(5)\nconsole.log(w.balance())', output: '15' }),
+    qShort('A function that keeps using the variables from where it was made, after that code has finished, is called a …?', 'closure', 'It closes over those variables.'),
+  ],
+})

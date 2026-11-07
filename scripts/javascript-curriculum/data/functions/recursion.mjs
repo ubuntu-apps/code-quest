@@ -1,0 +1,101 @@
+// Functions: Recursion. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'recursion',
+  title: 'Recursion: functions that call themselves',
+  paragraphs: [
+    'A function can call itself. This is **recursion**, and it suits problems that contain a smaller copy of themselves. Counting down from 3 is: show 3, then count down from 2.',
+    '```\nfunction countdown(n) {\n  if (n === 0) {\n    console.log("Lift off!")\n    return\n  }\n  console.log(n)\n  countdown(n - 1)\n}\n\ncountdown(3)\n```',
+    'Every recursive function needs two parts:',
+    '- a **base case**, where the answer is simple and the function stops calling itself (`n === 0` above);\n- a **recursive case**, which calls itself on a smaller problem, getting closer to the base case each time (`n - 1`).',
+    'Forget the base case, or never get closer to it, and the calls go on until JavaScript runs out of room: a `RangeError: Maximum call stack size exceeded`.',
+    'Recursive functions usually return values that build on each other. The factorial of 4, `4 × 3 × 2 × 1`, is 4 times the factorial of 3:',
+    '```\nfunction factorial(n) {\n  if (n <= 1) return 1\n  return n * factorial(n - 1)\n}\n\nconsole.log(factorial(4))\nconsole.log(factorial(10))\n```',
+    'Follow `factorial(3)`: it is `3 * factorial(2)`, which is `2 * factorial(1)`, which is `1`. The answers come back up: 2, then 6.',
+    'Many recursive jobs can also be done with a loop, and a loop is often simpler. Recursion shines with **nested** data, like folders inside folders or lists inside lists, where you don\'t know how deep it goes:',
+    '```\nfunction total(items) {\n  let sum = 0\n  for (const item of items) {\n    sum += Array.isArray(item) ? total(item) : item\n  }\n  return sum\n}\n\nconsole.log(total([1, [2, 3], [4, [5, 6]]]))\n```',
+  ],
+  sandboxCode: 'function factorial(n) {\n  if (n <= 1) return 1\n  return n * factorial(n - 1)\n}\n\nconsole.log(factorial(4), factorial(10))',
+  sandboxSnippets: [
+    snippet('Countdown', 'function countdown(n) {\n  if (n === 0) return console.log("Go!")\n  console.log(n)\n  countdown(n - 1)\n}\ncountdown(3)'),
+    snippet('Sum to n', 'function sumTo(n) {\n  if (n === 0) return 0\n  return n + sumTo(n - 1)\n}\nconsole.log(sumTo(100))'),
+    snippet('Nested lists', 'function depth(x) {\n  if (!Array.isArray(x)) return 0\n  let deepest = 0\n  for (const item of x) deepest = Math.max(deepest, depth(item))\n  return deepest + 1\n}\nconsole.log(depth([1, [2, [3]]]))'),
+    snippet('No base case', '// This shows an error: it never stops\nfunction forever(n) {\n  return forever(n + 1)\n}\nforever(1)'),
+  ],
+  readMore: MDN('Glossary/Recursion', 'MDN: Recursion'),
+  challenges: [
+    task('easy', 'Sum to n', {
+      prompt: 'Write `sumTo(n)` recursively: it returns 1 + 2 + … + `n`, and 0 for `n` of 0.',
+      hint: 'Base case `if (n === 0) return 0`; otherwise `return n + sumTo(n - 1)`.',
+      solution: 'function sumTo(n) {\n  if (n === 0) return 0\n  return n + sumTo(n - 1)\n}',
+      tests: [['sumTo(3) is 6', is('sumTo(3)', 6)], ['sumTo(100) is 5050', is('sumTo(100)', 5050)], ['sumTo(0) is 0', is('sumTo(0)', 0)], ['Calls itself', '/(?<!function\\s+)sumTo\\s*\\(/.test(_cq_code)']],
+    }),
+    task('easy', 'Factorial', {
+      prompt: 'Write `factorial(n)` recursively: `n × (n − 1) × … × 1`, and 1 for 0 or 1.',
+      hint: '`if (n <= 1) return 1`, then `return n * factorial(n - 1)`.',
+      solution: 'function factorial(n) {\n  if (n <= 1) return 1\n  return n * factorial(n - 1)\n}',
+      tests: [['factorial(4) is 24', is('factorial(4)', 24)], ['factorial(0) is 1', is('factorial(0)', 1)], ['factorial(10)', is('factorial(10)', 3628800)], ['Calls itself', '/(?<!function\\s+)factorial\\s*\\(/.test(_cq_code)']],
+    }),
+    task('easy', 'Add the base case', {
+      prompt: '`countdown` never stops. Add a base case so that at 0 it returns `["Go!"]`.',
+      starter: 'function countdown(n) {\n  return [n, ...countdown(n - 1)]\n}\n',
+      hint: '`if (n === 0) return ["Go!"]` at the top.',
+      solution: 'function countdown(n) {\n  if (n === 0) return ["Go!"]\n  return [n, ...countdown(n - 1)]\n}',
+      tests: [['countdown(3)', same('countdown(3)', '[3, 2, 1, "Go!"]')], ['countdown(0)', same('countdown(0)', '["Go!"]')]],
+    }),
+    task('medium', 'Power', {
+      prompt: 'Write `power(base, exp)` recursively, for whole `exp` of 0 or more, without `**` or `Math.pow`.',
+      hint: '`if (exp === 0) return 1`, then `return base * power(base, exp - 1)`.',
+      solution: 'function power(base, exp) {\n  if (exp === 0) return 1\n  return base * power(base, exp - 1)\n}',
+      tests: [['power(2, 10) is 1024', is('power(2, 10)', 1024)], ['power(5, 0) is 1', is('power(5, 0)', 1)], ['power(3, 3) is 27', is('power(3, 3)', 27)], ['No ** or Math.pow', '!_cq_code.includes("**") && !_cq_code.includes("Math.pow")']],
+    }),
+    task('medium', 'Reverse a word', {
+      prompt: 'Write `reverse(text)` recursively: the reverse of `text` is the reverse of all but its first letter, then its first letter.',
+      hint: '`if (text === "") return ""`, then `return reverse(text.slice(1)) + text[0]`.',
+      solution: 'function reverse(text) {\n  if (text === "") return ""\n  return reverse(text.slice(1)) + text[0]\n}',
+      tests: [['reverse("abc")', is('reverse("abc")', 'cba')], ['reverse("level")', is('reverse("level")', 'level')], ['reverse("")', is('reverse("")', '')], ['No .reverse()', '!_cq_code.includes(".reverse(")']],
+    }),
+    task('medium', 'Count the digits', {
+      prompt: 'Write `digits(n)` recursively, returning how many digits a whole number of 0 or more has.',
+      hint: 'Under 10 is 1 digit; otherwise `1 + digits(Math.floor(n / 10))`.',
+      solution: 'function digits(n) {\n  if (n < 10) return 1\n  return 1 + digits(Math.floor(n / 10))\n}',
+      tests: [['digits(7) is 1', is('digits(7)', 1)], ['digits(12345) is 5', is('digits(12345)', 5)], ['digits(100) is 3', is('digits(100)', 3)]],
+    }),
+    task('hard', 'Fibonacci', {
+      prompt: 'Write `fib(n)`: `fib(0)` is 0, `fib(1)` is 1, and each after is the two before added: 0, 1, 1, 2, 3, 5, 8…',
+      hint: '`if (n < 2) return n`, then `return fib(n - 1) + fib(n - 2)`.',
+      solution: 'function fib(n) {\n  if (n < 2) return n\n  return fib(n - 1) + fib(n - 2)\n}',
+      tests: [['fib(0) is 0', is('fib(0)', 0)], ['fib(1) is 1', is('fib(1)', 1)], ['fib(10) is 55', is('fib(10)', 55)], ['fib(20) is 6765', is('fib(20)', 6765)]],
+    }),
+    task('hard', 'Total of nested lists', {
+      prompt: 'Write `total(items)`, returning the sum of every number in a list that may hold lists, at any depth.',
+      hint: 'For each item: if `Array.isArray(item)`, add `total(item)`; else add the item.',
+      solution: 'function total(items) {\n  let sum = 0\n  for (const item of items) {\n    sum += Array.isArray(item) ? total(item) : item\n  }\n  return sum\n}',
+      tests: [['Flat', is('total([1, 2, 3])', 6)], ['Nested', is('total([1, [2, 3], [4, [5, 6]]])', 21)], ['Empty', is('total([])', 0)], ['Deep', is('total([[[[10]]]])', 10)]],
+    }),
+    task('expert', 'Flatten', {
+      prompt: 'Write `flatten(items)` recursively, returning one flat array of everything in a nested list, in order. Don\'t use `.flat`.',
+      hint: 'For an array item, push each of `flatten(item)`; else push the item.',
+      solution: 'function flatten(items) {\n  const out = []\n  for (const item of items) {\n    if (Array.isArray(item)) {\n      out.push(...flatten(item))\n    } else {\n      out.push(item)\n    }\n  }\n  return out\n}',
+      tests: [['Nested', same('flatten([1, [2, [3, [4]]], 5])', '[1, 2, 3, 4, 5]')], ['Words', same('flatten([["a"], "b", [["c"]]])', '["a", "b", "c"]')], ['Empty', same('flatten([])', '[]')], ['No .flat()', '!/\\.flat\\s*\\(/.test(_cq_code)']],
+    }),
+    task('expert', 'Count in a tree', {
+      prompt: 'A folder is `{ name, files, folders }`, where `files` is a number and `folders` an array of folders. Write `countFiles(folder)`, returning all the files in it and every folder inside.',
+      hint: 'Start with `folder.files`, then add `countFiles(sub)` for each sub-folder.',
+      solution: 'function countFiles(folder) {\n  let count = folder.files\n  for (const sub of folder.folders) {\n    count += countFiles(sub)\n  }\n  return count\n}',
+      tests: [['One folder', is('countFiles({ name: "a", files: 3, folders: [] })', 3)], ['A tree', is('countFiles({ name: "root", files: 1, folders: [{ name: "x", files: 2, folders: [{ name: "y", files: 4, folders: [] }] }, { name: "z", files: 5, folders: [] }] })', 12)]],
+    }),
+  ],
+  questions: [
+    mc('What is recursion?', ['A function calling itself', 'A loop inside a loop', 'A function returning a function', 'Calling a function twice'], 0, 'The function uses itself on a smaller problem.'),
+    mc('What is a base case?', ['The simple case where the function stops calling itself', 'The first line of a function', 'The biggest input', 'A default value'], 0, 'Without it, recursion never ends.'),
+    mc('What happens with no base case?', ['A RangeError: the call stack runs out', 'It returns undefined', 'It loops forever quietly', 'It returns 0'], 0, 'Calls pile up until JavaScript stops them.', { code: '// This shows an error\nfunction f(n) {\n  return f(n + 1)\n}\nf(0)', error: 'call stack' }),
+    mc('What does this show?\n```\nfunction s(n) {\n  if (n === 0) return 0\n  return n + s(n - 1)\n}\nconsole.log(s(3))\n```', ['`6`', '`3`', '`1`', '`0`'], 0, '3 + 2 + 1 + 0.', { code: 'function s(n) {\n  if (n === 0) return 0\n  return n + s(n - 1)\n}\nconsole.log(s(3))', output: '6' }),
+    mc('What does `factorial(3)` work out, for `n * factorial(n - 1)` with base 1?', ['3 * 2 * 1 = 6', '3 + 2 + 1 = 6', '3 * 3 = 9', '3'], 0, 'Each call multiplies by n.'),
+    mc('In the recursive case, what must change each call?', ['The problem must get smaller, closer to the base case', 'The function\'s name', 'Nothing', 'The base case'], 0, 'Otherwise it never reaches the end.'),
+    mc('Where does recursion help most?', ['Nested data of unknown depth, like folders in folders', 'Adding two numbers', 'Showing one line', 'Making a variable'], 0, 'Each level is the same problem again.'),
+    mc('What does this show?\n```\nfunction flat(x) {\n  const out = []\n  for (const i of x) Array.isArray(i) ? out.push(...flat(i)) : out.push(i)\n  return out\n}\nconsole.log(flat([1, [2, [3]]]))\n```', ['`[ 1, 2, 3 ]`', '`[ 1, [ 2, [ 3 ] ] ]`', '`6`', 'An error'], 0, 'It flattens each nested list.', { code: 'function flat(x) {\n  const out = []\n  for (const i of x) Array.isArray(i) ? out.push(...flat(i)) : out.push(i)\n  return out\n}\nconsole.log(flat([1, [2, [3]]]))', output: '[ 1, 2, 3 ]' }),
+    qShort('What is the case called where a recursive function stops calling itself? (two words)', 'base case', 'The base case.'),
+  ],
+})

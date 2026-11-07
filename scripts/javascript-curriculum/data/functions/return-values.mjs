@@ -1,0 +1,100 @@
+// Functions: Return values. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, prints, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'return_values',
+  title: 'Return values',
+  paragraphs: [
+    'So far your functions have shown things. More often, a function works something out and hands the answer back with **`return`**. The call then *becomes* that value, and you can store it, show it or use it in a calculation.',
+    '```\nfunction square(n) {\n  return n * n\n}\n\nconst nine = square(3)\nconsole.log(nine)\nconsole.log(square(4) + square(5))\n```',
+    'This is the big difference between `return` and `console.log`. `console.log` shows a value to a person and the program can\'t use it; `return` gives it to the code that called. Most functions should return, and let the caller decide whether to show it.',
+    '`return` also **ends** the function at once: lines after it don\'t run. That makes early returns a neat way to handle special cases first.',
+    '```\nfunction describe(age) {\n  if (age < 13) return "child"\n  if (age < 20) return "teen"\n  return "adult"\n}\n\nconsole.log(describe(8), describe(15), describe(40))\n```',
+    'A function with no `return`, or with a bare `return;`, gives back `undefined`. If a call gives `undefined` and you expected a value, a missing `return` is the usual reason.',
+    '```\nfunction addOops(a, b) {\n  a + b\n}\n\nconsole.log(addOops(2, 3))\n```',
+    'A function returns one value, but that value can be an array or an object, which can hold as much as you like: `return { min, max }`.',
+  ],
+  sandboxCode: 'function square(n) {\n  return n * n\n}\n\nconst nine = square(3)\nconsole.log(nine, square(4) + square(5))',
+  sandboxSnippets: [
+    snippet('Return vs log', 'function logIt(n) {\n  console.log(n * 2)\n}\nfunction giveIt(n) {\n  return n * 2\n}\nconst a = logIt(5)\nconst b = giveIt(5)\nconsole.log(a, b)'),
+    snippet('Early return', 'function sign(n) {\n  if (n > 0) return "positive"\n  if (n < 0) return "negative"\n  return "zero"\n}\nconsole.log(sign(4), sign(-1), sign(0))'),
+    snippet('Use it again', 'function half(n) {\n  return n / 2\n}\nconsole.log(half(half(100)))'),
+    snippet('Return an object', 'function stats(a, b) {\n  return { sum: a + b, diff: a - b }\n}\nconsole.log(stats(10, 4))'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Statements/return', 'MDN: return'),
+  challenges: [
+    task('easy', 'Give it back', {
+      prompt: 'Write `triple(n)`, which returns `n * 3`.',
+      hint: '`return n * 3`.',
+      solution: 'function triple(n) {\n  return n * 3\n}',
+      tests: [['triple(4) is 12', is('triple(4)', 12)], ['triple(0) is 0', is('triple(0)', 0)], ['triple(-2) is -6', is('triple(-2)', -6)]],
+    }),
+    task('easy', 'Fix the missing return', {
+      prompt: '`add` gives `undefined`. Fix it so it returns the sum.',
+      starter: 'function add(a, b) {\n  a + b\n}\n',
+      hint: 'Put `return` in front of `a + b`.',
+      solution: 'function add(a, b) {\n  return a + b\n}',
+      tests: [['add(2, 3) is 5', is('add(2, 3)', 5)], ['add(10, -4) is 6', is('add(10, -4)', 6)]],
+    }),
+    task('easy', 'Use the result', {
+      prompt: 'Set `total` to `price(3)` plus `price(5)`.',
+      starter: 'function price(n) {\n  return n * 2.5\n}\n',
+      hint: '`const total = price(3) + price(5)`.',
+      solution: 'function price(n) {\n  return n * 2.5\n}\nconst total = price(3) + price(5)',
+      tests: [['total is 20', is('total', 20)], ['Calls price', uses('price(3)')]],
+    }),
+    task('medium', 'Full name', {
+      prompt: 'Write `fullName(first, last)`, which returns the two joined with a space.',
+      hint: '`` return `${first} ${last}` ``.',
+      solution: 'function fullName(first, last) {\n  return `${first} ${last}`\n}',
+      tests: [['fullName("Ada", "Lovelace")', is('fullName("Ada", "Lovelace")', 'Ada Lovelace')], ['fullName("Al", "Gore")', is('fullName("Al", "Gore")', 'Al Gore')]],
+    }),
+    task('medium', 'Is it even?', {
+      prompt: 'Write `isEven(n)`, which returns `true` for even numbers and `false` for odd ones.',
+      hint: '`return n % 2 === 0`.',
+      solution: 'function isEven(n) {\n  return n % 2 === 0\n}',
+      tests: [['isEven(4) is true', is('isEven(4)', true)], ['isEven(7) is false', is('isEven(7)', false)], ['isEven(0) is true', is('isEven(0)', true)]],
+    }),
+    task('medium', 'The bigger one', {
+      prompt: 'Write `bigger(a, b)`, which returns the larger of the two, without `Math.max`.',
+      hint: '`if (a > b) return a`, then `return b`.',
+      solution: 'function bigger(a, b) {\n  if (a > b) return a\n  return b\n}',
+      tests: [['bigger(3, 9) is 9', is('bigger(3, 9)', 9)], ['bigger(8, 2) is 8', is('bigger(8, 2)', 8)], ['bigger(5, 5) is 5', is('bigger(5, 5)', 5)], ['No Math.max', '!_cq_code.includes("Math.max")']],
+    }),
+    task('hard', 'Grade it', {
+      prompt: 'Write `grade(score)`, returning `"A"` for 90 and up, `"B"` for 75 and up, `"C"` for 50 and up, else `"F"`. Use early returns.',
+      hint: '`if (score >= 90) return "A"` and so on, then `return "F"`.',
+      solution: 'function grade(score) {\n  if (score >= 90) return "A"\n  if (score >= 75) return "B"\n  if (score >= 50) return "C"\n  return "F"\n}',
+      tests: [['grade(95) is A', is('grade(95)', 'A')], ['grade(75) is B', is('grade(75)', 'B')], ['grade(60) is C', is('grade(60)', 'C')], ['grade(10) is F', is('grade(10)', 'F')]],
+    }),
+    task('hard', 'Total of a list', {
+      prompt: 'Write `sum(numbers)`, which returns the total of an array of numbers (0 for an empty one).',
+      hint: 'Add them up in a loop, then `return total`.',
+      solution: 'function sum(numbers) {\n  let total = 0\n  for (const n of numbers) {\n    total += n\n  }\n  return total\n}',
+      tests: [['sum([1, 2, 3]) is 6', is('sum([1, 2, 3])', 6)], ['sum([10, -5]) is 5', is('sum([10, -5])', 5)], ['sum([]) is 0', is('sum([])', 0)]],
+    }),
+    task('expert', 'Smallest and largest', {
+      prompt: 'Write `range(numbers)`, which returns an object `{ min, max }` for a non-empty array.',
+      hint: 'Start both at `numbers[0]`, loop, update, then `return { min, max }`.',
+      solution: 'function range(numbers) {\n  let min = numbers[0]\n  let max = numbers[0]\n  for (const n of numbers) {\n    if (n < min) min = n\n    if (n > max) max = n\n  }\n  return { min, max }\n}',
+      tests: [['range([4, 1, 9])', same('range([4, 1, 9])', '{ min: 1, max: 9 }')], ['range([-3])', same('range([-3])', '{ min: -3, max: -3 }')], ['range([5, 5, 2, 8])', same('range([5, 5, 2, 8])', '{ min: 2, max: 8 }')]],
+    }),
+    task('expert', 'Count the vowels', {
+      prompt: 'Write `vowels(text)`, which returns how many of `a e i o u` are in `text`, in either case.',
+      hint: 'Loop over `text.toLowerCase()`, counting letters where `"aeiou".includes(letter)`.',
+      solution: 'function vowels(text) {\n  let count = 0\n  for (const letter of text.toLowerCase()) {\n    if ("aeiou".includes(letter)) count++\n  }\n  return count\n}',
+      tests: [['vowels("Hello") is 2', is('vowels("Hello")', 2)], ['vowels("AEIOU") is 5', is('vowels("AEIOU")', 5)], ['vowels("rhythm") is 0', is('vowels("rhythm")', 0)]],
+    }),
+  ],
+  questions: [
+    mc('What does `return` do?', ['Gives a value back to the caller and ends the function', 'Shows a value', 'Starts the function again', 'Declares a variable'], 0, 'The call becomes the returned value.'),
+    mc('What does this show?\n```\nfunction add(a, b) {\n  a + b\n}\nconsole.log(add(2, 3))\n```', ['`undefined`', '`5`', 'An error', '`a + b`'], 0, 'With no return, the call gives undefined.', { code: 'function add(a, b) {\n  a + b\n}\nconsole.log(add(2, 3))', output: 'undefined' }),
+    mc('What does this show?\n```\nfunction f() {\n  return "one"\n  console.log("two")\n}\nconsole.log(f())\n```', ['`one`', '`one` then `two`', '`two`', 'Nothing'], 0, 'return ends the function.', { code: 'function f() {\n  return "one"\n  console.log("two")\n}\nconsole.log(f())', output: 'one' }),
+    mc('What does this show?\n```\nfunction double(n) {\n  return n * 2\n}\nconsole.log(double(double(3)))\n```', ['`12`', '`7`', '`undefined`', 'An error'], 0, 'double(double(3)) is double(6).', { code: 'function double(n) {\n  return n * 2\n}\nconsole.log(double(double(3)))', output: '12' }),
+    mc('Why prefer returning a value to logging it?', ['The caller can use it in more code', 'It is faster', 'console.log is wrong', 'Logging is not allowed in functions'], 0, 'A returned value can be stored, shown or calculated with.'),
+    mc('How can a function hand back two numbers?', ['Return an array or object holding both', 'return a, b', 'Two return lines', 'It can\'t'], 0, 'One value, but it can hold several.'),
+    mc('What does this show?\n```\nfunction shout(n) {\n  console.log(n)\n}\nconst x = shout(10)\nconsole.log(x)\n```', ['`10`, then `undefined`', '`10`, then `10`', '`undefined`, then `10`', 'An error'], 0, 'shout logs 10 and returns nothing.', { code: 'function shout(n) {\n  console.log(n)\n}\nconst x = shout(10)\nconsole.log(x)', output: '10\nundefined' }),
+    mc('What does `isAdult(20)` give, for `function isAdult(age) { return age >= 18 }`?', ['true', '"true"', '20', 'undefined'], 0, 'A comparison gives true or false.', { code: 'function isAdult(age) {\n  return age >= 18\n}\nconsole.log(isAdult(20))', output: 'true' }),
+    qShort('Which word sends a value back from a function?', 'return', 'return value'),
+  ],
+})

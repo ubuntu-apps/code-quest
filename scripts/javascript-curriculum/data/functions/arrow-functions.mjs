@@ -1,0 +1,101 @@
+// Functions: Arrow functions. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, matches, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'arrow_functions',
+  title: 'Arrow functions',
+  paragraphs: [
+    'Functions are values in JavaScript, like numbers and text, so you can store one in a variable. A **function expression** does just that:',
+    '```\nconst square = function (n) {\n  return n * n\n}\n\nconsole.log(square(5))\n```',
+    'An **arrow function** is a shorter way to write the same thing. Drop the word `function` and put `=>` after the parameters:',
+    '```\nconst square = (n) => {\n  return n * n\n}\n\nconsole.log(square(5))\n```',
+    'When the body is a single expression, you can drop the `{ }` and the `return` too: the value after `=>` is returned automatically. This short form is everywhere in modern JavaScript.',
+    '```\nconst square = (n) => n * n\nconst add = (a, b) => a + b\nconst sayHi = () => "Hi!"\n\nconsole.log(square(5), add(2, 3), sayHi())\n```',
+    'With exactly one parameter the brackets are optional (`n => n * n`), but many people keep them. With none or several, they are needed: `() => …`, `(a, b) => …`.',
+    'Two traps. Once you add `{ }`, you need `return` again, or the function gives `undefined`. And to return an object in the short form, wrap it in brackets, `() => ({ ok: true })`, or the `{` is read as the start of the body.',
+    'Unlike `function` declarations, a function stored in a `const` can only be used after that line. Arrow functions also differ in how they handle `this`, which matters for classes later.',
+  ],
+  sandboxCode: 'const square = (n) => n * n\nconst add = (a, b) => a + b\nconst sayHi = () => "Hi!"\n\nconsole.log(square(5), add(2, 3), sayHi())',
+  sandboxSnippets: [
+    snippet('Three ways', 'function a(n) {\n  return n + 1\n}\nconst b = function (n) {\n  return n + 1\n}\nconst c = (n) => n + 1\nconsole.log(a(1), b(1), c(1))'),
+    snippet('Braces need return', 'const oops = (n) => {\n  n * 2\n}\nconst fine = (n) => {\n  return n * 2\n}\nconsole.log(oops(4), fine(4))'),
+    snippet('Returning an object', 'const point = (x, y) => ({ x, y })\nconsole.log(point(3, 4))'),
+    snippet('Functions are values', 'const shout = (t) => t.toUpperCase()\nconst also = shout\nconsole.log(also("hey"), typeof shout)'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Functions/Arrow_functions', 'MDN: Arrow functions'),
+  challenges: [
+    task('easy', 'Your first arrow', {
+      prompt: 'Write `half` as an arrow function returning its argument divided by 2.',
+      hint: '`const half = (n) => n / 2`.',
+      solution: 'const half = (n) => n / 2',
+      tests: [['half(10) is 5', is('half(10)', 5)], ['half(3) is 1.5', is('half(3)', 1.5)], ['Uses =>', uses('=>')]],
+    }),
+    task('easy', 'Turn it into an arrow', {
+      prompt: 'Rewrite `double` as an arrow function in a `const`, in the short form (no `{ }` or `return`).',
+      starter: 'function double(n) {\n  return n * 2\n}\n',
+      hint: '`const double = (n) => n * 2`.',
+      solution: 'const double = (n) => n * 2',
+      tests: [['double(4) is 8', is('double(4)', 8)], ['double(-1) is -2', is('double(-1)', -2)], ['A short arrow', matches('const\\s+double\\s*=\\s*\\(?\\s*\\w+\\s*\\)?\\s*=>\\s*[^{\\s]')], ['No function keyword', '!_cq_code.includes("function")']],
+    }),
+    task('easy', 'Two parameters', {
+      prompt: 'Write `multiply` as an arrow function returning the product of its two arguments.',
+      hint: '`const multiply = (a, b) => a * b`.',
+      solution: 'const multiply = (a, b) => a * b',
+      tests: [['multiply(3, 4) is 12', is('multiply(3, 4)', 12)], ['multiply(5, 0) is 0', is('multiply(5, 0)', 0)], ['Uses =>', uses('=>')]],
+    }),
+    task('medium', 'No parameters', {
+      prompt: 'Write `rollDie` as an arrow function with no parameters that returns a whole number from 1 to 6.',
+      hint: '`() => Math.floor(Math.random() * 6) + 1`.',
+      solution: 'const rollDie = () => Math.floor(Math.random() * 6) + 1',
+      tests: [['Always 1 to 6', '(() => { for (let i = 0; i < 200; i++) { const r = rollDie(); if (!Number.isInteger(r) || r < 1 || r > 6) return false } return true })()'], ['Gives different numbers', 'new Set(Array.from({ length: 200 }, () => rollDie())).size === 6'], ['Uses =>', uses('=>')]],
+    }),
+    task('medium', 'Fix the missing return', {
+      prompt: '`area` gives `undefined`. Fix it, keeping the `{ }`.',
+      starter: 'const area = (w, h) => {\n  w * h\n}\n',
+      hint: 'With braces, the arrow needs `return`.',
+      solution: 'const area = (w, h) => {\n  return w * h\n}',
+      tests: [['area(3, 4) is 12', is('area(3, 4)', 12)], ['area(5, 5) is 25', is('area(5, 5)', 25)], ['Keeps the braces', uses('{')]],
+    }),
+    task('medium', 'An object back', {
+      prompt: 'Write `point` as a short arrow function returning `{ x, y }` from its two arguments.',
+      hint: 'Wrap the object in brackets: `(x, y) => ({ x, y })`.',
+      solution: 'const point = (x, y) => ({ x, y })',
+      tests: [['point(3, 4)', same('point(3, 4)', '{ x: 3, y: 4 }')], ['point(0, -1)', same('point(0, -1)', '{ x: 0, y: -1 }')], ['A short arrow', matches('=>\\s*\\(')]],
+    }),
+    task('hard', 'Initials', {
+      prompt: 'Write `initials` as an arrow function: given a first and last name, it returns their first letters with dots, `"A.L."`.',
+      hint: '`` (first, last) => `${first[0]}.${last[0]}.` ``.',
+      solution: 'const initials = (first, last) => `${first[0]}.${last[0]}.`',
+      tests: [['Ada Lovelace', is('initials("Ada", "Lovelace")', 'A.L.')], ['Grace Hopper', is('initials("Grace", "Hopper")', 'G.H.')], ['Uses =>', uses('=>')]],
+    }),
+    task('hard', 'Clamp', {
+      prompt: 'Write `clamp(n, low, high)` as an arrow function: it returns `n`, but no lower than `low` and no higher than `high`.',
+      hint: '`Math.min(Math.max(n, low), high)`.',
+      solution: 'const clamp = (n, low, high) => Math.min(Math.max(n, low), high)',
+      tests: [['clamp(5, 0, 10) is 5', is('clamp(5, 0, 10)', 5)], ['clamp(-3, 0, 10) is 0', is('clamp(-3, 0, 10)', 0)], ['clamp(99, 0, 10) is 10', is('clamp(99, 0, 10)', 10)], ['Uses =>', uses('=>')]],
+    }),
+    task('expert', 'A longer arrow', {
+      prompt: 'Write `longest` as an arrow function with `{ }`: given an array of words, it returns the longest (the first one, if tied).',
+      hint: 'Keep the best so far in a loop; replace it only when a word is longer. Don\'t forget `return`.',
+      solution: 'const longest = (words) => {\n  let best = words[0]\n  for (const w of words) {\n    if (w.length > best.length) best = w\n  }\n  return best\n}',
+      tests: [['longest(["a", "abc", "ab"])', is('longest(["a", "abc", "ab"])', 'abc')], ['First if tied', is('longest(["cat", "dog"])', 'cat')], ['One word', is('longest(["hello"])', 'hello')], ['Uses =>', uses('=>')]],
+    }),
+    task('expert', 'Celsius and back', {
+      prompt: 'Write two short arrow functions: `toF(c)` returns `c * 9 / 5 + 32`, and `toC(f)` converts back.',
+      hint: '`toC` is `(f - 32) * 5 / 9`.',
+      solution: 'const toF = (c) => c * 9 / 5 + 32\nconst toC = (f) => (f - 32) * 5 / 9',
+      tests: [['toF(100) is 212', is('toF(100)', 212)], ['toF(0) is 32', is('toF(0)', 32)], ['toC(212) is 100', is('toC(212)', 100)], ['They undo each other', 'Math.abs(toC(toF(37)) - 37) < 1e-9']],
+    }),
+  ],
+  questions: [
+    mc('Which is an arrow function returning `n + 1`?', ['`(n) => n + 1`', '`n -> n + 1`', '`function => n + 1`', '`(n) { n + 1 }`'], 0, 'Parameters, =>, then the value.'),
+    mc('What does this show?\n```\nconst f = (n) => {\n  n * 2\n}\nconsole.log(f(4))\n```', ['`undefined`', '`8`', 'An error', '`n * 2`'], 0, 'With braces, a return is needed.', { code: 'const f = (n) => {\n  n * 2\n}\nconsole.log(f(4))', output: 'undefined' }),
+    mc('What does this show?\n```\nconst f = (n) => n * 2\nconsole.log(f(4))\n```', ['`8`', '`undefined`', 'An error', '`4`'], 0, 'The short form returns the value after =>.', { code: 'const f = (n) => n * 2\nconsole.log(f(4))', output: '8' }),
+    mc('How do you return an object from a short arrow?', ['Wrap it in brackets: `() => ({ a: 1 })`', '`() => { a: 1 }`', '`() => return { a: 1 }`', 'You can\'t'], 0, 'Otherwise { starts the body.'),
+    mc('Which needs brackets around the parameters?', ['`() => 1` and `(a, b) => a + b`', 'Only `n => n`', 'None of them', 'All arrow functions'], 0, 'Only exactly one parameter can skip them.'),
+    mc('Can a `const` arrow function be called above the line that makes it?', ['No, it is an error', 'Yes, like a declaration', 'Only once', 'Only in a loop'], 0, 'The const doesn\'t exist yet.', { code: '// This shows an error\nf()\nconst f = () => 1', error: 'f' }),
+    mc('What is `typeof ((x) => x)`?', ['"function"', '"arrow"', '"object"', '"undefined"'], 0, 'Arrows are functions too.', { code: 'console.log(typeof ((x) => x))', output: 'function' }),
+    mc('What does this show?\n```\nconst up = (t) => t.toUpperCase()\nconst also = up\nconsole.log(also("hi"))\n```', ['`HI`', '`hi`', 'An error', '`undefined`'], 0, 'Both names hold the same function.', { code: 'const up = (t) => t.toUpperCase()\nconst also = up\nconsole.log(also("hi"))', output: 'HI' }),
+    qShort('Which two characters make an arrow function\'s arrow?', '=>', 'An equals sign and a greater-than sign.'),
+  ],
+})

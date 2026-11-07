@@ -1,0 +1,101 @@
+// Functions: Default values and rest parameters. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'default_values',
+  title: 'Default values and any number of arguments',
+  paragraphs: [
+    'A missing argument is `undefined`, which is rarely what you want. A **default value**, written with `=` in the parameter list, is used instead whenever that argument is left out.',
+    '```\nfunction greet(name = "friend") {\n  return `Hello, ${name}!`\n}\n\nconsole.log(greet("Mia"))\nconsole.log(greet())\n```',
+    'Defaults make arguments optional. Put the parameters people must give first and the optional ones last, so a call can simply stop early: `price(10)` or `price(10, 0.2)`.',
+    '```\nfunction price(amount, tax = 0.1) {\n  return amount * (1 + tax)\n}\n\nconsole.log(price(100))\nconsole.log(price(100, 0.25))\n```',
+    'A default is used only when the argument is `undefined` (left out). Passing `0`, `""` or `null` counts as giving a value, so the default is not used.',
+    'Some functions take any number of arguments, like `Math.max(3, 9, 4)`. A **rest parameter**, `...name`, collects all the remaining arguments into an array. It must come last.',
+    '```\nfunction total(...numbers) {\n  let sum = 0\n  for (const n of numbers) sum += n\n  return sum\n}\n\nconsole.log(total(1, 2), total(5, 5, 5, 5), total())\n```',
+    'You can mix them: `function log(level, ...messages)` takes one fixed argument, then collects the rest. And with spread, `total(...prices)` passes an array\'s items as separate arguments.',
+    'When a function has many optional settings, a common pattern is to take one **options object** and destructure it with defaults: `function makeButton({ text = "OK", colour = "blue" } = {})`. Calls then name what they set: `makeButton({ colour: "red" })`.',
+  ],
+  sandboxCode: 'function greet(name = "friend") {\n  return `Hello, ${name}!`\n}\nconsole.log(greet("Mia"), greet())\n\nfunction total(...numbers) {\n  let sum = 0\n  for (const n of numbers) sum += n\n  return sum\n}\nconsole.log(total(1, 2, 3))',
+  sandboxSnippets: [
+    snippet('Only when missing', 'function show(n = 10) {\n  return n\n}\nconsole.log(show(), show(0), show(undefined), show(null))'),
+    snippet('Collect the rest', 'function first(head, ...others) {\n  console.log(head, others)\n}\nfirst("a", "b", "c")'),
+    snippet('Spread into rest', 'function count(...items) {\n  return items.length\n}\nconst list = [4, 5, 6]\nconsole.log(count(...list), count(list))'),
+    snippet('Options object', 'function makeButton({ text = "OK", colour = "blue" } = {}) {\n  return `[${text}] in ${colour}`\n}\nconsole.log(makeButton(), makeButton({ colour: "red" }))'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Functions/Default_parameters', 'MDN: Default parameters'),
+  challenges: [
+    task('easy', 'A default name', {
+      prompt: 'Change `greet` so that, with no argument, it returns `Hello, friend!`.',
+      starter: 'function greet(name) {\n  return `Hello, ${name}!`\n}\n',
+      hint: '`function greet(name = "friend")`.',
+      solution: 'function greet(name = "friend") {\n  return `Hello, ${name}!`\n}',
+      tests: [['greet() is Hello, friend!', is('greet()', 'Hello, friend!')], ['greet("Ana") is Hello, Ana!', is('greet("Ana")', 'Hello, Ana!')]],
+    }),
+    task('easy', 'Optional tax', {
+      prompt: 'Write `withTax(amount, rate = 0.2)`, returning `amount` plus the tax.',
+      hint: '`return amount * (1 + rate)`.',
+      solution: 'function withTax(amount, rate = 0.2) {\n  return amount * (1 + rate)\n}',
+      tests: [['withTax(100) is 120', 'Math.abs(withTax(100) - 120) < 1e-9'], ['withTax(50, 0.1) is 55', 'Math.abs(withTax(50, 0.1) - 55) < 1e-9'], ['withTax(80, 0) is 80', 'Math.abs(withTax(80, 0) - 80) < 1e-9']],
+    }),
+    task('easy', 'How many?', {
+      prompt: 'Write `count(...items)`, which returns how many arguments it was given.',
+      hint: 'The rest parameter is an array: `return items.length`.',
+      solution: 'function count(...items) {\n  return items.length\n}',
+      tests: [['count(1, 2, 3) is 3', is('count(1, 2, 3)', 3)], ['count() is 0', is('count()', 0)], ['count("a") is 1', is('count("a")', 1)], ['Uses a rest parameter', uses('...')]],
+    }),
+    task('medium', 'Add them all', {
+      prompt: 'Write `total(...numbers)`, returning the sum of any number of arguments.',
+      hint: 'Loop over `numbers`, adding each.',
+      solution: 'function total(...numbers) {\n  let sum = 0\n  for (const n of numbers) {\n    sum += n\n  }\n  return sum\n}',
+      tests: [['total(1, 2, 3) is 6', is('total(1, 2, 3)', 6)], ['total(10) is 10', is('total(10)', 10)], ['total() is 0', is('total()', 0)]],
+    }),
+    task('medium', 'Repeat with a default', {
+      prompt: 'Write `repeat(text, times = 2)`, returning `text` repeated that many times, joined by spaces.',
+      hint: '`return Array(times).fill(text).join(" ")`, or build it in a loop.',
+      solution: 'function repeat(text, times = 2) {\n  const parts = []\n  for (let i = 0; i < times; i++) {\n    parts.push(text)\n  }\n  return parts.join(" ")\n}',
+      tests: [['repeat("ha") is "ha ha"', is('repeat("ha")', 'ha ha')], ['repeat("go", 3) is "go go go"', is('repeat("go", 3)', 'go go go')], ['repeat("x", 1) is "x"', is('repeat("x", 1)', 'x')]],
+    }),
+    task('medium', 'Spread them in', {
+      prompt: 'Set `best` by calling `highest` with the items of `scores` as separate arguments.',
+      starter: 'function highest(...nums) {\n  return Math.max(...nums)\n}\nconst scores = [61, 94, 78]\n',
+      hint: '`highest(...scores)`.',
+      solution: 'function highest(...nums) {\n  return Math.max(...nums)\n}\nconst scores = [61, 94, 78]\nconst best = highest(...scores)',
+      tests: [['best is 94', is('best', 94)], ['Spreads scores', uses('highest(...scores)')]],
+    }),
+    task('hard', 'A label and the rest', {
+      prompt: 'Write `labelled(label, ...values)`, returning `label: ` followed by the values joined with `, `. For `labelled("Pets", "cat", "dog")` that is `Pets: cat, dog`.',
+      hint: '`` return `${label}: ${values.join(", ")}` ``.',
+      solution: 'function labelled(label, ...values) {\n  return `${label}: ${values.join(", ")}`\n}',
+      tests: [['Pets: cat, dog', is('labelled("Pets", "cat", "dog")', 'Pets: cat, dog')], ['Days: Mon', is('labelled("Days", "Mon")', 'Days: Mon')], ['Nums: 1, 2, 3', is('labelled("Nums", 1, 2, 3)', 'Nums: 1, 2, 3')]],
+    }),
+    task('hard', 'Zero is a value', {
+      prompt: 'Write `discount(price, percent = 10)`, returning the price after taking off `percent`%. Make sure `discount(50, 0)` gives `50`.',
+      hint: 'A default is only used for a missing argument, so `0` stays 0: `return price - price * percent / 100`.',
+      solution: 'function discount(price, percent = 10) {\n  return price - price * percent / 100\n}',
+      tests: [['discount(200) is 180', is('discount(200)', 180)], ['discount(50, 0) is 50', is('discount(50, 0)', 50)], ['discount(80, 25) is 60', is('discount(80, 25)', 60)]],
+    }),
+    task('expert', 'Options object', {
+      prompt: 'Write `makeTitle({ text = "Untitled", stars = 0 } = {})`, returning `text` with that many `*` before and after it, joined by spaces: `makeTitle({ text: "Hi", stars: 2 })` is `** Hi **`, and with no stars just `Hi`.',
+      hint: 'Make the border with `"*".repeat(stars)`; when `stars` is 0, return just `text`.',
+      solution: 'function makeTitle({ text = "Untitled", stars = 0 } = {}) {\n  if (stars === 0) return text\n  const border = "*".repeat(stars)\n  return `${border} ${text} ${border}`\n}',
+      tests: [['Hi with 2 stars', is('makeTitle({ text: "Hi", stars: 2 })', '** Hi **')], ['No stars', is('makeTitle({ text: "Menu" })', 'Menu')], ['Stars only', is('makeTitle({ stars: 1 })', '* Untitled *')], ['No argument at all', is('makeTitle()', 'Untitled')]],
+    }),
+    task('expert', 'Average of any', {
+      prompt: 'Write `average(...numbers)`, returning their average, or `0` when there are none.',
+      hint: 'Check `numbers.length === 0` first; then total ÷ count.',
+      solution: 'function average(...numbers) {\n  if (numbers.length === 0) return 0\n  let sum = 0\n  for (const n of numbers) {\n    sum += n\n  }\n  return sum / numbers.length\n}',
+      tests: [['average(2, 4, 6) is 4', is('average(2, 4, 6)', 4)], ['average(5) is 5', is('average(5)', 5)], ['average() is 0', is('average()', 0)], ['average(1, 2) is 1.5', is('average(1, 2)', 1.5)]],
+    }),
+  ],
+  questions: [
+    mc('What does this show?\n```\nfunction hi(name = "you") {\n  return `Hi, ${name}`\n}\nconsole.log(hi())\n```', ['`Hi, you`', '`Hi, undefined`', 'An error', '`Hi, `'], 0, 'The default fills the missing argument.', { code: 'function hi(name = "you") {\n  return `Hi, ${name}`\n}\nconsole.log(hi())', output: 'Hi, you' }),
+    mc('What does this show?\n```\nfunction f(n = 5) {\n  return n\n}\nconsole.log(f(0))\n```', ['`0`', '`5`', '`undefined`', '`null`'], 0, '0 is a value, so the default isn\'t used.', { code: 'function f(n = 5) {\n  return n\n}\nconsole.log(f(0))', output: '0' }),
+    mc('When is a default value used?', ['When the argument is undefined (left out)', 'When it is 0', 'When it is falsy', 'Always'], 0, 'Only undefined triggers it.'),
+    mc('What is `nums` inside `function f(...nums)` called as `f(1, 2)`?', ['`[1, 2]`', '`1`', '`2`', '`"1, 2"`'], 0, 'A rest parameter is an array.', { code: 'function f(...nums) {\n  console.log(nums)\n}\nf(1, 2)', output: '[ 1, 2 ]' }),
+    mc('Where must a rest parameter go?', ['Last', 'First', 'Anywhere', 'Only alone'], 0, 'It takes everything that is left.'),
+    mc('What does `count(...[4, 5, 6])` pass?', ['Three arguments: 4, 5 and 6', 'One array', 'Nothing', 'The text "4,5,6"'], 0, 'Spread opens the array into arguments.'),
+    mc('Why put optional parameters last?', ['So a call can leave them off at the end', 'JavaScript requires it', 'It makes the function faster', 'They don\'t work first'], 0, 'Arguments fill in order, so trailing ones are easy to skip.'),
+    mc('What does this show?\n```\nfunction f(first, ...rest) {\n  console.log(first, rest)\n}\nf("a", "b", "c")\n```', ['`a [ \'b\', \'c\' ]`', '`a b c`', '`[ \'a\', \'b\', \'c\' ]`', 'An error'], 0, 'first gets "a", rest gets the others.', { code: 'function f(first, ...rest) {\n  console.log(first, rest)\n}\nf("a", "b", "c")', output: "a [ 'b', 'c' ]" }),
+    qShort('How many dots come before a rest parameter?', '3', 'Three: ...name.'),
+  ],
+})

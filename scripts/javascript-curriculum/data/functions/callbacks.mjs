@@ -1,0 +1,102 @@
+// Functions: Callbacks. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, is, makeTopic, mc, prints, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'callbacks',
+  title: 'Callbacks: passing functions around',
+  paragraphs: [
+    'Because functions are values, you can pass one to another function as an argument. A function passed in like this is called a **callback**: the other function "calls it back" when it needs to.',
+    '```\nfunction twice(action) {\n  action()\n  action()\n}\n\ntwice(() => console.log("Hello"))\n```',
+    '`twice` doesn\'t know or care what `action` does; it just calls it two times. The caller decides the behaviour. This lets one function do many different jobs.',
+    'A callback can take arguments, too. Here `applyTo` hands each number to whatever function it is given and collects the answers:',
+    '```\nfunction applyTo(numbers, change) {\n  const out = []\n  for (const n of numbers) {\n    out.push(change(n))\n  }\n  return out\n}\n\nconsole.log(applyTo([1, 2, 3], (n) => n * 10))\nconsole.log(applyTo([1, 2, 3], (n) => n % 2 === 0))\n```',
+    'You can pass a named function as well: `applyTo(prices, addTax)`. Note there are no `()` after `addTax`: you hand over the function itself, and `applyTo` calls it. Writing `addTax()` would call it straight away and pass its result instead.',
+    'Callbacks are all over JavaScript. Arrays have `forEach`, which calls a function for each item, giving the item and its index; the next quest is full of methods like it. Timers (`setTimeout`) and button clicks in web pages work the same way: "when this happens, call this function".',
+    '```\nconst pets = ["cat", "dog"]\npets.forEach((pet, i) => {\n  console.log(i, pet)\n})\n```',
+  ],
+  sandboxCode: 'function twice(action) {\n  action()\n  action()\n}\n\ntwice(() => console.log("Hello"))\n\nconst pets = ["cat", "dog"]\npets.forEach((pet, i) => console.log(i, pet))',
+  sandboxSnippets: [
+    snippet('A named callback', 'function shout(t) {\n  return t.toUpperCase() + "!"\n}\nfunction useOn(text, fn) {\n  return fn(text)\n}\nconsole.log(useOn("hi", shout))'),
+    snippet('With or without ()', 'const greet = () => "hello"\nconsole.log(greet)\nconsole.log(greet())'),
+    snippet('Choose the rule', 'function keep(list, test) {\n  const out = []\n  for (const x of list) {\n    if (test(x)) out.push(x)\n  }\n  return out\n}\nconsole.log(keep([5, 12, 8, 20], (n) => n > 10))'),
+    snippet('forEach', 'let total = 0\n;[3, 4, 5].forEach((n) => {\n  total += n\n})\nconsole.log(total)'),
+  ],
+  readMore: MDN('Glossary/Callback_function', 'MDN: Callback function'),
+  challenges: [
+    task('easy', 'Pass a function', {
+      prompt: 'Call `twice` with an arrow function that shows `Hip hip!`.',
+      starter: 'function twice(action) {\n  action()\n  action()\n}\n',
+      hint: '`twice(() => console.log("Hip hip!"))`.',
+      solution: 'function twice(action) {\n  action()\n  action()\n}\ntwice(() => console.log("Hip hip!"))',
+      tests: [['Shows it twice', prints('Hip hip!', 'Hip hip!')], ['One console.log, inside the callback', 'String(_cq_code.match(/console\\.log/g)?.length) === "1"']],
+      typedOk: true,
+    }),
+    task('easy', 'Call it back', {
+      prompt: 'Write `useOn(value, fn)`, which returns `fn` called with `value`.',
+      hint: '`return fn(value)`.',
+      solution: 'function useOn(value, fn) {\n  return fn(value)\n}',
+      tests: [['Doubles', is('useOn(4, (n) => n * 2)', 8)], ['Shouts', is('useOn("hi", (t) => t.toUpperCase())', 'HI')]],
+    }),
+    task('easy', 'No brackets', {
+      prompt: 'Set `loud` by passing the function `shout` (not a call of it) to `useOn` with `"hey"`.',
+      starter: 'function shout(t) {\n  return t.toUpperCase() + "!"\n}\nfunction useOn(value, fn) {\n  return fn(value)\n}\n',
+      hint: '`useOn("hey", shout)`.',
+      solution: 'function shout(t) {\n  return t.toUpperCase() + "!"\n}\nfunction useOn(value, fn) {\n  return fn(value)\n}\nconst loud = useOn("hey", shout)',
+      tests: [['loud is HEY!', is('loud', 'HEY!')], ['Passes shout itself', uses('useOn("hey", shout)')]],
+    }),
+    task('medium', 'Repeat an action', {
+      prompt: 'Write `repeat(times, action)`, which calls `action` that many times, passing it the round number starting at 1.',
+      hint: '`for (let i = 1; i <= times; i++) action(i)`.',
+      solution: 'function repeat(times, action) {\n  for (let i = 1; i <= times; i++) {\n    action(i)\n  }\n}',
+      tests: [['Calls with 1, 2, 3', '(() => { const got = []; repeat(3, (n) => got.push(n)); return JSON.stringify(got) === "[1,2,3]" })()'], ['repeat(0, …) calls nothing', '(() => { let calls = 0; repeat(0, () => calls++); return calls === 0 })()']],
+    }),
+    task('medium', 'Change every item', {
+      prompt: 'Write `applyTo(list, change)`, returning a new array of `change(item)` for each item.',
+      hint: 'Push `change(item)` for each item into a new array.',
+      solution: 'function applyTo(list, change) {\n  const out = []\n  for (const item of list) {\n    out.push(change(item))\n  }\n  return out\n}',
+      tests: [['Times 10', same('applyTo([1, 2, 3], (n) => n * 10)', '[10, 20, 30]')], ['Lengths', same('applyTo(["a", "bcd"], (t) => t.length)', '[1, 3]')], ['Empty list', same('applyTo([], (n) => n)', '[]')]],
+    }),
+    task('medium', 'forEach', {
+      prompt: 'Use `forEach` on `names` to show each as `1. Ana`, `2. Ben` and so on.',
+      starter: 'const names = ["Ana", "Ben", "Cal"]\n',
+      hint: '`` names.forEach((name, i) => console.log(`${i + 1}. ${name}`)) ``.',
+      solution: 'const names = ["Ana", "Ben", "Cal"]\nnames.forEach((name, i) => {\n  console.log(`${i + 1}. ${name}`)\n})',
+      tests: [['Shows the list', prints('1. Ana', '2. Ben', '3. Cal')], ['Uses forEach', uses('.forEach(')]],
+    }),
+    task('hard', 'Keep what passes', {
+      prompt: 'Write `keep(list, test)`, returning a new array of the items for which `test(item)` is `true`.',
+      hint: '`if (test(item)) out.push(item)`.',
+      solution: 'function keep(list, test) {\n  const out = []\n  for (const item of list) {\n    if (test(item)) out.push(item)\n  }\n  return out\n}',
+      tests: [['Over 10', same('keep([5, 12, 8, 20], (n) => n > 10)', '[12, 20]')], ['Short words', same('keep(["hi", "hello", "yo"], (w) => w.length < 3)', '["hi", "yo"]')], ['None pass', same('keep([1, 2], () => false)', '[]')]],
+    }),
+    task('hard', 'Count the matches', {
+      prompt: 'Write `countIf(list, test)`, returning how many items pass `test`.',
+      hint: 'Add 1 to a count when `test(item)` is true.',
+      solution: 'function countIf(list, test) {\n  let count = 0\n  for (const item of list) {\n    if (test(item)) count++\n  }\n  return count\n}',
+      tests: [['Even numbers', is('countIf([1, 2, 3, 4], (n) => n % 2 === 0)', 2)], ['Starts with a', is('countIf(["ant", "bee", "ape"], (w) => w[0] === "a")', 2)], ['Empty', is('countIf([], () => true)', 0)]],
+    }),
+    task('expert', 'Do it, then tell me', {
+      prompt: 'Write `calculate(a, b, operation, done)`: it works out `operation(a, b)` and passes the answer to `done`. Then call it to add 2 and 3, showing `Answer: 5`.',
+      hint: '`done(operation(a, b))`. The call: `` calculate(2, 3, (x, y) => x + y, (r) => console.log(`Answer: ${r}`)) ``.',
+      solution: 'function calculate(a, b, operation, done) {\n  done(operation(a, b))\n}\ncalculate(2, 3, (x, y) => x + y, (r) => console.log(`Answer: ${r}`))',
+      tests: [['Shows Answer: 5', prints('Answer: 5')], ['Works for times', '(() => { let got; calculate(4, 5, (x, y) => x * y, (r) => { got = r }); return got === 20 })()']],
+    }),
+    task('expert', 'The best by any rule', {
+      prompt: 'Write `best(list, score)`, returning the item with the highest `score(item)` (the first, if tied).',
+      hint: 'Keep the best item and its score; replace only on a higher score.',
+      solution: 'function best(list, score) {\n  let top = list[0]\n  let topScore = score(top)\n  for (const item of list) {\n    const s = score(item)\n    if (s > topScore) {\n      top = item\n      topScore = s\n    }\n  }\n  return top\n}',
+      tests: [['Longest word', is('best(["fig", "banana", "kiwi"], (w) => w.length)', 'banana')], ['Cheapest', same('best([{ p: 5 }, { p: 2 }, { p: 9 }], (x) => -x.p)', '{ p: 2 }')], ['First if tied', is('best(["ab", "cd"], (w) => w.length)', 'ab')]],
+    }),
+  ],
+  questions: [
+    mc('What is a callback?', ['A function passed to another function, to be called by it', 'A function that calls itself', 'A function with no name', 'A function that returns a function'], 0, 'It is "called back" later.'),
+    mc('What does `useOn(5, double)` pass?', ['The function double itself', 'The result of double()', 'The text "double"', 'Nothing'], 0, 'No brackets: the function is handed over.'),
+    mc('What does this show?\n```\nfunction thrice(f) {\n  f()\n  f()\n  f()\n}\nthrice(() => console.log("ran"))\n```', ['`ran` three times', '`ran` once', 'Nothing', 'An error'], 0, 'thrice calls the callback three times.', { code: 'function thrice(f) {\n  f()\n  f()\n  f()\n}\nthrice(() => console.log("ran"))', output: 'ran\nran\nran' }),
+    mc('What does this show?\n```\nfunction applyTo(list, f) {\n  const out = []\n  for (const x of list) out.push(f(x))\n  return out\n}\nconsole.log(applyTo([1, 2], (n) => n * 2))\n```', ['`[ 2, 4 ]`', '`[ 1, 2 ]`', '`6`', 'An error'], 0, 'Each item goes through the callback.', { code: 'function applyTo(list, f) {\n  const out = []\n  for (const x of list) out.push(f(x))\n  return out\n}\nconsole.log(applyTo([1, 2], (n) => n * 2))', output: '[ 2, 4 ]' }),
+    mc('What two things does `forEach` pass its callback?', ['The item and its index', 'The index and the length', 'Only the item', 'The array twice'], 0, '(item, index) => …'),
+    mc('What does `console.log(greet)` show, for `const greet = () => "hi"`?', ['The function, not "hi"', '"hi"', 'undefined', 'An error'], 0, 'Without () the function isn\'t called.', { code: 'const greet = () => "hi"\nconsole.log(typeof greet)', output: 'function' }),
+    mc('Why are callbacks useful?', ['One function can do many jobs, with the caller choosing the behaviour', 'They make code faster', 'They avoid loops', 'They are needed for every function'], 0, 'The work is passed in.'),
+    mc('What does this show?\n```\nconst run = (f) => f(3)\nconsole.log(run((n) => n * n))\n```', ['`9`', '`3`', '`undefined`', 'An error'], 0, 'run calls f with 3, giving 9.', { code: 'const run = (f) => f(3)\nconsole.log(run((n) => n * n))', output: '9' }),
+    qShort('Which array method calls a function once for each item, returning nothing?', 'forEach', 'list.forEach(fn).'),
+  ],
+})
