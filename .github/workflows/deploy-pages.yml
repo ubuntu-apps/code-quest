@@ -1,4 +1,6 @@
-# Build and deploy CodeQuest to GitHub Pages
+# Build and deploy the old copy of CodeQuest to GitHub Pages (ubuntu-apps.github.io/code-quest).
+# CodeQuest now lives at codequest.appfront.cc (see infra/README.md); this copy stays up with a
+# "CodeQuest has moved" banner so learners can back up their progress and take it with them.
 name: Deploy CodeQuest to GitHub Pages
 
 on:
@@ -35,6 +37,9 @@ jobs:
       # Lint and tests gate the deploy, so a broken build never goes live.
       - name: Lint, test, and build
         run: npm run check
+        env:
+          CODEQUEST_BASE: /code-quest/
+          VITE_MOVED_TO: https://codequest.appfront.cc/
 
       # Runs every Python challenge's solution, starter and empty code (see scripts/content-check/).
       - name: Setup Python
