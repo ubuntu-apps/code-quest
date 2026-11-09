@@ -48,3 +48,23 @@ jobs:
         run: |
           npm install --no-save --no-audit --no-fund webr@0.4.2
           npm run check:r
+
+  infra:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install the AWS CDK
+        run: npm install --no-audit --no-fund
+
+      - name: Test and synthesize the AWS stack
+        run: npm test && npm run synth

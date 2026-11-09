@@ -9,9 +9,13 @@ function startsWith(base: string): RegExp {
   return new RegExp(`^${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)
 }
 
+// CodeQuest lives at the root of codequest.appfront.cc. The old copy on GitHub Pages is
+// built with CODEQUEST_BASE=/code-quest/ (see .github/workflows/deploy-pages.yml).
+const base = process.env.CODEQUEST_BASE ?? '/'
+
 // https://vite.dev/config/
 export default defineConfig({
-base: '/',
+  base,
   build: {
     // iPhone 6 tops out at iOS 12 / Safari 12, which cannot parse optional
     // chaining (?.), nullish coalescing (??) or logical-assignment operators.
@@ -76,7 +80,7 @@ base: '/',
         'pwa-512x512-maskable.png',
       ],
       manifest: {
-        id: '/',
+        id: base,
         name: 'CodeQuest',
         short_name: 'CodeQuest',
         description: 'Learn to code through quests of hands-on challenges.',
@@ -85,8 +89,8 @@ base: '/',
         display: 'standalone',
         display_override: ['standalone', 'fullscreen'],
         orientation: 'any',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -110,5 +114,7 @@ base: '/',
   ],
   test: {
     environment: 'happy-dom',
+    // infra/ has its own packages and tests (see infra/README.md).
+    exclude: ['**/node_modules/**', 'infra/**'],
   },
 })

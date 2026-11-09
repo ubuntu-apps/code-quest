@@ -6,7 +6,7 @@
 
 **Learn to code for free, right in your browser.** CodeQuest teaches Python and SQL through quests: each quest is a series of short stages with hands-on challenges, and each stage ends with a gate, a short quiz that opens the next one. Your code runs on your own device, so there is nothing to install, no account to create and no ads.
 
-### [Start learning now](https://ubuntu-apps.github.io/code-quest/)
+### [Start learning now](https://codequest.appfront.cc/)
 
 Open the link on a laptop, a school Chromebook, a tablet or a phone, press **Start your Quest**, and you are writing your first line of Python within a minute.
 
@@ -66,13 +66,14 @@ Requires Node 24 (see `.nvmrc`).
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/code-quest/
+npm run dev        # http://localhost:5173/
 ```
 
 | Command | What it does |
 | --- | --- |
 | `npm run dev` | Dev server with hot reload |
-| `npm run build` | Type-check, build to `dist/`, and add `404.html` for GitHub Pages routing |
+| `npm run build` | Type-check, build to `dist/`, and add `404.html` for the old GitHub Pages copy |
+| `npm run deploy` | Build and upload to codequest.appfront.cc (needs AWS sign-in; see `infra/README.md`) |
 | `npm run check` | Lint, check lesson ids, check the course JSON is up to date, run tests, and build (what CI runs) |
 | `npm run check:generated` | Regenerate every course and fail if the JSON in `public/content/` changed (a data file edited without regenerating) |
 | `npm run lesson-ids:update` | Add new lessons to `scripts/lesson-ids.json` (see [Keeping learners' progress](#keeping-learners-progress)) |
@@ -153,7 +154,7 @@ The R course is being rewritten quest by quest (base R, data-analysis beginners,
 R content is checked with webR, the same runner the app uses: run `npm install --no-save webr@0.4.2` once, then `npm run check:r`. To check it in the browser instead, start `npm run dev`, open the app, and in the browser console run:
 
 ```js
-const { checkR } = await import('/code-quest/scripts/r-curriculum/check-in-browser.mjs')
+const { checkR } = await import('/scripts/r-curriculum/check-in-browser.mjs')
 await checkR()   // or checkR('first_steps')
 ```
 
@@ -161,7 +162,9 @@ It runs every solution (must pass) and starter code (must fail), every sandbox s
 
 ### Deployment
 
-Every push to `main` runs `.github/workflows/deploy-pages.yml`, which lints, tests, builds and publishes `dist/` to GitHub Pages. Pull requests run the same checks in `.github/workflows/ci.yml`.
+CodeQuest is served from **https://codequest.appfront.cc** on AWS (S3 and CloudFront). Deploy with `npm run deploy` from a window signed in to AWS; the first-time setup is in [`infra/README.md`](infra/README.md).
+
+The old address, `ubuntu-apps.github.io/code-quest`, still deploys from `main` through `.github/workflows/deploy-pages.yml`, with a banner that sends learners to the new address and helps them take their progress along. Pull requests run the checks in `.github/workflows/ci.yml`, including the AWS stack's tests.
 
 ## License
 

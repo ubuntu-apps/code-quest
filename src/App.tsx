@@ -3,6 +3,7 @@ import { CodeQuestScreen } from './features/curriculum/CodeQuestScreen'
 import { InstallAppBanner } from './components/InstallAppBanner'
 import { UpdateBanner } from './components/UpdateBanner'
 import { ProgressFileBanner } from './components/ProgressFileBanner'
+import { MovedBanner } from './components/MovedBanner'
 import { learnHomePath, learnLanguagePath } from './features/curriculum/learnPaths'
 import { SupporterLanding } from './features/support/SupporterLanding'
 import { useScreenCounts } from './lib/analytics'
@@ -18,6 +19,7 @@ function AppRoutes() {
   useScreenCounts()
   return (
     <>
+      <MovedBanner />
       <InstallAppBanner />
       <UpdateBanner />
       <ProgressFileBanner />
