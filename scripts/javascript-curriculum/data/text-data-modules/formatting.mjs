@@ -1,0 +1,102 @@
+// Text, data and modules: Formatting numbers and dates for people. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, makeTopic, mc, prints, qShort, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'formatting',
+  title: 'Formatting for people: Intl',
+  paragraphs: [
+    'Numbers and dates look different around the world. One and a quarter thousand is written `1,250.5` in the US, `1.250,5` in Germany and `1 250,5` in France; dates may be day first or month first. Writing this by hand is error-prone. JavaScript has it built in: **`Intl`**, the internationalisation tools.',
+    '**`Intl.NumberFormat(locale, options)`** makes a formatter; its `format(n)` gives the text. The **locale** is a language and region code like `"en-US"`, `"en-GB"`, `"de-DE"` or `"pt-BR"`.',
+    '```\nconst n = 1234567.891\nconsole.log(new Intl.NumberFormat("en-US").format(n))\nconsole.log(new Intl.NumberFormat("de-DE").format(n))\nconsole.log(new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 }).format(n))\n```',
+    'Options pick the style. `style: "currency"` with a `currency` code gives money with the right symbol and decimals; `style: "percent"` turns `0.25` into `25%`; `notation: "compact"` gives `1.2M`.',
+    '```\nconst price = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" })\nconsole.log(price.format(1234.5))\nconst euro = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" })\nconsole.log(euro.format(9.9))\nconsole.log(new Intl.NumberFormat("en-US", { style: "percent" }).format(0.256))\nconsole.log(new Intl.NumberFormat("en-US", { notation: "compact" }).format(1234567))\n```',
+    'Dates work the same with **`Intl.DateTimeFormat`**. Options like `dateStyle: "long"` or `weekday: "long"` choose what to show. Give a `timeZone` (like `"UTC"` or `"Europe/Lisbon"`) when it matters which clock the time is read on.',
+    '```\nconst when = new Date(Date.UTC(2026, 10, 12, 15, 30))\nconst opts = { dateStyle: "long", timeZone: "UTC" }\nconsole.log(new Intl.DateTimeFormat("en-US", opts).format(when))\nconsole.log(new Intl.DateTimeFormat("en-GB", opts).format(when))\nconsole.log(new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "UTC" }).format(when))\n```',
+    'Shortcuts do the same in one call: `n.toLocaleString("en-US", options)` and `date.toLocaleDateString("en-GB", options)`. Keep numbers as numbers in your data, and format them only at the very end, when showing them. And make the formatter once and reuse it, rather than making a new one for every number.',
+  ],
+  sandboxCode: 'const amount = 2549.5\nfor (const locale of ["en-US", "en-GB", "de-DE", "fr-FR", "ja-JP"]) {\n  console.log(locale, new Intl.NumberFormat(locale, { style: "currency", currency: "EUR" }).format(amount))\n}',
+  sandboxSnippets: [
+    snippet('toLocaleString', 'console.log((1234.5).toLocaleString("en-US"), (0.5).toLocaleString("en-US", { style: "percent" }))'),
+    snippet('Compact', 'const f = new Intl.NumberFormat("en-US", { notation: "compact" })\nconsole.log(f.format(950), f.format(15300), f.format(2400000))'),
+    snippet('A list', 'console.log(new Intl.ListFormat("en", { type: "conjunction" }).format(["tea", "cake", "juice"]))'),
+    snippet('Relative time', 'const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" })\nconsole.log(rtf.format(-1, "day"), "/", rtf.format(3, "week"))'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat', 'MDN: Intl.NumberFormat'),
+  challenges: [
+    task('easy', 'Thousands', {
+      prompt: 'Show `population` with US-style thousands separators (`8,412,000`), using `Intl.NumberFormat("en-US")`.',
+      starter: 'const population = 8412000\n',
+      hint: '`console.log(new Intl.NumberFormat("en-US").format(population))`.',
+      solution: 'const population = 8412000\nconsole.log(new Intl.NumberFormat("en-US").format(population))',
+      tests: [['Shows 8,412,000', prints('8,412,000')], ['Uses Intl.NumberFormat', uses('Intl.NumberFormat(')]],
+    }),
+    task('easy', 'Dollars', {
+      prompt: 'Make `text` the `price` as US dollars, like `$19.90`.',
+      starter: 'const price = 19.9\n',
+      hint: '`new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price)`.',
+      solution: 'const price = 19.9\nconst text = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price)',
+      tests: [['text is $19.90', 'text === "$19.90"'], ['Uses the currency style', uses('currency')]],
+    }),
+    task('easy', 'A percentage', {
+      prompt: 'Make `shown` the share of `done` out of `total` as a whole percentage, like `68%`, using `style: "percent"`.',
+      starter: 'const done = 17\nconst total = 25\n',
+      hint: '`new Intl.NumberFormat("en-US", { style: "percent" }).format(done / total)`.',
+      solution: 'const done = 17\nconst total = 25\nconst shown = new Intl.NumberFormat("en-US", { style: "percent" }).format(done / total)',
+      tests: [['shown is 68%', 'shown === "68%"'], ['Uses percent', uses('percent')]],
+    }),
+    task('medium', 'A price formatter', {
+      prompt: 'Write `money(amount, currency)` that formats an amount in `en-US` style for any currency code: `money(5, "EUR")` gives `€5.00`, `money(1234.5, "GBP")` gives `£1,234.50`. Make the formatter inside the function.',
+      hint: '`new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount)`.',
+      solution: 'function money(amount, currency) {\n  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount)\n}',
+      tests: [['Euros', 'money(5, "EUR") === "€5.00"'], ['Pounds', 'money(1234.5, "GBP") === "£1,234.50"'], ['Dollars', 'money(0.5, "USD") === "$0.50"']],
+    }),
+    task('medium', 'Big numbers, short', {
+      prompt: 'Write `short(n)` that shows a count like a social app does, in `en-US`: `950`, `15K`, `2.4M`, using `notation: "compact"`.',
+      hint: '`new Intl.NumberFormat("en-US", { notation: "compact" }).format(n)`.',
+      solution: 'function short(n) {\n  return new Intl.NumberFormat("en-US", { notation: "compact" }).format(n)\n}',
+      tests: [['950', 'short(950) === "950"'], ['15K', 'short(15300) === "15K"'], ['2.4M', 'short(2400000) === "2.4M"']],
+    }),
+    task('medium', 'A long date', {
+      prompt: 'Write `longDate(date)` that gives a date in UTC as US English with `dateStyle: "long"`, like `November 12, 2026`.',
+      hint: '`new Intl.DateTimeFormat("en-US", { dateStyle: "long", timeZone: "UTC" }).format(date)`.',
+      solution: 'function longDate(date) {\n  return new Intl.DateTimeFormat("en-US", { dateStyle: "long", timeZone: "UTC" }).format(date)\n}',
+      tests: [['12 November', 'longDate(new Date(Date.UTC(2026, 10, 12, 15))) === "November 12, 2026"'], ['1 January', 'longDate(new Date(Date.UTC(2027, 0, 1))) === "January 1, 2027"']],
+    }),
+    task('hard', 'A receipt line', {
+      prompt: 'Write `receiptLine(item, qty, price)` that gives a line like `3 × Coffee       $7.50`: the quantity, ` × `, the item padded to 10 characters, then the total (qty × price) in US dollars padded on the left to 8 characters.',
+      hint: 'Build the money text with a currency formatter, then `item.padEnd(10)` and `money.padStart(8)`.',
+      solution: 'function receiptLine(item, qty, price) {\n  const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(qty * price)\n  return `${qty} × ${item.padEnd(10)}${money.padStart(8)}`\n}',
+      tests: [['Coffee', 'receiptLine("Coffee", 3, 2.5) === "3 × Coffee       $7.50"'], ['Cake', 'receiptLine("Cake", 1, 12) === "1 × Cake        $12.00"']],
+    }),
+    task('hard', 'Reuse the formatter', {
+      prompt: 'Make one `Intl.NumberFormat` for euros in `en-IE` style, stored in `const eur`, and use it to make `labels`: each price as text, like `€2.50`.',
+      starter: 'const prices = [2.5, 13, 0.99]\n',
+      hint: '`const eur = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" })`, then `prices.map((p) => eur.format(p))`.',
+      solution: 'const prices = [2.5, 13, 0.99]\nconst eur = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" })\nconst labels = prices.map((p) => eur.format(p))',
+      tests: [['labels', 'JSON.stringify(labels) === JSON.stringify(["€2.50", "€13.00", "€0.99"])'], ['eur is a formatter', 'eur instanceof Intl.NumberFormat'], ['Made once', '(_cq_code.match(/new Intl\\.NumberFormat/g) ?? []).length === 1']],
+    }),
+    task('expert', 'A friendly list', {
+      prompt: 'Write `friendlyList(items)` that joins names the way a person writes them: `"tea"`, `"tea and cake"`, `"tea, cake, and juice"`, using `Intl.ListFormat("en", { type: "conjunction" })`. An empty list gives `"nothing"`.',
+      hint: 'Return `"nothing"` for an empty list; else `new Intl.ListFormat("en", { type: "conjunction" }).format(items)`.',
+      solution: 'function friendlyList(items) {\n  if (items.length === 0) return "nothing"\n  return new Intl.ListFormat("en", { type: "conjunction" }).format(items)\n}',
+      tests: [['Three', 'friendlyList(["tea", "cake", "juice"]) === "tea, cake, and juice"'], ['Two', 'friendlyList(["tea", "cake"]) === "tea and cake"'], ['One', 'friendlyList(["tea"]) === "tea"'], ['None', 'friendlyList([]) === "nothing"']],
+    }),
+    task('expert', 'Relative days', {
+      prompt: 'Write `whenText(days)` that turns a number of days from today into words with `Intl.RelativeTimeFormat("en", { numeric: "auto" })`: `0` gives `today`, `1` `tomorrow`, `-1` `yesterday`, `5` `in 5 days`, `-14` `2 weeks ago`. Use weeks when the number of days is a whole number of weeks other than 0.',
+      hint: 'If `days !== 0 && days % 7 === 0`, format `days / 7` with `"week"`; else format `days` with `"day"`.',
+      solution: 'function whenText(days) {\n  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" })\n  if (days !== 0 && days % 7 === 0) return rtf.format(days / 7, "week")\n  return rtf.format(days, "day")\n}',
+      tests: [['today', 'whenText(0) === "today"'], ['tomorrow and yesterday', 'whenText(1) === "tomorrow" && whenText(-1) === "yesterday"'], ['in 5 days', 'whenText(5) === "in 5 days"'], ['2 weeks ago', 'whenText(-14) === "2 weeks ago"']],
+    }),
+  ],
+  questions: [
+    mc('What is `"de-DE"` in `new Intl.NumberFormat("de-DE")`?', ['A locale: German language, Germany', 'A currency', 'A time zone', 'A number style'], 0, 'Language-REGION.'),
+    mc('What does this show?\n```\nconsole.log(new Intl.NumberFormat("en-US").format(1234.5))\n```', ['`1,234.5`', '`1.234,5`', '`1234.5`', '`$1,234.50`'], 0, 'US style: comma for thousands.', { code: 'console.log(new Intl.NumberFormat("en-US").format(1234.5))', output: '1,234.5' }),
+    mc('Which option gives money with the right symbol?', ['`{ style: "currency", currency: "EUR" }`', '`{ money: true }`', '`{ symbol: "€" }`', '`{ style: "euro" }`'], 0, 'style plus a currency code.'),
+    mc('What does this show?\n```\nconsole.log(new Intl.NumberFormat("en-US", { style: "percent" }).format(0.4))\n```', ['`40%`', '`0.4%`', '`4%`', '`0.40`'], 0, 'percent multiplies by 100.', { code: 'console.log(new Intl.NumberFormat("en-US", { style: "percent" }).format(0.4))', output: '40%' }),
+    mc('Why give a `timeZone` when formatting a date?', ['The same moment is a different time, even a different day, in different places', 'Dates need it to work', 'It makes it shorter', 'To pick the language'], 0, 'Otherwise the computer\'s own zone is used.'),
+    mc('Where should numbers be formatted as text?', ['At the very end, only when showing them', 'As soon as they are read', 'In the data you save', 'Never'], 0, 'Keep calculating with numbers.'),
+    mc('What does `notation: "compact"` give for 2400000 in en-US?', ['`2.4M`', '`2,400,000`', '`2.4e6`', '`2M`'], 0, 'Short like social counts.', { code: 'console.log(new Intl.NumberFormat("en-US", { notation: "compact" }).format(2400000))', output: '2.4M' }),
+    mc('Why make a formatter once and reuse it?', ['Making one is slower than using it', 'It can be used only once anyway', 'Intl requires it', 'There is no reason'], 0, 'Build once, format many.'),
+    qShort('What is the name of JavaScript\'s built-in internationalisation object?', 'Intl', 'Intl.NumberFormat, Intl.DateTimeFormat…'),
+  ],
+})

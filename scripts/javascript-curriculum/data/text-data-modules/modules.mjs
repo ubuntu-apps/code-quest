@@ -1,0 +1,101 @@
+// Text, data and modules: Modules, import and export. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'modules',
+  title: 'Modules: import and export',
+  paragraphs: [
+    'Real programs are too big for one file. JavaScript splits them into **modules**: each file is a module, with its own variables that the others can\'t see, and it chooses what to share with **`export`**. Another file takes what it needs with **`import`**.',
+    '```text\n// prices.js\nexport const VAT = 0.2\n\nexport function withVat(price) {\n  return round(price * (1 + VAT))\n}\n\nfunction round(n) {          // not exported: private to this file\n  return Math.round(n * 100) / 100\n}\n```',
+    '```text\n// app.js\nimport { withVat, VAT } from "./prices.js"\n\nconsole.log(withVat(10))     // 12\nconsole.log(VAT)             // 0.2\n// round(1.234)              // ReferenceError: round is not defined\n```',
+    'Those are **named** exports: you import them by their exact names, in braces. You can rename on the way in with `as`, or take everything as one object with `* as`:',
+    '```text\nimport { withVat as addTax } from "./prices.js"\nimport * as prices from "./prices.js"\n\naddTax(10)\nprices.withVat(10)\n```',
+    'A module can also have one **default** export, often its main thing, like a class. It is imported **without** braces, under any name you like:',
+    '```text\n// Cart.js\nexport default class Cart { … }\n\n// app.js\nimport Cart from "./Cart.js"\n```',
+    'A few facts worth knowing. A module\'s code runs **once**, the first time something imports it; every importer shares the same exports. Imports are read-only: you can\'t assign to an imported name. Paths start with `./` or `../` for your own files; a bare name like `"react"` means a package. In a web page, a script needs `<script type="module">` to use `import`.',
+    'The lesson runner here runs one piece of code at a time, so it can\'t `import` files. The challenges practise the same ideas with what you can run: objects that group exports, private variables inside a function, and code that reads `import` lines as text, like the tools that bundle modules do.',
+  ],
+  sandboxCode: '// What `import * as prices` gives you: one object holding the exports\nconst prices = (() => {\n  const VAT = 0.2\n  const round = (n) => Math.round(n * 100) / 100\n  return { VAT, withVat: (p) => round(p * (1 + VAT)) }\n})()\nconsole.log(prices.withVat(10), prices.VAT, prices.round)',
+  sandboxSnippets: [
+    snippet('Destructure like import', 'const prices = { VAT: 0.2, withVat: (p) => p * 1.2 }\nconst { withVat: addTax, VAT } = prices\nconsole.log(addTax(10), VAT)'),
+    snippet('Read import lines', 'const source = \'import { a, b } from "./x.js"\\nimport c from "./y.js"\'\nfor (const m of source.matchAll(/from\\s+"([^"]+)"/g)) console.log(m[1])'),
+    snippet('Frozen settings', 'const settings = Object.freeze({ lang: "en" })\nsettings.lang = "pt"\nconsole.log(settings.lang)'),
+  ],
+  readMore: MDN('Web/JavaScript/Guide/Modules', 'MDN: JavaScript modules'),
+  challenges: [
+    task('easy', 'A module as an object', {
+      prompt: 'Make `geometry` an object with two functions, `area(w, h)` and `perimeter(w, h)`, for rectangles: what `import * as geometry` would give you.',
+      hint: '`const geometry = { area: (w, h) => w * h, perimeter: (w, h) => 2 * (w + h) }`.',
+      solution: 'const geometry = {\n  area: (w, h) => w * h,\n  perimeter: (w, h) => 2 * (w + h),\n}',
+      tests: [['area(3, 4) is 12', 'geometry.area(3, 4) === 12'], ['perimeter(3, 4) is 14', 'geometry.perimeter(3, 4) === 14']],
+    }),
+    task('easy', 'Take what you need', {
+      prompt: 'Like `import { area, perimeter as edge } from "./geometry.js"`: use destructuring to make `area` and `edge` from `geometry`, then show `area(2, 5)` and `edge(2, 5)`.',
+      starter: 'const geometry = {\n  area: (w, h) => w * h,\n  perimeter: (w, h) => 2 * (w + h),\n}\n',
+      hint: '`const { area, perimeter: edge } = geometry`.',
+      solution: 'const geometry = {\n  area: (w, h) => w * h,\n  perimeter: (w, h) => 2 * (w + h),\n}\nconst { area, perimeter: edge } = geometry\nconsole.log(area(2, 5))\nconsole.log(edge(2, 5))',
+      tests: [['Shows 10 and 14', '_cq_prints("10", "14")'], ['edge is the perimeter function', 'edge === geometry.perimeter'], ['Uses destructuring', '/const\\s*\\{[^}]*perimeter\\s*:\\s*edge/.test(_cq_code)']],
+      typedOk: true,
+    }),
+    task('easy', 'Keep it private', {
+      prompt: 'Make `counter` with a function that runs once and returns `{ next, reset }`, keeping `count` private inside it (like a variable a module doesn\'t export). `next()` adds one and returns the new count; `reset()` sets it back to 0.',
+      hint: '`const counter = (() => { let count = 0; return { next: () => ++count, reset: () => { count = 0 } } })()`.',
+      solution: 'const counter = (() => {\n  let count = 0\n  return {\n    next: () => ++count,\n    reset: () => {\n      count = 0\n    },\n  }\n})()',
+      tests: [['Counts', '(() => { counter.reset(); counter.next(); return counter.next() === 2 })()'], ['Resets', '(() => { counter.next(); counter.reset(); return counter.next() === 1 })()'], ['count is private', 'counter.count === undefined && Object.keys(counter).join() === "next,reset"']],
+    }),
+    task('medium', 'Where from?', {
+      prompt: 'Write `importsFrom(source)` that returns the module paths a file imports from, in order: the text in quotes after `from`. Quotes can be `"` or `\'`.',
+      hint: '`[...source.matchAll(/from\\s+["\']([^"\']+)["\']/g)].map((m) => m[1])`.',
+      solution: 'function importsFrom(source) {\n  return [...source.matchAll(/from\\s+["\']([^"\']+)["\']/g)].map((m) => m[1])\n}',
+      tests: [['Three imports', same('importsFrom(\'import { a } from "./a.js"\\nimport b from \\\'../b.js\\\'\\nimport * as c from "react"\\nconsole.log(a)\')', '["./a.js", "../b.js", "react"]')], ['None', same('importsFrom("const x = 1")', '[]')]],
+    }),
+    task('medium', 'What does it export?', {
+      prompt: 'Write `exportedNames(source)` that returns the names a file exports with `export function NAME`, `export const NAME`, `export let NAME` or `export class NAME`, in order.',
+      hint: '`/export\\s+(?:function|const|let|class)\\s+(\\w+)/g` with `matchAll`.',
+      solution: 'function exportedNames(source) {\n  return [...source.matchAll(/export\\s+(?:function|const|let|class)\\s+(\\w+)/g)].map((m) => m[1])\n}',
+      tests: [['Mixed', same('exportedNames("export const VAT = 0.2\\nfunction round(n) {}\\nexport function withVat(p) {}\\nexport class Cart {}")', '["VAT", "withVat", "Cart"]')], ['None', same('exportedNames("const x = 1")', '[]')]],
+    }),
+    task('medium', 'Settings that can\'t change', {
+      prompt: 'A settings module exports constants nobody should change. Make `SETTINGS` an object with `currency: "EUR"` and `vat: 0.23`, frozen with `Object.freeze`, so assigning to it does nothing.',
+      hint: '`const SETTINGS = Object.freeze({ currency: "EUR", vat: 0.23 })`.',
+      solution: 'const SETTINGS = Object.freeze({ currency: "EUR", vat: 0.23 })',
+      tests: [['Values', 'SETTINGS.currency === "EUR" && SETTINGS.vat === 0.23'], ['Frozen', '(() => { try { SETTINGS.vat = 0 } catch {} return SETTINGS.vat === 0.23 && Object.isFrozen(SETTINGS) })()']],
+      typedOk: true,
+    }),
+    task('hard', 'Named or default?', {
+      prompt: 'Write `importKind(line)` for one import line: `"named"` for `import { … } from …`, `"namespace"` for `import * as x from …`, `"default"` for `import x from …`, and `"none"` for anything else.',
+      hint: 'Test the patterns in turn: `/^import\\s*\\{/`, `/^import\\s*\\*\\s*as\\s+\\w+/`, `/^import\\s+\\w+\\s+from/`.',
+      solution: 'function importKind(line) {\n  const t = line.trim()\n  if (/^import\\s*\\{/.test(t)) return "named"\n  if (/^import\\s*\\*\\s*as\\s+\\w+/.test(t)) return "namespace"\n  if (/^import\\s+\\w+\\s+from/.test(t)) return "default"\n  return "none"\n}',
+      tests: [['named', 'importKind(\'import { a, b } from "./x.js"\') === "named"'], ['namespace', 'importKind(\'import * as utils from "./utils.js"\') === "namespace"'], ['default', 'importKind(\'import Cart from "./Cart.js"\') === "default"'], ['none', 'importKind("const x = 1") === "none"']],
+    }),
+    task('hard', 'Runs once', {
+      prompt: 'Build a tiny module system. `define(name, factory)` records a module; `load(name)` runs its `factory()` the **first** time and returns what it returned (its exports), and gives the same exports on later calls without running it again. Loading an unknown name throws `Error("No module NAME")`.',
+      hint: 'Two `Map`s: `factories` and `loaded`. In `load`: if `loaded.has(name)` return it; else check the factory exists, run it, save and return the result.',
+      solution: 'const factories = new Map()\nconst loaded = new Map()\nfunction define(name, factory) {\n  factories.set(name, factory)\n}\nfunction load(name) {\n  if (loaded.has(name)) return loaded.get(name)\n  if (!factories.has(name)) throw new Error(`No module ${name}`)\n  const exports = factories.get(name)()\n  loaded.set(name, exports)\n  return exports\n}',
+      tests: [['Gives the exports', '(() => { define("greet", () => ({ hi: (n) => "hi " + n })); return load("greet").hi("Ana") === "hi Ana" })()'], ['Runs once', '(() => { let runs = 0; define("count", () => { runs++; return {} }); const a = load("count"); const b = load("count"); return runs === 1 && a === b })()'], ['Unknown', '(() => { try { load("nope") } catch (e) { return e.message === "No module nope" } return false })()']],
+    }),
+    task('expert', 'Load order', {
+      prompt: 'A bundler must load each module after the modules it imports. Write `loadOrder(graph, start)`: `graph` maps a module to the list it imports. Return the modules needed for `start`, each after its own imports, each once, with `start` last. Visit imports in the order listed.',
+      hint: 'A depth-first visit: `function visit(name) { if (done.has(name)) return; done.add(name); for (const dep of graph[name] ?? []) visit(dep); order.push(name) }`.',
+      solution: 'function loadOrder(graph, start) {\n  const order = []\n  const done = new Set()\n  function visit(name) {\n    if (done.has(name)) return\n    done.add(name)\n    for (const dep of graph[name] ?? []) visit(dep)\n    order.push(name)\n  }\n  visit(start)\n  return order\n}',
+      tests: [['An app', same('loadOrder({ app: ["ui", "api"], ui: ["utils"], api: ["utils"], utils: [] }, "app")', '["utils", "ui", "api", "app"]')], ['Alone', same('loadOrder({}, "solo")', '["solo"]')]],
+    }),
+    task('expert', 'Find a cycle', {
+      prompt: 'Modules that import each other in a circle (a → b → a) cause trouble. Write `findCycle(graph)` that returns `true` if any module can reach itself by following imports, else `false`.',
+      hint: 'Depth-first search with two sets: `visiting` (on the current path) and `done`. Reaching a module that is in `visiting` means a cycle.',
+      solution: 'function findCycle(graph) {\n  const visiting = new Set()\n  const done = new Set()\n  function visit(name) {\n    if (visiting.has(name)) return true\n    if (done.has(name)) return false\n    visiting.add(name)\n    for (const dep of graph[name] ?? []) {\n      if (visit(dep)) return true\n    }\n    visiting.delete(name)\n    done.add(name)\n    return false\n  }\n  return Object.keys(graph).some((name) => visit(name))\n}',
+      tests: [['A cycle', 'findCycle({ a: ["b"], b: ["c"], c: ["a"] }) === true'], ['No cycle', 'findCycle({ app: ["ui", "api"], ui: ["utils"], api: ["utils"], utils: [] }) === false'], ['Imports itself', 'findCycle({ x: ["x"] }) === true']],
+    }),
+  ],
+  questions: [
+    mc('What does `export` do in a module?', ['Shares a name so other files can import it', 'Sends the file to a server', 'Prints a value', 'Makes a variable constant'], 0, 'Everything else stays private to the file.'),
+    mc('How do you import the named export `withVat` from `./prices.js`?', ['`import { withVat } from "./prices.js"`', '`import withVat from "./prices.js"`', '`require withVat`', '`import "./prices.js".withVat`'], 0, 'Named exports go in braces.'),
+    mc('How is a default export imported?', ['Without braces, under any name: `import Cart from "./Cart.js"`', 'With braces, by its exact name', 'With `* as`', 'It can\'t be'], 0, 'One default per module.'),
+    mc('What does `import * as prices from "./prices.js"` give you?', ['One object holding all the named exports', 'Only the default export', 'A copy of the file as text', 'An error'], 0, 'Then prices.withVat(…).'),
+    mc('A module is imported by three files. How many times does its code run?', ['Once', 'Three times', 'Every time a function is called', 'Never'], 0, 'They share the same exports.'),
+    mc('What does `import { withVat as addTax } from "./prices.js"` do?', ['Imports withVat under the name addTax', 'Exports addTax', 'Copies the function', 'Imports both names'], 0, 'as renames.'),
+    mc('What does a path like `"./utils.js"` mean, compared with `"react"`?', ['Your own file next to this one, rather than an installed package', 'Nothing different', 'A web address', 'A default export'], 0, './ and ../ are relative paths.'),
+    mc('What does this show?\n```\nconst s = Object.freeze({ lang: "en" })\ns.lang = "pt"\nconsole.log(s.lang)\n```', ['`en`', '`pt`', 'undefined', 'An error'], 0, 'A frozen object can\'t be changed.', { code: 'const s = Object.freeze({ lang: "en" })\ns.lang = "pt"\nconsole.log(s.lang)', output: 'en' }),
+    qShort('Which keyword shares a function or value from a module?', 'export', 'export function …'),
+  ],
+})

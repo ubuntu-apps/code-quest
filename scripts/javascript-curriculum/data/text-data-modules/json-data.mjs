@@ -1,0 +1,103 @@
+// Text, data and modules: JSON in depth. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, makeTopic, mc, qShort, same, snippet, task, throwsWhen, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'json_data',
+  title: 'JSON: data as text',
+  paragraphs: [
+    '**JSON** (JavaScript Object Notation) is the way most programs swap data: servers send it, apps save settings in it, files store it. It looks almost like JavaScript objects and arrays, with a few strict rules.',
+    '```text\n{\n  "name": "Ana",\n  "age": 31,\n  "tags": ["admin", "editor"],\n  "address": { "city": "Lisbon" },\n  "active": true,\n  "manager": null\n}\n```',
+    'The rules: keys **must** be in double quotes; text uses double quotes; no comments; no trailing commas; values are only text, numbers, `true`, `false`, `null`, arrays and objects. **No** functions, `undefined`, dates or `NaN`.',
+    '**`JSON.stringify(value)`** turns a value into JSON text, and **`JSON.parse(text)`** turns JSON text back into a value. `stringify` can lay the text out nicely: its third argument is the indent.',
+    '```\nconst user = { name: "Ana", tags: ["admin"], active: true }\nconst text = JSON.stringify(user)\nconsole.log(text)\nconsole.log(JSON.stringify(user, null, 2))\nconst back = JSON.parse(text)\nconsole.log(back.tags[0])\n```',
+    'Watch what gets lost: properties that are `undefined` or functions **vanish**, `NaN` becomes `null`, and a `Date` becomes text. Parsing gives you a **plain** object, not an instance of your class: that is why the Classes quest had `toJSON` and `fromJSON`.',
+    '```\nconst odd = { a: undefined, b: NaN, c: () => 1, d: new Date(Date.UTC(2026, 0, 2)) }\nconsole.log(JSON.stringify(odd))\n```',
+    '`JSON.parse` **throws** a `SyntaxError` on bad text, so wrap it in `try`…`catch` when the text comes from outside. Its second argument, a **reviver**, can fix values on the way in, like turning date text back into `Date`s. `stringify`\'s second argument can be a list of the keys to keep.',
+  ],
+  sandboxCode: 'const settings = { theme: "dark", volume: 7, shortcuts: ["ctrl+s", "ctrl+z"] }\nconst saved = JSON.stringify(settings, null, 2)\nconsole.log(saved)\nconsole.log(JSON.parse(saved).volume)',
+  sandboxSnippets: [
+    snippet('Bad JSON', 'try {\n  JSON.parse("{name: \'Ana\'}")\n} catch (e) {\n  console.log(e.name)\n}'),
+    snippet('Only some keys', 'const user = { name: "Ana", password: "secret", age: 31 }\nconsole.log(JSON.stringify(user, ["name", "age"]))'),
+    snippet('A deep copy', 'const a = { list: [1, 2] }\nconst b = JSON.parse(JSON.stringify(a))\nb.list.push(3)\nconsole.log(a.list, b.list)'),
+    snippet('Reviver', 'const text = \'{"when":"2026-05-01T00:00:00.000Z"}\'\nconst data = JSON.parse(text, (key, value) => (key === "when" ? new Date(value) : value))\nconsole.log(data.when.getUTCMonth() + 1)'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Global_Objects/JSON', 'MDN: JSON'),
+  challenges: [
+    task('easy', 'To text and back', {
+      prompt: 'Make `text` the JSON text of `order`, and `copy` the value parsed back from `text`.',
+      starter: 'const order = { id: 7, items: ["tea", "cake"], paid: false }\n',
+      hint: '`JSON.stringify(order)`, then `JSON.parse(text)`.',
+      solution: 'const order = { id: 7, items: ["tea", "cake"], paid: false }\nconst text = JSON.stringify(order)\nconst copy = JSON.parse(text)',
+      tests: [['text is JSON', 'text === \'{"id":7,"items":["tea","cake"],"paid":false}\''], ['copy is a copy', 'copy !== order && copy.items[1] === "cake" && copy.id === 7'], ['Uses both', '_cq_code.includes("JSON.stringify(") && _cq_code.includes("JSON.parse(")']],
+    }),
+    task('easy', 'Pretty', {
+      prompt: 'Show `settings` as JSON indented by 2 spaces.',
+      starter: 'const settings = { theme: "dark", volume: 7 }\n',
+      hint: '`console.log(JSON.stringify(settings, null, 2))`.',
+      solution: 'const settings = { theme: "dark", volume: 7 }\nconsole.log(JSON.stringify(settings, null, 2))',
+      tests: [['Shows it indented', '_cq_prints("{", \'  "theme": "dark",\', \'  "volume": 7\', "}")'], ['Uses stringify', uses('JSON.stringify(')]],
+    }),
+    task('easy', 'Read the reply', {
+      prompt: 'A server sent `reply`, JSON text. Make `names` the list of the users\' names in it.',
+      starter: 'const reply = \'{"users":[{"name":"Ana","age":31},{"name":"Ben","age":27}],"total":2}\'\n',
+      hint: '`JSON.parse(reply).users.map((u) => u.name)`.',
+      solution: 'const reply = \'{"users":[{"name":"Ana","age":31},{"name":"Ben","age":27}],"total":2}\'\nconst names = JSON.parse(reply).users.map((u) => u.name)',
+      tests: [['names', same('names', '["Ana", "Ben"]')], ['Uses JSON.parse', uses('JSON.parse(')]],
+      alt: 'const reply = \'{"users":[{"name":"Kim","age":40}],"total":1}\'',
+    }),
+    task('medium', 'Safe parse', {
+      prompt: 'Write `safeParse(text, fallback)` that gives the parsed value, or `fallback` if the text isn\'t valid JSON.',
+      hint: '`try { return JSON.parse(text) } catch { return fallback }`.',
+      solution: 'function safeParse(text, fallback) {\n  try {\n    return JSON.parse(text)\n  } catch {\n    return fallback\n  }\n}',
+      tests: [['Good JSON', same('safeParse(\'{"a":[1,2]}\', null)', '{ a: [1, 2] }')], ['Bad JSON', same('safeParse("{a: 1}", {})', '{}')], ['Empty text', 'safeParse("", 0) === 0']],
+    }),
+    task('medium', 'Keep it private', {
+      prompt: 'Write `publicJson(user)` that gives the user as JSON text with only `name` and `city`, so the `password` and `email` never leave.',
+      hint: 'Pass the list of keys to keep as the second argument: `JSON.stringify(user, ["name", "city"])`.',
+      solution: 'function publicJson(user) {\n  return JSON.stringify(user, ["name", "city"])\n}',
+      tests: [['Only two keys', 'publicJson({ name: "Ana", password: "x1", email: "a@x.io", city: "Lisbon" }) === \'{"name":"Ana","city":"Lisbon"}\'']],
+    }),
+    task('medium', 'What survives', {
+      prompt: 'Make `after` the result of turning `before` into JSON and back. Then make `lost` the list of keys of `before` that `after` doesn\'t have.',
+      starter: 'const before = { id: 1, note: undefined, total: NaN, greet() { return "hi" }, tags: [] }\n',
+      hint: '`JSON.parse(JSON.stringify(before))`; then `Object.keys(before).filter((k) => !(k in after))`.',
+      solution: 'const before = { id: 1, note: undefined, total: NaN, greet() { return "hi" }, tags: [] }\nconst after = JSON.parse(JSON.stringify(before))\nconst lost = Object.keys(before).filter((k) => !(k in after))',
+      tests: [['lost is note and greet', same('lost', '["note", "greet"]')], ['total became null', 'after.total === null']],
+    }),
+    task('hard', 'Dates back', {
+      prompt: 'Write `loadEvents(text)` that parses JSON like `[{"title":"Gig","when":"2026-05-01T20:00:00.000Z"}]` and turns every `when` into a `Date`, using a reviver.',
+      hint: '`JSON.parse(text, (key, value) => (key === "when" ? new Date(value) : value))`.',
+      solution: 'function loadEvents(text) {\n  return JSON.parse(text, (key, value) => (key === "when" ? new Date(value) : value))\n}',
+      tests: [['Dates', '(() => { const e = loadEvents(\'[{"title":"Gig","when":"2026-05-01T20:00:00.000Z"}]\'); return e[0].title === "Gig" && e[0].when instanceof Date && e[0].when.getUTCHours() === 20 })()'], ['Round trip', '(() => { const e = loadEvents(JSON.stringify([{ title: "A", when: new Date(Date.UTC(2026, 6, 4)) }])); return e[0].when.getUTCDate() === 4 })()']],
+    }),
+    task('hard', 'Check the shape', {
+      prompt: 'Data from outside can be anything. Write `readUser(text)` that parses the text and returns the user only if it is an object with a `name` that is text and an `age` that is a number; otherwise throw `Error("Bad user data")`. Bad JSON should give the same error.',
+      hint: 'Parse in a `try`; then check `typeof data === "object" && data !== null && typeof data.name === "string" && typeof data.age === "number"`.',
+      solution: 'function readUser(text) {\n  let data\n  try {\n    data = JSON.parse(text)\n  } catch {\n    throw new Error("Bad user data")\n  }\n  if (typeof data !== "object" || data === null || typeof data.name !== "string" || typeof data.age !== "number") {\n    throw new Error("Bad user data")\n  }\n  return data\n}',
+      tests: [['Good', same('readUser(\'{"name":"Ana","age":31}\')', '{ name: "Ana", age: 31 }')], ['Age as text', throwsWhen('readUser(\'{"name":"Ana","age":"31"}\')', 'Bad user data')], ['null', throwsWhen('readUser("null")', 'Bad user data')], ['Not JSON', throwsWhen('readUser("Ana, 31")', 'Bad user data')]],
+    }),
+    task('expert', 'Changes between versions', {
+      prompt: 'Write `changedKeys(oldText, newText)`: both are JSON of flat objects. Return the keys whose value was added, removed or changed, sorted A to Z.',
+      hint: 'Parse both; go through the keys of both (a `Set`); a key changed if `JSON.stringify(a[k]) !== JSON.stringify(b[k])`.',
+      solution: 'function changedKeys(oldText, newText) {\n  const a = JSON.parse(oldText)\n  const b = JSON.parse(newText)\n  const keys = new Set([...Object.keys(a), ...Object.keys(b)])\n  return [...keys].filter((k) => JSON.stringify(a[k]) !== JSON.stringify(b[k])).sort()\n}',
+      tests: [['Three changes', same('changedKeys(\'{"theme":"dark","size":12,"lang":"en"}\', \'{"theme":"light","size":12,"beta":true}\')', '["beta", "lang", "theme"]')], ['Same', same('changedKeys(\'{"a":[1]}\', \'{"a":[1]}\')', '[]')]],
+    }),
+    task('expert', 'Merge settings', {
+      prompt: 'Write `mergeSettings(defaultsText, savedText)`: parse both and return the defaults with the saved values on top. Nested objects are merged one level deep (saved `{"colors":{"bg":"black"}}` keeps the default `colors.fg`). If the saved text is bad JSON, use just the defaults.',
+      hint: 'Parse the saved text in `try`…`catch` (fallback `{}`). Start from `{ ...defaults }`; for each saved key whose value and default are both plain objects, merge them with spread; else take the saved value.',
+      solution: 'function mergeSettings(defaultsText, savedText) {\n  const defaults = JSON.parse(defaultsText)\n  let saved\n  try {\n    saved = JSON.parse(savedText)\n  } catch {\n    saved = {}\n  }\n  const isObject = (v) => typeof v === "object" && v !== null && !Array.isArray(v)\n  const result = { ...defaults }\n  for (const [key, value] of Object.entries(saved)) {\n    result[key] = isObject(value) && isObject(defaults[key]) ? { ...defaults[key], ...value } : value\n  }\n  return result\n}',
+      tests: [['Merged', same('mergeSettings(\'{"theme":"light","colors":{"fg":"black","bg":"white"},"size":12}\', \'{"theme":"dark","colors":{"bg":"black"}}\')', '{ theme: "dark", colors: { fg: "black", bg: "black" }, size: 12 }')], ['Bad saved text', same('mergeSettings(\'{"size":12}\', "oops")', '{ size: 12 }')]],
+    }),
+  ],
+  questions: [
+    mc('Which of these is valid JSON?', ['`{"name": "Ana", "tags": []}`', '`{name: "Ana"}`', '`{\'name\': \'Ana\'}`', '`{"name": "Ana",}`'], 0, 'Double-quoted keys and text, no trailing comma.'),
+    mc('What does `JSON.stringify({ a: 1, b: [true] })` give?', ['`{"a":1,"b":[true]}`', '`{a: 1, b: [true]}`', '`[object Object]`', 'An object'], 0, 'Compact JSON text.', { code: 'console.log(JSON.stringify({ a: 1, b: [true] }))', output: '{"a":1,"b":[true]}' }),
+    mc('What happens to a property whose value is `undefined` in `JSON.stringify`?', ['It is left out', 'It becomes `null`', 'It becomes `"undefined"`', 'It throws'], 0, 'JSON has no undefined.'),
+    mc('What does `JSON.parse("{bad}")` do?', ['Throws a SyntaxError', 'Gives `null`', 'Gives `{}`', 'Gives `"{bad}"`'], 0, 'Wrap it in try…catch.', { code: 'try {\n  JSON.parse("{bad}")\n} catch (e) {\n  console.log(e.name)\n}', output: 'SyntaxError' }),
+    mc('What is the third argument of `JSON.stringify` for?', ['The indent, to lay the text out', 'The keys to keep', 'A reviver', 'The file name'], 0, 'JSON.stringify(value, null, 2).'),
+    mc('You parse JSON saved from a `Date`. What do you get?', ['Text, until you turn it back into a Date', 'A Date', 'A number', 'null'], 0, 'A reviver can do it.'),
+    mc('What does this show?\n```\nconsole.log(JSON.stringify([NaN, 1]))\n```', ['`[null,1]`', '`[NaN,1]`', '`[1]`', 'An error'], 0, 'JSON has no NaN.', { code: 'console.log(JSON.stringify([NaN, 1]))', output: '[null,1]' }),
+    mc('Why check the shape of parsed data from outside?', ['It could be any JSON, not what your code expects', 'JSON.parse gets numbers wrong', 'It is slower otherwise', 'You don\'t need to'], 0, 'Valid JSON isn\'t the same as the right data.'),
+    qShort('Which method turns JSON text into a value: `JSON.____`?', 'parse', 'JSON.parse(text)'),
+  ],
+})

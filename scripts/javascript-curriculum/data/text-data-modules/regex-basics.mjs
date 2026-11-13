@@ -1,0 +1,102 @@
+// Text, data and modules: Regular expressions. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'regex_basics',
+  title: 'Patterns: regular expressions',
+  paragraphs: [
+    '`includes` can tell you whether text contains `"cat"`. But what about "contains a number", "is a valid postcode" or "find every hashtag"? For those you describe a **pattern**, with a **regular expression** (regex for short). In JavaScript you write one between slashes: `/cat/`.',
+    '```\nconst pattern = /\\d+/\nconsole.log(pattern.test("Room 42"))\nconsole.log(pattern.test("No numbers here"))\nconsole.log("Room 42, floor 3".match(pattern)[0])\n```',
+    '**`pattern.test(text)`** says whether the text matches anywhere. **`text.match(pattern)`** gives the first match (or `null`). With the **`g`** flag (global), `match` gives a list of **all** matches. The **`i`** flag ignores case.',
+    'The building blocks:\n\n| Pattern | Matches |\n|---|---|\n| `\\d` | a digit 0–9 |\n| `\\w` | a letter, digit or `_` |\n| `\\s` | a space, tab or new line |\n| `.` | any one character |\n| `[aeiou]` | one of these |\n| `[^aeiou]` | anything but these |\n| `[a-z]` | a range |',
+    'And how many:\n\n| After a piece | Means |\n|---|---|\n| `+` | one or more |\n| `*` | zero or more |\n| `?` | optional |\n| `{3}` | exactly 3 |\n| `{2,4}` | 2 to 4 |',
+    '**`^`** at the start and **`$`** at the end tie the pattern to the start and end of the text, so the **whole** text must fit, which is what you want for checking input:',
+    '```\nconst pin = /^\\d{4}$/\nconsole.log(pin.test("2580"))\nconsole.log(pin.test("25800"))\nconsole.log(pin.test("ab12"))\nconsole.log("Tea, TEA and tea".match(/tea/gi))\n```',
+    'To match a character that has a special meaning, like `.` or `?`, put a backslash before it: `/\\./` matches a real dot. Regexes are powerful but get hard to read quickly: keep them short, and test them on good **and** bad examples.',
+  ],
+  sandboxCode: 'const text = "Call 555-0142 or 555-0199 before 6pm"\nconsole.log(/\\d{3}-\\d{4}/.test(text))\nconsole.log(text.match(/\\d{3}-\\d{4}/g))',
+  sandboxSnippets: [
+    snippet('All the numbers', 'console.log("3 cats, 12 dogs and 1 parrot".match(/\\d+/g))'),
+    snippet('Ignore case', 'console.log(/hello/i.test("HeLLo there"))'),
+    snippet('Whole text', 'console.log(/^[a-z]+$/.test("hello"), /^[a-z]+$/.test("hello!"))'),
+    snippet('No match', 'console.log("abc".match(/\\d/))'),
+  ],
+  readMore: MDN('Web/JavaScript/Guide/Regular_expressions', 'MDN: Regular expressions'),
+  challenges: [
+    task('easy', 'Has a digit', {
+      prompt: 'Make `hasDigit` `true` if `password` contains at least one digit, using `/\\d/` and `test`.',
+      starter: 'const password = "sunflower7"\n',
+      hint: '`const hasDigit = /\\d/.test(password)`.',
+      solution: 'const password = "sunflower7"\nconst hasDigit = /\\d/.test(password)',
+      tests: [['hasDigit is true', 'hasDigit === true'], ['Uses .test', uses('.test(')]],
+      alt: 'const password = "sunflower"',
+    }),
+    task('easy', 'All the numbers', {
+      prompt: 'Make `numbers` the list of all the numbers in `text` (as text), using `match` with `/\\d+/g`.',
+      starter: 'const text = "Order 66 shipped 3 boxes on day 214"\n',
+      hint: '`const numbers = text.match(/\\d+/g)`.',
+      solution: 'const text = "Order 66 shipped 3 boxes on day 214"\nconst numbers = text.match(/\\d+/g)',
+      tests: [['numbers', same('numbers', '["66", "3", "214"]')]],
+    }),
+    task('easy', 'Any case', {
+      prompt: 'Make `count` the number of times `the` appears in `text`, in any case (`The`, `THE`…). Use `match` with the `g` and `i` flags.',
+      starter: 'const text = "The cat and THE dog saw the bird"\n',
+      hint: '`const count = text.match(/the/gi).length`.',
+      solution: 'const text = "The cat and THE dog saw the bird"\nconst count = text.match(/the/gi).length',
+      tests: [['count is 3', 'count === 3'], ['Uses the gi flags', '/\\/the\\/(gi|ig)/.test(_cq_code)']],
+    }),
+    task('medium', 'A four-digit PIN', {
+      prompt: 'Write `isPin(text)` that is `true` only if the **whole** text is exactly 4 digits.',
+      hint: '`/^\\d{4}$/.test(text)`.',
+      solution: 'function isPin(text) {\n  return /^\\d{4}$/.test(text)\n}',
+      tests: [['2580', 'isPin("2580") === true'], ['Too long', 'isPin("25801") === false'], ['Letters', 'isPin("12a4") === false'], ['With spaces', 'isPin(" 2580") === false']],
+    }),
+    task('medium', 'Hashtags', {
+      prompt: 'Write `hashtags(post)` that returns every hashtag in the post: a `#` followed by one or more letters, digits or `_`. Return `[]` if there are none.',
+      hint: '`post.match(/#\\w+/g) ?? []`: `match` gives `null` when nothing matches.',
+      solution: 'function hashtags(post) {\n  return post.match(/#\\w+/g) ?? []\n}',
+      tests: [['Two tags', same('hashtags("Sunny day #beach #summer_2026!")', '["#beach", "#summer_2026"]')], ['None', same('hashtags("No tags here")', '[]')]],
+    }),
+    task('medium', 'Vowels', {
+      prompt: 'Write `vowelCount(word)` that counts the vowels (a, e, i, o, u, in any case) in a word.',
+      hint: '`(word.match(/[aeiou]/gi) ?? []).length`.',
+      solution: 'function vowelCount(word) {\n  return (word.match(/[aeiou]/gi) ?? []).length\n}',
+      tests: [['JavaScript', 'vowelCount("JavaScript") === 3'], ['RHYTHM', 'vowelCount("RHYTHM") === 0'], ['Education', 'vowelCount("Education") === 5']],
+    }),
+    task('hard', 'A UK-style postcode', {
+      prompt: 'Write `isPostcode(text)`: true for one or two capital letters, a digit, an optional digit or capital letter, a space, a digit and two capital letters, like `SW1A 1AA`, `M1 1AE` or `B33 8TH`. Nothing else may be in the text.',
+      hint: '`/^[A-Z]{1,2}\\d[A-Z\\d]? \\d[A-Z]{2}$/`.',
+      solution: 'function isPostcode(text) {\n  return /^[A-Z]{1,2}\\d[A-Z\\d]? \\d[A-Z]{2}$/.test(text)\n}',
+      tests: [['Good ones', 'isPostcode("SW1A 1AA") && isPostcode("M1 1AE") && isPostcode("B33 8TH")'], ['No space', 'isPostcode("M11AE") === false'], ['Lower case', 'isPostcode("m1 1ae") === false'], ['Extra text', 'isPostcode("M1 1AE!") === false']],
+    }),
+    task('hard', 'A strong password', {
+      prompt: 'Write `isStrong(pw)`: at least 8 characters, with at least one lower-case letter, one capital and one digit. Use a separate regex for each rule.',
+      hint: '`pw.length >= 8 && /[a-z]/.test(pw) && /[A-Z]/.test(pw) && /\\d/.test(pw)`.',
+      solution: 'function isStrong(pw) {\n  return pw.length >= 8 && /[a-z]/.test(pw) && /[A-Z]/.test(pw) && /\\d/.test(pw)\n}',
+      tests: [['Strong', 'isStrong("Sunflower7") === true'], ['No digit', 'isStrong("Sunflowers") === false'], ['No capital', 'isStrong("sunflower7") === false'], ['Too short', 'isStrong("Sun7") === false']],
+    }),
+    task('expert', 'Prices in text', {
+      prompt: 'Write `prices(text)` that finds every price like `$4.50` or `$12.99` (a `$`, digits, a dot, exactly two digits) and returns their total as a number, rounded to 2 decimal places.',
+      hint: '`text.match(/\\$\\d+\\.\\d{2}/g) ?? []`, then `Number(p.slice(1))` for each, and add up.',
+      solution: 'function prices(text) {\n  const found = text.match(/\\$\\d+\\.\\d{2}/g) ?? []\n  const total = found.reduce((sum, p) => sum + Number(p.slice(1)), 0)\n  return Math.round(total * 100) / 100\n}',
+      tests: [['Three prices', 'prices("Tea $2.50, cake $3.20 and a tip of $1.05") === 6.75'], ['Not prices', 'prices("Call 2.50 or $3 or $4.5") === 0'], ['Big', 'prices("$120.00 + $0.99") === 120.99']],
+    }),
+    task('expert', 'Simple email check', {
+      prompt: 'Write `looksLikeEmail(text)`: true if the whole text is one or more characters that are not spaces or `@`, then `@`, then the same, then a dot, then 2 or more letters. Like `ana.lima@mail.example.pt`.',
+      hint: '`/^[^\\s@]+@[^\\s@]+\\.[a-z]{2,}$/i`.',
+      solution: 'function looksLikeEmail(text) {\n  return /^[^\\s@]+@[^\\s@]+\\.[a-z]{2,}$/i.test(text)\n}',
+      tests: [['Good', 'looksLikeEmail("ana.lima@mail.example.pt") && looksLikeEmail("BEN@X.IO")'], ['No @', 'looksLikeEmail("ana.example.com") === false'], ['Two @', 'looksLikeEmail("a@b@c.com") === false'], ['Space', 'looksLikeEmail("ana @x.com") === false'], ['Short ending', 'looksLikeEmail("ana@x.c") === false']],
+    }),
+  ],
+  questions: [
+    mc('What does `\\d` match?', ['One digit 0–9', 'Any letter', 'The letter d', 'A dot'], 0, 'd for digit.'),
+    mc('What does `/^\\d{4}$/` require?', ['The whole text is exactly 4 digits', 'At least 4 digits somewhere', 'Up to 4 digits', '4 characters of any kind'], 0, '^ and $ pin it to the start and end.'),
+    mc('What does this show?\n```\nconsole.log("a1b22c333".match(/\\d+/g))\n```', ['`[ \'1\', \'22\', \'333\' ]`', '`[ \'1\' ]`', '`123`', '`[ 1, 22, 333 ]`'], 0, 'g gives every match, as text.', { code: 'console.log("a1b22c333".match(/\\d+/g))', output: "[ '1', '22', '333' ]" }),
+    mc('What does the `i` flag do?', ['Ignores upper and lower case', 'Finds all matches', 'Allows new lines', 'Inverts the match'], 0, 'i for case-insensitive.'),
+    mc('What does `"abc".match(/\\d/)` give?', ['`null`', '`[]`', '`false`', '`""`'], 0, 'No match gives null, so use ?? [] with g.', { code: 'console.log("abc".match(/\\d/))', output: 'null' }),
+    mc('Which pattern matches a real full stop?', ['`/\\./`', '`/./`', '`/[.]+?/`', '`/dot/`'], 0, 'A plain . means any character.'),
+    mc('What does `?` mean after a piece?', ['It is optional: zero or one', 'One or more', 'Any character', 'The end of the text'], 0, 'colou?r matches color and colour.'),
+    mc('What does this show?\n```\nconsole.log(/colou?r/.test("color"), /colou?r/.test("colour"))\n```', ['`true true`', '`false true`', '`true false`', '`false false`'], 0, 'The u is optional.', { code: 'console.log(/colou?r/.test("color"), /colou?r/.test("colour"))', output: 'true true' }),
+    qShort('Which regex method gives `true` or `false`: `pattern.____(text)`?', 'test', 'pattern.test(text)'),
+  ],
+})

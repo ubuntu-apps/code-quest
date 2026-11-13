@@ -26,6 +26,18 @@ describe('runJavaScript', () => {
     expect(result.output).toBe('after\nlater')
   })
 
+  it('waits for a timer that a promise callback starts after another timer', async () => {
+    const wait = 'const wait = (ms) => new Promise((r) => setTimeout(r, ms))\n'
+    const result = await runJavaScript(`${wait}wait(5).then(() => {\n  console.log("one")\n  return wait(5)\n}).then(() => console.log("two"))`)
+    expect(result.output).toBe('one\ntwo')
+  })
+
+  it('lets a promise chain finish before the tests run', async () => {
+    const chain = 'Promise.resolve(1).then((n) => n + 1).then((n) => n * 10).then((n) => console.log(n))'
+    const result = await runJavaScript(chain, { tests: [test('a', '_cq_prints("20")')] })
+    expect(result.tests?.[0]?.passed).toBe(true)
+  })
+
   it('runs the tests after the code, seeing its variables, its code and its output', async () => {
     const result = await runJavaScript('const hours = 365 * 24\nconsole.log(hours)', {
       tests: [test('a', 'hours === 8760'), test('b', '_cq_code.includes("*")'), test('c', '_cq_prints("8760")'), test('d', '_cq_output === "8760"')],

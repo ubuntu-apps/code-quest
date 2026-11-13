@@ -1,0 +1,102 @@
+// Text, data and modules: Dates and times. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'dates',
+  title: 'Dates and times',
+  paragraphs: [
+    'Birthdays, deadlines, opening hours, "posted 3 days ago": programs are full of dates. JavaScript keeps them in **`Date`** objects. `new Date()` is right now; `new Date(year, monthIndex, day)` is a day of your choice.',
+    '```\nconst launch = new Date(2026, 2, 14)\nconsole.log(launch.getFullYear(), launch.getMonth(), launch.getDate())\nconsole.log(launch.getDay())\n```',
+    'Two old surprises: **months count from 0** (January is 0, March is 2, December is 11), but days of the month count from 1. And `getDay()` is the day of the **week**, from 0 (Sunday) to 6 (Saturday); `getDate()` is the day of the month.',
+    'Under the hood a date is one number: the **milliseconds** since 1 January 1970. `date.getTime()` gives it, and subtracting two dates gives the milliseconds between them. Divide by `1000 * 60 * 60 * 24` for days; round it, because a clock change for summer time can make a day 23 or 25 hours long.',
+    '```\nconst DAY = 1000 * 60 * 60 * 24\nconst today = new Date(2026, 10, 12)\nconst holiday = new Date(2026, 11, 24)\nconsole.log(Math.round((holiday - today) / DAY), "days to go")\n```',
+    'To move a date, change a part with a `set` method. JavaScript rolls over for you: day 32 of January is 1 February. Make a **copy** first (`new Date(date)`), because the `set` methods change the date itself.',
+    '```\nconst start = new Date(2026, 0, 30)\nconst later = new Date(start)\nlater.setDate(later.getDate() + 5)\nconsole.log(later.getMonth(), later.getDate())\nconsole.log(start.getDate())\n```',
+    'Dates and time zones are tricky. `new Date(2026, 0, 30)` is midnight **where the computer is**. Text in ISO form like `"2026-01-30T09:00:00Z"` (`Z` meaning UTC, world time) is the same moment everywhere, and `toISOString()` writes a date that way. Store and send dates in ISO form; turn them into local time only to show them.',
+  ],
+  sandboxCode: 'const now = new Date()\nconsole.log("Year:", now.getFullYear())\nconsole.log("Month (0-11):", now.getMonth())\nconsole.log("Day of month:", now.getDate())\nconsole.log("Day of week (0 = Sunday):", now.getDay())',
+  sandboxSnippets: [
+    snippet('Roll over', 'const d = new Date(2026, 0, 32)\nconsole.log(d.getMonth(), d.getDate())'),
+    snippet('ISO text', 'console.log(new Date(Date.UTC(2026, 4, 1, 9, 30)).toISOString())'),
+    snippet('Compare', 'const a = new Date(2026, 5, 1)\nconst b = new Date(2026, 5, 2)\nconsole.log(a < b, b - a)'),
+    snippet('Days of the week', 'const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]\nconsole.log(names[new Date(2026, 10, 12).getDay()])'),
+  ],
+  readMore: MDN('Web/JavaScript/Reference/Global_Objects/Date', 'MDN: Date'),
+  challenges: [
+    task('easy', 'Make a date', {
+      prompt: 'Make `birthday` the date 9 July 2026 (remember: months from 0).',
+      hint: '`new Date(2026, 6, 9)`.',
+      solution: 'const birthday = new Date(2026, 6, 9)',
+      tests: [['birthday is 9 July 2026', 'birthday instanceof Date && birthday.getFullYear() === 2026 && birthday.getMonth() === 6 && birthday.getDate() === 9']],
+      typedOk: true,
+    }),
+    task('easy', 'Day of the week', {
+      prompt: 'Make `dayName` the name of the day of the week of `date`, using `getDay()` and the list `names`.',
+      starter: 'const names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]\nconst date = new Date(2026, 10, 12)\n',
+      hint: '`const dayName = names[date.getDay()]`.',
+      solution: 'const names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]\nconst date = new Date(2026, 10, 12)\nconst dayName = names[date.getDay()]',
+      tests: [['dayName is Thursday', 'dayName === "Thursday"'], ['Uses getDay', uses('getDay()')]],
+      alt: 'const names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]\nconst date = new Date(2026, 10, 14)',
+    }),
+    task('easy', 'Days to go', {
+      prompt: 'Make `daysLeft` the whole number of days from `today` to `trip`.',
+      starter: 'const DAY = 1000 * 60 * 60 * 24\nconst today = new Date(2026, 9, 20)\nconst trip = new Date(2026, 11, 2)\n',
+      hint: '`Math.round((trip - today) / DAY)`.',
+      solution: 'const DAY = 1000 * 60 * 60 * 24\nconst today = new Date(2026, 9, 20)\nconst trip = new Date(2026, 11, 2)\nconst daysLeft = Math.round((trip - today) / DAY)',
+      tests: [['daysLeft is 43', 'daysLeft === 43']],
+    }),
+    task('medium', 'Add days', {
+      prompt: 'Write `addDays(date, n)` that returns a **new** date `n` days after `date` (or before, if `n` is negative), without changing `date`.',
+      hint: '`const copy = new Date(date)`; `copy.setDate(copy.getDate() + n)`; `return copy`.',
+      solution: 'function addDays(date, n) {\n  const copy = new Date(date)\n  copy.setDate(copy.getDate() + n)\n  return copy\n}',
+      tests: [['Into February', '(() => { const d = addDays(new Date(2026, 0, 30), 5); return d.getMonth() === 1 && d.getDate() === 4 })()'], ['Backwards', '(() => { const d = addDays(new Date(2026, 2, 1), -1); return d.getMonth() === 1 && d.getDate() === 28 })()'], ['Leaves the date alone', '(() => { const d = new Date(2026, 5, 10); addDays(d, 3); return d.getDate() === 10 })()']],
+    }),
+    task('medium', 'Format a date', {
+      prompt: 'Write `formatDate(date)` that gives `YYYY-MM-DD` for a date, with the month and day padded to two digits.',
+      hint: '`date.getMonth() + 1`, and `String(…).padStart(2, "0")`.',
+      solution: 'function formatDate(date) {\n  const m = String(date.getMonth() + 1).padStart(2, "0")\n  const d = String(date.getDate()).padStart(2, "0")\n  return `${date.getFullYear()}-${m}-${d}`\n}',
+      tests: [['9 July', 'formatDate(new Date(2026, 6, 9)) === "2026-07-09"'], ['31 December', 'formatDate(new Date(2025, 11, 31)) === "2025-12-31"']],
+    }),
+    task('medium', 'Is it the weekend?', {
+      prompt: 'Write `isWeekend(date)` that is true on Saturdays and Sundays.',
+      hint: '`const day = date.getDay()`; Sunday is 0 and Saturday is 6.',
+      solution: 'function isWeekend(date) {\n  const day = date.getDay()\n  return day === 0 || day === 6\n}',
+      tests: [['Saturday', 'isWeekend(new Date(2026, 10, 14)) === true'], ['Sunday', 'isWeekend(new Date(2026, 10, 15)) === true'], ['Thursday', 'isWeekend(new Date(2026, 10, 12)) === false']],
+    }),
+    task('hard', 'How old?', {
+      prompt: 'Write `age(born, on)` that gives a person\'s age in whole years on the date `on`: the years between, minus one if their birthday hasn\'t come yet that year.',
+      hint: 'Start with `on.getFullYear() - born.getFullYear()`; subtract 1 if `on`\'s month is earlier, or the same month with an earlier day.',
+      solution: 'function age(born, on) {\n  let years = on.getFullYear() - born.getFullYear()\n  const before = on.getMonth() < born.getMonth() || (on.getMonth() === born.getMonth() && on.getDate() < born.getDate())\n  if (before) years--\n  return years\n}',
+      tests: [['Birthday passed', 'age(new Date(1995, 2, 14), new Date(2026, 10, 12)) === 31'], ['Not yet', 'age(new Date(1995, 11, 25), new Date(2026, 10, 12)) === 30'], ['On the day', 'age(new Date(2000, 10, 12), new Date(2026, 10, 12)) === 26']],
+    }),
+    task('hard', 'Days in a month', {
+      prompt: 'Write `daysInMonth(year, monthIndex)` that gives how many days that month has, using the trick that day 0 of the **next** month is the last day of this one.',
+      hint: '`new Date(year, monthIndex + 1, 0).getDate()`.',
+      solution: 'function daysInMonth(year, monthIndex) {\n  return new Date(year, monthIndex + 1, 0).getDate()\n}',
+      tests: [['February 2026', 'daysInMonth(2026, 1) === 28'], ['February 2028', 'daysInMonth(2028, 1) === 29'], ['December', 'daysInMonth(2026, 11) === 31'], ['April', 'daysInMonth(2026, 3) === 30']],
+    }),
+    task('expert', 'Working days', {
+      prompt: 'Write `workingDays(from, to)` that counts the days from `from` to `to`, both included, that are not Saturdays or Sundays.',
+      hint: 'Copy `from`, and loop while it is not after `to`, counting the weekdays and moving the copy on with `setDate(getDate() + 1)`.',
+      solution: 'function workingDays(from, to) {\n  let count = 0\n  const day = new Date(from)\n  while (day <= to) {\n    const d = day.getDay()\n    if (d !== 0 && d !== 6) count++\n    day.setDate(day.getDate() + 1)\n  }\n  return count\n}',
+      tests: [['Two weeks', 'workingDays(new Date(2026, 10, 2), new Date(2026, 10, 15)) === 10'], ['One Saturday', 'workingDays(new Date(2026, 10, 14), new Date(2026, 10, 14)) === 0'], ['Across a month', 'workingDays(new Date(2026, 9, 29), new Date(2026, 10, 3)) === 4']],
+    }),
+    task('expert', 'Posted ago', {
+      prompt: 'Write `ago(then, now)` for a feed: under a minute gives `just now`, under an hour `N min ago`, under a day `N h ago`, under a week `N days ago` (`1 day ago` for one), and anything older the date as `YYYY-MM-DD`. Use whole units, rounded down.',
+      hint: 'Work out the seconds between, then check each limit in turn with `Math.floor`. For the date, build the text from `getFullYear`, `getMonth() + 1` and `getDate()`.',
+      solution: 'function ago(then, now) {\n  const s = Math.floor((now - then) / 1000)\n  if (s < 60) return "just now"\n  if (s < 3600) return `${Math.floor(s / 60)} min ago`\n  if (s < 86400) return `${Math.floor(s / 3600)} h ago`\n  if (s < 7 * 86400) {\n    const days = Math.floor(s / 86400)\n    return days === 1 ? "1 day ago" : `${days} days ago`\n  }\n  const pad = (n) => String(n).padStart(2, "0")\n  return `${then.getFullYear()}-${pad(then.getMonth() + 1)}-${pad(then.getDate())}`\n}',
+      tests: [['Seconds', 'ago(new Date(2026, 10, 12, 9, 0, 0), new Date(2026, 10, 12, 9, 0, 40)) === "just now"'], ['Minutes', 'ago(new Date(2026, 10, 12, 9, 0), new Date(2026, 10, 12, 9, 25)) === "25 min ago"'], ['Hours', 'ago(new Date(2026, 10, 12, 1, 0), new Date(2026, 10, 12, 9, 30)) === "8 h ago"'], ['A day', 'ago(new Date(2026, 10, 11, 8, 0), new Date(2026, 10, 12, 9, 0)) === "1 day ago"'], ['Days', 'ago(new Date(2026, 10, 9, 8, 0), new Date(2026, 10, 12, 9, 0)) === "3 days ago"'], ['Old', 'ago(new Date(2026, 8, 3, 8, 0), new Date(2026, 10, 12, 9, 0)) === "2026-09-03"']],
+    }),
+  ],
+  questions: [
+    mc('Which month is `new Date(2026, 0, 15)`?', ['January', 'February', 'December', 'An invalid date'], 0, 'Months count from 0.'),
+    mc('What does `getDay()` give?', ['The day of the week, 0 (Sunday) to 6', 'The day of the month', 'The number of days since 1970', 'The day name'], 0, 'getDate() is the day of the month.'),
+    mc('What does this show?\n```\nconst d = new Date(2026, 0, 32)\nconsole.log(d.getMonth(), d.getDate())\n```', ['`1 1`', '`0 32`', '`1 32`', 'An error'], 0, 'Day 32 of January rolls over to 1 February.', { code: 'const d = new Date(2026, 0, 32)\nconsole.log(d.getMonth(), d.getDate())', output: '1 1' }),
+    mc('What do you get when you subtract two dates?', ['The milliseconds between them', 'The days between them', 'A new Date', 'NaN'], 0, 'Divide to get days.'),
+    mc('Why round when turning milliseconds into days?', ['A summer-time change can make a day 23 or 25 hours long', 'Dates are random', 'Milliseconds aren\'t exact', 'It isn\'t needed'], 0, 'Math.round fixes the odd hour.'),
+    mc('Why copy a date before `setDate`?', ['The set methods change the date object itself', 'setDate needs a copy', 'It is faster', 'Dates can\'t be changed'], 0, 'Otherwise the original moves too.'),
+    mc('What does the `Z` in `"2026-01-30T09:00:00Z"` mean?', ['UTC, world time, the same moment everywhere', 'Zero seconds', 'The time zone of the computer', 'Nothing'], 0, 'Good for storing and sending.'),
+    mc('What does this show?\n```\nconsole.log(new Date(2026, 2, 0).getDate())\n```', ['`28`: the last day of February', '`0`', '`31`', '`1`'], 0, 'Day 0 of March is the day before 1 March.', { code: 'console.log(new Date(2026, 2, 0).getDate())', output: '28' }),
+    qShort('Which `Date` method gives the four-digit year?', 'getFullYear', 'date.getFullYear()'),
+  ],
+})

@@ -119,6 +119,30 @@ export class JavaScriptBuilders extends CourseBuilders {
     return `(() => { try { ${call} } catch (_cq_e) { return (String(_cq_e?.name) + ": " + String(_cq_e?.message)).includes(${jsstr(text)}) } return false })()`
   }
 
+  /**
+   * Awaiting `call` (JavaScript, e.g. `'loadUser(1)'`) gives the same as a JavaScript value,
+   * compared as JSON: `resolvesTo('double(2)', '4')`. For async functions and promises.
+   */
+  resolvesTo(call, jsValue) {
+    return `(async () => JSON.stringify(await (${call})) === JSON.stringify(${jsValue}))()`
+  }
+
+  /**
+   * Awaiting `call` (JavaScript, e.g. `'loadUser(-1)'`) fails with an error whose `name: message`
+   * contains `text`. For async functions and promises that reject.
+   */
+  rejectsWhen(call, text) {
+    return `(async () => { try { await (${call}) } catch (_cq_e) { return (String(_cq_e?.name) + ": " + String(_cq_e?.message)).includes(${jsstr(text)}) } return false })()`
+  }
+
+  /**
+   * Running `run` (JavaScript statements, which may use `await`) logs exactly these lines. Like
+   * `logsWhen`, for async code: what it logs is caught, so it stays out of the learner's output.
+   */
+  logsWhenAwaited(run, ...lines) {
+    return `(async (_cq_log, _cq_got) => { console.log = (...v) => { _cq_got.push(...v.map(String).join(" ").split("\\n")) }; try { ${run} } finally { console.log = _cq_log } return JSON.stringify(_cq_got) === ${jsstr(JSON.stringify(lines))} })(console.log, [])`
+  }
+
   /** `name` is the same as a JavaScript value, compared as JSON: `same('nums', '[2, 4, 6]')`. */
   same(name, jsValue) {
     return `JSON.stringify(${name}) === JSON.stringify(${jsValue})`

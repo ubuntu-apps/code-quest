@@ -1,0 +1,101 @@
+// Text, data and modules: Groups and replacing. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'regex_groups',
+  title: 'Groups, matchAll and replace',
+  paragraphs: [
+    'Finding a pattern is good; pulling **pieces** out of it is better. Brackets `( )` in a regex make a **group**: the part of the match it covers is kept for you, numbered from 1.',
+    '```\nconst m = "Date: 2026-11-12".match(/(\\d{4})-(\\d{2})-(\\d{2})/)\nconsole.log(m[0])\nconsole.log(m[1], m[2], m[3])\n```',
+    '`m[0]` is the whole match; `m[1]`, `m[2]`… are the groups. Numbers are easy to mix up, so you can **name** groups with `(?<name>…)` and read them from `m.groups`:',
+    '```\nconst m = "Ana Lima <ana@example.com>".match(/(?<name>[^<]+) <(?<email>[^>]+)>/)\nconsole.log(m.groups.name.trim(), "/", m.groups.email)\n```',
+    'With the `g` flag, `match` gives only the whole matches and loses the groups. To go through every match **with** its groups, use **`text.matchAll(pattern)`** (the pattern must have `g`) in a `for…of` loop:',
+    '```\nconst text = "apples=3, pears=5, plums=12"\nfor (const m of text.matchAll(/(\\w+)=(\\d+)/g)) {\n  console.log(m[1], "→", Number(m[2]))\n}\n```',
+    '**`replace`** and **`replaceAll`** take a regex too. In the new text, `$1`, `$2` stand for the groups. Or pass a **function**: it gets the match and the groups and returns what to put instead, which lets you change each match differently.',
+    '```\nconsole.log("2026-11-12".replace(/(\\d+)-(\\d+)-(\\d+)/, "$3/$2/$1"))\nconsole.log("I have 3 cats and 2 dogs".replace(/\\d+/g, (n) => n * 2))\nconsole.log("too    many   spaces".replace(/\\s+/g, " "))\n```',
+  ],
+  sandboxCode: 'const line = "Kim scored 42 points in 7 minutes"\nconst m = line.match(/(\\w+) scored (\\d+)/)\nconsole.log(m[1], Number(m[2]))',
+  sandboxSnippets: [
+    snippet('Named groups', 'const { groups } = "12:45".match(/(?<h>\\d+):(?<m>\\d+)/)\nconsole.log(groups.h, groups.m)'),
+    snippet('matchAll', 'for (const m of "#red #green #blue".matchAll(/#(\\w+)/g)) console.log(m[1])'),
+    snippet('Swap with $1', 'console.log("Lima, Ana".replace(/(\\w+), (\\w+)/, "$2 $1"))'),
+    snippet('Replace with a function', 'console.log("hello world".replace(/\\b\\w/g, (c) => c.toUpperCase()))'),
+  ],
+  readMore: MDN('Web/JavaScript/Guide/Regular_expressions/Groups_and_backreferences', 'MDN: Groups and backreferences'),
+  challenges: [
+    task('easy', 'Hours and minutes', {
+      prompt: 'Use a regex with two groups to make `hours` and `minutes` numbers from `time` (like `"14:35"`).',
+      starter: 'const time = "14:35"\n',
+      hint: '`const m = time.match(/(\\d+):(\\d+)/)`; `const hours = Number(m[1])`.',
+      solution: 'const time = "14:35"\nconst m = time.match(/(\\d+):(\\d+)/)\nconst hours = Number(m[1])\nconst minutes = Number(m[2])',
+      tests: [['hours is 14', 'hours === 14'], ['minutes is 35', 'minutes === 35'], ['Uses match', uses('.match(')]],
+    }),
+    task('easy', 'Tidy the spaces', {
+      prompt: 'Make `tidy` the text with every run of spaces, tabs or new lines turned into one space, and no spaces at either end.',
+      starter: 'const messy = "  Hello    there,\\n\\n  how   are you?  "\n',
+      hint: '`messy.replace(/\\s+/g, " ").trim()`.',
+      solution: 'const messy = "  Hello    there,\\n\\n  how   are you?  "\nconst tidy = messy.replace(/\\s+/g, " ").trim()',
+      tests: [['tidy', 'tidy === "Hello there, how are you?"'], ['Uses a regex', uses('/\\s+/g')]],
+    }),
+    task('easy', 'Swap the names', {
+      prompt: 'Turn `"Lima, Ana"` into `"Ana Lima"` with `replace`, groups and `$1`/`$2`.',
+      starter: 'const listed = "Lima, Ana"\n',
+      hint: '`listed.replace(/(\\w+), (\\w+)/, "$2 $1")`.',
+      solution: 'const listed = "Lima, Ana"\nconst name = listed.replace(/(\\w+), (\\w+)/, "$2 $1")',
+      tests: [['name is Ana Lima', 'name === "Ana Lima"'], ['Uses $1 and $2', '_cq_code.includes("$1") && _cq_code.includes("$2")']],
+    }),
+    task('medium', 'Read a date', {
+      prompt: 'Write `parseDate(text)` that finds a date like `2026-11-12` anywhere in the text and returns `{ year, month, day }` as numbers, using **named** groups; `null` if there is none.',
+      hint: '`/(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})/`; if it matches, convert each of `m.groups`.',
+      solution: 'function parseDate(text) {\n  const m = text.match(/(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})/)\n  if (!m) return null\n  const { year, month, day } = m.groups\n  return { year: Number(year), month: Number(month), day: Number(day) }\n}',
+      tests: [['A date', same('parseDate("Due on 2026-03-09, please")', '{ year: 2026, month: 3, day: 9 }')], ['No date', 'parseDate("soon") === null'], ['Uses named groups', uses('(?<')]],
+    }),
+    task('medium', 'Settings from text', {
+      prompt: 'Write `readSettings(text)` that turns text like `"volume=7; theme=dark; size=12"` into an object `{ volume: "7", theme: "dark", size: "12" }`, using `matchAll`.',
+      hint: '`for (const m of text.matchAll(/(\\w+)=(\\w+)/g)) settings[m[1]] = m[2]`.',
+      solution: 'function readSettings(text) {\n  const settings = {}\n  for (const m of text.matchAll(/(\\w+)=(\\w+)/g)) {\n    settings[m[1]] = m[2]\n  }\n  return settings\n}',
+      tests: [['Three settings', same('readSettings("volume=7; theme=dark; size=12")', '{ volume: "7", theme: "dark", size: "12" }')], ['None', same('readSettings("")', '{}')], ['Uses matchAll', uses('matchAll(')]],
+    }),
+    task('medium', 'Double the numbers', {
+      prompt: 'Write `doubleNumbers(text)` that doubles every whole number in the text, using `replace` with a function.',
+      hint: '`text.replace(/\\d+/g, (n) => String(Number(n) * 2))`.',
+      solution: 'function doubleNumbers(text) {\n  return text.replace(/\\d+/g, (n) => String(Number(n) * 2))\n}',
+      tests: [['Recipe', 'doubleNumbers("2 eggs, 150 g flour, 1 cup milk") === "4 eggs, 300 g flour, 2 cup milk"'], ['No numbers', 'doubleNumbers("salt") === "salt"']],
+    }),
+    task('hard', 'Title Case', {
+      prompt: 'Write `titleCase(text)` that makes the first letter of every word a capital and the rest small letters, using `replace` with a regex and a function.',
+      hint: 'Lower-case it first, then `.replace(/\\b\\w/g, (c) => c.toUpperCase())`.',
+      solution: 'function titleCase(text) {\n  return text.toLowerCase().replace(/\\b\\w/g, (c) => c.toUpperCase())\n}',
+      tests: [['A title', 'titleCase("the LORD of the rings") === "The Lord Of The Rings"'], ['One word', 'titleCase("hELLO") === "Hello"']],
+    }),
+    task('hard', 'Mentions', {
+      prompt: 'Write `mentions(post)` that returns the user names mentioned in a post, without the `@`, with no repeats, in order of first mention. A mention is `@` and one or more letters, digits or `_`.',
+      hint: '`[...post.matchAll(/@(\\w+)/g)].map((m) => m[1])`, then remove repeats with a `Set`.',
+      solution: 'function mentions(post) {\n  const names = [...post.matchAll(/@(\\w+)/g)].map((m) => m[1])\n  return [...new Set(names)]\n}',
+      tests: [['Two names', same('mentions("Thanks @ana and @ben_k! @ana you rock")', '["ana", "ben_k"]')], ['None', same('mentions("hi all")', '[]')]],
+    }),
+    task('expert', 'Hide the card number', {
+      prompt: 'Write `mask(text)` that hides every 16-digit card number in the text (four groups of 4 digits, separated by spaces or dashes), keeping only the last 4: `1234 5678 9012 3456` becomes `**** **** **** 3456`, and dashes stay dashes.',
+      hint: 'Capture the separator: `/\\d{4}([ -])\\d{4}\\1\\d{4}\\1(\\d{4})/g` (`\\1` means "the same as group 1"), and replace with a function that builds the stars.',
+      solution: 'function mask(text) {\n  return text.replace(/\\d{4}([ -])\\d{4}\\1\\d{4}\\1(\\d{4})/g, (whole, sep, last) => ["****", "****", "****", last].join(sep))\n}',
+      tests: [['Spaces', 'mask("Card: 1234 5678 9012 3456.") === "Card: **** **** **** 3456."'], ['Dashes', 'mask("1111-2222-3333-4444") === "****-****-****-4444"'], ['Two cards', 'mask("1234 5678 9012 3456 and 9999-8888-7777-6666") === "**** **** **** 3456 and ****-****-****-6666"'], ['Not a card', 'mask("Call 1234 5678") === "Call 1234 5678"']],
+    }),
+    task('expert', 'A tiny template', {
+      prompt: 'Write `fill(template, values)` that replaces every `{{name}}` in the template with `values.name`. Spaces inside the braces are allowed (`{{ name }}`). A name that isn\'t in `values` stays as it was.',
+      hint: '`template.replace(/\\{\\{\\s*(\\w+)\\s*\\}\\}/g, (whole, key) => (key in values ? String(values[key]) : whole))`.',
+      solution: 'function fill(template, values) {\n  return template.replace(/\\{\\{\\s*(\\w+)\\s*\\}\\}/g, (whole, key) => (key in values ? String(values[key]) : whole))\n}',
+      tests: [['Two values', 'fill("Hi {{name}}, you have {{ count }} new messages", { name: "Ana", count: 3 }) === "Hi Ana, you have 3 new messages"'], ['Missing value', 'fill("Hi {{name}} from {{city}}", { name: "Ben" }) === "Hi Ben from {{city}}"']],
+    }),
+  ],
+  questions: [
+    mc('In `"12:45".match(/(\\d+):(\\d+)/)`, what is `m[2]`?', ['`"45"`', '`"12"`', '`"12:45"`', '`45`'], 0, 'm[0] is the whole match; groups start at 1, as text.', { code: 'console.log("12:45".match(/(\\d+):(\\d+)/)[2])', output: '45' }),
+    mc('How do you name a group?', ['`(?<name>…)`', '`(name:…)`', '`[name]…`', '`{name}…`'], 0, 'Then read m.groups.name.'),
+    mc('Why use `matchAll` instead of `match` with `g`?', ['`match` with `g` loses the groups; `matchAll` keeps each match\'s groups', 'matchAll is faster', 'match can\'t use g', 'They are the same'], 0, 'One match object per match.'),
+    mc('What does this show?\n```\nconsole.log("Lima, Ana".replace(/(\\w+), (\\w+)/, "$2 $1"))\n```', ['`Ana Lima`', '`Lima Ana`', '`$2 $1`', '`Lima, Ana`'], 0, '$1 and $2 are the groups.', { code: 'console.log("Lima, Ana".replace(/(\\w+), (\\w+)/, "$2 $1"))', output: 'Ana Lima' }),
+    mc('What does a function passed to `replace` return?', ['The text to put in place of that match', 'true or false', 'The index of the match', 'Nothing'], 0, 'Each match can be changed differently.'),
+    mc('What does this show?\n```\nconsole.log("a1b2".replace(/\\d/g, (d) => d * 10))\n```', ['`a10b20`', '`a1b2`', '`a10b2`', 'An error'], 0, 'Every digit is replaced.', { code: 'console.log("a1b2".replace(/\\d/g, (d) => d * 10))', output: 'a10b20' }),
+    mc('What does `\\s+` match?', ['One or more spaces, tabs or new lines', 'The letter s', 'Exactly one space', 'Nothing'], 0, 'Good for tidying spaces.'),
+    mc('Without the `g` flag, how many matches does `replace` change?', ['Only the first', 'All', 'The last', 'None'], 0, 'Add g, or use replaceAll.', { code: 'console.log("a-b-c".replace(/-/, "+"))', output: 'a+b-c' }),
+    qShort('Which method goes through every match of a `g` regex with its groups: `text.____(pattern)`?', 'matchAll', 'for (const m of text.matchAll(re))'),
+  ],
+})

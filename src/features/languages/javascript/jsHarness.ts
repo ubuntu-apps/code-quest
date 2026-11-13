@@ -304,7 +304,15 @@ export async function runJavaScript(code: string, { setupCode = '', tests, onOut
       wake()
     }
   }
-  const allTimersDone = () => (pending === 0 ? Promise.resolve() : new Promise<void>((resolve) => (settle = resolve)))
+  // Done when no timer is pending even after the promise callbacks waiting to run have run:
+  // a `.then` or an `await` that resumes after a timer can start another one.
+  const allTimersDone = async () => {
+    for (;;) {
+      if (pending > 0) await new Promise<void>((resolve) => (settle = resolve))
+      await new Promise<void>((resolve) => globalThis.setTimeout(resolve, 0))
+      if (pending === 0) return
+    }
+  }
 
   const linesBefore = setupCode ? setupCode.split('\n').length : 0
   const testList = tests ?? []

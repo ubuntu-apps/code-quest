@@ -39,8 +39,10 @@ export class JavaScriptChecker extends LanguageChecker {
     if (run.error) return null
     const at = run.output.lastIndexOf(MARK)
     if (at < 0) return null
-    const printed = run.output.slice(0, at).replace(/\n$/, '')
-    const values = JSON.parse(run.output.slice(at + MARK.length))
+    // Async code can log after the values (from timers), so they are one line among the output.
+    const end = run.output.indexOf('\n', at)
+    const printed = (run.output.slice(0, at) + (end < 0 ? '' : run.output.slice(end + 1))).replace(/\n$/, '')
+    const values = JSON.parse(run.output.slice(at + MARK.length, end < 0 ? undefined : end))
     const lines = Object.entries(values).map(([name, value]) => `const ${name} = ${JSON.stringify(value)}`)
     return [starter, ...lines, ...(printed ? [`console.log(${JSON.stringify(printed)})`] : [])].filter(Boolean).join('\n')
   }
