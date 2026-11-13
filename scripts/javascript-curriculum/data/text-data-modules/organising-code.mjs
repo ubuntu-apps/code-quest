@@ -1,0 +1,102 @@
+// Text, data and modules: Organising code. Lesson, Try-it snippets, challenges and quiz.
+import { MDN, makeTopic, mc, qShort, same, snippet, task, uses } from '../_builders.mjs'
+
+export default makeTopic({
+  id: 'organising_code',
+  title: 'Organising a program',
+  paragraphs: [
+    'Splitting code into modules only helps if each piece has a clear job. A few habits make programs much easier to read, test and change, whatever their size.',
+    '**Keep the work apart from the showing.** A function that calculates **and** logs can only be used where logging is wanted, and is hard to test. Let one function **return** the result, and another show it.',
+    '```\nfunction cartTotal(items) {\n  return items.reduce((sum, i) => sum + i.price * i.qty, 0)\n}\n\nfunction showTotal(items) {\n  console.log(`Total: ${cartTotal(items).toFixed(2)}`)\n}\n\nshowTotal([{ price: 2.5, qty: 2 }, { price: 3.2, qty: 1 }])\n```',
+    '**Name your numbers.** `if (subtotal >= 50)` makes the reader guess; `if (subtotal >= FREE_SHIPPING_FROM)` says why. Put such settings together at the top of a module, in capitals, so they are easy to find and change.',
+    '**Pass in what a function needs.** A function that reads the clock, a file or the network itself is hard to test: the answer changes. Give it the time, the data or the fetching function as an argument instead (this is called **dependency injection**), and the tests can pass fake ones.',
+    '```\nfunction greeting(now) {\n  const h = now.getHours()\n  if (h < 12) return "Good morning"\n  if (h < 18) return "Good afternoon"\n  return "Good evening"\n}\nconsole.log(greeting(new Date(2026, 0, 1, 9)))\nconsole.log(greeting(new Date(2026, 0, 1, 20)))\n```',
+    '**Use data instead of long `if` chains.** A table like `{ PT: 4, ES: 5, FR: 7 }` is shorter than nine `if`s, and adding a country is one line.',
+    'Put together, a module typically has its settings at the top, small private helpers, and a few exported functions that do one job each, take what they need as arguments, and return results. Code that talks to the outside world (the page, the network, files) stays thin, at the edges.',
+  ],
+  sandboxCode: 'const RATES = { PT: 4, ES: 5, FR: 7 }\nconst DEFAULT_RATE = 12\n\nfunction shippingTo(country) {\n  return RATES[country] ?? DEFAULT_RATE\n}\n\nconsole.log(shippingTo("ES"), shippingTo("JP"))',
+  sandboxSnippets: [
+    snippet('Inject the clock', 'function isOpen(now) {\n  const h = now.getHours()\n  return h >= 9 && h < 17\n}\nconsole.log(isOpen(new Date(2026, 0, 5, 10)), isOpen(new Date(2026, 0, 5, 19)))'),
+    snippet('A fake for a test', 'function welcome(name, log) {\n  log(`Welcome, ${name}!`)\n}\nconst lines = []\nwelcome("Ana", (text) => lines.push(text))\nconsole.log(lines)'),
+  ],
+  readMore: MDN('Learn_web_development/Core/Scripting/Functions', 'MDN: Functions, reusable blocks of code'),
+  challenges: [
+    task('easy', 'Work, then show', {
+      prompt: 'Split the job: write `average(scores)` that **returns** the average, and `report(scores)` that shows `Average: N` using it.',
+      hint: '`average` returns `sum / scores.length`; `report` does `console.log(`Average: ${average(scores)}`)`.',
+      solution: 'function average(scores) {\n  return scores.reduce((a, b) => a + b, 0) / scores.length\n}\nfunction report(scores) {\n  console.log(`Average: ${average(scores)}`)\n}',
+      tests: [['average returns', 'average([4, 6, 8]) === 6'], ['report shows it', '(() => { const lines = []; const log = console.log; console.log = (v) => lines.push(v); try { report([1, 2]) } finally { console.log = log } return lines[0] === "Average: 1.5" })()'], ['report uses average', '/function report[\\s\\S]*average\\(/.test(_cq_code)']],
+    }),
+    task('easy', 'Name the numbers', {
+      prompt: 'Rewrite `shipping` without bare numbers: add constants `FREE_FROM = 50` and `FLAT_RATE = 4.99` and use them.',
+      starter: 'function shipping(subtotal) {\n  return subtotal >= 50 ? 0 : 4.99\n}\n',
+      hint: '`const FREE_FROM = 50`, `const FLAT_RATE = 4.99`, then `subtotal >= FREE_FROM ? 0 : FLAT_RATE`.',
+      solution: 'const FREE_FROM = 50\nconst FLAT_RATE = 4.99\nfunction shipping(subtotal) {\n  return subtotal >= FREE_FROM ? 0 : FLAT_RATE\n}',
+      tests: [['Still works', 'shipping(60) === 0 && shipping(20) === 4.99 && shipping(50) === 0'], ['Has the constants', 'FREE_FROM === 50 && FLAT_RATE === 4.99'], ['No bare numbers in shipping', '!/function shipping[^}]*(50|4\\.99)/.test(_cq_code)']],
+      typedOk: true,
+    }),
+    task('easy', 'Pass the time in', {
+      prompt: 'Write `greeting(now)` that returns `Good morning` before 12:00, `Good afternoon` before 18:00 and `Good evening` after, reading the hour from the `now` it is given (not from `new Date()`).',
+      hint: '`const h = now.getHours()`, then two `if`s.',
+      solution: 'function greeting(now) {\n  const h = now.getHours()\n  if (h < 12) return "Good morning"\n  if (h < 18) return "Good afternoon"\n  return "Good evening"\n}',
+      tests: [['9:00', 'greeting(new Date(2026, 0, 1, 9)) === "Good morning"'], ['15:30', 'greeting(new Date(2026, 0, 1, 15, 30)) === "Good afternoon"'], ['21:00', 'greeting(new Date(2026, 0, 1, 21)) === "Good evening"'], ['Doesn\'t read the clock', '!_cq_code.includes("new Date()")']],
+    }),
+    task('medium', 'A table, not ifs', {
+      prompt: 'Replace the `if` chain with a lookup table `RATES` and a default `OTHER = 12`, keeping the same answers.',
+      starter: 'function shippingTo(country) {\n  if (country === "PT") return 4\n  if (country === "ES") return 5\n  if (country === "FR") return 7\n  if (country === "DE") return 8\n  return 12\n}\n',
+      hint: '`const RATES = { PT: 4, ES: 5, FR: 7, DE: 8 }`; `return RATES[country] ?? OTHER`.',
+      solution: 'const RATES = { PT: 4, ES: 5, FR: 7, DE: 8 }\nconst OTHER = 12\nfunction shippingTo(country) {\n  return RATES[country] ?? OTHER\n}',
+      tests: [['Same answers', 'shippingTo("PT") === 4 && shippingTo("FR") === 7 && shippingTo("DE") === 8 && shippingTo("JP") === 12'], ['Uses a table', same('RATES', '{ PT: 4, ES: 5, FR: 7, DE: 8 }')], ['No if chain', '!/\\bif\\s*\\(/.test(_cq_code)']],
+      typedOk: true,
+    }),
+    task('medium', 'A store you can test', {
+      prompt: 'Write `makeStore(storage)`: `storage` is any object with `get(key)` and `set(key, value)` (like a `Map`). Return `{ save(key, value), load(key, fallback) }`: `save` stores the value as JSON text; `load` parses it back, or gives `fallback` if there is nothing saved.',
+      hint: '`save: (key, value) => storage.set(key, JSON.stringify(value))`; in `load`, `const text = storage.get(key)` and return `fallback` if it is `undefined`.',
+      solution: 'function makeStore(storage) {\n  return {\n    save(key, value) {\n      storage.set(key, JSON.stringify(value))\n    },\n    load(key, fallback) {\n      const text = storage.get(key)\n      return text === undefined ? fallback : JSON.parse(text)\n    },\n  }\n}',
+      tests: [['Saves as JSON', '(() => { const m = new Map(); makeStore(m).save("prefs", { theme: "dark" }); return m.get("prefs") === \'{"theme":"dark"}\' })()'], ['Loads it back', '(() => { const s = makeStore(new Map()); s.save("list", [1, 2]); return JSON.stringify(s.load("list", [])) === "[1,2]" })()'], ['Fallback', '(() => makeStore(new Map()).load("nothing", "none") === "none")()']],
+    }),
+    task('medium', 'One job each', {
+      prompt: 'Write three small functions and one that uses them: `parse(line)` turns `"Ana,31"` into `{ name: "Ana", age: 31 }`; `isValid(person)` checks the name isn\'t empty and the age is between 0 and 130; `describe(line)` gives `Ana is 31` for a valid line, or `Invalid: LINE`.',
+      hint: '`describe` calls `parse`, then `isValid`, then builds the text.',
+      solution: 'function parse(line) {\n  const [name, age] = line.split(",")\n  return { name: name.trim(), age: Number(age) }\n}\nfunction isValid(person) {\n  return person.name !== "" && person.age >= 0 && person.age <= 130\n}\nfunction describe(line) {\n  const person = parse(line)\n  return isValid(person) ? `${person.name} is ${person.age}` : `Invalid: ${line}`\n}',
+      tests: [['parse', same('parse("Ana,31")', '{ name: "Ana", age: 31 }')], ['isValid', 'isValid({ name: "Ben", age: 27 }) && !isValid({ name: "", age: 5 }) && !isValid({ name: "Old", age: 200 })'], ['describe', 'describe("Ana,31") === "Ana is 31" && describe("Zed,-4") === "Invalid: Zed,-4"']],
+    }),
+    task('hard', 'Events', {
+      prompt: 'Many modules talk through **events**. Write `makeEmitter()` returning `{ on(event, fn), off(event, fn), emit(event, data) }`: `on` adds a listener, `off` removes it, and `emit` calls every listener of that event with `data`, in the order they were added.',
+      hint: 'Keep a `Map` of event → array of functions. `emit` does `(listeners.get(event) ?? []).forEach((fn) => fn(data))`.',
+      solution: 'function makeEmitter() {\n  const listeners = new Map()\n  return {\n    on(event, fn) {\n      listeners.set(event, [...(listeners.get(event) ?? []), fn])\n    },\n    off(event, fn) {\n      listeners.set(event, (listeners.get(event) ?? []).filter((f) => f !== fn))\n    },\n    emit(event, data) {\n      for (const fn of listeners.get(event) ?? []) fn(data)\n    },\n  }\n}',
+      tests: [['Calls listeners in order', '(() => { const e = makeEmitter(); const got = []; e.on("buy", (d) => got.push("a" + d)); e.on("buy", (d) => got.push("b" + d)); e.emit("buy", 1); return got.join() === "a1,b1" })()'], ['Other events left alone', '(() => { const e = makeEmitter(); let n = 0; e.on("x", () => n++); e.emit("y"); return n === 0 })()'], ['off', '(() => { const e = makeEmitter(); let n = 0; const f = () => n++; e.on("x", f); e.emit("x"); e.off("x", f); e.emit("x"); return n === 1 })()']],
+    }),
+    task('hard', 'A logger with levels', {
+      prompt: 'Write `makeLogger(level, write)`: levels are `"debug"`, `"info"`, `"warn"`, `"error"`, in that order. Return `{ debug(msg), info(msg), warn(msg), error(msg) }`; each calls `write("LEVEL: msg")` (level in capitals) only if it is at or above `level`.',
+      hint: '`const LEVELS = ["debug", "info", "warn", "error"]`. Build the object with `Object.fromEntries(LEVELS.map((name) => [name, (msg) => { … }]))`, comparing `indexOf`s.',
+      solution: 'const LEVELS = ["debug", "info", "warn", "error"]\nfunction makeLogger(level, write) {\n  const min = LEVELS.indexOf(level)\n  return Object.fromEntries(\n    LEVELS.map((name, i) => [\n      name,\n      (msg) => {\n        if (i >= min) write(`${name.toUpperCase()}: ${msg}`)\n      },\n    ]),\n  )\n}',
+      tests: [['warn and up', '(() => { const out = []; const log = makeLogger("warn", (t) => out.push(t)); log.debug("a"); log.info("b"); log.warn("c"); log.error("d"); return out.join("|") === "WARN: c|ERROR: d" })()'], ['Everything', '(() => { const out = []; const log = makeLogger("debug", (t) => out.push(t)); log.debug("x"); log.info("y"); return out.join("|") === "DEBUG: x|INFO: y" })()']],
+    }),
+    task('expert', 'A pipeline', {
+      prompt: 'Write `pipe(...steps)` that returns one function running the steps in order, each on the result of the one before. Then make `cleanTag = pipe(trim, lower, noSpaces)` from the three small functions given.',
+      starter: 'const trim = (s) => s.trim()\nconst lower = (s) => s.toLowerCase()\nconst noSpaces = (s) => s.replace(/\\s+/g, "-")\n',
+      hint: '`const pipe = (...steps) => (input) => steps.reduce((value, step) => step(value), input)`.',
+      solution: 'const trim = (s) => s.trim()\nconst lower = (s) => s.toLowerCase()\nconst noSpaces = (s) => s.replace(/\\s+/g, "-")\nconst pipe = (...steps) => (input) => steps.reduce((value, step) => step(value), input)\nconst cleanTag = pipe(trim, lower, noSpaces)',
+      tests: [['cleanTag', 'cleanTag("  Summer Sale  2026 ") === "summer-sale-2026"'], ['pipe with numbers', 'pipe((n) => n + 1, (n) => n * 10)(4) === 50'], ['No steps', 'pipe()("same") === "same"']],
+    }),
+    task('expert', 'Settings with checks', {
+      prompt: 'Write `makeConfig(overrides)`: start from `DEFAULTS` (given), apply the overrides, and return a frozen object. Throw `Error("Unknown setting: KEY")` for a key not in `DEFAULTS`, and `Error("KEY must be a TYPE")` if a value\'s `typeof` differs from the default\'s.',
+      starter: 'const DEFAULTS = { theme: "light", fontSize: 14, sounds: true }\n',
+      hint: 'Loop over `Object.entries(overrides)`: check `key in DEFAULTS`, then `typeof value === typeof DEFAULTS[key]`. Return `Object.freeze({ ...DEFAULTS, ...overrides })`.',
+      solution: 'const DEFAULTS = { theme: "light", fontSize: 14, sounds: true }\nfunction makeConfig(overrides) {\n  for (const [key, value] of Object.entries(overrides)) {\n    if (!(key in DEFAULTS)) throw new Error(`Unknown setting: ${key}`)\n    const type = typeof DEFAULTS[key]\n    if (typeof value !== type) throw new Error(`${key} must be a ${type}`)\n  }\n  return Object.freeze({ ...DEFAULTS, ...overrides })\n}',
+      tests: [['Merged', '(() => { const c = makeConfig({ fontSize: 18 }); return c.fontSize === 18 && c.theme === "light" && Object.isFrozen(c) })()'], ['Unknown key', '(() => { try { makeConfig({ colour: "red" }) } catch (e) { return e.message === "Unknown setting: colour" } return false })()'], ['Wrong type', '(() => { try { makeConfig({ fontSize: "big" }) } catch (e) { return e.message === "fontSize must be a number" } return false })()']],
+    }),
+  ],
+  questions: [
+    mc('Why should a calculating function return its result rather than log it?', ['So it can be reused and tested anywhere', 'Logging is slow', 'Functions can\'t log', 'It uses less memory'], 0, 'Showing is a separate job.'),
+    mc('What is a "magic number"?', ['A bare number in code whose meaning the reader has to guess', 'A random number', 'A very large number', 'A number in a string'], 0, 'Give it a name.'),
+    mc('What is dependency injection?', ['Passing a function what it needs (the time, the data, a fetcher) instead of it getting them itself', 'Importing every module', 'A security attack', 'Copying code between files'], 0, 'Tests can then pass fakes.'),
+    mc('Why is `greeting(now)` easier to test than a `greeting()` that calls `new Date()`?', ['The test can choose the time', 'It is shorter', 'Dates are slow', 'It isn\'t'], 0, 'The answer no longer depends on when you run it.'),
+    mc('What is the advantage of `RATES[country] ?? OTHER` over a chain of `if`s?', ['The rates are data: shorter, and adding one is a single line', 'It is the only correct way', 'It never fails', 'It runs in parallel'], 0, 'A lookup table.'),
+    mc('What does this show?\n```\nconst pipe = (...fs) => (x) => fs.reduce((v, f) => f(v), x)\nconsole.log(pipe((n) => n + 1, (n) => n * 2)(3))\n```', ['`8`', '`7`', '`6`', '`4`'], 0, '(3 + 1) × 2.', { code: 'const pipe = (...fs) => (x) => fs.reduce((v, f) => f(v), x)\nconsole.log(pipe((n) => n + 1, (n) => n * 2)(3))', output: '8' }),
+    mc('Where should code that talks to the page, network or files go?', ['At the edges, kept thin, with the logic in plain functions', 'Inside every function', 'In one giant file', 'Nowhere'], 0, 'The core stays easy to test.'),
+    mc('What does an event emitter let modules do?', ['Tell each other something happened without knowing who is listening', 'Run faster', 'Share variables', 'Import each other'], 0, 'Loose connections between parts.'),
+    qShort('Settings that never change are often written in capitals: what are they called (one word)?', 'constants', 'const FREE_FROM = 50'),
+  ],
+})

@@ -12,6 +12,9 @@ import { functionsTopics } from './functions.mjs'
 import { workingWithListsTopics } from './working-with-lists.mjs'
 import { errorsDebuggingTopics } from './errors-debugging.mjs'
 import { classesTopics } from './classes.mjs'
+import { asyncTopics } from './async.mjs'
+import { textDataModulesTopics } from './text-data-modules.mjs'
+import { projectsTopics } from './projects.mjs'
 
 export const COURSE = [
   { sectionId: 'first_steps', title: 'First steps', filename: 'first_steps.json', topics: firstStepsTopics },
@@ -21,7 +24,7 @@ export const COURSE = [
   { sectionId: 'working_with_lists', title: 'Working with lists', filename: 'working_with_lists.json', topics: workingWithListsTopics },
   { sectionId: 'errors_debugging', title: 'Errors and debugging', filename: 'errors_debugging.json', topics: errorsDebuggingTopics },
   { sectionId: 'classes', title: 'Classes', filename: 'classes.json', topics: classesTopics },
-  { sectionId: 'async', title: 'Asynchronous JavaScript', filename: 'async.json', topics: [] },
-  { sectionId: 'text_data_modules', title: 'Text, data and modules', filename: 'text_data_modules.json', topics: [] },
-  { sectionId: 'projects', title: 'Capstone projects', filename: 'projects.json', topics: [] },
+  { sectionId: 'async', title: 'Asynchronous JavaScript', filename: 'async.json', topics: asyncTopics },
+  { sectionId: 'text_data_modules', title: 'Text, data and modules', filename: 'text_data_modules.json', topics: textDataModulesTopics },
+  { sectionId: 'projects', title: 'Capstone projects', filename: 'projects.json', topics: projectsTopics },
 ]
